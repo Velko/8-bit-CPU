@@ -14,7 +14,15 @@ Far future
 ==========
 
 These ideas should be addressed *after* the basic CPU is working. But I should keep writing them
-as they appear.
+down as they appear.
+
+
+Multiplex Output bits
+---------------------
+
+Only one device should be allowed to output data onto the bus. But microcode now reserves a bit
+for each. Since only one can be enabled, we can encode *which* one. This way, using just 3 bits
+we can encode up to 7 devices on the bus.
 
 
 8-bit addressing and larger RAM
@@ -53,7 +61,7 @@ display. Next version!
 Variable-length instruction opcodes
 -----------------------------------
 There are only 16 possible opcodes. Some do not need arguments at all, others would greatly
-benefit from longer immediate values. It might be possible to vary whick bits goes out to bus
+benefit from longer immediate values. It might be possible to vary which bits goes out to bus
 and which are used for microcode addressing. But I suspect that complexity increases greatly.
 
 
