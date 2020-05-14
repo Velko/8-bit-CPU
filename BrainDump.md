@@ -9,8 +9,8 @@ Random thoughts
   have a simple feature to advance to next address. Could be useful when loading initial
   memory contents.
 
-What about creating an input device that scans 4x4 array of buttons (physically it might
-look more like 8x2 when built on breadboard)?
+What about creating an input device that scans 4x4 array of buttons. Use ready-made 4x4
+keypad matrix. May need to re-label it for hex digit input.
 
 Clock + 4-bit counter, 2-to-4 decoder, 4 ANDs, Quad-OR can detect key-press.
 2x 4-bit registers, to latch in the value. Evaluate if it is possible to move
@@ -64,8 +64,7 @@ Needed features:
 Potential input device - a 4+1 keyboard ( keys for base-4 input + enter) combined with 7-seg output
 display. Next version!
 
-If 4x4 input device turned out nice, could build one using keyboard switches and arrange it as a
-small 4x4 keyboard. See if it can be combined with display.
+If 4x4 input device turned out nice, can combine it with display.
 
 
 
