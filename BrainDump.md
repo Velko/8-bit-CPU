@@ -5,8 +5,17 @@ Random thoughts
 * Ribbon cable seems to be a good candidate for bus
 * Need bus/breadboard connector
 * is there a need for PCBs to be "pluggable" into breadboard?
+* MAR can be either simple latch register or use same as for PC. It might be useful to
+  have a simple feature to advance to next address. Could be useful when loading initial
+  memory contents.
 
+What about creating an input device that scans 4x4 array of buttons (physically it might
+look more like 8x2 when built on breadboard)?
 
+Clock + 4-bit counter, 2-to-4 decoder, 4 ANDs, Quad-OR can detect key-press.
+2x 4-bit registers, to latch in the value. Evaluate if it is possible to move
+current values from A to B while loading new into A. Also need a way to get single
+clock pulse when key detected (wasn't there something in the Bens videos???).
 
 
 
@@ -54,6 +63,9 @@ Needed features:
 
 Potential input device - a 4+1 keyboard ( keys for base-4 input + enter) combined with 7-seg output
 display. Next version!
+
+If 4x4 input device turned out nice, could build one using keyboard switches and arrange it as a
+small 4x4 keyboard. See if it can be combined with display.
 
 
 
