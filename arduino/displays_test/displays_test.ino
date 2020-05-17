@@ -78,14 +78,6 @@ const int displays[] = { DISPLAY_1, DISPLAY_10, DISPLAY_100, DISPLAY_1000 };
 #define MODE_HEX                2
 #define MODE_OCT                3
 
-
-const int digit_segments[] = {
-    DIGIT_0, DIGIT_1, DIGIT_2, DIGIT_3,
-    DIGIT_4, DIGIT_5, DIGIT_6, DIGIT_7,
-    DIGIT_8, DIGIT_9, DIGIT_A, DIGIT_B,
-    DIGIT_C, DIGIT_D, DIGIT_E, DIGIT_F,
-};
-
 /* Map display values to digits. Actual digit map should be generated using generate_digitmap.py
    script. Run command in script's directory:
 
@@ -109,12 +101,6 @@ void setup_segments(int segments)
             digitalWrite(segment_pins[i], LOW);
     }
 }
-
-void setup_digit(int digit)
-{
-    setup_segments(digit_segments[digit]);
-}
-
 
 void clear_displays()
 {
@@ -154,7 +140,6 @@ void cycle_displays()
     digitalWrite(SEG_PIN_DOT, HIGH);
     for( int i = 0; i < NUM_DISPLAYS; ++i)
     {
-
         digitalWrite(displays[i], LOW);
         delay(500);
         digitalWrite(displays[i], HIGH);
@@ -166,7 +151,8 @@ void cycle_digits()
     clear_displays();
     digitalWrite(DISPLAY_1, LOW);
     for (int i = 0; i < 16; ++i) {
-        setup_digit(i);
+        uint8_t segments = pgm_read_byte(&digitMap[MODE_HEX][i][0]);
+        setup_segments(segments);
         delay(500);
     }
 }
