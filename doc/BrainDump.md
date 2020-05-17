@@ -74,4 +74,6 @@ There are only 16 possible opcodes. Some do not need arguments at all, others wo
 benefit from longer immediate values. It might be possible to vary which bits goes out to bus
 and which are used for microcode addressing. But I suspect that complexity increases greatly.
 
-
+It appears that simpler option would be just swich to 16-bit instructions. That will provide enough
+space for full 8-bit operands and allow up to 256 instructions. In combination with that, we might
+switch to 256 byte RAM.
