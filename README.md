@@ -25,6 +25,9 @@ Up until now I was just dreaming about it. But I have to write my ideas down som
 
 * Created Github project and added few most immediate tasks
 * Wrote an introductionary README (this one ;-) )
+* Decided on overall design
+* Compiled list of modules and parts for first experiments, placed an order with my favorite supplier
+* Found Arduino, breadboard and few 7-segment displays at home. Time to practice!
 
 
 
