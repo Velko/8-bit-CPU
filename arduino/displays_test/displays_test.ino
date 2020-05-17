@@ -71,7 +71,13 @@ const int displays[] = { DISPLAY_1, DISPLAY_10, DISPLAY_100, DISPLAY_1000 };
 #define DIGIT_D     (SEG_BIT_B | SEG_BIT_C | SEG_BIT_D | SEG_BIT_E | SEG_BIT_G)
 #define DIGIT_E     (SEG_BIT_A | SEG_BIT_D | SEG_BIT_E | SEG_BIT_F | SEG_BIT_G)
 #define DIGIT_F     (SEG_BIT_A | SEG_BIT_E | SEG_BIT_F | SEG_BIT_G)
-#define DIGIT_MINUS (SEG_G)
+#define DIGIT_MINUS (SEG_BIT_G)
+
+#define MODE_DECIMAL_UNSIGNED   0
+#define MODE_DECIMAL_SIGNED     1
+#define MODE_HEX                2
+#define MODE_OCT                3
+
 
 const int digit_segments[] = {
     DIGIT_0, DIGIT_1, DIGIT_2, DIGIT_3,
@@ -80,6 +86,12 @@ const int digit_segments[] = {
     DIGIT_C, DIGIT_D, DIGIT_E, DIGIT_F,
 };
 
+/* Map display values to digits. Actual digit map should be generated using generate_digitmap.py
+   script. Run command in script's directory:
+
+   ./generate_digitmap.py >> zz_digitmap.ino
+ */
+extern const uint8_t digitMap[4][256][NUM_DISPLAYS] PROGMEM;
 
 void clear_digit()
 {
@@ -87,16 +99,22 @@ void clear_digit()
         digitalWrite(segment_pins[i], LOW);
 }
 
-void setup_digit(int digit)
+void setup_segments(int segments)
 {
     for (int i = 0; i < NUM_SEG_PINS; ++i)
     {
-        if (digit_segments[digit] & (1 << i))
+        if (segments & (1 << i))
             digitalWrite(segment_pins[i], HIGH);
         else
             digitalWrite(segment_pins[i], LOW);
     }
 }
+
+void setup_digit(int digit)
+{
+    setup_segments(digit_segments[digit]);
+}
+
 
 void clear_displays()
 {
@@ -153,17 +171,22 @@ void cycle_digits()
     }
 }
 
-void count_dec_unsigned()
+void count_map(int mode)
 {
     for (int count = 0; count < 256; ++count)
     {
         for (int repeat = 0; repeat < 16; ++repeat)
         {
-            int value = count;
-            for (int d = 0; d < NUM_DISPLAYS; ++d, value /= 10)
+            for (int d = 0; d < NUM_DISPLAYS; ++d)
             {
+                uint8_t segments = pgm_read_byte(&digitMap[mode][count][d]);
+
+                /* Use decimal separator dot to indicate display mode */
+                if (mode == d)
+                    segments |= SEG_BIT_DOT;
+
                 clear_displays();
-                setup_digit( value % 10);
+                setup_segments(segments);
                 enable_display(d);
                 delay(3);
             }
@@ -175,5 +198,8 @@ void loop()
 {
     cycle_displays();
     cycle_digits();
-    count_dec_unsigned();
+    count_map(MODE_DECIMAL_UNSIGNED);
+    count_map(MODE_DECIMAL_SIGNED);
+    count_map(MODE_HEX);
+    count_map(MODE_OCT);
 }
