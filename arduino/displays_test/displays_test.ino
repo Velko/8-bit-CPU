@@ -133,7 +133,9 @@ void cycle_displays()
     clear_displays();
     clear_digit();
 
-    digitalWrite(SEG_PIN_DOT, HIGH);
+    /* Set up 25% PWM so that brightness is similar as when
+       multiplexing on all displays */
+    analogWrite(SEG_PIN_DOT, 64);
     for( int i = 0; i < NUM_DISPLAYS; ++i)
     {
         digitalWrite(displays[i], LOW);
@@ -145,7 +147,9 @@ void cycle_displays()
 void cycle_digits()
 {
     clear_displays();
-    digitalWrite(DISPLAY_1, LOW);
+    /* Set up 75% PWM. Displays are On when pin is LOW so
+       it actually gives us 25% brightness */
+    analogWrite(DISPLAY_1, 192);
     for (int i = 0; i < 16; ++i) {
         uint8_t segments = pgm_read_byte(&digitMap[MODE_HEX][i][0]);
         setup_segments(segments);
