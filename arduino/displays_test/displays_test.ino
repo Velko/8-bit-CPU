@@ -3,14 +3,14 @@
  */
 
 /* Segments of displays are connected to these pins */
-#define SEG_PIN_A   8
-#define SEG_PIN_B   9
-#define SEG_PIN_C   11
-#define SEG_PIN_D   12
-#define SEG_PIN_E   10
-#define SEG_PIN_F   7
-#define SEG_PIN_G   6
-#define SEG_PIN_DOT 13
+#define SEG_PIN_A   12
+#define SEG_PIN_B   13
+#define SEG_PIN_C   7
+#define SEG_PIN_D   8
+#define SEG_PIN_E   6
+#define SEG_PIN_F   11
+#define SEG_PIN_G   10
+#define SEG_PIN_DOT 9
 
 /* Total number of segments */
 #define NUM_SEG_PINS    8
