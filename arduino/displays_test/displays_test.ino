@@ -113,8 +113,6 @@ void enable_display(int dsp)
     digitalWrite(displays[dsp], LOW);
 }
 
-unsigned int counter;
-
 void setup()
 {
     for (int i = 0; i < NUM_SEG_PINS; ++i)
@@ -128,8 +126,6 @@ void setup()
         digitalWrite(displays[i], HIGH);
         pinMode(displays[i], OUTPUT);
     }
-
-    counter = 0;
 }
 
 void cycle_displays()
@@ -161,7 +157,13 @@ void count_map(int mode)
 {
     for (int count = 0; count < 256; ++count)
     {
-        for (int repeat = 0; repeat < 16; ++repeat)
+        /* Cycling trough digits 25 times gives us nice quick, but visible
+           counting: ~5 numbers/sec
+
+           2 ms * 25 * 4 = 0.2 s
+           1 num / 0.2 s = 5 num/s
+         */
+        for (int repeat = 0; repeat < 25; ++repeat)
         {
             for (int d = 0; d < NUM_DISPLAYS; ++d)
             {
@@ -174,7 +176,7 @@ void count_map(int mode)
                 clear_displays();
                 setup_segments(segments);
                 enable_display(d);
-                delay(3);
+                delay(2);
             }
         }
     }
