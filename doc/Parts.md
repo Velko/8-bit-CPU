@@ -16,7 +16,7 @@ Register
 Program Counter
 ---------------
 
-* 2 x 74HC161 - 4-bit counter
+* 2 x 74HC161 - 4-bit counter (or 74HC191 for future features)
 * 1 x 74HC245 - output buffer
 * 8 x LEDs
 * 8 x 1kΩ resistors
@@ -51,7 +51,7 @@ Display
 
 * 1 x LM555 -timer
 * 4 x 7-segment displays (common cathode)
-* 1 x 74HC161 - counter
+* 1 x 74HC161 - counter (alternative: 74HC163)
 * 1 x 74HC138 - demux (or 74HC139)
 * 1 x AT28C64 - EEPROM
 * 1 x MCR7H4H-16RA - rotary encoded switch
@@ -69,7 +69,7 @@ Keyboard
 --------
 
 * 1 x 4x4 keyboard matrix
-* 1 x 74HC161 - counter
+* 1 x 74HC161 - counter (or 74HC163)
 * 2 x 74HC138 demux (or 1 x 74HC139)
 * 2 x 74HC173 - output latches
 * 1 x 74HC245 - output buffer
@@ -115,7 +115,7 @@ Bus monitor
 Control unit
 ------------
 
-* 1 x 74HC161 - counter
+* 1 x 74HC161 - counter (74HC163 might suit even better)
 * 2 x AT28C64 - EEPROM
 * 2 x 74HC138 - demux
 * 8 x LED
@@ -171,6 +171,20 @@ Optical:
 Extra materials:
 * some DIP switches (4 and 8 pole)
 * breadboards
+
+
+I couldn't source 74HC161 at the moment. Will try to use 74HC163 instead.
+Also, there's 74HC191. That will give us a nice Up/Down counting capability
+(and is a bit cheaper as well).
+
+Grabbed 74HC139 as well - will save some space on board for keyboard build.
+
+74HC161 and 74HC163 differs only on reset functionality (former is async,
+latter - sync). For some places it doesn't matter, as I'm not going to reset
+it anyway. In Control Logic, it might be even better to have it synchronous.
+
+
+
 
 
 Additional "fun"
