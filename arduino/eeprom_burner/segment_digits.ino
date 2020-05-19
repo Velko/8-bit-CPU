@@ -96,12 +96,12 @@ void write_eeprom(uint16_t addr, uint8_t value)
     /* Print address when starting with each 16-th byte */
     if ((addr & 0x0F) == 0)
     {
-        sprintf(buff, "%04X  ", addr);
+        sprintf_P(buff, PSTR("%04X  "), addr);
         Serial.print(buff);
     }
 
     /* Output the byte */
-    sprintf(buff, "%02X ", value);
+    sprintf_P(buff, PSTR("%02X "), value);
     Serial.print(buff);
 
     /* Newline after 16 bytes */
@@ -113,13 +113,13 @@ void write_eeprom(uint16_t addr, uint8_t value)
 
     /* Add extra space after first 8 bytes */
     if ((addr & 0x07) == 0x07)
-        Serial.print(" ");
+        Serial.print(F(" "));
 }
 
 void write_digit(int value, const char *format)
 {
     char output[5]; // 4 digits + \n
-    sprintf(output, format, value);
+    sprintf_P(output, format, value);
 
     for (int i = 3; i > -1; --i) // 4 digits backwards
     {
@@ -137,24 +137,24 @@ void burn7seg_digits()
 
     /* Decimal unsigned */
     for (int i = 0; i < 256; ++i)
-        write_digit(i, "%4d");
+        write_digit(i, PSTR("%4d"));
 
 
     /* Decimal signed - positive part */
     for (int i = 0; i < 128; ++i)
-        write_digit(i, "%4d");
+        write_digit(i, PSTR("%4d"));
 
     /* Decimal signed - negative part */
     for (int i = -128; i < 0; ++i)
-        write_digit(i, "%4d");
+        write_digit(i, PSTR("%4d"));
 
 
     /* Hex */
     for (int i = 0; i < 256; ++i)
-        write_digit(i, "%4X");
+        write_digit(i, PSTR("%4X"));
 
 
     /* Oct */
     for (int i = 0; i < 256; ++i)
-        write_digit(i, "%4o");
+        write_digit(i, PSTR("%4o"));
 }
