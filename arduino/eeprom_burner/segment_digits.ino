@@ -98,9 +98,6 @@ void write_digit(int value, const char *format)
         eeprom_write(output_address, encode_digit(output[i]));
         ++output_address;
     }
-    /* Add newline after writes */
-    if ((output_address & 0x0F) == 0)
-        Serial.println();
 }
 
 

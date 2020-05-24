@@ -25,6 +25,10 @@ void loop()
     {
         eeprom_read_contents();
     }
+    else if (command.equals("erase"))
+    {
+        eeprom_erase_all();
+    }
     else if (command.equals("addr"))
     {
         test_send_inc();
