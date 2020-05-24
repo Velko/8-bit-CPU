@@ -34,7 +34,7 @@ void eeprom_setup()
     SPI.begin();
     SPI.setDataMode(SPI_MODE0);
     SPI.setBitOrder(MSBFIRST);
-    SPI.setClockDivider(SPI_CLOCK_DIV64);
+    SPI.setClockDivider(SPI_CLOCK_DIV128);
 }
 
 void eeprom_set_address(uint16_t addr, bool w)
@@ -124,7 +124,9 @@ uint8_t eeprom_read(uint16_t addr)
     eeprom_config_pins_read(); /* Set as inputs */
     eeprom_set_address(addr, false); /* Also enables EEPROMs output */
 
-    delay(1); /* pause for EEPROM (actually - no idea how long) */
+    /* pause for EEPROM. Worst case scenario - it takes 250 ns to settle.
+       So 1 uS (1000 ns) should be enough */
+    delayMicroseconds(1);
 
     uint8_t rbyte = 0;
 
