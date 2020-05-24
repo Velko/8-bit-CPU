@@ -62,10 +62,39 @@ void eeprom_set_address(uint16_t addr, bool w)
        but we can just send both bytes seperately */
     SPI.transfer((addr >> 8) & 0xFF);
     SPI.transfer(addr & 0xFF);
-    
+
 }
 
 void eeprom_write(uint16_t addr, uint8_t value)
+{
+    uint8_t old_value = eeprom_read(addr);
+
+    /* Only if new value differs */
+    if (old_value != value)
+    {
+        eeprom_peform_write(addr, value);
+
+        for (int retry = 0; retry < 5 ; ++retry)
+        {
+            delay(2);
+            uint8_t readback = eeprom_read(addr);
+
+            if (readback == value)
+            {
+                /* Success. */
+                Serial.print('+');
+                return;
+            }
+        }
+        /* Failed */
+        Serial.print('!');
+        return;
+    }
+    /* Same value */
+    Serial.print('.');
+}
+
+void eeprom_peform_write(uint16_t addr, uint8_t value)
 {
     eeprom_config_pins_read(); /* To be sure, set as inputs */
     eeprom_set_address(addr, true); /* EEPROM as input */
@@ -85,10 +114,9 @@ void eeprom_write(uint16_t addr, uint8_t value)
     delayMicroseconds(1);
     digitalWrite(EE_WRITE, HIGH);
 
-    /* Wait until data reads back correctly */
+    /* Switch back to inputs as soon as possible:
+       let EEPROM control data lines */
     eeprom_config_pins_read();
-    delay(2);
-    //while (eeprom_read(addr) != value);
 }
 
 uint8_t eeprom_read(uint16_t addr)
@@ -96,7 +124,7 @@ uint8_t eeprom_read(uint16_t addr)
     eeprom_config_pins_read(); /* Set as inputs */
     eeprom_set_address(addr, false); /* Also enables EEPROMs output */
 
-    delay(1);
+    delay(1); /* pause for EEPROM (actually - no idea how long) */
 
     uint8_t rbyte = 0;
 
@@ -113,7 +141,7 @@ void eeprom_read_contents()
 {
     char buff[8];
 
-    for (uint16_t addr = 0; addr < (8 * 1024); ++addr)
+    for (uint16_t addr = 0; addr < (4 * 1024); ++addr)
     {
         uint8_t value = eeprom_read(addr);
 

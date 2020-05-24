@@ -88,35 +88,6 @@ uint8_t encode_digit(char c)
 
 uint16_t output_address;
 
-void write_eeprom(uint16_t addr, uint8_t value)
-{
-    eeprom_write(addr, value);
-    /* Just output back the writes for now */
-    char buff[8];
-
-    /* Print address when starting with each 16-th byte */
-    if ((addr & 0x0F) == 0)
-    {
-        sprintf_P(buff, PSTR("%04X  "), addr);
-        Serial.print(buff);
-    }
-
-    /* Output the byte */
-    sprintf_P(buff, PSTR("%02X "), value);
-    Serial.print(buff);
-
-    /* Newline after 16 bytes */
-    if ((addr & 0x0F) == 0x0F)
-    {
-        Serial.println();
-        return;
-    }
-
-    /* Add extra space after first 8 bytes */
-    if ((addr & 0x07) == 0x07)
-        Serial.print(F(" "));
-}
-
 void write_digit(int value, const char *format)
 {
     char output[5]; // 4 digits + \n
@@ -124,9 +95,12 @@ void write_digit(int value, const char *format)
 
     for (int i = 3; i > -1; --i) // 4 digits backwards
     {
-        write_eeprom(output_address, encode_digit(output[i]));
+        eeprom_write(output_address, encode_digit(output[i]));
         ++output_address;
     }
+    /* Add newline after writes */
+    if ((output_address & 0x0F) == 0)
+        Serial.println();
 }
 
 
