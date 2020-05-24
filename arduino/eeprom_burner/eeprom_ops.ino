@@ -30,7 +30,7 @@ void eeprom_write(uint16_t addr, uint8_t value)
 
 format_line:
     /* Add newline after writes */
-    if ((addr & 0x0F) == 0)
+    if ((addr & 0x0F) == 0x0F)
         Serial.println();
 }
 
