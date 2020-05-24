@@ -4,14 +4,14 @@
     Please ensure that each bit is mapped to EEPROMs data line connected to the segment.
     The exact wiring sequence is not important, as long as it is accurately described here.
  */
-#define SEG_BIT_A       (1 << 0)
-#define SEG_BIT_B       (1 << 1)
+#define SEG_BIT_A       (1 << 5)
+#define SEG_BIT_B       (1 << 4)
 #define SEG_BIT_C       (1 << 2)
-#define SEG_BIT_D       (1 << 3)
-#define SEG_BIT_E       (1 << 4)
-#define SEG_BIT_F       (1 << 5)
-#define SEG_BIT_G       (1 << 6)
-#define SEG_BIT_DOT     (1 << 7)
+#define SEG_BIT_D       (1 << 1)
+#define SEG_BIT_E       (1 << 0)
+#define SEG_BIT_F       (1 << 6)
+#define SEG_BIT_G       (1 << 7)
+#define SEG_BIT_DOT     (1 << 3)
 
 /* Segments:
 
@@ -90,6 +90,7 @@ uint16_t output_address;
 
 void write_eeprom(uint16_t addr, uint8_t value)
 {
+    eeprom_write(addr, value);
     /* Just output back the writes for now */
     char buff[8];
 

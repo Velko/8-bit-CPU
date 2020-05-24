@@ -6,6 +6,7 @@
 
 void setup()
 {
+    eeprom_setup();
     Serial.begin(9600);
     Serial.println(F("EEPROM burner utility"));
 }
@@ -19,6 +20,14 @@ void loop()
     if (command.equals("digits"))
     {
         burn7seg_digits();
+    }
+    else if (command.equals("read"))
+    {
+        eeprom_read_contents();
+    }
+    else if (command.equals("addr"))
+    {
+        test_send_inc();
     }
     else if (command.equals("help"))
     {
