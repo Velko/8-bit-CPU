@@ -7,6 +7,8 @@
 /* WE pin */
 #define EE_WRITE    SCL
 
+/* Address latch */
+#define SH_LATCH    SDA
 
 /* Pins for data IO. LSB first */
 const int DATA_PINS[] = {6, 7, 8, 9,
@@ -28,13 +30,16 @@ void eeprom_setup()
     digitalWrite(EE_WRITE, HIGH);
     pinMode(EE_WRITE, OUTPUT);
 
+    pinMode(SH_LATCH, OUTPUT);
+    digitalWrite(SH_LATCH, LOW);
+
     eeprom_config_pins_read();
 
     /* The "old" SPI initialization sequence (I like this one better)*/
     SPI.begin();
     SPI.setDataMode(SPI_MODE0);
     SPI.setBitOrder(MSBFIRST);
-    SPI.setClockDivider(SPI_CLOCK_DIV128);
+    SPI.setClockDivider(SPI_CLOCK_DIV32);
 }
 
 void eeprom_set_address(uint16_t addr, bool w)
@@ -42,20 +47,11 @@ void eeprom_set_address(uint16_t addr, bool w)
     /* Use last bit in the address to set OE pin.
        We want EEPROM to output data when we want to read, so then we should
        pull the pin low. When we are writing the data, we should keep the pin
-       high. Note that we can not really reach Q7 output of second shift register
-       as it requires an additional tick. But we can use Q6 output.
+       high.
      */
     if (w)
-        addr |= 0x4000;
+        addr |= 0x8000;
 
-
-    /* Shift register we're using (74HC594) buffers the values
-       for one clock tick, so it requires an extra clock pulse
-       until it reaches desired output pin. Since we do not need
-       all 16 bits, the simplest solution is to add extra bit to
-       the address. */
-
-    addr <<= 1;
 
     SPI.begin();
     /* Older versions of Arduino Lib does not have SPI.transfer16(),
@@ -63,6 +59,10 @@ void eeprom_set_address(uint16_t addr, bool w)
     SPI.transfer((addr >> 8) & 0xFF);
     SPI.transfer(addr & 0xFF);
 
+    /* Address is shifted in, latch address lines */
+    digitalWrite(SH_LATCH, HIGH);
+    delayMicroseconds(1);
+    digitalWrite(SH_LATCH, LOW);
 }
 
 void eeprom_peform_write(uint16_t addr, uint8_t value)
@@ -109,4 +109,3 @@ uint8_t eeprom_read(uint16_t addr)
 
     return rbyte;
 }
-
