@@ -28,6 +28,7 @@ void reg_prepare_in()
     for (int i = 0; i < 8 ; ++i)
     {
         pinMode(REG_DATA_PINS[i], INPUT);
+        digitalWrite(REG_DATA_PINS[i], HIGH);
     }
 }
 
