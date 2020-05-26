@@ -19,6 +19,10 @@ void loop()
     {
         display_test();
     }
+    if (command.equals("register"))
+    {
+        register_test();
+    }
     else if (command.equals("help"))
     {
         display_help();
