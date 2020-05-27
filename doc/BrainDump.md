@@ -8,25 +8,7 @@ Random thoughts
 * MAR can be either simple latch register or use same as for PC. It might be useful to have a simple
   feature to advance to next address. Could be useful when loading initial memory contents.
 
-What about creating an input device that scans 4x4 array of buttons. Use ready-made 4x4 keypad
-matrix. May need to re-label it for hex digit input.
 
-Clock + 4-bit counter, 2-to-4 decoder, 4 ANDs, Quad-OR can detect key-press. 2x 4-bit registers, to
-latch in the value. Evaluate if it is possible to move current values from A to B while loading new
-into A. Also need a way to get single clock pulse when key detected (wasn't there something in the
-Bens videos???).
-
-
-TS555 chips (all 3 if them) that I had at home proved to be unstable - changed the oscillating
-frequency wildly, I suspect they picked up some ambient EM noise or something, because touching
-various parts (chip itself, capacitors) of the board triggered/cancelled it. Another power supply
-or added decoupling capacitors did not help. Not sure whats wrong with them. Newly ordered LM555s
-seem to work fine.
-
-
-Solved: I forgot to wire up RESET pin, but since TS555 is a CMOS one, floating input pins are
-unpredictable. Actually - since the whole build is with HC chips, I should probably stick to
-these.
 
 
 There are also 556 dual timer, that might be nice for the clock. And there are TLC551 and TLC556
@@ -38,7 +20,55 @@ interpreter appears to be a bit complicated to write.
 
 
 
+Notes for blog
+==============
 
+
+* what was at home
+* 7-segment display tests
+    * additional tools
+    * Rants about IDE
+    * LOL from Arduino
+
+
+* ordering and delivery
+    * parts list
+    * warehouse rules
+    * delivery speed
+    * substitutions
+
+
+* building clock
+    * TS555 chips (all 3 if them) that I had at home proved to be unstable - changed the oscillating
+      frequency wildly, I suspect they picked up some ambient EM noise or something, because
+      touching various parts (chip itself, capacitors) of the board triggered/cancelled it. Another
+      power supply or added decoupling capacitors did not help. Not sure whats wrong with them.
+      Newly ordered LM555s seem to work fine.
+    * Solved: I forgot to wire up RESET pin, but since TS555 is a CMOS one, floating input pins are
+      unpredictable. Actually - since the whole build is with HC chips, I should probably stick to
+      these.
+    * thoughts about unhalting
+    * The toggle switch I ordered is not what I ment, but still would work with SR latch
+      will not stay in the breadboard tho. Using a jumper and 3 pins instead.
+    * Ampermeter burnout and current / voltage worries
+    * Innovation with NOR gates
+
+* building display
+    * use clock module temporarly
+    * testing using Arduino
+    * switch to standalone 555 and flickering
+
+* EEPROM burner
+    * substitute shifter
+    * Barely fits - actually doesn't. Relocate to bigger breadboard.
+    * thoughts about address lines (crazy layout)
+    * Shift using SPI
+    * something's unstable. Decoupling
+    * converting to separate latch signal
+
+* Register
+    * Moving the LEDs
+    * Testing from Arduino - read back issues / pull-ups
 
 
 Far future
@@ -83,11 +113,13 @@ Needed features:
 * (optional) load conents from address pointed by B into A
 
 
-Potential input device - a 4+1 keyboard ( keys for base-4 input + enter) combined with 7-seg output
-display. Next version!
+What about creating an input device that scans 4x4 array of buttons. Use ready-made 4x4 keypad
+matrix. May need to re-label it for hex digit input.
 
-If 4x4 input device turned out nice, can combine it with display.
-
+Clock + 4-bit counter, 2-to-4 decoder, 4 ANDs, Quad-OR can detect key-press. 2x 4-bit registers, to
+latch in the value. Evaluate if it is possible to move current values from A to B while loading new
+into A. Also need a way to get single clock pulse when key detected (wasn't there something in the
+Bens videos???).
 
 
 
