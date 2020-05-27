@@ -33,6 +33,9 @@ There are also 556 dual timer, that might be nice for the clock. And there are T
 versions - single and dual.
 
 
+Consider writing a Python clients for Arduino-based tools, as full-featured onboard command
+interpreter appears to be a bit complicated to write.
+
 
 
 
