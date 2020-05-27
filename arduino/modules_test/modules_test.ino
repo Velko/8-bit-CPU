@@ -6,30 +6,27 @@
 void setup()
 {
     Serial.begin(9600);
-    Serial.println(F("Testing utility"));
 }
 
 void loop()
 {
-    String command = Serial.readStringUntil('\n');
+    int cmd = Serial.read();
 
-    if (command.length() == 0) return;
+    if (cmd < 0) return;
 
-    if (command.equals("display"))
+    switch (cmd)
     {
+    case 'I':
+          Serial.println(F("MTEST"));
+          break;
+    case 'd':
         display_test();
-    }
-    if (command.equals("register"))
-    {
+        break;
+    case 'r':
         register_test();
-    }
-    else if (command.equals("help"))
-    {
-        display_help();
-    }
-    else
-    {
+        break;
+    default:
         Serial.println(F("Unknown command!"));
-        Serial.println(F("help - list available commands"));
+        break;
     }
 }
