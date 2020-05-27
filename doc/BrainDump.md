@@ -17,6 +17,26 @@ into A. Also need a way to get single clock pulse when key detected (wasn't ther
 Bens videos???).
 
 
+TS555 chips (all 3 if them) that I had at home proved to be unstable - changed the oscillating
+frequency wildly, I suspect they picked up some ambient EM noise or something, because touching
+various parts (chip itself, capacitors) of the board triggered/cancelled it. Another power supply
+or added decoupling capacitors did not help. Not sure whats wrong with them. Newly ordered LM555s
+seem to work fine.
+
+
+Solved: I forgot to wire up RESET pin, but since TS555 is a CMOS one, floating input pins are
+unpredictable. Actually - since the whole build is with HC chips, I should probably stick to
+these.
+
+
+There are also 556 dual timer, that might be nice for the clock. And there are TLC551 and TLC556
+versions - single and dual.
+
+
+
+
+
+
 
 Far future
 ==========
