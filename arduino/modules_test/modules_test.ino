@@ -24,6 +24,14 @@ void loop()
     case 'd':
         display_loop();
         break;
+    case 'D':
+        val = Serial.parseInt();
+        display_output(val);
+        break;
+    case 'm':
+        val = Serial.parseInt();
+        display_set_mode(val);
+        break;
     case 'r':
         register_loop();
         break;

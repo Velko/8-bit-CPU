@@ -21,6 +21,15 @@ class TesterClient(cmd.Cmd):
         'Test display'
         send_cmd('d')
 
+    def do_set_display(self, arg):
+        'Put a value on display'
+        send_cmd("D{}".format(arg))
+
+    def do_set_display_mode(self, arg):
+        'Switch display mode'
+        send_cmd("m{}".format(arg))
+
+
 
 
 def listen_responses():
