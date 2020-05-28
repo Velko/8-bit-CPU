@@ -13,9 +13,10 @@ void pulse_clock()
     digitalWrite(REG_CLK, LOW);
 }
 
-
-void register_test()
+void register_setup()
 {
+    /* Default "inactive" position */
+
     digitalWrite(REG_CLK, LOW);
     pinMode(REG_CLK, OUTPUT);
 
@@ -24,6 +25,31 @@ void register_test()
 
     digitalWrite(REG_OUT, HIGH);
     pinMode(REG_OUT, OUTPUT);
+}
+
+
+void register_write(uint8_t value)
+{
+    reg_bus.write(value);
+    digitalWrite(REG_LOAD, LOW);
+    pulse_clock();
+    digitalWrite(REG_LOAD, HIGH);
+}
+
+uint8_t register_read()
+{
+    reg_bus.set_input();
+    digitalWrite(REG_OUT, LOW);
+    delay(50);
+    uint8_t value = reg_bus.read();
+    digitalWrite(REG_OUT, HIGH);
+
+    return value;
+}
+
+void register_test()
+{
+    register_setup();
 
     for (;;)
     {
@@ -31,17 +57,11 @@ void register_test()
         {
             Serial.print(i);
             Serial.print(" ");
-            reg_bus.write(i);
-            digitalWrite(REG_LOAD, LOW);
-            pulse_clock();
-            digitalWrite(REG_LOAD, HIGH);
+
+            register_write(i);
             delay(250);
 
-            reg_bus.set_input();
-            digitalWrite(REG_OUT, LOW);
-            delay(250);
-            uint8_t readback = reg_bus.read();
-            digitalWrite(REG_OUT, HIGH);
+            uint8_t readback = register_read();
             Serial.print(readback);
             if (readback == i)
               Serial.println("   OK");
