@@ -22,7 +22,7 @@ void loop()
           Serial.println(F("MTEST"));
           break;
     case 'd':
-        display_test();
+        display_loop();
         break;
     case 'r':
         register_loop();

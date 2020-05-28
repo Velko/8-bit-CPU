@@ -17,7 +17,7 @@ class TesterClient(cmd.Cmd):
         'Send value to register'
         send_cmd("R{}".format(arg))
 
-    def do_display(self, arg):
+    def do_loop_display(self, arg):
         'Test display'
         send_cmd('d')
 
