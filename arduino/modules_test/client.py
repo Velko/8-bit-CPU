@@ -9,9 +9,13 @@ class TesterClient(cmd.Cmd):
         ser.close()
         sys.exit(0)
 
-    def do_register(self, arg):
+    def do_loop_reg(self, arg):
         'Test register module'
         send_cmd('r')
+
+    def do_set_reg(self, arg):
+        'Send value to register'
+        send_cmd("R{}".format(arg))
 
     def do_display(self, arg):
         'Test display'

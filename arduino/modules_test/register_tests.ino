@@ -47,7 +47,7 @@ uint8_t register_read()
     return value;
 }
 
-void register_test()
+void register_loop()
 {
     register_setup();
 

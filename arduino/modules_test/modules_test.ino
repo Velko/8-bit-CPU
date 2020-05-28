@@ -14,6 +14,8 @@ void loop()
 
     if (cmd < 0) return;
 
+    uint8_t val = 0;
+
     switch (cmd)
     {
     case 'I':
@@ -23,7 +25,12 @@ void loop()
         display_test();
         break;
     case 'r':
-        register_test();
+        register_loop();
+        break;
+    case 'R':
+        val = Serial.parseInt();
+        register_setup();
+        register_write(val);
         break;
     default:
         Serial.println(F("Unknown command!"));
