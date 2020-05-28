@@ -70,6 +70,11 @@ Notes for blog
     * Moving the LEDs
     * Testing from Arduino - read back issues / pull-ups
 
+* Migrating to Python command interpreter
+* Trying KiCad
+* Issues with multiple sketches in VSCode extension - verify + upload
+
+
 
 Far future
 ==========
