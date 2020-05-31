@@ -70,6 +70,15 @@ Notes for blog
     * Moving the LEDs
     * Testing from Arduino - read back issues / pull-ups
 
+* Counter
+    * more versatile (8-bit, up / down)
+    * issues with reset
+    * missing edge detector
+    * inverse clock also useful, could save one NOR gate
+    * probably needed some NANDs as well
+
+* Wire up
+    * Clock, counter, display
 
 Far future
 ==========
