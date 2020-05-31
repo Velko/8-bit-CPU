@@ -33,6 +33,11 @@ void register_write(uint8_t value)
     reg_bus.write(value);
     digitalWrite(REG_LOAD, LOW);
     pulse_clock();
+    // Emulate bus changes before LOAD is released
+    // but since register should latch the value on
+    // clock pulse - it should not affect it anymore
+    reg_bus.write(~value);
+    delay(1);
     digitalWrite(REG_LOAD, HIGH);
 }
 
