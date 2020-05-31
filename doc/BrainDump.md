@@ -57,6 +57,7 @@ Notes for blog
     * use clock module temporarly
     * testing using Arduino
     * switch to standalone 555 and flickering
+    * http://www.ohmslawcalculator.com/555-astable-calculator
 
 * EEPROM burner
     * substitute shifter
@@ -80,6 +81,7 @@ Notes for blog
     * missing edge detector
     * inverse clock also useful, could save one NOR gate
     * probably needed some NANDs as well
+    * https://logic.ly/demo
 
 * Wire up
     * Clock, counter, display
