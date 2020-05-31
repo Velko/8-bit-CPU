@@ -37,3 +37,12 @@ Clock:   Arduino 11                        -> 74HC191 14 (rightmost chip)
 Reset:                                     -> 74HC02  5 (active high)
 Up/Down:                                   -> 74HC191 5
 Count:                                     -> 74HC191 4
+
+Display
+=======
+
+Wiring
+------
+
+Bus:     Arduino (9, 8, 7, 6, 5, 4, 2, 3) -> AT28C64 (8, 7, 6, 5, 4, 3, 25, 24)
+Mode:    Arduino (23, 21)                 -> AT28C64 (13, 12)
