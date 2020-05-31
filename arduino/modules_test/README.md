@@ -32,8 +32,8 @@ Wiring
 
 Bus:     Arduino (9, 8, 7, 6, 5, 4, 3, 2) <-> 74HC245 (11, 12, 13, 14, 15, 16, 17, 18)
 Out:     Arduino 12                        -> 74HC245 19
-Load:    Arduino 13                        -> 74HC191 11
+Load:    Arduino 13                        -> 74HC02  3
 Clock:   Arduino 11                        -> 74HC191 14 (rightmost chip)
-Reset:                                     -> None
+Reset:                                     -> 74HC02  5 (active high)
 Up/Down:                                   -> 74HC191 5
 Count:                                     -> 74HC191 4
