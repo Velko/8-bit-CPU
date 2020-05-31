@@ -40,6 +40,9 @@ void loop()
         register_setup();
         register_write(val);
         break;
+    case 'c':
+        counter_loop();
+        break;
     default:
         Serial.println(F("Unknown command!"));
         break;

@@ -29,7 +29,8 @@ class TesterClient(cmd.Cmd):
         'Switch display mode'
         send_cmd("m{}".format(arg))
 
-
+    def do_loop_counter(self, arg):
+        send_cmd('c')
 
 
 def listen_responses():
