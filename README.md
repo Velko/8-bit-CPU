@@ -28,6 +28,7 @@ Up until now I was just dreaming about it. But I have to write my ideas down som
 * Decided on overall design
 * Compiled list of modules and parts for first experiments, placed an order with my favorite supplier
 * Found Arduino, breadboard and few 7-segment displays at home. Time to practice!
+* Built breadboard prototypes for Clock, Register, Counter, Display and EEPROM burner
 
 
 
