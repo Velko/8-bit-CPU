@@ -9,6 +9,9 @@ Random thoughts
   feature to advance to next address. Could be useful when loading initial memory contents.
 
 
+* What about going straight for full 8-bit addressing? And 2-byte instructions? Could get 64 or
+  so instructions + more memory
+* Can we make switchable RAM/ROM storage for programs???
 
 
 There are also 556 dual timer, that might be nice for the clock. And there are TLC551 and TLC556
@@ -17,6 +20,9 @@ versions - single and dual.
 
 Consider writing a Python clients for Arduino-based tools, as full-featured onboard command
 interpreter appears to be a bit complicated to write.
+
+
+To brighten up the displays, MIC2981/2982 alonf with ULN2003 might be useful.
 
 
 
@@ -58,6 +64,7 @@ Notes for blog
     * testing using Arduino
     * switch to standalone 555 and flickering
     * http://www.ohmslawcalculator.com/555-astable-calculator
+    * brightening plans (darlingtons ???)
 
 * EEPROM burner
     * substitute shifter
@@ -82,9 +89,21 @@ Notes for blog
     * inverse clock also useful, could save one NOR gate
     * probably needed some NANDs as well
     * https://logic.ly/demo
+    * worries about RC edge detector
 
 * Wire up
     * Clock, counter, display
+
+* Order 2
+    * Ran out of breadboards
+    * 556, NANDs, breadboards
+    * do I needed to order JK flip-flops as well?
+
+* ALU
+    * Lots of wiring
+    * miswired b1 (same as carry in) for H adder chip
+
+
 
 Far future
 ==========
