@@ -10,7 +10,7 @@ class Counter : public Register
         virtual void MoveNext();
 
     protected:
-        void advance(bool active_high);
+        virtual void set_count_enable(bool enabled);
 };
 
 

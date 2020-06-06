@@ -13,11 +13,17 @@ void UpDownCounter::setup()
 void UpDownCounter::MoveNext()
 {
     digitalWrite(PIN_UP_DOWN, LOW);
-    advance(false);
+    Counter::MoveNext();
 }
 
 void UpDownCounter::MovePrev()
 {
     digitalWrite(PIN_UP_DOWN, HIGH);
-    advance(false);
+    Counter::MoveNext();
+}
+
+void UpDownCounter::set_count_enable(bool enabled)
+{
+    // UpDownCounter is active low
+    Counter::set_count_enable(!enabled);
 }

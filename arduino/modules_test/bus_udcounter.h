@@ -9,6 +9,9 @@ class UpDownCounter : public Counter
         void setup() override;
         void MoveNext() override;
         void MovePrev();
+    protected:
+        void set_count_enable(bool enabled) override;
+
 };
 
 

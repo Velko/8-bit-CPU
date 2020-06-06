@@ -10,19 +10,24 @@ void Counter::setup()
 {
     Register::setup();
 
-    digitalWrite(PIN_COUNT, LOW);
+    set_count_enable(false);
     pinMode(PIN_COUNT, OUTPUT);
 }
 
 void Counter::MoveNext()
 {
-    advance(true);
-}
-
-void Counter::advance(bool active_high)
-{
-    digitalWrite(PIN_COUNT, active_high ? HIGH : LOW);
+    set_count_enable(true);
     delayMicroseconds(10);
     clock.pulse();
-    digitalWrite(PIN_COUNT, active_high ? LOW : HIGH);
+    set_count_enable(false);
+
+    // additional pulses to see if CE
+    // really works
+    clock.pulse();
+    clock.pulse();
+}
+
+void Counter::set_count_enable(bool enabled)
+{
+    digitalWrite(PIN_COUNT, enabled ? HIGH : LOW);
 }
