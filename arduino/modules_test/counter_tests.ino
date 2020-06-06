@@ -1,15 +1,15 @@
-#include "bus_register.h"
+#include "bus_counter.h"
 
-extern Register reg;
+Counter cnt;
 
 void counter_loop()
 {
-    reg.setup();
+    cnt.setup();
 
     for(;;)
     {
-        //reg.pulse_clock();
-        uint8_t val = reg.read();
+        cnt.MoveNext();
+        uint8_t val = cnt.read();
         Serial.println(val);
         delay(100);
     }
