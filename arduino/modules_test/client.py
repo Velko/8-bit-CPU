@@ -52,19 +52,19 @@ class TesterClient(cmd.Cmd):
 
 def listen_responses():
     while ser.is_open:
-        line = ser.readline().decode('ascii').strip()
-        if line:
-            print(line)
+        chr = ser.read().decode('ascii')
+        print(chr, end='', flush=True)
 
 def send_cmd(cmd):
     ser.write(cmd.encode("ascii"))
     ser.flush()
 
 def identify_device():
-    ser.read_all()
-    send_cmd('I')
-    devid = ser.readline().decode('ascii').strip()
-    print (devid)
+    pass
+#    ser.read_all()
+#    send_cmd('I')
+#    devid = ser.readline().decode('ascii').strip()
+#    print (devid)
 #    if devid != "MTEST":
 #        raise Exception("Device is not a Modules Tester")
 

@@ -27,25 +27,34 @@ void register_demo()
     }
 }
 
+void reg_load_store_output(Register *r, int repeats);
+
 void register_tests()
 {
-    reg_load_store_output(&reg);
+    reg_load_store_output(&reg, 1000);
 }
 
-void reg_load_store_output(Register *r)
+void reg_load_store_output(Register *r, int repeats)
 {
-    Serial.print(F("Load-store-output... "));
-    for (int i = 1; i < 256; i <<= 1)
-    {
-        r->write(i);
-        delay(1);
-        uint8_t readback = r->read();
+    r->setup();
 
-        if (readback != i)
+    Serial.print(F("Load-store-output"));
+    for (int pass = 0; pass < repeats; ++pass)
+    {
+        if (pass % 50 == 0)
+            Serial.print('.');
+        for (int i = 1; i < 256; i <<= 1)
         {
-            Serial.print(F("ERR "));
-            Serial.println(i);
-            return;
+            r->write(i);
+            delayMicroseconds(10);
+            uint8_t readback = r->read();
+
+            if (readback != i)
+            {
+                Serial.print(F("ERR "));
+                Serial.println(i);
+                return;
+            }
         }
     }
     Serial.println(F("OK"));

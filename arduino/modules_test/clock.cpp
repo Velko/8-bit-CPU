@@ -14,6 +14,6 @@ void Clock::setup()
 void Clock::pulse()
 {
     digitalWrite(PIN_CLK, HIGH);
-    delay(100);
+    delayMicroseconds(10);
     digitalWrite(PIN_CLK, LOW);
 }

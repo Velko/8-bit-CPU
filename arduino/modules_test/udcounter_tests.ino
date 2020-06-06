@@ -15,18 +15,21 @@ void down_count_demo()
     }
 }
 
+void reg_load_store_output(Register *r, int repeats);
+void test_count_up(Counter *c, int repeats);
 void test_count_down(UpDownCounter *c);
 
 
 void udcounter_tests()
 {
-    reg_load_store_output(&udc);
-    test_count_up(&udc);
+    reg_load_store_output(&udc, 1000);
+    test_count_up(&udc, 100);
     test_count_down(&udc);
 }
 
 void test_count_down(UpDownCounter *c)
 {
+    c->setup();
     Serial.print(F("Count down... "));
     c->write(0);
     for (int i = 511; i >= 0; --i)
@@ -39,7 +42,7 @@ void test_count_down(UpDownCounter *c)
             return;
         }
         c->MovePrev();
-        delay(1);
+        delayMicroseconds(10);
     }
     Serial.println(F("OK"));
 }

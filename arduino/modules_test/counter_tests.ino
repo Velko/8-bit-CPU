@@ -15,30 +15,37 @@ void counter_demo()
     }
 }
 
-void test_count_up(Counter *c);
+void test_count_up(Counter *c, int repeats);
+void reg_load_store_output(Register *r, int repeats);
 
 void counter_tests()
 {
-    reg_load_store_output(&cnt);
-    test_count_up(&cnt);
+    reg_load_store_output(&cnt, 1000);
+    test_count_up(&cnt, 100);
 }
 
 
-void test_count_up(Counter *c)
+void test_count_up(Counter *c, int repeats)
 {
-    Serial.print(F("Count up... "));
+    c->setup();
+    Serial.print(F("Count up"));
     c->write(0);
-    for (int i = 0; i < 512; ++i)
+    for (int pass = 0; pass < repeats; ++pass)
     {
-        uint8_t val = c->read();
-        if (val != (uint8_t)i)
+        if ((pass % 4) == 0)
+            Serial.print('.');
+        for (int i = 0; i < 256; ++i)
         {
-            Serial.print(F("ERR "));
-            Serial.println(i);
-            return;
+            uint8_t val = c->read();
+            if (val != (uint8_t)i)
+            {
+                Serial.print(F("ERR "));
+                Serial.println(i);
+                return;
+            }
+            c->MoveNext();
+            delayMicroseconds(10);
         }
-        c->MoveNext();
-        delay(1);
     }
     Serial.println(F("OK"));
 }

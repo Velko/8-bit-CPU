@@ -22,7 +22,7 @@ void Counter::MoveNext()
 void Counter::advance(bool active_high)
 {
     digitalWrite(PIN_COUNT, active_high ? HIGH : LOW);
-    delay(1);
+    delayMicroseconds(10);
     clock.pulse();
     digitalWrite(PIN_COUNT, active_high ? LOW : HIGH);
 }
