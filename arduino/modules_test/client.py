@@ -9,16 +9,16 @@ class TesterClient(cmd.Cmd):
         ser.close()
         sys.exit(0)
 
-    def do_loop_reg(self, arg):
-        'Test register module'
+    def do_demo_register(self, arg):
+        'Demo register in a loop'
         send_cmd('r')
 
     def do_set_reg(self, arg):
         'Send value to register'
         send_cmd("R{}".format(arg))
 
-    def do_loop_display(self, arg):
-        'Test display'
+    def do_demo_display(self, arg):
+        'Demo display in a loop'
         send_cmd('d')
 
     def do_set_display(self, arg):
@@ -29,10 +29,12 @@ class TesterClient(cmd.Cmd):
         'Switch display mode'
         send_cmd("m{}".format(arg))
 
-    def do_loop_counter(self, arg):
+    def do_demo_counter(self, arg):
+        "Demonstrate counter (up)"
         send_cmd('c')
 
-    def do_loop_down(self, arg):
+    def do_demo_downcount(self, arg):
+        "Demonstrate counter (down)"
         send_cmd('u')
 
 

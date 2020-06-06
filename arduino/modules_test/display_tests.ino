@@ -2,7 +2,7 @@
 
 Display dsp;
 
-void display_loop()
+void display_demo()
 {
     dsp.setup();
 

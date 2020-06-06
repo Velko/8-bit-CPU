@@ -29,7 +29,7 @@ void loop()
           Serial.println(F("MTEST"));
           break;
     case 'd':
-        display_loop();
+        display_demo();
         break;
     case 'D':
         val = Serial.parseInt();
@@ -42,7 +42,7 @@ void loop()
         dsp.set_mode(val);
         break;
     case 'r':
-        register_loop();
+        register_demo();
         break;
     case 'R':
         val = Serial.parseInt();
@@ -50,10 +50,10 @@ void loop()
         reg.write(val);
         break;
     case 'c':
-        counter_loop();
+        counter_demo();
         break;
     case 'u':
-        down_count_loop();
+        down_count_demo();
         break;
     default:
         Serial.println(F("Unknown command!"));

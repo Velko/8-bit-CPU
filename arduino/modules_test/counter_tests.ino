@@ -4,7 +4,7 @@ Counter cnt;
 
 UpDownCounter udc;
 
-void counter_loop()
+void counter_demo()
 {
     cnt.setup();
 
@@ -17,7 +17,7 @@ void counter_loop()
     }
 }
 
-void down_count_loop()
+void down_count_demo()
 {
     udc.setup();
 

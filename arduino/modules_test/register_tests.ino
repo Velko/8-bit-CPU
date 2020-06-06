@@ -3,7 +3,7 @@
 
 Register reg;
 
-void register_loop()
+void register_demo()
 {
     reg.setup();
 
