@@ -12,12 +12,12 @@ void UpDownCounter::setup()
 
 void UpDownCounter::MoveNext()
 {
-    digitalWrite(PIN_UP_DOWN, HIGH);
-    Counter::MoveNext();
+    digitalWrite(PIN_UP_DOWN, LOW);
+    advance(false);
 }
 
 void UpDownCounter::MovePrev()
 {
-    digitalWrite(PIN_UP_DOWN, LOW);
-    Counter::MoveNext();
+    digitalWrite(PIN_UP_DOWN, HIGH);
+    advance(false);
 }

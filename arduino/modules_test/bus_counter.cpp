@@ -16,8 +16,13 @@ void Counter::setup()
 
 void Counter::MoveNext()
 {
-    digitalWrite(PIN_COUNT, HIGH);
+    advance(true);
+}
+
+void Counter::advance(bool active_high)
+{
+    digitalWrite(PIN_COUNT, active_high ? HIGH : LOW);
     delay(1);
     clock.pulse();
-    digitalWrite(PIN_COUNT, LOW);
+    digitalWrite(PIN_COUNT, active_high ? LOW : HIGH);
 }
