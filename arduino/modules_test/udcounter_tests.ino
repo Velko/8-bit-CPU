@@ -6,12 +6,21 @@ void down_count_demo()
 {
     udc.setup();
 
+    bool count_down = false;
+
     for(;;)
     {
-        udc.MovePrev();
+        if (count_down)
+            udc.MovePrev();
+        else
+            udc.MoveNext();
+
         uint8_t val = udc.read();
         Serial.println(val);
         delay(100);
+
+        if (val == 0) count_down = false;
+        if (val == 255) count_down = true;
     }
 }
 
