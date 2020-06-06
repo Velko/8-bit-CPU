@@ -1,10 +1,12 @@
 #ifndef CLOCK_H
 #define CLOCK_H
 
-class Clock
+#include "ext_device.h"
+
+class Clock : public ExternalDevice
 {
     public:
-        void setup();
+        void setup() override;
         void pulse();
 };
 

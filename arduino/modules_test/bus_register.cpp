@@ -13,7 +13,6 @@ Register::Register()
 
 void Register::setup()
 {
-    BusDevice::setup();
     clock.setup();
 
     digitalWrite(PIN_LOAD, HIGH);
