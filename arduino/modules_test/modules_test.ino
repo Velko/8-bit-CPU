@@ -3,6 +3,11 @@
  */
 
 
+#include "bus_device.h"
+
+extern BusDevice reg;
+
+
 void setup()
 {
     Serial.begin(9600);
@@ -37,8 +42,8 @@ void loop()
         break;
     case 'R':
         val = Serial.parseInt();
-        register_setup();
-        register_write(val);
+        reg.setup();
+        reg.write(val);
         break;
     case 'c':
         counter_loop();

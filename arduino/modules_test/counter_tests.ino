@@ -1,14 +1,14 @@
-#include <iobus.h>
+#include "bus_device.h"
 
-
+extern BusDevice reg;
 
 void counter_loop()
 {
-    register_setup();
+    reg.setup();
 
     for(;;)
     {
-        pulse_clock();
+        reg.pulse_clock();
         uint8_t val = register_read();
         Serial.println(val);
         delay(100);
