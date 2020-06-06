@@ -9,7 +9,11 @@ Random thoughts
   feature to advance to next address. Could be useful when loading initial memory contents.
 
 
+* What about going straight for full 8-bit addressing? And 2-byte instructions? Could get 64 or
+  so instructions + more memory
+* Can we make switchable RAM/ROM storage for programs???
 
+We can combine 2 138s to get 4-to-16 line decoder, using enable pins
 
 There are also 556 dual timer, that might be nice for the clock. And there are TLC551 and TLC556
 versions - single and dual.
@@ -17,6 +21,47 @@ versions - single and dual.
 
 Consider writing a Python clients for Arduino-based tools, as full-featured onboard command
 interpreter appears to be a bit complicated to write.
+
+
+To brighten up the displays, MIC2981/2982 alonf with ULN2003 might be useful.
+
+
+Flags:
+* Carry - available immediately
+* Zero  - NORing + ANDing
+* Negative - available immediately
+* Overflow - XORing and stuff
+
+C, Z, N, O flags gives us same branching opportunities as AVR architecture
+
+Calculating O flag:
+http://teaching.idallen.com/dat2343/10f/notes/040_overflow.txt
+
+!(a xor b) and (a xor s)
+
+
+Zero:
+
+ s0 nor s1 | s2 nor s3 | s4 nor s5 | s6 nor s7
+          and          |          and
+                      and
+
+Overflow:
+
+ a7 xor b7 |     1     |  a7 xor s7
+          xor          |
+                      and
+
+https://www.dcode.fr/boolean-expressions-calculator
+
+
+Expanded arch:
+64 instructions - 6 bits
+ 8 stages       - 3 bits
+ 4 flags        - 4 bits
+---------------------------
+                 13 bits  = 28C64 EEPROM
+                 no room for word select
 
 
 
@@ -58,6 +103,7 @@ Notes for blog
     * testing using Arduino
     * switch to standalone 555 and flickering
     * http://www.ohmslawcalculator.com/555-astable-calculator
+    * brightening plans (darlingtons ???)
 
 * EEPROM burner
     * substitute shifter
@@ -75,16 +121,38 @@ Notes for blog
 * Trying KiCad
 * Issues with multiple sketches in VSCode extension - verify + upload
 
-* Counter
+* U/D Counter
     * more versatile (8-bit, up / down)
     * issues with reset
     * missing edge detector
     * inverse clock also useful, could save one NOR gate
     * probably needed some NANDs as well
     * https://logic.ly/demo
+    * worries about RC edge detector
 
 * Wire up
     * Clock, counter, display
+
+* Order 2
+    * Ran out of breadboards
+    * 556, NANDs, breadboards
+    * do I needed to order JK flip-flops as well?
+
+* ALU
+    * Lots of wiring
+    * miswired b1 (same as carry in) for H adder chip
+    * put everything together, run with counter as reference
+
+* Simple counter
+    * Decided to build simple counter as well
+
+* 4-to-16 decoder using 2x 3-to-8 decoders + using enable lines carefully
+    * POC build
+
+* Testing using Arduino
+    * U/D counter unstable when Arduino switches CE and U/D
+    * rewired to use parallel clock and ripple carry
+
 
 Far future
 ==========
