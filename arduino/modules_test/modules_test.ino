@@ -4,8 +4,10 @@
 
 
 #include "bus_register.h"
+#include "dev_display.h"
 
 extern Register reg;
+extern Display dsp;
 
 
 void setup()
@@ -31,11 +33,13 @@ void loop()
         break;
     case 'D':
         val = Serial.parseInt();
-        display_output(val);
+        dsp.setup();
+        dsp.write(val);
         break;
     case 'm':
         val = Serial.parseInt();
-        display_set_mode(val);
+        dsp.setup();
+        dsp.set_mode(val);
         break;
     case 'r':
         register_loop();
