@@ -33,10 +33,10 @@ Wiring
 
 Bus:   Arduino (9, 8, 7, 6, 5, 4, 3, 2) <-> 74HC245 (9, 8, 7, 6, 5, 4, 3, 2)
 Out:   Arduino 12                        -> 74HC245 19
-Load:    Arduino 13                        -> 74HC163 9
-Clock:   Arduino 11                        -> 74HC163 2
-Reset:                                     -> 74HC163 1 (active low, requires clock pulse)
-Count:                                     -> 74HC163 7
+Load:  Arduino 13                        -> 74HC163 9
+Clock: Arduino 11                        -> 74HC163 2
+Reset:                                   -> 74HC163 1 (active low, requires clock pulse)
+Count: Arduino SCL                       -> 74HC163 7
 
 
 
@@ -54,8 +54,8 @@ Out:     Arduino 12                        -> 74HC245 19
 Load:    Arduino 13                        -> 74HC02  3
 Clock:   Arduino 11                        -> 74HC191 14 (rightmost chip)
 Reset:                                     -> 74HC02  5 (active high)
-Up/Down:                                   -> 74HC191 5
-Count:                                     -> 74HC191 4
+Up/Down: Arduino SDA                       -> 74HC191 5
+Count:   Arduino SCL                       -> 74HC191 4
 
 Display
 =======
