@@ -64,4 +64,4 @@ Wiring
 ------
 
 Bus:     Arduino (9, 8, 7, 6, 5, 4, 2, 3) -> AT28C64 (8, 7, 6, 5, 4, 3, 25, 24)
-Mode:    Arduino (23, 21)                 -> AT28C64 (13, 12)
+Mode:    Arduino (13, 12)                 -> AT28C64 (23, 21)
