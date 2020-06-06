@@ -55,6 +55,15 @@ void loop()
     case 'u':
         down_count_demo();
         break;
+    case '1':
+        register_tests();
+        break;
+    case '2':
+        counter_tests();
+        break;
+    case '3':
+        udcounter_tests();
+        break;
     default:
         Serial.println(F("Unknown command!"));
         break;

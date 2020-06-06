@@ -37,6 +37,18 @@ class TesterClient(cmd.Cmd):
         "Demonstrate counter (down)"
         send_cmd('u')
 
+    def do_test_register(self, arg):
+        "Perform tests for latching register"
+        send_cmd('1')
+
+    def do_test_counter(self, arg):
+        "Perform tests for counting register"
+        send_cmd('2')
+
+    def do_test_udcounter(self, arg):
+        "Perform tests for up/down counting register"
+        send_cmd('3')
+
 
 def listen_responses():
     while ser.is_open:

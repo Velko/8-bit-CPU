@@ -25,5 +25,28 @@ void register_demo()
               Serial.println("   ERR");
         }
     }
+}
 
+void register_tests()
+{
+    reg_load_store_output(&reg);
+}
+
+void reg_load_store_output(Register *r)
+{
+    Serial.print(F("Load-store-output... "));
+    for (int i = 1; i < 256; i <<= 1)
+    {
+        r->write(i);
+        delay(1);
+        uint8_t readback = r->read();
+
+        if (readback != i)
+        {
+            Serial.print(F("ERR "));
+            Serial.println(i);
+            return;
+        }
+    }
+    Serial.println(F("OK"));
 }
