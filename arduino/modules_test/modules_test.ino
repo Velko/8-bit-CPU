@@ -3,9 +3,9 @@
  */
 
 
-#include "bus_device.h"
+#include "bus_register.h"
 
-extern BusDevice reg;
+extern Register reg;
 
 
 void setup()

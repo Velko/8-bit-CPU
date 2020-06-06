@@ -1,6 +1,6 @@
-#include "bus_device.h"
+#include "bus_register.h"
 
-extern BusDevice reg;
+extern Register reg;
 
 void counter_loop()
 {
@@ -9,7 +9,7 @@ void counter_loop()
     for(;;)
     {
         reg.pulse_clock();
-        uint8_t val = register_read();
+        uint8_t val = reg.read();
         Serial.println(val);
         delay(100);
     }

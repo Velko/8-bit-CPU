@@ -1,26 +1,11 @@
-#include <iobus.h>
-#include "bus_device.h"
-
-IOBus reg_bus({9, 8, 7, 6, 5, 4, 3, 2});
-
-BusDevice reg;
-
-#define REG_OUT     12
+#include "bus_register.h"
 
 
-void register_setup()
-{
-    reg.setup();
-}
-
-
-uint8_t register_read()
-{
-}
+Register reg;
 
 void register_loop()
 {
-    register_setup();
+    reg.setup();
 
     for (;;)
     {
