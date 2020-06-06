@@ -14,6 +14,7 @@ Register::Register()
 void Register::setup()
 {
     BusDevice::setup();
+    clock.setup();
 
     digitalWrite(PIN_LOAD, HIGH);
     pinMode(PIN_LOAD, OUTPUT);
@@ -26,7 +27,7 @@ void Register::write(uint8_t value)
 {
     bus.write(value);
     digitalWrite(PIN_LOAD, LOW);
-    pulse_clock();
+    clock.pulse();
     // Emulate bus changes before LOAD is released
     // but since register should latch the value on
     // clock pulse - it should not affect it anymore
@@ -37,7 +38,7 @@ void Register::write(uint8_t value)
 
 uint8_t Register::read()
 {
-        bus.set_input();
+    bus.set_input();
     digitalWrite(PIN_OUT, LOW);
     delay(50);
     uint8_t value = bus.read();

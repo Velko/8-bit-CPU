@@ -2,6 +2,7 @@
 #define BUS_REGISTER
 
 #include "bus_device.h"
+#include "clock.h"
 
 class Register : public BusDevice
 {
@@ -10,6 +11,8 @@ class Register : public BusDevice
         void setup() override;
         void write(uint8_t value) override;
         uint8_t read() override;
+    protected:
+        Clock clock;
 };
 
 

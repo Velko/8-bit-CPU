@@ -8,7 +8,7 @@ void counter_loop()
 
     for(;;)
     {
-        reg.pulse_clock();
+        //reg.pulse_clock();
         uint8_t val = reg.read();
         Serial.println(val);
         delay(100);
