@@ -52,6 +52,9 @@ void loop()
     case 'c':
         counter_loop();
         break;
+    case 'u':
+        down_count_loop();
+        break;
     default:
         Serial.println(F("Unknown command!"));
         break;

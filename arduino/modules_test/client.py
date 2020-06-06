@@ -32,6 +32,9 @@ class TesterClient(cmd.Cmd):
     def do_loop_counter(self, arg):
         send_cmd('c')
 
+    def do_loop_down(self, arg):
+        send_cmd('u')
+
 
 def listen_responses():
     while ser.is_open:
