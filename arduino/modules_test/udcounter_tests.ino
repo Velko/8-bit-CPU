@@ -17,32 +17,38 @@ void down_count_demo()
 
 void reg_load_store_output(Register *r, int repeats);
 void test_count_up(Counter *c, int repeats);
-void test_count_down(UpDownCounter *c);
+void test_count_down(UpDownCounter *c, int repeats);
 
 
 void udcounter_tests()
 {
     reg_load_store_output(&udc, 1000);
     test_count_up(&udc, 100);
-    test_count_down(&udc);
+    test_count_down(&udc, 100);
 }
 
-void test_count_down(UpDownCounter *c)
+void test_count_down(UpDownCounter *c, int repeats)
 {
     c->setup();
-    Serial.print(F("Count down... "));
-    c->write(0);
-    for (int i = 511; i >= 0; --i)
+    Serial.print(F("Count down"));
+    c->write(255);
+    for (int pass = 0; pass < repeats; ++pass)
     {
-        uint8_t val = c->read();
-        if (val != (uint8_t)i)
+        if ((pass % 4) == 0)
+            Serial.print('.');
+
+        for (int i = 255; i >= 0; --i)
         {
-            Serial.print(F("ERR "));
-            Serial.println(i);
-            return;
+            uint8_t val = c->read();
+            if (val != (uint8_t)i)
+            {
+                Serial.print(F("ERR "));
+                Serial.println(i);
+                return;
+            }
+            c->MovePrev();
+            delayMicroseconds(10);
         }
-        c->MovePrev();
-        delayMicroseconds(10);
     }
     Serial.println(F("OK"));
 }
