@@ -33,6 +33,11 @@ void Register::write(uint8_t value)
     bus.write(~value);
     delayMicroseconds(10);
     digitalWrite(PIN_LOAD, HIGH);
+
+    // Add few pulses to see if releasing LOAD really
+    // worked
+    clock.pulse();
+    clock.pulse();
 }
 
 uint8_t Register::read()
