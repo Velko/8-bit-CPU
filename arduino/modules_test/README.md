@@ -21,6 +21,25 @@ Clock: Arduino 11                        -> 74HC173 7
 Reset:                                   -> 74HC173 15  (active high)
 
 
+Counter (simple 74HC163 based)
+==============================
+
+In addition for behaving as a simple, latching register it has additional feature: ability to
+increase its value.
+
+
+Wiring
+------
+
+Bus:   Arduino (9, 8, 7, 6, 5, 4, 3, 2) <-> 74HC245 (9, 8, 7, 6, 5, 4, 3, 2)
+Out:   Arduino 12                        -> 74HC245 19
+Load:    Arduino 13                        -> 74HC163 9
+Clock:   Arduino 11                        -> 74HC163 2
+Reset:                                     -> 74HC163 1 (active low, requires clock pulse)
+Count:                                     -> 74HC163 7
+
+
+
 Counter (advanced 74HC191 based)
 ================================
 
