@@ -64,6 +64,10 @@ Expanded arch:
                  no room for word select
 
 
+Clock:
+What if I replace those AND gates with NAND? Still works for selection,
+but now those spare NANDs can be used to get the inverted clock...
+
 
 Notes for blog
 ==============
