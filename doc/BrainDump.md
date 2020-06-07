@@ -69,35 +69,6 @@ Notes for blog
 ==============
 
 
-* what was at home
-* 7-segment display tests
-    * additional tools
-    * Rants about IDE
-    * LOL from Arduino
-
-
-* ordering and delivery
-    * parts list
-    * warehouse rules
-    * delivery speed
-    * substitutions
-
-
-* building clock
-    * TS555 chips (all 3 if them) that I had at home proved to be unstable - changed the oscillating
-      frequency wildly, I suspect they picked up some ambient EM noise or something, because
-      touching various parts (chip itself, capacitors) of the board triggered/cancelled it. Another
-      power supply or added decoupling capacitors did not help. Not sure whats wrong with them.
-      Newly ordered LM555s seem to work fine.
-    * Solved: I forgot to wire up RESET pin, but since TS555 is a CMOS one, floating input pins are
-      unpredictable. Actually - since the whole build is with HC chips, I should probably stick to
-      these.
-    * thoughts about unhalting
-    * The toggle switch I ordered is not what I ment, but still would work with SR latch
-      will not stay in the breadboard tho. Using a jumper and 3 pins instead.
-    * Ampermeter burnout and current / voltage worries
-    * Innovation with NOR gates
-
 * building display
     * use clock module temporarly
     * testing using Arduino
