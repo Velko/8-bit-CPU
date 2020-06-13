@@ -65,3 +65,33 @@ Wiring
 
 Bus:     Arduino (9, 8, 7, 6, 5, 4, 2, 3) -> AT28C64 (8, 7, 6, 5, 4, 3, 25, 24)
 Mode:    Arduino (13, 12)                 -> AT28C64 (23, 21)
+
+
+
+ALU
+===
+
+Since ALU by itself requires lots of wiring, it should be tested together with Register A and
+Register B.
+
+Wiring
+------
+
+### Register A
+Bus:   Arduino (9, 8, 7, 6, 5, 4, 3, 2) <-> 74HC245 (11, 12, 13, 14, 15, 16, 17, 18)
+Out:   Arduino 12                        -> 74HC245 19
+Load:  Arduino 13                        -> 74HC173 9 or 10
+Clock: Arduino 11                        -> 74HC173 7
+
+### Register B
+Out:   Arduino ?                        -> 74HC245 19
+Load:  Arduino 10                       -> 74HC173 9 or 10
+                                           74HC163 9
+
+### ALU
+Out:   Arduino A4                       -> 74HC245 19
+Sub:   Arduino SDA                      -> 74HC86  10
+Carry: Arduino SCL                      -> 74HC00  12
+FlgIn: Arduino ?                        -> 74HC173 9 or 10
+Flags: Arduino ?                        -> 74HC173 (3, 4, 5, 6)
+

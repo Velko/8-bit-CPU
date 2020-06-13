@@ -11,6 +11,7 @@ class Register : public BusDevice
         void setup() override;
         void write(uint8_t value) override;
         uint8_t read() override;
+        void load();
     protected:
         Clock clock;
         // override for alternate wiring

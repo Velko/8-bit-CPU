@@ -22,6 +22,13 @@ void Register::setup()
     pinMode(get_pin_out(), OUTPUT);
 }
 
+void Register::load()
+{
+    digitalWrite(get_pin_load(), LOW);
+    clock.pulse();
+    digitalWrite(get_pin_load(), HIGH);
+}
+
 void Register::write(uint8_t value)
 {
     bus.write(value);
@@ -38,6 +45,9 @@ void Register::write(uint8_t value)
     // worked
     clock.pulse();
     clock.pulse();
+
+    // allow other devices to drive the bus
+    bus.set_input();
 }
 
 uint8_t Register::read()

@@ -62,6 +62,9 @@ void loop()
     case '3':
         udcounter_tests();
         break;
+    case 'a':
+        alu_tests();
+        break;
     default:
         Serial.println(F("Unknown command!"));
         break;

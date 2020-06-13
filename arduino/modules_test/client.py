@@ -49,6 +49,10 @@ class TesterClient(cmd.Cmd):
         "Perform tests for up/down counting register"
         send_cmd('3')
 
+    def do_test_alu(self, arg):
+        "Demonstrate ALU"
+        send_cmd('a')
+
 
 def listen_responses():
     while ser.is_open:
