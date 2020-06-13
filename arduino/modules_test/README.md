@@ -84,14 +84,14 @@ Load:  Arduino 13                        -> 74HC173 9 or 10
 Clock: Arduino 11                        -> 74HC173 7
 
 ### Register B
-Out:   Arduino ?                        -> 74HC245 19
+Out:   Arduino -                        -> 74HC245 19
 Load:  Arduino 10                       -> 74HC173 9 or 10
                                            74HC163 9
 
 ### ALU
-Out:   Arduino A4                       -> 74HC245 19
+Out:   Arduino A3                       -> 74HC245 19
 Sub:   Arduino SDA                      -> 74HC86  10
 Carry: Arduino SCL                      -> 74HC00  12
-FlgIn: Arduino ?                        -> 74HC173 9 or 10
-Flags: Arduino ?                        -> 74HC173 (3, 4, 5, 6)
+FlgIn: Arduino -                        -> 74HC173 9 or 10
+Flags: Arduino (A2, A1, A0)             -> 74HC173 (3, 5, 6)
 

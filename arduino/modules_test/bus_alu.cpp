@@ -2,12 +2,12 @@
 #include <Arduino.h>
 
 #define PIN_LOAD_B     10
-#define PIN_OUT_B      A5  // can reuse - not stricly needed
+#define PIN_OUT_B      -1  // hardwired to off
 
-#define PIN_OUT_ALU    A4
-#define PIN_SUBTRACT   SDA
-#define PIN_USE_CARRY  SCL
-#define PIN_STORE_FLAG 0  // hardwired to ON
+#define PIN_OUT_ALU    A3
+#define PIN_SUBTRACT   SDA  // alias of A4
+#define PIN_USE_CARRY  SCL  // alias of A5
+#define PIN_STORE_FLAG -1  // hardwired to ON
 
 
 
@@ -22,7 +22,7 @@ uint8_t SecondRegister::get_pin_out()
 }
 
 ALU::ALU()
-    : flags{A0, A1, A2, A3}
+    : flags{A0, A1, A2}
 {
 }
 
