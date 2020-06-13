@@ -7,7 +7,7 @@
 class BusDevice : public ExternalDevice
 {
     public:
-        BusDevice(uint8_t p0, uint8_t p1, uint8_t p2, uint8_t p3, uint8_t p4, uint8_t p5, uint8_t p6, uint8_t p7);
+        BusDevice(std::initializer_list<uint8_t> pins);
 
         virtual void write(uint8_t value) = 0;
         virtual uint8_t read() = 0;

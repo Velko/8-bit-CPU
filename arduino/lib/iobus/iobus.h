@@ -2,17 +2,19 @@
 #define IO_BUS_H
 
 #include <stdint.h>
+#include "gstl_initializer_list.h"
 
 class IOBus
 {
     public:
-        IOBus(uint8_t p0, uint8_t p1, uint8_t p2, uint8_t p3, uint8_t p4, uint8_t p5, uint8_t p6, uint8_t p7);
+        IOBus(std::initializer_list<uint8_t> pins);
         void set_input();
         uint8_t read();
         void write(uint8_t value);
-        static const uint8_t WIDTH = 8;
+        static const size_t MAX_SIZE = 8;
     private:
-        uint8_t pins[WIDTH];
+        uint8_t pins[MAX_SIZE];
+        uint8_t size;
 };
 
 

@@ -5,7 +5,7 @@ const int MODE_PINS[] = {12, 13};
 
 
 Display::Display()
-    : BusDevice(9, 8, 7, 6, 5, 4, 2, 3)
+    : BusDevice{9, 8, 7, 6, 5, 4, 2, 3}
 {
 }
 
