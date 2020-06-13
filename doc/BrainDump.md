@@ -128,6 +128,11 @@ Notes for blog
     * U/D counter unstable when Arduino switches CE and U/D
     * rewired to use parallel clock and ripple carry
 
+* Rebuilding clock
+    * Using 556
+    * NAND gate
+    * timer's reset lines
+    * halt override
 
 Far future
 ==========
