@@ -13,6 +13,11 @@ class Register : public BusDevice
         uint8_t read() override;
     protected:
         Clock clock;
+        // override for alternate wiring
+        // for example - when testing multiple
+        // registers at same time
+        virtual uint8_t get_pin_load();
+        virtual uint8_t get_pin_out();
 };
 
 

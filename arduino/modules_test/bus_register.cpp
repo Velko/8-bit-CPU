@@ -15,24 +15,24 @@ void Register::setup()
 {
     clock.setup();
 
-    digitalWrite(PIN_LOAD, HIGH);
-    pinMode(PIN_LOAD, OUTPUT);
+    digitalWrite(get_pin_load(), HIGH);
+    pinMode(get_pin_load(), OUTPUT);
 
-    digitalWrite(PIN_OUT, HIGH);
-    pinMode(PIN_OUT, OUTPUT);
+    digitalWrite(get_pin_out(), HIGH);
+    pinMode(get_pin_out(), OUTPUT);
 }
 
 void Register::write(uint8_t value)
 {
     bus.write(value);
-    digitalWrite(PIN_LOAD, LOW);
+    digitalWrite(get_pin_load(), LOW);
     clock.pulse();
     // Emulate bus changes before LOAD is released
     // but since register should latch the value on
     // clock pulse - it should not affect it anymore
     bus.write(~value);
     delayMicroseconds(10);
-    digitalWrite(PIN_LOAD, HIGH);
+    digitalWrite(get_pin_load(), HIGH);
 
     // Add few pulses to see if releasing LOAD really
     // worked
@@ -43,10 +43,20 @@ void Register::write(uint8_t value)
 uint8_t Register::read()
 {
     bus.set_input();
-    digitalWrite(PIN_OUT, LOW);
+    digitalWrite(get_pin_out(), LOW);
     delayMicroseconds(10);
     uint8_t value = bus.read();
-    digitalWrite(PIN_OUT, HIGH);
+    digitalWrite(get_pin_out(), HIGH);
 
     return value;
+}
+
+uint8_t Register::get_pin_load()
+{
+    return PIN_LOAD;
+}
+
+uint8_t Register::get_pin_out()
+{
+    return PIN_OUT;
 }
