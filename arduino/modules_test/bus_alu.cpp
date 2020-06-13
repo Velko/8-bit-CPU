@@ -7,7 +7,7 @@
 #define PIN_OUT_ALU    A3
 #define PIN_SUBTRACT   SDA  // alias of A4
 #define PIN_USE_CARRY  SCL  // alias of A5
-#define PIN_STORE_FLAG -1  // hardwired to ON
+#define PIN_STORE_FLAG A3   // connect together ALU_OUT and STORE_FLAGS
 
 
 
@@ -43,29 +43,30 @@ void ALU::setup()
 }
 
 
-uint8_t ALU::add(uint8_t a, uint8_t b)
+uint8_t ALU::add(uint8_t a, uint8_t b, bool carry_in)
 {
     reg_a.write(a);
     reg_b.write(b);
 
     digitalWrite(PIN_SUBTRACT, LOW);
-    digitalWrite(PIN_USE_CARRY, LOW);
+    digitalWrite(PIN_USE_CARRY, carry_in ? HIGH : LOW);
     digitalWrite(PIN_OUT_ALU, LOW);
 
     reg_a.load();
 
     digitalWrite(PIN_OUT_ALU, HIGH);
+    digitalWrite(PIN_STORE_FLAG, HIGH);
 
     return reg_a.read();
 }
 
-int8_t ALU::sub(uint8_t a, uint8_t b)
+int8_t ALU::sub(uint8_t a, uint8_t b, bool carry_in)
 {
     reg_a.write(a);
     reg_b.write(b);
 
     digitalWrite(PIN_SUBTRACT, HIGH);
-    digitalWrite(PIN_USE_CARRY, LOW);
+    digitalWrite(PIN_USE_CARRY, carry_in ? HIGH : LOW);
     digitalWrite(PIN_OUT_ALU, LOW);
 
     reg_a.load();

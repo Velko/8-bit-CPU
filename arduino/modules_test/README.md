@@ -92,6 +92,8 @@ Load:  Arduino 10                       -> 74HC173 9 or 10
 Out:   Arduino A3                       -> 74HC245 19
 Sub:   Arduino SDA                      -> 74HC86  10
 Carry: Arduino SCL                      -> 74HC00  12
-FlgIn: Arduino -                        -> 74HC173 9 or 10
+FlgIn: Arduino A3*                      -> 74HC173 9 or 10
 Flags: Arduino (A2, A1, A0)             -> 74HC173 (3, 5, 6)
 
+Note: ALU_OUT and FLAG_IN should be connected together while testing ADC / SBC, can be
+hardwired to LOW otherwise
