@@ -17,7 +17,6 @@ void Counter::setup()
 void Counter::MoveNext()
 {
     set_count_enable(true);
-    delayMicroseconds(10);
     clock.pulse();
     set_count_enable(false);
 

@@ -38,7 +38,6 @@ void Register::write(uint8_t value)
     // but since register should latch the value on
     // clock pulse - it should not affect it anymore
     bus.write(~value);
-    delayMicroseconds(10);
     digitalWrite(get_pin_load(), HIGH);
 
     // Add few pulses to see if releasing LOAD really
@@ -54,7 +53,6 @@ uint8_t Register::read()
 {
     bus.set_input();
     digitalWrite(get_pin_out(), LOW);
-    delayMicroseconds(10);
     uint8_t value = bus.read();
     digitalWrite(get_pin_out(), HIGH);
 

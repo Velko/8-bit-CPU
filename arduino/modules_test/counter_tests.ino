@@ -44,7 +44,6 @@ void test_count_up(Counter *c, int repeats)
                 return;
             }
             c->MoveNext();
-            delayMicroseconds(10);
         }
     }
     Serial.println(F("OK"));

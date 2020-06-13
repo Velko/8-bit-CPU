@@ -56,7 +56,6 @@ void test_count_down(UpDownCounter *c, int repeats)
                 return;
             }
             c->MovePrev();
-            delayMicroseconds(10);
         }
     }
     Serial.println(F("OK"));

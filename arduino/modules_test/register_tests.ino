@@ -46,7 +46,6 @@ void reg_load_store_output(Register *r, int repeats)
         for (int i = 1; i < 256; i <<= 1)
         {
             r->write(i);
-            delayMicroseconds(10);
             uint8_t readback = r->read();
 
             if (readback != i)
