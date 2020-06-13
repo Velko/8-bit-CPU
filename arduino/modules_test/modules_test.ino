@@ -33,12 +33,10 @@ void loop()
         break;
     case 'D':
         val = Serial.parseInt();
-        dsp.setup();
         dsp.write(val);
         break;
     case 'm':
         val = Serial.parseInt();
-        dsp.setup();
         dsp.set_mode(val);
         break;
     case 'r':

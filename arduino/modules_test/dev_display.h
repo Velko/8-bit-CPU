@@ -11,6 +11,8 @@ class Display : BusDevice
         void write(uint8_t value) override;
         uint8_t read() override;
         void set_mode(uint8_t mode);
+    private:
+        IOBus mode_bus;
 };
 
 
