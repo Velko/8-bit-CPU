@@ -58,3 +58,19 @@ uint8_t ALU::add(uint8_t a, uint8_t b)
 
     return reg_a.read();
 }
+
+int8_t ALU::sub(uint8_t a, uint8_t b)
+{
+    reg_a.write(a);
+    reg_b.write(b);
+
+    digitalWrite(PIN_SUBTRACT, HIGH);
+    digitalWrite(PIN_USE_CARRY, LOW);
+    digitalWrite(PIN_OUT_ALU, LOW);
+
+    reg_a.load();
+
+    digitalWrite(PIN_OUT_ALU, HIGH);
+
+    return reg_a.read();
+}
