@@ -146,6 +146,10 @@ Notes for blog
     * thoughts about zero-detector on bus, flags register as separate device
       in case we add bitwise operations
 
+* Testing ALU
+    * initializer_list
+    * Lack of wires, not even for N flag
+    * SDA, SCL == A4, A5
 
 
 Far future
