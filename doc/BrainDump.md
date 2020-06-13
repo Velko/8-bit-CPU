@@ -129,6 +129,10 @@ Notes for blog
     * probably needed some NANDs as well
     * https://logic.ly/demo
     * worries about RC edge detector
+    * better part, but unavail: 74x169
+    * https://en.wikipedia.org/wiki/List_of_7400-series_integrated_circuits
+
+
 
 * Wire up
     * Clock, counter, display
@@ -158,6 +162,16 @@ Notes for blog
     * NAND gate
     * timer's reset lines
     * halt override
+
+* ALU improvements
+    * adding zero-detect
+    * Overflow flag
+    * Carry in, carry out
+    * Clock still bounces
+    * thoughts about zero-detector on bus, flags register as separate device
+      in case we add bitwise operations
+
+
 
 Far future
 ==========
