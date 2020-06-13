@@ -1,7 +1,7 @@
 #ifndef IO_BUS_H
 #define IO_BUS_H
 
-#include <Arduino.h>
+#include <stdint.h>
 
 class IOBus
 {

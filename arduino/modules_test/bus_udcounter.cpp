@@ -1,4 +1,5 @@
 #include "bus_udcounter.h"
+#include <Arduino.h>
 
 #define PIN_UP_DOWN   SDA
 

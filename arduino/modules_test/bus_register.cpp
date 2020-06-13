@@ -1,5 +1,5 @@
 #include "bus_register.h"
-
+#include <Arduino.h>
 
 #define PIN_LOAD    13
 #define PIN_OUT     12

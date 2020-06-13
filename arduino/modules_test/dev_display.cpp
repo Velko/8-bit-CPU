@@ -1,4 +1,5 @@
 #include "dev_display.h"
+#include <Arduino.h>
 
 const int MODE_PINS[] = {12, 13};
 
