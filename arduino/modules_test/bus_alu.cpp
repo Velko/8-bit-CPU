@@ -74,3 +74,8 @@ int8_t ALU::sub(uint8_t a, uint8_t b, bool carry_in)
 
     return reg_a.read();
 }
+
+uint8_t ALU::read_flags()
+{
+    return flags.read();
+}
