@@ -19,7 +19,9 @@ void alu_tests()
 {
     alu.setup();
     alu_add_bytes();
+    alu_add_bytes_cset();
     alu_sub_bytes();
+    alu_sub_bytes_cset();
     alu_add_16bit();
     alu_sub_16bit();
 }
@@ -59,6 +61,42 @@ void alu_add_bytes()
     Serial.println(F("OK"));
 }
 
+void alu_add_bytes_cset()
+{
+    Serial.print(F("Add bytes (C)"));
+    for (int b = 0; b < 256; ++b)
+    {
+        if ((b % 8) == 0)
+            Serial.print('.');
+
+        for (int a = 0; a < 256; ++a)
+        {
+            alu.add(255, 1); // an easy (but sub-optimal) way to set C bit
+            uint8_t res = alu.add(a, b, true);
+            uint8_t flags = alu.read_flags();
+
+            uint8_t expected = add8_set_carry(a, b);
+            uint8_t expected_flags = flags_of_add8_with_c(a, b) & 0x0F;
+
+            if (res != expected ||
+               FLAG_IS_SET(flags, ALU_FLAG_C) != FLAG_IS_SET(expected_flags, AVR_FLAG_C) ||
+               FLAG_IS_SET(flags, ALU_FLAG_V) != FLAG_IS_SET(expected_flags, AVR_FLAG_V) ||
+               FLAG_IS_SET(flags, ALU_FLAG_Z) != FLAG_IS_SET(expected_flags, AVR_FLAG_Z)
+               // we do not check N flag as there are not enough pins on Arduino, but that
+               // is the simplest one - should be good on visual inspection
+            )
+            {
+                char line[80];
+
+                sprintf_P(line, PSTR("%d + %d + 1 = %d but received %d flags - expect %x real %x"), a, b, expected, res, expected_flags, flags);
+                Serial.println(line);
+                return;
+            }
+        }
+    }
+    Serial.println(F("OK"));
+}
+
 void alu_sub_bytes()
 {
     Serial.print(F("Subtract bytes"));
@@ -86,6 +124,42 @@ void alu_sub_bytes()
                 char line[80];
 
                 sprintf_P(line, PSTR("%d - %d = %d but received %d flags - expect %x real %x"), a, b, expected, res, expected_flags, flags);
+                Serial.println(line);
+                return;
+            }
+        }
+    }
+    Serial.println(F("OK"));
+}
+
+void alu_sub_bytes_cset()
+{
+    Serial.print(F("Subtract bytes (C)"));
+    for (int b = 0; b < 256; ++b)
+    {
+        if ((b % 8) == 0)
+            Serial.print('.');
+
+        for (int a = 0; a < 256; ++a)
+        {
+            alu.add(255, 1); // an easy (but sub-optimal) way to set C bit
+            int8_t res = alu.sub(a, b, true);
+            uint8_t flags = alu.read_flags();
+
+            int8_t expected = sub8_set_carry(a, b);
+            uint8_t expected_flags = flags_of_sub8_with_c(a, b) & 0x0F;
+
+            if (res != expected ||
+               FLAG_IS_SET(flags, ALU_FLAG_C) != FLAG_IS_SET(expected_flags, AVR_FLAG_C) ||
+               FLAG_IS_SET(flags, ALU_FLAG_V) != FLAG_IS_SET(expected_flags, AVR_FLAG_V) ||
+               FLAG_IS_SET(flags, ALU_FLAG_Z) != FLAG_IS_SET(expected_flags, AVR_FLAG_Z)
+               // we do not check N flag as there are not enough pins on Arduino, but that
+               // is the simplest one - should be good on visual inspection
+            )
+            {
+                char line[80];
+
+                sprintf_P(line, PSTR("%d - %d - 1 = %d but received %d flags - expect %x real %x"), a, b, expected, res, expected_flags, flags);
                 Serial.println(line);
                 return;
             }
