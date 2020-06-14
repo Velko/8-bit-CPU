@@ -1,4 +1,5 @@
 #include "bus_alu.h"
+#include "alu_ref.h"
 
 #define AVR_FLAG_C      0b0001
 #define AVR_FLAG_Z      0b0010
@@ -34,10 +35,10 @@ void alu_add_bytes()
         for (int a = 0; a < 256; ++a)
         {
             uint8_t res = alu.add(a, b);
-            uint8_t flags = 0;//alu.read_flags();
+            uint8_t flags = alu.read_flags();
 
             uint8_t expected = a + b;
-            uint8_t expected_flags = 0;//flags_of_add8(a, b) & 0x0F;
+            uint8_t expected_flags = flags_of_add8(a, b) & 0x0F;
 
             if (res != expected ||
                FLAG_IS_SET(flags, ALU_FLAG_C) != FLAG_IS_SET(expected_flags, AVR_FLAG_C) ||

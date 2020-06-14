@@ -150,6 +150,7 @@ Notes for blog
     * initializer_list
     * Lack of wires, not even for N flag
     * SDA, SCL == A4, A5
+    * a shift register could help a little
 
 
 Far future

@@ -1,24 +1,14 @@
 #include <stdint.h>
 #include <avr/io.h>
 
-int add16(int a, int b)
-{
-    return a + b;
-}
-
-int sub16(int a, int b)
-{
-    return a - b;
-}
-
 uint8_t scratch;
 
 uint8_t flags_of_add8(uint8_t a, uint8_t b)
 {
     /* We need to assign the value somewhere or
        the operation will be optimized away.
-       The scratch variable can be removed manually
-       in ASM file.
+       The scratch variable can optionally be
+       removed manually from ASM file.
      */
     scratch = a + b;
     return SREG;
@@ -28,8 +18,8 @@ uint8_t flags_of_sub8(uint8_t a, uint8_t b)
 {
     /* We need to assign the value somewhere or
        the operation will be optimized away.
-       The scratch variable can be removed manually
-       in ASM file.
+       The scratch variable can optionally be
+       removed manually from ASM file.
      */
     scratch = a - b;
     return SREG;
