@@ -85,7 +85,7 @@ void alu_sub_bytes()
             {
                 char line[80];
 
-                sprintf_P(line, PSTR("%d + %d = %d but received %d flags - expect %x real %x"), a, b, expected, res, expected_flags, flags);
+                sprintf_P(line, PSTR("%d - %d = %d but received %d flags - expect %x real %x"), a, b, expected, res, expected_flags, flags);
                 Serial.println(line);
                 return;
             }
@@ -121,13 +121,9 @@ void alu_add_16bit()
             uint16_t expected = a + b;
             if (res != expected)
             {
-                Serial.print(a);
-                Serial.print(F(" + "));
-                Serial.print(b);
-                Serial.print(F(" = "));
-                Serial.print(expected);
-                Serial.print(F(" but received "));
-                Serial.println(res);
+                char line[80];
+                sprintf_P(line, PSTR("%d + %d = %d but received %d"), a , b, expected, res);
+                Serial.println(line);
                 return;
             }
         }
@@ -158,13 +154,9 @@ void alu_sub_16bit()
             int16_t expected = a - b;
             if (res != expected)
             {
-                Serial.print(a);
-                Serial.print(F(" - "));
-                Serial.print(b);
-                Serial.print(F(" = "));
-                Serial.print(expected);
-                Serial.print(F(" but received "));
-                Serial.println(res);
+                char line[80];
+                sprintf_P(line, PSTR("%d - %d = %d but received %d"), a , b, expected, res);
+                Serial.println(line);
                 return;
             }
         }
