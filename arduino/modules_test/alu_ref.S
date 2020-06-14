@@ -13,7 +13,6 @@ flags_of_add8:
 /* stack size = 0 */
 .L__stack_usage = 0
 	add r24,r22
-	sts scratch,r24
 	in r24,__SREG__
 	ret
 	.size	flags_of_add8, .-flags_of_add8
@@ -25,7 +24,6 @@ flags_of_sub8:
 /* stack size = 0 */
 .L__stack_usage = 0
 	sub r24,r22
-	sts scratch,r24
 	in r24,__SREG__
 	ret
 	.size	flags_of_sub8, .-flags_of_sub8
@@ -60,7 +58,6 @@ flags_of_add8_with_c:
 .L__stack_usage = 0
 	sec
 	adc r24,r22
-	sts scratch,r24
 	in r24,__SREG__
 	ret
 	.size	flags_of_add8_with_c, .-flags_of_add8_with_c
@@ -73,10 +70,8 @@ flags_of_sub8_with_c:
 .L__stack_usage = 0
 	sec
 	sbc r24,r22
-	sts scratch,r24
 	in r24,__SREG__
 	ret
 	.size	flags_of_sub8_with_c, .-flags_of_sub8_with_c
-	.comm	scratch,1,1
 	.ident	"GCC: (GNU) 5.4.0"
 .global __do_clear_bss
