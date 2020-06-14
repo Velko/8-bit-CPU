@@ -55,7 +55,6 @@ uint8_t ALU::add(uint8_t a, uint8_t b, bool carry_in)
     reg_a.load();
 
     digitalWrite(PIN_OUT_ALU, HIGH);
-    digitalWrite(PIN_STORE_FLAG, HIGH);
 
     return reg_a.read();
 }
