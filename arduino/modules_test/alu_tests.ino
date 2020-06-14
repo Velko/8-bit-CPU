@@ -70,17 +70,23 @@ void alu_sub_bytes()
         for (int a = 0; a < 256; ++a)
         {
             int8_t res = alu.sub(a, b);
+            uint8_t flags = alu.read_flags();
 
             int8_t expected = a - b;
-            if (res != expected)
+            uint8_t expected_flags = flags_of_sub8(a, b) & 0x0F;
+
+            if (res != expected ||
+               FLAG_IS_SET(flags, ALU_FLAG_C) != FLAG_IS_SET(expected_flags, AVR_FLAG_C) ||
+               FLAG_IS_SET(flags, ALU_FLAG_V) != FLAG_IS_SET(expected_flags, AVR_FLAG_V) ||
+               FLAG_IS_SET(flags, ALU_FLAG_Z) != FLAG_IS_SET(expected_flags, AVR_FLAG_Z)
+               // we do not check N flag as there are not enough pins on Arduino, but that
+               // is the simplest one - should be good on visual inspection
+            )
             {
-                Serial.print(a);
-                Serial.print(F(" - "));
-                Serial.print(b);
-                Serial.print(F(" = "));
-                Serial.print(expected);
-                Serial.print(F(" but received "));
-                Serial.println(res);
+                char line[80];
+
+                sprintf_P(line, PSTR("%d + %d = %d but received %d flags - expect %x real %x"), a, b, expected, res, expected_flags, flags);
+                Serial.println(line);
                 return;
             }
         }
