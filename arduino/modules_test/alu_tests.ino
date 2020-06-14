@@ -1,5 +1,16 @@
 #include "bus_alu.h"
 
+#define AVR_FLAG_C      0b0001
+#define AVR_FLAG_Z      0b0010
+#define AVR_FLAG_N      0b0100
+#define AVR_FLAG_V      0b1000
+
+#define ALU_FLAG_Z      0b0001
+#define ALU_FLAG_V      0b0010
+#define ALU_FLAG_C      0b0100
+#define ALU_FLAG_N      0b1000
+
+#define FLAG_IS_SET(val, flag)     ((val & flag)!=0)
 
 ALU alu;
 
@@ -23,17 +34,23 @@ void alu_add_bytes()
         for (int a = 0; a < 256; ++a)
         {
             uint8_t res = alu.add(a, b);
+            uint8_t flags = 0;//alu.read_flags();
 
             uint8_t expected = a + b;
-            if (res != expected)
+            uint8_t expected_flags = 0;//flags_of_add8(a, b) & 0x0F;
+
+            if (res != expected ||
+               FLAG_IS_SET(flags, ALU_FLAG_C) != FLAG_IS_SET(expected_flags, AVR_FLAG_C) ||
+               FLAG_IS_SET(flags, ALU_FLAG_V) != FLAG_IS_SET(expected_flags, AVR_FLAG_V) ||
+               FLAG_IS_SET(flags, ALU_FLAG_Z) != FLAG_IS_SET(expected_flags, AVR_FLAG_Z)
+               // we do not check N flag as there are not enough pins on Arduino, but that
+               // is the simplest one - should be good on visual inspection
+            )
             {
-                Serial.print(a);
-                Serial.print(F(" + "));
-                Serial.print(b);
-                Serial.print(F(" = "));
-                Serial.print(expected);
-                Serial.print(F(" but received "));
-                Serial.println(res);
+                char line[80];
+
+                sprintf_P(line, PSTR("%d + %d = %d but received %d flags - expect %x real %x"), a, b, expected, res, expected_flags, flags);
+                Serial.println(line);
                 return;
             }
         }
