@@ -1,6 +1,23 @@
 #include "bus_alu.h"
 #include "alu_ref.h"
 
+/*
+    To verify if ALU sets flags as expected, we're comparing them to flags that are set by
+    AVR microcontroller. The flags layout may be different, but same instructions with same
+    arguments should produce same results (including the flags).
+
+    But to capture the tiniest details, we should dive into assembly language. I'm not that
+    familiar with AVR assembly to write those functions from scratch, but there is an easier
+    path: write it in C and use compiler to generate the assembly. Adding some modifications
+    in existing file is much easier.
+
+    So there is alu_ref.ctmpl file that is used to generate the "template". Commands required
+    to translate that are located in make_asm.sh script. After that alu_ref.S can be modified
+    to get desired results. But keep in mind that re-running the script will "reset" the file
+    back to "defaults". Luckily - there's source control (Git) that can help with that.
+*/
+
+
 #define AVR_FLAG_C      0b0001
 #define AVR_FLAG_Z      0b0010
 #define AVR_FLAG_N      0b0100
