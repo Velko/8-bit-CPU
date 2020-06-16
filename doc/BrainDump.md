@@ -79,6 +79,9 @@ Notes for blog
     * switch to standalone 555 and flickering
     * http://www.ohmslawcalculator.com/555-astable-calculator
     * brightening plans (darlingtons ???)
+    * finding the segments/bit experimentally
+    * use compiler to prepare the digit bytes
+    * sprintf formatting
 
 * EEPROM burner
     * substitute shifter
@@ -143,6 +146,7 @@ Notes for blog
     * Overflow flag
     * Carry in, carry out
     * Clock still bounces
+    * Clock mode jumper not staying in place, replace with 3x2 header
     * thoughts about zero-detector on bus, flags register as separate device
       in case we add bitwise operations
 
@@ -151,6 +155,7 @@ Notes for blog
     * Lack of wires, not even for N flag
     * SDA, SCL == A4, A5
     * a shift register could help a little
+    * abstracting the pins
 
 
 Far future
