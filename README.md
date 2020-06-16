@@ -9,7 +9,7 @@ In contrast to Ben, I'm not that crazy about building the whole thing on breadbo
 I like them, but building the whole thing on single board takes away the flexibility. So the plan is
 to make a small board for each module and connect them together.
 
-I plan to build a prototype module on breadboard, play around with it and then design and make a PCB 
+I plan to build a prototype module on breadboard, play around with it and then design and make a PCB
 for it. It might also be interesting to make the boards little customizable (leave a chip out, create
 a solder bridge, use shorter connector) so that they can be re-used for different purposes.
 
@@ -21,16 +21,20 @@ out PCBs for breadboards and vice versa.
 Progress
 ========
 
-Up until now I was just dreaming about it. But I have to write my ideas down somewhere.
-
 * Created Github project and added few most immediate tasks
 * Wrote an introductionary README (this one ;-) )
 * Decided on overall design
 * Compiled list of modules and parts for first experiments, placed an order with my favorite supplier
 * Found Arduino, breadboard and few 7-segment displays at home. Time to practice!
 * Built breadboard prototypes for Clock, Register, Counter, Display and EEPROM burner
+* Built ALU, complete with upgraded Flags register.
+* Wrote some [blog posts][velkoraspi] about the "adventures"
+* Working on Arduino-based testing device. Connect the module, run a command and it verifies that
+  module works as expected.
+
 
 
 
 
 [eater-net-8bit]: https://eater.net/8bit
+[velkoraspi]: https://velkoraspi.blogspot.com/
