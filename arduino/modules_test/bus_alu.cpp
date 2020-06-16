@@ -9,20 +9,21 @@
 #define PIN_USE_CARRY  SCL  // alias of A5
 #define PIN_STORE_FLAG A3   // connect together ALU_OUT and STORE_FLAGS
 
-
-
-uint8_t SecondRegister::get_pin_load()
+SecondRegister::SecondRegister()
+    : Register (
+        CtrlPin(PIN_LOAD_B, CtrlPin::ACTIVE_LOW),
+        CtrlPin(PIN_OUT_B, CtrlPin::ACTIVE_LOW)
+    )
 {
-    return PIN_LOAD_B;
 }
 
-uint8_t SecondRegister::get_pin_out()
-{
-    return PIN_OUT_B;
-}
+
 
 ALU::ALU()
-    : flags{A0, A1, A2}
+    : flags{A0, A1, A2},
+      pin_out{PIN_OUT_ALU, CtrlPin::ACTIVE_LOW},
+      pin_subtract{PIN_SUBTRACT, CtrlPin::ACTIVE_HIGH},
+      pin_use_carry{PIN_USE_CARRY, CtrlPin::ACTIVE_HIGH}
 {
 }
 
@@ -32,14 +33,9 @@ void ALU::setup()
     reg_b.setup();
     flags.set_input();
 
-    digitalWrite(PIN_OUT_ALU, HIGH);
-    pinMode(PIN_OUT_ALU, OUTPUT);
-
-    digitalWrite(PIN_SUBTRACT, LOW);
-    pinMode(PIN_SUBTRACT, OUTPUT);
-
-    digitalWrite(PIN_USE_CARRY, LOW);
-    pinMode(PIN_USE_CARRY, OUTPUT);
+    pin_out.setup();
+    pin_subtract.setup();
+    pin_use_carry.setup();
 }
 
 
@@ -48,13 +44,13 @@ uint8_t ALU::add(uint8_t a, uint8_t b, bool carry_in)
     reg_a.write(a);
     reg_b.write(b);
 
-    digitalWrite(PIN_SUBTRACT, LOW);
-    digitalWrite(PIN_USE_CARRY, carry_in ? HIGH : LOW);
-    digitalWrite(PIN_OUT_ALU, LOW);
+    pin_subtract.off();
+    pin_use_carry.set(carry_in);
+    pin_out.on();
 
     reg_a.load();
 
-    digitalWrite(PIN_OUT_ALU, HIGH);
+    pin_out.off();
 
     return reg_a.read();
 }
@@ -64,13 +60,13 @@ int8_t ALU::sub(uint8_t a, uint8_t b, bool carry_in)
     reg_a.write(a);
     reg_b.write(b);
 
-    digitalWrite(PIN_SUBTRACT, HIGH);
-    digitalWrite(PIN_USE_CARRY, carry_in ? HIGH : LOW);
-    digitalWrite(PIN_OUT_ALU, LOW);
+    pin_subtract.on();
+    pin_use_carry.set(carry_in);
+    pin_out.on();
 
     reg_a.load();
 
-    digitalWrite(PIN_OUT_ALU, HIGH);
+    pin_out.off();
 
     return reg_a.read();
 }

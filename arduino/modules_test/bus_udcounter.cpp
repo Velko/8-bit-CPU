@@ -3,28 +3,26 @@
 
 #define PIN_UP_DOWN   SDA
 
+UpDownCounter::UpDownCounter()
+    : Counter(CtrlPin::ACTIVE_LOW),
+      pin_down{PIN_UP_DOWN, CtrlPin::ACTIVE_HIGH}
+{
+}
+
 void UpDownCounter::setup()
 {
     Counter::setup();
-
-    digitalWrite(PIN_UP_DOWN, HIGH);
-    pinMode(PIN_UP_DOWN, OUTPUT);
+    pin_down.setup();
 }
 
 void UpDownCounter::MoveNext()
 {
-    digitalWrite(PIN_UP_DOWN, LOW);
+    pin_down.off();
     Counter::MoveNext();
 }
 
 void UpDownCounter::MovePrev()
 {
-    digitalWrite(PIN_UP_DOWN, HIGH);
+    pin_down.on();
     Counter::MoveNext();
-}
-
-void UpDownCounter::set_count_enable(bool enabled)
-{
-    // UpDownCounter is active low
-    Counter::set_count_enable(!enabled);
 }

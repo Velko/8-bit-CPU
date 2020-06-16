@@ -6,11 +6,13 @@
 class Counter : public Register
 {
     public:
+        Counter();
+        Counter(CtrlPin::ActiveLevel enable_mode);
         void setup() override;
         virtual void MoveNext();
 
     protected:
-        virtual void set_count_enable(bool enabled);
+        CtrlPin pin_c_enable;
 };
 
 

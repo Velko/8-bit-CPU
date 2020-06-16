@@ -8,9 +8,8 @@
 
 class SecondRegister : public Register
 {
-    protected:
-        uint8_t get_pin_load() override;
-        uint8_t get_pin_out() override;
+    public:
+        SecondRegister();
 };
 
 class ALU : public ExternalDevice
@@ -25,6 +24,9 @@ class ALU : public ExternalDevice
         Register reg_a;
         SecondRegister reg_b;
         IOBus flags;
+        CtrlPin pin_out;
+        CtrlPin pin_subtract;
+        CtrlPin pin_use_carry;
 };
 
 

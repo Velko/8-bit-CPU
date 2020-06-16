@@ -5,28 +5,30 @@
 
 #define PIN_COUNT       SCL
 
+Counter::Counter()
+    : pin_c_enable{PIN_COUNT, CtrlPin::ACTIVE_HIGH}
+{
+}
+
+Counter::Counter(CtrlPin::ActiveLevel enable_mode)
+    : pin_c_enable{PIN_COUNT, enable_mode}
+{
+}
 
 void Counter::setup()
 {
     Register::setup();
-
-    set_count_enable(false);
-    pinMode(PIN_COUNT, OUTPUT);
+    pin_c_enable.setup();
 }
 
 void Counter::MoveNext()
 {
-    set_count_enable(true);
+    pin_c_enable.on();
     clock.pulse();
-    set_count_enable(false);
+    pin_c_enable.off();
 
     // additional pulses to see if CE
     // really works
     clock.pulse();
     clock.pulse();
-}
-
-void Counter::set_count_enable(bool enabled)
-{
-    digitalWrite(PIN_COUNT, enabled ? HIGH : LOW);
 }

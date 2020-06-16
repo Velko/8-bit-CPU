@@ -6,12 +6,12 @@
 class UpDownCounter : public Counter
 {
     public:
+        UpDownCounter();
         void setup() override;
         void MoveNext() override;
         void MovePrev();
     protected:
-        void set_count_enable(bool enabled) override;
-
+        CtrlPin pin_down;
 };
 
 
