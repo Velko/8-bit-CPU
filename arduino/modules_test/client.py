@@ -53,6 +53,10 @@ class TesterClient(cmd.Cmd):
         "Demonstrate ALU"
         send_cmd('a')
 
+    def do_set_shift(self, arg):
+        "Set value on shift control"
+        send_cmd('s{}'.format(arg))
+
 
 def listen_responses():
     while ser.is_open:

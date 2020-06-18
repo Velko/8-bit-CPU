@@ -5,10 +5,12 @@
 
 #include "bus_register.h"
 #include "dev_display.h"
+#include <shiftoutext.h>
 
 extern Register reg;
 extern Display dsp;
 
+ShiftOutExt shift;
 
 void setup()
 {
@@ -64,6 +66,11 @@ void loop()
         break;
     case 'a':
         alu_tests();
+        break;
+    case 's':
+        val = Serial.parseInt();
+        shift.setup();
+        shift.write8(val);
         break;
     default:
         Serial.println(F("Unknown command!"));
