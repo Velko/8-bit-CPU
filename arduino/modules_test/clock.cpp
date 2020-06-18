@@ -1,7 +1,7 @@
 #include "clock.h"
 #include <Arduino.h>
 
-#define PIN_CLK    11
+#define PIN_CLK    SCL
 
 void Clock::setup()
 {
