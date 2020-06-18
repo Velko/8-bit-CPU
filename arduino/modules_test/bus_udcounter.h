@@ -11,7 +11,7 @@ class UpDownCounter : public Counter
         void MoveNext() override;
         void MovePrev();
     protected:
-        CtrlPin pin_down;
+        ShiftPin pin_down;
 };
 
 

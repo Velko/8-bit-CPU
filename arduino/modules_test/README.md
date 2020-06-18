@@ -54,7 +54,7 @@ Out:     74HC594 1                         -> 74HC245 19
 Load:    74HC594 15                        -> 74HC02  3
 Clock:   Arduino SCL                       -> 74HC191 14
 Reset:                                     -> 74HC02  5 (active high)
-Up/Down: 74HC594 ?                         -> 74HC191 5
+Up/Down: 74HC594 3                         -> 74HC191 5
 Count:   74HC594 2                         -> 74HC191 4
 
 Display

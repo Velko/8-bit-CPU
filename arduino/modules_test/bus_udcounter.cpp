@@ -1,7 +1,7 @@
 #include "bus_udcounter.h"
 #include <Arduino.h>
 
-#define PIN_UP_DOWN   SDA
+#define PIN_UP_DOWN   3
 
 UpDownCounter::UpDownCounter()
     : Counter(CtrlPin::ACTIVE_LOW),
