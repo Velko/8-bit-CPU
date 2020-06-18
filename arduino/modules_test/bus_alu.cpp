@@ -2,11 +2,11 @@
 #include <Arduino.h>
 
 #define PIN_LOAD_B     2
-#define PIN_OUT_B      -1  // hardwired to off
+#define PIN_OUT_B      6
 
 #define PIN_OUT_ALU    3
-#define PIN_SUBTRACT   4  // alias of A4
-#define PIN_USE_CARRY  5  // alias of A5
+#define PIN_SUBTRACT   4
+#define PIN_USE_CARRY  5
 #define PIN_STORE_FLAG 3   // connect together ALU_OUT and STORE_FLAGS
 
 SecondRegister::SecondRegister()

@@ -32,9 +32,13 @@
 
 ALU alu;
 
+void reg_load_store_output(Register *r, int repeats);
+
 void alu_tests()
 {
     alu.setup();
+    reg_load_store_output(&alu.reg_a, 1000);
+    reg_load_store_output(&alu.reg_b, 1000);
     alu_add_bytes();
     alu_add_bytes_cset();
     alu_sub_bytes();

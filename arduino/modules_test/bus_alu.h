@@ -20,9 +20,10 @@ class ALU : public ExternalDevice
         uint8_t add(uint8_t a, uint8_t b, bool carry_in=false);
         int8_t sub(uint8_t a, uint8_t b, bool carry_in=false);
         uint8_t read_flags();
-    private:
+
         Register reg_a;
         SecondRegister reg_b;
+    private:
         IOBus flags;
         ShiftPin pin_out;
         ShiftPin pin_subtract;
