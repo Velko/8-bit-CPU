@@ -20,7 +20,7 @@ SecondRegister::SecondRegister()
 
 
 ALU::ALU()
-    : flags{A0, A1, A2},
+    : flags{A0, A1, A2, A3},
       pin_out{PIN_OUT_ALU, CtrlPin::ACTIVE_LOW},
       pin_subtract{PIN_SUBTRACT, CtrlPin::ACTIVE_HIGH},
       pin_use_carry{PIN_USE_CARRY, CtrlPin::ACTIVE_HIGH}

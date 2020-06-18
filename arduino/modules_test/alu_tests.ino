@@ -25,8 +25,8 @@
 
 #define ALU_FLAG_Z      0b0001
 #define ALU_FLAG_V      0b0010
-#define ALU_FLAG_C      0b0100
-#define ALU_FLAG_N      0b1000
+#define ALU_FLAG_N      0b0100
+#define ALU_FLAG_C      0b1000
 
 #define FLAG_IS_SET(val, flag)     ((val & flag)!=0)
 
@@ -62,6 +62,7 @@ void alu_add_bytes()
             if (res != expected ||
                FLAG_IS_SET(flags, ALU_FLAG_C) != FLAG_IS_SET(expected_flags, AVR_FLAG_C) ||
                FLAG_IS_SET(flags, ALU_FLAG_V) != FLAG_IS_SET(expected_flags, AVR_FLAG_V) ||
+               FLAG_IS_SET(flags, ALU_FLAG_N) != FLAG_IS_SET(expected_flags, AVR_FLAG_N) ||
                FLAG_IS_SET(flags, ALU_FLAG_Z) != FLAG_IS_SET(expected_flags, AVR_FLAG_Z)
                // we do not check N flag as there are not enough pins on Arduino, but that
                // is the simplest one - should be good on visual inspection
@@ -98,6 +99,7 @@ void alu_add_bytes_cset()
             if (res != expected ||
                FLAG_IS_SET(flags, ALU_FLAG_C) != FLAG_IS_SET(expected_flags, AVR_FLAG_C) ||
                FLAG_IS_SET(flags, ALU_FLAG_V) != FLAG_IS_SET(expected_flags, AVR_FLAG_V) ||
+               FLAG_IS_SET(flags, ALU_FLAG_N) != FLAG_IS_SET(expected_flags, AVR_FLAG_N) ||
                FLAG_IS_SET(flags, ALU_FLAG_Z) != FLAG_IS_SET(expected_flags, AVR_FLAG_Z)
                // we do not check N flag as there are not enough pins on Arduino, but that
                // is the simplest one - should be good on visual inspection
@@ -133,6 +135,7 @@ void alu_sub_bytes()
             if (res != expected ||
                FLAG_IS_SET(flags, ALU_FLAG_C) != FLAG_IS_SET(expected_flags, AVR_FLAG_C) ||
                FLAG_IS_SET(flags, ALU_FLAG_V) != FLAG_IS_SET(expected_flags, AVR_FLAG_V) ||
+               FLAG_IS_SET(flags, ALU_FLAG_N) != FLAG_IS_SET(expected_flags, AVR_FLAG_N) ||
                FLAG_IS_SET(flags, ALU_FLAG_Z) != FLAG_IS_SET(expected_flags, AVR_FLAG_Z)
                // we do not check N flag as there are not enough pins on Arduino, but that
                // is the simplest one - should be good on visual inspection
@@ -169,6 +172,7 @@ void alu_sub_bytes_cset()
             if (res != expected ||
                FLAG_IS_SET(flags, ALU_FLAG_C) != FLAG_IS_SET(expected_flags, AVR_FLAG_C) ||
                FLAG_IS_SET(flags, ALU_FLAG_V) != FLAG_IS_SET(expected_flags, AVR_FLAG_V) ||
+               FLAG_IS_SET(flags, ALU_FLAG_N) != FLAG_IS_SET(expected_flags, AVR_FLAG_N) ||
                FLAG_IS_SET(flags, ALU_FLAG_Z) != FLAG_IS_SET(expected_flags, AVR_FLAG_Z)
                // we do not check N flag as there are not enough pins on Arduino, but that
                // is the simplest one - should be good on visual inspection
