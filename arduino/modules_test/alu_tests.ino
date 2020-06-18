@@ -43,6 +43,18 @@ void alu_tests()
     alu_sub_16bit();
 }
 
+uint8_t flags_avr2alu(uint8_t avr_flags)
+{
+    uint8_t alu_flags = 0;
+
+    if (FLAG_IS_SET(avr_flags, AVR_FLAG_C)) alu_flags |= ALU_FLAG_C;
+    if (FLAG_IS_SET(avr_flags, AVR_FLAG_Z)) alu_flags |= ALU_FLAG_Z;
+    if (FLAG_IS_SET(avr_flags, AVR_FLAG_N)) alu_flags |= ALU_FLAG_N;
+    if (FLAG_IS_SET(avr_flags, AVR_FLAG_V)) alu_flags |= ALU_FLAG_V;
+
+    return alu_flags;
+}
+
 void alu_add_bytes()
 {
     Serial.print(F("Add bytes"));
@@ -57,16 +69,9 @@ void alu_add_bytes()
             uint8_t flags = alu.read_flags();
 
             uint8_t expected = a + b;
-            uint8_t expected_flags = flags_of_add8(a, b) & 0x0F;
+            uint8_t expected_flags = flags_avr2alu(flags_of_add8(a, b));
 
-            if (res != expected ||
-               FLAG_IS_SET(flags, ALU_FLAG_C) != FLAG_IS_SET(expected_flags, AVR_FLAG_C) ||
-               FLAG_IS_SET(flags, ALU_FLAG_V) != FLAG_IS_SET(expected_flags, AVR_FLAG_V) ||
-               FLAG_IS_SET(flags, ALU_FLAG_N) != FLAG_IS_SET(expected_flags, AVR_FLAG_N) ||
-               FLAG_IS_SET(flags, ALU_FLAG_Z) != FLAG_IS_SET(expected_flags, AVR_FLAG_Z)
-               // we do not check N flag as there are not enough pins on Arduino, but that
-               // is the simplest one - should be good on visual inspection
-            )
+            if (res != expected || flags != expected_flags)
             {
                 char line[80];
 
@@ -94,16 +99,9 @@ void alu_add_bytes_cset()
             uint8_t flags = alu.read_flags();
 
             uint8_t expected = add8_set_carry(a, b);
-            uint8_t expected_flags = flags_of_add8_with_c(a, b) & 0x0F;
+            uint8_t expected_flags = flags_avr2alu(flags_of_add8_with_c(a, b));
 
-            if (res != expected ||
-               FLAG_IS_SET(flags, ALU_FLAG_C) != FLAG_IS_SET(expected_flags, AVR_FLAG_C) ||
-               FLAG_IS_SET(flags, ALU_FLAG_V) != FLAG_IS_SET(expected_flags, AVR_FLAG_V) ||
-               FLAG_IS_SET(flags, ALU_FLAG_N) != FLAG_IS_SET(expected_flags, AVR_FLAG_N) ||
-               FLAG_IS_SET(flags, ALU_FLAG_Z) != FLAG_IS_SET(expected_flags, AVR_FLAG_Z)
-               // we do not check N flag as there are not enough pins on Arduino, but that
-               // is the simplest one - should be good on visual inspection
-            )
+            if (res != expected || flags != expected_flags)
             {
                 char line[80];
 
@@ -130,16 +128,9 @@ void alu_sub_bytes()
             uint8_t flags = alu.read_flags();
 
             int8_t expected = a - b;
-            uint8_t expected_flags = flags_of_sub8(a, b) & 0x0F;
+            uint8_t expected_flags = flags_avr2alu(flags_of_sub8(a, b));
 
-            if (res != expected ||
-               FLAG_IS_SET(flags, ALU_FLAG_C) != FLAG_IS_SET(expected_flags, AVR_FLAG_C) ||
-               FLAG_IS_SET(flags, ALU_FLAG_V) != FLAG_IS_SET(expected_flags, AVR_FLAG_V) ||
-               FLAG_IS_SET(flags, ALU_FLAG_N) != FLAG_IS_SET(expected_flags, AVR_FLAG_N) ||
-               FLAG_IS_SET(flags, ALU_FLAG_Z) != FLAG_IS_SET(expected_flags, AVR_FLAG_Z)
-               // we do not check N flag as there are not enough pins on Arduino, but that
-               // is the simplest one - should be good on visual inspection
-            )
+            if (res != expected || flags != expected_flags)
             {
                 char line[80];
 
@@ -167,16 +158,9 @@ void alu_sub_bytes_cset()
             uint8_t flags = alu.read_flags();
 
             int8_t expected = sub8_set_carry(a, b);
-            uint8_t expected_flags = flags_of_sub8_with_c(a, b) & 0x0F;
+            uint8_t expected_flags = flags_avr2alu(flags_of_sub8_with_c(a, b));
 
-            if (res != expected ||
-               FLAG_IS_SET(flags, ALU_FLAG_C) != FLAG_IS_SET(expected_flags, AVR_FLAG_C) ||
-               FLAG_IS_SET(flags, ALU_FLAG_V) != FLAG_IS_SET(expected_flags, AVR_FLAG_V) ||
-               FLAG_IS_SET(flags, ALU_FLAG_N) != FLAG_IS_SET(expected_flags, AVR_FLAG_N) ||
-               FLAG_IS_SET(flags, ALU_FLAG_Z) != FLAG_IS_SET(expected_flags, AVR_FLAG_Z)
-               // we do not check N flag as there are not enough pins on Arduino, but that
-               // is the simplest one - should be good on visual inspection
-            )
+            if (res != expected || flags != expected_flags)
             {
                 char line[80];
 
