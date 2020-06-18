@@ -12,7 +12,7 @@ class Counter : public Register
         virtual void MoveNext();
 
     protected:
-        CtrlPin pin_c_enable;
+        ShiftPin pin_c_enable;
 };
 
 

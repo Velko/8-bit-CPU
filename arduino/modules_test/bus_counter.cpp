@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-#define PIN_COUNT       SCL
+#define PIN_COUNT       2
 
 Counter::Counter()
     : pin_c_enable{PIN_COUNT, CtrlPin::ACTIVE_HIGH}

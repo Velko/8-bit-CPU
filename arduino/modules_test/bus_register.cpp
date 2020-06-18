@@ -1,20 +1,20 @@
 #include "bus_register.h"
 #include <Arduino.h>
 
-#define PIN_LOAD    13
-#define PIN_OUT     12
+#define PIN_LOAD    0
+#define PIN_OUT     1
 
 
 Register::Register()
     : Register(
-        CtrlPin(PIN_LOAD, CtrlPin::ACTIVE_LOW),
-        CtrlPin(PIN_OUT, CtrlPin::ACTIVE_LOW)
+        ShiftPin(PIN_LOAD, CtrlPin::ACTIVE_LOW),
+        ShiftPin(PIN_OUT, CtrlPin::ACTIVE_LOW)
     )
 {
 
 }
 
-Register::Register(CtrlPin&& _pin_load, CtrlPin&& _pin_out)
+Register::Register(ShiftPin&& _pin_load, ShiftPin&& _pin_out)
     : BusDevice{9, 8, 7, 6, 5, 4, 3, 2},
       pin_load{_pin_load},
       pin_out{_pin_out}

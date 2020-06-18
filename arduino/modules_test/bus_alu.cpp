@@ -1,18 +1,18 @@
 #include "bus_alu.h"
 #include <Arduino.h>
 
-#define PIN_LOAD_B     10
+#define PIN_LOAD_B     2
 #define PIN_OUT_B      -1  // hardwired to off
 
-#define PIN_OUT_ALU    A3
-#define PIN_SUBTRACT   SDA  // alias of A4
-#define PIN_USE_CARRY  SCL  // alias of A5
-#define PIN_STORE_FLAG A3   // connect together ALU_OUT and STORE_FLAGS
+#define PIN_OUT_ALU    3
+#define PIN_SUBTRACT   4  // alias of A4
+#define PIN_USE_CARRY  5  // alias of A5
+#define PIN_STORE_FLAG 3   // connect together ALU_OUT and STORE_FLAGS
 
 SecondRegister::SecondRegister()
     : Register (
-        CtrlPin(PIN_LOAD_B, CtrlPin::ACTIVE_LOW),
-        CtrlPin(PIN_OUT_B, CtrlPin::ACTIVE_LOW)
+        ShiftPin(PIN_LOAD_B, CtrlPin::ACTIVE_LOW),
+        ShiftPin(PIN_OUT_B, CtrlPin::ACTIVE_LOW)
     )
 {
 }
@@ -44,8 +44,8 @@ uint8_t ALU::add(uint8_t a, uint8_t b, bool carry_in)
     reg_a.write(a);
     reg_b.write(b);
 
-    pin_subtract.off();
-    pin_use_carry.set(carry_in);
+    pin_subtract.off(false);
+    pin_use_carry.set(carry_in, false);
     pin_out.on();
 
     reg_a.load();
@@ -60,8 +60,8 @@ int8_t ALU::sub(uint8_t a, uint8_t b, bool carry_in)
     reg_a.write(a);
     reg_b.write(b);
 
-    pin_subtract.on();
-    pin_use_carry.set(carry_in);
+    pin_subtract.on(false);
+    pin_use_carry.set(carry_in, false);
     pin_out.on();
 
     reg_a.load();

@@ -24,9 +24,9 @@ class ALU : public ExternalDevice
         Register reg_a;
         SecondRegister reg_b;
         IOBus flags;
-        CtrlPin pin_out;
-        CtrlPin pin_subtract;
-        CtrlPin pin_use_carry;
+        ShiftPin pin_out;
+        ShiftPin pin_subtract;
+        ShiftPin pin_use_carry;
 };
 
 
