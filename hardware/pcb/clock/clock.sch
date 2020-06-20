@@ -1,5 +1,4 @@
 EESchema Schematic File Version 4
-LIBS:clock-cache
 EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
@@ -895,4 +894,96 @@ Wire Wire Line
 	6450 5000 7150 5000
 Wire Wire Line
 	5350 4550 7150 4550
+$Comp
+L Connector:Conn_01x02_Female J1
+U 1 1 5EEE95B9
+P 8900 4900
+F 0 "J1" H 8750 4700 50  0000 C CNN
+F 1 "01x02_F" H 8750 5000 50  0000 C CNN
+F 2 "" H 8900 4900 50  0001 C CNN
+F 3 "~" H 8900 4900 50  0001 C CNN
+	1    8900 4900
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	9100 4800 9250 4800
+Wire Wire Line
+	9250 4800 9250 4650
+Wire Wire Line
+	9250 4650 9500 4650
+Connection ~ 9500 4650
+Wire Wire Line
+	9100 4900 9250 4900
+Wire Wire Line
+	9250 4900 9250 5050
+Wire Wire Line
+	9250 5050 9500 5050
+Connection ~ 9500 5050
+$Comp
+L power:PWR_FLAG #FLG0101
+U 1 1 5EF02A22
+P 9250 4500
+F 0 "#FLG0101" H 9250 4575 50  0001 C CNN
+F 1 "PWR_FLAG" H 9250 4674 50  0000 C CNN
+F 2 "" H 9250 4500 50  0001 C CNN
+F 3 "~" H 9250 4500 50  0001 C CNN
+	1    9250 4500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9250 4500 9250 4650
+Connection ~ 9250 4650
+$Comp
+L Connector:Conn_01x04_Female J2
+U 1 1 5EF17E68
+P 1850 6550
+F 0 "J2" H 1877 6526 50  0000 L CNN
+F 1 "01x04_F" H 1877 6435 50  0000 L CNN
+F 2 "" H 1850 6550 50  0001 C CNN
+F 3 "~" H 1850 6550 50  0001 C CNN
+	1    1850 6550
+	1    0    0    -1  
+$EndComp
+Text GLabel 1450 6550 0    50   Input ~ 0
+~CLK~
+Text GLabel 1450 6700 0    50   Output ~ 0
+HLT
+Text GLabel 1450 6850 0    50   Output ~ 0
+~WAKE~
+$Comp
+L power:PWR_FLAG #FLG0102
+U 1 1 5EF36356
+P 9250 5150
+F 0 "#FLG0102" H 9250 5225 50  0001 C CNN
+F 1 "PWR_FLAG" H 9250 5323 50  0000 C CNN
+F 2 "" H 9250 5150 50  0001 C CNN
+F 3 "~" H 9250 5150 50  0001 C CNN
+	1    9250 5150
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	9250 5050 9250 5150
+Connection ~ 9250 5050
+Text GLabel 1450 6400 0    50   Input ~ 0
+CLK
+Wire Wire Line
+	1450 6400 1600 6400
+Wire Wire Line
+	1600 6400 1600 6450
+Wire Wire Line
+	1600 6450 1650 6450
+Wire Wire Line
+	1450 6550 1650 6550
+Wire Wire Line
+	1450 6700 1600 6700
+Wire Wire Line
+	1600 6700 1600 6650
+Wire Wire Line
+	1600 6650 1650 6650
+Wire Wire Line
+	1450 6850 1600 6850
+Wire Wire Line
+	1600 6850 1600 6750
+Wire Wire Line
+	1600 6750 1650 6750
 $EndSCHEMATC
