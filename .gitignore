@@ -4,5 +4,6 @@
 *.bak
 *.lib
 *.png
+*.kicad_pcb-bak
 zz_*.ino
 /sample/
