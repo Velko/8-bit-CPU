@@ -211,3 +211,12 @@ Additionally:
 * bus monitor
 * bus/breadboard adapter
 
+
+
+Parts for PCB
+=============
+
+Switch: 1201430
+SMD LEDs
+SMD capacitors: 10nF, 100nF, 1uF
+SMD resistors: 1K, 10K, 1M, 330
