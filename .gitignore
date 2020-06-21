@@ -5,3 +5,4 @@
 *.lib
 *.png
 zz_*.ino
+/sample/
