@@ -1,0 +1,300 @@
+EESchema Schematic File Version 4
+EELAYER 26 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L 74xx:74HC245 U1
+U 1 1 5EEF6738
+P 1750 2200
+F 0 "U1" H 1550 2850 50  0000 C CNN
+F 1 "74HC245" H 1950 2850 50  0000 C CNN
+F 2 "" H 1750 2200 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC245" H 1750 2200 50  0001 C CNN
+	1    1750 2200
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS173 U2
+U 1 1 5EEF68FA
+P 3750 2300
+F 0 "U2" H 3550 3050 50  0000 C CNN
+F 1 "74HC173" H 3950 3050 50  0000 C CNN
+F 2 "" H 3750 2300 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS173" H 3750 2300 50  0001 C CNN
+	1    3750 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS173 U3
+U 1 1 5EEF697C
+P 5750 2300
+F 0 "U3" H 5550 3050 50  0000 C CNN
+F 1 "74HC173" H 5950 3050 50  0000 C CNN
+F 2 "" H 5750 2300 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS173" H 5750 2300 50  0001 C CNN
+	1    5750 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 5EEF785D
+P 3750 1050
+F 0 "#PWR?" H 3750 900 50  0001 C CNN
+F 1 "VCC" H 3767 1223 50  0000 C CNN
+F 2 "" H 3750 1050 50  0001 C CNN
+F 3 "" H 3750 1050 50  0001 C CNN
+	1    3750 1050
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 5EEF7878
+P 1750 1050
+F 0 "#PWR?" H 1750 900 50  0001 C CNN
+F 1 "VCC" H 1767 1223 50  0000 C CNN
+F 2 "" H 1750 1050 50  0001 C CNN
+F 3 "" H 1750 1050 50  0001 C CNN
+	1    1750 1050
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 5EEF7889
+P 5750 1050
+F 0 "#PWR?" H 5750 900 50  0001 C CNN
+F 1 "VCC" H 5767 1223 50  0000 C CNN
+F 2 "" H 5750 1050 50  0001 C CNN
+F 3 "" H 5750 1050 50  0001 C CNN
+	1    5750 1050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5750 1400 5750 1050
+Wire Wire Line
+	3750 1050 3750 1400
+Wire Wire Line
+	1750 1050 1750 1250
+$Comp
+L power:GND #PWR?
+U 1 1 5EEF8A94
+P 3750 3400
+F 0 "#PWR?" H 3750 3150 50  0001 C CNN
+F 1 "GND" H 3755 3227 50  0000 C CNN
+F 2 "" H 3750 3400 50  0001 C CNN
+F 3 "" H 3750 3400 50  0001 C CNN
+	1    3750 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5EEF8AAC
+P 1750 3400
+F 0 "#PWR?" H 1750 3150 50  0001 C CNN
+F 1 "GND" H 1755 3227 50  0000 C CNN
+F 2 "" H 1750 3400 50  0001 C CNN
+F 3 "" H 1750 3400 50  0001 C CNN
+	1    1750 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5EEF8ABD
+P 5750 3400
+F 0 "#PWR?" H 5750 3150 50  0001 C CNN
+F 1 "GND" H 5755 3227 50  0000 C CNN
+F 2 "" H 5750 3400 50  0001 C CNN
+F 3 "" H 5750 3400 50  0001 C CNN
+	1    5750 3400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5750 3200 5750 3400
+Wire Wire Line
+	3750 3200 3750 3400
+Wire Wire Line
+	1750 3000 1750 3400
+$Comp
+L power:GND #PWR?
+U 1 1 5EEF9517
+P 3150 2300
+F 0 "#PWR?" H 3150 2050 50  0001 C CNN
+F 1 "GND" H 3155 2127 50  0000 C CNN
+F 2 "" H 3150 2300 50  0001 C CNN
+F 3 "" H 3150 2300 50  0001 C CNN
+	1    3150 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 5EEF9528
+P 5150 2300
+F 0 "#PWR?" H 5150 2050 50  0001 C CNN
+F 1 "GND" H 5155 2127 50  0000 C CNN
+F 2 "" H 5150 2300 50  0001 C CNN
+F 3 "" H 5150 2300 50  0001 C CNN
+	1    5150 2300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5250 2200 5150 2200
+Wire Wire Line
+	5150 2200 5150 2300
+Wire Wire Line
+	5250 2300 5150 2300
+Connection ~ 5150 2300
+Wire Wire Line
+	3250 2200 3150 2200
+Wire Wire Line
+	3150 2200 3150 2300
+Wire Wire Line
+	3250 2300 3150 2300
+Connection ~ 3150 2300
+Connection ~ 1750 1250
+Wire Wire Line
+	1750 1250 1750 1400
+Text GLabel 2300 1700 2    50   Output ~ 0
+BUS0
+Text GLabel 2300 1800 2    50   Output ~ 0
+BUS1
+Text GLabel 2300 1900 2    50   Output ~ 0
+BUS2
+Text GLabel 2300 2000 2    50   Output ~ 0
+BUS3
+Text GLabel 2300 2100 2    50   Output ~ 0
+BUS4
+Text GLabel 2300 2200 2    50   Output ~ 0
+BUS5
+Text GLabel 2300 2300 2    50   Output ~ 0
+BUS6
+Text GLabel 2300 2400 2    50   Output ~ 0
+BUS7
+Wire Wire Line
+	2250 1700 2300 1700
+Wire Wire Line
+	2250 1800 2300 1800
+Wire Wire Line
+	2250 1900 2300 1900
+Wire Wire Line
+	2250 2000 2300 2000
+Wire Wire Line
+	2250 2100 2300 2100
+Wire Wire Line
+	2250 2200 2300 2200
+Wire Wire Line
+	2250 2300 2300 2300
+Wire Wire Line
+	2250 2400 2300 2400
+Text GLabel 1150 1700 0    50   Input ~ 0
+TAP0
+Text GLabel 1150 1800 0    50   Input ~ 0
+TAP1
+Text GLabel 1150 1900 0    50   Input ~ 0
+TAP2
+Text GLabel 1150 2000 0    50   Input ~ 0
+TAP3
+Text GLabel 1150 2100 0    50   Input ~ 0
+TAP4
+Text GLabel 1150 2200 0    50   Input ~ 0
+TAP5
+Text GLabel 1150 2300 0    50   Input ~ 0
+TAP6
+Text GLabel 1150 2400 0    50   Input ~ 0
+TAP7
+Wire Wire Line
+	1150 1700 1250 1700
+Wire Wire Line
+	1150 1800 1250 1800
+Wire Wire Line
+	1150 1900 1250 1900
+Wire Wire Line
+	1150 2000 1250 2000
+Wire Wire Line
+	1150 2100 1250 2100
+Wire Wire Line
+	1150 2200 1250 2200
+Wire Wire Line
+	1150 2300 1250 2300
+Wire Wire Line
+	1150 2400 1250 2400
+Wire Wire Line
+	1250 2600 850  2600
+Wire Wire Line
+	850  2600 850  1250
+Wire Wire Line
+	850  1250 1750 1250
+Text GLabel 3150 1700 0    50   Input ~ 0
+BUS0
+Text GLabel 3150 1800 0    50   Input ~ 0
+BUS1
+Text GLabel 3150 1900 0    50   Input ~ 0
+BUS2
+Text GLabel 3150 2000 0    50   Input ~ 0
+BUS3
+Wire Wire Line
+	3150 1700 3250 1700
+Wire Wire Line
+	3150 1800 3250 1800
+Wire Wire Line
+	3150 1900 3250 1900
+Wire Wire Line
+	3150 2000 3250 2000
+Text GLabel 4350 1700 2    50   Output ~ 0
+TAP0
+Text GLabel 4350 1800 2    50   Output ~ 0
+TAP1
+Text GLabel 4350 1900 2    50   Output ~ 0
+TAP2
+Text GLabel 4350 2000 2    50   Output ~ 0
+TAP3
+Wire Wire Line
+	4250 1700 4350 1700
+Wire Wire Line
+	4250 1800 4350 1800
+Wire Wire Line
+	4250 1900 4350 1900
+Wire Wire Line
+	4250 2000 4350 2000
+Text GLabel 5200 1700 0    50   Input ~ 0
+BUS4
+Text GLabel 5200 1800 0    50   Input ~ 0
+BUS5
+Text GLabel 5200 1900 0    50   Input ~ 0
+BUS6
+Text GLabel 5200 2000 0    50   Input ~ 0
+BUS7
+Wire Wire Line
+	5200 1700 5250 1700
+Wire Wire Line
+	5200 1800 5250 1800
+Wire Wire Line
+	5200 1900 5250 1900
+Wire Wire Line
+	5200 2000 5250 2000
+Text GLabel 6350 1700 2    50   Output ~ 0
+TAP4
+Text GLabel 6350 1800 2    50   Output ~ 0
+TAP5
+Text GLabel 6350 1900 2    50   Output ~ 0
+TAP6
+Text GLabel 6350 2000 2    50   Output ~ 0
+TAP7
+Wire Wire Line
+	6250 1700 6350 1700
+Wire Wire Line
+	6250 1800 6350 1800
+Wire Wire Line
+	6250 1900 6350 1900
+Wire Wire Line
+	6250 2000 6350 2000
+$EndSCHEMATC
