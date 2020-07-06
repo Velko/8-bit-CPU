@@ -156,6 +156,22 @@ Notes for blog
     * SDA, SCL == A4, A5
     * a shift register could help a little
     * abstracting the pins
+    * add shift register outputs
+    * idea about combined eeprom burner / IO extender
+
+* Documenting the builds
+    * Fritzig, adding ICs
+    * Version-control unfriendlyness
+    * Kicad vs Eagle
+    
+
+
+* Keyboard
+    * Rearrange the keys
+    * Initial idea
+    * Post on Reddit / idea about pin7
+    * Latching logic
+    * Pair with Display
 
 
 Far future
