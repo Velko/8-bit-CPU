@@ -10,6 +10,7 @@ class ShiftOutExt
         ShiftOutExt(CtrlPin&& latch);
         void setup();
         void write8(uint8_t data);
+        void write16(uint16_t data);
     private:
         CtrlPin latch;
 };

@@ -29,3 +29,11 @@ void ShiftOutExt::write8(uint8_t data)
     latch.on();
     latch.off();
 }
+
+void ShiftOutExt::write16(uint16_t data)
+{
+    SPI.transfer((data >> 8) & 0xFF);
+    SPI.transfer(data & 0xFF);
+    latch.on();
+    latch.off();
+}

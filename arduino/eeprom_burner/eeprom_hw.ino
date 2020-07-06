@@ -1,18 +1,18 @@
-#include <SPI.h>
+#include <shiftoutext.h>
 
 /* Not used in code, just for the notes */
+#define SH_LATCH    10
 #define SPI_SCK     13
 #define SPI_MOSI    11
 
 /* WE pin */
 #define EE_WRITE    SCL
 
-/* Address latch */
-#define SH_LATCH    10
-
 /* Pins for data IO. LSB first */
 const int DATA_PINS[] = {6, 7, 8, 9,
                          5, 4, 3, 2};
+
+ShiftOutExt addr_out;
 
 void eeprom_config_pins_read()
 {
@@ -30,16 +30,9 @@ void eeprom_setup()
     digitalWrite(EE_WRITE, HIGH);
     pinMode(EE_WRITE, OUTPUT);
 
-    pinMode(SH_LATCH, OUTPUT);
-    digitalWrite(SH_LATCH, LOW);
-
     eeprom_config_pins_read();
 
-    /* The "old" SPI initialization sequence (I like this one better)*/
-    SPI.begin();
-    SPI.setDataMode(SPI_MODE0);
-    SPI.setBitOrder(MSBFIRST);
-    SPI.setClockDivider(SPI_CLOCK_DIV32);
+    addr_out.setup();
 }
 
 void eeprom_set_address(uint16_t addr, bool w)
@@ -52,17 +45,7 @@ void eeprom_set_address(uint16_t addr, bool w)
     if (w)
         addr |= 0x8000;
 
-
-    SPI.begin();
-    /* Older versions of Arduino Lib does not have SPI.transfer16(),
-       but we can just send both bytes seperately */
-    SPI.transfer((addr >> 8) & 0xFF);
-    SPI.transfer(addr & 0xFF);
-
-    /* Address is shifted in, latch address lines */
-    digitalWrite(SH_LATCH, HIGH);
-    delayMicroseconds(1);
-    digitalWrite(SH_LATCH, LOW);
+    addr_out.write16(addr);
 }
 
 void eeprom_peform_write(uint16_t addr, uint8_t value)
