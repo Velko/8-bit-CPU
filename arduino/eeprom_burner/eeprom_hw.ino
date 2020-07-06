@@ -8,7 +8,7 @@
 #define EE_WRITE    SCL
 
 /* Address latch */
-#define SH_LATCH    SDA
+#define SH_LATCH    10
 
 /* Pins for data IO. LSB first */
 const int DATA_PINS[] = {6, 7, 8, 9,
