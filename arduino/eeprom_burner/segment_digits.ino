@@ -45,6 +45,9 @@
 #define DIGIT_F     (SEG_BIT_A | SEG_BIT_E | SEG_BIT_F | SEG_BIT_G)
 #define DIGIT_MINUS (SEG_BIT_G)
 
+#define CHAR_h      (SEG_BIT_C | SEG_BIT_E | SEG_BIT_F | SEG_BIT_G)
+#define CHAR_o      (SEG_BIT_C | SEG_BIT_D | SEG_BIT_E | SEG_BIT_G)
+
 /* The layout of the EEPROM is as if it was an array similar to:
 
     uint8_t digitMap[NUM_MODES][256][NUM_DISPLAYS];
@@ -81,6 +84,8 @@ uint8_t encode_digit(char c)
         case 'E': return DIGIT_E;
         case 'F': return DIGIT_F;
         case '-': return DIGIT_MINUS;
+        case 'h': return CHAR_h;
+        case 'o': return CHAR_o;
         default:  return DIGIT_BLANK;
     }
 }
@@ -123,10 +128,10 @@ void burn7seg_digits()
 
     /* Hex */
     for (int i = 0; i < 256; ++i)
-        write_digit(i, PSTR("%4X"));
+        write_digit(i, PSTR("h %02X"));
 
 
     /* Oct */
     for (int i = 0; i < 256; ++i)
-        write_digit(i, PSTR("%4o"));
+        write_digit(i, PSTR("o%3o"));
 }
