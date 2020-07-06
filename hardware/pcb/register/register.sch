@@ -158,70 +158,38 @@ Connection ~ 3150 2300
 Connection ~ 1750 1250
 Wire Wire Line
 	1750 1250 1750 1400
-Text GLabel 2300 1700 2    50   Output ~ 0
+Text GLabel 2350 2400 2    50   Output ~ 0
 BUS0
-Text GLabel 2300 1800 2    50   Output ~ 0
+Text GLabel 2350 2300 2    50   Output ~ 0
 BUS1
-Text GLabel 2300 1900 2    50   Output ~ 0
+Text GLabel 2350 2200 2    50   Output ~ 0
 BUS2
-Text GLabel 2300 2000 2    50   Output ~ 0
+Text GLabel 2350 2100 2    50   Output ~ 0
 BUS3
-Text GLabel 2300 2100 2    50   Output ~ 0
+Text GLabel 2350 2000 2    50   Output ~ 0
 BUS4
-Text GLabel 2300 2200 2    50   Output ~ 0
+Text GLabel 2350 1900 2    50   Output ~ 0
 BUS5
-Text GLabel 2300 2300 2    50   Output ~ 0
+Text GLabel 2350 1800 2    50   Output ~ 0
 BUS6
-Text GLabel 2300 2400 2    50   Output ~ 0
+Text GLabel 2350 1700 2    50   Output ~ 0
 BUS7
-Wire Wire Line
-	2250 1700 2300 1700
-Wire Wire Line
-	2250 1800 2300 1800
-Wire Wire Line
-	2250 1900 2300 1900
-Wire Wire Line
-	2250 2000 2300 2000
-Wire Wire Line
-	2250 2100 2300 2100
-Wire Wire Line
-	2250 2200 2300 2200
-Wire Wire Line
-	2250 2300 2300 2300
-Wire Wire Line
-	2250 2400 2300 2400
-Text GLabel 1150 1700 0    50   Input ~ 0
-TAP0
-Text GLabel 1150 1800 0    50   Input ~ 0
-TAP1
-Text GLabel 1150 1900 0    50   Input ~ 0
-TAP2
-Text GLabel 1150 2000 0    50   Input ~ 0
-TAP3
-Text GLabel 1150 2100 0    50   Input ~ 0
-TAP4
-Text GLabel 1150 2200 0    50   Input ~ 0
-TAP5
-Text GLabel 1150 2300 0    50   Input ~ 0
-TAP6
 Text GLabel 1150 2400 0    50   Input ~ 0
+TAP0
+Text GLabel 1150 2300 0    50   Input ~ 0
+TAP1
+Text GLabel 1150 2200 0    50   Input ~ 0
+TAP2
+Text GLabel 1150 2100 0    50   Input ~ 0
+TAP3
+Text GLabel 1150 2000 0    50   Input ~ 0
+TAP4
+Text GLabel 1150 1900 0    50   Input ~ 0
+TAP5
+Text GLabel 1150 1800 0    50   Input ~ 0
+TAP6
+Text GLabel 1150 1700 0    50   Input ~ 0
 TAP7
-Wire Wire Line
-	1150 1700 1250 1700
-Wire Wire Line
-	1150 1800 1250 1800
-Wire Wire Line
-	1150 1900 1250 1900
-Wire Wire Line
-	1150 2000 1250 2000
-Wire Wire Line
-	1150 2100 1250 2100
-Wire Wire Line
-	1150 2200 1250 2200
-Wire Wire Line
-	1150 2300 1250 2300
-Wire Wire Line
-	1150 2400 1250 2400
 Wire Wire Line
 	1250 2600 850  2600
 Wire Wire Line
@@ -1016,4 +984,36 @@ Wire Wire Line
 NoConn ~ 5600 4750
 NoConn ~ 5600 4650
 NoConn ~ 22650 1900
+Wire Wire Line
+	1150 1700 1250 1700
+Wire Wire Line
+	1250 1800 1150 1800
+Wire Wire Line
+	1250 1900 1150 1900
+Wire Wire Line
+	1250 2000 1150 2000
+Wire Wire Line
+	1250 2100 1150 2100
+Wire Wire Line
+	1250 2200 1150 2200
+Wire Wire Line
+	1250 2300 1150 2300
+Wire Wire Line
+	1250 2400 1150 2400
+Wire Wire Line
+	2250 1700 2350 1700
+Wire Wire Line
+	2250 1800 2350 1800
+Wire Wire Line
+	2250 1900 2350 1900
+Wire Wire Line
+	2250 2000 2350 2000
+Wire Wire Line
+	2250 2100 2350 2100
+Wire Wire Line
+	2250 2200 2350 2200
+Wire Wire Line
+	2250 2300 2350 2300
+Wire Wire Line
+	2250 2400 2350 2400
 $EndSCHEMATC
