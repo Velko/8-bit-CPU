@@ -9,6 +9,8 @@
 /* WE pin */
 #define EE_WRITE    SCL
 
+CtrlPin write_pin(EE_WRITE, CtrlPin::ACTIVE_LOW);
+
 /* Pins for data IO. LSB first */
 IOBus data_bus {6, 7, 8, 9,
                 5, 4, 3, 2};
@@ -17,9 +19,7 @@ ShiftOutExt addr_out;
 
 void eeprom_setup()
 {
-    /* Keep WE pin high while not writing */
-    digitalWrite(EE_WRITE, HIGH);
-    pinMode(EE_WRITE, OUTPUT);
+    write_pin.setup();
 
     data_bus.set_input();
 
@@ -47,9 +47,9 @@ void eeprom_peform_write(uint16_t addr, uint8_t value)
     data_bus.write(value);
 
     /* Pulse the WE pin to start write */
-    digitalWrite(EE_WRITE, LOW);
+    write_pin.on();
     delayMicroseconds(1);
-    digitalWrite(EE_WRITE, HIGH);
+    write_pin.off();
 
     /* Switch back to inputs as soon as possible:
        let EEPROM control data lines */

@@ -9,8 +9,8 @@ CtrlPin::CtrlPin(uint8_t _pin, ActiveLevel _mode)
 
 void CtrlPin::setup()
 {
-    pinMode(pin, OUTPUT);
     off();
+    pinMode(pin, OUTPUT);
 }
 
 void CtrlPin::on()
