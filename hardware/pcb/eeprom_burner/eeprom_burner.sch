@@ -71,7 +71,7 @@ U 1 1 56D70129
 P 9150 1900
 F 0 "P1" H 9150 2350 50  0000 C CNN
 F 1 "Power" V 9250 1900 50  0000 C CNN
-F 2 "Socket_Arduino_Uno:Socket_Strip_Arduino_1x08" V 9300 1900 20  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical" V 9300 1900 20  0000 C CNN
 F 3 "" H 9150 1900 50  0000 C CNN
 	1    9150 1900
 	1    0    0    -1  
@@ -115,7 +115,7 @@ U 1 1 56D70DD8
 P 9150 2700
 F 0 "P2" H 9150 2300 50  0000 C CNN
 F 1 "Analog" V 9250 2700 50  0000 C CNN
-F 2 "Socket_Arduino_Uno:Socket_Strip_Arduino_1x06" V 9300 2750 20  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical" V 9300 2750 20  0000 C CNN
 F 3 "" H 9150 2700 50  0000 C CNN
 	1    9150 2700
 	1    0    0    -1  
@@ -174,7 +174,7 @@ U 1 1 56D7164F
 P 9550 2600
 F 0 "P4" H 9550 2100 50  0000 C CNN
 F 1 "Digital" V 9650 2600 50  0000 C CNN
-F 2 "Socket_Arduino_Uno:Socket_Strip_Arduino_1x08" V 9700 2550 20  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical" V 9700 2550 20  0000 C CNN
 F 3 "" H 9550 2600 50  0000 C CNN
 	1    9550 2600
 	-1   0    0    -1  
@@ -210,7 +210,7 @@ U 1 1 56D721E0
 P 9550 1600
 F 0 "P3" H 9550 2150 50  0000 C CNN
 F 1 "Digital" V 9650 1600 50  0000 C CNN
-F 2 "Socket_Arduino_Uno:Socket_Strip_Arduino_1x10" V 9700 1600 20  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x10_P2.54mm_Vertical" V 9700 1600 20  0000 C CNN
 F 3 "" H 9550 1600 50  0000 C CNN
 	1    9550 1600
 	-1   0    0    -1  
