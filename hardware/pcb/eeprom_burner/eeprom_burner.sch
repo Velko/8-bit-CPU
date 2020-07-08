@@ -366,41 +366,8 @@ Wire Wire Line
 	700  1900 700  1850
 Wire Wire Line
 	700  1900 1150 1900
-$Comp
-L Device:R R2
-U 1 1 5F053C37
-P 2450 2300
-F 0 "R2" H 2520 2300 50  0000 L CNN
-F 1 "R" H 2520 2255 50  0001 L CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 2380 2300 50  0001 C CNN
-F 3 "~" H 2450 2300 50  0001 C CNN
-	1    2450 2300
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:R R3
-U 1 1 5F053D48
-P 2450 2700
-F 0 "R3" H 2520 2700 50  0000 L CNN
-F 1 "R" H 2520 2655 50  0001 L CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 2380 2700 50  0001 C CNN
-F 3 "~" H 2450 2700 50  0001 C CNN
-	1    2450 2700
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	3000 2200 2650 2200
-Wire Wire Line
-	2650 2200 2650 2500
-Wire Wire Line
-	2650 2500 2450 2500
-Wire Wire Line
-	2450 2500 2450 2450
-Wire Wire Line
-	2450 2500 2450 2550
-Connection ~ 2450 2500
-Wire Wire Line
-	2450 2150 2450 1900
 Wire Wire Line
 	2450 1900 3000 1900
 $Comp
@@ -429,8 +396,6 @@ F 3 "" H 3400 2950 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	2450 2850 2450 2900
-Wire Wire Line
 	2450 2900 3400 2900
 Wire Wire Line
 	3400 2700 3400 2900
@@ -447,10 +412,6 @@ Wire Wire Line
 	1100 1600 1150 1600
 Wire Wire Line
 	3800 2500 4450 2500
-Wire Wire Line
-	2450 2500 2250 2500
-Wire Wire Line
-	2250 2500 2250 2750
 Wire Wire Line
 	2250 2750 1100 2750
 Wire Wire Line
@@ -479,7 +440,7 @@ L Device:R R1
 U 1 1 5F05FD4C
 P 7350 1250
 F 0 "R1" H 7420 1250 50  0000 L CNN
-F 1 "R" H 7420 1205 50  0001 L CNN
+F 1 "10K" H 7420 1205 50  0001 L CNN
 F 2 "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" V 7280 1250 50  0001 C CNN
 F 3 "~" H 7350 1250 50  0001 C CNN
 	1    7350 1250
@@ -876,4 +837,28 @@ Wire Wire Line
 	3300 5950 3300 6000
 Wire Wire Line
 	3300 6000 3350 6000
+Wire Wire Line
+	2650 2200 2650 2750
+Wire Wire Line
+	2650 2750 2250 2750
+Connection ~ 2250 2750
+$Comp
+L Jumper:SolderJumper_3_Open JP1
+U 1 1 5F0A6B6F
+P 2450 2400
+F 0 "JP1" V 2450 2467 50  0000 L CNN
+F 1 "SolderJumper_3_Open" V 2495 2468 50  0001 L CNN
+F 2 "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm" H 2450 2400 50  0001 C CNN
+F 3 "~" H 2450 2400 50  0001 C CNN
+	1    2450 2400
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2450 1900 2450 2200
+Wire Wire Line
+	2450 2600 2450 2900
+Wire Wire Line
+	2250 2400 2300 2400
+Wire Wire Line
+	2250 2400 2250 2750
 $EndSCHEMATC
