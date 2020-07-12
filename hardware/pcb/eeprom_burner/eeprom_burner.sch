@@ -14,52 +14,52 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
-Text Label 8450 2500 0    60   ~ 0
+Text Label 8200 2550 0    60   ~ 0
 A0
-Text Label 8450 2600 0    60   ~ 0
+Text Label 8200 2650 0    60   ~ 0
 A1
-Text Label 8450 2700 0    60   ~ 0
+Text Label 8200 2750 0    60   ~ 0
 A2
-Text Label 8450 2800 0    60   ~ 0
+Text Label 8200 2850 0    60   ~ 0
 A3
-Text Label 8450 2900 0    60   ~ 0
+Text Label 8200 2950 0    60   ~ 0
 A4(SDA)
-Text Label 8450 3000 0    60   ~ 0
+Text Label 8200 3050 0    60   ~ 0
 A5(SCL)
-Text Label 10350 3000 0    60   ~ 0
+Text Label 10350 3050 0    60   ~ 0
 0(Rx)
-Text Label 10350 2800 0    60   ~ 0
+Text Label 10350 2850 0    60   ~ 0
 2
-Text Label 10350 2900 0    60   ~ 0
+Text Label 10350 2950 0    60   ~ 0
 1(Tx)
-Text Label 10350 2700 0    60   ~ 0
+Text Label 10350 2750 0    60   ~ 0
 3(**)
-Text Label 10350 2600 0    60   ~ 0
+Text Label 10350 2650 0    60   ~ 0
 4
-Text Label 10350 2500 0    60   ~ 0
+Text Label 10350 2550 0    60   ~ 0
 5(**)
-Text Label 10350 2400 0    60   ~ 0
+Text Label 10350 2450 0    60   ~ 0
 6(**)
-Text Label 10350 2300 0    60   ~ 0
+Text Label 10350 2350 0    60   ~ 0
 7
-Text Label 10350 2100 0    60   ~ 0
+Text Label 10400 2150 0    60   ~ 0
 8
-Text Label 10350 2000 0    60   ~ 0
+Text Label 10400 2050 0    60   ~ 0
 9(**)
-Text Label 10350 1900 0    60   ~ 0
+Text Label 10400 1950 0    60   ~ 0
 10(**/SS)
-Text Label 10350 1800 0    60   ~ 0
+Text Label 10400 1850 0    60   ~ 0
 11(**/MOSI)
-Text Label 10350 1700 0    60   ~ 0
+Text Label 10400 1750 0    60   ~ 0
 12(MISO)
-Text Label 10350 1600 0    60   ~ 0
+Text Label 10400 1650 0    60   ~ 0
 13(SCK)
-Text Label 10350 1400 0    60   ~ 0
+Text Label 10350 1450 0    60   ~ 0
 AREF
 NoConn ~ 8950 1600
-Text Label 10350 1300 0    60   ~ 0
+Text Label 10350 1350 0    60   ~ 0
 A4(SDA)
-Text Label 10350 1200 0    60   ~ 0
+Text Label 10350 1250 0    60   ~ 0
 A5(SCL)
 Text Notes 10400 1000 0    60   ~ 0
 Holes
@@ -192,18 +192,6 @@ Wire Wire Line
 Connection ~ 8850 2200
 Wire Wire Line
 	8600 2000 8600 1350
-Wire Wire Line
-	8950 2500 8450 2500
-Wire Wire Line
-	8950 2600 8450 2600
-Wire Wire Line
-	8950 2700 8450 2700
-Wire Wire Line
-	8950 2800 8450 2800
-Wire Wire Line
-	8950 2900 8450 2900
-Wire Wire Line
-	8950 3000 8450 3000
 $Comp
 L Connector_Generic:Conn_01x10 P3
 U 1 1 56D721E0
@@ -861,4 +849,175 @@ Wire Wire Line
 	2250 2400 2300 2400
 Wire Wire Line
 	2250 2400 2250 2750
+Text GLabel 5550 4350 0    50   Input ~ 0
+A0
+Text GLabel 5550 4450 0    50   Input ~ 0
+A1
+Text GLabel 5550 4550 0    50   Input ~ 0
+A2
+Text GLabel 5550 4650 0    50   Input ~ 0
+A3
+Text GLabel 5550 4750 0    50   Input ~ 0
+A4
+Text GLabel 5550 4850 0    50   Input ~ 0
+A5
+Text GLabel 5550 4950 0    50   Input ~ 0
+A6
+Text GLabel 5550 5050 0    50   Input ~ 0
+A7
+Text GLabel 6450 4350 2    50   Input ~ 0
+A8
+Text GLabel 6450 4450 2    50   Input ~ 0
+A9
+Text GLabel 6450 4550 2    50   Input ~ 0
+A10
+Text GLabel 6450 4650 2    50   Input ~ 0
+A11
+Text GLabel 6450 4750 2    50   Input ~ 0
+A12
+Text GLabel 6450 4850 2    50   Input ~ 0
+A13
+Text GLabel 6450 4950 2    50   Input ~ 0
+A14
+Text GLabel 6450 5050 2    50   Input ~ 0
+A15
+Wire Wire Line
+	5550 4350 5650 4350
+Wire Wire Line
+	6350 4350 6450 4350
+Wire Wire Line
+	6450 4450 6350 4450
+Wire Wire Line
+	5550 4450 5650 4450
+Wire Wire Line
+	5550 4550 5650 4550
+Wire Wire Line
+	6350 4550 6450 4550
+Wire Wire Line
+	5550 4650 5650 4650
+Wire Wire Line
+	6350 4650 6450 4650
+Wire Wire Line
+	6450 4750 6350 4750
+Wire Wire Line
+	5550 4750 5650 4750
+Wire Wire Line
+	6350 4850 6450 4850
+Wire Wire Line
+	5550 4850 5650 4850
+Wire Wire Line
+	6350 4950 6450 4950
+Wire Wire Line
+	6450 5050 6350 5050
+Wire Wire Line
+	5550 4950 5650 4950
+Wire Wire Line
+	5650 5050 5550 5050
+Text GLabel 8750 2500 0    50   BiDi ~ 0
+E0
+Wire Wire Line
+	8750 2500 8950 2500
+Text GLabel 8750 2600 0    50   BiDi ~ 0
+E1
+Text GLabel 8750 2700 0    50   BiDi ~ 0
+E2
+Text GLabel 8750 2800 0    50   BiDi ~ 0
+E3
+Text GLabel 8750 2900 0    50   BiDi ~ 0
+E4
+Text GLabel 8750 3000 0    50   BiDi ~ 0
+E5
+Wire Wire Line
+	8750 2600 8950 2600
+Wire Wire Line
+	8750 2700 8950 2700
+Wire Wire Line
+	8750 2800 8950 2800
+Wire Wire Line
+	8950 2900 8750 2900
+Wire Wire Line
+	8750 3000 8950 3000
+Text GLabel 5550 5600 0    50   BiDi ~ 0
+E0
+Text GLabel 5550 5700 0    50   BiDi ~ 0
+E1
+Text GLabel 5550 5800 0    50   BiDi ~ 0
+E2
+Text GLabel 5550 5900 0    50   BiDi ~ 0
+E3
+Text GLabel 5550 6000 0    50   BiDi ~ 0
+E4
+Text GLabel 5550 6100 0    50   BiDi ~ 0
+E5
+$Comp
+L power:+5V #PWR0112
+U 1 1 5F1C55A4
+P 5250 5400
+F 0 "#PWR0112" H 5250 5250 50  0001 C CNN
+F 1 "+5V" V 5200 5500 50  0000 C CNN
+F 2 "" H 5250 5400 50  0000 C CNN
+F 3 "" H 5250 5400 50  0000 C CNN
+	1    5250 5400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0113
+U 1 1 5F1C568C
+P 5250 5500
+F 0 "#PWR0113" H 5250 5250 50  0001 C CNN
+F 1 "GND" H 5255 5327 50  0000 C CNN
+F 2 "" H 5250 5500 50  0001 C CNN
+F 3 "" H 5250 5500 50  0001 C CNN
+	1    5250 5500
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x08 J1
+U 1 1 5F1D9B5D
+P 5850 4650
+F 0 "J1" H 5850 5050 50  0000 L CNN
+F 1 "Conn_01x08" H 5930 4551 50  0001 L CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical" H 5850 4650 50  0001 C CNN
+F 3 "~" H 5850 4650 50  0001 C CNN
+	1    5850 4650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x08 J2
+U 1 1 5F1E3D16
+P 6150 4750
+F 0 "J2" H 6100 4250 50  0000 C CNN
+F 1 "Conn_01x08" H 6230 4651 50  0001 L CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical" H 6150 4750 50  0001 C CNN
+F 3 "~" H 6150 4750 50  0001 C CNN
+	1    6150 4750
+	-1   0    0    1   
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x08 J4
+U 1 1 5F20C709
+P 5850 5700
+F 0 "J4" H 5929 5646 50  0000 L CNN
+F 1 "Conn_01x06" H 5930 5601 50  0001 L CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical" H 5850 5700 50  0001 C CNN
+F 3 "~" H 5850 5700 50  0001 C CNN
+	1    5850 5700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5650 5400 5250 5400
+Wire Wire Line
+	5650 5500 5250 5500
+Wire Wire Line
+	5550 5600 5650 5600
+Wire Wire Line
+	5650 5700 5550 5700
+Wire Wire Line
+	5550 5800 5650 5800
+Wire Wire Line
+	5650 5900 5550 5900
+Wire Wire Line
+	5550 6000 5650 6000
+Wire Wire Line
+	5650 6100 5550 6100
 $EndSCHEMATC
