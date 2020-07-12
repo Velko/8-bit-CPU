@@ -1129,4 +1129,47 @@ Wire Wire Line
 	6450 4950 6550 4950
 Wire Wire Line
 	6550 5050 6450 5050
+$Comp
+L Connector_Generic:Conn_01x08 J3
+U 1 1 5F181CDD
+P 7900 4650
+F 0 "J3" H 7900 5050 50  0000 C CNN
+F 1 "Conn_01x08" H 7980 4551 50  0001 L CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical" H 7900 4650 50  0001 C CNN
+F 3 "~" H 7900 4650 50  0001 C CNN
+	1    7900 4650
+	1    0    0    -1  
+$EndComp
+Text GLabel 7600 4350 0    50   BiDi ~ 0
+D0
+Text GLabel 7600 4450 0    50   BiDi ~ 0
+D1
+Text GLabel 7600 4550 0    50   BiDi ~ 0
+D2
+Text GLabel 7600 4650 0    50   BiDi ~ 0
+D3
+Text GLabel 7600 4750 0    50   BiDi ~ 0
+D4
+Text GLabel 7600 4850 0    50   BiDi ~ 0
+D5
+Text GLabel 7600 4950 0    50   BiDi ~ 0
+D6
+Text GLabel 7600 5050 0    50   BiDi ~ 0
+D7
+Wire Wire Line
+	7600 4350 7700 4350
+Wire Wire Line
+	7600 4450 7700 4450
+Wire Wire Line
+	7600 4550 7700 4550
+Wire Wire Line
+	7600 4650 7700 4650
+Wire Wire Line
+	7600 4750 7700 4750
+Wire Wire Line
+	7600 4850 7700 4850
+Wire Wire Line
+	7600 4950 7700 4950
+Wire Wire Line
+	7600 5050 7700 5050
 $EndSCHEMATC
