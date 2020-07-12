@@ -1,0 +1,9 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP AT28C256J
+D Paged Parallel EEPROM 256Kb (32K x 8), LCC-32
+K Parallel EEPROM 256Kb
+F http://ww1.microchip.com/downloads/en/DeviceDoc/doc0006.pdf
+$ENDCMP
+#
+#End Doc Library
