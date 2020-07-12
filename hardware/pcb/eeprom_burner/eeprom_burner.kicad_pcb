@@ -1087,10 +1087,10 @@
       (net 16 ~WE~))
     (pad 32 smd roundrect (at 1.27 -6.8375 180) (size 0.6 1.475) (layers F.Cu F.Paste F.Mask) (roundrect_rratio 0.25)
       (net 1 +5V))
-    (model ${KISYS3DMOD}/Package_LCC.3dshapes/PLCC-32_11.4x14.0mm_P1.27mm.wrl
+    (model ${KIPRJMOD}/PLCC-32.wrl
       (at (xyz 0 0 0))
-      (scale (xyz 1 1 1))
-      (rotate (xyz 0 0 0))
+      (scale (xyz 0.39 0.39 0.39))
+      (rotate (xyz -90 0 180))
     )
   )
 
