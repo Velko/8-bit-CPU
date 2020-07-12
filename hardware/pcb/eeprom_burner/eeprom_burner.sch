@@ -865,50 +865,34 @@ Text GLabel 5550 4950 0    50   Input ~ 0
 A6
 Text GLabel 5550 5050 0    50   Input ~ 0
 A7
-Text GLabel 6450 4350 2    50   Input ~ 0
+Text GLabel 6450 4350 0    50   Input ~ 0
 A8
-Text GLabel 6450 4450 2    50   Input ~ 0
+Text GLabel 6450 4450 0    50   Input ~ 0
 A9
-Text GLabel 6450 4550 2    50   Input ~ 0
+Text GLabel 6450 4550 0    50   Input ~ 0
 A10
-Text GLabel 6450 4650 2    50   Input ~ 0
+Text GLabel 6450 4650 0    50   Input ~ 0
 A11
-Text GLabel 6450 4750 2    50   Input ~ 0
+Text GLabel 6450 4750 0    50   Input ~ 0
 A12
-Text GLabel 6450 4850 2    50   Input ~ 0
+Text GLabel 6450 4850 0    50   Input ~ 0
 A13
-Text GLabel 6450 4950 2    50   Input ~ 0
+Text GLabel 6450 4950 0    50   Input ~ 0
 A14
-Text GLabel 6450 5050 2    50   Input ~ 0
+Text GLabel 6450 5050 0    50   Input ~ 0
 A15
 Wire Wire Line
 	5550 4350 5650 4350
-Wire Wire Line
-	6350 4350 6450 4350
-Wire Wire Line
-	6450 4450 6350 4450
 Wire Wire Line
 	5550 4450 5650 4450
 Wire Wire Line
 	5550 4550 5650 4550
 Wire Wire Line
-	6350 4550 6450 4550
-Wire Wire Line
 	5550 4650 5650 4650
-Wire Wire Line
-	6350 4650 6450 4650
-Wire Wire Line
-	6450 4750 6350 4750
 Wire Wire Line
 	5550 4750 5650 4750
 Wire Wire Line
-	6350 4850 6450 4850
-Wire Wire Line
 	5550 4850 5650 4850
-Wire Wire Line
-	6350 4950 6450 4950
-Wire Wire Line
-	6450 5050 6350 5050
 Wire Wire Line
 	5550 4950 5650 4950
 Wire Wire Line
@@ -985,13 +969,13 @@ $EndComp
 $Comp
 L Connector_Generic:Conn_01x08 J2
 U 1 1 5F1E3D16
-P 6150 4750
-F 0 "J2" H 6100 4250 50  0000 C CNN
-F 1 "Conn_01x08" H 6230 4651 50  0001 L CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical" H 6150 4750 50  0001 C CNN
-F 3 "~" H 6150 4750 50  0001 C CNN
-	1    6150 4750
-	-1   0    0    1   
+P 6750 4650
+F 0 "J2" H 6750 5050 50  0000 C CNN
+F 1 "Conn_01x08" H 6830 4551 50  0001 L CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical" H 6750 4650 50  0001 C CNN
+F 3 "~" H 6750 4650 50  0001 C CNN
+	1    6750 4650
+	1    0    0    -1  
 $EndComp
 $Comp
 L Connector_Generic:Conn_01x08 J4
@@ -1129,4 +1113,20 @@ Connection ~ 6450 1100
 Wire Wire Line
 	6450 1400 6900 1400
 Connection ~ 6450 1400
+Wire Wire Line
+	6450 4350 6550 4350
+Wire Wire Line
+	6550 4450 6450 4450
+Wire Wire Line
+	6450 4550 6550 4550
+Wire Wire Line
+	6550 4650 6450 4650
+Wire Wire Line
+	6450 4750 6550 4750
+Wire Wire Line
+	6550 4850 6450 4850
+Wire Wire Line
+	6450 4950 6550 4950
+Wire Wire Line
+	6550 5050 6450 5050
 $EndSCHEMATC
