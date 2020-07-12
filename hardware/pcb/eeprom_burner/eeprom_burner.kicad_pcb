@@ -2,7 +2,7 @@
 
   (general
     (thickness 1.6)
-    (drawings 53)
+    (drawings 55)
     (tracks 0)
     (zones 0)
     (modules 23)
@@ -272,12 +272,12 @@
     )
   )
 
-  (module Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical locked (layer B.Cu) (tedit 59FED5CC) (tstamp 5F08B75F)
+  (module Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical locked (layer B.Cu) (tedit 5F0B5E11) (tstamp 5F08B75F)
     (at 161.798 123.825 270)
     (descr "Through hole straight pin header, 1x06, 2.54mm pitch, single row")
     (tags "Through hole pin header THT 1x06 2.54mm single row")
     (path /56D70DD8)
-    (fp_text reference P2 (at -2.54 -6.35) (layer B.SilkS)
+    (fp_text reference P2 (at -2.54 -6.35) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_text value Analog (at 0 -15.03 270) (layer B.Fab)
@@ -320,12 +320,12 @@
     )
   )
 
-  (module Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical locked (layer B.Cu) (tedit 59FED5CC) (tstamp 551AF9EA)
+  (module Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical locked (layer B.Cu) (tedit 5F0B5E09) (tstamp 551AF9EA)
     (at 138.938 123.825 270)
     (descr "Through hole straight pin header, 1x08, 2.54mm pitch, single row")
     (tags "Through hole pin header THT 1x08 2.54mm single row")
     (path /56D70129)
-    (fp_text reference P1 (at -2.54 -8.89) (layer B.SilkS)
+    (fp_text reference P1 (at -2.54 -8.89) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_text value Power (at 0 -20.11 270) (layer B.Fab)
@@ -372,12 +372,12 @@
     )
   )
 
-  (module Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical locked (layer B.Cu) (tedit 5F061F11) (tstamp 551AFA2F)
+  (module Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical locked (layer B.Cu) (tedit 5F0B5E00) (tstamp 551AFA2F)
     (at 156.718 75.565 270)
     (descr "Through hole straight pin header, 1x08, 2.54mm pitch, single row")
     (tags "Through hole pin header THT 1x08 2.54mm single row")
     (path /56D7164F)
-    (fp_text reference P4 (at 2.54 -9.525 180) (layer B.SilkS)
+    (fp_text reference P4 (at 2.54 -9.525 180) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_text value Digital (at 0 -20.11 270) (layer B.Fab) hide
@@ -424,12 +424,12 @@
     )
   )
 
-  (module Connector_PinHeader_2.54mm:PinHeader_1x10_P2.54mm_Vertical locked (layer B.Cu) (tedit 5F062309) (tstamp 551AFA18)
+  (module Connector_PinHeader_2.54mm:PinHeader_1x10_P2.54mm_Vertical locked (layer B.Cu) (tedit 5F0B5DF6) (tstamp 551AFA18)
     (at 129.794 75.565 270)
     (descr "Through hole straight pin header, 1x10, 2.54mm pitch, single row")
     (tags "Through hole pin header THT 1x10 2.54mm single row")
     (path /56D721E0)
-    (fp_text reference P3 (at 2.54 -12.319 180) (layer B.SilkS)
+    (fp_text reference P3 (at 2.54 -12.319 180) (layer B.SilkS) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_text value Digital (at 0 -25.19 270) (layer B.Fab) hide
@@ -1251,7 +1251,7 @@
   )
 
   (module Capacitor_THT:C_Disc_D6.0mm_W2.5mm_P5.00mm (layer F.Cu) (tedit 5AE50EF0) (tstamp 5F22AD9C)
-    (at 120.523 119.38)
+    (at 126.873 119.38)
     (descr "C, Disc series, Radial, pin pitch=5.00mm, , diameter*width=6*2.5mm^2, Capacitor, http://cdn-reichelt.de/documents/datenblatt/B300/DS_KERKO_TC.pdf")
     (tags "C Disc series Radial pin pitch 5.00mm  diameter 6mm width 2.5mm Capacitor")
     (path /5F0F4E6C)
@@ -1341,6 +1341,12 @@
     )
   )
 
+  (gr_text "EEPROM\nwriter" (at 117.983 120.65 180) (layer F.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)))
+  )
+  (gr_text "(c) Velko 2020" (at 137.033 78.74 180) (layer F.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)))
+  )
   (gr_text "OUT\nEXT" (at 144.018 93.98 180) (layer F.SilkS)
     (effects (font (size 0.75 0.75) (thickness 0.15)))
   )
