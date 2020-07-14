@@ -1341,10 +1341,10 @@
     )
   )
 
-  (gr_text "EEPROM\nwriter" (at 117.983 120.65 180) (layer F.SilkS)
+  (gr_text "EEPROM\nwriter" (at 116.713 121.285 180) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
-  (gr_text "(c) Velko 2020" (at 137.033 78.74 180) (layer F.SilkS)
+  (gr_text "Velko\n2020" (at 117.983 77.47 180) (layer F.SilkS) (tstamp 5F0D9671)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
   (gr_text "OUT\nEXT" (at 144.018 93.98 180) (layer F.SilkS)
