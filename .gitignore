@@ -7,5 +7,9 @@
 *.kicad_pcb-bak
 *.wrl
 *.bck
+*.bin
+*.zip
+*.gbr
+*.drl
 zz_*.ino
 /sample/
