@@ -27,46 +27,46 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS283" H 2750 1800 50  0001 C CNN
 $EndComp
 $Comp
 L 74xx:74HC86 U3
-U 1 1 5F18901C
+U 3 1 5F18901C
 P 1300 1350
 F 0 "U3" H 1300 1350 50  0000 C CNN
 F 1 "74HC86" H 1550 1500 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 1300 1350 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74HC86" H 1300 1350 50  0001 C CNN
-	1    1300 1350
+	3    1300 1350
 	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74HC86 U3
-U 2 1 5F189432
+U 4 1 5F189432
 P 1300 1700
 F 0 "U3" H 1300 1700 50  0000 C CNN
 F 1 "74HC86" H 1300 1934 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 1300 1700 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74HC86" H 1300 1700 50  0001 C CNN
-	2    1300 1700
+	4    1300 1700
 	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74HC86 U3
-U 3 1 5F18945A
+U 1 1 5F18945A
 P 1300 2050
 F 0 "U3" H 1300 2050 50  0000 C CNN
 F 1 "74HC86" H 1300 2284 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 1300 2050 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74HC86" H 1300 2050 50  0001 C CNN
-	3    1300 2050
+	1    1300 2050
 	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74HC86 U3
-U 4 1 5F189496
+U 2 1 5F189496
 P 1300 2400
 F 0 "U3" H 1300 2400 50  0000 C CNN
 F 1 "74HC86" H 1600 2600 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 1300 2400 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74HC86" H 1300 2400 50  0001 C CNN
-	4    1300 2400
+	2    1300 2400
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -106,46 +106,46 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS283" H 5850 1800 50  0001 C CNN
 $EndComp
 $Comp
 L 74xx:74HC86 U4
-U 1 1 5F18B204
+U 3 1 5F18B204
 P 4400 1350
 F 0 "U4" H 4400 1350 50  0000 C CNN
 F 1 "74HC86" H 4650 1500 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 4400 1350 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74HC86" H 4400 1350 50  0001 C CNN
-	1    4400 1350
+	3    4400 1350
 	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74HC86 U4
-U 2 1 5F18B20A
+U 4 1 5F18B20A
 P 4400 1700
 F 0 "U4" H 4400 1700 50  0000 C CNN
 F 1 "74HC86" H 4400 1934 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 4400 1700 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74HC86" H 4400 1700 50  0001 C CNN
-	2    4400 1700
+	4    4400 1700
 	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74HC86 U4
-U 3 1 5F18B210
+U 2 1 5F18B210
 P 4400 2050
 F 0 "U4" H 4400 2050 50  0000 C CNN
 F 1 "74HC86" H 4400 2284 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 4400 2050 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74HC86" H 4400 2050 50  0001 C CNN
-	3    4400 2050
+	2    4400 2050
 	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74HC86 U4
-U 4 1 5F18B216
+U 1 1 5F18B216
 P 4400 2400
 F 0 "U4" H 4400 2400 50  0000 C CNN
 F 1 "74HC86" H 4700 2600 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 4400 2400 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74HC86" H 4400 2400 50  0001 C CNN
-	4    4400 2400
+	1    4400 2400
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -204,65 +204,39 @@ Wire Wire Line
 	2200 1700 2250 1700
 Wire Wire Line
 	2200 1800 2250 1800
-Text GLabel 950  1250 0    50   Input ~ 0
+Text GLabel 950  1450 0    50   Input ~ 0
 B0
-Text GLabel 950  1600 0    50   Input ~ 0
+Text GLabel 950  1800 0    50   Input ~ 0
 B1
 Text GLabel 950  1950 0    50   Input ~ 0
 B2
 Text GLabel 950  2300 0    50   Input ~ 0
 B3
 Wire Wire Line
-	950  1250 1000 1250
-Wire Wire Line
-	950  1600 1000 1600
-Wire Wire Line
 	950  1950 1000 1950
 Wire Wire Line
 	950  2300 1000 2300
-Text GLabel 4050 1250 0    50   Input ~ 0
+Text GLabel 4050 1450 0    50   Input ~ 0
 B4
-Text GLabel 4050 1600 0    50   Input ~ 0
+Text GLabel 4050 1800 0    50   Input ~ 0
 B5
 Text GLabel 4050 1950 0    50   Input ~ 0
 B6
 Text GLabel 4050 2300 0    50   Input ~ 0
 B7
 Wire Wire Line
-	4050 1250 4100 1250
-Wire Wire Line
-	4100 1600 4050 1600
-Wire Wire Line
 	4100 1950 4050 1950
 Wire Wire Line
 	4100 2300 4050 2300
 Wire Wire Line
-	1000 1450 700  1450
-Wire Wire Line
-	700  1450 700  1800
-Wire Wire Line
-	700  1800 1000 1800
-Wire Wire Line
 	1000 2150 700  2150
-Wire Wire Line
-	700  2150 700  1800
-Connection ~ 700  1800
 Wire Wire Line
 	1000 2500 700  2500
 Wire Wire Line
 	700  2500 700  2150
 Connection ~ 700  2150
 Wire Wire Line
-	4100 1450 3800 1450
-Wire Wire Line
-	3800 1450 3800 1800
-Wire Wire Line
-	3800 1800 4100 1800
-Wire Wire Line
 	4100 2150 3800 2150
-Wire Wire Line
-	3800 2150 3800 1800
-Connection ~ 3800 1800
 Wire Wire Line
 	4100 2500 3800 2500
 Wire Wire Line
@@ -392,37 +366,34 @@ Wire Wire Line
 Connection ~ 4800 2400
 $Comp
 L 74xx:74HC86 U5
-U 1 1 5F1AAC76
+U 3 1 5F1AAC76
 P 1950 950
 F 0 "U5" H 1950 950 50  0000 C CNN
 F 1 "74HC86" H 2200 1100 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 1950 950 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74HC86" H 1950 950 50  0001 C CNN
-	1    1950 950 
+	3    1950 950 
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
 	2250 950  2250 1300
 Wire Wire Line
 	1650 1050 700  1050
-Wire Wire Line
-	700  1050 700  1450
-Connection ~ 700  1450
 Text GLabel 950  3250 0    50   Input ~ 0
-A0
+A7
 Text GLabel 950  3450 0    50   Input ~ 0
 B7I
 Text GLabel 1000 3700 0    50   Input ~ 0
 SUM7
 $Comp
 L 74xx:74HC86 U5
-U 3 1 5F1ED5E5
+U 1 1 5F1ED5E5
 P 1300 3350
 F 0 "U5" H 1300 3350 50  0000 C CNN
 F 1 "74HC86" H 1550 3500 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 1300 3350 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74HC86" H 1300 3350 50  0001 C CNN
-	3    1300 3350
+	1    1300 3350
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -445,25 +416,25 @@ Wire Wire Line
 Connection ~ 1000 3250
 $Comp
 L 74xx:74HC00 U6
-U 1 1 5F1F8EEB
+U 4 1 5F1F8EEB
 P 1900 3350
 F 0 "U6" H 1850 3350 50  0000 C CNN
 F 1 "74HC00" H 2150 3450 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 1900 3350 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 1900 3350 50  0001 C CNN
-	1    1900 3350
+	4    1900 3350
 	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74LS00 U6
-U 2 1 5F1F93CD
+U 3 1 5F1F93CD
 P 2500 3600
 F 0 "U6" H 2500 3600 50  0000 C CNN
 F 1 "74HC00" H 2750 3750 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2500 3600 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 2500 3600 50  0001 C CNN
-	2    2500 3600
-	1    0    0    -1  
+	3    2500 3600
+	1    0    0    1   
 $EndComp
 Wire Wire Line
 	1600 3800 2200 3800
@@ -482,21 +453,21 @@ F 3 "http://www.ti.com/lit/gpn/sn74HC245" H 7800 1850 50  0001 C CNN
 	1    7800 1850
 	1    0    0    -1  
 $EndComp
-Text GLabel 7250 2050 0    50   Input ~ 0
-SUM0
-Text GLabel 7250 1950 0    50   Input ~ 0
-SUM1
-Text GLabel 7250 1850 0    50   Input ~ 0
-SUM2
-Text GLabel 7250 1750 0    50   Input ~ 0
-SUM3
-Text GLabel 7250 1650 0    50   Input ~ 0
-SUM4
-Text GLabel 7250 1550 0    50   Input ~ 0
-SUM5
-Text GLabel 7250 1450 0    50   Input ~ 0
-SUM6
 Text GLabel 7250 1350 0    50   Input ~ 0
+SUM0
+Text GLabel 7250 1450 0    50   Input ~ 0
+SUM1
+Text GLabel 7250 1550 0    50   Input ~ 0
+SUM2
+Text GLabel 7250 1650 0    50   Input ~ 0
+SUM3
+Text GLabel 7250 1750 0    50   Input ~ 0
+SUM4
+Text GLabel 7250 1850 0    50   Input ~ 0
+SUM5
+Text GLabel 7250 1950 0    50   Input ~ 0
+SUM6
+Text GLabel 7250 2050 0    50   Input ~ 0
 SUM7
 Wire Wire Line
 	7250 1350 7300 1350
@@ -549,41 +520,41 @@ Wire Wire Line
 	7800 1000 7800 1050
 $Comp
 L 74xx:74LS125 U8
-U 1 1 5F2331E8
+U 2 1 5F2331E8
 P 3800 3600
 F 0 "U8" H 3750 3600 50  0000 C CNN
 F 1 "74HC125" H 3950 3750 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 3800 3600 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS126" H 3800 3600 50  0001 C CNN
-	1    3800 3600
+	2    3800 3600
 	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74LS125 U8
-U 2 1 5F233424
+U 1 1 5F233424
 P 5750 3600
 F 0 "U8" H 5700 3600 50  0000 C CNN
 F 1 "74HC125" H 5750 3826 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 5750 3600 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS126" H 5750 3600 50  0001 C CNN
-	2    5750 3600
+	1    5750 3600
 	1    0    0    -1  
 $EndComp
-Text GLabel 8400 1350 2    50   Output ~ 0
-BUS7
-Text GLabel 8400 1450 2    50   Output ~ 0
-BUS6
-Text GLabel 8400 1550 2    50   Output ~ 0
-BUS5
-Text GLabel 8400 1650 2    50   Output ~ 0
-BUS4
-Text GLabel 8400 1750 2    50   Output ~ 0
-BUS3
-Text GLabel 8400 1850 2    50   Output ~ 0
-BUS2
-Text GLabel 8400 1950 2    50   Output ~ 0
-BUS1
 Text GLabel 8400 2050 2    50   Output ~ 0
+BUS7
+Text GLabel 8400 1950 2    50   Output ~ 0
+BUS6
+Text GLabel 8400 1850 2    50   Output ~ 0
+BUS5
+Text GLabel 8400 1750 2    50   Output ~ 0
+BUS4
+Text GLabel 8400 1650 2    50   Output ~ 0
+BUS3
+Text GLabel 8400 1550 2    50   Output ~ 0
+BUS2
+Text GLabel 8400 1450 2    50   Output ~ 0
+BUS1
+Text GLabel 8400 1350 2    50   Output ~ 0
 BUS0
 Wire Wire Line
 	8300 1350 8400 1350
@@ -804,58 +775,6 @@ F 3 "~" H 1950 6350 50  0001 C CNN
 	1    1950 6350
 	0    1    1    0   
 $EndComp
-Wire Wire Line
-	1700 4950 1800 4950
-Wire Wire Line
-	1700 5150 1800 5150
-Wire Wire Line
-	1700 5350 1800 5350
-Wire Wire Line
-	1700 5550 1800 5550
-Wire Wire Line
-	1700 5750 1800 5750
-Wire Wire Line
-	1700 5950 1800 5950
-Wire Wire Line
-	1700 6150 1800 6150
-Wire Wire Line
-	1700 6350 1800 6350
-Wire Wire Line
-	2100 4950 2150 4950
-Wire Wire Line
-	2150 4950 2150 5150
-Wire Wire Line
-	2150 5150 2100 5150
-Wire Wire Line
-	2100 5350 2150 5350
-Wire Wire Line
-	2150 5350 2150 5150
-Connection ~ 2150 5150
-Wire Wire Line
-	2100 5550 2150 5550
-Wire Wire Line
-	2150 5550 2150 5350
-Connection ~ 2150 5350
-Wire Wire Line
-	2100 5750 2150 5750
-Wire Wire Line
-	2150 5750 2150 5550
-Connection ~ 2150 5550
-Wire Wire Line
-	2100 5950 2150 5950
-Connection ~ 2150 5750
-Wire Wire Line
-	2100 6150 2150 6150
-Wire Wire Line
-	2150 5750 2150 5950
-Connection ~ 2150 5950
-Wire Wire Line
-	2150 5950 2150 6150
-Wire Wire Line
-	2100 6350 2150 6350
-Wire Wire Line
-	2150 6350 2150 6150
-Connection ~ 2150 6150
 Text GLabel 1300 4950 0    50   Input ~ 0
 SUM0
 Text GLabel 1300 5150 0    50   Input ~ 0
@@ -872,22 +791,6 @@ Text GLabel 1300 6150 0    50   Input ~ 0
 SUM6
 Text GLabel 1300 6350 0    50   Input ~ 0
 SUM7
-Wire Wire Line
-	1300 4950 1400 4950
-Wire Wire Line
-	1400 5150 1300 5150
-Wire Wire Line
-	1400 5350 1300 5350
-Wire Wire Line
-	1300 5550 1400 5550
-Wire Wire Line
-	1300 5750 1400 5750
-Wire Wire Line
-	1300 5950 1400 5950
-Wire Wire Line
-	1300 6150 1400 6150
-Wire Wire Line
-	1300 6350 1400 6350
 $Comp
 L power:GND #PWR0107
 U 1 1 5F450848
@@ -899,9 +802,6 @@ F 3 "" H 2150 6450 50  0001 C CNN
 	1    2150 6450
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	2150 6350 2150 6450
-Connection ~ 2150 6350
 Text GLabel 3100 5250 0    50   Input ~ 0
 OVFD
 Text GLabel 3100 5450 0    50   Input ~ 0
@@ -950,20 +850,6 @@ F 3 "~" H 3750 5450 50  0001 C CNN
 	1    3750 5450
 	0    1    1    0   
 $EndComp
-Wire Wire Line
-	3100 5250 3200 5250
-Wire Wire Line
-	3100 5450 3200 5450
-Wire Wire Line
-	3500 5250 3600 5250
-Wire Wire Line
-	3500 5450 3600 5450
-Wire Wire Line
-	3900 5250 3950 5250
-Wire Wire Line
-	3950 5250 3950 5450
-Wire Wire Line
-	3900 5450 3950 5450
 Text GLabel 3100 5050 0    50   Input ~ 0
 ~OUT~
 $Comp
@@ -1029,15 +915,6 @@ F 3 "~" H 3750 5650 50  0001 C CNN
 	1    3750 5650
 	0    1    1    0   
 $EndComp
-Wire Wire Line
-	3100 5650 3200 5650
-Wire Wire Line
-	3500 5650 3600 5650
-Wire Wire Line
-	3900 5650 3950 5650
-Wire Wire Line
-	3950 5450 3950 5650
-Connection ~ 3950 5450
 $Comp
 L Connector:Conn_01x08_Male J1
 U 1 1 5F5AD288
@@ -1254,13 +1131,13 @@ F 3 "~" H 4600 5650 50  0001 C CNN
 $EndComp
 $Comp
 L 74xx:74LS00 U6
-U 4 1 5F93DE1B
+U 1 1 5F93DE1B
 P 9650 3700
 F 0 "U6" H 9650 3700 50  0000 C CNN
 F 1 "74HC00" H 9900 3850 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 9650 3700 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 9650 3700 50  0001 C CNN
-	4    9650 3700
+	1    9650 3700
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -1277,12 +1154,12 @@ $EndComp
 $Comp
 L 74xx:74LS125 U8
 U 3 1 5F962C3F
-P 3000 5950
-F 0 "U8" H 2950 5950 50  0000 C CNN
-F 1 "74HC125" H 3150 6100 50  0001 C CNN
-F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 3000 5950 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS126" H 3000 5950 50  0001 C CNN
-	3    3000 5950
+P 2900 5950
+F 0 "U8" H 2850 5950 50  0000 C CNN
+F 1 "74HC125" H 3050 6100 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2900 5950 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS126" H 2900 5950 50  0001 C CNN
+	3    2900 5950
 	1    0    0    -1  
 $EndComp
 NoConn ~ 9950 3700
@@ -1405,13 +1282,13 @@ Wire Wire Line
 	1400 850  1650 850 
 $Comp
 L 74xx:74LS00 U6
-U 3 1 5F1E69F3
+U 2 1 5F1E69F3
 P 3100 3600
 F 0 "U6" H 3100 3600 50  0000 C CNN
 F 1 "74HC00" H 3350 3750 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 3100 3600 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 3100 3600 50  0001 C CNN
-	3    3100 3600
+	2    3100 3600
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -1492,7 +1369,6 @@ F 3 "" H 7750 3250 50  0001 C CNN
 	1    7750 3250
 	1    0    0    -1  
 $EndComp
-Connection ~ 3950 5650
 Text Notes 4350 850  0    50   ~ 0
 Add / Subtract\n(with carry in)
 Wire Notes Line
@@ -1706,12 +1582,12 @@ Wire Wire Line
 $Comp
 L Device:LED D12
 U 1 1 5F2A17AF
-P 3450 5950
-F 0 "D12" H 3350 6050 50  0000 C CNN
-F 1 "Z" H 3442 5786 50  0001 C CNN
-F 2 "LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 3450 5950 50  0001 C CNN
-F 3 "~" H 3450 5950 50  0001 C CNN
-	1    3450 5950
+P 3400 5950
+F 0 "D12" H 3300 6050 50  0000 C CNN
+F 1 "Z" H 3392 5786 50  0001 C CNN
+F 2 "LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 3400 5950 50  0001 C CNN
+F 3 "~" H 3400 5950 50  0001 C CNN
+	1    3400 5950
 	-1   0    0    1   
 $EndComp
 $Comp
@@ -1725,12 +1601,12 @@ F 3 "~" H 3750 5950 50  0001 C CNN
 	1    3750 5950
 	0    1    1    0   
 $EndComp
-Text GLabel 2750 6250 0    50   Input ~ 0
+Text GLabel 2650 6250 0    50   Input ~ 0
 ~OUT~
-Text GLabel 2700 5950 0    50   Input ~ 0
+Text GLabel 2600 5950 0    50   Input ~ 0
 ZIN
 Wire Wire Line
-	3000 6250 3000 6200
+	2900 6250 2900 6200
 $Comp
 L power:GND #PWR03
 U 1 1 5F2DC5C9
@@ -1743,14 +1619,162 @@ F 3 "" H 3950 6000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
+	3100 5050 3200 5050
+Wire Wire Line
+	2650 6250 2900 6250
+Text Label 2000 2000 0    50   ~ 0
+B0I
+Text Label 2000 2100 0    50   ~ 0
+B1I
+Text Label 2000 2200 0    50   ~ 0
+B2I
+Text Label 2000 2300 0    50   ~ 0
+B3I
+Text Label 5150 2000 0    50   ~ 0
+B4I
+Text Label 5150 2100 0    50   ~ 0
+B5I
+Text Label 5150 2200 0    50   ~ 0
+B6I
+Text Label 5150 2300 0    50   ~ 0
+B7I
+Text Label 6350 2050 0    50   ~ 0
+CO
+Text Label 2250 1100 0    50   ~ 0
+CII
+Wire Wire Line
+	700  1050 700  1250
+Wire Wire Line
+	700  1250 1000 1250
+Connection ~ 700  1250
+Wire Wire Line
+	700  1250 700  1600
+Wire Wire Line
+	1000 1450 950  1450
+Wire Wire Line
+	700  1600 1000 1600
+Connection ~ 700  1600
+Wire Wire Line
+	700  1600 700  2150
+Wire Wire Line
+	1000 1800 950  1800
+Wire Wire Line
+	3800 1250 4100 1250
+Wire Wire Line
+	3800 1250 3800 1600
+Wire Wire Line
+	3800 1600 4100 1600
+Connection ~ 3800 1600
+Wire Wire Line
+	3800 1600 3800 2150
+Wire Wire Line
+	4100 1450 4050 1450
+Wire Wire Line
+	4100 1800 4050 1800
+Wire Wire Line
+	3950 5250 3950 5450
+Wire Wire Line
+	2150 4950 2150 5150
+Wire Wire Line
+	1300 4950 1400 4950
+Wire Wire Line
+	1300 5150 1400 5150
+Wire Wire Line
+	1300 5350 1400 5350
+Wire Wire Line
+	1300 5550 1400 5550
+Wire Wire Line
+	1300 5750 1400 5750
+Wire Wire Line
+	1300 5950 1400 5950
+Wire Wire Line
+	1300 6150 1400 6150
+Wire Wire Line
+	1300 6350 1400 6350
+Wire Wire Line
+	1700 4950 1800 4950
+Wire Wire Line
+	1700 5150 1800 5150
+Wire Wire Line
+	1700 5350 1800 5350
+Wire Wire Line
+	1700 5550 1800 5550
+Wire Wire Line
+	1700 5750 1800 5750
+Wire Wire Line
+	1700 5950 1800 5950
+Wire Wire Line
+	1700 6150 1800 6150
+Wire Wire Line
+	1700 6350 1800 6350
+Wire Wire Line
+	2100 4950 2150 4950
+Wire Wire Line
+	2100 5150 2150 5150
+Connection ~ 2150 5150
+Wire Wire Line
+	2150 5150 2150 5350
+Wire Wire Line
+	2100 5350 2150 5350
+Connection ~ 2150 5350
+Wire Wire Line
+	2150 5350 2150 5550
+Wire Wire Line
+	2100 5550 2150 5550
+Connection ~ 2150 5550
+Wire Wire Line
+	2150 5550 2150 5750
+Wire Wire Line
+	2100 5750 2150 5750
+Connection ~ 2150 5750
+Wire Wire Line
+	2150 5750 2150 5950
+Wire Wire Line
+	2100 5950 2150 5950
+Connection ~ 2150 5950
+Wire Wire Line
+	2150 5950 2150 6150
+Wire Wire Line
+	2100 6150 2150 6150
+Connection ~ 2150 6150
+Wire Wire Line
+	2150 6150 2150 6350
+Wire Wire Line
+	2100 6350 2150 6350
+Connection ~ 2150 6350
+Wire Wire Line
+	2150 6350 2150 6450
+Wire Wire Line
+	3100 5250 3200 5250
+Wire Wire Line
+	3500 5250 3600 5250
+Wire Wire Line
+	3900 5250 3950 5250
+Wire Wire Line
+	3900 5450 3950 5450
+Connection ~ 3950 5450
+Wire Wire Line
+	3950 5450 3950 5650
+Wire Wire Line
+	3100 5450 3200 5450
+Wire Wire Line
+	3100 5650 3200 5650
+Wire Wire Line
+	3500 5650 3600 5650
+Wire Wire Line
+	3900 5650 3950 5650
+Connection ~ 3950 5650
+Wire Wire Line
+	3950 5650 3950 5950
+Wire Wire Line
 	3900 5950 3950 5950
+Connection ~ 3950 5950
 Wire Wire Line
 	3950 5950 3950 6000
 Wire Wire Line
-	3950 5650 3950 5950
-Connection ~ 3950 5950
+	3550 5950 3600 5950
 Wire Wire Line
-	3100 5050 3200 5050
+	3200 5950 3250 5950
 Wire Wire Line
-	2750 6250 3000 6250
+	3500 5450 3600 5450
 $EndSCHEMATC
