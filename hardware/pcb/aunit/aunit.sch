@@ -229,13 +229,6 @@ Wire Wire Line
 Wire Wire Line
 	4100 2300 4050 2300
 Wire Wire Line
-	1000 2150 700  2150
-Wire Wire Line
-	1000 2500 700  2500
-Wire Wire Line
-	700  2500 700  2150
-Connection ~ 700  2150
-Wire Wire Line
 	4100 2150 3800 2150
 Wire Wire Line
 	4100 2500 3800 2500
@@ -336,12 +329,7 @@ Wire Wire Line
 	5850 2600 5850 2650
 Wire Wire Line
 	5850 950  5850 1000
-Wire Wire Line
-	3800 2500 3800 2800
-Wire Wire Line
-	700  2800 700  2500
 Connection ~ 3800 2500
-Connection ~ 700  2500
 Text GLabel 1400 850  0    50   Input ~ 0
 CIN
 $Comp
@@ -580,7 +568,6 @@ Text GLabel 3550 4150 0    50   Input ~ 0
 ~OUT~
 Wire Wire Line
 	6350 1800 6350 2800
-Connection ~ 3800 2800
 Text GLabel 3450 3700 3    50   Output ~ 0
 OVFD
 Wire Wire Line
@@ -1378,14 +1365,9 @@ Overflow flag
 Text Notes 6100 3150 0    50   ~ 0
 Carry out
 Wire Wire Line
-	700  2800 1500 2800
-Wire Wire Line
 	1400 2700 1500 2700
 Wire Wire Line
 	1500 2700 1500 2800
-Connection ~ 1500 2800
-Wire Wire Line
-	1500 2800 3800 2800
 Wire Wire Line
 	7650 3550 7750 3550
 Connection ~ 7750 3550
@@ -1441,9 +1423,7 @@ Unused gates
 Wire Wire Line
 	4750 2800 6350 2800
 Wire Wire Line
-	4650 3700 4650 2800
-Wire Wire Line
-	3800 2800 4650 2800
+	4650 3700 4650 2900
 Wire Wire Line
 	3800 4150 5750 4150
 Connection ~ 3800 4150
@@ -1643,19 +1623,7 @@ CO
 Text Label 2250 1100 0    50   ~ 0
 CII
 Wire Wire Line
-	700  1050 700  1250
-Wire Wire Line
-	700  1250 1000 1250
-Connection ~ 700  1250
-Wire Wire Line
-	700  1250 700  1600
-Wire Wire Line
 	1000 1450 950  1450
-Wire Wire Line
-	700  1600 1000 1600
-Connection ~ 700  1600
-Wire Wire Line
-	700  1600 700  2150
 Wire Wire Line
 	1000 1800 950  1800
 Wire Wire Line
@@ -1777,4 +1745,72 @@ Wire Wire Line
 	3200 5950 3250 5950
 Wire Wire Line
 	3500 5450 3600 5450
+Wire Wire Line
+	1000 1250 750  1250
+Wire Wire Line
+	750  1250 750  1600
+Wire Wire Line
+	750  1600 1000 1600
+Wire Wire Line
+	750  1600 750  2150
+Wire Wire Line
+	750  2150 1000 2150
+Connection ~ 750  1600
+Wire Wire Line
+	750  2150 750  2500
+Wire Wire Line
+	750  2500 1000 2500
+Connection ~ 750  2150
+Wire Wire Line
+	750  2500 750  2800
+Wire Wire Line
+	750  2800 1500 2800
+Connection ~ 750  2500
+Connection ~ 1500 2800
+Wire Wire Line
+	700  1050 700  2900
+$Comp
+L Jumper:SolderJumper_3_Open JP1
+U 1 1 5F321787
+P 3500 2700
+F 0 "JP1" H 3500 2800 50  0000 C CNN
+F 1 "SolderJumper_3_Open" H 3550 2800 50  0001 C CNN
+F 2 "Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm" H 3500 2700 50  0001 C CNN
+F 3 "~" H 3500 2700 50  0001 C CNN
+	1    3500 2700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3300 2700 3250 2700
+Wire Wire Line
+	3250 2700 3250 2500
+Wire Wire Line
+	3250 2500 3800 2500
+Wire Wire Line
+	3250 2800 3250 2700
+Connection ~ 3250 2700
+Wire Wire Line
+	1500 2800 3250 2800
+$Comp
+L power:GND #PWR0108
+U 1 1 5F3D97F7
+P 3750 2750
+F 0 "#PWR0108" H 3750 2500 50  0001 C CNN
+F 1 "GND" H 3900 2700 50  0000 C CNN
+F 2 "" H 3750 2750 50  0001 C CNN
+F 3 "" H 3750 2750 50  0001 C CNN
+	1    3750 2750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3700 2700 3750 2700
+Wire Wire Line
+	3750 2700 3750 2750
+Wire Wire Line
+	700  2900 3500 2900
+Wire Wire Line
+	3500 2850 3500 2900
+Connection ~ 3500 2900
+Wire Wire Line
+	3500 2900 4650 2900
 $EndSCHEMATC
