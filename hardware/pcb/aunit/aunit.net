@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/jurgis/work/8-bit-CPU/hardware/pcb/aunit/aunit.sch)
-    (date "Mon 03 Aug 2020 09:21:28 PM EEST")
+    (date "Mon 03 Aug 2020 09:44:50 PM EEST")
     (tool "Eeschema 5.0.2+dfsg1-1")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -633,7 +633,7 @@
       (node (ref U3) (pin 2))
       (node (ref U3) (pin 9)))
     (net (code 8) (name ~OUT~)
-      (node (ref D8) (pin 2))
+      (node (ref D8) (pin 1))
       (node (ref R12) (pin 1))
       (node (ref U8) (pin 1))
       (node (ref U8) (pin 4))
@@ -874,6 +874,6 @@
       (node (ref D10) (pin 2))
       (node (ref U8) (pin 2))
       (node (ref U5) (pin 6)))
-    (net (code 76) (name "Net-(D8-Pad1)")
-      (node (ref D8) (pin 1))
+    (net (code 76) (name "Net-(D8-Pad2)")
+      (node (ref D8) (pin 2))
       (node (ref R8) (pin 2)))))
