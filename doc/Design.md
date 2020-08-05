@@ -3,14 +3,19 @@ Overall design
 
 The overall structure follows the same design as used in breadboard computer built by Ben Eater. The
 main difference is that each module eventually will be implemented as PCB. All modules should be
-connected together using ribbon cable(s) and few individual control wires.
+plugged into a back-bone PCB, that provides bus connectivity, power and control signals. Another
+difference is that memory address width will be 8 bits.
 
-So, planned modules are:
+Module PCBs should be designed in a way that allows them to be plugged into breadboards. Designing a
+backbone PCB will be one of the final steps.
+
+Planned modules are:
 * CLK   - clock
 * PC    - program counter
 * A     - general purpose register A
 * B     - general purpose register B
 * ALU   - arithmetic/logic unit
+* FLG   - flags register
 * MAR   - memory address register
 * RAM   - memory
 * OUT   - output register
@@ -24,11 +29,10 @@ So, planned modules are:
 Registers
 =========
 
-Registers A, B, MAR, OUT and INSTR should be able to load 4 or 8 bits from the bus, output them back
-(all or just the lower 4), and provide "taps" for accessing current contents (all or 4-bit groups
-individually).
+Registers A, B, MAR, OUT and INSTR should be able to load 8-bit value from the bus, output it back and
+provide "taps" for accessing current contents.
 
-PC is also a register, which can load 4 bits from the bus, output them back. But there's additional
+PC is also a register, which can load 8 bits from the bus, output them back. But there's additional
 feature to increment value by 1.
 
 
@@ -36,15 +40,9 @@ Feature matrix:
 
 | Feature |    A    |    B    |   MAR   |   OUT   |  INSTR  |   PC    |
 | ------- | ------- | ------- | ------- | ------- | ------- | ------- |
-| Out L   |    Y    |    Y    |    N    |    N    |    Y    |    Y    |
-| Out H   |    Y    |    Y    |    N    |    N    |    N    |    N    |
-| Tap L   |    Y    |    Y    |    Y    |    Y    |    Y    |    N    |
-| Tap H   |    Y    |    Y    |    N    |    Y    |    Y    |    N    |
+| Out     |    Y    |    Y    |    N    |    N    |    Y    |    Y    |
+| Tap     |    Y    |    Y    |    Y    |    Y    |    Y    |    N    |
 | Incr    |    N    |    N    |    N    |    N    |    N    |    Y    |
-
-
-Registers, that output only lowest 4 bits, should output highest ones as 0s. Taps should allow
-reading all bits stored in register, even if output is disconnected.
 
 
 Minimal implementation
@@ -75,23 +73,25 @@ to the PC.
    register planned in the first version of the Computer, we may want to improve on that. If, for
    example, we choose to add a Stack Pointer register later, it might be quite useful feature.
 
+3. Summing register: design a register that can load a value from bus and add another value on next
+   clock cycle. Could be very useful for relative addressing.
 
 
 Bus
 ===
 
-Modules will be connected using a ribbon cable. This should provide compact and convenient
-interfacing between different parts of the Computer. In addition to data connections, the cable
-could also be used to distribute power and another common signals. To reduce complexity, same pinout
-should be used for main and "tap" connections. For some applications only a subset of pins will be
-used.
+In the final product Bus will be provided by a backbone board. Until then, however, modules will
+be plugged into breadboards.
 
-Note that ribbon cables are not normally used for power delivery, but it is still worth a try,
-because it greatly reduces clutter of the final system. We might include (initially unppoulated)
-headers for additional power distribution if the initial configuration causes issues.
+To help with the connections on this stage, it might be beneficial to design an adapter board that
+allows to connect bread-boarded modules using a ribbon cable. 
 
+This should provide compact and convenient interfacing between different parts of the Computer.
+In addition to data connections, the cable could also be used to distribute another common signals.
+To reduce complexity, same pinout should be used for main and "tap" connections. For some
+applications only a subset of pins will be used.
 
-So, there are 8 data lines. If we want to distribute power as well, that takes at least 2 additional
+There are 8 data lines. If we want to distribute power as well, that takes at least 2 additional
 wires. Then there are 2 omnipresent signals: clock and reset. So it takes at least 12 wires to
 connect everything.
 
@@ -125,8 +125,7 @@ The same layout can be reused for "tap" connections:
 
 The gap in the middle is minimum space that allows 2 IDC connectors to be connected side by side to
 unprotected header. We are providing additional power connections between boards, further reducing
-the load on main cable. But there are no need to provide redundancies for clock and reset signals.
-
+the load on main cable.
 
 The layout allows tap connections to be connected either using full 16-pin cable or interchangeably
 by using smaller 6-pin cables.
@@ -136,17 +135,92 @@ by using smaller 6-pin cables.
 Clock
 =====
 
-Clock follows the same 555-timer based design as built by Ben Eater. Additionally it might serve as
-initial power entry point, since nothing runs without clock anyway. PCB version should include
-micro-USB socket for that.
+Clock follows the same 555-timer based design as built by Ben Eater. However, efforts were made
+to reduce the chip count. In current design, only 3 chips remains on the board, but the functionality
+is equivalent to the original.
+
 
 
 Arithmetic logic unit
 =====================
 
-Arithmetic logic unit follows same design as built by Ben Eater. It provides just 2 operations -
-addition and sutraction. Upon completion, it should include Flags register as well. ALU uses tap
-connections to registers A and B to obtain its operands.
+Arithmetic logic unit follows same basic design as built by Ben Eater. It provides just 2 operations -
+addition and sutraction. ALU uses tap connections to registers A and B to obtain its operands.
+
+Module contains additional features:
+* Carry-In and Carry-Out signal handling (configurable in Z80 or 6502 modes)
+* oVerflow flag calculation
+
+The oVerflow flag is useful when performing calculations with signed values. According to
+[AVR Instruction Set Manual][http://ww1.microchip.com/downloads/en/devicedoc/atmel-0856-avr-instruction-set-manual.pdf]
+it is required to implement instructions like BRLT or BRGE.
+
+More info: http://teaching.idallen.com/dat2343/10f/notes/040_overflow.txt
+
+In short: oVerflow bit should be set if adding 2 numbers with the same sign produces a result with different
+sign. Given that sign is bit7 (in case of 8-bit values), it can be calculated using the following formula:
+
+!(a xor b) and (a xor s)
+
+
+The rules are slightly different for subtraction. But same formula applies if b7 bit is taken from adder's
+input, after it has been adjusted by a XOR gate.
+
+
+It was decided to move Zero flag calculation from ALU to the Flags register itself. For this to work,
+the result value should be put onto the Bus.
+
+There are several additional ALU modules planned for other operations:
+* AND/OR - provide 2 bitwise logic operations
+* XOR/NOT - provide 2 bitwise logic operations
+* SHL/SHR - shift operations
+
+ALU modules communicate with Flags register using special "flags minibus". Transmission of Carry-Out
+and Overflow flags should be controlled using tri-state buffers.
+
+
+Flags register
+==============
+
+The flags register is expanded to 4 bits: Z, C, N and V:
+* Zero     - result of calculation is 0. Register calculates the bit from value currently on the main
+             bus;
+* Carry    - loaded from the "flags minibus";
+* Negative - result of calculation was negative. Register loads bit7 from the main bus;
+* oVerflow - loaded from the "flags minibus";
+
+
+For operations that does not affect Carry and oVerflow bits, the same value should be kept on next load.
+An easy way to achieve this is connect the output of the current values back to the inputs using a
+resistor.
+
+
+Flags register should put current value of the Carry flag out to separate line on "flags minibus", for
+ALU modules to use. To support operations where Carry flag is ignored (e.g. ADD vs ADC instructions) the 
+value should be ANDed with a control signal.
+
+
+The register provides a tap connection to current value, to be used by Control logic.
+
+
+Additional feature is to ouput current value of the flags register onto the bus and load back from
+it. This will be reguired on future expansion, if interrupts are implemented. Additionally it can be
+used for instructions that modifies the flags (e.g. CLC, SEC). The output should affect only 4 lines on
+the bus, giving an opportunity for another module to complete the Status Register with another 4 bits
+(e.g. I flag).
+
+
+Flags minibus
+=============
+
+The "flags minibus" consists of 4 lines:
+* Carry-In  - from Flags register to ALU. Contents of C flags ANDed with "use carry" control signal;
+* Carry-Out - from ALU to Flags register. Weakly pulled to current value. ALU should set it by
+              activating a tri-state buffer;
+* oVerflow  - from ALU to Flags register. Weakly pulled to current value. ALU should set it by
+              activating a tri-state buffer;
+* Zero      - from Flags register to ALU. Provides value of current Zero calculation. Not strictly
+              necessary - just controls a LED on ALU board.
 
 
 RAM
@@ -166,7 +240,11 @@ Display
 =======
 
 Follows same design as build by Ben Eater. Uses tap connection into OUT register for the displayed
-value. Depending on EEPROM available, could provide more than 2 display modes.
+value. As 28C64 EEPROM is used, it provides 4 display modes (unsigned, signed, hex, oct). There's
+still one unused address line, providing capacity for 4 more modes.
+
+Additional efforts should be taken to provide sufficient display brightness, as driving 7 segment
+displays directly from EEPROM / demux is not enough.
 
 
 Input device
@@ -181,8 +259,27 @@ as the Computer (no cheating with microcontrollers).
 Control unit
 ============
 
-The same EEPROM based microcode machine. There might be additional ideas for improvements. 
+The same EEPROM based microcode machine, as designed by Ben. There are, however, room for improvements.
 
+* use 3-to-8 line decoder to provide OUT signals. Will take less bits on EEPROM, and prevents faulty
+  condition, when multiple modules tries to output values on the bus
+* use 6 bits from Instruction register, providing room for 64 instructions. In fact, it could be
+  designed to take all 8, so that it could be expanded using larger EEPROMs;
+* use 4 bits flags register, providing more opportuntities for conditions;
+
+
+There are 13 address lines for 28C64 EEPROMs, they are used:
+* 3 - instruction step
+* 4 - flags condition
+* 6 - instruction opcode
+
+When expanded to 28C256, there are 15 address lines in total. If same design is kept, the opcode
+can be expanded to full 8 bits.
+
+There is no room for "chip select" line, which enabled Ben to write same contents to both microcode
+EEPROMs. But that is just a slight inconvinience, compared to potential benefits. Also, I'm not
+convinced that 2 microcode EEPROMs will be enough. To add 3rd (and 4th) one and keep the "chip select"
+feature, we will need 2 address lines.
 
 
 Bus monitor
