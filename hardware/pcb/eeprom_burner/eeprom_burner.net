@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/jurgis/work/8-bit-CPU/hardware/pcb/eeprom_burner/eeprom_burner.sch)
-    (date "Sun 12 Jul 2020 09:44:27 PM EEST")
+    (date "Sun 09 Aug 2020 07:59:48 PM EEST")
     (tool "Eeschema 5.0.2+dfsg1-1")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -156,7 +156,7 @@
       (tstamp 5F0C9E09))
     (comp (ref C5)
       (value 100nF)
-      (footprint Capacitor_THT:C_Disc_D6.0mm_W2.5mm_P5.00mm)
+      (footprint Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder)
       (datasheet ~)
       (libsource (lib Device) (part C) (description "Unpolarized capacitor"))
       (sheetpath (names /) (tstamps /))
