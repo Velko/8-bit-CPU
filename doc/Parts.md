@@ -206,17 +206,41 @@ Main:
 * clock
 * register (will need a lot)
 * program counter
+* ALU
+* Flags reg
 
 Additionally:
 * bus monitor
-* bus/breadboard adapter
+* EEPROM burner
 
 
 
-Parts for PCB
-=============
+Parts for PCBs
+--------------
 
-Switch: 1201430
 SMD LEDs
 SMD capacitors: 10nF, 100nF, 1uF
 SMD resistors: 1K, 10K, 1M, 330
+
+
+
+
+Additional parts
+----------------
+* MIC2981 - source driver
+* LED bars
+* resistor networks
+* Buffers DIP version of those in ALU
+* MUX
+
+
+
+
+
+
+
+Side projects
+=============
+* 1.8432MHz oscillator (try to build UART)
+* MC21605H6WK-FPTLW-V2 - LCD screen
+* Arduino Nano
