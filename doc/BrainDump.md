@@ -27,6 +27,7 @@ To brighten up the displays, MIC2981/2982 alonf with ULN2003 might be useful.
 
 
 Flags:
+------
 * Carry - available immediately
 * Zero  - NORing + ANDing
 * Negative - available immediately
@@ -38,6 +39,8 @@ Calculating O flag:
 http://teaching.idallen.com/dat2343/10f/notes/040_overflow.txt
 
 !(a xor b) and (a xor s)
+
+(a xor s) and (b xor s)
 
 
 Zero:
@@ -52,6 +55,10 @@ Overflow:
           xor          |
                       and
 
+ a7 xor s7  |  b7 xor s7
+           and
+
+
 https://www.dcode.fr/boolean-expressions-calculator
 
 
@@ -65,8 +72,39 @@ Expanded arch:
 
 
 Clock:
+------
 What if I replace those AND gates with NAND? Still works for selection,
 but now those spare NANDs can be used to get the inverted clock...
+
+
+
+
+Registers
+---------
+
+It might be a good idea to output register TAP connections via another
+D-latch, that holds on to old value and updates itself only on FALLING
+clock edge (essentially - uses inverted clock). There are several places
+that might suffer some race problems if TAP output changes with the main
+register load:
+
+Example:
+- Arguments are loaded into registers A and B
+- ALU calculates a sum
+- on rising clock edge sum is loaded into register A
+- TAP output of A changes immediately, causing ALU to re-calculate
+- there is no issue for register A, as it is not going to re-load value
+  until next clock edge
+- if something else is looking at the value on the bus (Flags register,
+  for example), there is no guarantee if it will use initial value or
+  one after re-calculation;
+
+
+Additinally, by adding another 74HC173 chips, we can also make TAP output
+tri-state, potentially allowing connectin multiple registers as ALU inputs.
+
+
+
 
 
 Notes for blog
@@ -140,15 +178,20 @@ Notes for blog
     * NAND gate
     * timer's reset lines
     * halt override
+    * using 2 buttons instead of switch
+    * ensuring startup state
+    * do I need "centralized" edge detector / lines?
 
 * ALU improvements
     * adding zero-detect
-    * Overflow flag
+    * Overflow flag + idea from James Sharman
     * Carry in, carry out
     * Clock still bounces
     * Clock mode jumper not staying in place, replace with 3x2 header
     * thoughts about zero-detector on bus, flags register as separate device
       in case we add bitwise operations
+    * 6502 / Z80 mode
+    * Cheats for Zero flag
 
 * Testing ALU
     * initializer_list
@@ -158,6 +201,11 @@ Notes for blog
     * abstracting the pins
     * add shift register outputs
     * idea about combined eeprom burner / IO extender
+
+* Register updates
+    * James Sherman
+    * Additional latches for TAP connections
+    * Possible Race for flags
 
 * Documenting the builds
     * Fritzig, adding ICs
