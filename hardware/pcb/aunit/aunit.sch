@@ -401,13 +401,13 @@ Wire Wire Line
 Connection ~ 1400 3200
 $Comp
 L 74xx:74LS08 U6
-U 4 1 5F1F8EEB
+U 3 1 5F1F8EEB
 P 9150 3950
 F 0 "U6" H 9100 3950 50  0000 C CNN
 F 1 "74HC08" H 9400 4050 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 9150 3950 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 9150 3950 50  0001 C CNN
-	4    9150 3950
+	3    9150 3950
 	1    0    0    -1  
 $EndComp
 Text GLabel 3650 3550 2    50   Output ~ 0
@@ -1366,7 +1366,6 @@ Wire Wire Line
 	9700 3950 9700 4200
 Wire Wire Line
 	10000 4200 9700 4200
-Connection ~ 8850 3500
 Wire Notes Line
 	600  4300 11150 4300
 Wire Notes Line
@@ -1769,13 +1768,13 @@ Text GLabel 1350 3200 0    50   Input ~ 0
 SUM7
 $Comp
 L 74xx:74LS08 U6
-U 3 1 5F1F93CD
+U 4 1 5F1F93CD
 P 2400 3550
 F 0 "U6" H 2400 3550 50  0000 C CNN
 F 1 "74HC08" H 2650 3400 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2400 3550 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 2400 3550 50  0001 C CNN
-	3    2400 3550
+	4    2400 3550
 	1    0    0    1   
 $EndComp
 Wire Wire Line
@@ -1809,23 +1808,48 @@ Wire Wire Line
 	3200 4150 5750 4150
 Wire Wire Line
 	9700 3300 9700 3500
-Connection ~ 9700 3500
-Wire Wire Line
-	9700 3500 9700 3650
 Wire Wire Line
 	8850 4050 8850 3850
-Connection ~ 8850 3850
-Wire Wire Line
-	8850 3500 8850 3650
-Wire Wire Line
-	8850 3650 9700 3650
-Connection ~ 8850 3650
-Wire Wire Line
-	8850 3650 8850 3850
-Wire Wire Line
-	9700 3650 9700 3950
-Connection ~ 9700 3650
-Connection ~ 9700 3950
 NoConn ~ 10300 3400
 NoConn ~ 9450 3950
+Wire Wire Line
+	8850 4200 8850 4050
+Connection ~ 8850 4050
+$Comp
+L power:GND #PWR0115
+U 1 1 5F475DE8
+P 9700 3600
+F 0 "#PWR0115" H 9700 3350 50  0001 C CNN
+F 1 "GND" H 9850 3550 50  0000 C CNN
+F 2 "" H 9700 3600 50  0001 C CNN
+F 3 "" H 9700 3600 50  0001 C CNN
+	1    9700 3600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9700 3600 9700 3500
+Connection ~ 9700 3500
+$Comp
+L power:GND #PWR?
+U 1 1 5F416D53
+P 8850 4200
+F 0 "#PWR?" H 8850 3950 50  0001 C CNN
+F 1 "GND" H 9000 4150 50  0000 C CNN
+F 2 "" H 8850 4200 50  0001 C CNN
+F 3 "" H 8850 4200 50  0001 C CNN
+	1    8850 4200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR?
+U 1 1 5F417A83
+P 9700 3950
+F 0 "#PWR?" H 9700 3800 50  0001 C CNN
+F 1 "VCC" H 9800 4050 50  0000 C CNN
+F 2 "" H 9700 3950 50  0001 C CNN
+F 3 "" H 9700 3950 50  0001 C CNN
+	1    9700 3950
+	1    0    0    -1  
+$EndComp
+Connection ~ 9700 3950
 $EndSCHEMATC
