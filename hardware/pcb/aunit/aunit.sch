@@ -1129,8 +1129,6 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS126" H 2900 5950 50  0001 C CNN
 $EndComp
 NoConn ~ 9450 3400
 NoConn ~ 10300 3950
-Wire Wire Line
-	8850 3300 8850 3500
 $Comp
 L power:VCC #PWR0112
 U 1 1 5FA88E6A
@@ -1267,9 +1265,6 @@ Wire Wire Line
 	7350 5000 7800 5000
 Wire Wire Line
 	7350 6000 7800 6000
-Wire Wire Line
-	8850 3300 8850 3150
-Connection ~ 8850 3300
 $Comp
 L Device:R R12
 U 1 1 5F36ADD1
@@ -1806,15 +1801,8 @@ Wire Wire Line
 Connection ~ 3200 4150
 Wire Wire Line
 	3200 4150 5750 4150
-Wire Wire Line
-	9700 3300 9700 3500
-Wire Wire Line
-	8850 4050 8850 3850
 NoConn ~ 10300 3400
 NoConn ~ 9450 3950
-Wire Wire Line
-	8850 4200 8850 4050
-Connection ~ 8850 4050
 $Comp
 L power:GND #PWR0115
 U 1 1 5F475DE8
@@ -1826,9 +1814,6 @@ F 3 "" H 9700 3600 50  0001 C CNN
 	1    9700 3600
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	9700 3600 9700 3500
-Connection ~ 9700 3500
 $Comp
 L power:GND #PWR?
 U 1 1 5F416D53
