@@ -84,8 +84,8 @@ Load:  74HC594 15                        -> 74HC173 9 or 10
 Clock: Arduino SCL                       -> 74HC173 7
 
 ### Register B
-Out:   74HC594 2                        -> 74HC245 19
-Load:  74HC594 10                       -> 74HC173 9 or 10
+Out:   74HC594 6                        -> 74HC245 19
+Load:  74HC594 2                        -> 74HC173 9 or 10
                                            74HC163 9
 
 ### ALU
