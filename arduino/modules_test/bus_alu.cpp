@@ -36,6 +36,7 @@ void ALU::setup()
     pin_out.setup();
     pin_subtract.setup();
     pin_use_carry.setup();
+    ShiftCtrl::commit();
 }
 
 
