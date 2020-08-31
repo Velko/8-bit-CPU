@@ -50,8 +50,13 @@ class TesterClient(cmd.Cmd):
         send_cmd('3')
 
     def do_test_alu(self, arg):
-        "Demonstrate ALU"
+        "Test ALU"
         send_cmd('a')
+
+    def do_demo_alu(self, arg):
+        "Demonstrate ALU"
+        send_cmd('A')
+
 
     def do_set_shift(self, arg):
         "Set value on shift control"

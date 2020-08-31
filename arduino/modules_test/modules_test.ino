@@ -68,6 +68,9 @@ void loop()
     case 'a':
         alu_tests();
         break;
+    case 'A':
+        for (;;) alu_tests();
+        break;
     case 's':
         val = Serial.parseInt();
         shift.setup();
