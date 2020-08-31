@@ -56,6 +56,22 @@ uint8_t ALU::add(uint8_t a, uint8_t b, bool carry_in)
     return reg_a.read();
 }
 
+uint8_t ALU::add_b(uint8_t a, uint8_t b, bool carry_in)
+{
+    reg_a.write(a);
+    reg_b.write(b);
+
+    pin_subtract.off(false);
+    pin_use_carry.set(carry_in, false);
+    pin_out.on();
+
+    reg_b.load();
+
+    pin_out.off();
+
+    return reg_b.read();
+}
+
 int8_t ALU::sub(uint8_t a, uint8_t b, bool carry_in)
 {
     reg_a.write(a);
@@ -70,6 +86,22 @@ int8_t ALU::sub(uint8_t a, uint8_t b, bool carry_in)
     pin_out.off();
 
     return reg_a.read();
+}
+
+int8_t ALU::sub_b(uint8_t a, uint8_t b, bool carry_in)
+{
+    reg_a.write(a);
+    reg_b.write(b);
+
+    pin_subtract.on(false);
+    pin_use_carry.set(carry_in, false);
+    pin_out.on();
+
+    reg_b.load();
+
+    pin_out.off();
+
+    return reg_b.read();
 }
 
 uint8_t ALU::read_flags()

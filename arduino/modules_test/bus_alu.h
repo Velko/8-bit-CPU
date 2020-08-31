@@ -18,7 +18,9 @@ class ALU : public ExternalDevice
         ALU();
         void setup() override;
         uint8_t add(uint8_t a, uint8_t b, bool carry_in=false);
+        uint8_t add_b(uint8_t a, uint8_t b, bool carry_in=false);
         int8_t sub(uint8_t a, uint8_t b, bool carry_in=false);
+        int8_t sub_b(uint8_t a, uint8_t b, bool carry_in=false);
         uint8_t read_flags();
 
         Register reg_a;

@@ -40,8 +40,10 @@ void alu_tests()
     reg_load_store_output(&alu.reg_a, 1000);
     reg_load_store_output(&alu.reg_b, 1000);
     alu_add_bytes();
+    alu_add_bytes_b();
     alu_add_bytes_cset();
     alu_sub_bytes();
+    alu_sub_bytes_b();
     alu_sub_bytes_cset();
     alu_add_16bit();
     alu_sub_16bit();
@@ -87,6 +89,36 @@ void alu_add_bytes()
     }
     Serial.println(F("OK"));
 }
+
+void alu_add_bytes_b()
+{
+    Serial.print(F("Add bytes B"));
+    for (int a = 0; a < 256; ++a)
+    {
+        if ((a % 8) == 0)
+            Serial.print('.');
+
+        for (int b = 0; b < 256; ++b)
+        {
+            uint8_t res = alu.add_b(a, b);
+            uint8_t flags = alu.read_flags();
+
+            uint8_t expected = a + b;
+            uint8_t expected_flags = flags_avr2alu(flags_of_add8(a, b));
+
+            if (res != expected || flags != expected_flags)
+            {
+                char line[80];
+
+                sprintf_P(line, PSTR("%d + %d = %d but received %d flags - expect %x real %x"), a, b, expected, res, expected_flags, flags);
+                Serial.println(line);
+                return;
+            }
+        }
+    }
+    Serial.println(F("OK"));
+}
+
 
 void alu_add_bytes_cset()
 {
@@ -146,6 +178,36 @@ void alu_sub_bytes()
     }
     Serial.println(F("OK"));
 }
+
+void alu_sub_bytes_b()
+{
+    Serial.print(F("Subtract bytes B"));
+    for (int a = 0; a < 256; ++a)
+    {
+        if ((a % 8) == 0)
+            Serial.print('.');
+
+        for (int b = 0; b < 256; ++b)
+        {
+            int8_t res = alu.sub_b(a, b);
+            uint8_t flags = alu.read_flags();
+
+            int8_t expected = a - b;
+            uint8_t expected_flags = flags_avr2alu(flags_of_sub8(a, b));
+
+            if (res != expected || flags != expected_flags)
+            {
+                char line[80];
+
+                sprintf_P(line, PSTR("%d - %d = %d but received %d flags - expect %x real %x"), a, b, expected, res, expected_flags, flags);
+                Serial.println(line);
+                return;
+            }
+        }
+    }
+    Serial.println(F("OK"));
+}
+
 
 void alu_sub_bytes_cset()
 {
