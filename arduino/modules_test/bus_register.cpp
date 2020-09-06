@@ -8,14 +8,14 @@
 Register::Register(DeviceInterface &_dev)
     : Register(
         _dev,
-        ShiftPin(PIN_LOAD, CtrlPin::ACTIVE_LOW),
-        ShiftPin(PIN_OUT, CtrlPin::ACTIVE_LOW)
+        _dev.control.claim(PIN_LOAD, CtrlPin::ACTIVE_LOW),
+        _dev.control.claim(PIN_OUT, CtrlPin::ACTIVE_LOW)
     )
 {
 
 }
 
-Register::Register(DeviceInterface &_dev, ShiftPin&& _pin_load, ShiftPin&& _pin_out)
+Register::Register(DeviceInterface &_dev, ShiftPin &_pin_load, ShiftPin &_pin_out)
     : devices{_dev},
       pin_load{_pin_load},
       pin_out{_pin_out}

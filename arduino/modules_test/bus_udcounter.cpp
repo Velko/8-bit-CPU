@@ -5,7 +5,7 @@
 
 UpDownCounter::UpDownCounter(DeviceInterface &_dev)
     : Counter(_dev, CtrlPin::ACTIVE_LOW),
-      pin_down{PIN_UP_DOWN, CtrlPin::ACTIVE_HIGH}
+      pin_down{_dev.control.claim(PIN_UP_DOWN, CtrlPin::ACTIVE_HIGH)}
 {
 }
 

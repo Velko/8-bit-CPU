@@ -30,23 +30,31 @@
 
 #define FLAG_IS_SET(val, flag)     ((val & flag)!=0)
 
-ALU alu;
-
 void reg_load_store_output(Register *r, int repeats);
+
+void alu_add_bytes(ALU &alu);
+void alu_add_bytes_b(ALU &alu);
+void alu_add_bytes_cset(ALU &alu);
+void alu_sub_bytes(ALU &alu);
+void alu_sub_bytes_b(ALU &alu);
+void alu_sub_bytes_cset(ALU &alu);
+void alu_add_16bit(ALU &alu);
+void alu_sub_16bit(ALU &alu);
 
 void alu_tests()
 {
+    ALU alu(DeviceInterface::instance);
     alu.setup();
     reg_load_store_output(&alu.reg_a, 1000);
     reg_load_store_output(&alu.reg_b, 1000);
-    alu_add_bytes();
-    alu_add_bytes_b();
-    alu_add_bytes_cset();
-    alu_sub_bytes();
-    alu_sub_bytes_b();
-    alu_sub_bytes_cset();
-    alu_add_16bit();
-    alu_sub_16bit();
+    alu_add_bytes(alu);
+    alu_add_bytes_b(alu);
+    alu_add_bytes_cset(alu);
+    alu_sub_bytes(alu);
+    alu_sub_bytes_b(alu);
+    alu_sub_bytes_cset(alu);
+    alu_add_16bit(alu);
+    alu_sub_16bit(alu);
 }
 
 uint8_t flags_avr2alu(uint8_t avr_flags)
@@ -61,7 +69,7 @@ uint8_t flags_avr2alu(uint8_t avr_flags)
     return alu_flags;
 }
 
-void alu_add_bytes()
+void alu_add_bytes(ALU &alu)
 {
     Serial.print(F("Add bytes"));
     for (int b = 0; b < 256; ++b)
@@ -90,7 +98,7 @@ void alu_add_bytes()
     Serial.println(F("OK"));
 }
 
-void alu_add_bytes_b()
+void alu_add_bytes_b(ALU &alu)
 {
     Serial.print(F("Add bytes B"));
     for (int a = 0; a < 256; ++a)
@@ -120,7 +128,7 @@ void alu_add_bytes_b()
 }
 
 
-void alu_add_bytes_cset()
+void alu_add_bytes_cset(ALU &alu)
 {
     Serial.print(F("Add bytes (C)"));
     for (int b = 0; b < 256; ++b)
@@ -150,7 +158,7 @@ void alu_add_bytes_cset()
     Serial.println(F("OK"));
 }
 
-void alu_sub_bytes()
+void alu_sub_bytes(ALU &alu)
 {
     Serial.print(F("Subtract bytes"));
     for (int b = 0; b < 256; ++b)
@@ -179,7 +187,7 @@ void alu_sub_bytes()
     Serial.println(F("OK"));
 }
 
-void alu_sub_bytes_b()
+void alu_sub_bytes_b(ALU &alu)
 {
     Serial.print(F("Subtract bytes B"));
     for (int a = 0; a < 256; ++a)
@@ -209,7 +217,7 @@ void alu_sub_bytes_b()
 }
 
 
-void alu_sub_bytes_cset()
+void alu_sub_bytes_cset(ALU &alu)
 {
     Serial.print(F("Subtract bytes (C)"));
     for (int b = 0; b < 256; ++b)
@@ -239,7 +247,7 @@ void alu_sub_bytes_cset()
     Serial.println(F("OK"));
 }
 
-void alu_add_16bit()
+void alu_add_16bit(ALU &alu)
 {
     Serial.print(F("Add 16bit"));
 
@@ -276,7 +284,7 @@ void alu_add_16bit()
     Serial.println(F("OK"));
 }
 
-void alu_sub_16bit()
+void alu_sub_16bit(ALU &alu)
 {
     Serial.print(F("Subtract 16bit"));
 

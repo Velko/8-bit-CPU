@@ -11,7 +11,6 @@ ShiftOutExt shift;
 void setup()
 {
     Serial.begin(9600);
-    ShiftCtrl::setup();
     DeviceInterface::instance.setup();
 }
 

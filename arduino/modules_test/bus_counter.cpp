@@ -7,13 +7,13 @@
 
 Counter::Counter(DeviceInterface &_dev)
     : Register(_dev),
-      pin_c_enable{PIN_COUNT, CtrlPin::ACTIVE_HIGH}
+      pin_c_enable{_dev.control.claim(PIN_COUNT, CtrlPin::ACTIVE_HIGH)}
 {
 }
 
 Counter::Counter(DeviceInterface &_dev, CtrlPin::ActiveLevel enable_mode)
     : Register(_dev),
-      pin_c_enable{PIN_COUNT, enable_mode}
+      pin_c_enable{_dev.control.claim(PIN_COUNT, enable_mode)}
 {
 }
 

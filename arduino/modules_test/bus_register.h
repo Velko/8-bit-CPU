@@ -9,7 +9,7 @@ class Register : public ExternalDevice
 {
     public:
         Register(DeviceInterface &devices);
-        Register(DeviceInterface &devices, ShiftPin&& pin_load, ShiftPin&& pin_out);
+        Register(DeviceInterface &devices, ShiftPin &pin_load, ShiftPin &pin_out);
         void setup() override;
         void write(uint8_t value);
         uint8_t read();

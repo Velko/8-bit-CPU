@@ -15,7 +15,7 @@ class SecondRegister : public Register
 class ALU : public ExternalDevice
 {
     public:
-        ALU();
+        ALU(DeviceInterface &devices);
         void setup() override;
         uint8_t add(uint8_t a, uint8_t b, bool carry_in=false);
         uint8_t add_b(uint8_t a, uint8_t b, bool carry_in=false);
@@ -26,6 +26,7 @@ class ALU : public ExternalDevice
         Register reg_a;
         SecondRegister reg_b;
     private:
+        DeviceInterface &devices;
         IOBus flags;
         ShiftPin pin_out;
         ShiftPin pin_subtract;

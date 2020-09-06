@@ -3,9 +3,18 @@
 
 ShiftOutExt shext;
 
-void ShiftCtrl::setup()
+ShiftCtrl::ShiftCtrl()
 {
     buffer = 0;
+    for (int i = 0; i < sizeof(buffer) * 8; ++i)
+    {
+        pins[i].owner = this;
+        pins[i].pin = i;
+    }
+}
+
+void ShiftCtrl::setup()
+{
     shext.setup();
 }
 
@@ -14,12 +23,14 @@ void ShiftCtrl::commit()
     shext.write8(buffer);
 }
 
-uint8_t ShiftCtrl::buffer;
+ShiftPin::ShiftPin()
+{}
 
-ShiftPin::ShiftPin(uint8_t _pin, CtrlPin::ActiveLevel _mode)
+
+ShiftPin &ShiftCtrl::claim(uint8_t _pin, CtrlPin::ActiveLevel _mode)
 {
-    pin = _pin;
-    mode = _mode;
+    pins[_pin].mode = _mode;
+    return pins[_pin];
 }
 
 void ShiftPin::setup()
@@ -30,31 +41,28 @@ void ShiftPin::setup()
 void ShiftPin::on(bool autocommit)
 {
     if (mode == CtrlPin::ACTIVE_HIGH)
-        ShiftCtrl::buffer |= (1 << pin);
+        owner->buffer |= (1 << pin);
     else
-        ShiftCtrl::buffer &= ~(1 << pin);
+        owner->buffer &= ~(1 << pin);
     if (autocommit)
-        ShiftCtrl::commit();
+        owner->commit();
 }
 
 void ShiftPin::off(bool autocommit)
 {
     if (mode == CtrlPin::ACTIVE_HIGH)
-        ShiftCtrl::buffer &= ~(1 << pin);
+        owner->buffer &= ~(1 << pin);
     else
-        ShiftCtrl::buffer |= (1 << pin);
+        owner->buffer |= (1 << pin);
 
     if (autocommit)
-        ShiftCtrl::commit();
+        owner->commit();
 }
 
 void ShiftPin::set(bool enabled, bool autocommit)
 {
     if (enabled)
-        on();
+        on(autocommit);
     else
-        off();
-
-    if (autocommit)
-        ShiftCtrl::commit();
+        off(autocommit);
 }
