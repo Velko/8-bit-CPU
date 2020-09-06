@@ -25,7 +25,6 @@ SecondRegister::SecondRegister()
 ALU::ALU(DeviceInterface &_dev)
     : devices{_dev},
       reg_a(_dev),
-      flags{A0, A1, A2, A3},
       pin_out{_dev.control.claim(PIN_OUT_ALU, CtrlPin::ACTIVE_LOW)},
       pin_subtract{_dev.control.claim(PIN_SUBTRACT, CtrlPin::ACTIVE_HIGH)},
       pin_use_carry{_dev.control.claim(PIN_USE_CARRY, CtrlPin::ACTIVE_HIGH)}
@@ -36,7 +35,7 @@ void ALU::setup()
 {
     reg_a.setup();
     reg_b.setup();
-    flags.set_input();
+    devices.flagsBus.set_input();
 
     pin_out.setup();
     pin_subtract.setup();
@@ -111,5 +110,5 @@ int8_t ALU::sub_b(uint8_t a, uint8_t b, bool carry_in)
 
 uint8_t ALU::read_flags()
 {
-    return flags.read();
+    return devices.flagsBus.read();
 }
