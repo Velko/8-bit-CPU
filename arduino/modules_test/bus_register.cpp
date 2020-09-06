@@ -39,13 +39,13 @@ void Register::load()
 
 void Register::write(uint8_t value)
 {
-    bus.write(value);
+    devices.mainBus.write(value);
     pin_load.on();
     devices.clock.pulse();
     // Emulate bus changes before LOAD is released
     // but since register should latch the value on
     // clock pulse - it should not affect it anymore
-    bus.write(~value);
+    devices.mainBus.write(~value);
     pin_load.off();
 
     // Add few pulses to see if releasing LOAD really
@@ -54,14 +54,14 @@ void Register::write(uint8_t value)
     devices.clock.pulse();
 
     // allow other devices to drive the bus
-    bus.set_input();
+    devices.mainBus.set_input();
 }
 
 uint8_t Register::read()
 {
-    bus.set_input();
+    devices.mainBus.set_input();
     pin_out.on();
-    uint8_t value = bus.read();
+    uint8_t value = devices.mainBus.read();
     pin_out.off();
 
     return value;

@@ -3,12 +3,8 @@
  */
 
 
-#include "bus_register.h"
-#include "dev_display.h"
 #include <shiftoutext.h>
 #include "device_interface.h"
-
-extern Display dsp;
 
 ShiftOutExt shift;
 
@@ -37,11 +33,11 @@ void loop()
         break;
     case 'D':
         val = Serial.parseInt();
-        dsp.write(val);
+        display_set_value(val);
         break;
     case 'm':
         val = Serial.parseInt();
-        dsp.set_mode(val);
+        display_set_mode(val);
         break;
     case 'r':
         register_demo();

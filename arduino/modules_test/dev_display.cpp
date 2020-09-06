@@ -1,8 +1,9 @@
 #include "dev_display.h"
 #include <Arduino.h>
 
-Display::Display()
-    : BusDevice{9, 8, 7, 6, 5, 4, 2, 3},
+Display::Display(DeviceInterface &_dev)
+    : devices{_dev},
+      BusDevice{9, 8, 7, 6, 5, 4, 2, 3},
       mode_bus{12, 13}
 {
 }
@@ -14,7 +15,7 @@ void Display::setup()
 
 void Display::write(uint8_t value)
 {
-    bus.write(value);
+    devices.mainBus.write(value);
 }
 
 uint8_t Display::read()

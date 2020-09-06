@@ -1,9 +1,8 @@
 #include "dev_display.h"
 
-Display dsp;
-
 void display_demo()
 {
+    Display dsp(DeviceInterface::instance);
     dsp.setup();
 
     for (;;)
@@ -18,4 +17,18 @@ void display_demo()
             }
         }
     }
+}
+
+void display_set_mode(int val)
+{
+    Display dsp(DeviceInterface::instance);
+    dsp.setup();
+    dsp.set_mode(val);
+}
+
+void display_set_value(int val)
+{
+    Display dsp(DeviceInterface::instance);
+    dsp.setup();
+    dsp.write(val);
 }

@@ -13,7 +13,6 @@ class BusDevice : public ExternalDevice
         virtual uint8_t read() = 0;
 
     protected:
-        IOBus bus;
 };
 
 
