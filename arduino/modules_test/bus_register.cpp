@@ -17,7 +17,6 @@ Register::Register(DeviceInterface &_dev)
 
 Register::Register(DeviceInterface &_dev, ShiftPin&& _pin_load, ShiftPin&& _pin_out)
     : devices{_dev},
-      BusDevice{9, 8, 7, 6, 5, 4, 3, 2},
       pin_load{_pin_load},
       pin_out{_pin_out}
 {
