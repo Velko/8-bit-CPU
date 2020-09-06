@@ -11,11 +11,11 @@
 
 #include "device_interface.h"
 
-SecondRegister::SecondRegister()
+SecondRegister::SecondRegister(DeviceInterface &_dev)
     : Register (
-        DeviceInterface::instance,
-        DeviceInterface::instance.control.claim(PIN_LOAD_B, CtrlPin::ACTIVE_LOW),
-        DeviceInterface::instance.control.claim(PIN_OUT_B, CtrlPin::ACTIVE_LOW)
+        _dev,
+        _dev.control.claim(PIN_LOAD_B, CtrlPin::ACTIVE_LOW),
+        _dev.control.claim(PIN_OUT_B, CtrlPin::ACTIVE_LOW)
     )
 {
 }
@@ -25,6 +25,7 @@ SecondRegister::SecondRegister()
 ALU::ALU(DeviceInterface &_dev)
     : devices{_dev},
       reg_a(_dev),
+      reg_b(_dev),
       pin_out{_dev.control.claim(PIN_OUT_ALU, CtrlPin::ACTIVE_LOW)},
       pin_subtract{_dev.control.claim(PIN_SUBTRACT, CtrlPin::ACTIVE_HIGH)},
       pin_use_carry{_dev.control.claim(PIN_USE_CARRY, CtrlPin::ACTIVE_HIGH)}

@@ -9,7 +9,7 @@
 class SecondRegister : public Register
 {
     public:
-        SecondRegister();
+        SecondRegister(DeviceInterface &devices);
 };
 
 class ALU : public ExternalDevice
