@@ -5,13 +5,15 @@
 
 #define PIN_COUNT       2
 
-Counter::Counter()
-    : pin_c_enable{PIN_COUNT, CtrlPin::ACTIVE_HIGH}
+Counter::Counter(DeviceInterface &_dev)
+    : Register(_dev),
+      pin_c_enable{PIN_COUNT, CtrlPin::ACTIVE_HIGH}
 {
 }
 
-Counter::Counter(CtrlPin::ActiveLevel enable_mode)
-    : pin_c_enable{PIN_COUNT, enable_mode}
+Counter::Counter(DeviceInterface &_dev, CtrlPin::ActiveLevel enable_mode)
+    : Register(_dev),
+      pin_c_enable{PIN_COUNT, enable_mode}
 {
 }
 
@@ -24,11 +26,11 @@ void Counter::setup()
 void Counter::MoveNext()
 {
     pin_c_enable.on();
-    clock.pulse();
+    devices.clock.pulse();
     pin_c_enable.off();
 
     // additional pulses to see if CE
     // really works
-    clock.pulse();
-    clock.pulse();
+    devices.clock.pulse();
+    devices.clock.pulse();
 }

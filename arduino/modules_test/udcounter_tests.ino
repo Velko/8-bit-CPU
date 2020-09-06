@@ -1,9 +1,10 @@
 #include "bus_udcounter.h"
 
-UpDownCounter udc;
+
 
 void down_count_demo()
 {
+    UpDownCounter udc(DeviceInterface::instance);
     udc.setup();
 
     bool count_down = false;
@@ -31,6 +32,9 @@ void test_count_down(UpDownCounter *c, int repeats);
 
 void udcounter_tests()
 {
+    UpDownCounter udc(DeviceInterface::instance);
+    udc.setup();
+
     reg_load_store_output(&udc, 1000);
     test_count_up(&udc, 100);
     test_count_down(&udc, 100);

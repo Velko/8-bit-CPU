@@ -6,7 +6,7 @@
 class UpDownCounter : public Counter
 {
     public:
-        UpDownCounter();
+        UpDownCounter(DeviceInterface &devices);
         void setup() override;
         void MoveNext() override;
         void MovePrev();

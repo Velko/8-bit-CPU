@@ -1,10 +1,9 @@
 #include "bus_register.h"
 
 
-Register reg;
-
 void register_demo()
 {
+    Register reg(DeviceInterface::instance);
     reg.setup();
 
     for (;;)
@@ -29,8 +28,18 @@ void register_demo()
 
 void reg_load_store_output(Register *r, int repeats);
 
+void register_load(int val)
+{
+    Register reg(DeviceInterface::instance);
+    reg.setup();
+    reg.write(val);
+}
+
 void register_tests()
 {
+    Register reg(DeviceInterface::instance);
+    reg.setup();
+
     reg_load_store_output(&reg, 1000);
 }
 

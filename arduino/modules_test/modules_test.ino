@@ -6,8 +6,8 @@
 #include "bus_register.h"
 #include "dev_display.h"
 #include <shiftoutext.h>
+#include "device_interface.h"
 
-extern Register reg;
 extern Display dsp;
 
 ShiftOutExt shift;
@@ -16,6 +16,7 @@ void setup()
 {
     Serial.begin(9600);
     ShiftCtrl::setup();
+    DeviceInterface::instance.setup();
 }
 
 void loop()
@@ -47,8 +48,7 @@ void loop()
         break;
     case 'R':
         val = Serial.parseInt();
-        reg.setup();
-        reg.write(val);
+        register_load(val);
         break;
     case 'c':
         counter_demo();

@@ -6,8 +6,8 @@
 class Counter : public Register
 {
     public:
-        Counter();
-        Counter(CtrlPin::ActiveLevel enable_mode);
+        Counter(DeviceInterface &devices);
+        Counter(DeviceInterface &devices, CtrlPin::ActiveLevel enable_mode);
         void setup() override;
         virtual void MoveNext();
 

@@ -1,9 +1,8 @@
 #include "bus_counter.h"
 
-Counter cnt;
-
 void counter_demo()
 {
+    Counter cnt(DeviceInterface::instance);
     cnt.setup();
 
     for(;;)
@@ -20,6 +19,9 @@ void reg_load_store_output(Register *r, int repeats);
 
 void counter_tests()
 {
+    Counter cnt(DeviceInterface::instance);
+    cnt.setup();
+
     reg_load_store_output(&cnt, 1000);
     test_count_up(&cnt, 100);
 }

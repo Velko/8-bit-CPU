@@ -5,8 +5,9 @@
 #define PIN_OUT     1
 
 
-Register::Register()
+Register::Register(DeviceInterface &_dev)
     : Register(
+        _dev,
         ShiftPin(PIN_LOAD, CtrlPin::ACTIVE_LOW),
         ShiftPin(PIN_OUT, CtrlPin::ACTIVE_LOW)
     )
@@ -14,8 +15,9 @@ Register::Register()
 
 }
 
-Register::Register(ShiftPin&& _pin_load, ShiftPin&& _pin_out)
-    : BusDevice{9, 8, 7, 6, 5, 4, 3, 2},
+Register::Register(DeviceInterface &_dev, ShiftPin&& _pin_load, ShiftPin&& _pin_out)
+    : devices{_dev},
+      BusDevice{9, 8, 7, 6, 5, 4, 3, 2},
       pin_load{_pin_load},
       pin_out{_pin_out}
 {
@@ -24,7 +26,6 @@ Register::Register(ShiftPin&& _pin_load, ShiftPin&& _pin_out)
 
 void Register::setup()
 {
-    clock.setup();
     pin_load.setup();
     pin_out.setup();
 }
@@ -32,7 +33,7 @@ void Register::setup()
 void Register::load()
 {
     pin_load.on();
-    clock.pulse();
+    devices.clock.pulse();
     pin_load.off();
 }
 
@@ -40,7 +41,7 @@ void Register::write(uint8_t value)
 {
     bus.write(value);
     pin_load.on();
-    clock.pulse();
+    devices.clock.pulse();
     // Emulate bus changes before LOAD is released
     // but since register should latch the value on
     // clock pulse - it should not affect it anymore
@@ -49,8 +50,8 @@ void Register::write(uint8_t value)
 
     // Add few pulses to see if releasing LOAD really
     // worked
-    clock.pulse();
-    clock.pulse();
+    devices.clock.pulse();
+    devices.clock.pulse();
 
     // allow other devices to drive the bus
     bus.set_input();

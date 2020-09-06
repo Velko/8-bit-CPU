@@ -3,8 +3,8 @@
 
 #define PIN_UP_DOWN   3
 
-UpDownCounter::UpDownCounter()
-    : Counter(CtrlPin::ACTIVE_LOW),
+UpDownCounter::UpDownCounter(DeviceInterface &_dev)
+    : Counter(_dev, CtrlPin::ACTIVE_LOW),
       pin_down{PIN_UP_DOWN, CtrlPin::ACTIVE_HIGH}
 {
 }
