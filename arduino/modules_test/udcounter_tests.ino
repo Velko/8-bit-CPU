@@ -44,7 +44,7 @@ void test_count_down(UpDownCounter *c, int repeats)
 {
     c->setup();
     Serial.print(F("Count down"));
-    c->write(255);
+    c->write_quick(255);
     for (int pass = 0; pass < repeats; ++pass)
     {
         if ((pass % 4) == 0)

@@ -36,7 +36,7 @@ void Register::load()
     pin_load.off();
 }
 
-void Register::write(uint8_t value)
+void Register::write_check(uint8_t value)
 {
     devices.mainBus.write(value);
     pin_load.on();
@@ -55,6 +55,21 @@ void Register::write(uint8_t value)
     // allow other devices to drive the bus
     devices.mainBus.set_input();
 }
+
+void Register::write_quick(uint8_t value)
+{
+    // Do just the minimum for loading the value. Checking if
+    // Register reacts correctly to all quirks that might occur
+    // in a computer is done with write_check().
+    devices.mainBus.write(value);
+    pin_load.on();
+    devices.clock.pulse();
+    pin_load.off();
+
+    // allow other devices to drive the bus
+    devices.mainBus.set_input();
+}
+
 
 uint8_t Register::read()
 {

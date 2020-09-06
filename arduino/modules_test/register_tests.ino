@@ -13,7 +13,7 @@ void register_demo()
             Serial.print(i);
             Serial.print(" ");
 
-            reg.write(i);
+            reg.write_check(i);
             delay(250);
 
             uint8_t readback = reg.read();
@@ -32,7 +32,7 @@ void register_load(int val)
 {
     Register reg(DeviceInterface::instance);
     reg.setup();
-    reg.write(val);
+    reg.write_check(val);
 }
 
 void register_tests()
@@ -54,7 +54,7 @@ void reg_load_store_output(Register *r, int repeats)
             Serial.print('.');
         for (int i = 1; i < 256; i <<= 1)
         {
-            r->write(i);
+            r->write_check(i);
             uint8_t readback = r->read();
 
             if (readback != i)

@@ -31,7 +31,7 @@ void test_count_up(Counter *c, int repeats)
 {
     c->setup();
     Serial.print(F("Count up"));
-    c->write(0);
+    c->write_quick(0);
     for (int pass = 0; pass < repeats; ++pass)
     {
         if ((pass % 4) == 0)
