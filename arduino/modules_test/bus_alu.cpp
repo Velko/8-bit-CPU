@@ -23,9 +23,9 @@ SecondRegister::SecondRegister(DeviceInterface &_dev)
 
 
 ALU::ALU(DeviceInterface &_dev)
-    : devices{_dev},
-      reg_a(_dev),
+    : reg_a(_dev),
       reg_b(_dev),
+      devices{_dev},
       pin_out{_dev.control.claim(PIN_OUT_ALU, CtrlPin::ACTIVE_LOW)},
       pin_subtract{_dev.control.claim(PIN_SUBTRACT, CtrlPin::ACTIVE_HIGH)},
       pin_use_carry{_dev.control.claim(PIN_USE_CARRY, CtrlPin::ACTIVE_HIGH)}

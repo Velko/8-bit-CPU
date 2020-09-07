@@ -1,5 +1,9 @@
+#include <Arduino.h>
 #include "bus_alu.h"
 #include "alu_ref.h"
+
+#include "register_tests.h"
+#include "alu_tests.h"
 
 /*
     To verify if ALU sets flags as expected, we're comparing them to flags that are set by
@@ -29,17 +33,6 @@
 #define ALU_FLAG_C      0b1000
 
 #define FLAG_IS_SET(val, flag)     ((val & flag)!=0)
-
-void reg_load_store_output(Register *r, int repeats);
-
-void alu_add_bytes(ALU &alu);
-void alu_add_bytes_b(ALU &alu);
-void alu_add_bytes_cset(ALU &alu);
-void alu_sub_bytes(ALU &alu);
-void alu_sub_bytes_b(ALU &alu);
-void alu_sub_bytes_cset(ALU &alu);
-void alu_add_16bit(ALU &alu);
-void alu_sub_16bit(ALU &alu);
 
 void alu_tests()
 {

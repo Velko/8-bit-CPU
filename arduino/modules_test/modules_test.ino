@@ -5,6 +5,12 @@
 
 #include <shiftoutext.h>
 #include "device_interface.h"
+#include "register_tests.h"
+#include "display_tests.h"
+#include "counter_tests.h"
+#include "udcounter_tests.h"
+#include "alu_tests.h"
+
 
 ShiftOutExt shift;
 

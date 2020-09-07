@@ -1,5 +1,9 @@
+#include <Arduino.h>
 #include "bus_udcounter.h"
 
+#include "udcounter_tests.h"
+#include "counter_tests.h"
+#include "register_tests.h"
 
 
 void down_count_demo()
@@ -24,11 +28,6 @@ void down_count_demo()
         if (val == 255) count_down = true;
     }
 }
-
-void reg_load_store_output(Register *r, int repeats);
-void test_count_up(Counter *c, int repeats);
-void test_count_down(UpDownCounter *c, int repeats);
-
 
 void udcounter_tests()
 {

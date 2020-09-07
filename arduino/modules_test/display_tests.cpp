@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "dev_display.h"
 
 void display_demo()

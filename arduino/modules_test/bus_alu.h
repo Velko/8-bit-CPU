@@ -33,4 +33,4 @@ class ALU : public ExternalDevice
 };
 
 
-#endif BUS_ALU_H
+#endif /* BUS_ALU_H */

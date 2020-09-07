@@ -1,4 +1,6 @@
+#include <Arduino.h>
 #include "bus_register.h"
+#include "register_tests.h"
 
 
 void register_demo()
@@ -25,8 +27,6 @@ void register_demo()
         }
     }
 }
-
-void reg_load_store_output(Register *r, int repeats);
 
 void register_load(int val)
 {

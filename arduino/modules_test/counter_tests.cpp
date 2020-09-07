@@ -1,4 +1,7 @@
+#include <Arduino.h>
 #include "bus_counter.h"
+#include "counter_tests.h"
+#include "register_tests.h"
 
 void counter_demo()
 {
@@ -13,9 +16,6 @@ void counter_demo()
         delay(100);
     }
 }
-
-void test_count_up(Counter *c, int repeats);
-void reg_load_store_output(Register *r, int repeats);
 
 void counter_tests()
 {
