@@ -262,7 +262,7 @@ void alu_add_16bit(ALU &alu)
             uint8_t resb[2];
             resb[0] = alu.add(a, b);
             resb[1] = alu.add(a >> 8, b >> 8, true);
-            uint16_t res = *((uint16_t *)resb);
+            uint16_t res = (resb[1] << 8 ) | resb[0];
 
             uint16_t expected = a + b;
             if (res != expected)
@@ -295,7 +295,7 @@ void alu_sub_16bit(ALU &alu)
             int8_t resb[2];
             resb[0] = alu.sub(a, b);
             resb[1] = alu.sub(a >> 8, b >> 8, true);
-            int16_t res = *((int16_t *)resb);
+            int16_t res = (resb[1] << 8 ) | resb[0];
 
             int16_t expected = a - b;
             if (res != expected)

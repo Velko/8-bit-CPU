@@ -6,7 +6,7 @@ ShiftOutExt shext;
 ShiftCtrl::ShiftCtrl()
 {
     buffer = 0;
-    for (int i = 0; i < sizeof(buffer) * 8; ++i)
+    for (unsigned i = 0; i < sizeof(buffer) * 8; ++i)
     {
         pins[i].owner = this;
         pins[i].pin = i;
