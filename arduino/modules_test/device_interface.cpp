@@ -4,8 +4,7 @@
 DeviceInterface DeviceInterface::instance;
 
 DeviceInterface::DeviceInterface()
-    : mainBus{9, 8, 7, 6, 5, 4, 3, 2},
-      flagsBus{A0, A1, A2, A3}
+    : flagsBus{A0, A1, A2, A3}
 {
 
 }
