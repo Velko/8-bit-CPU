@@ -34,7 +34,7 @@ void udcounter_tests()
     UpDownCounter udc(DeviceInterface::instance);
     udc.setup();
 
-    reg_load_store_output(&udc, 1000);
+    reg_load_store_output(&udc, 1000, "UDC");
     test_count_up(&udc, 100);
     test_count_down(&udc, 100);
 }
@@ -42,7 +42,7 @@ void udcounter_tests()
 void test_count_down(UpDownCounter *c, int repeats)
 {
     c->setup();
-    Serial.print(F("Count down"));
+    Serial.print(F("Down"));
     c->write_quick(255);
     for (int pass = 0; pass < repeats; ++pass)
     {

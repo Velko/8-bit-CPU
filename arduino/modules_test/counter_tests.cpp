@@ -22,7 +22,7 @@ void counter_tests()
     Counter cnt(DeviceInterface::instance);
     cnt.setup();
 
-    reg_load_store_output(&cnt, 1000);
+    reg_load_store_output(&cnt, 1000, "CNT");
     test_count_up(&cnt, 100);
 }
 
@@ -30,7 +30,7 @@ void counter_tests()
 void test_count_up(Counter *c, int repeats)
 {
     c->setup();
-    Serial.print(F("Count up"));
+    Serial.print(F("Up  "));
     c->write_quick(0);
     for (int pass = 0; pass < repeats; ++pass)
     {

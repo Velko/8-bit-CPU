@@ -38,8 +38,8 @@ void alu_tests()
 {
     ALU alu(DeviceInterface::instance);
     alu.setup();
-    reg_load_store_output(&alu.reg_a, 1000);
-    reg_load_store_output(&alu.reg_b, 1000);
+    reg_load_store_output(&alu.reg_a, 1000, "A");
+    reg_load_store_output(&alu.reg_b, 1000, "B");
     alu_add_bytes(alu);
     alu_add_bytes_b(alu);
     alu_add_bytes_cset(alu);
@@ -64,7 +64,7 @@ uint8_t flags_avr2alu(uint8_t avr_flags)
 
 void alu_add_bytes(ALU &alu)
 {
-    Serial.print(F("Add bytes"));
+    Serial.print(F("A += B "));
     for (int b = 0; b < 256; ++b)
     {
         if ((b % 8) == 0)
@@ -93,7 +93,7 @@ void alu_add_bytes(ALU &alu)
 
 void alu_add_bytes_b(ALU &alu)
 {
-    Serial.print(F("Add bytes B"));
+    Serial.print(F("B += A "));
     for (int a = 0; a < 256; ++a)
     {
         if ((a % 8) == 0)
@@ -123,7 +123,7 @@ void alu_add_bytes_b(ALU &alu)
 
 void alu_add_bytes_cset(ALU &alu)
 {
-    Serial.print(F("Add bytes (C)"));
+    Serial.print(F("A += BC"));
     for (int b = 0; b < 256; ++b)
     {
         if ((b % 8) == 0)
@@ -153,7 +153,7 @@ void alu_add_bytes_cset(ALU &alu)
 
 void alu_sub_bytes(ALU &alu)
 {
-    Serial.print(F("Subtract bytes"));
+    Serial.print(F("A -= B "));
     for (int b = 0; b < 256; ++b)
     {
         if ((b % 8) == 0)
@@ -182,7 +182,7 @@ void alu_sub_bytes(ALU &alu)
 
 void alu_sub_bytes_b(ALU &alu)
 {
-    Serial.print(F("Subtract bytes B"));
+    Serial.print(F("B -= A "));
     for (int a = 0; a < 256; ++a)
     {
         if ((a % 8) == 0)
@@ -212,7 +212,7 @@ void alu_sub_bytes_b(ALU &alu)
 
 void alu_sub_bytes_cset(ALU &alu)
 {
-    Serial.print(F("Subtract bytes (C)"));
+    Serial.print(F("A -= BC"));
     for (int b = 0; b < 256; ++b)
     {
         if ((b % 8) == 0)
@@ -242,7 +242,7 @@ void alu_sub_bytes_cset(ALU &alu)
 
 void alu_add_16bit(ALU &alu)
 {
-    Serial.print(F("Add 16bit"));
+    Serial.print(F("16bit ADD"));
 
     /* It will take too long to perform a run with all possible
        16-bit values - 4,294,967,296 operations will take couple
@@ -279,7 +279,7 @@ void alu_add_16bit(ALU &alu)
 
 void alu_sub_16bit(ALU &alu)
 {
-    Serial.print(F("Subtract 16bit"));
+    Serial.print(F("16bit SUB"));
 
     /* Same as with add_16bit - just do quick checks for sub + sbc */
     for (long b = 0; b < 0x10000; b += 503)
