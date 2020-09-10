@@ -4,7 +4,6 @@
 DeviceInterface DeviceInterface::instance;
 
 DeviceInterface::DeviceInterface()
-    : flagsBus{A0, A1, A2, A3}
 {
 
 }

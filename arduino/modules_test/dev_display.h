@@ -1,6 +1,7 @@
 #ifndef DEV_DISPLAY
 #define DEV_DISPLAY
 
+#include <iobus.h>
 #include "ext_device.h"
 #include "device_interface.h"
 
