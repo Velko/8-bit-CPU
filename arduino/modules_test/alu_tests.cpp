@@ -268,7 +268,7 @@ void alu_add_16bit(ALU &alu)
             if (res != expected)
             {
                 char line[80];
-                sprintf_P(line, PSTR("%d + %d = %d but received %d"), a , b, expected, res);
+                sprintf_P(line, PSTR("%d + %d = %d but received %d"), (int)a , (int)b, expected, res);
                 Serial.println(line);
                 return;
             }
@@ -292,7 +292,7 @@ void alu_sub_16bit(ALU &alu)
             /* need to be careful with combination of
                the result bytes, as C is "helpfully"
                sign-extending those */
-            int8_t resb[2];
+            uint8_t resb[2];
             resb[0] = alu.sub(a, b);
             resb[1] = alu.sub(a >> 8, b >> 8, true);
             int16_t res = (resb[1] << 8 ) | resb[0];
@@ -301,7 +301,7 @@ void alu_sub_16bit(ALU &alu)
             if (res != expected)
             {
                 char line[80];
-                sprintf_P(line, PSTR("%d - %d = %d but received %d"), a , b, expected, res);
+                sprintf_P(line, PSTR("%d - %d = %d but received %d"), (int)a , (int)b, expected, res);
                 Serial.println(line);
                 return;
             }
