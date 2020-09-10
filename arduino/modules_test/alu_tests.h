@@ -3,6 +3,7 @@
 
 class ALU;
 
+void alu_demo();
 void alu_tests();
 
 void alu_add_bytes(ALU &alu);

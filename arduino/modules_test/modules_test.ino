@@ -70,7 +70,7 @@ void loop()
         alu_tests();
         break;
     case 'A':
-        for (;;) alu_tests();
+        alu_demo();
         break;
     case 's':
         val = Serial.parseInt();

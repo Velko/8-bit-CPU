@@ -34,6 +34,27 @@
 
 #define FLAG_IS_SET(val, flag)     ((val & flag)!=0)
 
+void alu_demo()
+{
+    ALU alu(DeviceInterface::instance);
+    alu.setup();
+
+    for (;;)
+    {
+        register_demo_cycle(alu.reg_a, "A");
+        register_demo_cycle(alu.reg_b, "B");
+
+        alu_add_bytes(alu);
+        alu_add_bytes_b(alu);
+        alu_add_bytes_cset(alu);
+        alu_sub_bytes(alu);
+        alu_sub_bytes_b(alu);
+        alu_sub_bytes_cset(alu);
+        alu_add_16bit(alu);
+        alu_sub_16bit(alu);
+    }
+}
+
 void alu_tests()
 {
     ALU alu(DeviceInterface::instance);
