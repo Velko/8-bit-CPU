@@ -68,6 +68,7 @@ flags_of_sub8_with_c:
 /* frame size = 0 */
 /* stack size = 0 */
 .L__stack_usage = 0
+	sez
 	sec
 	sbc r24,r22
 	in r24,__SREG__
