@@ -41,8 +41,11 @@ void alu_demo()
 
     for (;;)
     {
-        register_demo_cycle(alu.reg_a, "A");
-        register_demo_cycle(alu.reg_b, "B");
+        alu.sub(0, 1, false);
+        register_demo_cycle(alu.reg_a, "A", false);
+        delay(500);
+        alu.sub(1, 0, true);
+        register_demo_cycle(alu.reg_b, "B", true);
 
         alu_add_bytes(alu);
         alu_add_bytes_b(alu);

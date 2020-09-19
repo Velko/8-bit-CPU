@@ -25,22 +25,35 @@ void register_demo()
 
     for (;;)
     {
-        register_demo_cycle(reg, "");
+        register_demo_cycle(reg, "", false);
     }
 }
 
-void register_demo_cycle(Register &reg, const char *label)
+void register_demo_cycle(Register &reg, const char *label, bool reverse)
 {
     Serial.println(label);
 
-    for (int i = 1; i < 256; i <<= 1)
+    if (!reverse)
     {
-        register_demo_step(reg, i);
+        for (int i = 1; i <= 256; i <<= 1)
+        {
+            register_demo_step(reg, i);
+        }
+
+        delay(250);
     }
+
+    for (int i = 512; i > 1; i >>= 1)
+    {
+        register_demo_step(reg, i >> 1);
+    }
+
+    if (!reverse)
+        return;
 
     delay(250);
 
-    for (int i = 128; i > 0; i >>= 1)
+    for (int i = 1; i <= 256; i <<= 1)
     {
         register_demo_step(reg, i);
     }
