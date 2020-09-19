@@ -152,7 +152,7 @@ void alu_add_bytes_cset(ALU &alu)
 
         for (int a = 0; a < 256; ++a)
         {
-            alu.add(255, 2); // an easy (but sub-optimal) way to set C bit
+            alu.set_carry();
             uint8_t res = alu.add(a, b, true);
             uint8_t flags = alu.read_flags();
 
@@ -241,7 +241,7 @@ void alu_sub_bytes_cset(ALU &alu)
 
         for (int a = 0; a < 256; ++a)
         {
-            alu.add(255, 2); // an easy (but sub-optimal) way to set C bit
+            alu.set_carry();
             int8_t res = alu.sub(a, b, true);
             uint8_t flags = alu.read_flags();
 

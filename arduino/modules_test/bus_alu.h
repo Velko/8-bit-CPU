@@ -22,7 +22,7 @@ class ALU : public ExternalDevice
         int8_t sub(uint8_t a, uint8_t b, bool carry_in=false);
         int8_t sub_b(uint8_t a, uint8_t b, bool carry_in=false);
         uint8_t read_flags();
-
+        void set_carry();
         Register reg_a;
         SecondRegister reg_b;
     private:
