@@ -161,7 +161,6 @@
     (via_drill 0.4)
     (uvia_dia 0.3)
     (uvia_drill 0.1)
-    (add_net +5V)
     (add_net A0)
     (add_net A1)
     (add_net A10)
@@ -192,7 +191,6 @@
     (add_net E3)
     (add_net E4)
     (add_net E5)
-    (add_net GND)
     (add_net LATCH)
     (add_net MISO)
     (add_net MOSI)
@@ -218,6 +216,17 @@
     (add_net SCK)
     (add_net ~OE~)
     (add_net ~WE~)
+  )
+
+  (net_class PWR ""
+    (clearance 0.2)
+    (trace_width 0.5)
+    (via_dia 0.6)
+    (via_drill 0.4)
+    (uvia_dia 0.3)
+    (uvia_drill 0.1)
+    (add_net +5V)
+    (add_net GND)
   )
 
   (module Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical (layer F.Cu) (tedit 5F0B53B9) (tstamp 5F2296A2)
