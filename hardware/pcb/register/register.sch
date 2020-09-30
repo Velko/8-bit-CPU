@@ -1,5 +1,6 @@
 EESchema Schematic File Version 4
-EELAYER 30 0
+LIBS:register-cache
+EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -993,7 +994,7 @@ U 1 1 5F787EE2
 P 7700 3800
 F 0 "J1" H 7600 3800 50  0000 C CNN
 F 1 "Conn_01x08_Male" H 7808 4190 50  0001 C CNN
-F 2 "" H 7700 3800 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical" H 7700 3800 50  0001 C CNN
 F 3 "~" H 7700 3800 50  0001 C CNN
 	1    7700 3800
 	-1   0    0    -1  
@@ -1036,7 +1037,7 @@ U 1 1 5F8153A2
 P 8100 5300
 F 0 "J2" H 8072 5228 50  0000 R CNN
 F 1 "Conn_01x04_Male" H 8072 5183 50  0001 R CNN
-F 2 "" H 8100 5300 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 8100 5300 50  0001 C CNN
 F 3 "~" H 8100 5300 50  0001 C CNN
 	1    8100 5300
 	-1   0    0    -1  
@@ -1155,7 +1156,7 @@ U 1 1 5F997CC4
 P 9100 5300
 F 0 "J3" H 9072 5228 50  0000 R CNN
 F 1 "Conn_01x04_Male" H 9072 5183 50  0001 R CNN
-F 2 "" H 9100 5300 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 9100 5300 50  0001 C CNN
 F 3 "~" H 9100 5300 50  0001 C CNN
 	1    9100 5300
 	-1   0    0    -1  
@@ -1269,7 +1270,7 @@ U 1 1 5FA40071
 P 6500 6450
 F 0 "J4" H 6350 6400 50  0000 C CNN
 F 1 "Conn_01x04_Male" H 7050 6300 50  0001 C CNN
-F 2 "" H 6500 6450 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_2x02_P2.54mm_Vertical" H 6500 6450 50  0001 C CNN
 F 3 "~" H 6500 6450 50  0001 C CNN
 	1    6500 6450
 	-1   0    0    1   
@@ -1514,7 +1515,7 @@ U 1 1 5FB8CE21
 P 8350 3800
 F 0 "J5" H 8250 3800 50  0000 C CNN
 F 1 "Conn_01x08_Male" H 8458 4190 50  0001 C CNN
-F 2 "" H 8350 3800 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical" H 8350 3800 50  0001 C CNN
 F 3 "~" H 8350 3800 50  0001 C CNN
 	1    8350 3800
 	-1   0    0    -1  
@@ -1525,7 +1526,7 @@ U 1 1 5FB8D639
 P 9000 3800
 F 0 "J6" H 8900 3800 50  0000 C CNN
 F 1 "Conn_01x08_Male" H 9108 4190 50  0001 C CNN
-F 2 "" H 9000 3800 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical" H 9000 3800 50  0001 C CNN
 F 3 "~" H 9000 3800 50  0001 C CNN
 	1    9000 3800
 	-1   0    0    -1  
