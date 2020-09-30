@@ -2,7 +2,7 @@
 
   (general
     (thickness 1.6)
-    (drawings 55)
+    (drawings 57)
     (tracks 604)
     (zones 0)
     (modules 23)
@@ -16,7 +16,7 @@
 
   (layers
     (0 F.Cu signal)
-    (31 B.Cu signal hide)
+    (31 B.Cu signal)
     (32 B.Adhes user hide)
     (33 F.Adhes user hide)
     (34 B.Paste user hide)
@@ -24,7 +24,7 @@
     (36 B.SilkS user)
     (37 F.SilkS user)
     (38 B.Mask user hide)
-    (39 F.Mask user hide)
+    (39 F.Mask user)
     (40 Dwgs.User user hide)
     (41 Cmts.User user hide)
     (42 Eco1.User user hide)
@@ -489,13 +489,13 @@
     )
   )
 
-  (module Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm (layer F.Cu) (tedit 5B391EB7) (tstamp 5F2293F6)
+  (module Jumper:SolderJumper-3_P1.3mm_Open_RoundedPad1.0x1.5mm (layer F.Cu) (tedit 5F74E194) (tstamp 5F2293F6)
     (at 170.688 85.725 270)
     (descr "SMD Solder 3-pad Jumper, 1x1.5mm rounded Pads, 0.3mm gap, open")
     (tags "solder jumper open")
     (path /5F0A6B6F)
     (attr virtual)
-    (fp_text reference JP1 (at 0 -1.8 270) (layer F.SilkS)
+    (fp_text reference JP1 (at 0 -1.8 270) (layer F.Fab)
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_text value SolderJumper_3_Open (at 0 1.9 270) (layer F.Fab)
@@ -1347,6 +1347,12 @@
     )
   )
 
+  (gr_text 595 (at 170.688 88.9 180) (layer F.SilkS) (tstamp 5F750E40)
+    (effects (font (size 1 1) (thickness 0.125)))
+  )
+  (gr_text 594 (at 170.688 82.55 180) (layer F.SilkS)
+    (effects (font (size 1 1) (thickness 0.125)))
+  )
   (gr_text "EEPROM\nwriter" (at 116.713 121.285 180) (layer F.SilkS)
     (effects (font (size 1.5 1.5) (thickness 0.3)))
   )
