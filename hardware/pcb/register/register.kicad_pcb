@@ -207,7 +207,7 @@
     (tags "LED handsolder")
     (path /5F384C0D)
     (attr smd)
-    (fp_text reference D0 (at 2.54 0 270) (layer F.Fab) hide
+    (fp_text reference D1 (at 2.54 0 270) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_text value 0 (at 2.767 0 180) (layer F.Fab)
@@ -245,7 +245,7 @@
     (tags "LED handsolder")
     (path /5F384FBD)
     (attr smd)
-    (fp_text reference D1 (at 2.54 0 90) (layer F.Fab) hide
+    (fp_text reference D2 (at 2.54 0 90) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_text value 1 (at 2.767 0) (layer F.Fab)
@@ -283,7 +283,7 @@
     (tags "LED handsolder")
     (path /5F384FFF)
     (attr smd)
-    (fp_text reference D2 (at 2.54 0 270) (layer F.Fab) hide
+    (fp_text reference D3 (at 2.54 0 270) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_text value 2 (at 2.767 0) (layer F.Fab)
@@ -321,7 +321,7 @@
     (tags "LED handsolder")
     (path /5F385053)
     (attr smd)
-    (fp_text reference D3 (at 2.54 0 270) (layer F.Fab) hide
+    (fp_text reference D4 (at 2.54 0 270) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_text value Result (at 2.767 0.381) (layer F.SilkS)
@@ -359,7 +359,7 @@
     (tags "LED handsolder")
     (path /5F38509D)
     (attr smd)
-    (fp_text reference D4 (at 2.54 0 270) (layer F.Fab) hide
+    (fp_text reference D5 (at 2.54 0 270) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_text value 4 (at 2.767 0) (layer F.Fab)
@@ -397,7 +397,7 @@
     (tags "LED handsolder")
     (path /5F385103)
     (attr smd)
-    (fp_text reference D5 (at 2.54 0 270) (layer F.Fab) hide
+    (fp_text reference D6 (at 2.54 0 270) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_text value 5 (at 2.767 0) (layer F.Fab)
@@ -435,7 +435,7 @@
     (tags "LED handsolder")
     (path /5F38514F)
     (attr smd)
-    (fp_text reference D6 (at 2.54 0 270) (layer F.Fab) hide
+    (fp_text reference D7 (at 2.54 0 270) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_text value 6 (at 2.767 0) (layer F.Fab)
@@ -473,7 +473,7 @@
     (tags "LED handsolder")
     (path /5F3852D3)
     (attr smd)
-    (fp_text reference D7 (at 2.54 0 270) (layer F.Fab) hide
+    (fp_text reference D8 (at 2.54 0 270) (layer F.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)))
     )
     (fp_text value N (at 2.767 0) (layer F.SilkS)
@@ -562,7 +562,7 @@
     (descr "Through hole straight pin header, 1x08, 2.54mm pitch, single row")
     (tags "Through hole pin header THT 1x08 2.54mm single row")
     (path /5F62EA78)
-    (fp_text reference J2 (at 0 2.33 270) (layer B.Fab) hide
+    (fp_text reference J5 (at 0 2.33 270) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_text value "Input A" (at 2.54 -8.89 180) (layer B.Fab)
@@ -614,7 +614,7 @@
     (descr "Through hole straight pin header, 1x08, 2.54mm pitch, single row")
     (tags "Through hole pin header THT 1x08 2.54mm single row")
     (path /5F6AB90B)
-    (fp_text reference J3 (at 0 2.33 270) (layer B.Fab) hide
+    (fp_text reference J6 (at 0 2.33 270) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_text value "Input B" (at -2.54 -8.89 180) (layer B.Fab)
@@ -666,7 +666,7 @@
     (descr "Through hole straight pin header, 1x04, 2.54mm pitch, single row")
     (tags "Through hole pin header THT 1x04 2.54mm single row")
     (path /5F731807)
-    (fp_text reference J4 (at 0 2.33 270) (layer B.Fab) hide
+    (fp_text reference J2 (at 0 2.33 270) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_text value Control (at -2.54 -3.81 180) (layer B.Fab)
@@ -710,7 +710,7 @@
     (descr "Through hole straight pin header, 1x04, 2.54mm pitch, single row")
     (tags "Through hole pin header THT 1x04 2.54mm single row")
     (path /5F79C5A0)
-    (fp_text reference J5 (at 0 2.33 270) (layer B.Fab) hide
+    (fp_text reference J3 (at 0 2.33 270) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_text value Flags (at -2.54 -3.81 180) (layer B.Fab)
@@ -754,7 +754,7 @@
     (descr "Through hole straight pin header, 2x02, 2.54mm pitch, double rows")
     (tags "Through hole pin header THT 2x02 2.54mm double row")
     (path /5F86597C)
-    (fp_text reference J6 (at 1.27 2.33 90) (layer B.Fab) hide
+    (fp_text reference J4 (at 1.27 2.33 90) (layer B.Fab) hide
       (effects (font (size 1 1) (thickness 0.15)) (justify mirror))
     )
     (fp_text value Power (at -2.54 -1.27) (layer B.Fab)
