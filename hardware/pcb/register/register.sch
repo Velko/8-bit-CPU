@@ -1,6 +1,5 @@
 EESchema Schematic File Version 4
-LIBS:register-cache
-EELAYER 26 0
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -928,10 +927,6 @@ Wire Wire Line
 	1050 4850 1150 4850
 Wire Wire Line
 	2750 4850 2850 4850
-Text GLabel 1050 4450 0    50   Input ~ 0
-LOAD
-Text GLabel 2750 4450 0    50   Input ~ 0
-LOAD
 Wire Wire Line
 	1150 4550 1150 4450
 Wire Wire Line
@@ -970,12 +965,6 @@ Wire Wire Line
 Connection ~ 1150 4250
 Text GLabel 1050 4650 0    50   Input ~ 0
 ~CLK~
-Wire Wire Line
-	2750 4450 2850 4450
-Connection ~ 2850 4450
-Wire Wire Line
-	1050 4450 1150 4450
-Connection ~ 1150 4450
 Wire Wire Line
 	1050 4650 1150 4650
 Text GLabel 2750 4650 0    50   Input ~ 0
@@ -1709,4 +1698,10 @@ Wire Wire Line
 	3600 6250 3900 6250
 Wire Wire Line
 	3600 6550 3900 6550
+Wire Wire Line
+	1150 4450 1150 4250
+Connection ~ 1150 4450
+Wire Wire Line
+	2850 4450 2850 4250
+Connection ~ 2850 4450
 $EndSCHEMATC
