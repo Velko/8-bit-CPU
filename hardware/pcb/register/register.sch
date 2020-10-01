@@ -151,37 +151,37 @@ Wire Wire Line
 Connection ~ 5550 1000
 Wire Wire Line
 	5550 1000 5550 1150
-Text GLabel 6150 2150 2    50   Output ~ 0
-BUS0
-Text GLabel 6150 2050 2    50   Output ~ 0
-BUS1
-Text GLabel 6150 1950 2    50   Output ~ 0
-BUS2
-Text GLabel 6150 1850 2    50   Output ~ 0
-BUS3
-Text GLabel 6150 1750 2    50   Output ~ 0
-BUS4
-Text GLabel 6150 1650 2    50   Output ~ 0
-BUS5
-Text GLabel 6150 1550 2    50   Output ~ 0
-BUS6
 Text GLabel 6150 1450 2    50   Output ~ 0
+BUS0
+Text GLabel 6150 1550 2    50   Output ~ 0
+BUS1
+Text GLabel 6150 1650 2    50   Output ~ 0
+BUS2
+Text GLabel 6150 1750 2    50   Output ~ 0
+BUS3
+Text GLabel 6150 1850 2    50   Output ~ 0
+BUS4
+Text GLabel 6150 1950 2    50   Output ~ 0
+BUS5
+Text GLabel 6150 2050 2    50   Output ~ 0
+BUS6
+Text GLabel 6150 2150 2    50   Output ~ 0
 BUS7
-Text GLabel 4950 2150 0    50   Input ~ 0
-TAP0
-Text GLabel 4950 2050 0    50   Input ~ 0
-TAP1
-Text GLabel 4950 1950 0    50   Input ~ 0
-TAP2
-Text GLabel 4950 1850 0    50   Input ~ 0
-TAP3
-Text GLabel 4950 1750 0    50   Input ~ 0
-TAP4
-Text GLabel 4950 1650 0    50   Input ~ 0
-TAP5
-Text GLabel 4950 1550 0    50   Input ~ 0
-TAP6
 Text GLabel 4950 1450 0    50   Input ~ 0
+TAP0
+Text GLabel 4950 1550 0    50   Input ~ 0
+TAP1
+Text GLabel 4950 1650 0    50   Input ~ 0
+TAP2
+Text GLabel 4950 1750 0    50   Input ~ 0
+TAP3
+Text GLabel 4950 1850 0    50   Input ~ 0
+TAP4
+Text GLabel 4950 1950 0    50   Input ~ 0
+TAP5
+Text GLabel 4950 2050 0    50   Input ~ 0
+TAP6
+Text GLabel 4950 2150 0    50   Input ~ 0
 TAP7
 Wire Wire Line
 	5050 2350 4650 2350
@@ -189,13 +189,13 @@ Wire Wire Line
 	4650 2350 4650 1000
 Wire Wire Line
 	4650 1000 5550 1000
-Text GLabel 1050 1250 0    50   Input ~ 0
-BUS0
-Text GLabel 1050 1350 0    50   Input ~ 0
-BUS1
-Text GLabel 1050 1450 0    50   Input ~ 0
-BUS2
 Text GLabel 1050 1550 0    50   Input ~ 0
+BUS0
+Text GLabel 1050 1450 0    50   Input ~ 0
+BUS1
+Text GLabel 1050 1350 0    50   Input ~ 0
+BUS2
+Text GLabel 1050 1250 0    50   Input ~ 0
 BUS3
 Wire Wire Line
 	1050 1250 1150 1250
@@ -205,13 +205,13 @@ Wire Wire Line
 	1050 1450 1150 1450
 Wire Wire Line
 	1050 1550 1150 1550
-Text GLabel 2250 1250 2    50   Output ~ 0
-M0
-Text GLabel 2250 1350 2    50   Output ~ 0
-M1
-Text GLabel 2250 1450 2    50   Output ~ 0
-M2
 Text GLabel 2250 1550 2    50   Output ~ 0
+M0
+Text GLabel 2250 1450 2    50   Output ~ 0
+M1
+Text GLabel 2250 1350 2    50   Output ~ 0
+M2
+Text GLabel 2250 1250 2    50   Output ~ 0
 M3
 Wire Wire Line
 	2150 1250 2250 1250
@@ -221,13 +221,13 @@ Wire Wire Line
 	2150 1450 2250 1450
 Wire Wire Line
 	2150 1550 2250 1550
-Text GLabel 2800 1250 0    50   Input ~ 0
-BUS4
-Text GLabel 2800 1350 0    50   Input ~ 0
-BUS5
-Text GLabel 2800 1450 0    50   Input ~ 0
-BUS6
 Text GLabel 2800 1550 0    50   Input ~ 0
+BUS4
+Text GLabel 2800 1450 0    50   Input ~ 0
+BUS5
+Text GLabel 2800 1350 0    50   Input ~ 0
+BUS6
+Text GLabel 2800 1250 0    50   Input ~ 0
 BUS7
 Wire Wire Line
 	2800 1250 2850 1250
@@ -237,13 +237,13 @@ Wire Wire Line
 	2800 1450 2850 1450
 Wire Wire Line
 	2800 1550 2850 1550
-Text GLabel 3950 1250 2    50   Output ~ 0
-M4
-Text GLabel 3950 1350 2    50   Output ~ 0
-M5
-Text GLabel 3950 1450 2    50   Output ~ 0
-M6
 Text GLabel 3950 1550 2    50   Output ~ 0
+M4
+Text GLabel 3950 1450 2    50   Output ~ 0
+M5
+Text GLabel 3950 1350 2    50   Output ~ 0
+M6
+Text GLabel 3950 1250 2    50   Output ~ 0
 M7
 Wire Wire Line
 	3850 1250 3950 1250
@@ -564,22 +564,11 @@ Wire Wire Line
 Text GLabel 5000 2450 0    50   Input ~ 0
 ~BUS_OUT~
 $Comp
-L Device:LED D9
-U 1 1 5EFAF776
-P 1500 6950
-F 0 "D9" H 1600 6850 50  0000 C CNN
-F 1 "LED" H 1350 7000 50  0000 C CNN
-F 2 "LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 1500 6950 50  0001 C CNN
-F 3 "~" H 1500 6950 50  0001 C CNN
-	1    1500 6950
-	-1   0    0    1   
-$EndComp
-$Comp
 L Device:LED D10
 U 1 1 5EFAF7F0
 P 1550 6200
 F 0 "D10" H 1650 6100 50  0000 C CNN
-F 1 "LED" H 1400 6250 50  0000 C CNN
+F 1 "BUS" H 1400 6250 50  0000 C CNN
 F 2 "LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 1550 6200 50  0001 C CNN
 F 3 "~" H 1550 6200 50  0001 C CNN
 	1    1550 6200
@@ -800,13 +789,13 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS173" H 1650 4250 50  0001 C CNN
 	1    1650 4250
 	1    0    0    -1  
 $EndComp
-Text GLabel 1050 3650 0    50   Input ~ 0
-M0
-Text GLabel 1050 3750 0    50   Input ~ 0
-M1
-Text GLabel 1050 3850 0    50   Input ~ 0
-M2
 Text GLabel 1050 3950 0    50   Input ~ 0
+M0
+Text GLabel 1050 3850 0    50   Input ~ 0
+M1
+Text GLabel 1050 3750 0    50   Input ~ 0
+M2
+Text GLabel 1050 3650 0    50   Input ~ 0
 M3
 Wire Wire Line
 	1050 3650 1150 3650
@@ -816,13 +805,13 @@ Wire Wire Line
 	1050 3850 1150 3850
 Wire Wire Line
 	1050 3950 1150 3950
-Text GLabel 2750 3950 0    50   Input ~ 0
-M7
-Text GLabel 2750 3850 0    50   Input ~ 0
-M6
-Text GLabel 2750 3750 0    50   Input ~ 0
-M5
 Text GLabel 2750 3650 0    50   Input ~ 0
+M7
+Text GLabel 2750 3750 0    50   Input ~ 0
+M6
+Text GLabel 2750 3850 0    50   Input ~ 0
+M5
+Text GLabel 2750 3950 0    50   Input ~ 0
 M4
 $Comp
 L 74xx:74LS173 U5
@@ -843,21 +832,21 @@ Wire Wire Line
 	2850 3850 2750 3850
 Wire Wire Line
 	2850 3950 2750 3950
-Text GLabel 2250 3650 2    50   Input ~ 0
-TAP0
-Text GLabel 2250 3750 2    50   Input ~ 0
-TAP1
-Text GLabel 2250 3850 2    50   Input ~ 0
-TAP2
 Text GLabel 2250 3950 2    50   Input ~ 0
+TAP0
+Text GLabel 2250 3850 2    50   Input ~ 0
+TAP1
+Text GLabel 2250 3750 2    50   Input ~ 0
+TAP2
+Text GLabel 2250 3650 2    50   Input ~ 0
 TAP3
-Text GLabel 3950 3650 2    50   Input ~ 0
-TAP4
-Text GLabel 3950 3750 2    50   Input ~ 0
-TAP5
-Text GLabel 3950 3850 2    50   Input ~ 0
-TAP6
 Text GLabel 3950 3950 2    50   Input ~ 0
+TAP4
+Text GLabel 3950 3850 2    50   Input ~ 0
+TAP5
+Text GLabel 3950 3750 2    50   Input ~ 0
+TAP6
+Text GLabel 3950 3650 2    50   Input ~ 0
 TAP7
 Wire Wire Line
 	2150 3650 2250 3650
@@ -1192,7 +1181,7 @@ L Device:LED D11
 U 1 1 5FA248ED
 P 1550 6450
 F 0 "D11" H 1650 6350 50  0000 C CNN
-F 1 "LED" H 1400 6500 50  0000 C CNN
+F 1 "A" H 1400 6500 50  0000 C CNN
 F 2 "LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 1550 6450 50  0001 C CNN
 F 3 "~" H 1550 6450 50  0001 C CNN
 	1    1550 6450
@@ -1224,7 +1213,7 @@ L Device:LED D12
 U 1 1 5FA2F61B
 P 1550 6700
 F 0 "D12" H 1650 6600 50  0000 C CNN
-F 1 "LED" H 1400 6750 50  0000 C CNN
+F 1 "B" H 1400 6750 50  0000 C CNN
 F 2 "LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 1550 6700 50  0001 C CNN
 F 3 "~" H 1550 6700 50  0001 C CNN
 	1    1550 6700
@@ -1704,4 +1693,15 @@ Connection ~ 1150 4450
 Wire Wire Line
 	2850 4450 2850 4250
 Connection ~ 2850 4450
+$Comp
+L Device:LED D9
+U 1 1 5EFAF776
+P 1500 6950
+F 0 "D9" H 1600 6850 50  0000 C CNN
+F 1 "LOAD" H 1350 7000 50  0000 C CNN
+F 2 "LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 1500 6950 50  0001 C CNN
+F 3 "~" H 1500 6950 50  0001 C CNN
+	1    1500 6950
+	-1   0    0    1   
+$EndComp
 $EndSCHEMATC
