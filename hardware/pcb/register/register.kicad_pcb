@@ -3,7 +3,7 @@
   (general
     (thickness 1.6)
     (drawings 52)
-    (tracks 11)
+    (tracks 0)
     (zones 0)
     (modules 50)
     (nets 63)
@@ -2442,17 +2442,5 @@
   (gr_line (start 97.155 57.785) (end 34.925 57.785) (layer Edge.Cuts) (width 0.2) (tstamp 5F7615DD))
   (gr_line (start 97.155 36.195) (end 97.155 57.785) (layer Edge.Cuts) (width 0.2))
   (gr_line (start 34.925 36.195) (end 97.155 36.195) (layer Edge.Cuts) (width 0.2))
-
-  (segment (start 60.325 46.657998) (end 60.325 47.023) (width 0.25) (layer F.Cu) (net 2))
-  (segment (start 53.975 42.875) (end 53.975 42.545) (width 0.25) (layer B.Cu) (net 10))
-  (segment (start 62.865 41.173) (end 62.865 41.623) (width 0.25) (layer F.Cu) (net 15))
-  (segment (start 64.77 38.1) (end 64.75159 38.1) (width 0.25) (layer F.Cu) (net 16))
-  (segment (start 62.865 42.875) (end 62.865 42.545) (width 0.25) (layer B.Cu) (net 17))
-  (segment (start 82.55 38.1) (end 82.55 38.227) (width 0.25) (layer B.Cu) (net 23))
-  (segment (start 83.305 38.1) (end 82.55 38.1) (width 0.25) (layer F.Cu) (net 23))
-  (segment (start 87.63 42.875) (end 87.63 42.425) (width 0.25) (layer F.Cu) (net 23))
-  (segment (start 88.9 52.375) (end 88.9 52.870998) (width 0.25) (layer B.Cu) (net 29))
-  (segment (start 87.665 55.88) (end 87.63 55.88) (width 0.25) (layer B.Cu) (net 30))
-  (segment (start 62.865 47.388002) (end 62.865 47.023) (width 0.25) (layer F.Cu) (net 36))
 
 )
