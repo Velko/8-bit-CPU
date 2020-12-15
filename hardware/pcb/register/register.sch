@@ -1,5 +1,6 @@
 EESchema Schematic File Version 4
-EELAYER 30 0
+LIBS:register-cache
+EELAYER 26 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -168,21 +169,21 @@ BUS6
 Text GLabel 6150 2150 2    50   Output ~ 0
 BUS7
 Text GLabel 4950 1450 0    50   Input ~ 0
-TAP0
+M0
 Text GLabel 4950 1550 0    50   Input ~ 0
-TAP1
+M1
 Text GLabel 4950 1650 0    50   Input ~ 0
-TAP2
+M2
 Text GLabel 4950 1750 0    50   Input ~ 0
-TAP3
+M3
 Text GLabel 4950 1850 0    50   Input ~ 0
-TAP4
+M4
 Text GLabel 4950 1950 0    50   Input ~ 0
-TAP5
+M5
 Text GLabel 4950 2050 0    50   Input ~ 0
-TAP6
+M6
 Text GLabel 4950 2150 0    50   Input ~ 0
-TAP7
+M7
 Wire Wire Line
 	5050 2350 4650 2350
 Wire Wire Line
