@@ -59,25 +59,25 @@ F 3 "~" H 10150 5700 50  0001 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L Connector:Conn_01x08_Male J6
+L Connector:Conn_01x04_Male J6
 U 1 1 5FDBD7A5
-P 8700 4250
-F 0 "J6" H 8800 4650 50  0000 C CNN
-F 1 "Ctrl_Out" H 8850 3750 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical" H 8700 4250 50  0001 C CNN
-F 3 "~" H 8700 4250 50  0001 C CNN
-	1    8700 4250
+P 8700 4200
+F 0 "J6" H 8750 4400 50  0000 C CNN
+F 1 "Ctrl_Out" H 8850 3900 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 8700 4200 50  0001 C CNN
+F 3 "~" H 8700 4200 50  0001 C CNN
+	1    8700 4200
 	-1   0    0    -1  
 $EndComp
 $Comp
-L Connector:Conn_01x08_Male J5
+L Connector:Conn_01x04_Male J5
 U 1 1 5FDBE128
-P 9850 4300
-F 0 "J5" H 9950 4700 50  0000 C CNN
-F 1 "Flags_Bus" H 9950 3800 50  0000 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical" H 9850 4300 50  0001 C CNN
-F 3 "~" H 9850 4300 50  0001 C CNN
-	1    9850 4300
+P 9850 4200
+F 0 "J5" H 9950 4400 50  0000 C CNN
+F 1 "Flags_Bus" H 9950 3900 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 9850 4200 50  0001 C CNN
+F 3 "~" H 9850 4200 50  0001 C CNN
+	1    9850 4200
 	-1   0    0    -1  
 $EndComp
 $Comp
@@ -186,7 +186,7 @@ U 1 1 5FDAE108
 P 2000 1200
 F 0 "U1" H 2000 1200 50  0000 C CNN
 F 1 "74HC02" H 2000 1434 50  0000 C CNN
-F 2 "" H 2000 1200 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2000 1200 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74hc02" H 2000 1200 50  0001 C CNN
 	1    2000 1200
 	1    0    0    -1  
@@ -197,7 +197,7 @@ U 2 1 5FDB1B11
 P 2000 1600
 F 0 "U1" H 2000 1600 50  0000 C CNN
 F 1 "74HC02" H 2000 1834 50  0001 C CNN
-F 2 "" H 2000 1600 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2000 1600 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74hc02" H 2000 1600 50  0001 C CNN
 	2    2000 1600
 	1    0    0    -1  
@@ -208,7 +208,7 @@ U 3 1 5FDB31F6
 P 2000 2000
 F 0 "U1" H 2000 2000 50  0000 C CNN
 F 1 "74HC02" H 2000 2234 50  0001 C CNN
-F 2 "" H 2000 2000 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2000 2000 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74hc02" H 2000 2000 50  0001 C CNN
 	3    2000 2000
 	1    0    0    -1  
@@ -219,7 +219,7 @@ U 4 1 5FDB4427
 P 2000 2400
 F 0 "U1" H 2000 2400 50  0000 C CNN
 F 1 "74HC02" H 2000 2634 50  0001 C CNN
-F 2 "" H 2000 2400 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2000 2400 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74hc02" H 2000 2400 50  0001 C CNN
 	4    2000 2400
 	1    0    0    -1  
@@ -262,7 +262,7 @@ U 1 1 5FDE00D8
 P 2850 1400
 F 0 "U2" H 2850 1400 50  0000 C CNN
 F 1 "74HC08" H 2850 1634 50  0000 C CNN
-F 2 "" H 2850 1400 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2850 1400 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 2850 1400 50  0001 C CNN
 	1    2850 1400
 	1    0    0    -1  
@@ -273,7 +273,7 @@ U 2 1 5FDE23AD
 P 2850 2200
 F 0 "U2" H 2850 2200 50  0000 C CNN
 F 1 "74HC08" H 2850 2434 50  0001 C CNN
-F 2 "" H 2850 2200 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2850 2200 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 2850 2200 50  0001 C CNN
 	2    2850 2200
 	1    0    0    -1  
@@ -284,7 +284,7 @@ U 3 1 5FDE4BA9
 P 3600 1800
 F 0 "U2" H 3600 1800 50  0000 C CNN
 F 1 "74HC08" H 3600 2034 50  0001 C CNN
-F 2 "" H 3600 1800 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 3600 1800 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 3600 1800 50  0001 C CNN
 	3    3600 1800
 	1    0    0    -1  
@@ -295,7 +295,7 @@ U 4 1 5FDE6BF2
 P 2700 3900
 F 0 "U2" H 2700 3900 50  0000 C CNN
 F 1 "74HC08" H 2700 4134 50  0001 C CNN
-F 2 "" H 2700 3900 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2700 3900 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 2700 3900 50  0001 C CNN
 	4    2700 3900
 	1    0    0    -1  
@@ -342,7 +342,7 @@ U 1 1 5FDF8F5E
 P 6450 2400
 F 0 "U4" H 6200 3150 50  0000 C CNN
 F 1 "74HC173" H 6650 3150 50  0000 C CNN
-F 2 "" H 6450 2400 50  0001 C CNN
+F 2 "Package_SO:SOIC-16W_5.3x10.2mm_P1.27mm" H 6450 2400 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS173" H 6450 2400 50  0001 C CNN
 	1    6450 2400
 	1    0    0    -1  
@@ -353,7 +353,7 @@ U 1 1 5FDFC5E9
 P 4950 2400
 F 0 "U3" H 4700 3150 50  0000 C CNN
 F 1 "74HC157" H 5150 3150 50  0000 C CNN
-F 2 "" H 4950 2400 50  0001 C CNN
+F 2 "Package_SO:SOIC-16W_5.3x10.2mm_P1.27mm" H 4950 2400 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS157" H 4950 2400 50  0001 C CNN
 	1    4950 2400
 	1    0    0    -1  
@@ -414,7 +414,7 @@ U 1 1 5FE44004
 P 8350 2400
 F 0 "U5" H 8100 3150 50  0000 C CNN
 F 1 "74HC173" H 8550 3150 50  0000 C CNN
-F 2 "" H 8350 2400 50  0001 C CNN
+F 2 "Package_SO:SOIC-16W_5.3x10.2mm_P1.27mm" H 8350 2400 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS173" H 8350 2400 50  0001 C CNN
 	1    8350 2400
 	1    0    0    -1  
@@ -429,7 +429,7 @@ U 1 1 5FE50CBB
 P 1850 4350
 F 0 "R1" H 1920 4396 50  0000 L CNN
 F 1 "R" H 1920 4305 50  0000 L CNN
-F 2 "" V 1780 4350 50  0001 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 1780 4350 50  0001 C CNN
 F 3 "~" H 1850 4350 50  0001 C CNN
 	1    1850 4350
 	1    0    0    -1  
@@ -440,7 +440,7 @@ U 1 1 5FE51B30
 P 2100 4350
 F 0 "R2" H 2170 4396 50  0000 L CNN
 F 1 "R" H 2170 4305 50  0000 L CNN
-F 2 "" V 2030 4350 50  0001 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 2030 4350 50  0001 C CNN
 F 3 "~" H 2100 4350 50  0001 C CNN
 	1    2100 4350
 	1    0    0    -1  
@@ -487,19 +487,19 @@ Text GLabel 1650 4000 0    50   Input ~ 0
 N_CTRL
 Text GLabel 1650 4100 0    50   Input ~ 0
 C_CTRL
-Text GLabel 8450 3950 0    50   Input ~ 0
+Text GLabel 8450 4100 0    50   Input ~ 0
 Z_CTRL
-Text GLabel 8450 4050 0    50   Input ~ 0
+Text GLabel 8450 4200 0    50   Input ~ 0
 V_CTRL
-Text GLabel 8450 4150 0    50   Input ~ 0
+Text GLabel 8450 4300 0    50   Input ~ 0
 N_CTRL
-Text GLabel 8450 4250 0    50   Input ~ 0
+Text GLabel 8450 4400 0    50   Input ~ 0
 C_CTRL
-Text GLabel 9550 4100 0    50   Input ~ 0
+Text GLabel 9550 4200 0    50   Input ~ 0
 OV_IN
-Text GLabel 9550 4000 0    50   Input ~ 0
+Text GLabel 9550 4300 0    50   Input ~ 0
 CARRY_IN
-Text GLabel 9550 4200 0    50   Output ~ 0
+Text GLabel 9550 4100 0    50   Output ~ 0
 CARRY_OUT
 Text GLabel 6400 4500 2    50   Output ~ 0
 USE_CARRY
@@ -530,7 +530,7 @@ Wire Wire Line
 Connection ~ 3950 1800
 Wire Wire Line
 	3950 1800 4450 1800
-Text GLabel 9550 4300 0    50   Input ~ 0
+Text GLabel 9550 4400 0    50   Input ~ 0
 Z_OUT
 $Comp
 L 74xx:74LS125 U6
@@ -538,7 +538,7 @@ U 1 1 5FFE8137
 P 2450 5650
 F 0 "U6" H 2450 5650 50  0000 C CNN
 F 1 "74HC125" H 2450 5876 50  0000 C CNN
-F 2 "" H 2450 5650 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2450 5650 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS125" H 2450 5650 50  0001 C CNN
 	1    2450 5650
 	1    0    0    -1  
@@ -549,7 +549,7 @@ U 2 1 5FFEC7F6
 P 2450 6150
 F 0 "U6" H 2450 6150 50  0000 C CNN
 F 1 "74HC125" H 2450 6376 50  0001 C CNN
-F 2 "" H 2450 6150 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2450 6150 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS125" H 2450 6150 50  0001 C CNN
 	2    2450 6150
 	1    0    0    -1  
@@ -560,7 +560,7 @@ U 3 1 5FFECFFE
 P 2450 6650
 F 0 "U6" H 2450 6650 50  0000 C CNN
 F 1 "74HC125" H 2450 6876 50  0001 C CNN
-F 2 "" H 2450 6650 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2450 6650 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS125" H 2450 6650 50  0001 C CNN
 	3    2450 6650
 	1    0    0    -1  
@@ -571,7 +571,7 @@ U 4 1 5FFED72B
 P 2450 7150
 F 0 "U6" H 2450 7150 50  0000 C CNN
 F 1 "74HC125" H 2450 7376 50  0001 C CNN
-F 2 "" H 2450 7150 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2450 7150 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS125" H 2450 7150 50  0001 C CNN
 	4    2450 7150
 	1    0    0    -1  
@@ -806,21 +806,21 @@ Wire Wire Line
 	4950 3500 4950 3450
 Connection ~ 4950 3450
 Wire Wire Line
-	8450 3950 8500 3950
+	8450 4100 8500 4100
 Wire Wire Line
-	8450 4050 8500 4050
+	8450 4200 8500 4200
 Wire Wire Line
-	8450 4150 8500 4150
+	8450 4300 8500 4300
 Wire Wire Line
-	8450 4250 8500 4250
-Wire Wire Line
-	9550 4000 9650 4000
+	8450 4400 8500 4400
 Wire Wire Line
 	9550 4100 9650 4100
 Wire Wire Line
 	9550 4200 9650 4200
 Wire Wire Line
 	9550 4300 9650 4300
+Wire Wire Line
+	9550 4400 9650 4400
 Text GLabel 7600 4100 2    50   Input ~ 0
 CLK
 Text GLabel 7600 4250 2    50   Input ~ 0
