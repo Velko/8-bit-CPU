@@ -336,10 +336,10 @@ Wire Wire Line
 Wire Wire Line
 	3200 1900 3300 1900
 $Comp
-L 74xx:74LS173 U?
+L 74xx:74LS173 U4
 U 1 1 5FDF8F5E
 P 6450 2400
-F 0 "U?" H 6450 3481 50  0000 C CNN
+F 0 "U4" H 6450 3481 50  0000 C CNN
 F 1 "74LS173" H 6450 3390 50  0000 C CNN
 F 2 "" H 6450 2400 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS173" H 6450 2400 50  0001 C CNN
@@ -347,10 +347,10 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS173" H 6450 2400 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L 74xx:74LS157 U?
+L 74xx:74LS157 U3
 U 1 1 5FDFC5E9
 P 4950 2400
-F 0 "U?" H 4950 3481 50  0000 C CNN
+F 0 "U3" H 4950 3481 50  0000 C CNN
 F 1 "74LS157" H 4950 3390 50  0000 C CNN
 F 2 "" H 4950 2400 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS157" H 4950 2400 50  0001 C CNN
@@ -408,24 +408,16 @@ Wire Wire Line
 Wire Wire Line
 	3850 2700 4450 2700
 $Comp
-L 74xx:74LS173 U?
+L 74xx:74LS173 U5
 U 1 1 5FE44004
-P 7750 2400
-F 0 "U?" H 7750 3481 50  0000 C CNN
-F 1 "74LS173" H 7750 3390 50  0000 C CNN
-F 2 "" H 7750 2400 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS173" H 7750 2400 50  0001 C CNN
-	1    7750 2400
+P 8350 2400
+F 0 "U5" H 8350 3481 50  0000 C CNN
+F 1 "74LS173" H 8350 3390 50  0000 C CNN
+F 2 "" H 8350 2400 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS173" H 8350 2400 50  0001 C CNN
+	1    8350 2400
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	6950 1800 7250 1800
-Wire Wire Line
-	6950 1900 7250 1900
-Wire Wire Line
-	6950 2000 7250 2000
-Wire Wire Line
-	6950 2100 7250 2100
 Text GLabel 2300 4550 2    50   Output ~ 0
 OV_IN
 Text GLabel 2300 4700 2    50   Output ~ 0
@@ -478,22 +470,22 @@ Wire Wire Line
 	2800 3800 2850 3800
 Wire Wire Line
 	1650 4000 2850 4000
-Text GLabel 8500 1800 2    50   Output ~ 0
+Text GLabel 9100 1800 2    50   Output ~ 0
 Z_CTRL
-Text GLabel 8500 1900 2    50   Output ~ 0
+Text GLabel 9100 1900 2    50   Output ~ 0
 V_CTRL
-Text GLabel 8500 2000 2    50   Output ~ 0
+Text GLabel 9100 2000 2    50   Output ~ 0
 N_CTRL
-Text GLabel 8500 2100 2    50   Output ~ 0
+Text GLabel 9100 2100 2    50   Output ~ 0
 C_CTRL
 Wire Wire Line
-	8250 1800 8500 1800
+	8850 1800 9100 1800
 Wire Wire Line
-	8250 1900 8500 1900
+	8850 1900 9100 1900
 Wire Wire Line
-	8250 2000 8500 2000
+	8850 2000 9100 2000
 Wire Wire Line
-	8250 2100 8500 2100
+	8850 2100 9100 2100
 Text GLabel 1650 3900 0    50   Input ~ 0
 V_CTRL
 Text GLabel 1650 4000 0    50   Input ~ 0
@@ -518,12 +510,12 @@ Text GLabel 6200 5500 2    50   Output ~ 0
 USE_CARRY
 Text GLabel 5850 2800 0    50   Input ~ 0
 CLK
-Text GLabel 7150 2800 0    50   Input ~ 0
+Text GLabel 7750 2800 0    50   Input ~ 0
 ~CLK~
 Wire Wire Line
 	5850 2800 5950 2800
 Wire Wire Line
-	7150 2800 7250 2800
+	7750 2800 7850 2800
 Text GLabel 6200 5150 2    50   Output ~ 0
 ~OUT~
 Text GLabel 6200 5300 2    50   Output ~ 0
@@ -553,4 +545,135 @@ Wire Wire Line
 	3950 1800 4450 1800
 Text GLabel 10000 4900 0    50   Input ~ 0
 Z_OUT
+$Comp
+L 74xx:74LS125 U6
+U 1 1 5FFE8137
+P 3000 5600
+F 0 "U6" H 3000 5600 50  0000 C CNN
+F 1 "74HC125" H 3000 5826 50  0000 C CNN
+F 2 "" H 3000 5600 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS125" H 3000 5600 50  0001 C CNN
+	1    3000 5600
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS125 U6
+U 2 1 5FFEC7F6
+P 3000 6100
+F 0 "U6" H 3000 6100 50  0000 C CNN
+F 1 "74HC125" H 3000 6326 50  0001 C CNN
+F 2 "" H 3000 6100 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS125" H 3000 6100 50  0001 C CNN
+	2    3000 6100
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS125 U6
+U 3 1 5FFECFFE
+P 3000 6600
+F 0 "U6" H 3000 6600 50  0000 C CNN
+F 1 "74HC125" H 3000 6826 50  0001 C CNN
+F 2 "" H 3000 6600 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS125" H 3000 6600 50  0001 C CNN
+	3    3000 6600
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS125 U6
+U 4 1 5FFED72B
+P 3000 7100
+F 0 "U6" H 3000 7100 50  0000 C CNN
+F 1 "74HC125" H 3000 7326 50  0001 C CNN
+F 2 "" H 3000 7100 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS125" H 3000 7100 50  0001 C CNN
+	4    3000 7100
+	1    0    0    -1  
+$EndComp
+Text GLabel 3500 5600 2    50   Input ~ 0
+BUS0
+Text GLabel 3500 6100 2    50   Input ~ 0
+BUS1
+Text GLabel 3500 6600 2    50   Input ~ 0
+BUS2
+Text GLabel 3500 7100 2    50   Input ~ 0
+BUS3
+Wire Wire Line
+	3300 5600 3500 5600
+Wire Wire Line
+	3300 6100 3500 6100
+Wire Wire Line
+	3300 6600 3500 6600
+Wire Wire Line
+	3300 7100 3500 7100
+Text GLabel 7100 1800 2    50   Output ~ 0
+Z_D
+Text GLabel 7100 1900 2    50   Output ~ 0
+V_D
+Text GLabel 7100 2000 2    50   Output ~ 0
+N_D
+Text GLabel 7100 2100 2    50   Output ~ 0
+C_D
+Wire Wire Line
+	6950 1800 7100 1800
+Wire Wire Line
+	6950 1900 7100 1900
+Wire Wire Line
+	6950 2000 7100 2000
+Wire Wire Line
+	6950 2100 7100 2100
+Text GLabel 7700 1800 0    50   Input ~ 0
+Z_D
+Text GLabel 7700 1900 0    50   Input ~ 0
+V_D
+Text GLabel 7700 2000 0    50   Input ~ 0
+N_D
+Text GLabel 7700 2100 0    50   Input ~ 0
+C_D
+Wire Wire Line
+	7700 1800 7850 1800
+Wire Wire Line
+	7700 1900 7850 1900
+Wire Wire Line
+	7700 2000 7850 2000
+Wire Wire Line
+	7700 2100 7850 2100
+Text GLabel 2550 5600 0    50   Input ~ 0
+Z_D
+Text GLabel 2550 6100 0    50   Input ~ 0
+V_D
+Text GLabel 2550 6600 0    50   Input ~ 0
+N_D
+Text GLabel 2550 7100 0    50   Input ~ 0
+C_D
+Wire Wire Line
+	2550 5600 2700 5600
+Wire Wire Line
+	2550 6100 2700 6100
+Wire Wire Line
+	2550 6600 2700 6600
+Wire Wire Line
+	2550 7100 2700 7100
+Wire Wire Line
+	3000 5850 2200 5850
+Wire Wire Line
+	2200 5850 2200 6350
+Wire Wire Line
+	2200 6350 3000 6350
+Wire Wire Line
+	3000 6850 2200 6850
+Wire Wire Line
+	2200 6850 2200 6350
+Connection ~ 2200 6350
+Wire Wire Line
+	3000 7350 2200 7350
+Wire Wire Line
+	2200 7350 2200 6850
+Connection ~ 2200 6850
+Text GLabel 2050 5400 0    50   Input ~ 0
+~OUT~
+Wire Wire Line
+	2050 5400 2200 5400
+Wire Wire Line
+	2200 5400 2200 5850
+Connection ~ 2200 5850
 $EndSCHEMATC
