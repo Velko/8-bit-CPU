@@ -538,28 +538,22 @@ Wire Wire Line
 	1650 2750 1650 2800
 Wire Wire Line
 	3350 2750 3350 2800
-Text GLabel 1050 2150 0    50   Input ~ 0
-LOAD
+Text GLabel 1050 2050 0    50   Input ~ 0
+~LOAD~
 Text GLabel 1050 2250 0    50   Input ~ 0
 CLK
 Text GLabel 1050 2450 0    50   Input ~ 0
 RESET
-Wire Wire Line
-	1050 2150 1150 2150
-Connection ~ 1150 2150
 Wire Wire Line
 	1050 2250 1150 2250
 Text GLabel 2800 2450 0    50   Input ~ 0
 RESET
 Text GLabel 2800 2250 0    50   Input ~ 0
 CLK
-Text GLabel 2800 2150 0    50   Input ~ 0
-LOAD
+Text GLabel 2800 2050 0    50   Input ~ 0
+~LOAD~
 Wire Wire Line
 	2800 2250 2850 2250
-Wire Wire Line
-	2800 2150 2850 2150
-Connection ~ 2850 2150
 Wire Wire Line
 	2800 2450 2850 2450
 Text GLabel 5000 2450 0    50   Input ~ 0
@@ -576,7 +570,7 @@ F 3 "~" H 1550 6200 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text GLabel 1250 6950 0    50   Input ~ 0
-LOAD
+~LOAD~
 Text GLabel 1250 6200 0    50   Input ~ 0
 ~BUS_OUT~
 $Comp
@@ -616,19 +610,6 @@ Wire Wire Line
 	1700 6200 1750 6200
 Wire Wire Line
 	2050 6200 2150 6200
-Wire Wire Line
-	1650 6950 1750 6950
-$Comp
-L power:GND #PWR022
-U 1 1 5EFCA25D
-P 2150 7050
-F 0 "#PWR022" H 2150 6800 50  0001 C CNN
-F 1 "GND" H 2155 6877 50  0000 C CNN
-F 2 "" H 2150 7050 50  0001 C CNN
-F 3 "" H 2150 7050 50  0001 C CNN
-	1    2150 7050
-	1    0    0    -1  
-$EndComp
 Wire Wire Line
 	2050 6950 2150 6950
 $Comp
@@ -727,23 +708,23 @@ $EndComp
 $Comp
 L Device:R R3
 U 1 1 5F0FB349
-P 7700 5750
-F 0 "R3" V 7600 5750 50  0000 C CNN
-F 1 "10K" V 7700 5750 50  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 7630 5750 50  0001 C CNN
-F 3 "~" H 7700 5750 50  0001 C CNN
-	1    7700 5750
+P 7850 4900
+F 0 "R3" V 7950 4900 50  0000 C CNN
+F 1 "10K" V 7850 4900 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 7780 4900 50  0001 C CNN
+F 3 "~" H 7850 4900 50  0001 C CNN
+	1    7850 4900
 	-1   0    0    1   
 $EndComp
 $Comp
 L Device:R R13
 U 1 1 5F10F3D4
-P 8750 5750
-F 0 "R13" V 8650 5750 50  0000 C CNN
-F 1 "100K" V 8750 5750 50  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 8680 5750 50  0001 C CNN
-F 3 "~" H 8750 5750 50  0001 C CNN
-	1    8750 5750
+P 8950 5750
+F 0 "R13" V 8850 5750 50  0000 C CNN
+F 1 "100K" V 8950 5750 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 8880 5750 50  0001 C CNN
+F 3 "~" H 8950 5750 50  0001 C CNN
+	1    8950 5750
 	-1   0    0    1   
 $EndComp
 NoConn ~ 22650 1900
@@ -1013,18 +994,18 @@ Wire Wire Line
 $Comp
 L Connector:Conn_01x04_Male J2
 U 1 1 5F8153A2
-P 8100 5300
-F 0 "J2" H 8072 5228 50  0000 R CNN
-F 1 "Conn_01x04_Male" H 8072 5183 50  0001 R CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 8100 5300 50  0001 C CNN
-F 3 "~" H 8100 5300 50  0001 C CNN
-	1    8100 5300
+P 8300 5300
+F 0 "J2" H 8272 5228 50  0000 R CNN
+F 1 "Conn_01x04_Male" H 8272 5183 50  0001 R CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 8300 5300 50  0001 C CNN
+F 3 "~" H 8300 5300 50  0001 C CNN
+	1    8300 5300
 	-1   0    0    -1  
 $EndComp
 Text GLabel 7400 5150 0    50   Output ~ 0
 ~BUS_OUT~
 Text GLabel 7400 5300 0    50   Output ~ 0
-LOAD
+~LOAD~
 Wire Wire Line
 	5000 2450 5050 2450
 $Comp
@@ -1042,8 +1023,6 @@ Wire Wire Line
 	2150 5950 2150 6200
 Wire Wire Line
 	1250 6200 1400 6200
-Wire Wire Line
-	1250 6950 1350 6950
 Text GLabel 7400 5450 0    50   Output ~ 0
 ~A_OUT~
 Text GLabel 7400 5600 0    50   Output ~ 0
@@ -1074,109 +1053,77 @@ $EndComp
 $Comp
 L Device:R R4
 U 1 1 5F927009
-P 7850 4900
-F 0 "R4" V 7750 4900 50  0000 C CNN
-F 1 "10K" V 7850 4900 50  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 7780 4900 50  0001 C CNN
-F 3 "~" H 7850 4900 50  0001 C CNN
-	1    7850 4900
+P 8050 4900
+F 0 "R4" V 7950 4900 50  0000 C CNN
+F 1 "10K" V 8050 4900 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.15x1.40mm_HandSolder" V 7980 4900 50  0001 C CNN
+F 3 "~" H 8050 4900 50  0001 C CNN
+	1    8050 4900
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	7450 5200 7900 5200
-Wire Wire Line
-	7400 5300 7700 5300
-Wire Wire Line
 	7450 5400 7650 5400
-Wire Wire Line
-	7450 5500 7850 5500
 Wire Wire Line
 	7450 5050 7450 5150
 Connection ~ 7450 5150
 Wire Wire Line
-	7650 5050 7650 5400
-Connection ~ 7650 5400
+	8050 5050 8050 5500
+Connection ~ 8050 5500
 Wire Wire Line
-	7650 5400 7900 5400
+	8050 5500 8100 5500
 Wire Wire Line
-	7850 5050 7850 5500
-Connection ~ 7850 5500
-Wire Wire Line
-	7850 5500 7900 5500
-Wire Wire Line
-	7650 4750 7850 4750
+	7850 4750 8050 4750
 Wire Wire Line
 	7400 4750 7450 4750
 Wire Wire Line
 	7450 4750 7650 4750
 Connection ~ 7450 4750
-Connection ~ 7650 4750
-$Comp
-L power:GND #PWR016
-U 1 1 5F97F28F
-P 7700 5950
-F 0 "#PWR016" H 7700 5700 50  0001 C CNN
-F 1 "GND" H 7705 5777 50  0000 C CNN
-F 2 "" H 7700 5950 50  0001 C CNN
-F 3 "" H 7700 5950 50  0001 C CNN
-	1    7700 5950
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	7700 5300 7700 5600
-Connection ~ 7700 5300
-Wire Wire Line
-	7700 5300 7900 5300
-Wire Wire Line
-	7700 5900 7700 5950
 $Comp
 L Connector:Conn_01x04_Male J3
 U 1 1 5F997CC4
-P 9100 5300
-F 0 "J3" H 9072 5228 50  0000 R CNN
-F 1 "Conn_01x04_Male" H 9072 5183 50  0001 R CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 9100 5300 50  0001 C CNN
-F 3 "~" H 9100 5300 50  0001 C CNN
-	1    9100 5300
+P 9300 5300
+F 0 "J3" H 9272 5228 50  0000 R CNN
+F 1 "Conn_01x04_Male" H 9272 5183 50  0001 R CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 9300 5300 50  0001 C CNN
+F 3 "~" H 9300 5300 50  0001 C CNN
+	1    9300 5300
 	-1   0    0    -1  
 $EndComp
-Text GLabel 8650 5100 0    50   Output ~ 0
+Text GLabel 8850 5100 0    50   Output ~ 0
 CLK
-Text GLabel 8650 5250 0    50   Output ~ 0
+Text GLabel 8850 5250 0    50   Output ~ 0
 ~CLK~
-Text GLabel 8650 5400 0    50   Output ~ 0
+Text GLabel 8850 5400 0    50   Output ~ 0
 RESET
 Wire Wire Line
-	8650 5100 8700 5100
+	8850 5100 8900 5100
 Wire Wire Line
-	8700 5100 8700 5200
+	8900 5100 8900 5200
 Wire Wire Line
-	8700 5200 8900 5200
+	8900 5200 9100 5200
 Wire Wire Line
-	8900 5300 8700 5300
+	9100 5300 8900 5300
 Wire Wire Line
-	8700 5300 8700 5250
+	8900 5300 8900 5250
 Wire Wire Line
-	8700 5250 8650 5250
+	8900 5250 8850 5250
 Wire Wire Line
-	8900 5400 8750 5400
-NoConn ~ 8900 5500
+	9100 5400 8950 5400
+NoConn ~ 9100 5500
 $Comp
 L power:GND #PWR020
 U 1 1 5F9DA252
-P 8750 5950
-F 0 "#PWR020" H 8750 5700 50  0001 C CNN
-F 1 "GND" H 8755 5777 50  0000 C CNN
-F 2 "" H 8750 5950 50  0001 C CNN
-F 3 "" H 8750 5950 50  0001 C CNN
-	1    8750 5950
+P 8950 5950
+F 0 "#PWR020" H 8950 5700 50  0001 C CNN
+F 1 "GND" H 8955 5777 50  0000 C CNN
+F 2 "" H 8950 5950 50  0001 C CNN
+F 3 "" H 8950 5950 50  0001 C CNN
+	1    8950 5950
 	1    0    0    -1  
 $EndComp
-Connection ~ 8750 5400
+Connection ~ 8950 5400
 Wire Wire Line
-	8750 5400 8650 5400
-Wire Wire Line
-	2150 6950 2150 7050
+	8950 5400 8850 5400
 $Comp
 L Device:LED D11
 U 1 1 5FA248ED
@@ -1585,9 +1532,9 @@ Wire Wire Line
 Wire Wire Line
 	5550 2750 5550 2850
 Wire Wire Line
-	8750 5400 8750 5600
+	8950 5400 8950 5600
 Wire Wire Line
-	8750 5900 8750 5950
+	8950 5900 8950 5950
 $Comp
 L Device:C C8
 U 1 1 602584DA
@@ -1697,12 +1644,45 @@ Connection ~ 2850 4450
 $Comp
 L Device:LED D9
 U 1 1 5EFAF776
-P 1500 6950
-F 0 "D9" H 1600 6850 50  0000 C CNN
-F 1 "LOAD" H 1350 7000 50  0000 C CNN
-F 2 "LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 1500 6950 50  0001 C CNN
-F 3 "~" H 1500 6950 50  0001 C CNN
-	1    1500 6950
-	-1   0    0    1   
+P 1550 6950
+F 0 "D9" H 1650 6850 50  0000 C CNN
+F 1 "LOAD" H 1400 7000 50  0000 C CNN
+F 2 "LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 1550 6950 50  0001 C CNN
+F 3 "~" H 1550 6950 50  0001 C CNN
+	1    1550 6950
+	1    0    0    -1  
 $EndComp
+Wire Wire Line
+	2850 2050 2800 2050
+Connection ~ 2850 2050
+Wire Wire Line
+	1150 2050 1050 2050
+Connection ~ 1150 2050
+Wire Wire Line
+	2150 6950 2150 6700
+Connection ~ 2150 6700
+Wire Wire Line
+	1250 6950 1400 6950
+Wire Wire Line
+	1700 6950 1750 6950
+Wire Wire Line
+	7650 5050 7650 5400
+Wire Wire Line
+	7450 5200 8100 5200
+Connection ~ 7650 5400
+Wire Wire Line
+	7450 5500 8050 5500
+Wire Wire Line
+	7650 4750 7850 4750
+Connection ~ 7650 4750
+Connection ~ 7850 4750
+Wire Wire Line
+	7400 5300 7850 5300
+Wire Wire Line
+	7650 5400 8100 5400
+Wire Wire Line
+	7850 5050 7850 5300
+Connection ~ 7850 5300
+Wire Wire Line
+	7850 5300 8100 5300
 $EndSCHEMATC
