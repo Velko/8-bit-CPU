@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/jurgis/work/8-bit-CPU/hardware/pcb/flags/flags.sch)
-    (date "Sun 27 Dec 2020 08:41:29 PM EET")
+    (date "Sun 27 Dec 2020 11:15:02 PM EET")
     (tool "Eeschema 5.0.2+dfsg1-1")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -226,7 +226,7 @@
       (sheetpath (names /) (tstamps /))
       (tstamp 5FEDD780))
     (comp (ref C7)
-      (value 10uF)
+      (value 10μF)
       (footprint Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder)
       (datasheet ~)
       (libsource (lib Device) (part C) (description "Unpolarized capacitor"))
