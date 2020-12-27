@@ -174,46 +174,46 @@ Wire Wire Line
 	6200 5850 6150 5850
 $Comp
 L 74xx:74HC02 U1
-U 2 1 5FDAE108
+U 4 1 5FDAE108
 P 2000 1200
 F 0 "U1" H 2000 1200 50  0000 C CNN
 F 1 "74HC02" H 2000 950 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2000 1200 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74hc02" H 2000 1200 50  0001 C CNN
-	2    2000 1200
+	4    2000 1200
 	1    0    0    1   
 $EndComp
 $Comp
 L 74xx:74HC02 U1
-U 1 1 5FDB1B11
+U 3 1 5FDB1B11
 P 2000 1600
 F 0 "U1" H 2000 1600 50  0000 C CNN
 F 1 "74HC02" H 2000 1834 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2000 1600 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74hc02" H 2000 1600 50  0001 C CNN
-	1    2000 1600
+	3    2000 1600
 	1    0    0    1   
 $EndComp
 $Comp
 L 74xx:74HC02 U1
-U 3 1 5FDB31F6
+U 1 1 5FDB31F6
 P 2000 2000
 F 0 "U1" H 2000 2000 50  0000 C CNN
 F 1 "74HC02" H 2000 2234 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2000 2000 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74hc02" H 2000 2000 50  0001 C CNN
-	3    2000 2000
+	1    2000 2000
 	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74HC02 U1
-U 4 1 5FDB4427
+U 2 1 5FDB4427
 P 2000 2400
 F 0 "U1" H 2000 2400 50  0000 C CNN
 F 1 "74HC02" H 2000 2634 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2000 2400 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74hc02" H 2000 2400 50  0001 C CNN
-	4    2000 2400
+	2    2000 2400
 	1    0    0    -1  
 $EndComp
 Text GLabel 1600 1100 0    50   Input ~ 0
@@ -250,46 +250,46 @@ Wire Wire Line
 	1700 2500 1600 2500
 $Comp
 L 74xx:74LS08 U2
-U 1 1 5FDE00D8
+U 2 1 5FDE00D8
 P 2850 1400
 F 0 "U2" H 2850 1400 50  0000 C CNN
 F 1 "74HC08" H 2850 1634 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2850 1400 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 2850 1400 50  0001 C CNN
-	1    2850 1400
+	2    2850 1400
 	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74LS08 U2
-U 2 1 5FDE23AD
+U 1 1 5FDE23AD
 P 2850 2200
 F 0 "U2" H 2850 2200 50  0000 C CNN
 F 1 "74HC08" H 2850 2434 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2850 2200 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 2850 2200 50  0001 C CNN
-	2    2850 2200
-	1    0    0    -1  
+	1    2850 2200
+	1    0    0    1   
 $EndComp
 $Comp
 L 74xx:74LS08 U2
-U 3 1 5FDE4BA9
+U 4 1 5FDE4BA9
 P 3600 1800
 F 0 "U2" H 3600 1800 50  0000 C CNN
 F 1 "74HC08" H 3600 2034 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 3600 1800 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 3600 1800 50  0001 C CNN
-	3    3600 1800
+	4    3600 1800
 	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74LS08 U2
-U 4 1 5FDE6BF2
+U 3 1 5FDE6BF2
 P 2700 3700
 F 0 "U2" H 2700 3700 50  0000 C CNN
 F 1 "74HC08" H 2700 3934 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2700 3700 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 2700 3700 50  0001 C CNN
-	4    2700 3700
+	3    2700 3700
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -352,7 +352,7 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS157" H 4950 2400 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	3900 1800 3950 1800
-Text GLabel 3850 2400 0    50   Input ~ 0
+Text GLabel 4300 2400 0    50   Input ~ 0
 BUS7
 Text GLabel 4350 1900 0    50   Input ~ 0
 BUS0
@@ -370,8 +370,6 @@ Wire Wire Line
 	4350 2500 4450 2500
 Wire Wire Line
 	4350 2800 4450 2800
-Wire Wire Line
-	3850 2100 4450 2100
 Wire Wire Line
 	5450 1800 5950 1800
 Wire Wire Line
@@ -392,14 +390,10 @@ Wire Wire Line
 	5600 2700 5600 2100
 Wire Wire Line
 	5600 2100 5950 2100
-Text GLabel 3850 2700 0    50   Input ~ 0
+Text GLabel 4400 2700 0    50   Input ~ 0
 CARRY_IN
-Text GLabel 3850 2100 0    50   Input ~ 0
+Text GLabel 4300 2100 0    50   Input ~ 0
 OV_IN
-Wire Wire Line
-	3850 2400 4450 2400
-Wire Wire Line
-	3850 2700 4450 2700
 $Comp
 L 74xx:74LS173 U5
 U 1 1 5FE44004
@@ -451,13 +445,13 @@ Text GLabel 2350 3600 0    50   Input ~ 0
 USE_CARRY
 Wire Wire Line
 	2350 3600 2400 3600
-Text GLabel 9450 1800 2    50   Output ~ 0
-Z_CTRL
-Text GLabel 9450 1900 2    50   Output ~ 0
-V_CTRL
 Text GLabel 9450 2000 2    50   Output ~ 0
-N_CTRL
+Z_CTRL
+Text GLabel 9450 1800 2    50   Output ~ 0
+V_CTRL
 Text GLabel 9450 2100 2    50   Output ~ 0
+N_CTRL
+Text GLabel 9450 1900 2    50   Output ~ 0
 C_CTRL
 Wire Wire Line
 	9200 1800 9450 1800
@@ -469,8 +463,6 @@ Wire Wire Line
 	9200 2100 9450 2100
 Text GLabel 1650 3700 0    50   Input ~ 0
 V_CTRL
-Text GLabel 1650 3800 0    50   Input ~ 0
-N_CTRL
 Text GLabel 1650 3900 0    50   Input ~ 0
 C_CTRL
 Text GLabel 8450 4300 0    50   Input ~ 0
@@ -513,9 +505,6 @@ Wire Wire Line
 	4000 1550 3950 1550
 Wire Wire Line
 	3950 1550 3950 1800
-Connection ~ 3950 1800
-Wire Wire Line
-	3950 1800 4450 1800
 Text GLabel 9550 4400 0    50   Input ~ 0
 Z_OUT
 $Comp
@@ -594,13 +583,13 @@ Wire Wire Line
 	6950 2000 7100 2000
 Wire Wire Line
 	6950 2100 7100 2100
-Text GLabel 8050 1800 0    50   Input ~ 0
-Z_D
-Text GLabel 8050 1900 0    50   Input ~ 0
-V_D
 Text GLabel 8050 2000 0    50   Input ~ 0
-N_D
+Z_D
+Text GLabel 8050 1800 0    50   Input ~ 0
+V_D
 Text GLabel 8050 2100 0    50   Input ~ 0
+N_D
+Text GLabel 8050 1900 0    50   Input ~ 0
 C_D
 Wire Wire Line
 	8050 1800 8200 1800
@@ -651,8 +640,6 @@ Wire Wire Line
 Connection ~ 1650 5900
 Wire Wire Line
 	1650 3700 2100 3700
-Wire Wire Line
-	1650 3800 2400 3800
 $Comp
 L power:GND #PWR0104
 U 1 1 5FDBC107
@@ -1133,7 +1120,7 @@ L Device:C C7
 U 1 1 5FF9EE91
 P 10350 5600
 F 0 "C7" H 10350 5700 50  0000 L CNN
-F 1 "10μF" H 10350 5500 50  0000 L CNN
+F 1 "10uF" H 10350 5500 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 10388 5450 50  0001 C CNN
 F 3 "~" H 10350 5600 50  0001 C CNN
 	1    10350 5600
@@ -1405,10 +1392,10 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS125" H 10500 3100 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:GND #PWR?
+L power:GND #PWR0111
 U 1 1 5FEC07F8
 P 10050 3700
-F 0 "#PWR?" H 10050 3450 50  0001 C CNN
+F 0 "#PWR0111" H 10050 3450 50  0001 C CNN
 F 1 "GND" H 10055 3527 50  0000 C CNN
 F 2 "" H 10050 3700 50  0001 C CNN
 F 3 "" H 10050 3700 50  0001 C CNN
@@ -1416,10 +1403,10 @@ F 3 "" H 10050 3700 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L power:VCC #PWR?
+L power:VCC #PWR0112
 U 1 1 5FEC0911
 P 10050 2500
-F 0 "#PWR?" H 10050 2350 50  0001 C CNN
+F 0 "#PWR0112" H 10050 2350 50  0001 C CNN
 F 1 "VCC" H 10065 2673 50  0000 C CNN
 F 2 "" H 10050 2500 50  0001 C CNN
 F 3 "" H 10050 2500 50  0001 C CNN
@@ -1440,4 +1427,19 @@ Wire Wire Line
 Connection ~ 10050 3600
 Wire Wire Line
 	10050 3600 10050 3700
+Wire Wire Line
+	2400 3800 1800 3800
+Wire Wire Line
+	1800 3800 1800 3900
+Connection ~ 1800 3900
+Text GLabel 4300 1800 0    50   Input ~ 0
+Z_OUT
+Wire Wire Line
+	4300 1800 4450 1800
+Wire Wire Line
+	4300 2100 4450 2100
+Wire Wire Line
+	4300 2400 4450 2400
+Wire Wire Line
+	4400 2700 4450 2700
 $EndSCHEMATC
