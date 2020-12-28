@@ -214,8 +214,6 @@ Wire Wire Line
 Wire Wire Line
 	9750 1600 10100 1600
 Wire Wire Line
-	9750 1200 10100 1200
-Wire Wire Line
 	9750 2800 10100 2800
 Wire Wire Line
 	9750 2700 10100 2700
@@ -229,8 +227,6 @@ Wire Wire Line
 	9750 2300 10100 2300
 Wire Wire Line
 	9750 1500 9850 1500
-Wire Wire Line
-	9850 1500 9850 3150
 Wire Wire Line
 	8850 2100 8850 2200
 Wire Wire Line
@@ -355,23 +351,18 @@ Wire Wire Line
 Wire Wire Line
 	700  1900 1150 1900
 Wire Wire Line
-	3000 2200 2650 2200
-Wire Wire Line
 	2450 1900 3000 1900
 $Comp
 L power:+5V #PWR0105
 U 1 1 5F04F98D
-P 2450 1850
-F 0 "#PWR0105" H 2450 1700 50  0001 C CNN
-F 1 "+5V" V 2400 1950 50  0000 C CNN
-F 2 "" H 2450 1850 50  0000 C CNN
-F 3 "" H 2450 1850 50  0000 C CNN
-	1    2450 1850
+P 2450 1800
+F 0 "#PWR0105" H 2450 1650 50  0001 C CNN
+F 1 "+5V" V 2400 1900 50  0000 C CNN
+F 2 "" H 2450 1800 50  0000 C CNN
+F 3 "" H 2450 1800 50  0000 C CNN
+	1    2450 1800
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	2450 1900 2450 1850
-Connection ~ 2450 1900
 $Comp
 L power:GND #PWR0102
 U 1 1 5F041751
@@ -408,8 +399,6 @@ Wire Wire Line
 	1100 2200 1150 2200
 Wire Wire Line
 	9750 1700 10100 1700
-Wire Wire Line
-	3400 1400 3400 1250
 Text GLabel 7500 1050 2    50   Input ~ 0
 MISO
 $Comp
@@ -440,8 +429,6 @@ Wire Wire Line
 	7350 1050 7350 1100
 Wire Wire Line
 	7350 1450 7350 1400
-Wire Wire Line
-	1550 2700 1550 2950
 Text GLabel 3950 1600 2    50   Output ~ 0
 A0
 Text GLabel 3950 1700 2    50   Output ~ 0
@@ -596,7 +583,7 @@ A13
 Text GLabel 1250 5800 0    50   Input ~ 0
 A14
 Text GLabel 1250 6100 0    50   Input ~ 0
-A15
+~OE~
 Wire Wire Line
 	1250 4400 1350 4400
 Wire Wire Line
@@ -654,17 +641,8 @@ $EndComp
 Wire Wire Line
 	1750 4100 1750 4200
 Wire Wire Line
-	1750 6500 1750 6450
-Wire Wire Line
 	1350 6200 1300 6200
-Wire Wire Line
-	1300 6200 1300 6450
-Wire Wire Line
-	1300 6450 1750 6450
-Connection ~ 1750 6450
-Wire Wire Line
-	1750 6450 1750 6400
-Text GLabel 10100 1200 2    50   Output ~ 0
+Text GLabel 10100 1150 2    50   Output ~ 0
 ~WE~
 Text GLabel 1250 5950 0    50   Input ~ 0
 ~WE~
@@ -674,9 +652,8 @@ Wire Wire Line
 	1300 5950 1300 6000
 Wire Wire Line
 	1300 6000 1350 6000
-NoConn ~ 9750 1300
 $Comp
-L Custom:AT28C256J U4
+L eeprom_burner-rescue:AT28C256J-Custom U4
 U 1 1 5F109E2E
 P 3750 5300
 F 0 "U4" H 3550 6350 50  0000 C CNN
@@ -749,7 +726,7 @@ A13
 Text GLabel 3250 5800 0    50   Input ~ 0
 A14
 Text GLabel 3250 6100 0    50   Input ~ 0
-A15
+~OE~
 Wire Wire Line
 	3250 4400 3350 4400
 Wire Wire Line
@@ -807,16 +784,7 @@ $EndComp
 Wire Wire Line
 	3750 4100 3750 4200
 Wire Wire Line
-	3750 6500 3750 6450
-Wire Wire Line
 	3350 6200 3300 6200
-Wire Wire Line
-	3300 6200 3300 6450
-Wire Wire Line
-	3300 6450 3750 6450
-Connection ~ 3750 6450
-Wire Wire Line
-	3750 6450 3750 6400
 Text GLabel 3250 5950 0    50   Input ~ 0
 ~WE~
 Wire Wire Line
@@ -1060,7 +1028,7 @@ F 3 "" H 5800 1500 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	5100 1400 5550 1400
+	5100 1400 5350 1400
 Connection ~ 5550 1400
 Wire Wire Line
 	5550 1400 5800 1400
@@ -1073,7 +1041,7 @@ Connection ~ 5800 1400
 Wire Wire Line
 	5800 1400 6000 1400
 Wire Wire Line
-	5100 1100 5550 1100
+	5100 1100 5350 1100
 Connection ~ 5550 1100
 Wire Wire Line
 	5550 1100 5800 1100
@@ -1102,7 +1070,7 @@ U 1 1 5F0F4E6C
 P 6900 1250
 F 0 "C5" H 7015 1296 50  0000 L CNN
 F 1 "100nF" H 7015 1205 50  0000 L CNN
-F 2 "Capacitor_THT:C_Disc_D6.0mm_W2.5mm_P5.00mm" H 6938 1100 50  0001 C CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 6938 1100 50  0001 C CNN
 F 3 "~" H 6900 1250 50  0001 C CNN
 	1    6900 1250
 	1    0    0    -1  
@@ -1172,4 +1140,85 @@ Wire Wire Line
 	7600 4950 7700 4950
 Wire Wire Line
 	7600 5050 7700 5050
+Text GLabel 10100 1300 2    50   Output ~ 0
+~OE~
+Wire Wire Line
+	9750 1200 10000 1200
+Wire Wire Line
+	10000 1200 10000 1150
+Wire Wire Line
+	10000 1150 10100 1150
+Wire Wire Line
+	9750 1300 10100 1300
+Text GLabel 6600 5450 0    50   Input ~ 0
+E0
+Text GLabel 6600 5600 0    50   Input ~ 0
+E1
+Wire Wire Line
+	3750 6400 3750 6500
+Wire Wire Line
+	1750 6400 1750 6500
+Wire Wire Line
+	3300 6200 3300 6250
+Wire Wire Line
+	3300 6250 3250 6250
+Wire Wire Line
+	1300 6200 1300 6250
+Wire Wire Line
+	1300 6250 1250 6250
+Text GLabel 6700 5450 2    50   Output ~ 0
+~CS1~
+Text GLabel 6700 5600 2    50   Output ~ 0
+~CS2~
+Wire Wire Line
+	6600 5450 6700 5450
+Wire Wire Line
+	6700 5600 6600 5600
+Text GLabel 1250 6250 0    50   Input ~ 0
+~CS1~
+Text GLabel 3250 6250 0    50   Input ~ 0
+~CS2~
+Wire Wire Line
+	9850 1500 9850 3150
+Wire Wire Line
+	3400 1400 3400 1250
+Wire Wire Line
+	1550 2950 1550 2700
+Wire Wire Line
+	2450 1900 2450 1800
+Connection ~ 2450 1900
+$Comp
+L power:PWR_FLAG #FLG0101
+U 1 1 5F7F4680
+P 5350 1050
+F 0 "#FLG0101" H 5350 1125 50  0001 C CNN
+F 1 "PWR_FLAG" H 5350 1224 50  0000 C CNN
+F 2 "" H 5350 1050 50  0001 C CNN
+F 3 "~" H 5350 1050 50  0001 C CNN
+	1    5350 1050
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:PWR_FLAG #FLG0102
+U 1 1 5F7F46C0
+P 5350 1500
+F 0 "#FLG0102" H 5350 1575 50  0001 C CNN
+F 1 "PWR_FLAG" H 5350 1673 50  0000 C CNN
+F 2 "" H 5350 1500 50  0001 C CNN
+F 3 "~" H 5350 1500 50  0001 C CNN
+	1    5350 1500
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	5350 1050 5350 1100
+Connection ~ 5350 1100
+Wire Wire Line
+	5350 1100 5550 1100
+Wire Wire Line
+	5350 1500 5350 1400
+Connection ~ 5350 1400
+Wire Wire Line
+	5350 1400 5550 1400
+Wire Wire Line
+	2650 2200 3000 2200
 $EndSCHEMATC
