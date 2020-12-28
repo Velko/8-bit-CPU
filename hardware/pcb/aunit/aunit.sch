@@ -1,6 +1,5 @@
 EESchema Schematic File Version 4
-LIBS:aunit-cache
-EELAYER 26 0
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -367,69 +366,52 @@ Wire Wire Line
 	2250 950  2250 1300
 Wire Wire Line
 	1650 1050 700  1050
-Text GLabel 950  3250 0    50   Input ~ 0
+Text GLabel 1350 3700 0    50   Input ~ 0
 A7
-Text GLabel 950  3450 0    50   Input ~ 0
+Text GLabel 1350 3400 0    50   Input ~ 0
 B7I
-Text GLabel 1000 3700 0    50   Input ~ 0
-SUM7
 $Comp
 L 74xx:74HC86 U5
 U 1 1 5F1ED5E5
-P 1300 3350
-F 0 "U5" H 1300 3350 50  0000 C CNN
-F 1 "74HC86" H 1550 3500 50  0001 C CNN
-F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 1300 3350 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74HC86" H 1300 3350 50  0001 C CNN
-	1    1300 3350
-	1    0    0    -1  
+P 1700 3300
+F 0 "U5" H 1700 3300 50  0000 C CNN
+F 1 "74HC86" H 1950 3450 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 1700 3300 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC86" H 1700 3300 50  0001 C CNN
+	1    1700 3300
+	1    0    0    1   
 $EndComp
 $Comp
 L 74xx:74HC86 U5
 U 4 1 5F1ED7CF
-P 1300 3800
-F 0 "U5" H 1300 3800 50  0000 C CNN
-F 1 "74HC86" H 1550 3950 50  0001 C CNN
-F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 1300 3800 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74HC86" H 1300 3800 50  0001 C CNN
-	4    1300 3800
+P 1700 3800
+F 0 "U5" H 1700 3800 50  0000 C CNN
+F 1 "74HC86" H 1950 3950 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 1700 3800 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74HC86" H 1700 3800 50  0001 C CNN
+	4    1700 3800
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	950  3250 1000 3250
+	1350 3200 1400 3200
 Wire Wire Line
-	950  3450 1000 3450
+	1350 3400 1400 3400
 Wire Wire Line
-	1000 3150 1000 3250
-Connection ~ 1000 3250
+	1400 3100 1400 3200
+Connection ~ 1400 3200
 $Comp
-L 74xx:74HC00 U6
-U 4 1 5F1F8EEB
-P 1900 3350
-F 0 "U6" H 1850 3350 50  0000 C CNN
-F 1 "74HC00" H 2150 3450 50  0000 C CNN
-F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 1900 3350 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 1900 3350 50  0001 C CNN
-	4    1900 3350
+L 74xx:74LS08 U6
+U 3 1 5F1F8EEB
+P 9150 3950
+F 0 "U6" H 9100 3950 50  0000 C CNN
+F 1 "74HC08" H 9400 4050 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 9150 3950 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 9150 3950 50  0001 C CNN
+	3    9150 3950
 	1    0    0    -1  
 $EndComp
-$Comp
-L 74xx:74LS00 U6
-U 3 1 5F1F93CD
-P 2500 3600
-F 0 "U6" H 2500 3600 50  0000 C CNN
-F 1 "74HC00" H 2750 3750 50  0001 C CNN
-F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2500 3600 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 2500 3600 50  0001 C CNN
-	3    2500 3600
-	1    0    0    1   
-$EndComp
-Wire Wire Line
-	1600 3800 2200 3800
-Text GLabel 4100 3600 2    50   Output ~ 0
+Text GLabel 3650 3550 2    50   Output ~ 0
 OOUT
-Wire Wire Line
-	3400 3600 3450 3600
 $Comp
 L 74xx:74HC245 U7
 U 1 1 5F208CA5
@@ -509,12 +491,12 @@ Wire Wire Line
 $Comp
 L 74xx:74LS125 U8
 U 2 1 5F2331E8
-P 3800 3600
-F 0 "U8" H 3750 3600 50  0000 C CNN
-F 1 "74HC125" H 3950 3750 50  0000 C CNN
-F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 3800 3600 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS126" H 3800 3600 50  0001 C CNN
-	2    3800 3600
+P 3200 3550
+F 0 "U8" H 3150 3550 50  0000 C CNN
+F 1 "74HC125" H 3350 3700 50  0000 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 3200 3550 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS126" H 3200 3550 50  0001 C CNN
+	2    3200 3550
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -564,17 +546,17 @@ Text GLabel 7200 2350 0    50   Input ~ 0
 ~OUT~
 Wire Wire Line
 	7200 2350 7300 2350
-Text GLabel 3550 4150 0    50   Input ~ 0
+Text GLabel 3150 4150 0    50   Input ~ 0
 ~OUT~
 Wire Wire Line
 	6350 1800 6350 2800
-Text GLabel 3450 3700 3    50   Output ~ 0
+Text GLabel 2850 3650 3    50   Output ~ 0
 OVFD
 Wire Wire Line
-	3450 3600 3450 3700
-Connection ~ 3450 3600
+	2850 3550 2850 3650
+Connection ~ 2850 3550
 Wire Wire Line
-	3450 3600 3500 3600
+	2850 3550 2900 3550
 Wire Wire Line
 	6050 3600 6150 3600
 Wire Wire Line
@@ -1042,10 +1024,6 @@ F 3 "~" H 8200 3700 50  0001 C CNN
 	1    8200 3700
 	-1   0    0    -1  
 $EndComp
-Wire Wire Line
-	3550 4150 3800 4150
-Wire Wire Line
-	3800 4150 3800 3850
 Text GLabel 7650 3550 0    50   Output ~ 0
 ~OUT~
 Text GLabel 7650 3700 0    50   Output ~ 0
@@ -1117,25 +1095,25 @@ F 3 "~" H 4600 5650 50  0001 C CNN
 	-1   0    0    1   
 $EndComp
 $Comp
-L 74xx:74LS00 U6
+L 74xx:74LS08 U6
 U 1 1 5F93DE1B
-P 9650 3700
-F 0 "U6" H 9650 3700 50  0000 C CNN
-F 1 "74HC00" H 9900 3850 50  0001 C CNN
-F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 9650 3700 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 9650 3700 50  0001 C CNN
-	1    9650 3700
+P 9150 3400
+F 0 "U6" H 9150 3400 50  0000 C CNN
+F 1 "74HC08" H 9400 3550 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 9150 3400 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 9150 3400 50  0001 C CNN
+	1    9150 3400
 	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74LS125 U8
 U 4 1 5F961AA1
-P 10350 3700
-F 0 "U8" H 10300 3700 50  0000 C CNN
-F 1 "74HC125" H 10500 3850 50  0001 C CNN
-F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 10350 3700 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS126" H 10350 3700 50  0001 C CNN
-	4    10350 3700
+P 10000 3950
+F 0 "U8" H 9950 3950 50  0000 C CNN
+F 1 "74HC125" H 10150 4100 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 10000 3950 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS126" H 10000 3950 50  0001 C CNN
+	4    10000 3950
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -1149,19 +1127,17 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS126" H 2900 5950 50  0001 C CNN
 	3    2900 5950
 	1    0    0    -1  
 $EndComp
-NoConn ~ 9950 3700
-NoConn ~ 10650 3700
-Wire Wire Line
-	9350 3600 9350 3800
+NoConn ~ 9450 3400
+NoConn ~ 10300 3950
 $Comp
 L power:VCC #PWR0112
 U 1 1 5FA88E6A
-P 9350 3450
-F 0 "#PWR0112" H 9350 3300 50  0001 C CNN
-F 1 "VCC" H 9450 3550 50  0000 C CNN
-F 2 "" H 9350 3450 50  0001 C CNN
-F 3 "" H 9350 3450 50  0001 C CNN
-	1    9350 3450
+P 8850 3150
+F 0 "#PWR0112" H 8850 3000 50  0001 C CNN
+F 1 "VCC" H 8950 3250 50  0000 C CNN
+F 2 "" H 8850 3150 50  0001 C CNN
+F 3 "" H 8850 3150 50  0001 C CNN
+	1    8850 3150
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -1202,7 +1178,7 @@ L 74xx:74LS00 U6
 U 5 1 5FADFA09
 P 7350 5500
 F 0 "U6" H 7350 5500 50  0000 C CNN
-F 1 "74HC00" H 7600 5650 50  0001 C CNN
+F 1 "74HC08" H 7600 5650 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 7350 5500 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 7350 5500 50  0001 C CNN
 	5    7350 5500
@@ -1268,36 +1244,16 @@ Connection ~ 7350 5000
 Wire Wire Line
 	1400 850  1650 850 
 $Comp
-L 74xx:74LS00 U6
+L 74xx:74LS08 U6
 U 2 1 5F1E69F3
-P 3100 3600
-F 0 "U6" H 3100 3600 50  0000 C CNN
-F 1 "74HC00" H 3350 3750 50  0001 C CNN
-F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 3100 3600 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 3100 3600 50  0001 C CNN
-	2    3100 3600
+P 10000 3400
+F 0 "U6" H 10000 3400 50  0000 C CNN
+F 1 "74HC08" H 10250 3550 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 10000 3400 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 10000 3400 50  0001 C CNN
+	2    10000 3400
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	1600 3250 1600 3350
-Connection ~ 1600 3350
-Wire Wire Line
-	1600 3350 1600 3450
-Wire Wire Line
-	2200 3700 2200 3800
-Wire Wire Line
-	2200 3350 2200 3500
-Wire Wire Line
-	2800 3500 2800 3600
-Connection ~ 2800 3600
-Wire Wire Line
-	2800 3600 2800 3700
-Wire Wire Line
-	700  3900 700  3150
-Wire Wire Line
-	700  3900 1000 3900
-Wire Wire Line
-	700  3150 1000 3150
 Wire Wire Line
 	4750 3500 4750 2800
 Wire Wire Line
@@ -1309,9 +1265,6 @@ Wire Wire Line
 	7350 5000 7800 5000
 Wire Wire Line
 	7350 6000 7800 6000
-Wire Wire Line
-	9350 3600 9350 3450
-Connection ~ 9350 3600
 $Comp
 L Device:R R12
 U 1 1 5F36ADD1
@@ -1405,15 +1358,9 @@ Wire Notes Line
 Text Notes 3600 4550 0    50   ~ 0
 Data and status\n    indicators
 Wire Wire Line
-	10050 3700 10050 3950
+	9700 3950 9700 4200
 Wire Wire Line
-	10350 3950 10050 3950
-Wire Wire Line
-	10050 3950 9350 3950
-Wire Wire Line
-	9350 3950 9350 3800
-Connection ~ 10050 3950
-Connection ~ 9350 3800
+	10000 4200 9700 4200
 Wire Notes Line
 	600  4300 11150 4300
 Wire Notes Line
@@ -1424,9 +1371,6 @@ Wire Wire Line
 	4750 2800 6350 2800
 Wire Wire Line
 	4650 3700 4650 2900
-Wire Wire Line
-	3800 4150 5750 4150
-Connection ~ 3800 4150
 $Comp
 L Device:C C1
 U 1 1 5F1E2F39
@@ -1813,4 +1757,93 @@ Wire Wire Line
 Connection ~ 3500 2900
 Wire Wire Line
 	3500 2900 4650 2900
+Wire Wire Line
+	1050 3100 1400 3100
+Text GLabel 1350 3200 0    50   Input ~ 0
+SUM7
+$Comp
+L 74xx:74LS08 U6
+U 4 1 5F1F93CD
+P 2400 3550
+F 0 "U6" H 2400 3550 50  0000 C CNN
+F 1 "74HC08" H 2650 3400 50  0000 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2400 3550 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 2400 3550 50  0001 C CNN
+	4    2400 3550
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	1050 3900 1400 3900
+Wire Wire Line
+	1050 3100 1050 3900
+Wire Wire Line
+	1350 3700 1400 3700
+Wire Wire Line
+	2000 3300 2050 3300
+Wire Wire Line
+	2050 3300 2050 3450
+Wire Wire Line
+	2050 3450 2100 3450
+Wire Wire Line
+	2000 3800 2050 3800
+Wire Wire Line
+	2050 3800 2050 3650
+Wire Wire Line
+	2050 3650 2100 3650
+Wire Wire Line
+	2700 3550 2850 3550
+Wire Wire Line
+	3500 3550 3650 3550
+Wire Wire Line
+	3150 4150 3200 4150
+Wire Wire Line
+	3200 3800 3200 4150
+Connection ~ 3200 4150
+Wire Wire Line
+	3200 4150 5750 4150
+NoConn ~ 10300 3400
+NoConn ~ 9450 3950
+$Comp
+L power:GND #PWR0116
+U 1 1 5F416D53
+P 8850 4200
+F 0 "#PWR0116" H 8850 3950 50  0001 C CNN
+F 1 "GND" H 9000 4150 50  0000 C CNN
+F 2 "" H 8850 4200 50  0001 C CNN
+F 3 "" H 8850 4200 50  0001 C CNN
+	1    8850 4200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR0117
+U 1 1 5F417A83
+P 9700 3950
+F 0 "#PWR0117" H 9700 3800 50  0001 C CNN
+F 1 "VCC" H 9800 4050 50  0000 C CNN
+F 2 "" H 9700 3950 50  0001 C CNN
+F 3 "" H 9700 3950 50  0001 C CNN
+	1    9700 3950
+	1    0    0    -1  
+$EndComp
+Connection ~ 9700 3950
+Wire Wire Line
+	8850 3150 8850 3300
+Connection ~ 8850 3300
+Wire Wire Line
+	8850 3300 8850 3500
+Wire Wire Line
+	8850 3500 8850 3600
+Wire Wire Line
+	8850 3600 9700 3600
+Wire Wire Line
+	9700 3600 9700 3500
+Connection ~ 8850 3500
+Wire Wire Line
+	9700 3300 9700 3500
+Connection ~ 9700 3500
+Wire Wire Line
+	8850 3850 8850 4050
+Wire Wire Line
+	8850 4200 8850 4050
+Connection ~ 8850 4050
 $EndSCHEMATC
