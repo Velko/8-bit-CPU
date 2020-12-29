@@ -1,8 +1,8 @@
 (export (version D)
   (design
-    (source C:\Work\8-bit-CPU\hardware\pcb\aunit\aunit.sch)
-    (date "20.08.2020 16:05:45")
-    (tool "Eeschema (5.1.6)-1")
+    (source /home/jurgis/work/8-bit-CPU/hardware/pcb/aunit/aunit.sch)
+    (date "Tue 29 Dec 2020 12:39:41 PM EET")
+    (tool "Eeschema 5.0.2+dfsg1-1")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
         (title "Arithmetic Unit")
@@ -289,7 +289,7 @@
       (sheetpath (names /) (tstamps /))
       (tstamp 5F36AE38))
     (comp (ref C1)
-      (value 100nF)
+      (value 10μF)
       (footprint Capacitor_SMD:C_0805_2012Metric_Pad1.15x1.40mm_HandSolder)
       (datasheet ~)
       (libsource (lib Device) (part C) (description "Unpolarized capacitor"))
@@ -358,7 +358,7 @@
       (description "Quad And2")
       (docs http://www.ti.com/lit/gpn/sn74LS08)
       (footprints
-        (fp DIP*W7.62mm*))
+        (fp DIP?14*))
       (fields
         (field (name Reference) U)
         (field (name Value) 74LS08))
@@ -383,7 +383,7 @@
       (description "Quad buffer 3-State outputs")
       (docs http://www.ti.com/lit/gpn/sn74LS125)
       (footprints
-        (fp DIP*W7.62mm*))
+        (fp DIP?14*))
       (fields
         (field (name Reference) U)
         (field (name Value) 74LS125))
@@ -464,7 +464,7 @@
       (description "Quad 2-input XOR")
       (docs 74xx/74ls86.pdf)
       (footprints
-        (fp DIP*W7.62mm*))
+        (fp DIP?14*))
       (fields
         (field (name Reference) U)
         (field (name Value) 74LS86))
@@ -562,13 +562,13 @@
         (pin (num 3) (name B) (type passive)))))
   (libraries
     (library (logical 74xx)
-      (uri "C:\\Program Files\\KiCad\\share\\kicad\\library/74xx.lib"))
+      (uri /usr/share/kicad/library/74xx.lib))
     (library (logical Connector)
-      (uri "C:\\Program Files\\KiCad\\share\\kicad\\library/Connector.lib"))
+      (uri /usr/share/kicad/library/Connector.lib))
     (library (logical Device)
-      (uri "C:\\Program Files\\KiCad\\share\\kicad\\library/Device.lib"))
+      (uri /usr/share/kicad/library/Device.lib))
     (library (logical Jumper)
-      (uri "C:\\Program Files\\KiCad\\share\\kicad\\library/Jumper.lib")))
+      (uri /usr/share/kicad/library/Jumper.lib)))
   (nets
     (net (code 1) (name ~OUT~)
       (node (ref R12) (pin 1))
