@@ -244,3 +244,118 @@ Side projects
 * 1.8432MHz oscillator (try to build UART)
 * MC21605H6WK-FPTLW-V2 - LCD screen
 * Arduino Nano
+
+
+PCB Order 1
+===========
+
+PCBs were designed for EEPROM writer, Arithmetic unit, Register and Flags. Following is the BOM for
+each unit. As General Purpose register will be used for Instruction and Memory Address registers,
+there should be enough parts to build 4.
+
+
+EEPROM programmer
+-----------------
+
+* 4x disc cap 5mm, 100nF
+* 1x 0805 cap 100nF
+* 4x PinSocket 1x8
+* 2x PinHeader 1x8
+* 1x PinHeader 1x6
+* 1x PinHeader 1x10
+* 1x resistor 10K
+* 2x 74HC595 (or 74HC595)
+* 1x DIP-28-W socket
+* 1x PLCC-32 socket
+
+Arithmetic unit
+---------------
+* 4x 0805 cap 100nF
+* 1x 0805 cap 10μF
+* 8x 0805 LED yellow
+* 3x 0805 LED green
+* 2x 0805 LED red
+* 3x PinHeader 1x8
+* 2x PinHeader 1x4
+* 1x PinHeader 2x2
+* 13x 0805 resistor 1K (or 330)
+* 2x 0805 resistor 10K
+* 2x 74HC283 SOIC-16W_5.3x10.2mm_P1.27mm
+* 3x 74HC86 SOIC-14_3.9x8.7mm_P1.27mm
+* 1x 74HC08 SOIC-14_3.9x8.7mm_P1.27mm
+* 1x 74HC245 SO-20_12.8x7.5mm_P1.27mm
+* 1x 74HC125 SOIC-14_3.9x8.7mm_P1.27mm
+
+Register
+--------
+* 7x 0805 cap 100nF
+* 1x 0805 cap 10μF
+* 8x 0805 LED yellow
+* 4x 0805 LED red
+* 3x PinHeader 1x8
+* 2x PinHeader 1x4
+* 1x PinHeader 2x2
+* 12x 0805 resistor 1K (or 330)
+* 4x 0805 resistor 10K
+* 1x 0805 resistor 100K
+* 3x 74HC245 SO-20_12.8x7.5mm_P1.27mm
+* 4x 74HC173 SOIC-16_3.9x9.9mm_P1.27mm
+
+Flags
+-----
+* 6x 0805 cap 100nF
+* 1x 0805 cap 10μF
+* 4x 0805 LED green
+* 4x 0805 LED red
+* 1x PinHeader 1x8
+* 4x PinHeader 1x4
+* 1x PinHeader 2x2
+* 8x 0805 resistor 1K (or 330)
+* 6x 0805 resistor 10K
+* 1x 0805 resistor 100K
+* 1x 74HC02 SOIC-14_3.9x8.7mm_P1.27mm
+* 1x 74HC08 SOIC-14_3.9x8.7mm_P1.27mm
+* 1x 74HC157 SOIC-16_3.9x9.9mm_P1.27mm
+* 2x 74HC173 SOIC-16_3.9x9.9mm_P1.27mm
+* 1x 74HC125 SOIC-14_3.9x8.7mm_P1.27mm
+
+Total
+-----
+* 39x 0805 cap 100nF
+* 6x 0805 cap 10μF
+* 7x 0805 LED green
+* 40x 0805 LED yellow
+* 22x 0805 LED red
+* 5x 0805 resistor 100K
+* 24x 0805 resistor 10K
+* 69x 0805 resistor 1K (or 330)
+* 1x 74HC02 SOIC-14_3.9x8.7mm_P1.27mm
+* 2x 74HC08 SOIC-14_3.9x8.7mm_P1.27mm
+* 2x 74HC125 SOIC-14_3.9x8.7mm_P1.27mm
+* 1x 74HC157 SOIC-16_3.9x9.9mm_P1.27mm
+* 18x 74HC173 SOIC-16_3.9x9.9mm_P1.27mm
+* 13x 74HC245 SO-20_12.8x7.5mm_P1.27mm
+* 2x 74HC283 SOIC-16W_5.3x10.2mm_P1.27mm
+* 2x 74HC595 (or 74HC595)
+* 3x 74HC86 SOIC-14_3.9x8.7mm_P1.27mm
+* 1x DIP-28-W socket
+* 4x disc cap 5mm, 100nF - on stock @ home
+* 1x PLCC-32 socket
+* 1x PinHeader 1x10 - will improvise
+* 14x PinHeader 1x4
+* 1x PinHeader 1x6 - will improvise
+* 18x PinHeader 1x8
+* 6x PinHeader 2x2
+* 4x PinSocket 1x8
+* 1x resistor 10K - on stock @ home
+
+Additional
+----------
+74HC125 DIP
+74HC157 DIP - not on stock
+MIC2981
+ULN2003
+LED bars
+resistor networks 1K x 10
+MC21605H6WK-FPTLW-V2 - LCD screen
+Arduino Nano
