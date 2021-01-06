@@ -99,7 +99,7 @@ void reg_load_store_output(Register &r, int repeats, const char *label)
     {
         if (pass % 50 == 0)
             Serial.print('.');
-        for (int i = 1; i < 256; i <<= 1)
+        for (int i = 0; i < 256; ++i)
         {
             r.write_check(i);
             uint8_t readback = r.read();
