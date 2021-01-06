@@ -27,6 +27,7 @@ void Register::setup()
 {
     pin_load.setup();
     pin_out.setup();
+    devices.control.commit();
 }
 
 void Register::load()

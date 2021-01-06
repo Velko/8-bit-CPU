@@ -11,8 +11,8 @@ UpDownCounter::UpDownCounter(DeviceInterface &_dev)
 
 void UpDownCounter::setup()
 {
-    Counter::setup();
     pin_down.setup();
+    Counter::setup();
 }
 
 void UpDownCounter::MoveNext()

@@ -19,8 +19,8 @@ Counter::Counter(DeviceInterface &_dev, CtrlPin::ActiveLevel enable_mode)
 
 void Counter::setup()
 {
-    Register::setup();
     pin_c_enable.setup();
+    Register::setup();
 }
 
 void Counter::MoveNext()
