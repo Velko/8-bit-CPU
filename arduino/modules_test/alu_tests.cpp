@@ -62,8 +62,8 @@ void alu_tests()
 {
     ALU alu(DeviceInterface::instance);
     alu.setup();
-    reg_load_store_output(&alu.reg_a, 1000, "A");
-    reg_load_store_output(&alu.reg_b, 1000, "B");
+    reg_load_store_output(alu.reg_a, 1000, "A");
+    reg_load_store_output(alu.reg_b, 1000, "B");
     alu_add_bytes(alu);
     alu_add_bytes_b(alu);
     alu_add_bytes_cset(alu);

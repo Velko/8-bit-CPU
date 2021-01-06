@@ -88,13 +88,11 @@ void register_tests()
     Register reg(DeviceInterface::instance);
     reg.setup();
 
-    reg_load_store_output(&reg, 1000, "REG");
+    reg_load_store_output(reg, 1000, "REG");
 }
 
-void reg_load_store_output(Register *r, int repeats, const char *label)
+void reg_load_store_output(Register &r, int repeats, const char *label)
 {
-    r->setup();
-
     Serial.print(F("Load-store-output "));
     Serial.print(label);
     for (int pass = 0; pass < repeats; ++pass)
@@ -103,13 +101,15 @@ void reg_load_store_output(Register *r, int repeats, const char *label)
             Serial.print('.');
         for (int i = 1; i < 256; i <<= 1)
         {
-            r->write_check(i);
-            uint8_t readback = r->read();
+            r.write_check(i);
+            uint8_t readback = r.read();
 
             if (readback != i)
             {
                 Serial.print(F("ERR "));
-                Serial.println(i);
+                Serial.print(i);
+                Serial.print(F(" != "));
+                Serial.println(readback);
                 return;
             }
         }

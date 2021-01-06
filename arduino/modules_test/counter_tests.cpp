@@ -22,7 +22,7 @@ void counter_tests()
     Counter cnt(DeviceInterface::instance);
     cnt.setup();
 
-    reg_load_store_output(&cnt, 1000, "CNT");
+    reg_load_store_output(cnt, 1000, "CNT");
     test_count_up(&cnt, 100);
 }
 

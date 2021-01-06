@@ -34,7 +34,7 @@ void udcounter_tests()
     UpDownCounter udc(DeviceInterface::instance);
     udc.setup();
 
-    reg_load_store_output(&udc, 1000, "UDC");
+    reg_load_store_output(udc, 1000, "UDC");
     test_count_up(&udc, 100);
     test_count_down(&udc, 100);
 }
