@@ -80,7 +80,7 @@ void register_load(int val)
 {
     Register reg(DeviceInterface::instance);
     reg.setup();
-    reg.write_check(val);
+    reg.write_quick(val);
 }
 
 void register_tests()
