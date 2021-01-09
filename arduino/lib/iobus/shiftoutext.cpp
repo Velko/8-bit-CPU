@@ -15,12 +15,12 @@ ShiftOutExt::ShiftOutExt(CtrlPin&& _latch)
 
 void ShiftOutExt::setup()
 {
-    latch.setup();
-
     SPI.begin();
     SPI.setDataMode(SPI_MODE0);
     SPI.setBitOrder(MSBFIRST);
     SPI.setClockDivider(SPI_CLOCK_DIV2);
+
+    latch.setup();
 }
 
 void ShiftOutExt::write8(uint8_t data)
