@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include <shiftoutext.h>
 #include <iobus.h>
 

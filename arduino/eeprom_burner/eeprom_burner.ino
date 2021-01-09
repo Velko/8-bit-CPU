@@ -3,6 +3,12 @@
   Utility to burn various types of EEPROMs
  */
 
+#include "eeprom_hw.h"
+#include "eeprom_ops.h"
+
+
+void display_help();
+void burn7seg_digits();
 
 void setup()
 {

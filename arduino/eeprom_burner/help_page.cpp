@@ -1,3 +1,5 @@
+#include <Arduino.h>
+
 void display_help()
 {
     Serial.println(F("Valid commands are:"));

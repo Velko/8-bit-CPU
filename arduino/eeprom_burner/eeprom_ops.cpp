@@ -1,3 +1,6 @@
+#include <Arduino.h>
+#include "eeprom_hw.h"
+
 #define EEPROM_SIZE   ( 8 * 1024)   // AT28C64
 
 void eeprom_write(uint16_t addr, uint8_t value)

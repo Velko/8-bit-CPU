@@ -1,3 +1,5 @@
+#include <Arduino.h>
+#include "eeprom_ops.h"
 /*
     Encode each segment as a bit.
 
