@@ -20,6 +20,9 @@ void ShiftOutExt::setup()
     SPI.setBitOrder(MSBFIRST);
     SPI.setClockDivider(SPI_CLOCK_DIV2);
 
+    // We're using SS pin for latch control. The CtrlPin initialization
+    // should be done after SPI.begin(), as it modifies the state of SS
+    // to a "known safe" state
     latch.setup();
 }
 
