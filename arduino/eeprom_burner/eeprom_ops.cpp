@@ -84,7 +84,7 @@ void test_send_inc()
     for (int addr = 0; addr < 16; ++addr)
     {
         Serial.println(addr);
-        eeprom_set_address(addr, true);
+        eeprom_set_address(addr);
         delay(500);
     }
 
@@ -92,10 +92,10 @@ void test_send_inc()
     for (int addr = 0; addr < 16; ++addr)
     {
         Serial.println(addr);
-        eeprom_set_address(addr, false);
+        eeprom_set_address(addr);
         delay(500);
     }
 
     Serial.println(F("Done"));
-    eeprom_set_address(0, false);
+    eeprom_set_address(0);
 }
