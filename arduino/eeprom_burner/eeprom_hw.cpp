@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <shiftoutext.h>
 #include <iobus8bit.h>
+#include "eeprom_hw.h"
 
 /* Not used in code, just for the notes */
 #define SH_LATCH    10

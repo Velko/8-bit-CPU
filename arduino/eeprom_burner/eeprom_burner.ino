@@ -13,9 +13,9 @@ void verify7seg_digits();
 
 void setup()
 {
-    eeprom_setup();
     Serial.begin(9600);
     Serial.println(F("EEPROM burner utility"));
+    eeprom_setup();
 }
 
 void loop()
