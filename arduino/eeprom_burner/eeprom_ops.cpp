@@ -37,6 +37,21 @@ format_line:
         Serial.println();
 }
 
+void eeprom_verify(uint16_t addr, uint8_t value)
+{
+    uint8_t old_value = eeprom_read(addr);
+
+    if (old_value != value)
+        Serial.print('+');
+    else
+        Serial.print('.');
+
+    /* Add newline after writes */
+    if ((addr & 0x0F) == 0x0F)
+        Serial.println();
+}
+
+
 void eeprom_erase_all()
 {
     for (uint16_t addr = 0; addr < EEPROM_SIZE; ++addr)

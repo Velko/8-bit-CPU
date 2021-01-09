@@ -107,6 +107,18 @@ void write_digit(int value, const char *format)
     }
 }
 
+void verify_digit(int value, const char *format)
+{
+    char output[5]; // 4 digits + \n
+    sprintf_P(output, format, value);
+
+    for (int i = 3; i > -1; --i) // 4 digits backwards
+    {
+        eeprom_verify(output_address, encode_digit(output[i]));
+        ++output_address;
+    }
+}
+
 
 void burn7seg_digits()
 {
@@ -136,4 +148,38 @@ void burn7seg_digits()
     /* Oct */
     for (int i = 0; i < 256; ++i)
         write_digit(i, PSTR("o%3o"));
+
+    Serial.println(F("Done"));
+}
+
+void verify7seg_digits()
+{
+    Serial.println(F("Verifying the digits!"));
+
+    output_address = 0;
+
+    /* Decimal unsigned */
+    for (int i = 0; i < 256; ++i)
+        verify_digit(i, PSTR("%4d"));
+
+
+    /* Decimal signed - positive part */
+    for (int i = 0; i < 128; ++i)
+        verify_digit(i, PSTR("%4d"));
+
+    /* Decimal signed - negative part */
+    for (int i = -128; i < 0; ++i)
+        verify_digit(i, PSTR("%4d"));
+
+
+    /* Hex */
+    for (int i = 0; i < 256; ++i)
+        verify_digit(i, PSTR("h %02X"));
+
+
+    /* Oct */
+    for (int i = 0; i < 256; ++i)
+        verify_digit(i, PSTR("o%3o"));
+
+    Serial.println(F("Done"));
 }

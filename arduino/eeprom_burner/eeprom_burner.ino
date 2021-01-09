@@ -9,6 +9,7 @@
 
 void display_help();
 void burn7seg_digits();
+void verify7seg_digits();
 
 void setup()
 {
@@ -26,6 +27,10 @@ void loop()
     if (command.equals("digits"))
     {
         burn7seg_digits();
+    }
+    else if (command.equals("verify-digits"))
+    {
+        verify7seg_digits();
     }
     else if (command.equals("read"))
     {
