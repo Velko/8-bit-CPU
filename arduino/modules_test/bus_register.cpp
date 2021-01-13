@@ -34,6 +34,7 @@ void Register::load()
 {
     pin_load.on();
     devices.clock.pulse();
+    devices.inv_clock.pulse();
     pin_load.off();
 }
 
@@ -42,6 +43,7 @@ void Register::write_check(uint8_t value)
     devices.mainBus.write(value);
     pin_load.on();
     devices.clock.pulse();
+    devices.inv_clock.pulse();
     // Emulate bus changes before LOAD is released
     // but since register should latch the value on
     // clock pulse - it should not affect it anymore
@@ -65,6 +67,7 @@ void Register::write_quick(uint8_t value)
     devices.mainBus.write(value);
     pin_load.on();
     devices.clock.pulse();
+    devices.inv_clock.pulse();
     pin_load.off();
 
     // allow other devices to drive the bus
