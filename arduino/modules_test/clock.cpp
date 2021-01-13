@@ -1,18 +1,21 @@
 #include "clock.h"
 #include <Arduino.h>
 
-#define PIN_CLK    SCL
+Clock::Clock(int _pin)
+    : pin{_pin}
+{
+}
 
 void Clock::setup()
 {
     /* Default "inactive" position */
 
-    digitalWrite(PIN_CLK, LOW);
-    pinMode(PIN_CLK, OUTPUT);
+    digitalWrite(pin, LOW);
+    pinMode(pin, OUTPUT);
 }
 
 void Clock::pulse()
 {
-    digitalWrite(PIN_CLK, HIGH);
-    digitalWrite(PIN_CLK, LOW);
+    digitalWrite(pin, HIGH);
+    digitalWrite(pin, LOW);
 }

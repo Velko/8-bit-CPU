@@ -14,6 +14,7 @@ class DeviceInterface
         IOBus8bit mainBus;
         IOBus4bit flagsBus;
         Clock clock;
+        Clock inv_clock;
         ShiftCtrl control;
         static DeviceInterface instance;
 };

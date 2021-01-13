@@ -5,7 +5,9 @@
 
 class Clock : public ExternalDevice
 {
+        int pin;
     public:
+        Clock(int pin);
         void setup() override;
         void pulse();
 };
