@@ -12,6 +12,7 @@
 *.zip
 *.gbr
 *.drl
+*.pyc
 zz_*.ino
 /sample/
 /temp/
