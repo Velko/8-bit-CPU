@@ -2,66 +2,52 @@
 
 import sys, cmd, serial, threading
 
+from libpins import PinClient
+
 ser = serial.Serial("/dev/ttyACM0", 9600, timeout=1)
 
 class TesterClient(cmd.Cmd):
+
+    def __init__(self):
+        cmd.Cmd.__init__(self, stdout=self)
+        self.pins = PinClient.PinClient(ser)
+
     def do_EOF(self, arg):
         ser.close()
         sys.exit(0)
 
     def do_identify(self, arg):
         'Identify device'
-        send_cmd('I')
-        chr = ser.readline().decode('ascii').strip()
+        chr = self.pins.identify()
         print (chr)
 
     def do_start(self, arg):
-        send_cmd("P0")
-        send_cmd("P1")
-        send_cmd("P2")
-        send_cmd("P3")
-        send_cmd("p4")
-        send_cmd("p5")
-        send_cmd("P6")
-        send_cmd("P7")
-        send_cmd("M")
-
+        self.pins.start()
 
     def do_bus_set(self, arg):
-        send_cmd("B{}".format(int(arg, 0)))
+        self.pins.bus_set(arg)
 
     def do_bus_get(self, arg):
-        send_cmd("b")
-        chr = ser.readline().decode('ascii').strip()
+        chr = self.pins.bus_get()
         print (chr)
 
     def do_bus_free(self, arg):
-        send_cmd("f")
+        self.pins.bus_free()
 
     def do_ctrl_set(self, arg):
-        send_cmd("P{}".format(arg))
+        self.pins.ctrl_set(arg)
 
     def do_ctrl_clr(self, arg):
-        send_cmd("p{}".format(arg))
+        self.pins.ctrl_clr(arg)
 
     def do_ctrl_commit(self, arg):
-        send_cmd("M")
+        self.pins.ctrl_commit()
 
     def do_clock_pulse(self, arg):
-        send_cmd('c')
+        self.pins.clock_pulse()
 
     def do_clock_inverted(self, arg):
-        send_cmd('C')
-
-
-def listen_responses():
-    while ser.is_open:
-
-        print(chr, end='', flush=True)
-
-def send_cmd(cmd):
-    ser.write(cmd.encode("ascii"))
-    ser.flush()
+        self.pins.clock_inverted()
 
 if __name__ == "__main__":
     TesterClient().cmdloop()
