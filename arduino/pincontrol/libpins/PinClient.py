@@ -14,7 +14,8 @@ class PinClient:
     def identify(self):
         return self.query('I')
 
-    def start(self):
+    def ctrl_off(self):
+        # All control lines inactive levels: 11001111
         self.ctrl_set(0)
         self.ctrl_set(1)
         self.ctrl_set(2)

@@ -21,8 +21,7 @@ class TesterClient(cmd.Cmd):
         chr = self.pins.identify()
         print (chr)
 
-    def do_start(self, arg):
-        self.pins.start()
+        self.pins.ctrl_off()
 
     def do_bus_set(self, arg):
         self.pins.bus_set(arg)

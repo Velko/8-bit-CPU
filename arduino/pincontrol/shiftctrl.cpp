@@ -3,14 +3,15 @@
 
 ShiftOutExt shext;
 
-ShiftCtrl::ShiftCtrl()
+ShiftCtrl::ShiftCtrl(uint8_t init)
 {
-    buffer = 0;
+    buffer = init;
 }
 
 void ShiftCtrl::setup()
 {
     shext.setup();
+    commit();
 }
 
 void ShiftCtrl::commit()

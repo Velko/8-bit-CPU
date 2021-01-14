@@ -6,7 +6,7 @@
 class ShiftCtrl
 {
     public:
-        ShiftCtrl();
+        ShiftCtrl(uint8_t init);
         void setup();
         void commit();
         void set(uint8_t pin);
