@@ -27,7 +27,9 @@ class PinClient:
 
 
     def bus_set(self, arg):
-        self.send_cmd("B{}".format(int(arg, 0)))
+        if isinstance(arg, str):
+            arg = int(arg, 0)
+        self.send_cmd("B{}".format(arg))
 
     def bus_get(self):
         return self.query("b")
