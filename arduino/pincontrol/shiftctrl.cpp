@@ -1,7 +1,5 @@
 #include "shiftctrl.h"
-#include <shiftoutext.h>
 
-ShiftOutExt shext;
 
 ShiftCtrl::ShiftCtrl(uint8_t init)
 {

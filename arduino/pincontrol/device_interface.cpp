@@ -1,8 +1,6 @@
 #include <Arduino.h>
 #include "device_interface.h"
 
-DeviceInterface DeviceInterface::instance;
-
 #define PIN_CLK        SCL
 #define PIN_CLK_INV    SDA
 

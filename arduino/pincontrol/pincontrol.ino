@@ -6,19 +6,18 @@
 #include <shiftoutext.h>
 #include "device_interface.h"
 
-
+DeviceInterface dev;
 
 void setup()
 {
     Serial.begin(9600);
-    DeviceInterface::instance.setup();
+    dev.setup();
 }
 
 
 void loop()
 {
     char buffer[20];
-    DeviceInterface &dev = DeviceInterface::instance;
 
     int cmd = Serial.read();
 

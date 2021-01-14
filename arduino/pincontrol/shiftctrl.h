@@ -2,9 +2,11 @@
 #define SHIFT_CTRL_H
 
 #include <stdint.h>
+#include <shiftoutext.h>
 
 class ShiftCtrl
 {
+        ShiftOutExt shext;
     public:
         ShiftCtrl(uint8_t init);
         void setup();

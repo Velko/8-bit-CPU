@@ -15,7 +15,6 @@ class DeviceInterface
         Clock clock;
         Clock inv_clock;
         ShiftCtrl control;
-        static DeviceInterface instance;
 };
 
 
