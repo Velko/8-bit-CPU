@@ -3,6 +3,7 @@
 import sys, cmd, serial
 
 from libpins import PinClient, cpu
+from libpins.devices import Flags
 
 ser = serial.Serial("/dev/ttyACM0", 9600, timeout=1)
 
@@ -45,6 +46,10 @@ class TesterClient(cmd.Cmd):
     def do_out_b(self, arg):
         val = self.cpu.op_out(self.cpu.reg_B)
         print(val)
+
+    def do_flags_get(self, arg):
+        val = self.pins.flags_get()
+        print (Flags.decode(val))
 
     def do_fibo(self, arg):
         self.cpu.op_ldi(self.cpu.reg_A, 0)

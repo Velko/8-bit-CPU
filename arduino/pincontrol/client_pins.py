@@ -34,6 +34,9 @@ class TesterClient(cmd.Cmd):
     def do_bus_free(self, arg):
         self.pins.bus_free()
 
+    def do_flags_get(self, arg):
+        print (self.pins.flags_get())
+
     def do_ctrl_set(self, arg):
         self.pins.ctrl_set(arg)
 

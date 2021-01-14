@@ -57,3 +57,32 @@ class Flags:
 
     def off(self):
         self.pin_client.ctrl_clr(self.pin_use_carry)
+
+    @staticmethod
+    def decode(val):
+        #VCZF
+        val = int(val)
+
+        f = ""
+
+        if val & 0b1000:
+            f += 'V'
+        else:
+            f += '-'
+
+        if val & 0b0100:
+            f += 'C'
+        else:
+            f += '-'
+
+        if val & 0b0010:
+            f += 'Z'
+        else:
+            f += '-'
+
+        if val & 0b0001:
+            f += 'N'
+        else:
+            f += '-'
+
+        return f
