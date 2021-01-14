@@ -38,7 +38,7 @@ class CPU:
         self.pins.ctrl_commit()
         val = self.pins.bus_get()
         self.pins.ctrl_off()
-        return val
+        return int(val)
 
 
 
