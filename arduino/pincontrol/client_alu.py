@@ -2,6 +2,7 @@
 
 import sys, cmd, serial
 
+from libpins import asm
 from libpins.PinClient import PinClient
 from libpins.cpu import CPU
 from libpins.devices import Flags
@@ -27,23 +28,23 @@ class TesterClient(cmd.Cmd):
         pins.ctrl_off()
 
     def do_load_a(self, arg):
-        cpu.op_ldi(cpu.reg_A, arg)
+        ldi(A, arg)
 
     def do_load_b(self, arg):
-        cpu.op_ldi(cpu.reg_B, arg)
+        ldi(B, arg)
 
     def do_add_ab(self, arg):
-        cpu.op_add(cpu.reg_A)
+        add(A)
 
     def do_add_ba(self, arg):
-        cpu.op_add(cpu.reg_B)
+        add(B)
 
     def do_out_a(self, arg):
-        val = cpu.op_out(cpu.reg_A)
+        val = out(A)
         print(val)
 
     def do_out_b(self, arg):
-        val = cpu.op_out(cpu.reg_B)
+        val = out(B)
         print(val)
 
     def do_flags_get(self, arg):
@@ -51,19 +52,22 @@ class TesterClient(cmd.Cmd):
         print (Flags.decode(val))
 
     def do_fibo(self, arg):
-        cpu.op_ldi(cpu.reg_A, 0)
-        cpu.op_ldi(cpu.reg_B, 1)
 
-        print(cpu.op_out(cpu.reg_A))
-        print(cpu.op_out(cpu.reg_B))
+        ldi(A, 0)
+        ldi(B, 1)
+
+        print(out(A))
+        print(out(B))
 
         for _ in range(6):
-            cpu.op_add(cpu.reg_A)
-            print(cpu.op_out(cpu.reg_A))
+            add(A)
+            print(out(A))
 
-            cpu.op_add(cpu.reg_B)
-            print(cpu.op_out(cpu.reg_B))
+            add(B)
+            print(out(B))
 
 
 if __name__ == "__main__":
+
+    asm.export_isa(cpu, globals())
     TesterClient().cmdloop()
