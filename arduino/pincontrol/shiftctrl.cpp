@@ -1,7 +1,7 @@
 #include "shiftctrl.h"
 
 
-ShiftCtrl::ShiftCtrl(uint8_t _init)
+ShiftCtrl::ShiftCtrl(uint16_t _init)
 {
     buffer = _init;
     init = _init;
@@ -21,7 +21,7 @@ void ShiftCtrl::reset()
 
 void ShiftCtrl::commit()
 {
-    shext.write8(buffer);
+    shext.write16(buffer);
 }
 
 void ShiftCtrl::set(uint8_t pin)

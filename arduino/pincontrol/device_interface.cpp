@@ -7,7 +7,7 @@
 DeviceInterface::DeviceInterface()
     : clock{PIN_CLK},
       inv_clock{PIN_CLK_INV},
-      control{0b11001111}
+      control{0b0111001111}
 {
 
 }
