@@ -46,6 +46,20 @@ class TesterClient(cmd.Cmd):
         val = self.cpu.op_out(self.cpu.reg_B)
         print(val)
 
+    def do_fibo(self, arg):
+        self.cpu.op_ldi(self.cpu.reg_A, 0)
+        self.cpu.op_ldi(self.cpu.reg_B, 1)
+
+        print(self.cpu.op_out(self.cpu.reg_A))
+        print(self.cpu.op_out(self.cpu.reg_B))
+
+        for _ in range(6):
+            self.cpu.op_add(self.cpu.reg_A)
+            print(self.cpu.op_out(self.cpu.reg_A))
+
+            self.cpu.op_add(self.cpu.reg_B)
+            print(self.cpu.op_out(self.cpu.reg_B))
+
 
 if __name__ == "__main__":
     TesterClient().cmdloop()
