@@ -17,8 +17,6 @@ void setup()
 
 void loop()
 {
-    char buffer[20];
-
     int cmd = Serial.read();
 
     if (cmd < 0) return;
@@ -39,8 +37,12 @@ void loop()
     case 'b':
         dev.mainBus.set_input();
         val = dev.mainBus.read();
-        sprintf_P(buffer, PSTR("b %d"), val);
-        Serial.println(buffer);
+        Serial.println(val);
+        break;
+
+    case 's':
+        val = dev.flagsBus.read();
+        Serial.println(val);
         break;
 
     case 'f':

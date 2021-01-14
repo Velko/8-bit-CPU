@@ -41,12 +41,16 @@ class ALU:
 
 
 class Flags:
-    def __init__(self, pin_use_carry):
+    def __init__(self, pin_load, pin_use_carry):
         self.pin_client = None
+        self.pin_load = pin_load
         self.pin_use_carry = pin_use_carry
 
     def connect(self, pin_client):
         self.pin_client = pin_client
+
+    def load(self):
+        self.pin_client.ctrl_clr(self.pin_load)
 
     def use_carry(self):
         self.pin_client.ctrl_set(self.pin_use_carry)

@@ -2,6 +2,7 @@
 #define DEVICE_INTERFACE_H
 
 #include <iobus8bit.h>
+#include <iobus4bit.h>
 #include "clock.h"
 #include "shiftctrl.h"
 
@@ -11,7 +12,7 @@ class DeviceInterface
         DeviceInterface();
         void setup();
         IOBus8bit mainBus;
-        //IOBus flagsBus;
+        IOBus4bit flagsBus;
         Clock clock;
         Clock inv_clock;
         ShiftCtrl control;

@@ -15,7 +15,8 @@ DeviceInterface::DeviceInterface()
 
 void DeviceInterface::setup()
 {
-    //mainBus.setup();
+    mainBus.set_input();
+    flagsBus.set_input();
     clock.setup();
     inv_clock.setup();
     control.setup();

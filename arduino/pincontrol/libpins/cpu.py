@@ -27,6 +27,7 @@ class CPU:
     def op_add(self, target):
         target.load()
         self.alu.out()
+        self.reg_F.load()
         self.pins.ctrl_commit()
         self.pins.clock_pulse()
         self.pins.clock_inverted()
