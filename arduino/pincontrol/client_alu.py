@@ -2,7 +2,7 @@
 
 import sys, cmd, serial
 
-from libpins import PinClient, ALUSection
+from libpins import PinClient, cpu
 
 ser = serial.Serial("/dev/ttyACM0", 9600, timeout=1)
 
@@ -11,8 +11,7 @@ class TesterClient(cmd.Cmd):
     def __init__(self):
         cmd.Cmd.__init__(self, stdout=self)
         self.pins = PinClient.PinClient(ser)
-        self.dev = ALUSection.ALUSection()
-        self.dev.connect(self.pins)
+        self.cpu = cpu.CPU(self.pins)
 
     def do_EOF(self, arg):
         ser.close()
@@ -28,51 +27,23 @@ class TesterClient(cmd.Cmd):
         self.pins.ctrl_off()
 
     def do_load_a(self, arg):
-        self.dev.RegA.load()
-        self.pins.bus_set(arg)
-        self.pins.ctrl_commit()
-        self.pins.clock_pulse()
-        self.pins.clock_inverted()
-        self.pins.ctrl_off()
-        self.pins.bus_free()
+        self.cpu.op_ldi(self.cpu.reg_A, arg)
 
     def do_load_b(self, arg):
-        self.dev.RegB.load()
-        self.pins.bus_set(arg)
-        self.pins.ctrl_commit()
-        self.pins.clock_pulse()
-        self.pins.clock_inverted()
-        self.pins.ctrl_off()
-        self.pins.bus_free()
+        self.cpu.op_ldi(self.cpu.reg_B, arg)
 
     def do_add_ab(self, arg):
-        self.dev.AddSub.out()
-        self.dev.RegA.load()
-        self.pins.ctrl_commit()
-        self.pins.clock_pulse()
-        self.pins.clock_inverted()
-        self.pins.ctrl_off()
+        self.cpu.op_add(self.cpu.reg_A)
 
     def do_add_ba(self, arg):
-        self.dev.AddSub.out()
-        self.dev.RegB.load()
-        self.pins.ctrl_commit()
-        self.pins.clock_pulse()
-        self.pins.clock_inverted()
-        self.pins.ctrl_off()
+        self.cpu.op_add(self.cpu.reg_B)
 
     def do_out_a(self, arg):
-        self.dev.RegA.out()
-        self.pins.ctrl_commit()
-        val = self.pins.bus_get()
-        self.pins.ctrl_off()
+        val = self.cpu.op_out(self.cpu.reg_A)
         print(val)
 
     def do_out_b(self, arg):
-        self.dev.RegB.out()
-        self.pins.ctrl_commit()
-        val = self.pins.bus_get()
-        self.pins.ctrl_off()
+        val = self.cpu.op_out(self.cpu.reg_B)
         print(val)
 
 
