@@ -16,16 +16,7 @@ class PinClient:
 
     def ctrl_off(self):
         # All control lines inactive levels: 11001111
-        self.ctrl_set(0)
-        self.ctrl_set(1)
-        self.ctrl_set(2)
-        self.ctrl_set(3)
-        self.ctrl_clr(4)
-        self.ctrl_clr(5)
-        self.ctrl_set(6)
-        self.ctrl_set(7)
-        self.ctrl_commit()
-
+        self.send_cmd('O')
 
     def bus_set(self, arg):
         if isinstance(arg, str):

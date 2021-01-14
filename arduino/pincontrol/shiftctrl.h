@@ -7,10 +7,12 @@
 class ShiftCtrl
 {
         ShiftOutExt shext;
+        uint8_t init;
     public:
         ShiftCtrl(uint8_t init);
         void setup();
         void commit();
+        void reset();
         void set(uint8_t pin);
         void clear(uint8_t pin);
     private:

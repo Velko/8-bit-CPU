@@ -1,14 +1,21 @@
 #include "shiftctrl.h"
 
 
-ShiftCtrl::ShiftCtrl(uint8_t init)
+ShiftCtrl::ShiftCtrl(uint8_t _init)
 {
-    buffer = init;
+    buffer = _init;
+    init = _init;
 }
 
 void ShiftCtrl::setup()
 {
     shext.setup();
+    commit();
+}
+
+void ShiftCtrl::reset()
+{
+    buffer = init;
     commit();
 }
 

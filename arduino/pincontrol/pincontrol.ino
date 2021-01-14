@@ -57,6 +57,10 @@ void loop()
         dev.control.set(val);
         break;
 
+    case 'O':
+        dev.control.reset();
+        break;
+
     case 'M':
         dev.control.commit();
         break;
