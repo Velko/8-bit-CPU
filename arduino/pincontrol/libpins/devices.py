@@ -1,62 +1,65 @@
+from .pin import Pin, Level
+
 class Register:
     def __init__(self, name, pin_out, pin_load):
-        self.pin_client = None
         self.name = name
         self.pin_out = pin_out
         self.pin_load = pin_load
 
-    def connect(self, pin_client):
-        self.pin_client = pin_client
+    def connect(self, client):
+        self.pin_out.connect(client)
+        self.pin_load.connect(client)
 
     def out(self):
-        self.pin_client.ctrl_clr(self.pin_out)
+        self.pin_out.enable()
 
     def load(self):
-        self.pin_client.ctrl_clr(self.pin_load)
+        self.pin_load.enable()
 
     def off(self):
-        self.pin_client.ctrl_set(self.pin_out)
-        self.pin_client.ctrl_set(self.pin_load)
+        self.pin_out.disable()
+        self.pin_load.disable()
 
 
 class ALU:
     def __init__(self, name, pin_out, pin_sub):
-        self.pin_client = None
         self.name = name
         self.pin_out = pin_out
         self.pin_sub = pin_sub
 
     def connect(self, pin_client):
-        self.pin_client = pin_client
+        self.pin_out.connect(pin_client)
+        self.pin_sub.connect(pin_client)
 
     def out(self):
-        self.pin_client.ctrl_clr(self.pin_out)
+        self.pin_out.enable()
 
     def sub(self):
-        self.pin_client.ctrl_set(self.pin_sub)
+        self.pin_sub.enable()
 
     def off(self):
-        self.pin_client.ctrl_set(self.pin_out)
-        self.pin_client.ctrl_clr(self.pin_sub)
+        self.pin_out.disable()
+        self.pin_sub.disable()
 
 
 class Flags:
     def __init__(self, pin_load, pin_use_carry):
-        self.pin_client = None
         self.pin_load = pin_load
         self.pin_use_carry = pin_use_carry
 
     def connect(self, pin_client):
-        self.pin_client = pin_client
+        self.pin_load.connect(pin_client)
+        self.pin_use_carry.connect(pin_client)
 
     def load(self):
-        self.pin_client.ctrl_clr(self.pin_load)
+        self.pin_load.enable()
 
     def use_carry(self):
-        self.pin_client.ctrl_set(self.pin_use_carry)
+        self.pin_use_carry.enable()
 
     def off(self):
-        self.pin_client.ctrl_clr(self.pin_use_carry)
+        self.pin_load.disable()
+        self.pin_use_carry.disable()
 
     @staticmethod
     def decode(val):
