@@ -39,6 +39,9 @@ class TesterClient(cmd.Cmd):
     def do_add_ba(self, arg):
         add(B)
 
+    def do_sub_ab(self, arg):
+        sub()
+
     def do_out_a(self, arg):
         val = out(A)
         print(val)

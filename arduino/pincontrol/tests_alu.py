@@ -127,6 +127,79 @@ class AluOperations(unittest.TestCase):
         flags = Flags.decode(pins.flags_get())
         self.assertEqual("-CZ-", flags)
 
+    def test_sub_result_small(self):
+        ldi(A, 4)
+        ldi(B, 3)
+
+        sub()
+
+        value = out(A)
+        self.assertEqual(1, value)
+
+    def test_sub_flags_small(self):
+        ldi(A, 4)
+        ldi(B, 3)
+
+        sub()
+
+        flags = Flags.decode(pins.flags_get())
+        self.assertEqual("----", flags)
+
+    def test_sub_flags_zero(self):
+        ldi(A, 4)
+        ldi(B, 4)
+
+        sub()
+
+        flags = Flags.decode(pins.flags_get())
+        self.assertEqual("--Z-", flags)
+
+    def test_sub_result_carry(self):
+        ldi(A, 3)
+        ldi(B, 5)
+
+        sub()
+
+        value = out(A)
+        self.assertEqual(254, value)
+
+    def test_sub_flags_carry(self):
+        ldi(A, 3)
+        ldi(B, 5)
+
+        sub()
+
+        flags = Flags.decode(pins.flags_get())
+        self.assertEqual("-C-N", flags)
+
+    def test_sub_overflow_to_positive(self):
+        ldi(A, 140)
+        ldi(B, 20)
+
+        sub()
+
+        flags = Flags.decode(pins.flags_get())
+        self.assertEqual("V---", flags)
+
+    def test_sub_overflow_to_negative(self):
+        ldi(A, 120)
+        ldi(B, 130)
+
+        sub()
+
+        flags = Flags.decode(pins.flags_get())
+        self.assertEqual("VC-N", flags)
+
+    def test_sub_flags_zero_(self):
+        ldi(A, 20)
+        ldi(B, 20)
+
+        sub()
+
+        flags = Flags.decode(pins.flags_get())
+        self.assertEqual("--Z-", flags)
+
+
 
 
 if __name__ == "__main__":

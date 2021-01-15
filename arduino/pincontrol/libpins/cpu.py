@@ -32,6 +32,17 @@ class CPU:
         self.pins.clock_inverted()
         self.pins.off()
 
+    def op_sub(self):
+        self.reg_A.load()
+        self.alu.out()
+        self.alu.sub()
+        self.reg_F.load()
+        self.pins.ctrl_commit()
+        self.pins.clock_pulse()
+        self.pins.clock_inverted()
+        self.pins.off()
+
+
     def op_out(self, source):
         source.out()
         self.pins.ctrl_commit()
