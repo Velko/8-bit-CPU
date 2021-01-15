@@ -1,35 +1,23 @@
 #include "shiftctrl.h"
 
 
-ShiftCtrl::ShiftCtrl(uint16_t _init)
+ShiftCtrl::ShiftCtrl(uint16_t _defaults)
 {
-    buffer = _init;
-    init = _init;
+    defaults = _defaults;
 }
 
 void ShiftCtrl::setup()
 {
     shext.setup();
-    commit();
+    commit(defaults);
 }
 
 void ShiftCtrl::reset()
 {
-    buffer = init;
-    commit();
+    commit(defaults);
 }
 
-void ShiftCtrl::commit()
+void ShiftCtrl::commit(uint16_t c_word)
 {
-    shext.write16(buffer);
-}
-
-void ShiftCtrl::set(uint8_t pin)
-{
-    buffer |= (1 << pin);
-}
-
-void ShiftCtrl::clear(uint8_t pin)
-{
-    buffer &= ~(1 << pin);
+    shext.write16(c_word);
 }

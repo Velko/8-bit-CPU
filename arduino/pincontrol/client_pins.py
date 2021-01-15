@@ -22,7 +22,7 @@ class TesterClient(cmd.Cmd):
         print (chr)
 
     def do_ctrl_off(self, arg):
-        self.pins.ctrl_off()
+        self.pins.off()
 
     def do_bus_set(self, arg):
         self.pins.bus_set(arg)

@@ -21,7 +21,7 @@ void loop()
 
     if (cmd < 0) return;
 
-    uint8_t val = 0;
+    uint16_t val = 0;
 
     switch (cmd)
     {
@@ -49,22 +49,14 @@ void loop()
         dev.mainBus.set_input();
         break;
 
-    case 'p':
-        val = Serial.parseInt();
-        dev.control.clear(val);
-        break;
-
-    case 'P':
-        val = Serial.parseInt();
-        dev.control.set(val);
-        break;
-
     case 'O':
         dev.control.reset();
+        dev.mainBus.set_input();
         break;
 
     case 'M':
-        dev.control.commit();
+        val = Serial.parseInt();
+        dev.control.commit(val);
         break;
 
     case 'c':

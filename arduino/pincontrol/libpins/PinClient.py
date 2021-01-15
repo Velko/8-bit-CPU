@@ -1,7 +1,10 @@
+DEFAULT=0b0111001111
+
 class PinClient:
 
     def __init__(self, serial):
         self.serial = serial
+        self.c_word = DEFAULT
 
     def send_cmd(self, cmd):
         self.serial.write(cmd.encode("ascii"))
@@ -14,8 +17,8 @@ class PinClient:
     def identify(self):
         return self.query('I')
 
-    def ctrl_off(self):
-        # All control lines inactive levels: 11001111
+    def off(self):
+        self.c_word = DEFAULT
         self.send_cmd('O')
 
     def bus_set(self, arg):
@@ -33,13 +36,13 @@ class PinClient:
         self.send_cmd("f")
 
     def ctrl_set(self, pin):
-        self.send_cmd("P{}".format(pin))
+        self.c_word |= 1 << pin
 
     def ctrl_clr(self, pin):
-        self.send_cmd("p{}".format(pin))
+        self.c_word &= ~(1 << pin)
 
     def ctrl_commit(self):
-        self.send_cmd("M")
+        self.send_cmd("M{}".format(self.c_word))
 
     def clock_pulse(self):
         self.send_cmd('c')

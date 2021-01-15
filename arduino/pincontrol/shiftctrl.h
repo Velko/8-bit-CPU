@@ -7,16 +7,12 @@
 class ShiftCtrl
 {
         ShiftOutExt shext;
-        uint16_t init;
+        uint16_t defaults;
     public:
-        ShiftCtrl(uint16_t init);
+        ShiftCtrl(uint16_t defaults);
         void setup();
-        void commit();
+        void commit(uint16_t c_word);
         void reset();
-        void set(uint8_t pin);
-        void clear(uint8_t pin);
-    private:
-        uint16_t buffer;
 };
 
 #endif /* SHIFT_CTRL_H */

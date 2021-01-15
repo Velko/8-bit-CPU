@@ -21,8 +21,7 @@ class CPU:
         self.pins.bus_set(value)
         self.pins.clock_pulse()
         self.pins.clock_inverted()
-        self.pins.ctrl_off()
-        self.pins.bus_free()
+        self.pins.off()
 
     def op_add(self, target):
         target.load()
@@ -31,14 +30,11 @@ class CPU:
         self.pins.ctrl_commit()
         self.pins.clock_pulse()
         self.pins.clock_inverted()
-        self.pins.ctrl_off()
+        self.pins.off()
 
     def op_out(self, source):
         source.out()
         self.pins.ctrl_commit()
         val = self.pins.bus_get()
-        self.pins.ctrl_off()
+        self.pins.off()
         return int(val)
-
-
-
