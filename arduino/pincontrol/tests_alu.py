@@ -82,7 +82,7 @@ class AluOperations(unittest.TestCase):
         flags = Flags.decode(pins.flags_get())
         self.assertEqual("----", flags)
 
-    def test_add_ab_result_carry(self):
+    def test_add_ab_result_wraparound(self):
         ldi(A, 245)
         ldi(B, 18)
 
@@ -99,6 +99,33 @@ class AluOperations(unittest.TestCase):
 
         flags = Flags.decode(pins.flags_get())
         self.assertEqual("-C--", flags)
+
+    def test_add_ab_flags_overflow_to_negative(self):
+        ldi(A, 126)
+        ldi(B, 4)
+
+        add(A)
+
+        flags = Flags.decode(pins.flags_get())
+        self.assertEqual("V--N", flags)
+
+    def test_add_ab_flags_overflow_to_positive(self):
+        ldi(A, 226)
+        ldi(B, 145)
+
+        add(A)
+
+        flags = Flags.decode(pins.flags_get())
+        self.assertEqual("VC--", flags)
+
+    def test_add_ab_flags_zero(self):
+        ldi(A, 246)
+        ldi(B, 10)
+
+        add(A)
+
+        flags = Flags.decode(pins.flags_get())
+        self.assertEqual("-CZ-", flags)
 
 
 
