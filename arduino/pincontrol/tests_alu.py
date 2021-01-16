@@ -68,7 +68,7 @@ class AluOperations(unittest.TestCase):
         ldi(A, 24)
         ldi(B, 18)
 
-        add(A)
+        add(A, B)
 
         value = out(A)
         self.assertEqual(42, value)
@@ -77,7 +77,7 @@ class AluOperations(unittest.TestCase):
         ldi(A, 24)
         ldi(B, 18)
 
-        add(A)
+        add(A, B)
 
         flags = Flags.decode(pins.flags_get())
         self.assertEqual("----", flags)
@@ -86,7 +86,7 @@ class AluOperations(unittest.TestCase):
         ldi(A, 245)
         ldi(B, 18)
 
-        add(A)
+        add(A, B)
 
         value = out(A)
         self.assertEqual(7, value)
@@ -95,7 +95,7 @@ class AluOperations(unittest.TestCase):
         ldi(A, 245)
         ldi(B, 18)
 
-        add(A)
+        add(A, B)
 
         flags = Flags.decode(pins.flags_get())
         self.assertEqual("-C--", flags)
@@ -104,7 +104,7 @@ class AluOperations(unittest.TestCase):
         ldi(A, 126)
         ldi(B, 4)
 
-        add(A)
+        add(A, B)
 
         flags = Flags.decode(pins.flags_get())
         self.assertEqual("V--N", flags)
@@ -113,7 +113,7 @@ class AluOperations(unittest.TestCase):
         ldi(A, 226)
         ldi(B, 145)
 
-        add(A)
+        add(A, B)
 
         flags = Flags.decode(pins.flags_get())
         self.assertEqual("VC--", flags)
@@ -122,7 +122,7 @@ class AluOperations(unittest.TestCase):
         ldi(A, 246)
         ldi(B, 10)
 
-        add(A)
+        add(A, B)
 
         flags = Flags.decode(pins.flags_get())
         self.assertEqual("-CZ-", flags)
@@ -131,7 +131,7 @@ class AluOperations(unittest.TestCase):
         ldi(A, 4)
         ldi(B, 3)
 
-        sub()
+        sub(A, B)
 
         value = out(A)
         self.assertEqual(1, value)
@@ -140,7 +140,7 @@ class AluOperations(unittest.TestCase):
         ldi(A, 4)
         ldi(B, 3)
 
-        sub()
+        sub(A, B)
 
         flags = Flags.decode(pins.flags_get())
         self.assertEqual("----", flags)
@@ -149,7 +149,7 @@ class AluOperations(unittest.TestCase):
         ldi(A, 4)
         ldi(B, 4)
 
-        sub()
+        sub(A, B)
 
         flags = Flags.decode(pins.flags_get())
         self.assertEqual("--Z-", flags)
@@ -158,7 +158,7 @@ class AluOperations(unittest.TestCase):
         ldi(A, 3)
         ldi(B, 5)
 
-        sub()
+        sub(A, B)
 
         value = out(A)
         self.assertEqual(254, value)
@@ -167,7 +167,7 @@ class AluOperations(unittest.TestCase):
         ldi(A, 3)
         ldi(B, 5)
 
-        sub()
+        sub(A, B)
 
         flags = Flags.decode(pins.flags_get())
         self.assertEqual("-C-N", flags)
@@ -176,7 +176,7 @@ class AluOperations(unittest.TestCase):
         ldi(A, 140)
         ldi(B, 20)
 
-        sub()
+        sub(A, B)
 
         flags = Flags.decode(pins.flags_get())
         self.assertEqual("V---", flags)
@@ -185,7 +185,7 @@ class AluOperations(unittest.TestCase):
         ldi(A, 120)
         ldi(B, 130)
 
-        sub()
+        sub(A, B)
 
         flags = Flags.decode(pins.flags_get())
         self.assertEqual("VC-N", flags)
@@ -194,7 +194,7 @@ class AluOperations(unittest.TestCase):
         ldi(A, 20)
         ldi(B, 20)
 
-        sub()
+        sub(A, B)
 
         flags = Flags.decode(pins.flags_get())
         self.assertEqual("--Z-", flags)
