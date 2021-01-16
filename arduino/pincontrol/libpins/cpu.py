@@ -18,6 +18,7 @@ class CPU:
         Flags.connect(self.client)
         AddSub.connect(self.client)
         Imm.connect(self.client)
+        OutPort.connect(self.client)
 
         self.disable_all()
         self.client.store_defaults()
@@ -41,13 +42,9 @@ class CPU:
         self.client.clock_pulse()
         self.client.clock_inverted()
 
-        result = None
-        if "out" in opcode:
-            result = int(self.client.bus_get())
+        OutPort.read_bus()
 
         self.client.off()
-
-        return result
 
     def op_ldi(self, target, value):
         opcode = "ldi_{}_imm".format(target.name)
@@ -71,7 +68,9 @@ class CPU:
 
     def op_out(self, source):
         opcode = "out_{}".format(source.name)
-        return self.execute_opcode(opcode, None)
+        self.execute_opcode(opcode, None)
+
+        return OutPort.value
 
 
 class InvalidOpcodeException(Exception):
@@ -91,7 +90,26 @@ class ImmediateValue:
     def enable(self):
         self.client.bus_set(self.value)
 
+class ResultValue:
+    def __init__(self):
+        self.client = None
+        self.value = None
+        self.active = False
+
+    def connect(self, client):
+        self.client = client
+
+    def enable(self):
+        self.active = True
+
+    def read_bus(self):
+        if self.active:
+            self.value = int(self.client.bus_get())
+            self.active = False
+
+
 Imm = ImmediateValue()
+OutPort = ResultValue()
 
 opcodes = {
     "ldi_A_imm": [RegA.load, Imm],
@@ -99,6 +117,6 @@ opcodes = {
     "add_A_B": [RegA.load, AddSub.out, Flags.load],
     "add_B_A": [RegB.load, AddSub.out, Flags.load],
     "sub_A_B": [RegA.load, AddSub.out, AddSub.sub, Flags.load],
-    "out_A": [RegA.out],
-    "out_B": [RegB.out],
+    "out_A": [RegA.out, OutPort],
+    "out_B": [RegB.out, OutPort],
 }
