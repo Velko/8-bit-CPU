@@ -1,71 +1,53 @@
 from .pin import Pin, Level
 
 class Register:
-    def __init__(self, name, pin_out, pin_load):
+    def __init__(self, name, out, load):
         self.name = name
-        self.pin_out = pin_out
-        self.pin_load = pin_load
+        self.out = out
+        self.load = load
 
     def connect(self, client):
-        self.pin_out.connect(client)
-        self.pin_load.connect(client)
-
-    def out(self):
-        self.pin_out.enable()
-
-    def load(self):
-        self.pin_load.enable()
+        self.out.connect(client)
+        self.load.connect(client)
 
     def off(self):
-        self.pin_out.disable()
-        self.pin_load.disable()
+        self.out.disable()
+        self.load.disable()
 
 
 class ALU:
-    def __init__(self, name, pin_out, pin_sub):
+    def __init__(self, name, out, sub):
         self.name = name
-        self.pin_out = pin_out
-        self.pin_sub = pin_sub
+        self.out = out
+        self.sub = sub
 
-    def connect(self, pin_client):
-        self.pin_out.connect(pin_client)
-        self.pin_sub.connect(pin_client)
-
-    def out(self):
-        self.pin_out.enable()
-
-    def sub(self):
-        self.pin_sub.enable()
+    def connect(self, client):
+        self.out.connect(client)
+        self.sub.connect(client)
 
     def off(self):
-        self.pin_out.disable()
-        self.pin_sub.disable()
+        self.out.disable()
+        self.sub.disable()
 
 
 class Flags:
-    def __init__(self, pin_load, pin_use_carry, pin_bus_out, pin_bus_in):
-        self.pin_load = pin_load
-        self.pin_use_carry = pin_use_carry
-        self.pin_bus_out = pin_bus_out
-        self.pin_bus_in = pin_bus_in
+    def __init__(self, load, use_carry, bus_out, bus_in):
+        self.load = load
+        self.use_carry = use_carry
+        self.bus_out = bus_out
+        self.bus_in = bus_in
 
-    def connect(self, pin_client):
-        self.pin_load.connect(pin_client)
-        self.pin_use_carry.connect(pin_client)
-        self.pin_bus_out.connect(pin_client)
-        self.pin_bus_in.connect(pin_client)
-
-    def load(self):
-        self.pin_load.enable()
-
-    def use_carry(self):
-        self.pin_use_carry.enable()
+    def connect(self, client):
+        self.load.connect(client)
+        self.use_carry.connect(client)
+        self.bus_out.connect(client)
+        self.bus_in.connect(client)
 
     def off(self):
-        self.pin_load.disable()
-        self.pin_use_carry.disable()
-        self.pin_bus_out.disable()
-        self.pin_bus_in.disable()
+        self.load.disable()
+        self.use_carry.disable()
+        self.bus_out.disable()
+        self.bus_in.disable()
 
     @staticmethod
     def decode(val):

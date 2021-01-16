@@ -1,8 +1,8 @@
 from .DeviceSetup import *
 
 class CPU:
-    def __init__(self, pins):
-        self.pins = pins
+    def __init__(self, client):
+        self.client = client
 
         self.reg_A = RegA
         self.reg_B = RegB
@@ -11,16 +11,16 @@ class CPU:
 
         self.connect()
         self.disable_all()
-        self.pins.store_defaults()
+        self.client.store_defaults()
 
     def connect(self):
-        self.reg_A.connect(self.pins)
-        self.reg_B.connect(self.pins)
-        self.reg_F.connect(self.pins)
-        self.alu.connect(self.pins)
+        self.reg_A.connect(self.client)
+        self.reg_B.connect(self.client)
+        self.reg_F.connect(self.client)
+        self.alu.connect(self.client)
 
     def disable_all(self):
-        self.pins.c_word = 0
+        self.client.c_word = 0
         self.reg_A.off()
         self.reg_B.off()
         self.reg_F.off()
@@ -31,19 +31,19 @@ class CPU:
         for pin in microcode:
             pin.enable()
 
-        self.pins.ctrl_commit()
+        self.client.ctrl_commit()
 
         if "imm" in opcode:
-            self.pins.bus_set(value)
+            self.client.bus_set(value)
 
-        self.pins.clock_pulse()
-        self.pins.clock_inverted()
+        self.client.clock_pulse()
+        self.client.clock_inverted()
 
         result = None
         if "out" in opcode:
-            result = int(self.pins.bus_get())
+            result = int(self.client.bus_get())
 
-        self.pins.off()
+        self.client.off()
 
         return result
 
@@ -75,11 +75,11 @@ class InvalidOpcodeException(Exception):
     pass
 
 opcodes = {
-    "ldi_A_imm": [RegA.pin_load],
-    "ldi_B_imm": [RegB.pin_load],
-    "add_A_B": [RegA.pin_load, AddSub.pin_out, Flags.pin_load],
-    "add_B_A": [RegB.pin_load, AddSub.pin_out, Flags.pin_load],
-    "sub_A_B": [RegA.pin_load, AddSub.pin_out, AddSub.pin_sub, Flags.pin_load],
-    "out_A": [RegA.pin_out],
-    "out_B": [RegB.pin_out],
+    "ldi_A_imm": [RegA.load],
+    "ldi_B_imm": [RegB.load],
+    "add_A_B": [RegA.load, AddSub.out, Flags.load],
+    "add_B_A": [RegB.load, AddSub.out, Flags.load],
+    "sub_A_B": [RegA.load, AddSub.out, AddSub.sub, Flags.load],
+    "out_A": [RegA.out],
+    "out_B": [RegB.out],
 }
