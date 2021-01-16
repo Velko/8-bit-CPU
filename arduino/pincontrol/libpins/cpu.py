@@ -1,30 +1,33 @@
 from .DeviceSetup import *
 
 class CPU:
-    def __init__(self, client):
-        self.client = client
+    def __init__(self):
+        self.client = None
 
         self.reg_A = RegA
         self.reg_B = RegB
         self.reg_F = Flags
         self.alu = AddSub
 
-        self.connect()
+
+    def connect(self, client):
+        self.client = client
+
+        RegA.connect(self.client)
+        RegB.connect(self.client)
+        Flags.connect(self.client)
+        AddSub.connect(self.client)
+
         self.disable_all()
         self.client.store_defaults()
 
-    def connect(self):
-        self.reg_A.connect(self.client)
-        self.reg_B.connect(self.client)
-        self.reg_F.connect(self.client)
-        self.alu.connect(self.client)
-
     def disable_all(self):
         self.client.c_word = 0
-        self.reg_A.off()
-        self.reg_B.off()
-        self.reg_F.off()
-        self.alu.off()
+        RegA.off()
+        RegB.off()
+        Flags.off()
+        AddSub.off()
+
 
     def execute_opcode(self, opcode, value):
         microcode = opcodes[opcode]

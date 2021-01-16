@@ -9,7 +9,8 @@ from libpins.devices import Flags
 
 ser = serial.Serial("/dev/ttyACM0", 9600, timeout=1)
 pins = PinClient(ser)
-cpu = CPU(pins)
+cpu = CPU()
+cpu.connect(pins)
 
 
 class TesterClient(cmd.Cmd):
@@ -34,13 +35,13 @@ class TesterClient(cmd.Cmd):
         ldi(B, arg)
 
     def do_add_ab(self, arg):
-        add(A)
+        add(A, B)
 
     def do_add_ba(self, arg):
-        add(B)
+        add(B, A)
 
     def do_sub_ab(self, arg):
-        sub()
+        sub(A, B)
 
     def do_out_a(self, arg):
         val = out(A)
@@ -63,10 +64,10 @@ class TesterClient(cmd.Cmd):
         print(out(B))
 
         for _ in range(6):
-            add(A)
+            add(A, B)
             print(out(A))
 
-            add(B)
+            add(B, A)
             print(out(B))
 
 

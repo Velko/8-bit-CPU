@@ -9,7 +9,9 @@ from libpins.devices import Flags
 
 ser = serial.Serial("/dev/ttyACM0", 9600, timeout=3)
 pins = PinClient(ser)
-cpu = CPU(pins)
+cpu = CPU()
+cpu.connect(pins)
+cpu.disable_all()
 
 # Common test cases for registers
 # see RegisterALoadOut, RegisterBLoadOut
