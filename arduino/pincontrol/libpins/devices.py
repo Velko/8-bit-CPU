@@ -43,13 +43,17 @@ class ALU:
 
 
 class Flags:
-    def __init__(self, pin_load, pin_use_carry):
+    def __init__(self, pin_load, pin_use_carry, pin_bus_out, pin_bus_in):
         self.pin_load = pin_load
         self.pin_use_carry = pin_use_carry
+        self.pin_bus_out = pin_bus_out
+        self.pin_bus_in = pin_bus_in
 
     def connect(self, pin_client):
         self.pin_load.connect(pin_client)
         self.pin_use_carry.connect(pin_client)
+        self.pin_bus_out.connect(pin_client)
+        self.pin_bus_in.connect(pin_client)
 
     def load(self):
         self.pin_load.enable()
@@ -60,6 +64,8 @@ class Flags:
     def off(self):
         self.pin_load.disable()
         self.pin_use_carry.disable()
+        self.pin_bus_out.disable()
+        self.pin_bus_in.disable()
 
     @staticmethod
     def decode(val):
