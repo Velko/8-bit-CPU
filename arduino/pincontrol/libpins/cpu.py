@@ -9,11 +9,22 @@ class CPU:
         self.reg_F = DeviceSetup.Flags
         self.alu = DeviceSetup.AddSub
 
+        self.connect()
+        self.disable_all()
+        self.pins.store_defaults()
+
+    def connect(self):
         self.reg_A.connect(self.pins)
         self.reg_B.connect(self.pins)
         self.reg_F.connect(self.pins)
         self.alu.connect(self.pins)
 
+    def disable_all(self):
+        self.pins.c_word = 0
+        self.reg_A.off()
+        self.reg_B.off()
+        self.reg_F.off()
+        self.alu.off()
 
     def op_ldi(self, target, value):
         target.load()

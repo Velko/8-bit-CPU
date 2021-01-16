@@ -24,8 +24,8 @@ class TesterClient(cmd.Cmd):
         print (chr)
 
     def do_off(self, arg):
-        pins.bus_free()
-        pins.ctrl_off()
+        pins.off()
+        print (bin(pins.defaults))
 
     def do_load_a(self, arg):
         ldi(A, arg)

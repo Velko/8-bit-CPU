@@ -1,10 +1,9 @@
-DEFAULT=0b0111001111
-
 class PinClient:
 
     def __init__(self, serial):
         self.serial = serial
-        self.c_word = DEFAULT
+        self.c_word = None
+        self.defaults = None
 
     def send_cmd(self, cmd):
         self.serial.write(cmd.encode("ascii"))
@@ -17,8 +16,11 @@ class PinClient:
     def identify(self):
         return self.query('I')
 
+    def store_defaults(self):
+        self.defaults = self.c_word;
+
     def off(self):
-        self.c_word = DEFAULT
+        self.c_word = self.defaults
         self.send_cmd('O')
 
     def bus_set(self, arg):
