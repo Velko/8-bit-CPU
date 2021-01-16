@@ -17,6 +17,7 @@ class CPU:
         RegB.connect(self.client)
         Flags.connect(self.client)
         AddSub.connect(self.client)
+        Imm.connect(self.client)
 
         self.disable_all()
         self.client.store_defaults()
@@ -36,8 +37,6 @@ class CPU:
 
         self.client.ctrl_commit()
 
-        if "imm" in opcode:
-            self.client.bus_set(value)
 
         self.client.clock_pulse()
         self.client.clock_inverted()
@@ -52,6 +51,7 @@ class CPU:
 
     def op_ldi(self, target, value):
         opcode = "ldi_{}_imm".format(target.name)
+        Imm.set(value)
         self.execute_opcode(opcode, value)
 
 
@@ -77,9 +77,25 @@ class CPU:
 class InvalidOpcodeException(Exception):
     pass
 
+class ImmediateValue:
+    def __init__(self):
+        self.client = None
+        self.value = None
+
+    def connect(self, client):
+        self.client = client
+
+    def set(self, value):
+        self.value = value
+
+    def enable(self):
+        self.client.bus_set(self.value)
+
+Imm = ImmediateValue()
+
 opcodes = {
-    "ldi_A_imm": [RegA.load],
-    "ldi_B_imm": [RegB.load],
+    "ldi_A_imm": [RegA.load, Imm],
+    "ldi_B_imm": [RegB.load, Imm],
     "add_A_B": [RegA.load, AddSub.out, Flags.load],
     "add_B_A": [RegB.load, AddSub.out, Flags.load],
     "sub_A_B": [RegA.load, AddSub.out, AddSub.sub, Flags.load],
