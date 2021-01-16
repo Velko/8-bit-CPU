@@ -6,7 +6,13 @@
 #include <shiftoutext.h>
 #include "device_interface.h"
 
-DeviceInterface dev;
+
+// update this with value what is displayed
+// with OFF command when new pins added
+#define CTRL_ALL_OFF   0b0111001111
+
+
+DeviceInterface dev(CTRL_ALL_OFF);
 
 void setup()
 {

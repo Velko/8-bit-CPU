@@ -9,7 +9,7 @@
 class DeviceInterface
 {
     public:
-        DeviceInterface();
+        DeviceInterface(uint16_t def_c_word);
         void setup();
         IOBus8bit mainBus;
         IOBus4bit flagsBus;
