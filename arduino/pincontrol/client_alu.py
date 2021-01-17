@@ -13,8 +13,7 @@ control = CtrlWord()
 
 ser = serial.Serial("/dev/ttyACM0", 9600, timeout=1)
 pins = PinClient(ser)
-cpu = CPU()
-cpu.connect(pins, control)
+cpu = CPU(pins, control)
 
 
 class TesterClient(cmd.Cmd):

@@ -12,8 +12,7 @@ control = CtrlWord()
 
 ser = serial.Serial("/dev/ttyACM0", 9600, timeout=3)
 pins = PinClient(ser)
-cpu = CPU()
-cpu.connect(pins, control)
+cpu = CPU(pins, control)
 
 # Common test cases for registers
 # see RegisterALoadOut, RegisterBLoadOut

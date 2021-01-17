@@ -1,18 +1,14 @@
 from .DeviceSetup import *
 
 class CPU:
-    def __init__(self):
-        self.client = None
+    def __init__(self, client, control):
+        self.client = client
+        self.control = control
 
         self.reg_A = RegA
         self.reg_B = RegB
         self.reg_F = Flags
         self.alu = AddSub
-
-
-    def connect(self, client, control):
-        self.client = client
-        self.control = control
 
         Imm.connect(self.client)
         OutPort.connect(self.client)

@@ -4,12 +4,14 @@ import sys, cmd, serial
 
 from libpins.PinClient import PinClient
 from libpins.cpu import CPU
+from libpins.ctrl_word import CtrlWord
+
+control = CtrlWord()
 
 ser = serial.Serial("/dev/ttyACM0", 9600, timeout=1)
 ser = serial.Serial("/dev/ttyACM0", 9600, timeout=1)
 pins = PinClient(ser)
-cpu = CPU()
-cpu.connect(pins)
+cpu = CPU(pins, control)
 
 class TesterClient(cmd.Cmd):
 
@@ -26,7 +28,8 @@ class TesterClient(cmd.Cmd):
         print (chr)
 
     def do_ctrl_off(self, arg):
-        pins.off()
+        control.reset()
+        pins.off(control.default)
 
     def do_bus_set(self, arg):
         pins.bus_set(arg)
@@ -42,13 +45,13 @@ class TesterClient(cmd.Cmd):
         print (pins.flags_get())
 
     def do_ctrl_set(self, arg):
-        pins.ctrl_set(int(arg))
+        control.ctrl_set(int(arg))
 
     def do_ctrl_clr(self, arg):
-        pins.ctrl_clr(int(arg))
+        control.ctrl_clr(int(arg))
 
     def do_ctrl_commit(self, arg):
-        pins.ctrl_commit()
+        pins.ctrl_commit(control.c_word)
 
     def do_clock_pulse(self, arg):
         pins.clock_pulse()
