@@ -67,6 +67,16 @@ class TesterClient(cmd.Cmd):
 
     complete_ctrl_clr = complete_pin
 
+    def do_ctrl_enable(self, arg):
+        pin_map[arg].enable()
+
+    complete_ctrl_enable = complete_pin
+
+    def do_ctrl_disable(self, arg):
+        pin_map[arg].disable()
+
+    complete_ctrl_disable = complete_pin
+
     def do_ctrl_commit(self, arg):
         pins.ctrl_commit(control.c_word)
 
