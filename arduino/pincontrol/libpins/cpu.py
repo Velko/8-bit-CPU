@@ -10,20 +10,12 @@ class CPU:
         self.alu = AddSub
 
 
-    def connect(self, client):
+    def connect(self, client, control):
         self.client = client
-
-        for pin in all_pins():
-            pin.connect(self.client)
+        self.control = control
 
         Imm.connect(self.client)
         OutPort.connect(self.client)
-
-        self.client.c_word = 0
-        for pin in all_pins():
-            pin.disable()
-
-        self.client.store_defaults()
 
     def execute_opcode(self, opcode):
         if not opcode in opcodes:
@@ -33,7 +25,7 @@ class CPU:
         for pin in microcode:
             pin.enable()
 
-        self.client.ctrl_commit()
+        self.client.ctrl_commit(self.control.c_word)
 
 
         self.client.clock_pulse()
@@ -41,7 +33,8 @@ class CPU:
 
         OutPort.read_bus()
 
-        self.client.off()
+        self.control.reset()
+        self.client.off(self.control.default)
 
     def op_ldi(self, target, value):
         opcode = "ldi_{}_imm".format(target.name)

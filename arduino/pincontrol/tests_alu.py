@@ -6,11 +6,14 @@ from libpins import asm
 from libpins.PinClient import PinClient
 from libpins.cpu import CPU
 from libpins.devices import Flags
+from libpins.ctrl_word import CtrlWord
+
+control = CtrlWord()
 
 ser = serial.Serial("/dev/ttyACM0", 9600, timeout=3)
 pins = PinClient(ser)
 cpu = CPU()
-cpu.connect(pins)
+cpu.connect(pins, control)
 
 # Common test cases for registers
 # see RegisterALoadOut, RegisterBLoadOut

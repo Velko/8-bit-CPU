@@ -7,10 +7,14 @@ from libpins.PinClient import PinClient
 from libpins.cpu import CPU
 from libpins.devices import Flags
 
+from libpins.ctrl_word import CtrlWord
+
+control = CtrlWord()
+
 ser = serial.Serial("/dev/ttyACM0", 9600, timeout=1)
 pins = PinClient(ser)
 cpu = CPU()
-cpu.connect(pins)
+cpu.connect(pins, control)
 
 
 class TesterClient(cmd.Cmd):
