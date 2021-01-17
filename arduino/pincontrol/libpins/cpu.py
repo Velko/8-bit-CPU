@@ -31,7 +31,7 @@ class CPU:
         AddSub.off()
 
 
-    def execute_opcode(self, opcode, value):
+    def execute_opcode(self, opcode):
         if not opcode in opcodes:
             raise InvalidOpcodeException(opcode)
 
@@ -52,28 +52,28 @@ class CPU:
     def op_ldi(self, target, value):
         opcode = "ldi_{}_imm".format(target.name)
         Imm.set(value)
-        self.execute_opcode(opcode, value)
+        self.execute_opcode(opcode)
 
 
     def op_add(self, target, arg):
         opcode = "add_{}_{}".format(target.name, arg.name)
-        self.execute_opcode(opcode, None)
+        self.execute_opcode(opcode)
 
 
     def op_sub(self, target, arg):
         opcode = "sub_{}_{}".format(target.name, arg.name)
 
-        self.execute_opcode(opcode, None)
+        self.execute_opcode(opcode)
 
     def op_out(self, source):
         opcode = "out_{}".format(source.name)
-        self.execute_opcode(opcode, None)
+        self.execute_opcode(opcode)
 
         return OutPort.value
 
     def op_mov(self, target, source):
         opcode = "mov_{}_{}".format(target.name, source.name)
-        self.execute_opcode(opcode, None)
+        self.execute_opcode(opcode)
 
 class InvalidOpcodeException(Exception):
     pass
