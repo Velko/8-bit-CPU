@@ -279,7 +279,7 @@ class FlagsOutSameAsFlagsGet(unittest.TestCase):
         self.assertEqual("V---", flags)
 
 
-#@unittest.skip("unsupported with hardwired ALU inputs")
+@unittest.skip("unsupported with hardwired ALU inputs")
 class AluOperationsSwitchableInputs(unittest.TestCase):
     def test_sub_b_a_small(self):
         ldi(A, 3)

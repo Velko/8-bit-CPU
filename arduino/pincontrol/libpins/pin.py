@@ -24,3 +24,16 @@ class Pin:
             self.client.ctrl_clr(self.num)
         else:
             self.client.ctrl_set(self.num)
+
+class NullPin:
+    def __init__(self, num, level):
+        pass
+
+    def connect(self, client):
+        pass
+
+    def enable(self):
+        pass
+
+    def disable(self):
+        pass
