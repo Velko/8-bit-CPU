@@ -22,3 +22,7 @@ Flags = Flags("F",
     use_carry = Pin(5, Level.HIGH),
     bus_out = Pin(8, Level.LOW),
     bus_in = Pin(9, Level.HIGH))
+
+
+def all_pins():
+    return RegA.all_pins() + RegB.all_pins() + AddSub.all_pins() + Flags.all_pins()

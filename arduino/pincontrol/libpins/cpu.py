@@ -13,23 +13,17 @@ class CPU:
     def connect(self, client):
         self.client = client
 
-        RegA.connect(self.client)
-        RegB.connect(self.client)
-        Flags.connect(self.client)
-        AddSub.connect(self.client)
+        for pin in all_pins():
+            pin.connect(self.client)
+
         Imm.connect(self.client)
         OutPort.connect(self.client)
 
-        self.disable_all()
-        self.client.store_defaults()
-
-    def disable_all(self):
         self.client.c_word = 0
-        RegA.off()
-        RegB.off()
-        Flags.off()
-        AddSub.off()
+        for pin in all_pins():
+            pin.disable()
 
+        self.client.store_defaults()
 
     def execute_opcode(self, opcode):
         if not opcode in opcodes:

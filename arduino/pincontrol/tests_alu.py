@@ -11,7 +11,6 @@ ser = serial.Serial("/dev/ttyACM0", 9600, timeout=3)
 pins = PinClient(ser)
 cpu = CPU()
 cpu.connect(pins)
-cpu.disable_all()
 
 # Common test cases for registers
 # see RegisterALoadOut, RegisterBLoadOut

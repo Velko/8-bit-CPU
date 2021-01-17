@@ -8,17 +8,8 @@ class Register:
         self.alu_a = alu_a
         self.alu_b = alu_b
 
-    def connect(self, client):
-        self.out.connect(client)
-        self.load.connect(client)
-        self.alu_a.connect(client)
-        self.alu_b.connect(client)
-
-    def off(self):
-        self.out.disable()
-        self.load.disable()
-        self.alu_a.disable()
-        self.alu_b.disable()
+    def all_pins(self):
+        return [self.out, self.load, self.alu_a, self.alu_b]
 
 
 class ALU:
@@ -27,13 +18,8 @@ class ALU:
         self.out = out
         self.sub = sub
 
-    def connect(self, client):
-        self.out.connect(client)
-        self.sub.connect(client)
-
-    def off(self):
-        self.out.disable()
-        self.sub.disable()
+    def all_pins(self):
+        return [self.out, self.sub]
 
 
 class Flags:
@@ -44,17 +30,8 @@ class Flags:
         self.bus_out = bus_out
         self.bus_in = bus_in
 
-    def connect(self, client):
-        self.load.connect(client)
-        self.use_carry.connect(client)
-        self.bus_out.connect(client)
-        self.bus_in.connect(client)
-
-    def off(self):
-        self.load.disable()
-        self.use_carry.disable()
-        self.bus_out.disable()
-        self.bus_in.disable()
+    def all_pins(self):
+        return [self.load, self.use_carry, self.bus_out, self.bus_in]
 
     @staticmethod
     def decode(val):
