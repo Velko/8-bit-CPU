@@ -37,6 +37,7 @@ class TesterClient(cmd.Cmd):
     def do_ctrl_off(self, arg):
         control.reset()
         pins.off(control.default)
+        print(bin(control.c_word))
 
     def do_bus_set(self, arg):
         pins.bus_set(arg)
@@ -56,6 +57,7 @@ class TesterClient(cmd.Cmd):
             control.ctrl_set(pin_map[arg].num)
         else:
             control.ctrl_set(int(arg))
+        print(bin(control.c_word))
 
     complete_ctrl_set = complete_pin
 
@@ -64,16 +66,19 @@ class TesterClient(cmd.Cmd):
             control.ctrl_clr(pin_map[arg].num)
         else:
             control.ctrl_clr(int(arg))
+        print(bin(control.c_word))
 
     complete_ctrl_clr = complete_pin
 
     def do_ctrl_enable(self, arg):
         pin_map[arg].enable()
+        print(bin(control.c_word))
 
     complete_ctrl_enable = complete_pin
 
     def do_ctrl_disable(self, arg):
         pin_map[arg].disable()
+        print(bin(control.c_word))
 
     complete_ctrl_disable = complete_pin
 
