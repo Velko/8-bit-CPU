@@ -69,6 +69,10 @@ void loop()
         dev.control.write16(val);
         break;
 
+    case 'N':
+        // NOP
+        break;
+
     case 'c':
         dev.clock.pulse();
         break;

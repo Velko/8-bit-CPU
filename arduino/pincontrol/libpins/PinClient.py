@@ -21,12 +21,16 @@ class PinClient:
 
     def off(self):
         self.c_word = self.defaults
-        self.send_cmd("O{}".format(self.defaults))
+
+        # Add NOP command at the end, so that
+        # Serial.parseInt() in Arduino does not
+        # have to wait for timeout
+        self.send_cmd("O{}N".format(self.defaults))
 
     def bus_set(self, arg):
         if isinstance(arg, str):
             arg = int(arg, 0)
-        self.send_cmd("B{}".format(arg))
+        self.send_cmd("B{}N".format(arg))
 
     def bus_get(self):
         return self.query("b")
@@ -44,7 +48,7 @@ class PinClient:
         self.c_word &= ~(1 << pin)
 
     def ctrl_commit(self):
-        self.send_cmd("M{}".format(self.c_word))
+        self.send_cmd("M{}N".format(self.c_word))
 
     def clock_pulse(self):
         self.send_cmd('c')
