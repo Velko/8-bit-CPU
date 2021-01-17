@@ -3,19 +3,19 @@
 
 #include <iobus8bit.h>
 #include <iobus4bit.h>
+#include <shiftoutext.h>
 #include "clock.h"
-#include "shiftctrl.h"
 
 class DeviceInterface
 {
     public:
-        DeviceInterface(uint16_t def_c_word);
+        DeviceInterface();
         void setup();
         IOBus8bit mainBus;
         IOBus4bit flagsBus;
         Clock clock;
         Clock inv_clock;
-        ShiftCtrl control;
+        ShiftOutExt control;
 };
 
 

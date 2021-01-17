@@ -4,10 +4,9 @@
 #define PIN_CLK        SCL
 #define PIN_CLK_INV    SDA
 
-DeviceInterface::DeviceInterface(uint16_t def_c_word)
+DeviceInterface::DeviceInterface()
     : clock{PIN_CLK},
-      inv_clock{PIN_CLK_INV},
-      control{def_c_word}
+      inv_clock{PIN_CLK_INV}
 {
 
 }

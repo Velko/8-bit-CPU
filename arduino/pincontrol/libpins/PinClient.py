@@ -21,7 +21,7 @@ class PinClient:
 
     def off(self):
         self.c_word = self.defaults
-        self.send_cmd('O')
+        self.send_cmd("O{}".format(self.defaults))
 
     def bus_set(self, arg):
         if isinstance(arg, str):

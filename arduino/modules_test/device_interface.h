@@ -3,8 +3,8 @@
 
 #include <iobus8bit.h>
 #include <iobus4bit.h>
+#include <shiftoutext.h>
 #include "clock.h"
-#include "shiftctrl.h"
 
 class DeviceInterface
 {
