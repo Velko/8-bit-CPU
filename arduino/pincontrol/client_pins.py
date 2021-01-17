@@ -18,9 +18,6 @@ pin_map = dict()
 
 class TesterClient(cmd.Cmd):
 
-    def __init__(self):
-        cmd.Cmd.__init__(self, stdout=self)
-
     def complete_pin(self, text, line, begidx, endidx):
         return list(filter(lambda n: n.startswith(text), pin_map.keys()))
 
@@ -34,61 +31,73 @@ class TesterClient(cmd.Cmd):
         chr = pins.identify()
         print (chr)
 
-    def do_ctrl_off(self, arg):
+    def do_off(self, arg):
+        'Turn everything off, release Bus'
         control.reset()
         pins.off(control.default)
         print(bin(control.c_word))
 
-    def do_bus_set(self, arg):
+    def do_send(self, arg):
+        'Send value on to the Bus'
         pins.bus_set(arg)
 
-    def do_bus_get(self, arg):
+    def do_bus(self, arg):
+        'Read current value on the Bus'
         chr = pins.bus_get()
         print (chr)
 
-    def do_bus_free(self, arg):
+    def do_release(self, arg):
+        'Release bus'
         pins.bus_free()
 
-    def do_flags_get(self, arg):
+    def do_flags(self, arg):
+        'Read flags'
         print (pins.flags_get())
 
-    def do_ctrl_set(self, arg):
+    def do_set(self, arg):
+        'Set control pin ignoring active-high/low setting'
         if arg in pin_map:
             control.ctrl_set(pin_map[arg].num)
         else:
             control.ctrl_set(int(arg))
         print(bin(control.c_word))
 
-    complete_ctrl_set = complete_pin
+    complete_set = complete_pin
 
-    def do_ctrl_clr(self, arg):
+    def do_clr(self, arg):
+        'Clear control pin ignoring active-high/low setting'
         if arg in pin_map:
             control.ctrl_clr(pin_map[arg].num)
         else:
             control.ctrl_clr(int(arg))
         print(bin(control.c_word))
 
-    complete_ctrl_clr = complete_pin
+    complete_clr = complete_pin
 
-    def do_ctrl_enable(self, arg):
+    def do_enable(self, arg):
+        'Enable control pin according to active-high/low setting'
         pin_map[arg].enable()
         print(bin(control.c_word))
 
-    complete_ctrl_enable = complete_pin
+    complete_enable = complete_pin
 
-    def do_ctrl_disable(self, arg):
+    def do_disable(self, arg):
+        'Disable control pin according to active-high/low setting'
         pin_map[arg].disable()
         print(bin(control.c_word))
 
-    complete_ctrl_disable = complete_pin
+    complete_disable = complete_pin
 
-    def do_ctrl_commit(self, arg):
+    def do_commit(self, arg):
+        'Send the control word to Arduino'
         pins.ctrl_commit(control.c_word)
 
-    def do_clock_pulse(self, arg):
+    def do_pulse(self, arg):
+        'Pulse normal clock'
         pins.clock_pulse()
 
-    def do_clock_inverted(self, arg):
+    def do_inverted(self, arg):
+        'Pulse inverted clock'
         pins.clock_inverted()
 
     def do_add_sample(self, arg):
