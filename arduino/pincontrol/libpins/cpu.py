@@ -80,6 +80,7 @@ class ImmediateValue:
     def __init__(self):
         self.client = None
         self.value = None
+        self.out = self
 
     def connect(self, client):
         self.client = client
@@ -95,6 +96,7 @@ class ResultValue:
         self.client = None
         self.value = None
         self.active = False
+        self.load = self
 
     def connect(self, client):
         self.client = client
@@ -112,11 +114,11 @@ Imm = ImmediateValue()
 OutPort = ResultValue()
 
 opcodes = {
-    "ldi_A_imm": [RegA.load, Imm],
-    "ldi_B_imm": [RegB.load, Imm],
+    "ldi_A_imm": [RegA.load, Imm.out],
+    "ldi_B_imm": [RegB.load, Imm.out],
     "add_A_B": [RegA.load, AddSub.out, Flags.load],
     "add_B_A": [RegB.load, AddSub.out, Flags.load],
     "sub_A_B": [RegA.load, AddSub.out, AddSub.sub, Flags.load],
-    "out_A": [RegA.out, OutPort],
-    "out_B": [RegB.out, OutPort],
+    "out_A": [RegA.out, OutPort.load],
+    "out_B": [RegB.out, OutPort.load],
 }
