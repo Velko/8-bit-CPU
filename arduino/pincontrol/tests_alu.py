@@ -322,6 +322,24 @@ class AluOperationsSwitchableInputs(unittest.TestCase):
         value = out(B)
         self.assertEqual(0, value)
 
+class RegisterMov(unittest.TestCase):
+    def test_mov_a_b(self):
+        ldi(A, 0)
+        ldi(B, 42)
+
+        mov(A, B)
+
+        value = out(A)
+        self.assertEqual(42, value)
+
+    def test_mov_b_a(self):
+        ldi(A, 34)
+        ldi(B, 0)
+
+        mov(B, A)
+
+        value = out(B)
+        self.assertEqual(34, value)
 
 
 if __name__ == "__main__":

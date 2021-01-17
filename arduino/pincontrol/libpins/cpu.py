@@ -71,6 +71,9 @@ class CPU:
 
         return OutPort.value
 
+    def op_mov(self, target, source):
+        opcode = "mov_{}_{}".format(target.name, source.name)
+        self.execute_opcode(opcode, None)
 
 class InvalidOpcodeException(Exception):
     pass
@@ -124,6 +127,8 @@ opcodes = {
     "sub_A_B": [RegA.load, RegA.alu_a, RegB.alu_b, AddSub.out, AddSub.sub, Flags.load],
     "sub_B_A": [RegB.load, RegB.alu_a, RegA.alu_b, AddSub.out, AddSub.sub, Flags.load],
     "sub_B_B": [RegB.load, RegB.alu_a, RegB.alu_b, AddSub.out, AddSub.sub, Flags.load],
+    "mov_A_B": [RegA.load, RegB.out],
+    "mov_B_A": [RegB.load, RegA.out],
     "out_A": [RegA.out, OutPort.load],
     "out_B": [RegB.out, OutPort.load],
     "out_F": [Flags.bus_out, OutPort.load],
