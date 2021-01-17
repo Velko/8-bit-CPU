@@ -1,18 +1,24 @@
 from .pin import Pin, Level
 
 class Register:
-    def __init__(self, name, out, load):
+    def __init__(self, name, out, load, alu_a, alu_b):
         self.name = name
         self.out = out
         self.load = load
+        self.alu_a = alu_a
+        self.alu_b = alu_b
 
     def connect(self, client):
         self.out.connect(client)
         self.load.connect(client)
+        self.alu_a.connect(client)
+        self.alu_b.connect(client)
 
     def off(self):
         self.out.disable()
         self.load.disable()
+        self.alu_a.disable()
+        self.alu_b.disable()
 
 
 class ALU:

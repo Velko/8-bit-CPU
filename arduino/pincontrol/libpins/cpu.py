@@ -32,6 +32,9 @@ class CPU:
 
 
     def execute_opcode(self, opcode, value):
+        if not opcode in opcodes:
+            raise InvalidOpcodeException(opcode)
+
         microcode = opcodes[opcode]
         for pin in microcode:
             pin.enable()
@@ -59,10 +62,6 @@ class CPU:
 
     def op_sub(self, target, arg):
         opcode = "sub_{}_{}".format(target.name, arg.name)
-
-        # only one subtraction instruction currently supported
-        if opcode != "sub_A_B":
-            raise InvalidOpcodeException
 
         self.execute_opcode(opcode, None)
 
@@ -116,9 +115,14 @@ OutPort = ResultValue()
 opcodes = {
     "ldi_A_imm": [RegA.load, Imm.out],
     "ldi_B_imm": [RegB.load, Imm.out],
-    "add_A_B": [RegA.load, AddSub.out, Flags.load],
-    "add_B_A": [RegB.load, AddSub.out, Flags.load],
-    "sub_A_B": [RegA.load, AddSub.out, AddSub.sub, Flags.load],
+    "add_A_A": [RegA.load, RegA.alu_a, RegA.alu_b, AddSub.out, Flags.load],
+    "add_A_B": [RegA.load, RegA.alu_a, RegB.alu_b, AddSub.out, Flags.load],
+    "add_B_A": [RegB.load, RegB.alu_a, RegA.alu_b, AddSub.out, Flags.load],
+    "add_B_B": [RegB.load, RegB.alu_a, RegB.alu_b, AddSub.out, Flags.load],
+    "sub_A_A": [RegA.load, RegA.alu_a, RegA.alu_b, AddSub.out, AddSub.sub, Flags.load],
+    "sub_A_B": [RegA.load, RegA.alu_a, RegB.alu_b, AddSub.out, AddSub.sub, Flags.load],
+    "sub_B_A": [RegB.load, RegB.alu_a, RegA.alu_b, AddSub.out, AddSub.sub, Flags.load],
+    "sub_B_B": [RegB.load, RegB.alu_a, RegB.alu_b, AddSub.out, AddSub.sub, Flags.load],
     "out_A": [RegA.out, OutPort.load],
     "out_B": [RegB.out, OutPort.load],
 }

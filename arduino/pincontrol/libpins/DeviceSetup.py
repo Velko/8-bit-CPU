@@ -3,11 +3,15 @@ from .pin import Pin, Level
 
 RegA = Register("A",
     out = Pin(1, Level.LOW),
-    load = Pin(0, Level.LOW))
+    load = Pin(0, Level.LOW),
+    alu_a = Pin(10, Level.LOW),
+    alu_b = Pin(11, Level.LOW))
 
 RegB = Register("B",
     out = Pin(6, Level.LOW),
-    load = Pin(2, Level.LOW))
+    load = Pin(2, Level.LOW),
+    alu_a = Pin(12, Level.LOW),
+    alu_b = Pin(13, Level.LOW))
 
 AddSub = ALU("Add/Sub",
     out = Pin(3, Level.LOW),

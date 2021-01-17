@@ -147,6 +147,15 @@ class AluOperations(unittest.TestCase):
         flags = Flags.decode(pins.flags_get())
         self.assertEqual("----", flags)
 
+    def test_sub_result_zero(self):
+        ldi(A, 4)
+        ldi(B, 4)
+
+        sub(A, B)
+
+        value = out(A)
+        self.assertEqual(0, value)
+
     def test_sub_flags_zero(self):
         ldi(A, 4)
         ldi(B, 4)
@@ -192,7 +201,7 @@ class AluOperations(unittest.TestCase):
         flags = Flags.decode(pins.flags_get())
         self.assertEqual("VC-N", flags)
 
-    def test_sub_flags_zero_(self):
+    def test_sub_flags_zero(self):
         ldi(A, 20)
         ldi(B, 20)
 
@@ -201,6 +210,48 @@ class AluOperations(unittest.TestCase):
         flags = Flags.decode(pins.flags_get())
         self.assertEqual("--Z-", flags)
 
+#@unittest.skip("unsupported with hardwired ALU inputs")
+class AluOperationsSwitchableInputs(unittest.TestCase):
+    def test_sub_b_a_small(self):
+        ldi(A, 3)
+        ldi(B, 4)
+
+        sub(B, A)
+
+        value = out(B)
+        self.assertEqual(1, value)
+
+    def test_add_a_a(self):
+        ldi(A, 21)
+
+        add(A, A)
+
+        value = out(A)
+        self.assertEqual(42, value)
+
+    def test_add_b_b(self):
+        ldi(B, 18)
+
+        add(B, B)
+
+        value = out(B)
+        self.assertEqual(36, value)
+
+    def test_sub_a_a(self):
+        ldi(A, 32)
+
+        sub(A, A)
+
+        value = out(A)
+        self.assertEqual(0, value)
+
+    def test_sub_b_b(self):
+        ldi(B, 63)
+
+        sub(B, B)
+
+        value = out(B)
+        self.assertEqual(0, value)
 
 
 
