@@ -65,6 +65,33 @@ class RegisterBLoadOut(unittest.TestCase, RegisterLoadOutCommon):
         self.register = B
 
 
+class FlagsLoadOut(unittest.TestCase):
+    def test_load_0(self):
+        ldi (F, 0)
+        v = out(F)
+        self.assertEqual(0, v)
+
+    def test_load_1(self):
+        ldi (F, 1)
+        v = out(F)
+        self.assertEqual(1, v)
+
+    def test_load_2(self):
+        ldi (F, 2)
+        v = out(F)
+        self.assertEqual(2, v)
+
+    def test_load_4(self):
+        ldi (F, 4)
+        v = out(F)
+        self.assertEqual(4, v)
+
+    def test_load_8(self):
+        ldi (F, 8)
+        v = out(F)
+        self.assertEqual(8, v)
+
+
 class AluOperations(unittest.TestCase):
     def test_add_ab_result_small(self):
         ldi(A, 24)
@@ -209,6 +236,48 @@ class AluOperations(unittest.TestCase):
 
         flags = Flags.decode(pins.flags_get())
         self.assertEqual("--Z-", flags)
+
+class FlagsOutSameAsFlagsGet(unittest.TestCase):
+    def test_flags_out_n(self):
+        ldi(A, 230)
+        ldi(B, 5)
+        add(A, B)
+
+        f = out(F)
+
+        flags = Flags.decode(f)
+        self.assertEqual("---N", flags)
+
+    def test_flags_out_z(self):
+        ldi(A, 5)
+        ldi(B, 5)
+        sub(A, B)
+
+        f = out(F)
+
+        flags = Flags.decode(f)
+        self.assertEqual("--Z-", flags)
+
+    def test_flags_out_c(self):
+        ldi(A, 230)
+        ldi(B, 40)
+        add(A, B)
+
+        f = out(F)
+
+        flags = Flags.decode(f)
+        self.assertEqual("-C--", flags)
+
+    def test_flags_out_v(self):
+        ldi(A, 140)
+        ldi(B, 20)
+        sub(A, B)
+
+        f = out(F)
+
+        flags = Flags.decode(f)
+        self.assertEqual("V---", flags)
+
 
 #@unittest.skip("unsupported with hardwired ALU inputs")
 class AluOperationsSwitchableInputs(unittest.TestCase):

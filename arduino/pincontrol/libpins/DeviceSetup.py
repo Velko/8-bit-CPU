@@ -17,7 +17,7 @@ AddSub = ALU("Add/Sub",
     out = Pin(3, Level.LOW),
     sub = Pin(4, Level.HIGH))
 
-Flags = Flags(
+Flags = Flags("F",
     load = Pin(7, Level.LOW),
     use_carry = Pin(5, Level.HIGH),
     bus_out = Pin(8, Level.LOW),

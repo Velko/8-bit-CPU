@@ -115,6 +115,7 @@ OutPort = ResultValue()
 opcodes = {
     "ldi_A_imm": [RegA.load, Imm.out],
     "ldi_B_imm": [RegB.load, Imm.out],
+    "ldi_F_imm": [Flags.load, Flags.bus_in, Imm.out],
     "add_A_A": [RegA.load, RegA.alu_a, RegA.alu_b, AddSub.out, Flags.load],
     "add_A_B": [RegA.load, RegA.alu_a, RegB.alu_b, AddSub.out, Flags.load],
     "add_B_A": [RegB.load, RegB.alu_a, RegA.alu_b, AddSub.out, Flags.load],
@@ -125,4 +126,5 @@ opcodes = {
     "sub_B_B": [RegB.load, RegB.alu_a, RegB.alu_b, AddSub.out, AddSub.sub, Flags.load],
     "out_A": [RegA.out, OutPort.load],
     "out_B": [RegB.out, OutPort.load],
+    "out_F": [Flags.bus_out, OutPort.load],
 }

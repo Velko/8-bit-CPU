@@ -37,7 +37,8 @@ class ALU:
 
 
 class Flags:
-    def __init__(self, load, use_carry, bus_out, bus_in):
+    def __init__(self, name, load, use_carry, bus_out, bus_in):
+        self.name = name
         self.load = load
         self.use_carry = use_carry
         self.bus_out = bus_out
