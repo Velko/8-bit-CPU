@@ -13,7 +13,7 @@ RegB = Register("B",
     alu_a = NullPin(12, Level.LOW),
     alu_b = NullPin(13, Level.LOW))
 
-AddSub = ALU("Add/Sub",
+AddSub = ALU("AddSub",
     out = Pin(3, Level.LOW),
     sub = Pin(4, Level.HIGH))
 

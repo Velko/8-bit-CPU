@@ -5,6 +5,7 @@ import sys, cmd, serial
 from libpins.PinClient import PinClient
 from libpins.cpu import CPU
 from libpins.ctrl_word import CtrlWord
+from libpins import DeviceSetup, devices
 
 control = CtrlWord()
 
@@ -13,10 +14,16 @@ ser = serial.Serial("/dev/ttyACM0", 9600, timeout=1)
 pins = PinClient(ser)
 cpu = CPU(pins, control)
 
+pin_map = dict()
+
 class TesterClient(cmd.Cmd):
 
     def __init__(self):
         cmd.Cmd.__init__(self, stdout=self)
+
+    def complete_pin(self, text, line, begidx, endidx):
+        return list(filter(lambda n: n.startswith(text), pin_map.keys()))
+
 
     def do_EOF(self, arg):
         ser.close()
@@ -45,10 +52,20 @@ class TesterClient(cmd.Cmd):
         print (pins.flags_get())
 
     def do_ctrl_set(self, arg):
-        control.ctrl_set(int(arg))
+        if arg in pin_map:
+            control.ctrl_set(pin_map[arg].num)
+        else:
+            control.ctrl_set(int(arg))
+
+    complete_ctrl_set = complete_pin
 
     def do_ctrl_clr(self, arg):
-        control.ctrl_clr(int(arg))
+        if arg in pin_map:
+            control.ctrl_clr(pin_map[arg].num)
+        else:
+            control.ctrl_clr(int(arg))
+
+    complete_ctrl_clr = complete_pin
 
     def do_ctrl_commit(self, arg):
         pins.ctrl_commit(control.c_word)
@@ -80,5 +97,15 @@ class TesterClient(cmd.Cmd):
         pins.ctrl_set(3)
         pins.ctrl_commit()
 
+def build_pinmap():
+
+    for name, dev in vars(DeviceSetup).items():
+        if dev.__class__.__module__ == 'libpins.devices':
+            for a_name, attr in vars(dev).items():
+                if a_name == "name": continue
+                pin_name = "{}.{}".format(dev.name, a_name).lower()
+                pin_map[pin_name] = attr
+
 if __name__ == "__main__":
+    build_pinmap()
     TesterClient().cmdloop()

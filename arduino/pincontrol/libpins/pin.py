@@ -27,6 +27,7 @@ class Pin:
 
 class NullPin:
     def __init__(self, num, level):
+        self.num = None
         pass
 
     def connect(self, client):
