@@ -394,6 +394,37 @@ class RegisterMov(unittest.TestCase):
         value = out(B)
         self.assertEqual(34, value)
 
+class RegisterOutputLatches(unittest.TestCase):
+
+    def test_a_latch(self):
+        ldi(A, 54)
+        ldi(B, 0)
+
+        # Load another value into A, but "forget" to pulse the
+        # inverted clock
+        pins.bus_set(40)
+        A.load.enable()
+        pins.ctrl_commit(control.c_word)
+
+        pins.clock_pulse()
+        #pins.clock_inverted()
+
+        control.reset()
+        pins.off(control.default)
+
+        # Not try to sense what it sends to ALU by enabling it and
+        # reading value on the bus
+        cpu.alu.out.enable()
+        A.alu_a.enable()
+        B.alu_b.enable()
+        pins.ctrl_commit(control.c_word)
+        value = pins.bus_get()
+
+        control.reset()
+        pins.off(control.default)
+
+        # should have kept the old value
+        self.assertEqual(54, value)
 
 if __name__ == "__main__":
 

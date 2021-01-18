@@ -96,7 +96,7 @@ class ResultValue:
 
     def read_bus(self):
         if self.active:
-            self.value = int(self.client.bus_get())
+            self.value = self.client.bus_get()
             self.active = False
 
 

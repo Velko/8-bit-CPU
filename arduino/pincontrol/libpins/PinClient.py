@@ -26,7 +26,7 @@ class PinClient:
         self.send_cmd("B{}N".format(arg))
 
     def bus_get(self):
-        return self.query("b")
+        return int(self.query("b"))
 
     def flags_get(self):
         return self.query("s")
