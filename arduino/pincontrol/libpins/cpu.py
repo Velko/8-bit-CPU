@@ -104,6 +104,8 @@ Imm = ImmediateValue()
 OutPort = ResultValue()
 
 opcodes = {
+    "nop": [],
+
     "ldi_A_imm": [RegA.load, Imm.out],
     "ldi_B_imm": [RegB.load, Imm.out],
     "ldi_F_imm": [Flags.load, Flags.bus_in, Imm.out],
