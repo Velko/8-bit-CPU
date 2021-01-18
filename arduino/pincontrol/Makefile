@@ -1,4 +1,4 @@
-ARDUINO_DIR = /usr/local/arduino-1.8.12
+ARDUINO_DIR = /usr/local/arduino
 BOARD_TAG    = uno
 ARDUINO_LIBS = SPI iobus EEPROM
 USER_LIB_PATH = ../lib
