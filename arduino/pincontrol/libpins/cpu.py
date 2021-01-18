@@ -103,33 +103,57 @@ class ResultValue:
 Imm = ImmediateValue()
 OutPort = ResultValue()
 
-opcodes = {
-    "nop": [],
 
-    "ldi_A_imm": [RegA.load, Imm.out],
-    "ldi_B_imm": [RegB.load, Imm.out],
-    "ldi_F_imm": [Flags.load, Flags.bus_in, Imm.out],
+def mkuc_list(registers, nameformat, pinformatter):
+    ops = list()
 
-    "add_A_A": [RegA.load, RegA.alu_a, RegA.alu_b, AddSub.out, Flags.load],
-    "add_A_B": [RegA.load, RegA.alu_a, RegB.alu_b, AddSub.out, Flags.load],
-    "add_B_A": [RegB.load, RegB.alu_a, RegA.alu_b, AddSub.out, Flags.load],
-    "add_B_B": [RegB.load, RegB.alu_a, RegB.alu_b, AddSub.out, Flags.load],
+    for r in registers:
+        name = nameformat.format(r.name)
+        ucode = pinformatter(r)
+        ops.append((name, ucode))
+    return ops
 
-    "adc_A_A": [RegA.load, RegA.alu_a, RegA.alu_b, AddSub.out, Flags.load, Flags.use_carry],
-    "adc_A_B": [RegA.load, RegA.alu_a, RegB.alu_b, AddSub.out, Flags.load, Flags.use_carry],
-    "adc_B_A": [RegB.load, RegB.alu_a, RegA.alu_b, AddSub.out, Flags.load, Flags.use_carry],
-    "adc_B_B": [RegB.load, RegB.alu_a, RegB.alu_b, AddSub.out, Flags.load, Flags.use_carry],
 
-    "sub_A_A": [RegA.load, RegA.alu_a, RegA.alu_b, AddSub.out, AddSub.sub, Flags.load],
-    "sub_A_B": [RegA.load, RegA.alu_a, RegB.alu_b, AddSub.out, AddSub.sub, Flags.load],
-    "sub_B_A": [RegB.load, RegB.alu_a, RegA.alu_b, AddSub.out, AddSub.sub, Flags.load],
-    "sub_B_B": [RegB.load, RegB.alu_a, RegB.alu_b, AddSub.out, AddSub.sub, Flags.load],
+def mkuc_permute_all(registers, nameformat, pinformatter):
+    ops = list()
 
-    "sbb_A_B": [RegA.load, RegA.alu_a, RegB.alu_b, AddSub.out, AddSub.sub, Flags.load, Flags.use_carry],
+    for l in registers:
+        for r in registers:
+            name = nameformat.format(l.name, r.name)
+            ucode = pinformatter(l, r)
+            ops.append((name, ucode))
+    return ops
 
-    "mov_A_B": [RegA.load, RegB.out],
-    "mov_B_A": [RegB.load, RegA.out],
-    "out_A": [RegA.out, OutPort.load],
-    "out_B": [RegB.out, OutPort.load],
-    "out_F": [Flags.bus_out, OutPort.load],
-}
+def mkuc_permute_nsame(registers, nameformat, pinformatter):
+    ops = list()
+
+    for l in registers:
+        for r in registers:
+            if l == r: continue
+            name = nameformat.format(l.name, r.name)
+            ucode = pinformatter(l, r)
+            ops.append((name, ucode))
+    return ops
+
+gp_regs = [RegA, RegB]
+
+
+opcodes = dict(
+    [("nop", [])]+
+
+    mkuc_list(gp_regs, "ldi_{}_imm", lambda r: [r.load, Imm.out]) +
+
+    [("ldi_F_imm", [Flags.load, Flags.bus_in, Imm.out])] +
+
+    mkuc_permute_all(gp_regs, "add_{}_{}", lambda l, r: [l.load, l.alu_a, r.alu_b, AddSub.out, Flags.load]) +
+    mkuc_permute_all(gp_regs, "adc_{}_{}", lambda l, r: [l.load, l.alu_a, r.alu_b, AddSub.out, Flags.load, Flags.use_carry]) +
+    mkuc_permute_nsame(gp_regs, "sub_{}_{}", lambda l, r: [l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.load]) +
+    mkuc_permute_nsame(gp_regs, "sbb_{}_{}", lambda l, r: [l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.load, Flags.use_carry]) +
+
+    [("sbb_A_B", [RegA.load, RegA.alu_a, RegB.alu_b, AddSub.out, AddSub.sub, Flags.load, Flags.use_carry])] +
+
+    mkuc_permute_nsame(gp_regs, "mov_{}_{}", lambda l, r: [l.load, r.out]) +
+    mkuc_list(gp_regs, "out_{}", lambda r: [r.out, OutPort.load]) +
+
+    [("out_F", [Flags.bus_out, OutPort.load]),]
+)

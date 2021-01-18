@@ -238,6 +238,18 @@ class AluOperations(unittest.TestCase):
         flags = Flags.decode(pins.flags_get())
         self.assertEqual("--Z-", flags)
 
+    @unittest.expectedFailure
+    def test_sub_ba_result_small(self):
+        ldi(A, 3)
+        ldi(B, 4)
+
+        sub(B, A)
+
+        value = out(B)
+        self.assertEqual(1, value)
+
+
+
 class FlagsOutSameAsFlagsGet(unittest.TestCase):
     def test_flags_out_n(self):
         ldi(A, 230)
