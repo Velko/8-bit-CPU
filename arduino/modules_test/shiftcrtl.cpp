@@ -20,7 +20,7 @@ void ShiftCtrl::setup()
 
 void ShiftCtrl::commit()
 {
-    shext.write8(buffer);
+    shext.write16(buffer);
 }
 
 ShiftPin::ShiftPin()

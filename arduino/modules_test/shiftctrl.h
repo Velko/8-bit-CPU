@@ -27,7 +27,7 @@ class ShiftCtrl
         void commit();
         ShiftPin &claim(uint8_t pin, CtrlPin::ActiveLevel mode);
     private:
-        uint8_t buffer;
+        uint16_t buffer;
         ShiftPin pins[8];
         friend class ShiftPin;
 };
