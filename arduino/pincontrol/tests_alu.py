@@ -279,6 +279,46 @@ class FlagsOutSameAsFlagsGet(unittest.TestCase):
         flags = Flags.decode(f)
         self.assertEqual("V---", flags)
 
+    def test_result_adc_ab_c_set(self):
+        ldi (F, 0b0100)
+        ldi (A, 5)
+        ldi (B, 3)
+
+        adc(A, B)
+
+        value = out(A)
+        self.assertEqual(9, value)
+
+    def test_result_adc_ab_c_clear(self):
+        ldi (F, 0)
+        ldi (A, 5)
+        ldi (B, 3)
+
+        adc(A, B)
+
+        value = out(A)
+        self.assertEqual(8, value)
+
+    def test_result_sbb_ab_c_set(self):
+        ldi (F, 0b0100)
+        ldi (A, 5)
+        ldi (B, 3)
+
+        sbb(A, B)
+
+        value = out(A)
+        self.assertEqual(1, value)
+
+    def test_result_sbb_ab_c_clear(self):
+        ldi (F, 0)
+        ldi (A, 5)
+        ldi (B, 3)
+
+        sbb(A, B)
+
+        value = out(A)
+        self.assertEqual(2, value)
+
 
 @unittest.skip("unsupported with hardwired ALU inputs")
 class AluOperationsSwitchableInputs(unittest.TestCase):

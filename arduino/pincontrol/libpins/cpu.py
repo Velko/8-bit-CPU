@@ -37,15 +37,20 @@ class CPU:
         Imm.set(value)
         self.execute_opcode(opcode)
 
-
     def op_add(self, target, arg):
         opcode = "add_{}_{}".format(target.name, arg.name)
         self.execute_opcode(opcode)
 
+    def op_adc(self, target, arg):
+        opcode = "adc_{}_{}".format(target.name, arg.name)
+        self.execute_opcode(opcode)
 
     def op_sub(self, target, arg):
         opcode = "sub_{}_{}".format(target.name, arg.name)
+        self.execute_opcode(opcode)
 
+    def op_sbb(self, target, arg):
+        opcode = "sbb_{}_{}".format(target.name, arg.name)
         self.execute_opcode(opcode)
 
     def op_out(self, source):
@@ -102,14 +107,24 @@ opcodes = {
     "ldi_A_imm": [RegA.load, Imm.out],
     "ldi_B_imm": [RegB.load, Imm.out],
     "ldi_F_imm": [Flags.load, Flags.bus_in, Imm.out],
+
     "add_A_A": [RegA.load, RegA.alu_a, RegA.alu_b, AddSub.out, Flags.load],
     "add_A_B": [RegA.load, RegA.alu_a, RegB.alu_b, AddSub.out, Flags.load],
     "add_B_A": [RegB.load, RegB.alu_a, RegA.alu_b, AddSub.out, Flags.load],
     "add_B_B": [RegB.load, RegB.alu_a, RegB.alu_b, AddSub.out, Flags.load],
+
+    "adc_A_A": [RegA.load, RegA.alu_a, RegA.alu_b, AddSub.out, Flags.load, Flags.use_carry],
+    "adc_A_B": [RegA.load, RegA.alu_a, RegB.alu_b, AddSub.out, Flags.load, Flags.use_carry],
+    "adc_B_A": [RegB.load, RegB.alu_a, RegA.alu_b, AddSub.out, Flags.load, Flags.use_carry],
+    "adc_B_B": [RegB.load, RegB.alu_a, RegB.alu_b, AddSub.out, Flags.load, Flags.use_carry],
+
     "sub_A_A": [RegA.load, RegA.alu_a, RegA.alu_b, AddSub.out, AddSub.sub, Flags.load],
     "sub_A_B": [RegA.load, RegA.alu_a, RegB.alu_b, AddSub.out, AddSub.sub, Flags.load],
     "sub_B_A": [RegB.load, RegB.alu_a, RegA.alu_b, AddSub.out, AddSub.sub, Flags.load],
     "sub_B_B": [RegB.load, RegB.alu_a, RegB.alu_b, AddSub.out, AddSub.sub, Flags.load],
+
+    "sbb_A_B": [RegA.load, RegA.alu_a, RegB.alu_b, AddSub.out, AddSub.sub, Flags.load, Flags.use_carry],
+
     "mov_A_B": [RegA.load, RegB.out],
     "mov_B_A": [RegB.load, RegA.out],
     "out_A": [RegA.out, OutPort.load],
