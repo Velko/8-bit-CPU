@@ -133,18 +133,13 @@ uint8_t ALU::read_flags()
 
 void ALU::set_carry()
 {
-    // an easy (but sub-optimal) way to set C bit
-    reg_a.write_quick(255);
-    reg_b.write_quick(2);
-
-    pin_subtract.off(false);
-    pin_use_carry.set(false, false);
-    pin_out.on(false);
-    pin_flags_load.on();
+    devices.mainBus.write(0b0100);
+    pin_flags_load.on(false);
+    pin_flags_sel.on();
 
     devices.clock.pulse();
     devices.inv_clock.pulse();
 
-    pin_out.off(false);
+    pin_flags_sel.off(false);
     pin_flags_load.off();
 }
