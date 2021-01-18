@@ -30,6 +30,9 @@ class ALU : public ExternalDevice
         ShiftPin pin_out;
         ShiftPin pin_subtract;
         ShiftPin pin_use_carry;
+        ShiftPin pin_flags_load;
+        ShiftPin pin_flags_out;
+        ShiftPin pin_flags_sel;
 };
 
 
