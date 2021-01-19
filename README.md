@@ -29,8 +29,12 @@ Progress
 * Built breadboard prototypes for Clock, Register, Counter, Display and EEPROM burner
 * Built ALU, complete with upgraded Flags register.
 * Wrote some [blog posts][velkoraspi] about the "adventures"
-* Working on Arduino-based testing device. Connect the module, run a command and it verifies that
-  module works as expected.
+* Arduino-based testing device. Connect the module, run a command and it verifies that module works
+  as expected.
+* Designed, soldered PCB versions of Register, ALU, Flags and EEPROM programmer
+* Reworked testing device - moved most logic to "client" side. Coding in Python is a lot quicker
+  than constantly re-flashing the Arduino. Can use unit-test framework, use debugger, quick edits.
+* Beginnings of instruction set.
 
 
 
