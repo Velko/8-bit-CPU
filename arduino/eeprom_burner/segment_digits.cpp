@@ -6,13 +6,13 @@
     Please ensure that each bit is mapped to EEPROMs data line connected to the segment.
     The exact wiring sequence is not important, as long as it is accurately described here.
  */
-#define SEG_BIT_A       (1 << 5)
-#define SEG_BIT_B       (1 << 4)
+#define SEG_BIT_A       (1 << 6)
+#define SEG_BIT_B       (1 << 7)
 #define SEG_BIT_C       (1 << 2)
 #define SEG_BIT_D       (1 << 1)
 #define SEG_BIT_E       (1 << 0)
-#define SEG_BIT_F       (1 << 6)
-#define SEG_BIT_G       (1 << 7)
+#define SEG_BIT_F       (1 << 5)
+#define SEG_BIT_G       (1 << 4)
 #define SEG_BIT_DOT     (1 << 3)
 
 /* Segments:
@@ -100,7 +100,7 @@ void write_digit(int value, const char *format)
     char output[5]; // 4 digits + \n
     sprintf_P(output, format, value);
 
-    for (int i = 3; i > -1; --i) // 4 digits backwards
+    for (int i = 0; i < 4; ++i) // 4 digits
     {
         eeprom_write(output_address, encode_digit(output[i]));
         ++output_address;
@@ -112,7 +112,7 @@ void verify_digit(int value, const char *format)
     char output[5]; // 4 digits + \n
     sprintf_P(output, format, value);
 
-    for (int i = 3; i > -1; --i) // 4 digits backwards
+    for (int i = 0; i < 4; ++i) // 4 digits
     {
         eeprom_verify(output_address, encode_digit(output[i]));
         ++output_address;
