@@ -10,7 +10,6 @@ from libpins import DeviceSetup, devices
 control = CtrlWord()
 
 ser = serial.Serial("/dev/ttyACM0", 9600, timeout=1)
-ser = serial.Serial("/dev/ttyACM0", 9600, timeout=1)
 pins = PinClient(ser)
 cpu = CPU(pins, control)
 
