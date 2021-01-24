@@ -211,7 +211,7 @@ Notes for blog
     * Fritzig, adding ICs
     * Version-control unfriendlyness
     * Kicad vs Eagle
-    
+
 
 
 * Keyboard
@@ -283,3 +283,76 @@ and which are used for microcode addressing. But I suspect that complexity incre
 It appears that simpler option would be just swich to 16-bit instructions. That will provide enough
 space for full 8-bit operands and allow up to 256 instructions. In combination with that, we might
 switch to 256 byte RAM.
+
+
+RAM signals
+-----------
+
+RAM:
+
+* ~OE~
+* ~WE~
+
+Buffer:
+
+* ~OE~  - ~BOE~
+* DIR
+
+DIR HIGH -> A2B (up)
+    LOW  -> B2A (down)
+
+do nothing (display current):
+   ~OE~ = LOW
+   ~WE~ = HIGH
+   ~BOE~ = HIGH
+   DIR  = dont care
+
+read from RAM:
+   ~OE~ = LOW
+   ~WE~ = HIGH
+   ~BOE~ = LOW
+    DIR = HIGH
+
+write to RAM:
+    ~OE~ = HIGH
+    ~WE~ = LOW  (clocked)
+    ~BOE~ = LOW
+    DIR = LOW
+
+for easier wiring - flip the buffer around, so the ~OE~ and DIR are same
+can connect them together then
+
+
+Control signals for RAM
+
+RAM Out: active low
+RAM Load: active low
+
+internal - ~OE~ == DIR
+
+Clock: 25%
+
+Truth table:
+
+OUT | LOAD | CLOCK | Function | BOE | OE | WE
+-----------------------------------------------
+ H  |  H   |   L   | Nothing  |  H  | L  | H
+ H  |  H   |   H   | Nothing  |  H  | L  | H
+ L  |  H   |   L   | Out      |  L  | L  | H
+ L  |  H   |   H   | Out      |  L  | L  | H
+ H  |  L   |   L   | Load     |  L  | H  | H
+ H  |  L   |   H   | Load     |  L  | H  | L
+ L  |  L   |   x   | invalid  |  *  | *  | *
+
+WE = !(CLOCK AND !LOAD)
+OE = !LOAD
+BOE = OUT AND LOAD
+
+OE = not(LOAD)
+WE = CLOCK nand not(LOAD)
+BOE = not(OUT nand LOAD)
+
+OE = not(LOAD)
+WE = CLOCK nand OE
+BOE = not(OUT nand LOAD)
+
