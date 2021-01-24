@@ -58,7 +58,7 @@ class TesterClient(cmd.Cmd):
         if arg in pin_map:
             control.ctrl_set(pin_map[arg].num)
         else:
-            control.ctrl_set(int(arg))
+            control.ctrl_set(int(arg, 0))
         print(bin(control.c_word))
 
     complete_set = complete_pin
