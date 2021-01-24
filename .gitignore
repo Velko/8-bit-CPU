@@ -13,6 +13,7 @@
 *.gbr
 *.drl
 *.pyc
+*.hex
 zz_*.ino
 /sample/
 /temp/
