@@ -3,7 +3,6 @@
 import sys, cmd, serial
 
 from libpins.PinClient import PinClient
-from libpins.cpu import CPU
 from libpins.ctrl_word import CtrlWord
 from libpins import DeviceSetup, devices
 
@@ -11,7 +10,6 @@ control = CtrlWord()
 
 ser = serial.Serial("/dev/ttyACM0", 9600, timeout=1)
 pins = PinClient(ser)
-cpu = CPU(pins, control)
 
 pin_map = dict()
 
