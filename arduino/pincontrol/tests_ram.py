@@ -28,19 +28,20 @@ class RamLoadOut(unittest.TestCase):
         pins.off(control.default)
 
     def write_ram(self, value):
-        Ram.buff_oe.enable()
-        Ram.ram_oe.enable() # meaning is opposite, we actually turn it off by 'enabling'
-        Ram.ram_we.enable()
+        Ram.write.enable()
         pins.bus_set(value)
 
-        # current version of RAM is unclocked that will change soon
         pins.ctrl_commit(control.c_word)
+
+        # clocked RAM write
+        pins.clock_pulse()
+
         control.reset()
         pins.off(control.default)
 
 
     def read_ram(self):
-        Ram.buff_oe.enable()
+        Ram.out.enable()
 
         pins.ctrl_commit(control.c_word)
         val = pins.bus_get()

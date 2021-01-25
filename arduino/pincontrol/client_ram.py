@@ -43,18 +43,17 @@ class TesterClient(cmd.Cmd):
         pins.off(control.default)
 
     def do_write_ram(self, arg):
-        Ram.buff_oe.enable()
-        Ram.ram_oe.enable() # meaning is opposite, we actually turn it off by 'enabling'
-        Ram.ram_we.enable()
+        Ram.write.enable()
         pins.bus_set(arg)
-
-        # current version of RAM is unclocked that will change soon
         pins.ctrl_commit(control.c_word)
+
+        pins.clock_pulse()
+
         control.reset()
         pins.off(control.default)
 
     def do_read_ram(self, arg):
-        Ram.buff_oe.enable()
+        Ram.out.enable()
 
         pins.ctrl_commit(control.c_word)
         val = pins.bus_get()

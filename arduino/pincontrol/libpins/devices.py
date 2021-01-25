@@ -63,11 +63,10 @@ class Flags:
         return f
 
 class RAM:
-    def __init__(self, name, buff_oe, ram_oe, ram_we):
+    def __init__(self, name, out, write):
         self.name = name
-        self.buff_oe = buff_oe
-        self.ram_oe = ram_oe
-        self.ram_we = ram_we
+        self.out = out
+        self.write = write
 
     def all_pins(self):
-        return [self.buff_oe, self.ram_oe, self.ram_we]
+        return [self.out, self.write]

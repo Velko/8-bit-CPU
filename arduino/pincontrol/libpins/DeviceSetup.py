@@ -31,9 +31,8 @@ Mar = Register("MAR",
     alu_b = NullPin(-1, Level.LOW))
 
 Ram = RAM("Ram",
-    buff_oe = Pin(11, Level.LOW),
-    ram_oe = Pin(12, Level.HIGH), # actually LOW, but we need it enabled by default
-    ram_we = Pin(13, Level.LOW))
+    out = Pin(11, Level.LOW),
+    write = Pin(12, Level.LOW))
 
 
 def all_pins():
