@@ -18,19 +18,21 @@ class CPU:
             raise InvalidOpcodeException(opcode)
 
         microcode = opcodes[opcode]
-        for pin in microcode:
-            pin.enable()
 
-        self.client.ctrl_commit(self.control.c_word)
+        for microstep in microcode:
+            for pin in microstep:
+                pin.enable()
+
+            self.client.ctrl_commit(self.control.c_word)
 
 
-        self.client.clock_pulse()
-        self.client.clock_inverted()
+            self.client.clock_pulse()
+            self.client.clock_inverted()
 
-        OutPort.read_bus()
+            OutPort.read_bus()
 
-        self.control.reset()
-        self.client.off(self.control.default)
+            self.control.reset()
+            self.client.off(self.control.default)
 
     def op_ldi(self, target, value):
         opcode = "ldi_{}_imm".format(target.name)
@@ -141,19 +143,19 @@ gp_regs = [RegA, RegB]
 opcodes = dict(
     [("nop", [])]+
 
-    mkuc_list(gp_regs, "ldi_{}_imm", lambda r: [r.load, Imm.out]) +
+    mkuc_list(gp_regs, "ldi_{}_imm", lambda r: [[r.load, Imm.out]]) +
 
-    [("ldi_F_imm", [Flags.load, Flags.bus_in, Imm.out])] +
+    [("ldi_F_imm", [[Flags.load, Flags.bus_in, Imm.out]])] +
 
-    mkuc_permute_all(gp_regs, "add_{}_{}", lambda l, r: [l.load, l.alu_a, r.alu_b, AddSub.out, Flags.load]) +
-    mkuc_permute_all(gp_regs, "adc_{}_{}", lambda l, r: [l.load, l.alu_a, r.alu_b, AddSub.out, Flags.load, Flags.use_carry]) +
-    mkuc_permute_nsame(gp_regs, "sub_{}_{}", lambda l, r: [l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.load]) +
-    mkuc_permute_nsame(gp_regs, "sbb_{}_{}", lambda l, r: [l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.load, Flags.use_carry]) +
+    mkuc_permute_all(gp_regs, "add_{}_{}", lambda l, r: [[l.load, l.alu_a, r.alu_b, AddSub.out, Flags.load]]) +
+    mkuc_permute_all(gp_regs, "adc_{}_{}", lambda l, r: [[l.load, l.alu_a, r.alu_b, AddSub.out, Flags.load, Flags.use_carry]]) +
+    mkuc_permute_nsame(gp_regs, "sub_{}_{}", lambda l, r: [[l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.load]]) +
+    mkuc_permute_nsame(gp_regs, "sbb_{}_{}", lambda l, r: [[l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.load, Flags.use_carry]]) +
 
-    [("sbb_A_B", [RegA.load, RegA.alu_a, RegB.alu_b, AddSub.out, AddSub.sub, Flags.load, Flags.use_carry])] +
+    [("sbb_A_B", [[RegA.load, RegA.alu_a, RegB.alu_b, AddSub.out, AddSub.sub, Flags.load, Flags.use_carry]])] +
 
-    mkuc_permute_nsame(gp_regs, "mov_{}_{}", lambda l, r: [l.load, r.out]) +
-    mkuc_list(gp_regs, "out_{}", lambda r: [r.out, OutPort.load]) +
+    mkuc_permute_nsame(gp_regs, "mov_{}_{}", lambda l, r: [[l.load, r.out]]) +
+    mkuc_list(gp_regs, "out_{}", lambda r: [[r.out, OutPort.load]]) +
 
-    [("out_F", [Flags.bus_out, OutPort.load]),]
+    [("out_F", [[Flags.bus_out, OutPort.load]]),]
 )
