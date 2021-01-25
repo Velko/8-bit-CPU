@@ -426,6 +426,18 @@ class RegisterOutputLatches(unittest.TestCase):
         # should have kept the old value
         self.assertEqual(54, value)
 
+class StoreRecall(unittest.TestCase):
+    def test_store_load(self):
+        ldi (B, 42)
+        ldi (A, 11)
+
+        st (5, B)
+        ld (A, 5)
+
+        val = out (A)
+
+        self.assertEqual(42, val)
+
 if __name__ == "__main__":
 
     # PySerial is not ready directly after connecting

@@ -65,6 +65,16 @@ class CPU:
         opcode = "mov_{}_{}".format(target.name, source.name)
         self.execute_opcode(opcode)
 
+    def op_st(self, addr, source):
+        Imm.set(addr)
+        opcode = "st_{}".format(source.name)
+        self.execute_opcode(opcode)
+
+    def op_ld(self, target, addr):
+        Imm.set(addr)
+        opcode = "ld_{}".format(target.name)
+        self.execute_opcode(opcode)
+
 class InvalidOpcodeException(Exception):
     pass
 
@@ -156,6 +166,9 @@ opcodes = dict(
 
     mkuc_permute_nsame(gp_regs, "mov_{}_{}", lambda l, r: [[l.load, r.out]]) +
     mkuc_list(gp_regs, "out_{}", lambda r: [[r.out, OutPort.load]]) +
+
+    mkuc_list(gp_regs, "st_{}", lambda r: [[Imm.out, Mar.load], [r.out, Ram.write]]) +
+    mkuc_list(gp_regs, "ld_{}", lambda r: [[Imm.out, Mar.load], [Ram.out, r.load]]) +
 
     [("out_F", [[Flags.bus_out, OutPort.load]]),]
 )
