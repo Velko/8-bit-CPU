@@ -63,6 +63,12 @@ class CPU:
         opcode = "out_{}".format(source.name)
         self.execute_opcode(opcode)
 
+        print ("{}".format(OutPort.value), flush=True)
+
+    def op_peek(self, source):
+        opcode = "out_{}".format(source.name)
+        self.execute_opcode(opcode)
+
         return OutPort.value
 
     def op_mov(self, target, source):

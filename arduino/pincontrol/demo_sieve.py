@@ -62,7 +62,7 @@ def run():
 
         if not beq(): # emulate jumping over block
 
-            print ("{}".format(out(A)), flush=True)
+            out(A)
 
             # start from next multiple
             mov (B, A)
@@ -108,7 +108,7 @@ def run():
 
     while True:
         st (r_low, A)
-        print ("----------- segment: {}+ -----------".format(out(A)), flush=True)
+        print ("----------- segment: {}+ -----------".format(peek(A)), flush=True)
 
         # Fill seg_n with non-zeros
         ldi (A, 0)
@@ -210,7 +210,7 @@ def run():
                 ld (B, r_low)
                 add (B, A)
 
-                print ("{}".format(out(B)), flush=True)
+                out(B)
 
             # next index in A
             ldi (B, 1)

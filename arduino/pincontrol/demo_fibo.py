@@ -19,17 +19,17 @@ def run():
     ldi(A, 0)
     ldi(B, 1)
 
-    print(out(A))
-    print(out(B))
+    out(A)
+    out(B)
 
     while True:
         add(A, B)
         if bcs(): break;
-        print(out(A))
+        out(A)
 
         add(B, A)
         if bcs(): break;
-        print(out(B))
+        out(B)
 
 
 if __name__ == "__main__":
