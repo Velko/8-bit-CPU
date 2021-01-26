@@ -61,21 +61,6 @@ class TesterClient(cmd.Cmd):
         val = pins.flags_get()
         print (Flags.decode(val))
 
-    def do_fibo(self, arg):
-
-        ldi(A, 0)
-        ldi(B, 1)
-
-        print(out(A))
-        print(out(B))
-
-        for _ in range(6):
-            add(A, B)
-            print(out(A))
-
-            add(B, A)
-            print(out(B))
-
 
 if __name__ == "__main__":
 
