@@ -4,6 +4,10 @@ def run():
 
     seg0 = 0x80     # location in RAM, 16 bytes
 
+    # the seg0 array serves dual purpose
+    # - the fact that there is something non-zero at seg0[n] indicates that n is a prime
+    # - contents of seg0[n] is a largest (so far) calculated multiple of that n
+
     p = 0x80        # first 2 bytes of seg0 is never accessed, reuse them
     m = 0x81
     seg_n = 0x90    # next 16 bytes - segment calc
@@ -20,7 +24,7 @@ def run():
         ldi (B, seg0)
         add (B, A)
 
-        stabs (B, A) # store "something" there (any non-zero value will do)
+        stabs (B, A) # store "something" there (for starters, any non-zero value will do)
 
         # next index in A
         ldi (B, 1)
@@ -76,6 +80,16 @@ def run():
                 ld (B, p)
                 add (A, B)
 
+            # store largest multiple
+            st (m, A)
+
+            # at address of seg0[p]
+            ld (A, p)
+            ldi (B, seg0)
+            add (B, A)
+
+            ld (A, m)
+            stabs (B, A)
 
         # next index in A
         ld (A, p)
@@ -121,24 +135,12 @@ def run():
         while True:
             st (p, A) # save for later
 
-            # test if seg0[A] != 0 meaning that A is prime
+            # load seg0[A], getting the latest calculated multiple
             ldi (B, seg0)
             add (B, A)
-            tstabs (B)
+            ldabs (A, B) # it also calculates flags accordingly
 
             if not beq():   # jump over if not prime
-
-                # add p to m until get in range of current segment
-                while True:
-                    ld (B, p)
-                    add (A, B)
-
-                    # A smaller that r_low?
-                    ld (B, r_low)
-                    cmp (A, B)
-
-                    if bcs(): continue
-                    break
 
                 # subtract, so that A becomes an index in seg_n[]
                 ld (B, r_low)
@@ -167,6 +169,18 @@ def run():
                     ld (B, p)
                     add (A, B)
 
+                # add back r_low, so the A again becomes a multiple of prime
+                # instead of index in array
+                ld (B, r_low)
+                add (A, B)
+
+                # and store it into the seg0[p]
+                st (m, A)
+                ld (A, p)
+                ldi (B, seg0)
+                add (B, A)
+                ld (A, m)
+                stabs (B, A)
 
             # next index in seg0
             ld (A, p)
