@@ -29,7 +29,7 @@ class PinClient:
         return int(self.query("b"))
 
     def flags_get(self):
-        return self.query("s")
+        return int(self.query("s"))
 
     def bus_free(self):
         self.send_cmd("f")

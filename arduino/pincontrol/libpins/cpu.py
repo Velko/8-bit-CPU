@@ -99,23 +99,23 @@ class CPU:
 
     def op_bcs(self):
         # emulated version - returns true
-        self.execute_opcode("out_F")
-        return (OutPort.value & Flags.C) != 0
+        flags = self.client.flags_get()
+        return (flags & Flags.C) != 0
 
     def op_bcc(self):
         # emulated version - returns true
-        self.execute_opcode("out_F")
-        return (OutPort.value & Flags.C) == 0
+        flags = self.client.flags_get()
+        return (flags & Flags.C) == 0
 
     def op_beq(self):
         # emulated version - returns true
-        self.execute_opcode("out_F")
-        return (OutPort.value & Flags.Z) != 0
+        flags = self.client.flags_get()
+        return (flags & Flags.Z) != 0
 
     def op_bne(self):
         # emulated version - returns true
-        self.execute_opcode("out_F")
-        return (OutPort.value & Flags.Z) == 0
+        flags = self.client.flags_get()
+        return (flags & Flags.Z) == 0
 
 
 class InvalidOpcodeException(Exception):
