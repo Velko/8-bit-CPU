@@ -14,14 +14,15 @@ pins = FakeClient()
 cpu = CPU(pins, control)
 
 def generate_microcode():
-    for key, pins in opcodes.items():
+    for key, microcode in opcodes.items():
 
-        for pin in pins:
-            pin.enable()
+        for pins in microcode:
+            control.reset()
+            for pin in pins:
+                pin.enable()
 
-        print ("{0:12}{1:010b}    {1:03x}".format(key, control.c_word))
+            print ("{0:13}{1:013b}    {1:04x}".format(key, control.c_word))
 
-        control.reset()
 
 
 if __name__ == "__main__":
