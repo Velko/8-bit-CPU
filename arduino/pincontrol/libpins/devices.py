@@ -33,6 +33,11 @@ class Flags:
     def all_pins(self):
         return [self.load, self.use_carry, self.bus_out, self.bus_in]
 
+    V = 0b1000
+    C = 0b0100
+    Z = 0b0010
+    N = 0b0001
+
     @staticmethod
     def decode(val):
         #VCZF
@@ -40,22 +45,22 @@ class Flags:
 
         f = ""
 
-        if val & 0b1000:
+        if val & Flags.V:
             f += 'V'
         else:
             f += '-'
 
-        if val & 0b0100:
+        if val & Flags.C:
             f += 'C'
         else:
             f += '-'
 
-        if val & 0b0010:
+        if val & Flags.Z:
             f += 'Z'
         else:
             f += '-'
 
-        if val & 0b0001:
+        if val & Flags.N:
             f += 'N'
         else:
             f += '-'

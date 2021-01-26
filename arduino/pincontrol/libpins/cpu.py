@@ -75,6 +75,12 @@ class CPU:
         opcode = "ld_{}".format(target.name)
         self.execute_opcode(opcode)
 
+    def op_bcs(self):
+        # emulated version - returns true
+        self.execute_opcode("out_F")
+        return (OutPort.value & Flags.C) != 0
+
+
 class InvalidOpcodeException(Exception):
     pass
 
