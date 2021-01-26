@@ -55,6 +55,10 @@ class CPU:
         opcode = "sbb_{}_{}".format(target.name, arg.name)
         self.execute_opcode(opcode)
 
+    def op_cmp(self, target, arg):
+        opcode = "cmp_{}_{}".format(target.name, arg.name)
+        self.execute_opcode(opcode)
+
     def op_out(self, source):
         opcode = "out_{}".format(source.name)
         self.execute_opcode(opcode)
@@ -70,6 +74,18 @@ class CPU:
         opcode = "st_{}".format(source.name)
         self.execute_opcode(opcode)
 
+    def op_stabs(self, addr_reg, source):
+        opcode = "stabs_{}_{}".format(addr_reg.name, source.name)
+        self.execute_opcode(opcode)
+
+    def op_ldabs(self, target, addr_reg):
+        opcode = "ldabs_{}_{}".format(target.name, addr_reg.name)
+        self.execute_opcode(opcode)
+
+    def op_tstabs(self, addr_reg):
+        opcode = "tstabs_{}".format(addr_reg.name)
+        self.execute_opcode(opcode)
+
     def op_ld(self, target, addr):
         Imm.set(addr)
         opcode = "ld_{}".format(target.name)
@@ -79,6 +95,21 @@ class CPU:
         # emulated version - returns true
         self.execute_opcode("out_F")
         return (OutPort.value & Flags.C) != 0
+
+    def op_bcc(self):
+        # emulated version - returns true
+        self.execute_opcode("out_F")
+        return (OutPort.value & Flags.C) == 0
+
+    def op_beq(self):
+        # emulated version - returns true
+        self.execute_opcode("out_F")
+        return (OutPort.value & Flags.Z) != 0
+
+    def op_bne(self):
+        # emulated version - returns true
+        self.execute_opcode("out_F")
+        return (OutPort.value & Flags.Z) == 0
 
 
 class InvalidOpcodeException(Exception):
@@ -168,13 +199,20 @@ opcodes = dict(
     mkuc_permute_nsame(gp_regs, "sub_{}_{}", lambda l, r: [[l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.load]]) +
     mkuc_permute_nsame(gp_regs, "sbb_{}_{}", lambda l, r: [[l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.load, Flags.use_carry]]) +
 
+    mkuc_permute_nsame(gp_regs, "cmp_{}_{}", lambda l, r: [[l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.load]]) +
+
     [("sbb_A_B", [[RegA.load, RegA.alu_a, RegB.alu_b, AddSub.out, AddSub.sub, Flags.load, Flags.use_carry]])] +
 
     mkuc_permute_nsame(gp_regs, "mov_{}_{}", lambda l, r: [[l.load, r.out]]) +
     mkuc_list(gp_regs, "out_{}", lambda r: [[r.out, OutPort.load]]) +
 
     mkuc_list(gp_regs, "st_{}", lambda r: [[Imm.out, Mar.load], [r.out, Ram.write]]) +
-    mkuc_list(gp_regs, "ld_{}", lambda r: [[Imm.out, Mar.load], [Ram.out, r.load]]) +
+    mkuc_permute_all(gp_regs, "stabs_{}_{}", lambda a, v: [[a.out, Mar.load], [v.out, Ram.write]]) +
+    mkuc_list(gp_regs, "ld_{}", lambda r: [[Imm.out, Mar.load], [Ram.out, r.load, Flags.load]]) +
+    mkuc_permute_all(gp_regs, "ldabs_{}_{}", lambda v, a: [[a.out, Mar.load], [v.load, Ram.out, Flags.load]]) +
+
+    mkuc_list(gp_regs, "tstabs_{}", lambda r: [[r.out, Mar.load], [Ram.out, Flags.load]]) +
+
 
     [("out_F", [[Flags.bus_out, OutPort.load]]),]
 )
