@@ -10,7 +10,7 @@ from libpins.ctrl_word import CtrlWord
 
 control = CtrlWord()
 
-ser = serial.Serial("/dev/ttyACM0", 9600, timeout=3)
+ser = serial.Serial("/dev/ttyACM0", 115200, timeout=3)
 pins = PinClient(ser)
 cpu = CPU(pins, control)
 

@@ -6,7 +6,7 @@ from .PinClient import PinClient
 from .cpu import CPU
 from .ctrl_word import CtrlWord
 
-ser = serial.Serial("/dev/ttyACM0", 9600, timeout=3)
+ser = serial.Serial("/dev/ttyACM0", 115200, timeout=3)
 pins = PinClient(ser)
 cpu = CPU(pins, CtrlWord())
 

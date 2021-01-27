@@ -16,7 +16,7 @@ uint16_t default_cword;
 
 void setup()
 {
-    Serial.begin(9600);
+    Serial.begin(115200);
     load_default_cword();
     dev.setup();
     dev.control.write16(default_cword);

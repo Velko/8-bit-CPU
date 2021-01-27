@@ -12,7 +12,7 @@ from libpins.ctrl_word import CtrlWord
 
 control = CtrlWord()
 
-ser = serial.Serial("/dev/ttyACM0", 9600, timeout=1)
+ser = serial.Serial("/dev/ttyACM0", 115200, timeout=1)
 pins = PinClient(ser)
 
 
