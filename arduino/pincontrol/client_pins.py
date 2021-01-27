@@ -97,19 +97,21 @@ class TesterClient(cmd.Cmd):
         'Pulse inverted clock'
         pins.clock_inverted()
 
+    def do_tick(self, arg):
+        'Pulse both clocks'
+        pins.clock_tick()
+
     def do_add_sample(self, arg):
         pins.off()
         pins.bus_set(24)
         pins.ctrl_clr(0)
         pins.ctrl_commit()
-        pins.clock_pulse()
-        pins.clock_inverted()
+        pins.clock_tick()
         pins.ctrl_set(0)
         pins.ctrl_clr(2)
         pins.ctrl_commit()
         pins.bus_set(18)
-        pins.clock_pulse()
-        pins.clock_inverted()
+        pins.clock_tick()
         pins.bus_free()
         pins.ctrl_set(2)
         pins.ctrl_clr(3)

@@ -36,8 +36,7 @@ class TesterClient(cmd.Cmd):
         Mar.load.enable()
         pins.bus_set(arg)
         pins.ctrl_commit(control.c_word)
-        pins.clock_pulse()
-        pins.clock_inverted()
+        pins.clock_tick()
 
         control.reset()
         pins.off(control.default)
@@ -47,7 +46,7 @@ class TesterClient(cmd.Cmd):
         pins.bus_set(arg)
         pins.ctrl_commit(control.c_word)
 
-        pins.clock_pulse()
+        pins.clock_tick()
 
         control.reset()
         pins.off(control.default)

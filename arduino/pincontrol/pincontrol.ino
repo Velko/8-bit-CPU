@@ -81,6 +81,11 @@ void loop()
         dev.inv_clock.pulse();
         break;
 
+    case 'T':
+        dev.clock.pulse();
+        dev.inv_clock.pulse();
+        break;
+
     default:
         Serial.println(F("Unknown command!"));
         break;

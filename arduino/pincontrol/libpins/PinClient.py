@@ -43,3 +43,6 @@ class PinClient:
     def clock_inverted(self):
         self.send_cmd('C')
 
+    def clock_tick(self):
+        self.send_cmd('T')
+

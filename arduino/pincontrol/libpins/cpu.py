@@ -25,11 +25,18 @@ class CPU:
 
             self.client.ctrl_commit(self.control.c_word)
 
+            # special handling when reading the bus: it should
+            # be done on "rising edge" - after primary clock
+            # has rised, but inverted is not
+            # in other cases it does not matter, using faster
+            # version
+            if OutPort.active:
+                self.client.clock_pulse()
+                OutPort.read_bus()
+                self.client.clock_inverted()
+            else:
+                self.client.clock_tick()
 
-            self.client.clock_pulse()
-            self.client.clock_inverted()
-
-            OutPort.read_bus()
 
             self.control.reset()
             self.client.off(self.control.default)
@@ -150,9 +157,8 @@ class ResultValue:
         self.active = True
 
     def read_bus(self):
-        if self.active:
-            self.value = self.client.bus_get()
-            self.active = False
+        self.value = self.client.bus_get()
+        self.active = False
 
 
 Imm = ImmediateValue()

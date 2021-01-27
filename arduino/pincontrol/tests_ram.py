@@ -21,8 +21,7 @@ class RamLoadOut(unittest.TestCase):
         Mar.load.enable()
         pins.bus_set(value)
         pins.ctrl_commit(control.c_word)
-        pins.clock_pulse()
-        pins.clock_inverted()
+        pins.clock_tick()
 
         control.reset()
         pins.off(control.default)
@@ -34,7 +33,7 @@ class RamLoadOut(unittest.TestCase):
         pins.ctrl_commit(control.c_word)
 
         # clocked RAM write
-        pins.clock_pulse()
+        pins.clock_tick()
 
         control.reset()
         pins.off(control.default)
