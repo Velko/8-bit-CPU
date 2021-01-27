@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+from libpins.markers import *
+
 def run():
 
     print ("-------- segment: 0 (simple) -------", flush=True)
@@ -224,15 +226,18 @@ def run():
 
         print ("----------- done -----------", flush=True)
 
-from libpins.markers import *
 
+# probably will need adjustments as the code above
+# might not fit in first 128 bytes
 org(0x80)
+align(16)
+
 p = Byte()
 m = Byte()
 
-# re-start addressing because seg0[0..1] are never accessed
+# rewind addressing because seg0[0..1] are never accessed
 # p and m can happily live there
-org(0x80)
+rewind(2)
 
 # the seg0 array serves dual purpose
 # - the fact that there is something non-zero at seg0[n] indicates that n is a prime

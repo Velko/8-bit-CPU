@@ -7,6 +7,17 @@ def org(address):
     global next_addr
     next_addr = address
 
+def rewind(offset):
+    global next_addr
+    next_addr -= offset
+
+def align(alignment):
+    global next_addr
+
+    mod = next_addr % alignment
+    if mod != 0:
+        next_addr += alignment - mod
+
 class Bytes:
     def __init__(self, size):
         global next_addr
