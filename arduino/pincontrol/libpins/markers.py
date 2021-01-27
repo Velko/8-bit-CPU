@@ -18,3 +18,10 @@ class Bytes:
 class Byte(Bytes):
     def __init__(self):
         Bytes.__init__(self, 1)
+
+class Label:
+    def __init__(self):
+        self.addr = None
+
+    def here(self):
+        self.addr = next_addr

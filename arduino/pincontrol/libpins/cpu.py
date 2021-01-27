@@ -105,22 +105,22 @@ class CPU:
         opcode = "ld_{}".format(target.name)
         self.execute_opcode(opcode)
 
-    def op_bcs(self):
+    def op_bcs(self, label=None):
         # emulated version - returns true
         flags = self.client.flags_get()
         return (flags & Flags.C) != 0
 
-    def op_bcc(self):
+    def op_bcc(self, label=None):
         # emulated version - returns true
         flags = self.client.flags_get()
         return (flags & Flags.C) == 0
 
-    def op_beq(self):
+    def op_beq(self, label=None):
         # emulated version - returns true
         flags = self.client.flags_get()
         return (flags & Flags.Z) != 0
 
-    def op_bne(self):
+    def op_bne(self, label=None):
         # emulated version - returns true
         flags = self.client.flags_get()
         return (flags & Flags.Z) == 0
