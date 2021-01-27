@@ -224,7 +224,7 @@ def run():
         break
 
 
-        print ("----------- done -----------", flush=True)
+    print ("----------- done -----------", flush=True)
 
 
 # probably will need adjustments as the code above
