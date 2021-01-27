@@ -2,18 +2,6 @@
 
 def run():
 
-    seg0 = 0x80     # location in RAM, 16 bytes
-
-    # the seg0 array serves dual purpose
-    # - the fact that there is something non-zero at seg0[n] indicates that n is a prime
-    # - contents of seg0[n] is a largest (so far) calculated multiple of that n
-
-    p = 0x80        # first 2 bytes of seg0 is never accessed, reuse them
-    m = 0x81
-    seg_n = 0x90    # next 16 bytes - segment calc
-    r_low = 0xA0
-
-
     print ("-------- segment: 0 (simple) -------", flush=True)
 
     ldi (A, 2)
@@ -235,6 +223,25 @@ def run():
 
 
         print ("----------- done -----------", flush=True)
+
+from libpins.markers import *
+
+org(0x80)
+p = Byte()
+m = Byte()
+
+# re-start addressing because seg0[0..1] are never accessed
+# p and m can happily live there
+org(0x80)
+
+# the seg0 array serves dual purpose
+# - the fact that there is something non-zero at seg0[n] indicates that n is a prime
+# - contents of seg0[n] is a largest (so far) calculated multiple of that n
+seg0 = Bytes(16)
+
+seg_n = Bytes(16)
+r_low = Byte()
+
 
 if __name__ == "__main__":
 

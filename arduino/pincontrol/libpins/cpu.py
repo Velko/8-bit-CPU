@@ -1,4 +1,5 @@
 from .DeviceSetup import *
+from .markers import Bytes
 
 class CPU:
     def __init__(self, client, control):
@@ -138,7 +139,12 @@ class ImmediateValue:
         self.client = client
 
     def set(self, value):
-        self.value = value
+        if isinstance(value, Bytes):
+            self.value = value.start
+        elif isinstance(value, int):
+            self.value = value
+        else:
+            raise TypeError
 
     def enable(self):
         self.client.bus_set(self.value)
