@@ -21,7 +21,7 @@ class RegisterLoadOutCommon:
     def load_test_value(self, value):
 
         ldi (self.register, value)
-        received = out(self.register)
+        received = peek(self.register)
 
         self.assertEqual(value, received)
 
@@ -69,27 +69,27 @@ class RegisterBLoadOut(unittest.TestCase, RegisterLoadOutCommon):
 class FlagsLoadOut(unittest.TestCase):
     def test_load_0(self):
         ldi (F, 0)
-        v = out(F)
+        v = peek(F)
         self.assertEqual(0, v)
 
     def test_load_1(self):
         ldi (F, 1)
-        v = out(F)
+        v = peek(F)
         self.assertEqual(1, v)
 
     def test_load_2(self):
         ldi (F, 2)
-        v = out(F)
+        v = peek(F)
         self.assertEqual(2, v)
 
     def test_load_4(self):
         ldi (F, 4)
-        v = out(F)
+        v = peek(F)
         self.assertEqual(4, v)
 
     def test_load_8(self):
         ldi (F, 8)
-        v = out(F)
+        v = peek(F)
         self.assertEqual(8, v)
 
 
@@ -100,7 +100,7 @@ class AluOperations(unittest.TestCase):
 
         add(A, B)
 
-        value = out(A)
+        value = peek(A)
         self.assertEqual(42, value)
 
     def test_add_ab_flags_small(self):
@@ -118,7 +118,7 @@ class AluOperations(unittest.TestCase):
 
         add(A, B)
 
-        value = out(A)
+        value = peek(A)
         self.assertEqual(7, value)
 
     def test_add_ab_flags_carry(self):
@@ -163,7 +163,7 @@ class AluOperations(unittest.TestCase):
 
         sub(A, B)
 
-        value = out(A)
+        value = peek(A)
         self.assertEqual(1, value)
 
     def test_sub_flags_small(self):
@@ -181,7 +181,7 @@ class AluOperations(unittest.TestCase):
 
         sub(A, B)
 
-        value = out(A)
+        value = peek(A)
         self.assertEqual(0, value)
 
     def test_sub_flags_zero(self):
@@ -199,7 +199,7 @@ class AluOperations(unittest.TestCase):
 
         sub(A, B)
 
-        value = out(A)
+        value = peek(A)
         self.assertEqual(254, value)
 
     def test_sub_flags_carry(self):
@@ -245,7 +245,7 @@ class AluOperations(unittest.TestCase):
 
         sub(B, A)
 
-        value = out(B)
+        value = peek(B)
         self.assertEqual(1, value)
 
 
@@ -256,7 +256,7 @@ class FlagsOutSameAsFlagsGet(unittest.TestCase):
         ldi(B, 5)
         add(A, B)
 
-        f = out(F)
+        f = peek(F)
 
         flags = Flags.decode(f)
         self.assertEqual("---N", flags)
@@ -266,7 +266,7 @@ class FlagsOutSameAsFlagsGet(unittest.TestCase):
         ldi(B, 5)
         sub(A, B)
 
-        f = out(F)
+        f = peek(F)
 
         flags = Flags.decode(f)
         self.assertEqual("--Z-", flags)
@@ -276,7 +276,7 @@ class FlagsOutSameAsFlagsGet(unittest.TestCase):
         ldi(B, 40)
         add(A, B)
 
-        f = out(F)
+        f = peek(F)
 
         flags = Flags.decode(f)
         self.assertEqual("-C--", flags)
@@ -286,7 +286,7 @@ class FlagsOutSameAsFlagsGet(unittest.TestCase):
         ldi(B, 20)
         sub(A, B)
 
-        f = out(F)
+        f = peek(F)
 
         flags = Flags.decode(f)
         self.assertEqual("V---", flags)
@@ -298,7 +298,7 @@ class FlagsOutSameAsFlagsGet(unittest.TestCase):
 
         adc(A, B)
 
-        value = out(A)
+        value = peek(A)
         self.assertEqual(9, value)
 
     def test_result_adc_ab_c_clear(self):
@@ -308,7 +308,7 @@ class FlagsOutSameAsFlagsGet(unittest.TestCase):
 
         adc(A, B)
 
-        value = out(A)
+        value = peek(A)
         self.assertEqual(8, value)
 
     def test_result_sbb_ab_c_set(self):
@@ -318,7 +318,7 @@ class FlagsOutSameAsFlagsGet(unittest.TestCase):
 
         sbb(A, B)
 
-        value = out(A)
+        value = peek(A)
         self.assertEqual(1, value)
 
     def test_result_sbb_ab_c_clear(self):
@@ -328,7 +328,7 @@ class FlagsOutSameAsFlagsGet(unittest.TestCase):
 
         sbb(A, B)
 
-        value = out(A)
+        value = peek(A)
         self.assertEqual(2, value)
 
 
@@ -340,7 +340,7 @@ class AluOperationsSwitchableInputs(unittest.TestCase):
 
         sub(B, A)
 
-        value = out(B)
+        value = peek(B)
         self.assertEqual(1, value)
 
     def test_add_a_a(self):
@@ -348,7 +348,7 @@ class AluOperationsSwitchableInputs(unittest.TestCase):
 
         add(A, A)
 
-        value = out(A)
+        value = peek(A)
         self.assertEqual(42, value)
 
     def test_add_b_b(self):
@@ -356,7 +356,7 @@ class AluOperationsSwitchableInputs(unittest.TestCase):
 
         add(B, B)
 
-        value = out(B)
+        value = peek(B)
         self.assertEqual(36, value)
 
     def test_sub_a_a(self):
@@ -364,7 +364,7 @@ class AluOperationsSwitchableInputs(unittest.TestCase):
 
         sub(A, A)
 
-        value = out(A)
+        value = peek(A)
         self.assertEqual(0, value)
 
     def test_sub_b_b(self):
@@ -372,7 +372,7 @@ class AluOperationsSwitchableInputs(unittest.TestCase):
 
         sub(B, B)
 
-        value = out(B)
+        value = peek(B)
         self.assertEqual(0, value)
 
 class RegisterMov(unittest.TestCase):
@@ -382,7 +382,7 @@ class RegisterMov(unittest.TestCase):
 
         mov(A, B)
 
-        value = out(A)
+        value = peek(A)
         self.assertEqual(42, value)
 
     def test_mov_b_a(self):
@@ -391,7 +391,7 @@ class RegisterMov(unittest.TestCase):
 
         mov(B, A)
 
-        value = out(B)
+        value = peek(B)
         self.assertEqual(34, value)
 
 class RegisterOutputLatches(unittest.TestCase):
@@ -434,7 +434,7 @@ class StoreRecall(unittest.TestCase):
         st (5, B)
         ld (A, 5)
 
-        val = out (A)
+        val = peek (A)
 
         self.assertEqual(42, val)
 
