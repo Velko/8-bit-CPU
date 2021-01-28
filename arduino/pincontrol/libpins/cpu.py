@@ -117,7 +117,7 @@ class CPU:
         self.backend.execute_opcode(opcode)
 
     def op_st(self, addr, source):
-        opcode = "st_{}".format(source.name)
+        opcode = "st_addr_{}".format(source.name)
         self.backend.execute_opcode(opcode, addr)
 
     def op_stabs(self, addr_reg, source):
@@ -133,23 +133,23 @@ class CPU:
         self.backend.execute_opcode(opcode)
 
     def op_ld(self, target, addr):
-        opcode = "ld_{}".format(target.name)
+        opcode = "ld_{}_addr".format(target.name)
         self.backend.execute_opcode(opcode, addr)
 
     def op_bcs(self, label=None):
-        return self.backend.execute_opcode("bcs")
+        return self.backend.execute_opcode("bcs_addr")
 
     def op_bcc(self, label=None):
-        return self.backend.execute_opcode("bcc")
+        return self.backend.execute_opcode("bcc_addr")
 
     def op_beq(self, label=None):
-        return self.backend.execute_opcode("beq")
+        return self.backend.execute_opcode("beq_addr")
 
     def op_bne(self, label=None):
-        return self.backend.execute_opcode("bne")
+        return self.backend.execute_opcode("bne_addr")
 
     def op_jmp(self, label=None):
-        return self.backend.execute_opcode("jmp")
+        return self.backend.execute_opcode("jmp_addr")
 
 
 class InvalidOpcodeException(Exception):
@@ -336,18 +336,18 @@ opcodes = dict(
     mkuc_permute_nsame(gp_regs, "mov_{}_{}", lambda l, r: MicroCode([[l.load, r.out]])) +
     mkuc_list(gp_regs, "out_{}", lambda r: MicroCode([[r.out, OutPort.load]])) +
 
-    mkuc_list(gp_regs, "st_{}", lambda r: MicroCode([setup_imm, [ProgMem.out, Mar.load, PC.count], [r.out, Ram.write]])) +
+    mkuc_list(gp_regs, "st_addr_{}", lambda r: MicroCode([setup_imm, [ProgMem.out, Mar.load, PC.count], [r.out, Ram.write]])) +
     mkuc_permute_all(gp_regs, "stabs_{}_{}", lambda a, v: MicroCode([[a.out, Mar.load], [v.out, Ram.write]])) +
-    mkuc_list(gp_regs, "ld_{}", lambda r: MicroCode([setup_imm, [ProgMem.out, Mar.load, PC.count], [Ram.out, r.load, Flags.load]])) +
+    mkuc_list(gp_regs, "ld_{}_addr", lambda r: MicroCode([setup_imm, [ProgMem.out, Mar.load, PC.count], [Ram.out, r.load, Flags.load]])) +
     mkuc_permute_all(gp_regs, "ldabs_{}_{}", lambda v, a: MicroCode([[a.out, Mar.load], [v.load, Ram.out, Flags.load]])) +
 
     mkuc_list(gp_regs, "tstabs_{}", lambda r: MicroCode([[r.out, Mar.load], [Ram.out, Flags.load]])) +
 
-    [("jmp", MicroCode([setup_imm,[ProgMem.out, PC.load]]))]+
-    [("beq", MicroCode([[PC.count]],[FlagsAlt(mask=Flags.Z, value=Flags.Z, steps=[setup_imm,[ProgMem.out, PC.load]])]))]+
-    [("bne", MicroCode([[PC.count]],[FlagsAlt(mask=Flags.Z, value=0, steps=[setup_imm,[ProgMem.out, PC.load]])]))]+
-    [("bcs", MicroCode([[PC.count]],[FlagsAlt(mask=Flags.C, value=Flags.C, steps=[setup_imm,[ProgMem.out, PC.load]])]))]+
-    [("bcc", MicroCode([[PC.count]],[FlagsAlt(mask=Flags.C, value=0, steps=[setup_imm,[ProgMem.out, PC.load]])]))]+
+    [("jmp_addr", MicroCode([setup_imm,[ProgMem.out, PC.load]]))]+
+    [("beq_addr", MicroCode([[PC.count]],[FlagsAlt(mask=Flags.Z, value=Flags.Z, steps=[setup_imm,[ProgMem.out, PC.load]])]))]+
+    [("bne_addr", MicroCode([[PC.count]],[FlagsAlt(mask=Flags.Z, value=0, steps=[setup_imm,[ProgMem.out, PC.load]])]))]+
+    [("bcs_addr", MicroCode([[PC.count]],[FlagsAlt(mask=Flags.C, value=Flags.C, steps=[setup_imm,[ProgMem.out, PC.load]])]))]+
+    [("bcc_addr", MicroCode([[PC.count]],[FlagsAlt(mask=Flags.C, value=0, steps=[setup_imm,[ProgMem.out, PC.load]])]))]+
 
     [("out_F", MicroCode([[Flags.bus_out, OutPort.load]]))]
 )
