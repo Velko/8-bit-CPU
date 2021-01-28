@@ -209,12 +209,16 @@ class ProgramCounter:
         self.c_enabled = False
         self.out = self
         self.count = EnableCallback(self.enable_count)
+        self.load  = EnableCallback(self.enable_load)
 
     def connect(self, client):
         pass
 
     def enable_count(self):
         self.c_enabled = True
+
+    def enable_load(self):
+        pass
 
     def enable(self):
         # OUT enable
@@ -307,6 +311,7 @@ opcodes = dict(
 
     mkuc_list(gp_regs, "tstabs_{}", lambda r: [[r.out, Mar.load], [Ram.out, Flags.load]]) +
 
+    [("jmp", [setup_imm,[ProgMem.out, PC.load]])]+
 
     [("out_F", [[Flags.bus_out, OutPort.load]]),]
 )
