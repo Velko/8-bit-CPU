@@ -137,19 +137,19 @@ class CPU:
         self.backend.execute_opcode(opcode, addr)
 
     def op_bcs(self, label=None):
-        return self.backend.execute_opcode("bcs_addr")
+        return self.backend.execute_opcode("bcs_addr", label)
 
     def op_bcc(self, label=None):
-        return self.backend.execute_opcode("bcc_addr")
+        return self.backend.execute_opcode("bcc_addr", label)
 
     def op_beq(self, label=None):
-        return self.backend.execute_opcode("beq_addr")
+        return self.backend.execute_opcode("beq_addr", label)
 
     def op_bne(self, label=None):
-        return self.backend.execute_opcode("bne_addr")
+        return self.backend.execute_opcode("bne_addr", label)
 
     def op_jmp(self, label=None):
-        return self.backend.execute_opcode("jmp_addr")
+        return self.backend.execute_opcode("jmp_addr", label)
 
 
 class InvalidOpcodeException(Exception):
