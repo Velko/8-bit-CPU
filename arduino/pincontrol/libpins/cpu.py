@@ -64,7 +64,6 @@ class CPU:
     def __init__(self, client, control):
 
         self.backend = CPUBackendControl(client, control)
-        self.client = client
 
         self.reg_A = RegA
         self.reg_B = RegB
