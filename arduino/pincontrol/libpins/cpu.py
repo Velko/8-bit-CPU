@@ -1,15 +1,10 @@
 from .DeviceSetup import *
 from .markers import Bytes
 
-class CPU:
+class CPUBackendControl:
     def __init__(self, client, control):
         self.client = client
         self.control = control
-
-        self.reg_A = RegA
-        self.reg_B = RegB
-        self.reg_F = Flags
-        self.alu = AddSub
 
         Imm.connect(self.client)
         OutPort.connect(self.client)
@@ -42,68 +37,80 @@ class CPU:
             self.control.reset()
             self.client.off(self.control.default)
 
+
+class CPU:
+    def __init__(self, client, control):
+
+        self.backend = CPUBackendControl(client, control)
+        self.client = client
+
+        self.reg_A = RegA
+        self.reg_B = RegB
+        self.reg_F = Flags
+        self.alu = AddSub
+
     def op_ldi(self, target, value):
         opcode = "ldi_{}_imm".format(target.name)
         Imm.set(value)
-        self.execute_opcode(opcode)
+        self.backend.execute_opcode(opcode)
 
     def op_add(self, target, arg):
         opcode = "add_{}_{}".format(target.name, arg.name)
-        self.execute_opcode(opcode)
+        self.backend.execute_opcode(opcode)
 
     def op_adc(self, target, arg):
         opcode = "adc_{}_{}".format(target.name, arg.name)
-        self.execute_opcode(opcode)
+        self.backend.execute_opcode(opcode)
 
     def op_sub(self, target, arg):
         opcode = "sub_{}_{}".format(target.name, arg.name)
-        self.execute_opcode(opcode)
+        self.backend.execute_opcode(opcode)
 
     def op_sbb(self, target, arg):
         opcode = "sbb_{}_{}".format(target.name, arg.name)
-        self.execute_opcode(opcode)
+        self.backend.execute_opcode(opcode)
 
     def op_cmp(self, target, arg):
         opcode = "cmp_{}_{}".format(target.name, arg.name)
-        self.execute_opcode(opcode)
+        self.backend.execute_opcode(opcode)
 
     def op_out(self, source):
         opcode = "out_{}".format(source.name)
-        self.execute_opcode(opcode)
+        self.backend.execute_opcode(opcode)
 
         print ("{}".format(OutPort.value), flush=True)
 
     def op_peek(self, source):
         opcode = "out_{}".format(source.name)
-        self.execute_opcode(opcode)
+        self.backend.execute_opcode(opcode)
 
         return OutPort.value
 
     def op_mov(self, target, source):
         opcode = "mov_{}_{}".format(target.name, source.name)
-        self.execute_opcode(opcode)
+        self.backend.execute_opcode(opcode)
 
     def op_st(self, addr, source):
         Imm.set(addr)
         opcode = "st_{}".format(source.name)
-        self.execute_opcode(opcode)
+        self.backend.execute_opcode(opcode)
 
     def op_stabs(self, addr_reg, source):
         opcode = "stabs_{}_{}".format(addr_reg.name, source.name)
-        self.execute_opcode(opcode)
+        self.backend.execute_opcode(opcode)
 
     def op_ldabs(self, target, addr_reg):
         opcode = "ldabs_{}_{}".format(target.name, addr_reg.name)
-        self.execute_opcode(opcode)
+        self.backend.execute_opcode(opcode)
 
     def op_tstabs(self, addr_reg):
         opcode = "tstabs_{}".format(addr_reg.name)
-        self.execute_opcode(opcode)
+        self.backend.execute_opcode(opcode)
 
     def op_ld(self, target, addr):
         Imm.set(addr)
         opcode = "ld_{}".format(target.name)
-        self.execute_opcode(opcode)
+        self.backend.execute_opcode(opcode)
 
     def op_bcs(self, label=None):
         # emulated version - returns true
