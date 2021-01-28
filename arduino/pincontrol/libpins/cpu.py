@@ -24,10 +24,13 @@ class CPUBackendControl:
         if microcode.is_flag_dependent():
             flags = self.client.flags_get()
 
-        for microstep in microcode.steps(flags):
+        steps = microcode.steps(flags)
+        for microstep in steps:
             self.execute_step(microstep)
 
         Imm.clear()
+
+        return not microcode.are_default(steps)
 
     def execute_step(self, microstep):
 
@@ -132,28 +135,19 @@ class CPU:
         self.backend.execute_opcode(opcode)
 
     def op_bcs(self, label=None):
-        # emulated version - returns true
-        flags = self.client.flags_get()
-        return (flags & Flags.C) != 0
+        return self.backend.execute_opcode("bcs")
 
     def op_bcc(self, label=None):
-        # emulated version - returns true
-        flags = self.client.flags_get()
-        return (flags & Flags.C) == 0
+        return self.backend.execute_opcode("bcc")
 
     def op_beq(self, label=None):
-        # emulated version - returns true
-        flags = self.client.flags_get()
-        return (flags & Flags.Z) != 0
+        return self.backend.execute_opcode("beq")
 
     def op_bne(self, label=None):
-        # emulated version - returns true
-        flags = self.client.flags_get()
-        return (flags & Flags.Z) == 0
+        return self.backend.execute_opcode("bne")
 
     def op_jmp(self, label=None):
-        # emulated - always returns true
-        return True
+        return self.backend.execute_opcode("jmp")
 
 
 class InvalidOpcodeException(Exception):
@@ -281,6 +275,9 @@ class MicroCode:
 
         return self._steps
 
+    def are_default(self, steps):
+        return steps == self._steps
+
 
 def mkuc_list(registers, nameformat, pinformatter):
     ops = list()
@@ -344,6 +341,10 @@ opcodes = dict(
     mkuc_list(gp_regs, "tstabs_{}", lambda r: [[r.out, Mar.load], [Ram.out, Flags.load]]) +
 
     [("jmp", MicroCode([setup_imm,[ProgMem.out, PC.load]]))]+
+    [("beq", MicroCode([[PC.count]],[FlagsAlt(mask=Flags.Z, value=Flags.Z, steps=[setup_imm,[ProgMem.out, PC.load]])]))]+
+    [("bne", MicroCode([[PC.count]],[FlagsAlt(mask=Flags.Z, value=0, steps=[setup_imm,[ProgMem.out, PC.load]])]))]+
+    [("bcs", MicroCode([[PC.count]],[FlagsAlt(mask=Flags.C, value=Flags.C, steps=[setup_imm,[ProgMem.out, PC.load]])]))]+
+    [("bcc", MicroCode([[PC.count]],[FlagsAlt(mask=Flags.C, value=0, steps=[setup_imm,[ProgMem.out, PC.load]])]))]+
 
     [("out_F", MicroCode([[Flags.bus_out, OutPort.load]]))]
 )
