@@ -10,9 +10,11 @@ class CPUBackendControl:
         OutPort.connect(self.client)
         PC.connect(self.client)
 
-    def execute_opcode(self, opcode):
+    def execute_opcode(self, opcode, arg=None):
         if not opcode in opcodes:
             raise InvalidOpcodeException(opcode)
+
+        Imm.set(arg)
 
         # fetch is emulated, it always advances PC by one
         PC.advance()
@@ -72,8 +74,7 @@ class CPU:
 
     def op_ldi(self, target, value):
         opcode = "ldi_{}_imm".format(target.name)
-        Imm.set(value)
-        self.backend.execute_opcode(opcode)
+        self.backend.execute_opcode(opcode, value)
 
     def op_add(self, target, arg):
         opcode = "add_{}_{}".format(target.name, arg.name)
@@ -112,9 +113,8 @@ class CPU:
         self.backend.execute_opcode(opcode)
 
     def op_st(self, addr, source):
-        Imm.set(addr)
         opcode = "st_{}".format(source.name)
-        self.backend.execute_opcode(opcode)
+        self.backend.execute_opcode(opcode, addr)
 
     def op_stabs(self, addr_reg, source):
         opcode = "stabs_{}_{}".format(addr_reg.name, source.name)
@@ -129,9 +129,8 @@ class CPU:
         self.backend.execute_opcode(opcode)
 
     def op_ld(self, target, addr):
-        Imm.set(addr)
         opcode = "ld_{}".format(target.name)
-        self.backend.execute_opcode(opcode)
+        self.backend.execute_opcode(opcode, addr)
 
     def op_bcs(self, label=None):
         return self.backend.execute_opcode("bcs")
@@ -162,10 +161,10 @@ class ImmediateValue:
         self.client = client
 
     def set(self, value):
-        if isinstance(value, Bytes):
-            self.value = value.start
-        elif isinstance(value, int):
+        if isinstance(value, int) or value is None:
             self.value = value
+        elif isinstance(value, Bytes):
+            self.value = value.start
         else:
             raise TypeError
 
@@ -173,7 +172,8 @@ class ImmediateValue:
         self.value = None
 
     def enable(self):
-        self.client.bus_set(self.value)
+        if self.value is not None:
+            self.client.bus_set(self.value)
 
 class ResultValue:
     def __init__(self):
