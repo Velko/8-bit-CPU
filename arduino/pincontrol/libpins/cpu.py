@@ -150,6 +150,9 @@ class CPU:
     def op_jmp(self, label=None):
         return self.backend.execute_opcode("jmp_addr", label)
 
+    def op_hlt(self):
+        self.backend.execute_opcode("hlt")
+
 
 class InvalidOpcodeException(Exception):
     pass
@@ -355,5 +358,6 @@ opcodes = dict(
     [("bcs_addr", MicroCode([[PC.count]],[FlagsAlt(mask=Flags.C, value=Flags.C, steps=[setup_imm,[ProgMem.out, PC.load]])]))]+
     [("bcc_addr", MicroCode([[PC.count]],[FlagsAlt(mask=Flags.C, value=0, steps=[setup_imm,[ProgMem.out, PC.load]])]))]+
 
-    [("out_F", MicroCode([[Flags.bus_out, OutPort.load]]))]
+    [("out_F", MicroCode([[Flags.bus_out, OutPort.load]]))] +
+    [("hlt", MicroCode([[Clock.halt]]))]
 )

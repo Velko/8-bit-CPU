@@ -225,7 +225,7 @@ def run():
 
 
     print ("----------- done -----------", flush=True)
-
+    hlt()
 
 # probably will need adjustments as the code above
 # might not fit in first 128 bytes

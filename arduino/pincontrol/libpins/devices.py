@@ -75,3 +75,11 @@ class RAM:
 
     def all_pins(self):
         return [self.out, self.write]
+
+class Clock:
+    def __init__(self, name, halt):
+        self.name = name
+        self.halt = halt
+
+    def all_pins(self):
+        return [self.halt]

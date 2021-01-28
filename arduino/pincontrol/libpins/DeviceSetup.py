@@ -35,6 +35,10 @@ Ram = RAM("Ram",
     write = Pin(12, Level.LOW))
 
 
+Clock = Clock("Clock",
+    halt = Pin(15, Level.HIGH))
+
+
 def all_pins():
     return RegA.all_pins() + RegB.all_pins() + AddSub.all_pins() + Flags.all_pins() \
-        + Mar.all_pins() + Ram.all_pins()
+        + Mar.all_pins() + Ram.all_pins() + Clock.all_pins()
