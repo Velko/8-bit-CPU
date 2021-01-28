@@ -19,7 +19,7 @@ class CPUBackendControl:
 
         microcode = opcodes[opcode]
 
-        for microstep in microcode:
+        for microstep in microcode.steps:
             self.execute_step(microstep)
 
         Imm.clear()
@@ -250,13 +250,18 @@ ProgMAR = NullRegister()
 # Memory output when loading from program memory. Normally RAM or ROM, internal Imm for emulated
 ProgMem = Imm
 
+class MicroCode:
+    def __init__(self, steps):
+        self.steps = steps
+
+
 def mkuc_list(registers, nameformat, pinformatter):
     ops = list()
 
     for r in registers:
         name = nameformat.format(r.name)
         ucode = pinformatter(r)
-        ops.append((name, ucode))
+        ops.append((name, MicroCode(ucode)))
     return ops
 
 
@@ -267,7 +272,7 @@ def mkuc_permute_all(registers, nameformat, pinformatter):
         for r in registers:
             name = nameformat.format(l.name, r.name)
             ucode = pinformatter(l, r)
-            ops.append((name, ucode))
+            ops.append((name, MicroCode(ucode)))
     return ops
 
 def mkuc_permute_nsame(registers, nameformat, pinformatter):
@@ -278,7 +283,7 @@ def mkuc_permute_nsame(registers, nameformat, pinformatter):
             if l == r: continue
             name = nameformat.format(l.name, r.name)
             ucode = pinformatter(l, r)
-            ops.append((name, ucode))
+            ops.append((name, MicroCode(ucode)))
     return ops
 
 gp_regs = [RegA, RegB]
@@ -286,11 +291,11 @@ gp_regs = [RegA, RegB]
 setup_imm = [PC.out, ProgMAR.load]
 
 opcodes = dict(
-    [("nop", [])]+
+    [("nop", MicroCode([]))]+
 
     mkuc_list(gp_regs, "ldi_{}_imm", lambda r: [setup_imm, [r.load, ProgMem.out, PC.count]]) +
 
-    [("ldi_F_imm", [setup_imm, [Flags.load, Flags.bus_in, ProgMem.out, PC.count]])] +
+    [("ldi_F_imm", MicroCode([setup_imm, [Flags.load, Flags.bus_in, ProgMem.out, PC.count]]))] +
 
     mkuc_permute_all(gp_regs, "add_{}_{}", lambda l, r: [[l.load, l.alu_a, r.alu_b, AddSub.out, Flags.load]]) +
     mkuc_permute_all(gp_regs, "adc_{}_{}", lambda l, r: [[l.load, l.alu_a, r.alu_b, AddSub.out, Flags.load, Flags.use_carry]]) +
@@ -299,7 +304,7 @@ opcodes = dict(
 
     mkuc_permute_nsame(gp_regs, "cmp_{}_{}", lambda l, r: [[l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.load]]) +
 
-    [("sbb_A_B", [[RegA.load, RegA.alu_a, RegB.alu_b, AddSub.out, AddSub.sub, Flags.load, Flags.use_carry]])] +
+    [("sbb_A_B", MicroCode([[RegA.load, RegA.alu_a, RegB.alu_b, AddSub.out, AddSub.sub, Flags.load, Flags.use_carry]]))] +
 
     mkuc_permute_nsame(gp_regs, "mov_{}_{}", lambda l, r: [[l.load, r.out]]) +
     mkuc_list(gp_regs, "out_{}", lambda r: [[r.out, OutPort.load]]) +
@@ -311,7 +316,7 @@ opcodes = dict(
 
     mkuc_list(gp_regs, "tstabs_{}", lambda r: [[r.out, Mar.load], [Ram.out, Flags.load]]) +
 
-    [("jmp", [setup_imm,[ProgMem.out, PC.load]])]+
+    [("jmp", MicroCode([setup_imm,[ProgMem.out, PC.load]]))]+
 
-    [("out_F", [[Flags.bus_out, OutPort.load]]),]
+    [("out_F", MicroCode([[Flags.bus_out, OutPort.load]]))]
 )
