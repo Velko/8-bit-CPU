@@ -16,26 +16,29 @@ class CPUBackendControl:
         microcode = opcodes[opcode]
 
         for microstep in microcode:
-            for pin in microstep:
-                pin.enable()
+            self.execute_step(microstep)
 
-            self.client.ctrl_commit(self.control.c_word)
+    def execute_step(self, microstep):
+        for pin in microstep:
+            pin.enable()
 
-            # special handling when reading the bus: it should
-            # be done on "rising edge" - after primary clock
-            # has rised, but inverted is not
-            # in other cases it does not matter, using faster
-            # version
-            if OutPort.active:
-                self.client.clock_pulse()
-                OutPort.read_bus()
-                self.client.clock_inverted()
-            else:
-                self.client.clock_tick()
+        self.client.ctrl_commit(self.control.c_word)
+
+        # special handling when reading the bus: it should
+        # be done on "rising edge" - after primary clock
+        # has rised, but inverted is not
+        # in other cases it does not matter, using faster
+        # version
+        if OutPort.active:
+            self.client.clock_pulse()
+            OutPort.read_bus()
+            self.client.clock_inverted()
+        else:
+            self.client.clock_tick()
 
 
-            self.control.reset()
-            self.client.off(self.control.default)
+        self.control.reset()
+        self.client.off(self.control.default)
 
 
 class CPU:
