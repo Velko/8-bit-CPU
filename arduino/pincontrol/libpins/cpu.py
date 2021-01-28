@@ -255,14 +255,30 @@ ProgMAR = NullRegister()
 # Memory output when loading from program memory. Normally RAM or ROM, internal Imm for emulated
 ProgMem = Imm
 
+class FlagsAlt:
+    def __init__(self, mask, value, steps):
+        self.mask = mask
+        self.value = value
+        self.steps = steps
+
 class MicroCode:
-    def __init__(self, steps):
+    def __init__(self, steps, f_alt=None):
         self._steps = steps
+        self.f_alt = f_alt
 
     def is_flag_dependent(self):
-        return False
+        return self.f_alt is not None
 
     def steps(self, flags):
+        if self.f_alt:
+            matches = list(filter(lambda alt: flags & alt.mask == alt.value, self.f_alt))
+
+            if len(matches) > 1:
+                raise Exception("Multiple options found")
+
+            if len(matches) == 1:
+                return matches[0].steps
+
         return self._steps
 
 
