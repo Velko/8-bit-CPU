@@ -19,7 +19,12 @@ class CPUBackendControl:
 
         microcode = opcodes[opcode]
 
-        for microstep in microcode.steps:
+        flags = None
+
+        if microcode.is_flag_dependent():
+            flags = self.client.flags_get()
+
+        for microstep in microcode.steps(flags):
             self.execute_step(microstep)
 
         Imm.clear()
@@ -252,7 +257,13 @@ ProgMem = Imm
 
 class MicroCode:
     def __init__(self, steps):
-        self.steps = steps
+        self._steps = steps
+
+    def is_flag_dependent(self):
+        return False
+
+    def steps(self, flags):
+        return self._steps
 
 
 def mkuc_list(registers, nameformat, pinformatter):
