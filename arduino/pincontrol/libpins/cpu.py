@@ -60,10 +60,9 @@ class CPUBackendControl:
             if PC.c_enabled:
                 PC.advance()
 
-            self.client.off(self.control.default)
-
         OutPort.disable()
         PC.disable()
+        Imm.disable()
 
 
 class CPU:
@@ -160,6 +159,7 @@ class ImmediateValue:
         self.client = None
         self.value = None
         self.out = self
+        self.write_enabled = False
 
     def connect(self, client):
         self.client = client
@@ -175,9 +175,15 @@ class ImmediateValue:
     def clear(self):
         self.value = None
 
+    def disable(self):
+        if self.write_enabled:
+            self.client.bus_free()
+            self.write_enabled = False
+
     def enable(self):
         if self.value is not None:
             self.client.bus_set(self.value)
+            self.write_enabled = True
 
 class ResultValue:
     def __init__(self):
