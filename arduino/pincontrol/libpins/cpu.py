@@ -8,10 +8,14 @@ class CPUBackendControl:
 
         Imm.connect(self.client)
         OutPort.connect(self.client)
+        PC.connect(self.client)
 
     def execute_opcode(self, opcode):
         if not opcode in opcodes:
             raise InvalidOpcodeException(opcode)
+
+        # fetch is emulated, it always advances PC by one
+        PC.advance()
 
         microcode = opcodes[opcode]
 
@@ -21,6 +25,7 @@ class CPUBackendControl:
         Imm.clear()
 
     def execute_step(self, microstep):
+
         for pin in microstep:
             pin.enable()
 
@@ -38,9 +43,12 @@ class CPUBackendControl:
         else:
             self.client.clock_tick()
 
+        if PC.c_enabled:
+            PC.advance()
 
         self.control.reset()
         OutPort.disable()
+        PC.disable()
         self.client.off(self.control.default)
 
 
@@ -188,10 +196,55 @@ class ResultValue:
     def read_bus(self):
         self.value = self.client.bus_get()
 
+class EnableCallback:
+    def __init__(self, callback):
+        self.callback = callback
+
+    def enable(self):
+        self.callback()
+
+class ProgramCounter:
+    def __init__(self):
+        self.value = 0
+        self.c_enabled = False
+        self.out = self
+        self.count = EnableCallback(self.enable_count)
+
+    def connect(self, client):
+        pass
+
+    def enable_count(self):
+        self.c_enabled = True
+
+    def enable(self):
+        # OUT enable
+        pass
+
+    def disable(self):
+        self.c_enabled = False
+
+    def advance(self):
+        self.value += 1
+
+# to emulate ProgMAR
+class NullRegister:
+    def __init__(self):
+        self.load = self
+
+    def enable(self):
+        pass
+
+
 
 Imm = ImmediateValue()
 OutPort = ResultValue()
+PC = ProgramCounter()
 
+# MAR to access program memory, normally same as regular MAR, Null in emulated mode
+ProgMAR = NullRegister()
+
+# Memory output when loading from program memory. Normally RAM or ROM, internal Imm for emulated
+ProgMem = Imm
 
 def mkuc_list(registers, nameformat, pinformatter):
     ops = list()
@@ -226,13 +279,14 @@ def mkuc_permute_nsame(registers, nameformat, pinformatter):
 
 gp_regs = [RegA, RegB]
 
+setup_imm = [PC.out, ProgMAR.load]
 
 opcodes = dict(
     [("nop", [])]+
 
-    mkuc_list(gp_regs, "ldi_{}_imm", lambda r: [[r.load, Imm.out]]) +
+    mkuc_list(gp_regs, "ldi_{}_imm", lambda r: [setup_imm, [r.load, ProgMem.out, PC.count]]) +
 
-    [("ldi_F_imm", [[Flags.load, Flags.bus_in, Imm.out]])] +
+    [("ldi_F_imm", [setup_imm, [Flags.load, Flags.bus_in, ProgMem.out, PC.count]])] +
 
     mkuc_permute_all(gp_regs, "add_{}_{}", lambda l, r: [[l.load, l.alu_a, r.alu_b, AddSub.out, Flags.load]]) +
     mkuc_permute_all(gp_regs, "adc_{}_{}", lambda l, r: [[l.load, l.alu_a, r.alu_b, AddSub.out, Flags.load, Flags.use_carry]]) +
@@ -246,9 +300,9 @@ opcodes = dict(
     mkuc_permute_nsame(gp_regs, "mov_{}_{}", lambda l, r: [[l.load, r.out]]) +
     mkuc_list(gp_regs, "out_{}", lambda r: [[r.out, OutPort.load]]) +
 
-    mkuc_list(gp_regs, "st_{}", lambda r: [[Imm.out, Mar.load], [r.out, Ram.write]]) +
+    mkuc_list(gp_regs, "st_{}", lambda r: [setup_imm, [ProgMem.out, Mar.load, PC.count], [r.out, Ram.write]]) +
     mkuc_permute_all(gp_regs, "stabs_{}_{}", lambda a, v: [[a.out, Mar.load], [v.out, Ram.write]]) +
-    mkuc_list(gp_regs, "ld_{}", lambda r: [[Imm.out, Mar.load], [Ram.out, r.load, Flags.load]]) +
+    mkuc_list(gp_regs, "ld_{}", lambda r: [setup_imm, [ProgMem.out, Mar.load, PC.count], [Ram.out, r.load, Flags.load]]) +
     mkuc_permute_all(gp_regs, "ldabs_{}_{}", lambda v, a: [[a.out, Mar.load], [v.load, Ram.out, Flags.load]]) +
 
     mkuc_list(gp_regs, "tstabs_{}", lambda r: [[r.out, Mar.load], [Ram.out, Flags.load]]) +
