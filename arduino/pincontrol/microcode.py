@@ -15,14 +15,23 @@ cpu = CPU(pins, control)
 
 def generate_microcode():
     for key, microcode in opcodes.items():
+        if microcode.is_flag_dependent():
+            for f in range(16):
+                process_steps(key, microcode, f)
+        else:
+            process_steps(key, microcode, None)
 
-        for pins in microcode:
-            control.reset()
-            for pin in pins:
-                pin.enable()
 
-            print ("{0:13}{1:013b}    {1:04x}".format(key, control.c_word))
+def process_steps(key, microcode, flags):
+    for step, pins in enumerate(microcode.steps(flags)):
+        control.reset()
+        for pin in pins:
+            pin.enable()
 
+        if flags is None:
+            flags = 0
+
+        print ("{0:13}    {1:04b}  {2}  {3:013b}    {3:04x}".format(key, flags, step, control.c_word))
 
 
 if __name__ == "__main__":
