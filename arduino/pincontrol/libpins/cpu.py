@@ -18,6 +18,8 @@ class CPUBackendControl:
         for microstep in microcode:
             self.execute_step(microstep)
 
+        Imm.clear()
+
     def execute_step(self, microstep):
         for pin in microstep:
             pin.enable()
@@ -38,6 +40,7 @@ class CPUBackendControl:
 
 
         self.control.reset()
+        OutPort.disable()
         self.client.off(self.control.default)
 
 
@@ -160,6 +163,9 @@ class ImmediateValue:
         else:
             raise TypeError
 
+    def clear(self):
+        self.value = None
+
     def enable(self):
         self.client.bus_set(self.value)
 
@@ -176,9 +182,11 @@ class ResultValue:
     def enable(self):
         self.active = True
 
+    def disable(self):
+        self.active = False
+
     def read_bus(self):
         self.value = self.client.bus_get()
-        self.active = False
 
 
 Imm = ImmediateValue()
