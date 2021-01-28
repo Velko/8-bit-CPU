@@ -125,6 +125,10 @@ class CPU:
         flags = self.client.flags_get()
         return (flags & Flags.Z) == 0
 
+    def op_jmp(self, label=None):
+        # emulated - always returns true
+        return True
+
 
 class InvalidOpcodeException(Exception):
     pass
