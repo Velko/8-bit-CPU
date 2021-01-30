@@ -32,10 +32,10 @@ class TesterClient(cmd.Cmd):
         print (bin(pins.defaults))
 
     def do_load_a(self, arg):
-        ldi(A, arg)
+        ldi(A, int(arg, 0))
 
     def do_load_b(self, arg):
-        ldi(B, arg)
+        ldi(B, int(arg, 0))
 
     def do_load_f(self, arg):
         ldi(F, arg)
