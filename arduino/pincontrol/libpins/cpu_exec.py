@@ -236,7 +236,52 @@ gp_regs = [RegA, RegB]
 
 setup_imm = [PC.out, ProgMAR.load]
 
-opcodes = dict(
+class MicrocodeBuilder:
+    def __init__(self):
+        self.opcodes = []
+
+    def add_instruction(self, name, *fmt):
+        opcode = name.format(*fmt)
+        ibuilder = InstructionBuilder()
+
+        self.opcodes.append((opcode, ibuilder))
+        return ibuilder
+
+    def build(self):
+        lst = map(lambda opcb: (opcb[0], opcb[1].build()), self.opcodes)
+        return dict(lst)
+
+class InstructionBuilder:
+    def __init__(self):
+        self.steps = []
+
+    def build(self):
+        return MicroCode(self.steps)
+
+    def add_step(self, pins):
+        self.steps.append(pins)
+
+def build_opcodes():
+
+    builder = MicrocodeBuilder()
+
+    builder.add_instruction("nop")
+
+    for r in gp_regs:
+        instr = builder.add_instruction("ldi_{}_imm", r)
+        instr.add_step(setup_imm)
+        instr.add_step([r.load, ProgMem.out, PC.count])
+
+    instr = builder.add_instruction("ldi_F_imm")
+    instr.add_step(setup_imm)
+    instr.add_step([Flags.load, Flags.bus_in, ProgMem.out, PC.count])
+
+    return builder.build()
+
+
+opcodes = build_opcodes()
+
+opcodes0 = dict(
     [("nop", MicroCode([]))]+
 
     mkuc_list(gp_regs, "ldi_{}_imm", lambda r: MicroCode([setup_imm, [r.load, ProgMem.out, PC.count]])) +

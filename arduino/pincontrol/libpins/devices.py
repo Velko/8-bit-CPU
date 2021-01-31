@@ -11,6 +11,9 @@ class Register:
     def all_pins(self):
         return [self.out, self.load, self.alu_a, self.alu_b]
 
+    def __str__(self):
+        return self.name
+
 
 class ALU:
     def __init__(self, name, out, sub):
