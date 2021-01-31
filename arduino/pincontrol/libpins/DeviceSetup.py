@@ -2,16 +2,17 @@ from .devices import *
 from .pin import Pin, NullPin, Level, Mux, MuxPin
 
 OutMux = Mux([5, 6, 7], 7) # bits 5-7 in Control Word, defaults to 7
+LoadMux = Mux([13, 14, 15], 7)
 
 RegA = Register("A",
     out = MuxPin(OutMux, 0),
-    load = Pin(0, Level.LOW),
+    load = MuxPin(LoadMux, 0),
     alu_a = NullPin(10, Level.LOW),
     alu_b = NullPin(11, Level.LOW))
 
 RegB = Register("B",
     out = MuxPin(OutMux, 1),
-    load = Pin(2, Level.LOW),
+    load = MuxPin(LoadMux, 1),
     alu_a = NullPin(12, Level.LOW),
     alu_b = NullPin(13, Level.LOW))
 
@@ -28,17 +29,17 @@ Flags = Flags("F",
 # Note: pins overlap with currently unused ones for RegA and RegB
 Mar = Register("MAR",
     out = NullPin(-1, Level.LOW),
-    load = Pin(10, Level.LOW),
+    load = MuxPin(LoadMux, 2),
     alu_a = NullPin(-1, Level.LOW),
     alu_b = NullPin(-1, Level.LOW))
 
 Ram = RAM("Ram",
     out = MuxPin(OutMux, 3),
-    write = Pin(12, Level.LOW))
+    write = MuxPin(LoadMux, 3))
 
 
 Clock = Clock("Clock",
-    halt = Pin(15, Level.HIGH))
+    halt = Pin(8, Level.LOW))
 
 
 def all_pins():
