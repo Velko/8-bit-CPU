@@ -18,7 +18,8 @@ def find_serial_port():
 
 ser = serial.Serial(find_serial_port(), 115200, timeout=3)
 pins = PinClient(ser)
-cpu.setup(pins, CtrlWord())
+control = CtrlWord()
+cpu.setup(pins, control)
 
 
 def setup():

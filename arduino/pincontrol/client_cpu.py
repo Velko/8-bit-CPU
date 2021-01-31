@@ -4,7 +4,7 @@ import sys, cmd
 
 from libpins.cpu import *
 from libpins.devices import Flags
-from libpins.PyAsmExec import pins
+from libpins.PyAsmExec import pins, control, ser
 
 class TesterClient(cmd.Cmd):
 
@@ -18,8 +18,9 @@ class TesterClient(cmd.Cmd):
         print (chr)
 
     def do_off(self, arg):
-        pins.off()
-        print (bin(pins.defaults))
+        control.reset()
+        pins.off(control.default)
+        print (bin(control.default))
 
     def do_load_a(self, arg):
         ldi(A, int(arg, 0))
@@ -50,6 +51,36 @@ class TesterClient(cmd.Cmd):
     def do_flags_get(self, arg):
         val = pins.flags_get()
         print (Flags.decode(val))
+
+    def do_load_mar(self, arg):
+        Mar.load.enable()
+        pins.bus_set(arg)
+        pins.ctrl_commit(control.c_word)
+        pins.clock_tick()
+
+        control.reset()
+        pins.off(control.default)
+
+    def do_write_ram(self, arg):
+        Ram.write.enable()
+        pins.bus_set(arg)
+        pins.ctrl_commit(control.c_word)
+
+        pins.clock_tick()
+
+        control.reset()
+        pins.off(control.default)
+
+    def do_read_ram(self, arg):
+        Ram.out.enable()
+
+        pins.ctrl_commit(control.c_word)
+        val = pins.bus_get()
+
+        control.reset()
+        pins.off(control.default)
+
+        print (hex(val))
 
 
 if __name__ == "__main__":
