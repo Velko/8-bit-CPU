@@ -297,8 +297,54 @@ def build_opcodes():
         instr.add_step([l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.load])
 
     for l, r in permute_gp_regs_nsame():
+        instr = builder.add_instruction("sbb_{}_{}", l, r)
+        instr.add_step([l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.load, Flags.use_carry])
+
+    for l, r in permute_gp_regs_nsame():
         instr = builder.add_instruction("cmp_{}_{}", l, r)
         instr.add_step([l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.load])
+
+    for l, r in permute_gp_regs_nsame():
+        instr = builder.add_instruction("mov_{}_{}", l, r)
+        instr.add_step([l.load, r.out])
+
+    for r in gp_regs:
+        instr = builder.add_instruction("out_{}", r)
+        instr.add_step([r.out, OutPort.load])
+
+    for v in gp_regs:
+        instr = builder.add_instruction("st_addr_{}", v)
+        instr.add_step(setup_imm)
+        instr.add_step([ProgMem.out, Mar.load, PC.count])
+        instr.add_step([v.out, Ram.write])
+
+    for a, v in permute_gp_regs_all():
+        instr = builder.add_instruction("stabs_{}_{}", a, v)
+        instr.add_step([a.out, Mar.load])
+        instr.add_step([v.out, Ram.write])
+
+    for r in gp_regs:
+        instr = builder.add_instruction("ld_{}_addr", r)
+        instr.add_step(setup_imm)
+        instr.add_step([ProgMem.out, Mar.load, PC.count])
+        instr.add_step([Ram.out, r.load, Flags.load])
+
+    for v, a in permute_gp_regs_all():
+        instr = builder.add_instruction("ldabs_{}_{}", v, a)
+        instr.add_step([a.out, Mar.load])
+        instr.add_step([v.load, Ram.out, Flags.load])
+
+    for r in gp_regs:
+        instr = builder.add_instruction("tstabs_{}", r)
+        instr.add_step([r.out, Mar.load])
+        instr.add_step([Ram.out, Flags.load])
+
+    instr = builder.add_instruction("out_F")
+    instr.add_step([Flags.bus_out, OutPort.load])
+
+    instr = builder.add_instruction("hlt")
+    instr.add_step([Clock.halt])
+
 
     return builder.build()
 
