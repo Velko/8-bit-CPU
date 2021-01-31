@@ -1,15 +1,10 @@
 #!/usr/bin/python3
 
-import sys, cmd, serial
+import sys, cmd
 
 from libpins.PinClient import PinClient
-from libpins.ctrl_word import CtrlWord
+from libpins.PyAsmExec import pins, control, ser
 from libpins import DeviceSetup, devices
-
-control = CtrlWord()
-
-ser = serial.Serial("/dev/ttyACM0", 115200, timeout=1)
-pins = PinClient(ser)
 
 pin_map = dict()
 
@@ -130,5 +125,9 @@ def build_pinmap():
                 pin_map[pin_name] = attr
 
 if __name__ == "__main__":
+
+    from libpins import PyAsmExec
+    PyAsmExec.setup()
+
     build_pinmap()
     TesterClient().cmdloop()
