@@ -13,10 +13,10 @@ class CtrlWord:
         self.default = self.c_word
 
 
-    def ctrl_set(self, pin):
+    def set(self, pin):
         self.c_word |= 1 << pin
 
-    def ctrl_clr(self, pin):
+    def clr(self, pin):
         self.c_word &= ~(1 << pin)
 
     def reset(self):

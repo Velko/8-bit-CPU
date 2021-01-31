@@ -6,31 +6,31 @@ class Level(Enum):
 
 class Pin:
     def __init__(self, num, level):
-        self.client = None
+        self.control_word = None
         self.num = num
         self.level = level
 
-    def connect(self, client):
-        self.client = client
+    def connect(self, control_word):
+        self.control_word = control_word
 
     def enable(self):
         if self.level == Level.HIGH:
-            self.client.ctrl_set(self.num)
+            self.control_word.set(self.num)
         else:
-            self.client.ctrl_clr(self.num)
+            self.control_word.clr(self.num)
 
     def disable(self):
         if self.level == Level.HIGH:
-            self.client.ctrl_clr(self.num)
+            self.control_word.clr(self.num)
         else:
-            self.client.ctrl_set(self.num)
+            self.control_word.set(self.num)
 
 class NullPin:
     def __init__(self, num, level):
         self.num = None
         pass
 
-    def connect(self, client):
+    def connect(self, control_word):
         pass
 
     def enable(self):
