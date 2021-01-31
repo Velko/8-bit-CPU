@@ -1,20 +1,10 @@
 #!/usr/bin/python3
 
-import sys, cmd, serial
+import sys, cmd
 
-from libpins import asm
-from libpins.PinClient import PinClient
-from libpins.cpu import CPU
+from libpins.cpu import *
 from libpins.devices import Flags
-
-from libpins.ctrl_word import CtrlWord
-
-control = CtrlWord()
-
-ser = serial.Serial("/dev/ttyACM0", 115200, timeout=1)
-pins = PinClient(ser)
-cpu = CPU(pins, control)
-
+from libpins.PyAsmExec import pins
 
 class TesterClient(cmd.Cmd):
 
@@ -50,11 +40,11 @@ class TesterClient(cmd.Cmd):
         sub(A, B)
 
     def do_out_a(self, arg):
-        val = out(A)
+        val = peek(A)
         print(val)
 
     def do_out_b(self, arg):
-        val = out(B)
+        val = peek(B)
         print(val)
 
     def do_flags_get(self, arg):
@@ -64,5 +54,8 @@ class TesterClient(cmd.Cmd):
 
 if __name__ == "__main__":
 
-    asm.export_isa(cpu, globals())
+    from libpins import PyAsmExec
+
+    PyAsmExec.setup()
+
     TesterClient().cmdloop()
