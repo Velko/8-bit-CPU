@@ -1,26 +1,28 @@
 from .devices import *
-from .pin import Pin, NullPin, Level
+from .pin import Pin, NullPin, Level, Mux, MuxPin
+
+OutMux = Mux([5, 6, 7], 7) # bits 5-7 in Control Word, defaults to 7
 
 RegA = Register("A",
-    out = Pin(1, Level.LOW),
+    out = MuxPin(OutMux, 0),
     load = Pin(0, Level.LOW),
     alu_a = NullPin(10, Level.LOW),
     alu_b = NullPin(11, Level.LOW))
 
 RegB = Register("B",
-    out = Pin(6, Level.LOW),
+    out = MuxPin(OutMux, 1),
     load = Pin(2, Level.LOW),
     alu_a = NullPin(12, Level.LOW),
     alu_b = NullPin(13, Level.LOW))
 
 AddSub = ALU("AddSub",
-    out = Pin(3, Level.LOW),
+    out = MuxPin(OutMux, 2),
     sub = Pin(4, Level.HIGH))
 
 Flags = Flags("F",
-    load = Pin(7, Level.LOW),
-    use_carry = Pin(5, Level.HIGH),
-    bus_out = Pin(8, Level.LOW),
+    load = Pin(1, Level.LOW),
+    use_carry = Pin(3, Level.HIGH),
+    bus_out = MuxPin(OutMux, 4),
     bus_in = Pin(9, Level.HIGH))
 
 # Note: pins overlap with currently unused ones for RegA and RegB
@@ -31,7 +33,7 @@ Mar = Register("MAR",
     alu_b = NullPin(-1, Level.LOW))
 
 Ram = RAM("Ram",
-    out = Pin(11, Level.LOW),
+    out = MuxPin(OutMux, 3),
     write = Pin(12, Level.LOW))
 
 
