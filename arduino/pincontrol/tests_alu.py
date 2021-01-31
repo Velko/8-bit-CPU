@@ -1,18 +1,10 @@
 #!/usr/bin/python3
 
-import sys, serial, unittest
+import unittest
 
-from libpins import asm
-from libpins.PinClient import PinClient
-from libpins.cpu import CPU
+from libpins.cpu import *
 from libpins.devices import Flags
-from libpins.ctrl_word import CtrlWord
-
-control = CtrlWord()
-
-ser = serial.Serial("/dev/ttyACM0", 115200, timeout=3)
-pins = PinClient(ser)
-cpu = CPU(pins, control)
+from libpins.PyAsmExec import pins, control
 
 # Common test cases for registers
 # see RegisterALoadOut, RegisterBLoadOut
@@ -397,6 +389,9 @@ class RegisterMov(unittest.TestCase):
 class RegisterOutputLatches(unittest.TestCase):
 
     def test_a_latch(self):
+
+        from libpins.DeviceSetup import AddSub as alu
+
         ldi(A, 54)
         ldi(B, 0)
 
@@ -414,7 +409,7 @@ class RegisterOutputLatches(unittest.TestCase):
 
         # Not try to sense what it sends to ALU by enabling it and
         # reading value on the bus
-        cpu.alu.out.enable()
+        alu.out.enable()
         A.alu_a.enable()
         B.alu_b.enable()
         pins.ctrl_commit(control.c_word)
@@ -440,8 +435,7 @@ class StoreRecall(unittest.TestCase):
 
 if __name__ == "__main__":
 
-    # PySerial is not ready directly after connecting
-    # try a single operation before proceeding with tests
-    pins.identify()
-    asm.export_isa(cpu, globals())
+    from libpins import PyAsmExec
+    PyAsmExec.setup()
+
     unittest.main()

@@ -4,15 +4,9 @@ import sys, serial, unittest
 
 import random
 
-from libpins import asm
-from libpins.PinClient import PinClient
-from libpins.DeviceSetup import *
-from libpins.ctrl_word import CtrlWord
-
-control = CtrlWord()
-
-ser = serial.Serial("/dev/ttyACM0", 115200, timeout=3)
-pins = PinClient(ser)
+from libpins.cpu import *
+from libpins.devices import Flags
+from libpins.PyAsmExec import pins, control
 
 
 class RamLoadOut(unittest.TestCase):
@@ -81,7 +75,7 @@ class RamLoadOut(unittest.TestCase):
 
 if __name__ == "__main__":
 
-    # PySerial is not ready directly after connecting
-    # try a single operation before proceeding with tests
-    pins.identify()
+    from libpins import PyAsmExec
+    PyAsmExec.setup()
+
     unittest.main()
