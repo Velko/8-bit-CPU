@@ -351,6 +351,34 @@ def build_opcodes():
         instr.add_step([r.out, Mar.load])
         instr.add_step([Ram.out, Flags.load])
 
+    instr = builder.add_instruction("jmp_addr")
+    instr.add_step(setup_imm)
+    instr.add_step([ProgMem.out, PC.load])
+
+    instr = builder.add_instruction("beq_addr")
+    instr.add_step([PC.count])
+    cond = instr.add_condition(mask=Flags.Z, value=Flags.Z)
+    cond.add_step(setup_imm)
+    cond.add_step([ProgMem.out, PC.load])
+
+    instr = builder.add_instruction("bne_addr")
+    instr.add_step([PC.count])
+    cond = instr.add_condition(mask=Flags.Z, value=0)
+    cond.add_step(setup_imm)
+    cond.add_step([ProgMem.out, PC.load])
+
+    instr = builder.add_instruction("bcs_addr")
+    instr.add_step([PC.count])
+    cond = instr.add_condition(mask=Flags.C, value=Flags.C)
+    cond.add_step(setup_imm)
+    cond.add_step([ProgMem.out, PC.load])
+
+    instr = builder.add_instruction("bcc_addr")
+    instr.add_step([PC.count])
+    cond = instr.add_condition(mask=Flags.C, value=0)
+    cond.add_step(setup_imm)
+    cond.add_step([ProgMem.out, PC.load])
+
     instr = builder.add_instruction("out_F")
     instr.add_step([Flags.bus_out, OutPort.load])
 
