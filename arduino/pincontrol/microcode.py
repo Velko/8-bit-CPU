@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-from libpins.cpu import CPU, opcodes
+from libpins.cpu_exec import opcodes
+from libpins import cpu
+
 from libpins.devices import Flags
 from libpins.ctrl_word import CtrlWord
 
@@ -11,7 +13,7 @@ class FakeClient:
         pass
 
 pins = FakeClient()
-cpu = CPU(pins, control)
+cpu.setup(pins, control)
 
 def generate_microcode():
     for key, microcode in opcodes.items():
@@ -31,7 +33,7 @@ def process_steps(key, microcode, flags):
         if flags is None:
             flags = 0
 
-        print ("{0:13}    {1:04b}  {2}  {3:013b}    {3:04x}".format(key, flags, step, control.c_word))
+        print ("{0:13}    {1:04b}  {2}  {3:016b}    {3:04x}".format(key, flags, step, control.c_word))
 
 
 if __name__ == "__main__":
