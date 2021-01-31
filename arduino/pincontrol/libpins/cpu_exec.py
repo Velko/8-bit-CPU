@@ -236,6 +236,18 @@ gp_regs = [RegA, RegB]
 
 setup_imm = [PC.out, ProgMAR.load]
 
+def permute_gp_regs_all():
+    for l in gp_regs:
+        for r in gp_regs:
+            yield l, r
+
+def permute_gp_regs_nsame():
+    for l in gp_regs:
+        for r in gp_regs:
+            if l != r:
+                yield l, r
+
+
 class MicrocodeBuilder:
     def __init__(self):
         self.opcodes = []
@@ -275,6 +287,18 @@ def build_opcodes():
     instr = builder.add_instruction("ldi_F_imm")
     instr.add_step(setup_imm)
     instr.add_step([Flags.load, Flags.bus_in, ProgMem.out, PC.count])
+
+    for l, r in permute_gp_regs_all():
+        instr = builder.add_instruction("add_{}_{}", l, r)
+        instr.add_step([l.load, l.alu_a, r.alu_b, AddSub.out, Flags.load])
+
+    for l, r in permute_gp_regs_nsame():
+        instr = builder.add_instruction("sub_{}_{}", l, r)
+        instr.add_step([l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.load])
+
+    for l, r in permute_gp_regs_nsame():
+        instr = builder.add_instruction("cmp_{}_{}", l, r)
+        instr.add_step([l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.load])
 
     return builder.build()
 
