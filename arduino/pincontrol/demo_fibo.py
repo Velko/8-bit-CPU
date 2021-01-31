@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+from libpins.cpu import *
+
 def run():
     ldi(A, 0)
     ldi(B, 1)
@@ -20,5 +22,5 @@ if __name__ == "__main__":
 
     from libpins import PyAsmExec
 
-    PyAsmExec.setup(globals())
+    PyAsmExec.setup()
     run()

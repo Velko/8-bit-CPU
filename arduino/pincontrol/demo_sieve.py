@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from libpins.markers import *
+from libpins.cpu import *
 
 def run():
 
@@ -252,5 +253,5 @@ if __name__ == "__main__":
 
     from libpins import PyAsmExec
 
-    PyAsmExec.setup(globals())
+    PyAsmExec.setup()
     run()

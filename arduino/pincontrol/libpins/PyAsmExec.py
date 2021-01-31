@@ -1,9 +1,8 @@
 
 import serial, os
 
-from . import asm
 from .PinClient import PinClient
-from .cpu import CPU
+from . import cpu
 from .ctrl_word import CtrlWord
 
 def find_serial_port():
@@ -19,12 +18,11 @@ def find_serial_port():
 
 ser = serial.Serial(find_serial_port(), 115200, timeout=3)
 pins = PinClient(ser)
-cpu = CPU(pins, CtrlWord())
+cpu.setup(pins, CtrlWord())
 
 
-def setup(scope):
+def setup():
     # PySerial is not ready directly after connecting
     # try a single operation before proceeding with tests
     pins.identify()
-    asm.export_isa(cpu, scope)
 
