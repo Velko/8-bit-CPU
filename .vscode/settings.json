@@ -8,6 +8,7 @@
         "**/.git": true,
         "**/__pycache__": true,
         "**/build-uno": true,
+        "**/build-nano-*": true,
         "**/*.hex": true
     }
 }
