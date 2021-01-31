@@ -177,6 +177,9 @@ class FlagsAlt:
         self.value = value
         self.steps = steps
 
+    def add_step(self, step):
+        self.steps.append(step)
+
 class MicroCode:
     def __init__(self, steps, f_alt=None):
         self._steps = steps
@@ -202,6 +205,15 @@ class MicroCode:
 
     def add_step(self, pins):
         self._steps.append(pins)
+
+    def add_condition(self, mask, value):
+        if self.f_alt is None:
+            self.f_alt = []
+
+        alt = FlagsAlt(mask, value, [])
+        self.f_alt.append(alt)
+
+        return alt
 
 
 def mkuc_list(registers, nameformat, pinformatter):
@@ -284,6 +296,13 @@ def build_opcodes():
     for l, r in permute_gp_regs_all():
         instr = builder.add_instruction("add_{}_{}", l, r)
         instr.add_step([l.load, l.alu_a, r.alu_b, AddSub.out, Flags.load])
+
+    for l, r in permute_gp_regs_all():
+        instr = builder.add_instruction("adc_{}_{}", l, r)
+        instr.add_step([l.load, l.alu_a, r.alu_b, AddSub.out, Flags.load])
+
+        cond = instr.add_condition(mask=Flags.C, value=Flags.C)
+        cond.add_step([l.load, l.alu_a, r.alu_b, AddSub.out, Flags.load, Flags.use_carry])
 
     for l, r in permute_gp_regs_nsame():
         instr = builder.add_instruction("sub_{}_{}", l, r)
