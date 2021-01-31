@@ -200,6 +200,9 @@ class MicroCode:
     def are_default(self, steps):
         return steps == self._steps
 
+    def add_step(self, pins):
+        self._steps.append(pins)
+
 
 def mkuc_list(registers, nameformat, pinformatter):
     ops = list()
@@ -254,24 +257,14 @@ class MicrocodeBuilder:
 
     def add_instruction(self, name, *fmt):
         opcode = name.format(*fmt)
-        ibuilder = InstructionBuilder()
+        ucode = MicroCode([])
 
-        self.opcodes.append((opcode, ibuilder))
-        return ibuilder
-
-    def build(self):
-        lst = map(lambda opcb: (opcb[0], opcb[1].build()), self.opcodes)
-        return dict(lst)
-
-class InstructionBuilder:
-    def __init__(self):
-        self.steps = []
+        self.opcodes.append((opcode, ucode))
+        return ucode
 
     def build(self):
-        return MicroCode(self.steps)
+        return dict(self.opcodes)
 
-    def add_step(self, pins):
-        self.steps.append(pins)
 
 def build_opcodes():
 
