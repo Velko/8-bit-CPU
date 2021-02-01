@@ -172,7 +172,8 @@ ProgMAR = NullRegister()
 ProgMem = Imm
 
 class FlagsAlt:
-    def __init__(self, mask, value):
+    def __init__(self, owner, mask, value):
+        self.owner = owner
         self.mask = mask
         self.value = value
         self.steps = []
@@ -181,6 +182,9 @@ class FlagsAlt:
         self.steps.append(step)
 
         return self
+
+    def add_condition(self, mask, value):
+        return self.owner.add_condition(mask, value)
 
 class MicroCode:
     def __init__(self):
@@ -211,7 +215,7 @@ class MicroCode:
         return self
 
     def add_condition(self, mask, value):
-        alt = FlagsAlt(mask, value)
+        alt = FlagsAlt(self, mask, value)
         self.f_alt.append(alt)
 
         return alt
