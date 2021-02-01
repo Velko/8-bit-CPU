@@ -5,6 +5,7 @@ from libcpu import cpu
 
 from libcpu.devices import Flags
 from libcpu.ctrl_word import CtrlWord
+from libcpu.cpu_exec import CPUBackendControl
 
 control = CtrlWord()
 
@@ -13,7 +14,7 @@ class FakeClient:
         pass
 
 pins = FakeClient()
-cpu.setup(pins, control)
+cpu.install_cpu_backend(CPUBackendControl(pins, control))
 
 def generate_microcode():
     for key, microcode in opcodes.items():
