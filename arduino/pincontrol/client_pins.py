@@ -3,7 +3,7 @@
 import sys, cmd
 
 from libpins.PinClient import PinClient
-from libpins.PyAsmExec import pins, control, ser
+from libpins.PyAsmExec import pins, control
 from libpins import DeviceSetup, devices
 
 pin_map = dict()
@@ -15,7 +15,7 @@ class TesterClient(cmd.Cmd):
 
 
     def do_EOF(self, arg):
-        ser.close()
+        pins.close()
         sys.exit(0)
 
     def do_identify(self, arg):

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import sys, serial, unittest
+import unittest
 
 import random
 

@@ -3,6 +3,9 @@ class PinClient:
     def __init__(self, serial):
         self.serial = serial
 
+    def close(self):
+        self.serial.close()
+
     def send_cmd(self, cmd):
         self.serial.write(cmd.encode("ascii"))
         self.serial.flush()

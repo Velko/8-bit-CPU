@@ -4,12 +4,12 @@ import sys, cmd
 
 from libpins.cpu import *
 from libpins.devices import Flags
-from libpins.PyAsmExec import pins, control, ser
+from libpins.PyAsmExec import pins, control
 
 class TesterClient(cmd.Cmd):
 
     def do_EOF(self, arg):
-        ser.close()
+        pins.close()
         sys.exit(0)
 
     def do_identify(self, arg):
