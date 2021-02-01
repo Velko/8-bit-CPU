@@ -215,38 +215,6 @@ class MicroCode:
 
         return alt
 
-
-def mkuc_list(registers, nameformat, pinformatter):
-    ops = list()
-
-    for r in registers:
-        name = nameformat.format(r.name)
-        ucode = pinformatter(r)
-        ops.append((name, ucode))
-    return ops
-
-
-def mkuc_permute_all(registers, nameformat, pinformatter):
-    ops = list()
-
-    for l in registers:
-        for r in registers:
-            name = nameformat.format(l.name, r.name)
-            ucode = pinformatter(l, r)
-            ops.append((name, ucode))
-    return ops
-
-def mkuc_permute_nsame(registers, nameformat, pinformatter):
-    ops = list()
-
-    for l in registers:
-        for r in registers:
-            if l == r: continue
-            name = nameformat.format(l.name, r.name)
-            ucode = pinformatter(l, r)
-            ops.append((name, ucode))
-    return ops
-
 gp_regs = [RegA, RegB]
 
 setup_imm = [PC.out, ProgMAR.load]
@@ -390,39 +358,3 @@ def build_opcodes():
 
 
 opcodes = build_opcodes()
-
-opcodes0 = dict(
-    [("nop", MicroCode([]))]+
-
-    mkuc_list(gp_regs, "ldi_{}_imm", lambda r: MicroCode([setup_imm, [r.load, ProgMem.out, PC.count]])) +
-
-    [("ldi_F_imm", MicroCode([setup_imm, [Flags.load, Flags.bus_in, ProgMem.out, PC.count]]))] +
-
-    mkuc_permute_all(gp_regs, "add_{}_{}", lambda l, r: MicroCode([[l.load, l.alu_a, r.alu_b, AddSub.out, Flags.load]])) +
-    mkuc_permute_all(gp_regs, "adc_{}_{}", lambda l, r: MicroCode([[l.load, l.alu_a, r.alu_b, AddSub.out, Flags.load]], [FlagsAlt(mask=Flags.C, value=Flags.C, steps=[[l.load, l.alu_a, r.alu_b, AddSub.out, Flags.load, Flags.use_carry]]) ])) +
-    mkuc_permute_nsame(gp_regs, "sub_{}_{}", lambda l, r: MicroCode([[l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.load]])) +
-    mkuc_permute_nsame(gp_regs, "sbb_{}_{}", lambda l, r: MicroCode([[l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.load, Flags.use_carry]])) +
-
-    mkuc_permute_nsame(gp_regs, "cmp_{}_{}", lambda l, r: MicroCode([[l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.load]])) +
-
-    [("sbb_A_B", MicroCode([[RegA.load, RegA.alu_a, RegB.alu_b, AddSub.out, AddSub.sub, Flags.load, Flags.use_carry]]))] +
-
-    mkuc_permute_nsame(gp_regs, "mov_{}_{}", lambda l, r: MicroCode([[l.load, r.out]])) +
-    mkuc_list(gp_regs, "out_{}", lambda r: MicroCode([[r.out, OutPort.load]])) +
-
-    mkuc_list(gp_regs, "st_addr_{}", lambda r: MicroCode([setup_imm, [ProgMem.out, Mar.load, PC.count], [r.out, Ram.write]])) +
-    mkuc_permute_all(gp_regs, "stabs_{}_{}", lambda a, v: MicroCode([[a.out, Mar.load], [v.out, Ram.write]])) +
-    mkuc_list(gp_regs, "ld_{}_addr", lambda r: MicroCode([setup_imm, [ProgMem.out, Mar.load, PC.count], [Ram.out, r.load, Flags.load]])) +
-    mkuc_permute_all(gp_regs, "ldabs_{}_{}", lambda v, a: MicroCode([[a.out, Mar.load], [v.load, Ram.out, Flags.load]])) +
-
-    mkuc_list(gp_regs, "tstabs_{}", lambda r: MicroCode([[r.out, Mar.load], [Ram.out, Flags.load]])) +
-
-    [("jmp_addr", MicroCode([setup_imm,[ProgMem.out, PC.load]]))]+
-    [("beq_addr", MicroCode([[PC.count]],[FlagsAlt(mask=Flags.Z, value=Flags.Z, steps=[setup_imm,[ProgMem.out, PC.load]])]))]+
-    [("bne_addr", MicroCode([[PC.count]],[FlagsAlt(mask=Flags.Z, value=0, steps=[setup_imm,[ProgMem.out, PC.load]])]))]+
-    [("bcs_addr", MicroCode([[PC.count]],[FlagsAlt(mask=Flags.C, value=Flags.C, steps=[setup_imm,[ProgMem.out, PC.load]])]))]+
-    [("bcc_addr", MicroCode([[PC.count]],[FlagsAlt(mask=Flags.C, value=0, steps=[setup_imm,[ProgMem.out, PC.load]])]))]+
-
-    [("out_F", MicroCode([[Flags.bus_out, OutPort.load]]))] +
-    [("hlt", MicroCode([[Clock.halt]]))]
-)
