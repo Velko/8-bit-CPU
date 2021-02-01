@@ -4,7 +4,7 @@ from libcpu.cpu import *
 
 def run():
 
-    # "Low power mode" - turn off as most LEDs as
+    # "Low power mode" - turn off as many LEDs as
     # possible
     ldi (A, 1)
     ldi (B, 0)
