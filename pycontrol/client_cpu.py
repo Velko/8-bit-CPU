@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import sys, cmd
+import localpath
 
 from libcpu.cpu import *
 from libcpu.devices import Flags

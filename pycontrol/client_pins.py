@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import sys, cmd
+import localpath
 
 from libpins.PinClient import PinClient
 from libcpu.PyAsmExec import pins, control

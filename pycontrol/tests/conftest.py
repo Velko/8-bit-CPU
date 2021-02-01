@@ -1,4 +1,5 @@
 import pytest, random
+import localpath
 
 from libpins.PinClient import PinClient
 from libcpu.cpu import install_cpu_backend

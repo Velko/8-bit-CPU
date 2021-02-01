@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import localpath
 from libcpu.markers import *
 from libcpu.cpu import *
 
