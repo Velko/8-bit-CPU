@@ -34,7 +34,7 @@ def process_steps(key, microcode, flags):
         if flags is None:
             flags = 0
 
-        print ("{0:13}    {1:04b}  {2}  {3:016b}    {3:04x}".format(key, flags, step, control.c_word))
+        print ("{0:13} {4:02x}   {1:04b}  {2}  {3:016b}    {3:04x}".format(key, flags, step, control.c_word, microcode.opcode))
 
 
 if __name__ == "__main__":
