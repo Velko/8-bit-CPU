@@ -28,3 +28,21 @@ def test_load_store_flags(cpu_backend_real, value):
 
     assert value == received
 
+
+def test_mov_a_b(cpu_backend_real):
+    ldi(A, 0)
+    ldi(B, 42)
+
+    mov(A, B)
+
+    value = peek(A)
+    assert value == 42
+
+def test_mov_b_a(cpu_backend_real):
+    ldi(A, 34)
+    ldi(B, 0)
+
+    mov(B, A)
+
+    value = peek(B)
+    assert value == 34

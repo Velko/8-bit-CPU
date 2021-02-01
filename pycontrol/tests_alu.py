@@ -6,25 +6,6 @@ from libcpu.cpu import *
 from libcpu.devices import Flags
 from libcpu.PyAsmExec import pins, control
 
-class RegisterMov(unittest.TestCase):
-    def test_mov_a_b(self):
-        ldi(A, 0)
-        ldi(B, 42)
-
-        mov(A, B)
-
-        value = peek(A)
-        self.assertEqual(42, value)
-
-    def test_mov_b_a(self):
-        ldi(A, 34)
-        ldi(B, 0)
-
-        mov(B, A)
-
-        value = peek(B)
-        self.assertEqual(34, value)
-
 class RegisterOutputLatches(unittest.TestCase):
 
     def test_a_latch(self):
@@ -59,18 +40,6 @@ class RegisterOutputLatches(unittest.TestCase):
 
         # should have kept the old value
         self.assertEqual(54, value)
-
-class StoreRecall(unittest.TestCase):
-    def test_store_load(self):
-        ldi (B, 42)
-        ldi (A, 11)
-
-        st (5, B)
-        ld (A, 5)
-
-        val = peek (A)
-
-        self.assertEqual(42, val)
 
 if __name__ == "__main__":
 
