@@ -41,7 +41,10 @@ Ram = RAM("Ram",
 Clock = Clock("Clock",
     halt = Pin(8, Level.LOW))
 
+StepCounter = StepCounter("Steps",
+    reset = Pin(0, Level.LOW))
+
 
 def all_pins():
     return RegA.all_pins() + RegB.all_pins() + AddSub.all_pins() + Flags.all_pins() \
-        + Mar.all_pins() + Ram.all_pins() + Clock.all_pins()
+        + Mar.all_pins() + Ram.all_pins() + Clock.all_pins() + StepCounter.all_pins()

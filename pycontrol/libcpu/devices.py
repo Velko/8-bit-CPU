@@ -89,3 +89,11 @@ class Clock:
 
     def all_pins(self):
         return [self.halt]
+
+class StepCounter:
+    def __init__(self, name, reset):
+        self.name = name
+        self.reset = reset
+
+    def all_pins(self):
+        return [self.reset]
