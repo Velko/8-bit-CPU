@@ -92,5 +92,5 @@ def jmp(label=None):
     taken, _ = backend.execute_opcode("jmp_addr", label)
     return taken
 
-def hlt(self):
+def hlt():
     backend.execute_opcode("hlt")
