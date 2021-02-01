@@ -1,4 +1,4 @@
-import pytest
+import pytest, random
 
 from libpins.PinClient import PinClient
 from libcpu.cpu import install_cpu_backend
@@ -15,3 +15,13 @@ def cpu_backend_real(request):
     install_cpu_backend(backend)
 
     return backend
+
+@pytest.fixture(scope="module")
+def random_bytes():
+    data = []
+
+    for addr in range(256):
+        value = random.randrange(256)
+        data.append(value)
+
+    return data
