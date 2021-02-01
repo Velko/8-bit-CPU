@@ -158,3 +158,42 @@ def test_sub_ba_result_small(cpu_backend_real):
     value = peek(B)
     assert value == 1
 
+def test_result_adc_ab_c_set(cpu_backend_real):
+    ldi (F, 0b0100)
+    ldi (A, 5)
+    ldi (B, 3)
+
+    adc(A, B)
+
+    value = peek(A)
+    assert value == 9
+
+def test_result_adc_ab_c_clear(cpu_backend_real):
+    ldi (F, 0)
+    ldi (A, 5)
+    ldi (B, 3)
+
+    adc(A, B)
+
+    value = peek(A)
+    assert value == 8
+
+def test_result_sbb_ab_c_set(cpu_backend_real):
+    ldi (F, 0b0100)
+    ldi (A, 5)
+    ldi (B, 3)
+
+    sbb(A, B)
+
+    value = peek(A)
+    assert value == 1
+
+def test_result_sbb_ab_c_clear(cpu_backend_real):
+    ldi (F, 0)
+    ldi (A, 5)
+    ldi (B, 3)
+
+    sbb(A, B)
+
+    value = peek(A)
+    assert value == 2
