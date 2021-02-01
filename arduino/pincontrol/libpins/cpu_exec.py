@@ -172,21 +172,21 @@ ProgMAR = NullRegister()
 ProgMem = Imm
 
 class FlagsAlt:
-    def __init__(self, mask, value, steps):
+    def __init__(self, mask, value):
         self.mask = mask
         self.value = value
-        self.steps = steps
+        self.steps = []
 
     def add_step(self, step):
         self.steps.append(step)
 
 class MicroCode:
-    def __init__(self, steps, f_alt=None):
-        self._steps = steps
-        self.f_alt = f_alt
+    def __init__(self):
+        self._steps = []
+        self.f_alt = []
 
     def is_flag_dependent(self):
-        return self.f_alt is not None
+        return any(self.f_alt)
 
     def steps(self, flags):
         if self.f_alt:
@@ -207,10 +207,7 @@ class MicroCode:
         self._steps.append(pins)
 
     def add_condition(self, mask, value):
-        if self.f_alt is None:
-            self.f_alt = []
-
-        alt = FlagsAlt(mask, value, [])
+        alt = FlagsAlt(mask, value)
         self.f_alt.append(alt)
 
         return alt
@@ -237,7 +234,7 @@ class MicrocodeBuilder:
 
     def add_instruction(self, name, *fmt):
         opcode = name.format(*fmt)
-        ucode = MicroCode([])
+        ucode = MicroCode()
 
         self.opcodes.append((opcode, ucode))
         return ucode
