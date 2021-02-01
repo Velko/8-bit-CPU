@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import localpath
+
 from libcpu.cpu_exec import opcodes
 from libcpu import cpu
 
