@@ -2,7 +2,7 @@ from .DeviceSetup import *
 
 backend = None
 
-def setup(engine):
+def install_cpu_backend(engine):
     global backend
     backend = engine
 

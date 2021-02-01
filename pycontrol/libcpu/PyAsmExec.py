@@ -9,4 +9,4 @@ control = CtrlWord()
 
 def setup():
     backend = CPUBackendControl(pins, control)
-    cpu.setup(backend)
+    cpu.install_cpu_backend(backend)
