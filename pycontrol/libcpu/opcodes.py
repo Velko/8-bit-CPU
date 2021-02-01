@@ -1,10 +1,14 @@
 from .DeviceSetup import *
 from .pseudo_devices import *
-from .opcode_builder import MicrocodeBuilder
+from .opcode_builder import MicrocodeBuilder, MicroCode
 
 gp_regs = [RegA, RegB]
 
 setup_imm = [PC.out, ProgMAR.load]
+
+fetch = MicroCode(-1)\
+    .add_step([PC.out, ProgMAR.load])\
+    .add_step([ProgMem.out, IR.load])
 
 def permute_gp_regs_all():
     for l in gp_regs:

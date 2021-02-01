@@ -105,3 +105,6 @@ ProgMAR = NullRegister()
 
 # Memory output when loading from program memory. Normally RAM or ROM, internal Imm for emulated
 ProgMem = Imm
+
+# Also emulated for now
+IR = NullRegister()
