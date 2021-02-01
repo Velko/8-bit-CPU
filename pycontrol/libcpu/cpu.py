@@ -1,12 +1,10 @@
 from .DeviceSetup import *
-from .cpu_exec import CPUBackendControl
-
 
 backend = None
 
-def setup(client, control):
+def setup(engine):
     global backend
-    backend = CPUBackendControl(client, control)
+    backend = engine
 
 A = RegA
 B = RegB

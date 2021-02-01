@@ -2,9 +2,11 @@
 from libpins.PinClient import PinClient
 from . import cpu
 from .ctrl_word import CtrlWord
+from .cpu_exec import CPUBackendControl
 
 pins = PinClient()
 control = CtrlWord()
 
 def setup():
-    cpu.setup(pins, control)
+    backend = CPUBackendControl(pins, control)
+    cpu.setup(backend)
