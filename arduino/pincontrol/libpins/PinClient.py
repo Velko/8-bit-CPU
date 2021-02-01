@@ -1,7 +1,17 @@
+import serial, os
+
 class PinClient:
 
-    def __init__(self, serial):
-        self.serial = serial
+    def __init__(self, serial=None):
+
+        if serial is not None:
+            self.serial = serial
+        else:
+            self.serial = open_port()
+
+        # Arduino is not ready directly after connecting
+        # try a single operation before proceeding
+        self.identify()
 
     def close(self):
         self.serial.close()
@@ -49,3 +59,17 @@ class PinClient:
     def clock_tick(self):
         self.send_cmd('T')
 
+
+def find_port():
+    ports = list(filter(lambda fn: fn.startswith("ttyACM") or fn.startswith("ttyUSB"),  os.listdir("/dev")))
+
+    if len(ports) > 1:
+        raise Exception("Multiple USB serial devices found")
+
+    if len(ports) == 0:
+        raise Exception("No USB serial devices found")
+
+    return os.path.join("/dev", ports[0])
+
+def open_port():
+    return serial.Serial(find_port(), 115200, timeout=3)
