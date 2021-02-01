@@ -4,9 +4,9 @@ import unittest
 
 import random
 
-from libpins.cpu import *
-from libpins.devices import Flags
-from libpins.PyAsmExec import pins, control
+from libcpu.cpu import *
+from libcpu.devices import Flags
+from libcpu.PyAsmExec import pins, control
 
 
 class RamLoadOut(unittest.TestCase):
@@ -75,7 +75,7 @@ class RamLoadOut(unittest.TestCase):
 
 if __name__ == "__main__":
 
-    from libpins import PyAsmExec
+    from libcpu import PyAsmExec
     PyAsmExec.setup()
 
     unittest.main()

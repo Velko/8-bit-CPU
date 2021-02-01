@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-from libpins.cpu_exec import opcodes
-from libpins import cpu
+from libcpu.cpu_exec import opcodes
+from libcpu import cpu
 
-from libpins.devices import Flags
-from libpins.ctrl_word import CtrlWord
+from libcpu.devices import Flags
+from libcpu.ctrl_word import CtrlWord
 
 control = CtrlWord()
 

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
-from libpins.markers import *
-from libpins.cpu import *
+from libcpu.markers import *
+from libcpu.cpu import *
 
 def run():
 
@@ -251,7 +251,7 @@ r_low = Byte()
 
 if __name__ == "__main__":
 
-    from libpins import PyAsmExec
+    from libcpu import PyAsmExec
 
     PyAsmExec.setup()
     run()

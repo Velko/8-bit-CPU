@@ -1,5 +1,5 @@
 
-from .PinClient import PinClient
+from libpins.PinClient import PinClient
 from . import cpu
 from .ctrl_word import CtrlWord
 

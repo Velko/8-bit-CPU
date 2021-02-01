@@ -3,8 +3,8 @@
 import sys, cmd
 
 from libpins.PinClient import PinClient
-from libpins.PyAsmExec import pins, control
-from libpins import DeviceSetup, devices
+from libcpu.PyAsmExec import pins, control
+from libcpu import DeviceSetup, devices
 
 pin_map = dict()
 
@@ -118,7 +118,7 @@ class TesterClient(cmd.Cmd):
 def build_pinmap():
 
     for name, dev in vars(DeviceSetup).items():
-        if dev.__class__.__module__ == 'libpins.devices':
+        if dev.__class__.__module__ == 'libcpu.devices':
             for a_name, attr in vars(dev).items():
                 if a_name == "name": continue
                 pin_name = "{}.{}".format(dev.name, a_name).lower()
@@ -126,7 +126,7 @@ def build_pinmap():
 
 if __name__ == "__main__":
 
-    from libpins import PyAsmExec
+    from libcpu import PyAsmExec
     PyAsmExec.setup()
 
     build_pinmap()

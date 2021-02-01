@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from libpins.cpu import *
+from libcpu.cpu import *
 
 def run():
 
@@ -16,7 +16,7 @@ def run():
 
 if __name__ == "__main__":
 
-    from libpins import PyAsmExec
+    from libcpu import PyAsmExec
 
     PyAsmExec.setup()
     run()

@@ -2,9 +2,9 @@
 
 import unittest
 
-from libpins.cpu import *
-from libpins.devices import Flags
-from libpins.PyAsmExec import pins, control
+from libcpu.cpu import *
+from libcpu.devices import Flags
+from libcpu.PyAsmExec import pins, control
 
 # Common test cases for registers
 # see RegisterALoadOut, RegisterBLoadOut
@@ -390,7 +390,7 @@ class RegisterOutputLatches(unittest.TestCase):
 
     def test_a_latch(self):
 
-        from libpins.DeviceSetup import AddSub as alu
+        from libcpu.DeviceSetup import AddSub as alu
 
         ldi(A, 54)
         ldi(B, 0)
@@ -435,7 +435,7 @@ class StoreRecall(unittest.TestCase):
 
 if __name__ == "__main__":
 
-    from libpins import PyAsmExec
+    from libcpu import PyAsmExec
     PyAsmExec.setup()
 
     unittest.main()

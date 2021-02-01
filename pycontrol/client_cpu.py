@@ -2,9 +2,9 @@
 
 import sys, cmd
 
-from libpins.cpu import *
-from libpins.devices import Flags
-from libpins.PyAsmExec import pins, control
+from libcpu.cpu import *
+from libcpu.devices import Flags
+from libcpu.PyAsmExec import pins, control
 
 class TesterClient(cmd.Cmd):
 
@@ -85,7 +85,7 @@ class TesterClient(cmd.Cmd):
 
 if __name__ == "__main__":
 
-    from libpins import PyAsmExec
+    from libcpu import PyAsmExec
 
     PyAsmExec.setup()
 
