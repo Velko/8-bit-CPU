@@ -52,8 +52,12 @@ StepCounter = StepCounter("Steps",
 IRFetch = IRFetch("IRFetch",
     load = Pin(12, Level.LOW))
 
+PC = ProgramCounter("PC",
+    out = MuxPin(OutMux, 5),
+    load = MuxPin(LoadMux, 5),
+    count = Pin(2, Level.HIGH))
 
 def all_pins():
     return RegA.all_pins() + RegB.all_pins() + AddSub.all_pins() + Flags.all_pins() \
         + Mar.all_pins() + Ram.all_pins() + Clock.all_pins() + StepCounter.all_pins() \
-        + IRFetch.all_pins()
+        + IRFetch.all_pins() + PC.all_pins()

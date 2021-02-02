@@ -98,6 +98,23 @@ class StepCounter:
     def all_pins(self):
         return [self.reset]
 
+class ProgramCounter:
+    def __init__(self, name, out, load, count):
+        self.name = name
+        self.out = out
+        self.load = load
+        self.count = count
+
+    def all_pins(self):
+        return [self.out, self.load, self.count]
+
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return self.name
+
+
 # Helper device for debugger
 class IRFetch:
     def __init__(self, name, load):
