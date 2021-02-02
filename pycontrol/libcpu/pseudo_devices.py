@@ -59,33 +59,6 @@ class ResultValue:
     def read_bus(self):
         self.value = self.client.bus_get()
 
-class ProgramCounter:
-    def __init__(self):
-        self.value = 0
-        self.c_enabled = False
-        self.out = self
-        self.count = EnableCallback(self.enable_count)
-        self.load  = EnableCallback(self.enable_load)
-
-    def connect(self, client):
-        pass
-
-    def enable_count(self):
-        self.c_enabled = True
-
-    def enable_load(self):
-        pass
-
-    def enable(self):
-        # OUT enable
-        pass
-
-    def disable(self):
-        self.c_enabled = False
-
-    def advance(self):
-        self.value += 1
-
 # to emulate ProgMAR
 class NullRegister:
     def __init__(self):
@@ -98,7 +71,6 @@ class NullRegister:
 
 Imm = ImmediateValue()
 OutPort = ResultValue()
-PC = ProgramCounter()
 
 # MAR to access program memory, normally same as regular MAR, Null in emulated mode
 ProgMAR = NullRegister()
@@ -106,5 +78,3 @@ ProgMAR = NullRegister()
 # Memory output when loading from program memory. Normally RAM or ROM, internal Imm for emulated
 ProgMem = Imm
 
-# Also emulated for now
-IR = NullRegister()

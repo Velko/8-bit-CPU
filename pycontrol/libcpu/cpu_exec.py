@@ -1,5 +1,5 @@
-from .pseudo_devices import Imm, OutPort, PC
-from .opcodes import opcodes
+from .pseudo_devices import Imm, OutPort
+from .opcodes import opcodes, fetch
 
 class CPUBackendControl:
     def __init__(self, client, control):
@@ -8,7 +8,6 @@ class CPUBackendControl:
 
         Imm.connect(self.client)
         OutPort.connect(self.client)
-        PC.connect(self.client)
 
     def execute_opcode(self, opcode, arg=None):
         if not opcode in opcodes:
@@ -16,8 +15,13 @@ class CPUBackendControl:
 
         Imm.set(arg)
 
-        # fetch is emulated, it always advances PC by one
-        PC.advance()
+        # fetch stage is not described in opcodes structure
+        # we may execute it seperately, but it does not do
+        # anything meaningful in emulation anyway
+        fetch_steps = fetch.steps(None)
+        for fstep in fetch_steps:
+            self.execute_step(fstep)
+
 
         microcode = opcodes[opcode]
 
@@ -57,11 +61,7 @@ class CPUBackendControl:
             else:
                 self.client.clock_tick()
 
-            if PC.c_enabled:
-                PC.advance()
-
         OutPort.disable()
-        PC.disable()
         Imm.disable()
 
 class InvalidOpcodeException(Exception):
