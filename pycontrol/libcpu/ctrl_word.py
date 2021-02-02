@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
-from .DeviceSetup import all_pins
+from .discovery import all_pins
 
 class CtrlWord:
     def __init__(self):
         self.c_word = 0
 
-        for pin in all_pins():
+        for name, pin in all_pins():
             pin.connect(self)
             pin.disable()
 

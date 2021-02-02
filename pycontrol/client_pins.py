@@ -7,6 +7,7 @@ from libpins.PinClient import PinClient
 from libcpu.PyAsmExec import pins, control
 from libcpu import DeviceSetup, devices
 from libcpu.pin import Pin, MuxPin
+from libcpu.discovery import all_pins
 
 pin_map = dict()
 
@@ -125,13 +126,9 @@ class TesterClient(cmd.Cmd):
         pins.ctrl_commit()
 
 def build_pinmap():
+    for name, attr in all_pins():
+        pin_map[name.lower()] = attr
 
-    for name, dev in vars(DeviceSetup).items():
-        if dev.__class__.__module__ == 'libcpu.devices':
-            for a_name, attr in vars(dev).items():
-                if isinstance(attr, Pin) or isinstance(attr, MuxPin):
-                    pin_name = "{}.{}".format(dev.name, a_name).lower()
-                    pin_map[pin_name] = attr
 
 if __name__ == "__main__":
 

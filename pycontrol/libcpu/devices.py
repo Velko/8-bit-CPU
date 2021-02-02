@@ -8,9 +8,6 @@ class Register:
         self.alu_a = alu_a
         self.alu_b = alu_b
 
-    def all_pins(self):
-        return [self.out, self.load, self.alu_a, self.alu_b]
-
     def __str__(self):
         return self.name
 
@@ -24,9 +21,6 @@ class ALU:
         self.out = out
         self.sub = sub
 
-    def all_pins(self):
-        return [self.out, self.sub]
-
 
 class Flags:
     def __init__(self, name, load, use_carry, bus_out, bus_in):
@@ -35,9 +29,6 @@ class Flags:
         self.use_carry = use_carry
         self.bus_out = bus_out
         self.bus_in = bus_in
-
-    def all_pins(self):
-        return [self.load, self.use_carry, self.bus_out, self.bus_in]
 
     V = 0b1000
     C = 0b0100
@@ -79,24 +70,15 @@ class RAM:
         self.out = out
         self.write = write
 
-    def all_pins(self):
-        return [self.out, self.write]
-
 class Clock:
     def __init__(self, name, halt):
         self.name = name
         self.halt = halt
 
-    def all_pins(self):
-        return [self.halt]
-
 class StepCounter:
     def __init__(self, name, reset):
         self.name = name
         self.reset = reset
-
-    def all_pins(self):
-        return [self.reset]
 
 class ProgramCounter:
     def __init__(self, name, out, load, count):
@@ -104,9 +86,6 @@ class ProgramCounter:
         self.out = out
         self.load = load
         self.count = count
-
-    def all_pins(self):
-        return [self.out, self.load, self.count]
 
     def __str__(self):
         return self.name
@@ -120,6 +99,3 @@ class IRFetch:
     def __init__(self, name, load):
         self.name = name
         self.load = load
-
-    def all_pins(self):
-        return [self.load]
