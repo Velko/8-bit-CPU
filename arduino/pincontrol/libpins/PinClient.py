@@ -60,7 +60,7 @@ class PinClient:
         self.send_cmd('T')
 
     def ir_get(self, c_word):
-        return self.query("r{}N".format(c_word))
+        return int(self.query("r{}N".format(c_word)))
 
 
 def find_port():
