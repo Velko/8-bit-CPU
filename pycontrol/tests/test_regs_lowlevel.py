@@ -38,3 +38,28 @@ def test_reg_a_latch(cpu_backend_real):
         # should have kept the old value
         assert value == 54
 
+
+def singlebit_vals():
+    yield 255
+    for b in range(8):
+        yield 1 << b
+    yield 0
+
+@pytest.mark.parametrize("expected", singlebit_vals())
+def test_ir_load(cpu_backend_real, expected):
+    backend = cpu_backend_real
+
+    backend.client.bus_set(expected)
+    IR.load.enable()
+    backend.client.ctrl_commit(backend.control.c_word)
+    backend.client.clock_tick()
+
+    backend.control.reset()
+    IRFetch.load.enable()
+
+    readback = backend.client.ir_get(backend.control.c_word)
+
+    backend.control.reset()
+    backend.client.off(backend.control.default)
+
+    assert readback == expected

@@ -37,6 +37,11 @@ Ram = RAM("Ram",
     out = MuxPin(OutMux, 3),
     write = MuxPin(LoadMux, 3))
 
+IR = Register("IR",
+    out = NullPin(-1, Level.LOW),
+    load = MuxPin(LoadMux, 4),
+    alu_a = NullPin(-1, Level.LOW),
+    alu_b = NullPin(-1, Level.LOW))
 
 Clock = Clock("Clock",
     halt = Pin(8, Level.LOW))
