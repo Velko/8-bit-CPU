@@ -97,6 +97,13 @@ class TesterClient(cmd.Cmd):
         'Pulse both clocks'
         pins.clock_tick()
 
+    def do_ir_get(self, arg):
+        control.reset()
+        pin_map['irfetch.load'].enable()
+        rv = pins.ir_get(control.c_word)
+        print (rv)
+
+
     def do_add_sample(self, arg):
         pins.off()
         pins.bus_set(24)

@@ -97,3 +97,12 @@ class StepCounter:
 
     def all_pins(self):
         return [self.reset]
+
+# Helper device for debugger
+class IRFetch:
+    def __init__(self, name, load):
+        self.name = name
+        self.load = load
+
+    def all_pins(self):
+        return [self.load]

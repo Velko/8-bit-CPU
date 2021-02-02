@@ -86,6 +86,18 @@ void loop()
         dev.inv_clock.pulse();
         break;
 
+    case 'r':
+        // read-in from SPI. The control of the device is a bit awkward:
+        //   * output control word (NOP + IRFetch.load bit)
+        //   * set back to defaults, shift reg keeps loading while IRFetch.load is active
+        //   * now IRFetch.load is inactive - read in latched value
+        val = Serial.parseInt();
+        dev.control.write16(val);
+        dev.control.write16(default_cword);
+        val = dev.control.write16(default_cword);
+        Serial.println(val);
+        break;
+
     default:
         Serial.println(F("Unknown command!"));
         break;

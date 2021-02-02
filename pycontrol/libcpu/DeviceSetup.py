@@ -44,7 +44,11 @@ Clock = Clock("Clock",
 StepCounter = StepCounter("Steps",
     reset = Pin(0, Level.LOW))
 
+IRFetch = IRFetch("IRFetch",
+    load = Pin(12, Level.LOW))
+
 
 def all_pins():
     return RegA.all_pins() + RegB.all_pins() + AddSub.all_pins() + Flags.all_pins() \
-        + Mar.all_pins() + Ram.all_pins() + Clock.all_pins() + StepCounter.all_pins()
+        + Mar.all_pins() + Ram.all_pins() + Clock.all_pins() + StepCounter.all_pins() \
+        + IRFetch.all_pins()

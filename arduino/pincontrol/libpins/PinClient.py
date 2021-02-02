@@ -59,6 +59,9 @@ class PinClient:
     def clock_tick(self):
         self.send_cmd('T')
 
+    def ir_get(self, c_word):
+        return self.query("r{}N".format(c_word))
+
 
 def find_port():
     ports = list(filter(lambda fn: fn.startswith("ttyACM") or fn.startswith("ttyUSB"),  os.listdir("/dev")))

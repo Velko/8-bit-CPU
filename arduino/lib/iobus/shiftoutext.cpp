@@ -26,17 +26,21 @@ void ShiftOutExt::setup()
     latch.setup();
 }
 
-void ShiftOutExt::write8(uint8_t data)
+uint8_t ShiftOutExt::write8(uint8_t data)
 {
-    SPI.transfer(data);
+    uint8_t din = SPI.transfer(data);
     latch.on();
     latch.off();
+
+    return din;
 }
 
-void ShiftOutExt::write16(uint16_t data)
+uint16_t ShiftOutExt::write16(uint16_t data)
 {
-    SPI.transfer((data >> 8) & 0xFF);
-    SPI.transfer(data & 0xFF);
+    uint8_t din_l = SPI.transfer((data >> 8) & 0xFF);
+    uint16_t din_h = SPI.transfer(data & 0xFF);
     latch.on();
     latch.off();
+
+    return din_l | (din_h << 8);
 }
