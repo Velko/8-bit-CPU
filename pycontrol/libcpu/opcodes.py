@@ -1,5 +1,4 @@
 from .DeviceSetup import *
-from .pseudo_devices import *
 from .opcode_builder import MicrocodeBuilder, MicroCode
 
 gp_regs = [RegA, RegB]

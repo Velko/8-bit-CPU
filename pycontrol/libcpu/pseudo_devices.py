@@ -12,7 +12,6 @@ class ImmediateValue:
     def __init__(self):
         self.client = None
         self.value = None
-        self.out = self
         self.write_enabled = False
 
     def connect(self, client):
@@ -34,15 +33,24 @@ class ImmediateValue:
             self.client.bus_free()
             self.write_enabled = False
 
-    def enable(self):
+    def enable_out(self):
         if self.value is not None:
             self.client.bus_set(self.value)
             self.write_enabled = True
 
 
+class RamProxy:
+    def __init__(self, name, ram):
+        self.name = name
+        self.out = EnableCallback(self.enable_out)
+        self.write = ram.write
+
+        # Replace the ram_out with another EnableCallback
+        # to intercept
+        self.ram_out = ram.out
+
+    def enable_out(self):
+        self.ram_out.enable()
+
 
 Imm = ImmediateValue()
-
-# Memory output when loading from program memory. Normally RAM or ROM, internal Imm for emulated
-ProgMem = Imm
-

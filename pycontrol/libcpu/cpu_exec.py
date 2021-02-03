@@ -1,5 +1,5 @@
-from .pseudo_devices import Imm
-from .DeviceSetup import OutPort
+from .pseudo_devices import Imm, EnableCallback
+from .DeviceSetup import OutPort, ProgMem
 from .opcodes import opcodes, fetch
 
 class CPUBackendControl:
@@ -9,6 +9,10 @@ class CPUBackendControl:
         self.out_hooked_val = None
 
         Imm.connect(self.client)
+
+        # hook into ProgMem read routine
+        ProgMem.ram_out = EnableCallback(Imm.enable_out)
+
 
     def execute_opcode(self, opcode, arg=None):
         if not opcode in opcodes:

@@ -1,4 +1,5 @@
 from .devices import *
+from .pseudo_devices import RamProxy
 from .pin import Pin, NullPin, Level, Mux, MuxPin
 
 OutMux = Mux([5, 6, 7], 7) # bits 5-7 in Control Word, defaults to 7
@@ -40,6 +41,9 @@ ProgMAR = Mar
 Ram = RAM("Ram",
     out = MuxPin(OutMux, 3),
     write = MuxPin(LoadMux, 3))
+
+ProgMem = RamProxy("ProgMem",
+    ram = Ram)
 
 IR = Register("IR",
     out = NullPin(-1, Level.LOW),
