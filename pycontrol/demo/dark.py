@@ -17,7 +17,6 @@ def run():
 
 if __name__ == "__main__":
 
-    from libcpu import PyAsmExec
-
-    PyAsmExec.setup()
+    from libcpu.PyAsmExec import setup_live
+    setup_live()
     run()

@@ -5,7 +5,9 @@ import localpath
 
 from libcpu.cpu import *
 from libcpu.devices import Flags
-from libcpu.PyAsmExec import pins, control
+from libcpu.PyAsmExec import setup_live, control
+setup_live()
+from libcpu.PyAsmExec import pins
 
 class TesterClient(cmd.Cmd):
 
@@ -85,9 +87,5 @@ class TesterClient(cmd.Cmd):
 
 
 if __name__ == "__main__":
-
-    from libcpu import PyAsmExec
-
-    PyAsmExec.setup()
 
     TesterClient().cmdloop()

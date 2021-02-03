@@ -7,8 +7,10 @@ from .cpu_assemble import CPUBackendAssemble
 
 
 control = CtrlWord()
+pins = None
 
-def setup():
+def setup_live():
+    global pins
     pins = PinClient()
     backend = CPUBackendControl(pins, control)
     cpu.install_cpu_backend(backend)

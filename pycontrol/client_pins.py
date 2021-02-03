@@ -4,7 +4,11 @@ import sys, cmd
 import localpath
 
 from libpins.PinClient import PinClient
-from libcpu.PyAsmExec import pins, control
+
+from libcpu.PyAsmExec import setup_live, control
+setup_live()
+from libcpu.PyAsmExec import pins
+
 from libcpu import DeviceSetup, devices
 from libcpu.pin import Pin, MuxPin
 from libcpu.discovery import all_pins
@@ -131,9 +135,6 @@ def build_pinmap():
 
 
 if __name__ == "__main__":
-
-    from libcpu import PyAsmExec
-    PyAsmExec.setup()
 
     build_pinmap()
     TesterClient().cmdloop()
