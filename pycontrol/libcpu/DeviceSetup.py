@@ -56,3 +56,9 @@ PC = ProgramCounter("PC",
     out = MuxPin(OutMux, 5),
     load = MuxPin(LoadMux, 5),
     count = Pin(2, Level.HIGH))
+
+OutPort = Register("Out",
+    out = NullPin(-1, Level.LOW),
+    load = MuxPin(LoadMux, 6),
+    alu_a = NullPin(-1, Level.LOW),
+    alu_b = NullPin(-1, Level.LOW))

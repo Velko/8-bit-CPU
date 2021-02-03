@@ -70,7 +70,7 @@ class NullRegister:
 
 
 Imm = ImmediateValue()
-OutPort = ResultValue()
+OutPortHook = ResultValue()
 
 # MAR to access program memory, normally same as regular MAR, Null in emulated mode
 ProgMAR = NullRegister()
