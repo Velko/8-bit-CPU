@@ -26,6 +26,10 @@ class ProgramInstruction:
 
         print ("{:02x}  {:8}{}".format(self.address, self.opcode, argstr))
 
+    def write_bytes(self, stream):
+        binary = bytes([self.bin_opcode] + list(self.eval_args()))
+        stream.write(binary)
+
 class CPUBackendAssemble:
     def __init__(self, control):
         self.control = control
@@ -53,7 +57,13 @@ class CPUBackendAssemble:
 
         microcode = opcodes[opcode]
 
-        self.advance_counter(microcode._steps)
+        instr.bin_opcode = microcode.opcode
+
+        #self.advance_counter(microcode._steps) jump does not increase PC,
+        # quick workaround
+        if arg is not None:
+            self.addr_counter +=1
+            org(self.addr_counter)
 
         return False, None
 
@@ -64,3 +74,7 @@ class CPUBackendAssemble:
     def list(self):
         for instr in self.program:
             instr.print()
+
+    def bin(self, stream):
+        for instr in self.program:
+            instr.write_bytes(stream)

@@ -5,6 +5,7 @@ from .ctrl_word import CtrlWord
 from .cpu_exec import CPUBackendControl
 from .cpu_assemble import CPUBackendAssemble
 
+
 control = CtrlWord()
 
 def setup():
@@ -17,3 +18,7 @@ def compile(program):
     cpu.install_cpu_backend(backend)
     program()
     backend.list()
+
+    binary = open("sieve.bin", "wb")
+    backend.bin(binary)
+    binary.close()
