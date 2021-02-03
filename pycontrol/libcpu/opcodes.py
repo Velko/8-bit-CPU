@@ -26,7 +26,10 @@ def build_opcodes():
 
     builder = MicrocodeBuilder()
 
-    builder.add_instruction("nop")
+    # easier to define an extra step here than
+    # handling the special case in code
+    builder.add_instruction("nop")\
+        .add_step([])
 
     for r in gp_regs:
         builder.add_instruction("ldi_{}_imm", r)\
