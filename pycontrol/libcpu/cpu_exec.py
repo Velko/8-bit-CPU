@@ -1,4 +1,4 @@
-from .pseudo_devices import Imm, OutPortHook
+from .pseudo_devices import Imm
 from .DeviceSetup import OutPort
 from .opcodes import opcodes, fetch
 
@@ -6,9 +6,9 @@ class CPUBackendControl:
     def __init__(self, client, control):
         self.client = client
         self.control = control
+        self.out_hooked_val = None
 
         Imm.connect(self.client)
-        OutPortHook.connect(self.client)
 
     def execute_opcode(self, opcode, arg=None):
         if not opcode in opcodes:
@@ -37,7 +37,7 @@ class CPUBackendControl:
 
         Imm.clear()
 
-        return not microcode.are_default(steps), OutPortHook.value
+        return not microcode.are_default(steps), self.out_hooked_val
 
     def execute_step(self, microstep):
         self.control.reset()
@@ -57,7 +57,7 @@ class CPUBackendControl:
             # version
             if OutPort.load.is_enabled():
                 self.client.clock_pulse()
-                OutPortHook.read_bus()
+                self.out_hooked_val = self.client.bus_get()
                 self.client.clock_inverted()
             else:
                 self.client.clock_tick()

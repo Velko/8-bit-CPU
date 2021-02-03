@@ -40,25 +40,6 @@ class ImmediateValue:
             self.write_enabled = True
 
 
-class ResultValue:
-    def __init__(self):
-        self.client = None
-        self.value = None
-        self.active = False
-        self.load = self
-
-    def connect(self, client):
-        self.client = client
-
-    def enable(self):
-        self.active = True
-
-    def disable(self):
-        self.active = False
-
-    def read_bus(self):
-        self.value = self.client.bus_get()
-
 # to emulate ProgMAR
 class NullRegister:
     def __init__(self):
@@ -70,7 +51,6 @@ class NullRegister:
 
 
 Imm = ImmediateValue()
-OutPortHook = ResultValue()
 
 # MAR to access program memory, normally same as regular MAR, Null in emulated mode
 ProgMAR = NullRegister()
