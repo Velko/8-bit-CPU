@@ -6,7 +6,7 @@ import ast, pdb, astor
 #    tree = ast.parse(source.read())
 
 
-tree = astor.parse_file("demo_sieve.py")
+tree = astor.parse_file("../demo/prime_sieve.py")
 
 class AsmVisitor(ast.NodeTransformer):
     def __init__(self):
