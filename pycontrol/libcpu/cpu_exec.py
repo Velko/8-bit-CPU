@@ -11,7 +11,7 @@ class CPUBackendControl:
         Imm.connect(self.client)
 
         # hook into ProgMem read routine
-        ProgMem.ram_out = EnableCallback(Imm.enable_out)
+        ProgMem.hook_out(EnableCallback(Imm.enable_out))
 
 
     def execute_opcode(self, opcode, arg=None):

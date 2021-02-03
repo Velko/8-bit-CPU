@@ -43,14 +43,24 @@ class RamProxy:
     def __init__(self, name, ram):
         self.name = name
         self.out = EnableCallback(self.enable_out)
-        self.write = ram.write
+        self.write = EnableCallback(self.enable_write)
 
-        # Replace the ram_out with another EnableCallback
-        # to intercept
-        self.ram_out = ram.out
+        self._ram_out = ram.out
+        self._ram_write = ram.write
+
+    # update to intercept ram.out
+    def hook_out(self, hook):
+        self._ram_out = hook
+
+    # update to intercept ram.write
+    def hook_write(self, hook):
+        self._ram_write = hook
 
     def enable_out(self):
-        self.ram_out.enable()
+        self._ram_out.enable()
+
+    def enable_write(self):
+        self._ram_write.enable()
 
 
 Imm = ImmediateValue()
