@@ -229,9 +229,8 @@ def run():
     print ("----------- done -----------", flush=True)
     hlt()
 
-# probably will need adjustments as the code above
-# might not fit in first 128 bytes
-org(0x80)
+# the code takes about 166 bytes, put data at 192 then
+org(0xc0)
 align(16)
 
 p = Byte()
