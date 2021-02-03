@@ -25,6 +25,12 @@ class Pin:
         else:
             self.control_word.set(self.num)
 
+    def is_enabled(self):
+        if self.level == Level.HIGH:
+            return self.control_word.is_set(self.num)
+        else:
+            return not self.control_word.is_set(self.num)
+
 class NullPin:
     def __init__(self, num, level):
         self.num = None
@@ -58,6 +64,14 @@ class Mux:
     def disable(self):
         self.enable(self.default)
 
+    def current(self):
+        result = 0
+        for bit_idx, pin in enumerate(self.pins):
+            if (self.control_word.c_word & (1 << pin)) != 0:
+                result |= (1 << bit_idx)
+
+        return result
+
 class MuxPin:
     def __init__(self, mux, num):
         self.mux = mux
@@ -77,3 +91,6 @@ class MuxPin:
 
     def disable(self):
         self.mux.disable()
+
+    def is_enabled(self):
+        return self.mux.current() == self.num

@@ -3,10 +3,14 @@
 from .discovery import all_pins
 
 class CtrlWord:
-    def __init__(self):
+    def __init__(self, pins=None):
+
+        if pins is None:
+            pins = all_pins()
+
         self.c_word = 0
 
-        for name, pin in all_pins():
+        for name, pin in pins:
             pin.connect(self)
             pin.disable()
 
@@ -21,3 +25,6 @@ class CtrlWord:
 
     def reset(self):
         self.c_word = self.default
+
+    def is_set(self, pin):
+        return (self.c_word & (1 << pin)) != 0
