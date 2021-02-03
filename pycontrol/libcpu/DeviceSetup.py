@@ -36,7 +36,7 @@ Mar = Register("MAR",
 # currently same as regular MAR, can be redefined for different
 # hardware configuration. Will not require changes in instruction
 # definitions
-ProgMAR = Mar
+ProgMar = Mar
 
 Ram = RAM("Ram",
     out = MuxPin(OutMux, 3),
