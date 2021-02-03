@@ -16,14 +16,6 @@ class CPUBackendControl:
 
         Imm.set(arg)
 
-        # fetch stage is not described in opcodes structure
-        # we may execute it seperately, but it does not do
-        # anything meaningful in emulation anyway
-        fetch_steps = fetch.steps(None)
-        for fstep in fetch_steps:
-            self.execute_step(fstep)
-
-
         microcode = opcodes[opcode]
 
         flags = None
