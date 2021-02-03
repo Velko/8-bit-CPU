@@ -7,7 +7,7 @@ setup_imm = [PC.out, ProgMar.load]
 
 fetch = MicroCode(-1)\
     .add_step([PC.out, ProgMar.load])\
-    .add_step([ProgMem.out, IR.load])
+    .add_step([ProgMem.out, IR.load, PC.count])
 
 def permute_gp_regs_all():
     for l in gp_regs:
