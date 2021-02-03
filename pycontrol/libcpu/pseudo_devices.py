@@ -40,20 +40,8 @@ class ImmediateValue:
             self.write_enabled = True
 
 
-# to emulate ProgMAR
-class NullRegister:
-    def __init__(self):
-        self.load = self
-
-    def enable(self):
-        pass
-
-
 
 Imm = ImmediateValue()
-
-# MAR to access program memory, normally same as regular MAR, Null in emulated mode
-ProgMAR = NullRegister()
 
 # Memory output when loading from program memory. Normally RAM or ROM, internal Imm for emulated
 ProgMem = Imm

@@ -26,12 +26,16 @@ Flags = Flags("F",
     bus_out = MuxPin(OutMux, 4),
     bus_in = Pin(9, Level.HIGH))
 
-# Note: pins overlap with currently unused ones for RegA and RegB
 Mar = Register("MAR",
     out = NullPin(-1, Level.LOW),
     load = MuxPin(LoadMux, 2),
     alu_a = NullPin(-1, Level.LOW),
     alu_b = NullPin(-1, Level.LOW))
+
+# currently same as regular MAR, can be redefined for different
+# hardware configuration. Will not require changes in instruction
+# definitions
+ProgMAR = Mar
 
 Ram = RAM("Ram",
     out = MuxPin(OutMux, 3),
