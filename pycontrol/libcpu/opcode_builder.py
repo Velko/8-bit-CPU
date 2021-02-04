@@ -14,10 +14,11 @@ class FlagsAlt:
         return self.owner.add_condition(mask, value)
 
 class MicroCode:
-    def __init__(self, opcode):
+    def __init__(self, opcode, name):
         self._steps = []
         self.f_alt = []
         self.opcode = opcode
+        self.name = name
 
     def is_flag_dependent(self):
         return any(self.f_alt)
@@ -54,7 +55,7 @@ class MicrocodeBuilder:
 
     def add_instruction(self, name, *fmt):
         opcode = name.format(*fmt)
-        ucode = MicroCode(len(self.opcodes))
+        ucode = MicroCode(len(self.opcodes), opcode)
 
         self.opcodes.append((opcode, ucode))
         return ucode

@@ -5,7 +5,7 @@ gp_regs = [RegA, RegB]
 
 setup_imm = [PC.out, ProgMar.load]
 
-fetch = MicroCode(-1)\
+fetch = MicroCode(-1, None)\
     .add_step([PC.out, ProgMar.load])\
     .add_step([ProgMem.out, IR.load, PC.count])
 
