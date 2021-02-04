@@ -42,6 +42,7 @@ class ImmediateValue:
 class RamProxy:
     def __init__(self, name, ram):
         self.name = name
+        self.ram = ram
         self.out = EnableCallback(self.enable_out)
         self.write = EnableCallback(self.enable_write)
 
@@ -61,6 +62,10 @@ class RamProxy:
 
     def enable_write(self):
         self._ram_write.enable()
+
+    def unhook_all(self):
+        self._ram_out = self.ram.out
+        self._ram_write = self.ram.write
 
 
 Imm = ImmediateValue()
