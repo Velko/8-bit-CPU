@@ -10,43 +10,38 @@ from libcpu.ctrl_word import CtrlWord
 control = CtrlWord()
 
 
-def generate_microcode():
-    print ("#include \"opcode.h\"")
-    print ()
+def generate_microcode(cfile):
+    cfile.write ("#include \"microcode.h\"\n\n")
 
     words = process_steps(fetch._steps)
-    print ("uint16_t fetch = {{{}}};".format(", ".join(words)))
-    print ()
+    cfile.write ("const uint16_t op_fetch = {{{}}};\n\n".format(", ".join(words)))
 
-
-    print ("struct opcode opcodes[] = {")
+    cfile.write ("const struct op_microcode microcode[] PROGMEM = {\n")
 
 
     for key, microcode in opcodes.items():
 
         words = process_steps(microcode._steps)
-        print()
-        print ("    /* {:10} */".format(key))
-        print ("    {{ .default_steps = {{{}}},".format(", ".join(words)), end="")
+        cfile.write ("\n    /* {:10} */\n".format(key))
+        cfile.write ("    {{ .default_steps = {{{}}},".format(", ".join(words)))
 
         if not microcode.f_alt:
-            print ("},")
+            cfile.write ("},\n")
             continue
 
-        print ()
-        print ("      .f_alt = {")
+        cfile.write ("\n      .f_alt = {\n")
 
         for alt in microcode.f_alt:
             words = process_steps(alt.steps)
-            print ("          /* mask: {} value: {} */".format(Flags.decode(alt.mask), Flags.decode(alt.value)))
-            print ("          {{ .mask = 0x{:02x}, .value = 0x{:02x},".format(alt.mask, alt.value))
-            print ("            .steps = {{{}}}, ".format(", ".join(words)))
-            print ("          },")
+            cfile.write ("          /* mask: {} value: {} */\n".format(Flags.decode(alt.mask), Flags.decode(alt.value)))
+            cfile.write ("          {{ .mask = 0x{:02x}, .value = 0x{:02x},\n".format(alt.mask, alt.value))
+            cfile.write ("            .steps = {{{}}},\n".format(", ".join(words)))
+            cfile.write ("          },\n")
 
-            print ("      },")
-        print ("    },")
+            cfile.write ("      },\n")
+        cfile.write ("    },\n")
 
-    print ("};")
+    cfile.write ("};\n")
 
 def process_steps(steps):
     for pins in steps:
@@ -58,4 +53,5 @@ def process_steps(steps):
 
 
 if __name__ == "__main__":
-    generate_microcode()
+    with open("export-c/microcode.c", "wt") as cfile:
+        generate_microcode(cfile)
