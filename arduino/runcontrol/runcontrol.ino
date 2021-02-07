@@ -4,9 +4,6 @@
 
 DeviceInterface dev;
 
-extern const unsigned char sieve_bin[] PROGMEM;
-extern unsigned int sieve_bin_len;
-
 #define NOP_CTRL    0b1111000111100011
 #define CLOCK_HLT   0b0000000100000000
 #define LOAD_MASK   0b1110000000000000
@@ -41,9 +38,6 @@ void loop()
     case 'R':
         run_program();
         break;
-    case 'L':
-        upload_code();
-        break;
     default:
         Serial.println(F("Unknown command!"));
         break;
@@ -51,35 +45,6 @@ void loop()
 }
 
 char txt_buf[80];
-
-void upload_code()
-{
-    for (uint8_t addr = 0; addr < sieve_bin_len; ++addr)
-    {
-        /* Load addr into MAR */
-        dev.control.write16(MAR_LOAD);
-        dev.mainBus.write(addr);
-        dev.clock.pulse();
-        dev.inv_clock.pulse();
-
-        /* load program byte into RAM */
-        uint8_t data = pgm_read_byte(&sieve_bin[addr]);
-        dev.control.write16(RAM_WRITE);
-        dev.mainBus.write(data);
-        dev.clock.pulse();
-        dev.inv_clock.pulse();
-
-        //delay(5);
-
-        if ((addr & 3) == 0)
-            Serial.print('.');
-    }
-
-    /* release the bus */
-    dev.mainBus.set_input();
-
-    Serial.println();
-}
 
 void reset_pc()
 {
