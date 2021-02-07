@@ -12,26 +12,18 @@ from libcpu.DeviceSetup import StepCounter
 
 control = CtrlWord()
 
-class FakeClient:
-    def bus_set(self, arg):
-        pass
-
-pins = FakeClient()
-cpu.install_cpu_backend(CPUBackendControl(pins, control))
-
-
 def finalize_steps(steps):
 
     # prepend fetch stage
     work_steps = fetch.steps(None) + steps
 
     # patch last "meaningful" step to reset step counter
-    work_steps[-1].append(StepCounter.reset)
+    #work_steps[-1].append(StepCounter.reset)
 
     # list of empty lists to pad total count to 8
     padding = [[]] * (8 - len(work_steps))
 
-    return work_steps + padding
+    return work_steps #+ padding
 
 def generate_microcode():
     for key, microcode in opcodes.items():
