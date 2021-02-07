@@ -6,10 +6,15 @@
 #include "eeprom_hw.h"
 #include "eeprom_ops.h"
 
+extern const unsigned char sieve_bin[] PROGMEM;
+extern unsigned int sieve_bin_len;
 
 void display_help();
 void burn7seg_digits();
 void verify7seg_digits();
+
+void burn_progmem_blob(unsigned char blob[], unsigned int len);
+void verify_progmem_blob(unsigned char blob[], unsigned int len);
 
 void setup()
 {
@@ -31,6 +36,14 @@ void loop()
     else if (command.equals("verify-digits"))
     {
         verify7seg_digits();
+    }
+    else if (command.equals("sieve"))
+    {
+        burn_progmem_blob(sieve_bin, sieve_bin_len);
+    }
+    else if (command.equals("verify-sieve"))
+    {
+        verify_progmem_blob(sieve_bin, sieve_bin_len);
     }
     else if (command.equals("read"))
     {
