@@ -83,9 +83,7 @@ void execute_steps()
         uint8_t opcode = fetch_instruction();
         uint8_t flags = dev.flagsBus.read();
 
-        //delay(1);
-        //sprintf(txt_buf, "Opcode: %02x", opcode);
-        //Serial.println(txt_buf);
+        delay(1);
 
         struct opcode instruction;
 
@@ -102,8 +100,6 @@ void execute_steps()
 
         for (uint8_t i = 0; i < MAX_STEPS && steps[i]; ++i)
         {
-            //sprintf(txt_buf, "Step: %04x", steps[i]);
-            //Serial.println(txt_buf);
             dev.control.write16(steps[i]);
             dev.clock.pulse();
 
@@ -113,6 +109,7 @@ void execute_steps()
                 uint8_t out_val = dev.mainBus.read();
                 sprintf(txt_buf, "%d", out_val);
                 Serial.println(txt_buf);
+                delay(250);
             }
 
             dev.inv_clock.pulse();
