@@ -1,4 +1,4 @@
-from .markers import Bytes
+from .markers import Bytes, Label
 
 class EnableCallback:
     def __init__(self, callback):
@@ -22,6 +22,8 @@ class ImmediateValue:
             self.value = value
         elif isinstance(value, Bytes):
             self.value = value.start
+        elif isinstance(value, Label):
+            self.value = value.addr
         else:
             raise TypeError
 
