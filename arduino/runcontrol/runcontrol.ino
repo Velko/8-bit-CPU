@@ -25,6 +25,7 @@ void setup()
 
 
 void run_program();
+void upload_code();
 
 void loop()
 {
@@ -39,6 +40,9 @@ void loop()
         break;
     case 'R':
         run_program();
+        break;
+    case 'L':
+        upload_code();
         break;
     default:
         Serial.println(F("Unknown command!"));
@@ -159,9 +163,6 @@ void execute_steps()
 
 void run_program()
 {
-    upload_code();
-    for (;;) {
-        reset_pc();
-        execute_steps();
-    }
+    reset_pc();
+    execute_steps();
 }
