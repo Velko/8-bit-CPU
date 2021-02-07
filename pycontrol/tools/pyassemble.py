@@ -98,6 +98,11 @@ class AsmVisitor(ast.NodeTransformer):
             else:
                 raise Exception("Unsupported")
 
+        elif isinstance(node.test, ast.NameConstant):
+            if node.test.value == True:
+                return node.body
+            elif node.test.value == False:
+                return []
         else:
             pass
 
@@ -140,4 +145,5 @@ class AsmVisitor(ast.NodeTransformer):
 
 tree = AsmVisitor().visit(tree)
 
+print ("#!/usr/bin/python3\n")
 print (astor.to_source(tree))
