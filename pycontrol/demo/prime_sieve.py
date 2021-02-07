@@ -26,7 +26,8 @@ def run():
             stabs (B, A)
             ldi (A, 1)
             add (B, A)
-            if bcs(): break
+            if bcc(): continue
+            break
 
         # after address wrap-around B should be 0, the address we need;
         # replace the value there with opcode for jmp (be careful with microcode updates)
