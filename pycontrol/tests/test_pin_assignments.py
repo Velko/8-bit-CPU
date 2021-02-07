@@ -51,7 +51,4 @@ def each_pin_with_others_in_mux():
 @pytest.mark.parametrize("name_a,pin_a,name_b,pin_b", each_pin_with_others_in_mux())
 def test_mux_pin_overlap(name_a, pin_a, name_b, pin_b):
 
-    if name_a == name_b:
-        pytest.skip("comparing aliased pins")
-
     assert pin_a != pin_b
