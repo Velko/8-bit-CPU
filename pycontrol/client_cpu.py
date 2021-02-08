@@ -92,6 +92,26 @@ class TesterClient(cmd.Cmd):
         except KeyboardInterrupt:
             pass
 
+    def do_upload(self, arg):
+        with open(arg, "rb") as f:
+            for addr, data in enumerate(f.read()):
+                control.reset()
+                Mar.load.enable()
+                pins.bus_set(addr)
+                pins.ctrl_commit(control.c_word)
+                pins.clock_tick()
+                control.reset()
+
+                Ram.write.enable()
+                pins.bus_set(data)
+                pins.ctrl_commit(control.c_word)
+                pins.clock_tick()
+
+                control.reset()
+                pins.off(control.default)
+                print (".", end="", flush=True)
+        print ()
+
 
 if __name__ == "__main__":
 
