@@ -85,6 +85,13 @@ class TesterClient(cmd.Cmd):
 
         print (hex(val))
 
+    def do_run(self, arg):
+        try:
+            for line in pins.run_program():
+                print (line, end="", flush=True)
+        except KeyboardInterrupt:
+            pass
+
 
 if __name__ == "__main__":
 

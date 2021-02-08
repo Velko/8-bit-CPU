@@ -5,8 +5,10 @@
 #include <EEPROM.h>
 #include <shiftoutext.h>
 #include "device_interface.h"
+#include "op-defs.h"
 
 
+void run_program();
 void load_default_cword();
 void store_default_cword(uint16_t cword);
 
@@ -96,6 +98,15 @@ void loop()
         dev.control.write16(default_cword);
         val = dev.control.write16(default_cword);
         Serial.println(val);
+        break;
+
+    case 'R':
+        if (default_cword != CTRL_DEFAULT)
+        {
+            Serial.println(F("Wiring updated, re-upload sketch!"));
+            break;
+        }       
+        run_program();
         break;
 
     default:

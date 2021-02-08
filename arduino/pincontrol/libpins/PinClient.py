@@ -62,6 +62,12 @@ class PinClient:
     def ir_get(self, c_word):
         return int(self.query("r{}N".format(c_word)))
 
+    def run_program(self):
+        self.send_cmd('R')
+        while True:
+            line = self.serial.readline().decode('ascii')
+            yield line
+
 
 def find_port():
     ports = list(filter(lambda fn: fn.startswith("ttyACM") or fn.startswith("ttyUSB"),  os.listdir("/dev")))
