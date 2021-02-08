@@ -1,23 +1,15 @@
 #include <shiftoutext.h>
 #include "device_interface.h"
-#include "opcodes.h"
+#include "microcode.h"
+#include "op-defs.h"
 
 DeviceInterface dev;
-
-#define NOP_CTRL    0b1111000111100011
-#define CLOCK_HLT   0b0000000100000000
-#define LOAD_MASK   0b1110000000000000
-#define OUT_IDX     0b1100000000000000
-#define IRF_BIT     0b0001000000000000
-#define MAR_LOAD    0b0101000111100011
-#define RAM_WRITE   0b0111000111100011
-#define PC_LOAD     0b1011000111100011
 
 void setup()
 {
     Serial.begin(115200);
     dev.setup();
-    dev.control.write16(NOP_CTRL);
+    dev.control.write16(CTRL_DEFAULT);
 }
 
 
@@ -49,7 +41,7 @@ char txt_buf[80];
 void reset_pc()
 {
     /* write 0 into PC */
-    dev.control.write16(PC_LOAD);
+    dev.control.write16(MAKE_MUX_CWORD(MUX_LOAD_MASK, MPIN_PC_LOAD_BITS));
     dev.mainBus.write(0);
     dev.clock.pulse();
     dev.inv_clock.pulse();
@@ -60,18 +52,18 @@ void reset_pc()
 
 uint8_t fetch_instruction()
 {
-    dev.control.write16(fetch[0]);
+    dev.control.write16(op_fetch[0]);
     dev.clock.pulse();
     dev.inv_clock.pulse();
 
     /* combine last fetch step with IRFETCH enable */
-    dev.control.write16(fetch[1] ^ IRF_BIT);
+    dev.control.write16(op_fetch[1] ^ LPIN_IRFETCH_LOAD_BIT);
     dev.clock.pulse();
     dev.inv_clock.pulse();
 
     /* write it 2 times, to get the instruction from IR */
-    dev.control.write16(NOP_CTRL);
-    uint8_t opcode = dev.control.write16(NOP_CTRL);
+    dev.control.write16(CTRL_DEFAULT);
+    uint8_t opcode = dev.control.write16(CTRL_DEFAULT);
 
     return opcode;
 }
@@ -85,9 +77,9 @@ void execute_steps()
 
         delay(1);
 
-        struct opcode instruction;
+        struct op_microcode instruction;
 
-        memcpy_P(&instruction, &opcodes[opcode], sizeof(struct opcode));
+        memcpy_P(&instruction, &microcode[opcode], sizeof(struct op_microcode));
 
         uint16_t *steps = instruction.default_steps;
 
@@ -104,7 +96,7 @@ void execute_steps()
             dev.clock.pulse();
 
             /* special handling to intercept output */
-            if ((steps[i] & LOAD_MASK) == OUT_IDX)
+            if ((steps[i] & MUX_LOAD_MASK) ==  MPIN_OUT_LOAD_BITS)
             {
                 uint8_t out_val = dev.mainBus.read();
                 sprintf(txt_buf, "%d", out_val);
@@ -114,7 +106,7 @@ void execute_steps()
 
             dev.inv_clock.pulse();
 
-            if ((steps[i] & CLOCK_HLT) == 0)
+            if ((steps[i] & LPIN_CLOCK_HALT_BIT) == 0)
             {
                 Serial.println("Halted");
                 return;

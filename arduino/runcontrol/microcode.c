@@ -1,8 +1,8 @@
-#include "opcodes.h"
+#include "microcode.h"
 
-const uint16_t fetch[] = {0x51a3, 0x9167};
+const uint16_t op_fetch[] = {0x51a3, 0x9167};
 
-const struct opcode opcodes[] PROGMEM = {
+const struct op_microcode microcode[] PROGMEM = {
 
     /* nop        */
     { .default_steps = {0xf1e3},},
