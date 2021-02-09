@@ -15,6 +15,8 @@ void verify7seg_digits();
 
 void burn_progmem_blob(unsigned char blob[], unsigned int len);
 void verify_progmem_blob(unsigned char blob[], unsigned int len);
+void write_microcode(int rom_idx);
+void verify_microcode(int rom_idx);
 
 void setup()
 {
@@ -44,6 +46,22 @@ void loop()
     else if (command.equals("verify-sieve"))
     {
         verify_progmem_blob(sieve_bin, sieve_bin_len);
+    }
+    else if (command.equals("control0"))
+    {
+        write_microcode(0);
+    }
+    else if (command.equals("verify-control0"))
+    {
+        verify_microcode(0);
+    }
+    else if (command.equals("control1"))
+    {
+        write_microcode(1);
+    }
+    else if (command.equals("verify-control1"))
+    {
+        verify_microcode(1);
     }
     else if (command.equals("read"))
     {
