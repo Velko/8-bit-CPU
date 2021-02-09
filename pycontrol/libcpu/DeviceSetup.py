@@ -2,8 +2,8 @@ from .devices import *
 from .pseudo_devices import RamProxy
 from .pin import Pin, NullPin, Level, Mux, MuxPin
 
-OutMux = Mux([5, 6, 7], 7) # bits 5-7 in Control Word, defaults to 7
-LoadMux = Mux([13, 14, 15], 7)
+OutMux = Mux([0, 1, 2], 7) # bits 5-7 in Control Word, defaults to 7
+LoadMux = Mux([8, 9, 10], 7)
 
 RegA = Register("A",
     out = MuxPin(OutMux, 0),
@@ -22,10 +22,10 @@ AddSub = ALU("AddSub",
     sub = Pin(4, Level.HIGH))
 
 Flags = Flags("F",
-    load = Pin(1, Level.LOW),
-    use_carry = Pin(3, Level.HIGH),
+    load = Pin(6, Level.LOW),
+    use_carry = Pin(11, Level.HIGH),
     bus_out = MuxPin(OutMux, 4),
-    bus_in = Pin(9, Level.HIGH))
+    bus_in = Pin(3, Level.HIGH))
 
 Mar = Register("MAR",
     out = NullPin(-1, Level.LOW),
@@ -52,10 +52,10 @@ IR = Register("IR",
     alu_b = NullPin(-1, Level.LOW))
 
 Clock = Clock("Clock",
-    halt = Pin(8, Level.LOW))
+    halt = Pin(13, Level.LOW))
 
 StepCounter = StepCounter("Steps",
-    reset = Pin(0, Level.LOW))
+    reset = Pin(7, Level.LOW))
 
 IRFetch = IRFetch("IRFetch",
     load = Pin(12, Level.LOW))
@@ -63,7 +63,7 @@ IRFetch = IRFetch("IRFetch",
 PC = ProgramCounter("PC",
     out = MuxPin(OutMux, 5),
     load = MuxPin(LoadMux, 5),
-    count = Pin(2, Level.HIGH))
+    count = Pin(5, Level.HIGH))
 
 OutPort = Register("Out",
     out = NullPin(-1, Level.LOW),
