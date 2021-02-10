@@ -75,7 +75,7 @@ void write_microcode(int rom_idx)
             }
 
             // fill up with NOPs, in case step counter fails to reset
-            for (; step < MAX_STEPS_ROM; ++step)
+            for (; step < (1 << NUM_STEP_BITS); ++step)
             {
                 printf ("      %d;\n", step);
                 write_cword(CTRL_DEFAULT, rom_idx);
@@ -102,7 +102,21 @@ void verify_microcode(int rom_idx)
                 write_cword(op_fetch[step], rom_idx);
             }
 
-            const uint16_t *steps = microcode[opcode].default_steps - NUM_FETCH_STEPS;
+            struct op_microcode instruction;
+
+            memcpy_P(&instruction, &microcode[opcode], sizeof(struct op_microcode));
+
+            const uint16_t *steps = instruction.default_steps - NUM_FETCH_STEPS;
+
+            for (int alt = 0; alt < MAX_ALTS && instruction.f_alt[alt].mask; ++alt)
+            {
+                if ((flags & instruction.f_alt[alt].mask) == instruction.f_alt[alt].value)
+                {
+                    steps = instruction.f_alt[alt].steps - NUM_FETCH_STEPS;
+                    break;
+                }
+            }
+
             for (; step < MAX_STEPS + NUM_FETCH_STEPS && steps[step]; ++step)
             {
                 printf ("      %d;\n", step);
@@ -117,7 +131,7 @@ void verify_microcode(int rom_idx)
             }
 
             // fill up with NOPs, in case step counter fails to reset
-            for (; step < MAX_STEPS_ROM; ++step)
+            for (; step < (1 << NUM_STEP_BITS); ++step)
             {
                 printf ("      %d;\n", step);
                 verify_cword(CTRL_DEFAULT, rom_idx);
@@ -125,7 +139,6 @@ void verify_microcode(int rom_idx)
         }
     }
 }
-
 
 
 #ifndef __AVR__

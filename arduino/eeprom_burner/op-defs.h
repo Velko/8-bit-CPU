@@ -46,10 +46,9 @@
 #define OP_OUT_F               0x29
 #define OP_HLT                 0x2a
 #define NUM_OPS                0x2b
-#define NUM_FETCH_STEPS        2
-#define NUM_FLAGS              4
-#define MAX_STEPS_ROM          8
 
+/* Fetch */
+#define NUM_FETCH_STEPS        2
 
 /* Device setup */
 #define CTRL_DEFAULT                    0b0011011111000111

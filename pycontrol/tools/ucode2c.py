@@ -67,6 +67,8 @@ def write_opcodes(hfile):
 
         hfile.write("#define OP_{:20}0x{:02x}\n".format(name, microcode.opcode))
 
+    hfile.write("#define NUM_OPS                0x{:02x}\n".format(len(opcodes)))
+
     hfile.write("\n")
 
 def write_default_cword(hfile):
@@ -114,6 +116,8 @@ def generate_defines(hfile):
     write_header(hfile)
     write_opcodes(hfile)
 
+    hfile.write("/* Fetch */\n")
+    hfile.write("#define NUM_FETCH_STEPS        {}\n\n".format(len(fetch._steps)))
 
     hfile.write("/* Device setup */\n")
     write_default_cword(hfile)

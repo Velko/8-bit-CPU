@@ -9,8 +9,14 @@
 #define PROGMEM
 #endif
 
+/* "Compressed" description */
 #define MAX_STEPS       4
 #define MAX_ALTS        1
+
+/* Hardware config */
+#define NUM_FLAGS       4
+#define NUM_STEP_BITS   3
+
 
 struct op_flags_alt {
     uint8_t mask;
