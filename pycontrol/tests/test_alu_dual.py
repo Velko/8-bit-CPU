@@ -4,6 +4,8 @@ import pytest
 
 from libcpu.cpu import *
 
+pytestmark = pytest.mark.hardware
+
 hardwired_alu = True
 hardwired_reason = "unsupported with hardwired ALU inputs"
 

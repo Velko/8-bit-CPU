@@ -2,6 +2,8 @@
 
 import pytest
 
+pytestmark = pytest.mark.hardware
+
 from libcpu.cpu import *
 
 def test_flags_out_n(cpu_backend_real):

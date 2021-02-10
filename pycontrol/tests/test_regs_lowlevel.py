@@ -6,6 +6,8 @@ from libcpu.cpu import *
 from libcpu.DeviceSetup import AddSub as alu
 
 
+pytestmark = pytest.mark.hardware
+
 def test_reg_a_latch(cpu_backend_real):
         backend = cpu_backend_real
 

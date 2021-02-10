@@ -2,6 +2,8 @@
 
 import pytest
 
+pytestmark = pytest.mark.hardware
+
 from libcpu.cpu import *
 
 def test_add_ab_result_small(cpu_backend_real):

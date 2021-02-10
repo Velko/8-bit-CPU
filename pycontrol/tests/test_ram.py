@@ -4,6 +4,7 @@ import pytest, random
 
 from libcpu.cpu import *
 
+pytestmark = pytest.mark.hardware
 
 # can not make as a fixture, because it can not be
 # unpacked for parametrization (couldn't find a way)

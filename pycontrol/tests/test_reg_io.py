@@ -4,6 +4,8 @@ import pytest
 
 from libcpu.cpu import *
 
+pytestmark = pytest.mark.hardware
+
 def all_regs_and_bits():
     regs = [A, B]
     bits = range(8)

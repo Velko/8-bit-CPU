@@ -2,6 +2,8 @@
 
 import pytest
 
+pytestmark = pytest.mark.hardware
+
 from libcpu.cpu import *
 
 def load_pc(backend, value):
