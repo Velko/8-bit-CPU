@@ -41,8 +41,6 @@ def run():
     # now the program
     sieve_start.here()
 
-    print ("-------- segment: 0 (simple) -------", flush=True)
-
     ldi (A, 2)
 
     # fill seg0 with non-zero values
@@ -135,7 +133,6 @@ def run():
 
     while True:
         st (r_low, A)
-        print ("----------- segment: {}+ -----------".format(peek(A)), flush=True)
 
         # Fill seg_n with non-zeros
         ldi (A, 0)
@@ -261,8 +258,8 @@ def run():
         break
 
 
-    print ("----------- done -----------", flush=True)
     hlt()
+    jmp(0) # if hlt did not work/was overridden, start from the beginning
 
 # the code takes about 166 bytes, put data at 192 then
 org(0xc0)
