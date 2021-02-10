@@ -4,31 +4,31 @@ const uint16_t op_fetch[] = {0x32c5, 0x34e3};
 
 const struct op_microcode microcode[] PROGMEM = {
 
-    /* nop        */
+    /* 00 nop        */
     { .default_steps = {0x37c7},},
 
-    /* ldi_A_imm  */
+    /* 01 ldi_A_imm  */
     { .default_steps = {0x32c5, 0x30e3},},
 
-    /* ldi_B_imm  */
+    /* 02 ldi_B_imm  */
     { .default_steps = {0x32c5, 0x31e3},},
 
-    /* ldi_F_imm  */
+    /* 03 ldi_F_imm  */
     { .default_steps = {0x32c5, 0x37ab},},
 
-    /* add_A_A    */
+    /* 04 add_A_A    */
     { .default_steps = {0x3082},},
 
-    /* add_A_B    */
+    /* 05 add_A_B    */
     { .default_steps = {0x3082},},
 
-    /* add_B_A    */
+    /* 06 add_B_A    */
     { .default_steps = {0x3182},},
 
-    /* add_B_B    */
+    /* 07 add_B_B    */
     { .default_steps = {0x3182},},
 
-    /* adc_A_A    */
+    /* 08 adc_A_A    */
     { .default_steps = {0x3082},
       .f_alt = {
           /* mask: -C-- value: -C-- */
@@ -38,7 +38,7 @@ const struct op_microcode microcode[] PROGMEM = {
       },
     },
 
-    /* adc_A_B    */
+    /* 09 adc_A_B    */
     { .default_steps = {0x3082},
       .f_alt = {
           /* mask: -C-- value: -C-- */
@@ -48,7 +48,7 @@ const struct op_microcode microcode[] PROGMEM = {
       },
     },
 
-    /* adc_B_A    */
+    /* 0a adc_B_A    */
     { .default_steps = {0x3182},
       .f_alt = {
           /* mask: -C-- value: -C-- */
@@ -58,7 +58,7 @@ const struct op_microcode microcode[] PROGMEM = {
       },
     },
 
-    /* adc_B_B    */
+    /* 0b adc_B_B    */
     { .default_steps = {0x3182},
       .f_alt = {
           /* mask: -C-- value: -C-- */
@@ -68,82 +68,82 @@ const struct op_microcode microcode[] PROGMEM = {
       },
     },
 
-    /* sub_A_B    */
+    /* 0c sub_A_B    */
     { .default_steps = {0x3092},},
 
-    /* sub_B_A    */
+    /* 0d sub_B_A    */
     { .default_steps = {0x3192},},
 
-    /* sbb_A_B    */
+    /* 0e sbb_A_B    */
     { .default_steps = {0x3892},},
 
-    /* sbb_B_A    */
+    /* 0f sbb_B_A    */
     { .default_steps = {0x3992},},
 
-    /* cmp_A_B    */
+    /* 10 cmp_A_B    */
     { .default_steps = {0x3792},},
 
-    /* cmp_B_A    */
+    /* 11 cmp_B_A    */
     { .default_steps = {0x3792},},
 
-    /* mov_A_B    */
+    /* 12 mov_A_B    */
     { .default_steps = {0x30c1},},
 
-    /* mov_B_A    */
+    /* 13 mov_B_A    */
     { .default_steps = {0x31c0},},
 
-    /* out_A      */
+    /* 14 out_A      */
     { .default_steps = {0x36c0},},
 
-    /* out_B      */
+    /* 15 out_B      */
     { .default_steps = {0x36c1},},
 
-    /* st_addr_A  */
+    /* 16 st_addr_A  */
     { .default_steps = {0x32c5, 0x32e3, 0x33c0},},
 
-    /* st_addr_B  */
+    /* 17 st_addr_B  */
     { .default_steps = {0x32c5, 0x32e3, 0x33c1},},
 
-    /* stabs_A_A  */
+    /* 18 stabs_A_A  */
     { .default_steps = {0x32c0, 0x33c0},},
 
-    /* stabs_A_B  */
+    /* 19 stabs_A_B  */
     { .default_steps = {0x32c0, 0x33c1},},
 
-    /* stabs_B_A  */
+    /* 1a stabs_B_A  */
     { .default_steps = {0x32c1, 0x33c0},},
 
-    /* stabs_B_B  */
+    /* 1b stabs_B_B  */
     { .default_steps = {0x32c1, 0x33c1},},
 
-    /* ld_A_addr  */
+    /* 1c ld_A_addr  */
     { .default_steps = {0x32c5, 0x32e3, 0x3083},},
 
-    /* ld_B_addr  */
+    /* 1d ld_B_addr  */
     { .default_steps = {0x32c5, 0x32e3, 0x3183},},
 
-    /* ldabs_A_A  */
+    /* 1e ldabs_A_A  */
     { .default_steps = {0x32c0, 0x3083},},
 
-    /* ldabs_A_B  */
+    /* 1f ldabs_A_B  */
     { .default_steps = {0x32c1, 0x3083},},
 
-    /* ldabs_B_A  */
+    /* 20 ldabs_B_A  */
     { .default_steps = {0x32c0, 0x3183},},
 
-    /* ldabs_B_B  */
+    /* 21 ldabs_B_B  */
     { .default_steps = {0x32c1, 0x3183},},
 
-    /* tstabs_A   */
+    /* 22 tstabs_A   */
     { .default_steps = {0x32c0, 0x3783},},
 
-    /* tstabs_B   */
+    /* 23 tstabs_B   */
     { .default_steps = {0x32c1, 0x3783},},
 
-    /* jmp_addr   */
+    /* 24 jmp_addr   */
     { .default_steps = {0x32c5, 0x35c3},},
 
-    /* beq_addr   */
+    /* 25 beq_addr   */
     { .default_steps = {0x37e7},
       .f_alt = {
           /* mask: --Z- value: --Z- */
@@ -153,7 +153,7 @@ const struct op_microcode microcode[] PROGMEM = {
       },
     },
 
-    /* bne_addr   */
+    /* 26 bne_addr   */
     { .default_steps = {0x37e7},
       .f_alt = {
           /* mask: --Z- value: ---- */
@@ -163,7 +163,7 @@ const struct op_microcode microcode[] PROGMEM = {
       },
     },
 
-    /* bcs_addr   */
+    /* 27 bcs_addr   */
     { .default_steps = {0x37e7},
       .f_alt = {
           /* mask: -C-- value: -C-- */
@@ -173,7 +173,7 @@ const struct op_microcode microcode[] PROGMEM = {
       },
     },
 
-    /* bcc_addr   */
+    /* 28 bcc_addr   */
     { .default_steps = {0x37e7},
       .f_alt = {
           /* mask: -C-- value: ---- */
@@ -183,9 +183,9 @@ const struct op_microcode microcode[] PROGMEM = {
       },
     },
 
-    /* out_F      */
+    /* 29 out_F      */
     { .default_steps = {0x36c4},},
 
-    /* hlt        */
+    /* 2a hlt        */
     { .default_steps = {0x17c7},},
 };

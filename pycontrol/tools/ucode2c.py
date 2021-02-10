@@ -24,7 +24,7 @@ def generate_microcode(cfile):
     for key, microcode in opcodes.items():
 
         words = process_steps(microcode._steps)
-        cfile.write ("\n    /* {:10} */\n".format(key))
+        cfile.write ("\n    /* {:02x} {:10} */\n".format(microcode.opcode, key))
         cfile.write ("    {{ .default_steps = {{{}}},".format(", ".join(words)))
 
         if not microcode.f_alt:
