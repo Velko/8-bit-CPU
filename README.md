@@ -101,7 +101,7 @@ but the potential is there.
 Quarter-clock
 -------------
 
-One of the sources of instability in Ben's version is RC-circuit used as and edge detector in RAM
+One of the sources of instability in Ben's version is RC-circuit used as an edge detector in RAM
 module. A common technique is to isolate the circuit so that it does not send spikes back in clock
 line. I, however, decided to eliminate the need for edge detection completely. The thing with RAM
 is that it will keep loading the value all the time while Write Enable line is enabled. If inputs
@@ -202,10 +202,10 @@ Progress
 * Built a dedicated "debug control" board using Nano, shift registers and demultiplexers
 * Connected Program Counter and "read-back" from IR into Arduino. Should be able to "run" programs from
   memory
-* Developed a Python-side instruction interpreter, that uses input from IR and flags to select and
+* Developed a Python-side instruction interpreter, which uses input from IR and flags to select and
   execute appropriate microcode steps. Now it really runs machine code, albeit using weird (and very slow)
   control logic
-* Developed an utility that dumps current microcode (Python) definitions to C arrays.
+* Developed utility that dumps current microcode (Python) definitions to C arrays.
 * Wrote an Arduino-side instruction interpreter that uses the C microcode arrays and input from IR and
   Flags. Now can run programs without Python-side involvement
 * Added an EEPROM in RAM module. Added a bootloader code in the Prime Sieve demo. The bootloader copies
