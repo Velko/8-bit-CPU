@@ -18,6 +18,158 @@ those as well. I don't know, time will tell. But the main idea is that it should
 out PCBs for breadboards and vice versa.
 
 
+
+Key differences from Ben's version
+==================================
+
+256 bytes of memory
+-------------------
+
+I felt that 16 bytes of total memory might be too tight, went for 8-bit addressing and 256 bytes
+of memory straight from the beginning. It does not introduce more complexity, I think that it even
+made things easier. I plan to expand it to full 64KiB of memory, eventually.
+
+
+ROM and bootloader mode
+-----------------------
+
+I was not in the mood for _any_ DIP switch toggling for program entry, so I added an EEPROM instead.
+Still I did not want to go full Harward achitecture with seperate program and data memories, so
+there's bootloader mode instead.
+
+RAM's Chip Enable is connected together with Write Enable, while ROM's Chip Enable is connected with
+Output Enable of the RAM. What happens is that all reads comes from ROM and all writes goes into RAM.
+
+I have bootloader code in the beginning of the program that copies contents of all 256 bytes into RAM
+and then patches itself (in RAM) to be skipped. It is nice to have more memory, since in original
+version there are only 16 bytes total, but I can afford to _waste_ similar amount on bootloader.
+
+In _run mode_ ROM's Chip Enable is tied disabled state permanently, while RAM is permanently enabled.
+
+4 flags
+-------
+
+In addition to Ben's Z and C flags, there are Negative and oVerflow flags. Took an inspiration from
+[AVR Instruction Set Manual][avr-instructions], on how to implement various branching instructions.
+N and V flags are required for some.
+
+C flag got an additional update to act as a Borrow bit in subtraction. It behaves same way as in
+Z80 / AVR / x86 processors. In subtraction the meaning of C is opposite from 6502 or Ben's version,
+I find this more intuitive.
+
+
+Modular ALU
+-----------
+
+While currently there is only single module for Add and Subtract (with or without carry/borrow),
+design allows additional modules for other operations - AND/OR, XOR/NOT, SHIFT.
+
+
+Flags register as an independent entity
+---------------------------------------
+
+Zero flag's calculation takes input from the Bus, instead of being embedded in ALU module. This allows
+to add additional ALU modules and keep just one instance of Z calculation circuitry. Additionally, it
+is possible to calculate flags for anything on the Bus, for example - while loading byte from memory.
+
+
+Double-latching registers
+-------------------------
+
+One of the main sources of instability in Ben's design is that registers' "tap outputs" (ones that
+connects registers to ALU, RAM or Control Logic) change on same moment when new value is latched.
+This is especially important with Flags and Instruction Register, as it creates the infamous
+"EEPROM noise" on the rising clock edge, when it can cause unexpected effects. It might not be such
+an issue for general-purpose registers or MAR, but it is better that everything holds steady while
+the clock line is high.
+
+The double-latching technique adds additional D flip-flops between register's primary ones and its
+"tap output". These additional flip-flops are configured to latch on the inverted clock, therefore
+output stays unchanged until the falling edge.
+
+
+Dual-output registers
+---------------------
+
+General purpose registers got dual 3-state "tap outputs". Instead of ALU inputs being hardwired to
+registers A and B, now (with appropiate control signals) it is possible to connect them differently,
+for example do A + A directly. It also allows additional registers (C and D), that could be used
+with ALU directly. Currently this feature is not used and control lines are wired for steady "on",
+but the potential is there.
+
+
+Quarter-clock
+-------------
+
+One of the sources of instability in Ben's version is RC-circuit used as and edge detector in RAM
+module. A common technique is to isolate the circuit so that it does not send spikes back in clock
+line. I, however, decided to eliminate the need for edge detection completely. The thing with RAM
+is that it will keep loading the value all the time while Write Enable line is enabled. If inputs
+change, the last value will be stored, which may not be one we want if Write Enable is disabled on
+same moment as other control lines starts to change. Ben solved it using edge detector circuit, I
+went in another direction and introduced a "dead time" between moment when primary clock line goes
+low and inverted clock rises.
+
+By introducting a counter (could have been anything that can divide the frequency) and few NOR gates
+on the *clock module* I generate two 25% duty-cycle clock signals, that are offset by half of the
+cycle. If you divide one clock cycle into quarters, it works like is:
+
+* primary clock rises, inverted stays low
+* primary clock falls, inverted stays low
+* primary clock stays low, inverted rises
+* primary clock stays low, inverted falls
+
+Part of the cycle when both clocks are low ensures that RAM's Write Enable is not active when control
+lines or bus changes.
+
+Currently it is required only by RAM module, but now other un-clocked parts (e.g. 193 counter for
+Stack Pointer) can be introduced without worries.
+
+
+Muxed control lines
+-------------------
+
+A great way to save bits in Control EEPROMs is to add demultiplexers, that activates just
+a single line from several. For example, by using 74*138 demultiplexer one can expand 3 bits to 7
+control lines (technically - to 8, but you need to reserve one as "unused"). Currently there are
+2 demultiplexers used - for OUT and for LOAD lines. For OUT it also prevents "invalid" conditions,
+such as multiple modules trying to output value on the bus.
+
+While, in theory, there might be need to load same value into multiple modules simultaineously, I've
+not yet encountered one, and I happy to live with that limitation.
+
+
+Arduino + Python test module
+----------------------------
+
+It started with hooking up an Arduino and writing some sketches to verify if modules work as expected.
+Soon I realized that the environment is a bit limited and while it can prove that everything works,
+it is not very helpful for diagnostics.
+
+Reducing the functions of Arduino to "set control lines", "put to bus", "read from bus", etc. and
+implementing higher level logic in Python makes it more flexible and quicker to develop. Wrote a "client"
+that uses cmd-input for diagnostics.
+
+Started to implement Python functions that acts as an assembly instructions - for example: add(A, B)
+switches all control lines and issues clock ticks as needed for the addition operation. Basically -
+implemented microcode in Python. Later, with refactoring it became my main microcode definition and
+is used as primary source for microcode EEPROM contents.
+
+Using the instruction-like functions and [pytest][pytest] framework wrote a quite complete thorough
+test suite. It can check couple hundred scenarios in just few seconds and point out if something does
+not work as expected. It has already saved me several times, when I did some rewiring.
+
+With help of these instruction-like functions I also wrote some demo programs. Largest one is Sieve
+of Eratosthenes - it finds all 8-bit prime numbers. All variables/arrays required for algorithm are
+stored in the RAM. The control flow reads its input only from Flags register.
+
+With some "clever" manipulations, I managed to add necessary labels and jumps to replace Python's
+while/if/continue/break control flow. As a result - I can translate it into machine code.
+
+At the moment the test module is swapped out for "real" EEPROM-based Control Logic, but I'll definetely
+find a way to use both of them in parallel, as it is too useful to be retired.
+
+
 Progress
 ========
 
@@ -67,3 +219,5 @@ Progress
 
 [eater-net-8bit]: https://eater.net/8bit
 [velkoraspi]: https://velkoraspi.blogspot.com/
+[avr-instructions]: http://ww1.microchip.com/downloads/en/devicedoc/atmel-0856-avr-instruction-set-manual.pdf
+[pytest]: https://docs.pytest.org/en/stable/
