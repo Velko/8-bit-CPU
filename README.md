@@ -122,8 +122,8 @@ cycle. If you divide one clock cycle into quarters, it works like is:
 Part of the cycle when both clocks are low ensures that RAM's Write Enable is not active when control
 lines or bus changes.
 
-Currently it is required only by RAM module, but now other un-clocked parts (e.g. 193 counter for
-Stack Pointer) can be introduced without worries.
+While it is required only by RAM module, I see no downsides for using it globally. Also, now other
+un-clocked parts (e.g. 193 counter for Stack Pointer) can be introduced without worries.
 
 
 Muxed control lines
