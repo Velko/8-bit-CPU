@@ -58,6 +58,23 @@ Z80 / AVR / x86 processors. In subtraction the meaning of C is opposite from 650
 I find this more intuitive.
 
 
+256 opcodes
+-----------
+
+As memory was expanded to 256 bytes, it was not possible to encode opcode and address in single byte
+anymore. Instructions require multiple bytes anyway, Instruction Register loads 8-bit opcode and
+extra arguments are fetched from RAM when needed. There's room for 256 opcodes now.
+
+However, number of opcodes is also limited by capacity of control EEPROMs. 8 bits for opcode + 4 bits
+for flags + 3 bits for instruction step = 15 address lines. This calls for 32K EEPROM - 28C256. They
+felt a little pricey when I ordered parts and I was not completely sure if I'll really need them. For
+now I only have 28C64 chips, limiting number of opcodes to 64. It is still 4 times more than in Ben's
+version.
+
+I could probably lose one or both extra flags (not using N and V that much for now) and re-use address
+lines for opcodes, but I think I'll upgrade the EEPROMs or check out Flash chips instead.
+
+
 Modular ALU
 -----------
 
