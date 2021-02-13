@@ -14,6 +14,12 @@ all: $(TARGET).hex
 upload : $(TARGET).hex
 	$(DUDE) -p $(PART_PROG) -c $(PROGRAMMER) -y -U flash:w:$(TARGET).hex
 
+fuses:
+	# default fuse values for ATTiny25/45 are E:FF, H:DF, L:62
+	# need to switch off CKDIV8 bit only, USBasp has to be slowed down (using -B 3)
+	# as by default it is too fast for default 1 MHz clock
+	$(DUDE) -p $(PART_PROG) -c $(PROGRAMMER) -B 3 -U lfuse:w:0xE2:m -U hfuse:w:0xDF:m
+
 %.elf : $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@
 
