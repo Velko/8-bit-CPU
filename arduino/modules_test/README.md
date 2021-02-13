@@ -1,5 +1,8 @@
-Modules tester
-==============
+Modules tester (deprecated)
+===========================
+
+*This sketch is deprecated in favor of PinControl + PyControl, as it proved to be more flexible
+and easier to develop.*
 
 Arduino based modules tester - used to verify that modules operates as they are supposed to.
 Module should be connected to Arduino and testing scenario should be launched. There's a Python
