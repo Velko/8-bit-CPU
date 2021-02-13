@@ -86,7 +86,17 @@
     <wire from="(380,260)" to="(450,260)"/>
     <wire from="(380,370)" to="(450,370)"/>
     <comp lib="5" loc="(800,280)" name="Hex Digit Display"/>
-    <comp lib="4" loc="(560,260)" name="Register"/>
+    <comp lib="1" loc="(520,300)" name="NOT Gate"/>
+    <comp lib="5" loc="(850,280)" name="Hex Digit Display"/>
+    <comp lib="4" loc="(480,370)" name="Register"/>
+    <comp lib="0" loc="(380,370)" name="Constant">
+      <a name="width" val="8"/>
+    </comp>
+    <comp lib="5" loc="(400,480)" name="Button"/>
+    <comp lib="3" loc="(650,320)" name="Adder"/>
+    <comp lib="0" loc="(630,240)" name="Constant">
+      <a name="value" val="0x0"/>
+    </comp>
     <comp lib="0" loc="(750,320)" name="Splitter">
       <a name="incoming" val="8"/>
       <a name="bit1" val="0"/>
@@ -97,20 +107,8 @@
       <a name="bit6" val="1"/>
       <a name="bit7" val="1"/>
     </comp>
-    <comp lib="1" loc="(520,300)" name="NOT Gate"/>
-    <comp lib="0" loc="(400,480)" name="Constant">
-      <a name="value" val="0x0"/>
-    </comp>
-    <comp lib="0" loc="(380,370)" name="Constant">
-      <a name="width" val="8"/>
-    </comp>
     <comp lib="0" loc="(270,300)" name="Clock"/>
-    <comp lib="0" loc="(630,240)" name="Constant">
-      <a name="value" val="0x0"/>
-    </comp>
     <comp lib="4" loc="(480,260)" name="Register"/>
-    <comp lib="4" loc="(480,370)" name="Register"/>
-    <comp lib="3" loc="(650,320)" name="Adder"/>
-    <comp lib="5" loc="(850,280)" name="Hex Digit Display"/>
+    <comp lib="4" loc="(560,260)" name="Register"/>
   </circuit>
 </project>
