@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project source="2.7.1" version="1.0">
+  This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
+
+  <lib desc="#Wiring" name="0"/>
+  <lib desc="#Gates" name="1"/>
+  <lib desc="#Plexers" name="2"/>
+  <lib desc="#Arithmetic" name="3"/>
+  <lib desc="#Memory" name="4">
+    <tool name="ROM">
+      <a name="contents">addr/data: 8 8
+0
+</a>
+    </tool>
+  </lib>
+  <lib desc="#I/O" name="5"/>
+  <lib desc="#Base" name="6">
+    <tool name="Text Tool">
+      <a name="text" val=""/>
+      <a name="font" val="SansSerif plain 12"/>
+      <a name="halign" val="center"/>
+      <a name="valign" val="base"/>
+    </tool>
+  </lib>
+  <main name="main"/>
+  <options>
+    <a name="gateUndefined" val="ignore"/>
+    <a name="simlimit" val="1000"/>
+    <a name="simrand" val="0"/>
+  </options>
+  <mappings>
+    <tool lib="6" map="Button2" name="Menu Tool"/>
+    <tool lib="6" map="Button3" name="Menu Tool"/>
+    <tool lib="6" map="Ctrl Button1" name="Menu Tool"/>
+  </mappings>
+  <toolbar>
+    <tool lib="6" name="Poke Tool"/>
+    <tool lib="6" name="Edit Tool"/>
+    <tool lib="6" name="Text Tool">
+      <a name="text" val=""/>
+      <a name="font" val="SansSerif plain 12"/>
+      <a name="halign" val="center"/>
+      <a name="valign" val="base"/>
+    </tool>
+    <sep/>
+    <tool lib="0" name="Pin">
+      <a name="tristate" val="false"/>
+    </tool>
+    <tool lib="0" name="Pin">
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+      <a name="labelloc" val="east"/>
+    </tool>
+    <tool lib="1" name="NOT Gate"/>
+    <tool lib="1" name="AND Gate"/>
+    <tool lib="1" name="OR Gate"/>
+  </toolbar>
+  <circuit name="main">
+    <a name="circuit" val="main"/>
+    <a name="clabel" val=""/>
+    <a name="clabelup" val="east"/>
+    <a name="clabelfont" val="SansSerif plain 12"/>
+    <wire from="(530,300)" to="(530,340)"/>
+    <wire from="(530,190)" to="(530,230)"/>
+    <wire from="(390,280)" to="(450,280)"/>
+    <wire from="(390,320)" to="(450,320)"/>
+    <wire from="(390,250)" to="(450,250)"/>
+    <wire from="(700,260)" to="(700,300)"/>
+    <wire from="(530,340)" to="(550,340)"/>
+    <wire from="(530,190)" to="(550,190)"/>
+    <wire from="(530,230)" to="(550,230)"/>
+    <wire from="(610,360)" to="(770,360)"/>
+    <wire from="(610,210)" to="(770,210)"/>
+    <wire from="(510,300)" to="(530,300)"/>
+    <wire from="(510,230)" to="(530,230)"/>
+    <wire from="(310,210)" to="(450,210)"/>
+    <wire from="(700,260)" to="(770,260)"/>
+    <wire from="(700,300)" to="(770,300)"/>
+    <wire from="(390,280)" to="(390,300)"/>
+    <wire from="(390,300)" to="(390,320)"/>
+    <wire from="(310,300)" to="(390,300)"/>
+    <wire from="(310,380)" to="(550,380)"/>
+    <wire from="(390,250)" to="(390,280)"/>
+    <wire from="(530,300)" to="(700,300)"/>
+    <comp lib="0" loc="(310,300)" name="Pin">
+      <a name="tristate" val="false"/>
+      <a name="pull" val="up"/>
+      <a name="label" val="LOAD"/>
+    </comp>
+    <comp lib="6" loc="(812,304)" name="Text">
+      <a name="text" val="RAM Output Enable, active LOW"/>
+      <a name="halign" val="left"/>
+    </comp>
+    <comp lib="6" loc="(811,365)" name="Text">
+      <a name="text" val="RAM Write Enable. active LOW"/>
+      <a name="halign" val="left"/>
+    </comp>
+    <comp lib="0" loc="(770,360)" name="Pin">
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+      <a name="tristate" val="false"/>
+      <a name="label" val="WE"/>
+    </comp>
+    <comp lib="1" loc="(510,230)" name="NAND Gate">
+      <a name="inputs" val="2"/>
+    </comp>
+    <comp lib="0" loc="(310,380)" name="Clock"/>
+    <comp lib="0" loc="(770,260)" name="Pin">
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+      <a name="tristate" val="false"/>
+      <a name="label" val="DIR"/>
+    </comp>
+    <comp lib="0" loc="(770,210)" name="Pin">
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+      <a name="tristate" val="false"/>
+      <a name="label" val="BOE"/>
+    </comp>
+    <comp lib="1" loc="(610,210)" name="NAND Gate">
+      <a name="inputs" val="2"/>
+    </comp>
+    <comp lib="0" loc="(310,210)" name="Pin">
+      <a name="tristate" val="false"/>
+      <a name="pull" val="up"/>
+      <a name="label" val="OUT"/>
+    </comp>
+    <comp lib="1" loc="(610,360)" name="NAND Gate">
+      <a name="inputs" val="2"/>
+    </comp>
+    <comp lib="6" loc="(966,467)" name="Text">
+      <a name="halign" val="left"/>
+    </comp>
+    <comp lib="6" loc="(811,264)" name="Text">
+      <a name="text" val="Buffer direction: LOW - to bus, HIGH - from bus"/>
+      <a name="halign" val="left"/>
+    </comp>
+    <comp lib="0" loc="(770,300)" name="Pin">
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+      <a name="tristate" val="false"/>
+      <a name="label" val="OE"/>
+    </comp>
+    <comp lib="1" loc="(510,300)" name="NAND Gate">
+      <a name="inputs" val="2"/>
+    </comp>
+    <comp lib="6" loc="(811,215)" name="Text">
+      <a name="text" val="Buffer Output Enable: LOW - transmit to or from main bus"/>
+      <a name="halign" val="left"/>
+    </comp>
+  </circuit>
+</project>
