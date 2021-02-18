@@ -26,8 +26,9 @@ Key differences from Ben's version
 -------------------
 
 I felt that 16 bytes of total memory might be too tight, went for 8-bit addressing and 256 bytes
-of memory straight from the beginning. It does not introduce more complexity, I think that it even
-made things easier. I plan to expand it to full 64KiB of memory, eventually.
+of memory straight from the beginning. "Real" 32 KiB SRAM chip is used, with remaining higher address
+lines tied to ground. Expanding to 256 bytes does not introduce more complexity, I think that it even
+made things easier. I plan to expand further to full 64KiB of memory, eventually.
 
 
 ROM and bootloader mode
@@ -51,7 +52,10 @@ In _run mode_ ROM's Chip Enable is tied disabled state permanently, while RAM is
 
 In addition to Ben's Z and C flags, there are Negative and oVerflow flags. Took an inspiration from
 [AVR Instruction Set Manual][avr-instructions], on how to implement various branching instructions.
-N and V flags are required for some.
+N and V flags are required for some. N bit is just a copy of 7-th bit of the result. oVerflow indicates
+that the sign bit "overflowed" as a result of addition/subtraction. In short it can be defined as:
+*If sign bits of both addition operands are equal, but sign bit of the result is different, the overflow
+occured.*
 
 C flag got an additional update to act as a Borrow bit in subtraction. It behaves same way as in
 Z80 / AVR / x86 processors. In subtraction the meaning of C is opposite from 6502 or Ben's version,
@@ -88,6 +92,8 @@ Flags register as an independent entity
 Zero flag's calculation takes input from the Bus, instead of being embedded in ALU module. This allows
 to add additional ALU modules and keep just one instance of Z calculation circuitry. Additionally, it
 is possible to calculate flags for anything on the Bus, for example - while loading byte from memory.
+There's additional function for flags register to be sent and loaded from bus directly. Currently
+there is no use for that, but it may become handy if interrupts are implemented some day.
 
 
 Double-latching registers
@@ -232,7 +238,11 @@ Progress
 * Built an EEPROM-based control board. Flashed microcode into ROMs.
 * Swapped out Arduino-based control board with EEPROM-based one. A very error-prone operation, I must admit.
 * IT'S ALIVE!!! The Sieve of Eratosthenes runs without involvement of any additional processor!
-
+* I pushed it for speed. Initially there were some instability, but I noticed that connection of N flag
+  from Flags to Control Logic was loose. Nothing in the code uses N flag for now, that's why it did not
+  fail immediately. Once that was fixed, it appears to be rock-solid. I even pulled the capacitor from the
+  astable clock, making it go as fast as it can. It's been running that way for over a week - not a single
+  misstep.
 
 [eater-net-8bit]: https://eater.net/8bit
 [velkoraspi]: https://velkoraspi.blogspot.com/
