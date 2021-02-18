@@ -135,12 +135,9 @@ low and inverted clock rises.
 
 By introducing a counter (could have been anything that can divide the frequency) and few NOR gates
 on the *clock module* I generate two 25% duty-cycle clock signals, that are offset by half of the
-cycle. If you divide one clock cycle into quarters, it works like is:
+cycle. It looks like this:
 
-* primary clock rises, inverted stays low
-* primary clock falls, inverted stays low
-* primary clock stays low, inverted rises
-* primary clock stays low, inverted falls
+![q-clock](./doc/q-clock.png)
 
 Part of the cycle when both clocks are low ensures that RAM's Write Enable is not active when control
 lines or bus changes.
