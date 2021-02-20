@@ -193,6 +193,17 @@ At the moment the test module is swapped out for "real" EEPROM-based Control Log
 find a way to use both of them in parallel, as it is too useful to be retired.
 
 
+Side-project: EEPROM writer
+---------------------------
+
+As a side project I also built an EEPROM writer: PCB version - an Arduino Uno shield. It can program
+DIP-28 EEPROMs (AT28C64 and AT28C256) and PLCC-32 versions of same chips. Main principle is same as in
+Ben's version, but wiring is different, because it uses Arduino's SPI module to work with shift registers
+(it is much faster than shiftOut() method). Additional headers on the board gives access to "address" and
+"data bus" pins, so the board can be used for different purposes when no EEPROMs need to be programmed.
+I used it as the Test Module at first.
+
+
 Progress
 ========
 
