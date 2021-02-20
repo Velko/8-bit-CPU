@@ -38,14 +38,15 @@ I was not in the mood for _any_ DIP switch toggling for program entry, so I adde
 Still I did not want to go full Harvard architecture with separate program and data memories, so
 there's bootloader mode instead.
 
-RAM's Chip Enable is connected together with Write Enable, while ROM's Chip Enable is connected with
-Output Enable of the RAM. What happens is that all reads comes from ROM and all writes goes into RAM.
+To enable it, RAM's Chip Enable is connected together with Write Enable, while ROM's Chip Enable is
+connected with Output Enable of the RAM. What happens is that all reads comes from ROM and all writes
+goes into RAM.
 
 I have bootloader code in the beginning of the program that copies contents of all 256 bytes into RAM
 and then patches itself (in RAM) to be skipped. It is nice to have more memory, since in original
 version there are only 16 bytes total, but I can afford to _waste_ similar amount on bootloader.
 
-In _run mode_ ROM's Chip Enable is tied disabled state permanently, while RAM is permanently enabled.
+In _run mode_ ROM's Chip Enable is tied to disabled state permanently, while RAM is permanently enabled.
 
 4 flags
 -------
