@@ -162,29 +162,32 @@ not yet encountered one, and I happy to live with that limitation.
 Arduino + Python test module
 ----------------------------
 
-It started with hooking up an Arduino and writing some sketches to verify if modules work as expected.
-Soon I realized that the environment is a bit limited and while it can prove that everything works,
-it is not very helpful for diagnostics.
+It started with hooking up an Arduino (on its own at first, then expanded output with 595 shift registers,
+expanding even more with 139 demultiplexers and finally added 165 for expanded input) and writing some
+sketches to verify if modules work as expected. Soon I realized that the environment is a bit limited
+and while it can prove that everything works, it is not very helpful for diagnostics.
 
-Reducing the functions of Arduino to "set control lines", "put to bus", "read from bus", etc. and
-implementing higher level logic in Python makes it more flexible and quicker to develop. Wrote a "client"
-that uses cmd-input for diagnostics.
+Reducing the functions of Arduino to "set control lines", "put to bus", "read from bus", "read flags",
+"pulse a clock", etc. and implementing higher level logic in Python, makes it more flexible and quicker
+to develop. Wrote a "client" that uses interactive input for diagnostics.
 
 Started to implement Python functions that acts as an assembly instructions - for example: add(A, B)
 switches all control lines and issues clock ticks as needed for the addition operation. Basically -
 implemented microcode in Python. Later, with refactoring it became my main microcode definition and
 is used as primary source for microcode EEPROM contents.
 
-Using the instruction-like functions and [pytest][pytest] framework wrote a quite complete thorough
-test suite. It can check couple hundred scenarios in just few seconds and point out if something does
-not work as expected. It has already saved me several times, when I did some rewiring.
+Using the instruction-like functions and [pytest][pytest] framework wrote a quite thorough test suite.
+It can check couple hundred scenarios in just few seconds and point out if something does not work as
+expected. It has already saved me several times, when I did some rewiring.
 
 With help of these instruction-like functions I also wrote some demo programs. Largest one is Sieve
 of Eratosthenes - it finds all 8-bit prime numbers. All variables/arrays required for algorithm are
 stored in the RAM. The control flow reads its input only from Flags register.
 
-With some "clever" manipulations, I managed to add necessary labels and jumps to replace Python's
-while/if/continue/break control flow. As a result - I can translate it into machine code.
+With some "clever" manipulations, I add necessary labels and jumps to replace Python's while/if/
+continue/break control flow. The resulting code is ran using alternate "backend" that generates
+machine code, instead of sending it to hardware directly. Machine code that can be written into program
+ROM or loaded into RAM by different means.
 
 At the moment the test module is swapped out for "real" EEPROM-based Control Logic, but I'll definitely
 find a way to use both of them in parallel, as it is too useful to be retired.
@@ -216,9 +219,8 @@ Progress
   algorithm are stored in the RAM. The control flow reads its input only from Flags register. This
   should be almost 1:1 translatable to assembly / machine code
 * Play around with Python AST visitor to automatically "flatten" the program and add necessary labels
-  and jumps to replace Python's while/if/continue/break control flow. Main idea is to run this program
-  with different "backend" that generates machine code from it, instead of sending commands to hardware
-  directly
+  and jumps to replace Python's while/if/continue/break control flow. When executed, this program generates
+  machine code.
 * Built a dedicated "debug control" board using Nano, shift registers and demultiplexers
 * Connected Program Counter and "read-back" from IR into Arduino. Should be able to "run" programs from
   memory
