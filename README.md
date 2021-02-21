@@ -144,21 +144,22 @@ looks like this:
 Part of the cycle when both clocks are low ensures that RAM's Write Enable is not active when control
 lines or bus changes.
 
-While it is required only by RAM module, I see no downsides for using it globally. Also, now other
-un-clocked parts (e.g. 193 counter for Stack Pointer) can be introduced without worries.
+While it is required only by RAM module, I see no downsides for using it globally (it might be an issue
+at high clock frequencies, though). Also, now other un-clocked parts (e.g. 193 counter for Stack Pointer)
+can be introduced without worries.
 
 
 Muxed control lines
 -------------------
 
-A great way to save bits in Control EEPROMs is to add demultiplexers, which activates just
-a single line from several. For example, by using 74*138 demultiplexer one can expand 3 bits to 7
-control lines (technically - to 8, but you need to reserve one as "unused"). Currently there are
-2 demultiplexers used - for OUT and for LOAD lines. For OUT it also prevents "invalid" conditions,
-such as multiple modules trying to output value on the bus.
+A great way to save bits in Control EEPROMs is to add demultiplexers, which activates just a single line
+from several. For example, by using 74*138 demultiplexer one can expand 3 bits to 7 control lines
+(technically - to 8, but you need to reserve one as "unused"). Currently there are 2 demultiplexers
+used - for OUT and for LOAD lines. For OUT it also prevents "invalid" conditions, such as multiple
+modules trying to output value on the bus.
 
 While, in theory, there might be need to load same value into multiple modules simultaneously, I've
-not yet encountered one, and I happy to live with that limitation.
+not yet encountered one, and I'm happy to live with that limitation.
 
 
 Arduino + Python test module
