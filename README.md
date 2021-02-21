@@ -51,7 +51,7 @@ In _run mode_ ROM's Chip Enable is tied to disabled state permanently, while RAM
 4 flags
 -------
 
-In addition to Ben's Z and C flags, there are Negative and oVerflow flags. Took an inspiration from
+In addition to Z and C flags, there are Negative and oVerflow flags. Took an inspiration from
 [AVR Instruction Set Manual][avr-instructions], on how to implement various branching instructions.
 N and V flags are required for some. N bit is just a copy of 7-th bit of the result. oVerflow indicates
 that the sign bit "overflowed" as a result of addition/subtraction. In short it can be defined as:
@@ -67,8 +67,8 @@ I find this more intuitive.
 -----------
 
 As memory was expanded to 256 bytes, it was not possible to encode opcode and address in single byte
-anymore. Instructions require multiple bytes anyway, Instruction Register loads 8-bit opcode and
-extra arguments are fetched from RAM when needed. There's room for 256 opcodes now.
+anymore. Instructions may require multiple bytes anyway now. Instruction Register loads 8-bit opcode and
+extra arguments are fetched from RAM when needed, there's room for 256 opcodes.
 
 However, number of opcodes is also limited by capacity of control EEPROMs. 8 bits for opcode + 4 bits
 for flags + 3 bits for instruction step = 15 address lines. This calls for 32K EEPROM - 28C256. They
@@ -101,7 +101,7 @@ Double-latching registers
 -------------------------
 
 One of the main sources of instability in Ben's design is that registers' "tap outputs" (ones that
-connects registers to ALU, RAM or Control Logic) change on same moment when new value is latched.
+connects registers to ALU, RAM or Control Logic) change on immediately when new value is latched.
 This is especially important with Flags and Instruction Register, as it creates the infamous
 "EEPROM noise" on the rising clock edge, when it can cause unexpected effects. It might not be such
 an issue for general-purpose registers or MAR, but it is better that everything holds steady while
@@ -126,17 +126,17 @@ Quarter-clock
 -------------
 
 One of the sources of instability in Ben's version is RC-circuit used as an edge detector in RAM
-module. A common technique is to isolate the circuit so that it does not send spikes back in clock
-line. I, however, decided to eliminate the need for edge detection completely. The thing with RAM
-is that it will keep loading the value all the time while Write Enable line is enabled. If inputs
-change, the last value will be stored, which may not be one we want if Write Enable is disabled on
-same moment as other control lines starts to change. Ben solved it using edge detector circuit, I
-went in another direction and introduced a "dead time" between moment when primary clock line goes
-low and inverted clock rises.
+module. A common technique is to isolate the circuit using extra logic gates, so that it does not
+send spikes back in clock line. I, however, decided to eliminate the need for edge detection
+completely. The thing with RAM is that it will keep loading the value all the time while Write Enable
+line is enabled. If inputs change, the last value will be stored, which may not be one we want if
+Write Enable is disabled on same moment as other control lines starts to change. Ben solved it using
+edge detector circuit, I went in another direction and introduced a "dead time" between moment when
+primary clock line goes low and inverted clock rises.
 
-By introducing a counter (could have been anything that can divide the frequency) and few NOR gates
-on the *clock module* I generate two 25% duty-cycle clock signals, that are offset by half of the
-cycle. It looks like this:
+Added a counter (could have been anything that can divide the frequency) and few NOR gates on the
+*clock module* I generate two 25% duty-cycle clock signals, that are offset by half of the cycle. It
+looks like this:
 
 ![q-clock](./doc/q-clock.png)
 
@@ -164,7 +164,7 @@ Arduino + Python test module
 ----------------------------
 
 It started with hooking up an Arduino (on its own at first, then expanded output with 595 shift registers,
-expanding even more with 139 demultiplexers and finally added 165 for expanded input) and writing some
+expanded even more with 139 demultiplexers and finally added 165 for expanded input) and writing some
 sketches to verify if modules work as expected. Soon I realized that the environment is a bit limited
 and while it can prove that everything works, it is not very helpful for diagnostics.
 
