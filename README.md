@@ -94,14 +94,15 @@ Zero flag's calculation takes input from the Bus, instead of being embedded in A
 to add additional ALU modules and keep just one instance of Z calculation circuitry. Additionally, it
 is possible to calculate flags for anything on the Bus, for example - while loading byte from memory.
 There's additional function for flags register to be sent and loaded from bus directly. Currently
-there is no use for that, but it may become handy if interrupts are implemented some day.
+there is no use for that, but it may become handy if flags need to be saved and restored for some reason
+(perhaps, to implement interrupts).
 
 
 Double-latching registers
 -------------------------
 
 One of the main sources of instability in Ben's design is that registers' "tap outputs" (ones that
-connects registers to ALU, RAM or Control Logic) change on immediately when new value is latched.
+connects registers to ALU, RAM or Control Logic) change immediately when new value is latched.
 This is especially important with Flags and Instruction Register, as it creates the infamous
 "EEPROM noise" on the rising clock edge, when it can cause unexpected effects. It might not be such
 an issue for general-purpose registers or MAR, but it is better that everything holds steady while
