@@ -352,15 +352,15 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS157" H 4950 2400 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	3900 1800 3950 1800
-Text GLabel 4300 1800 0    50   Input ~ 0
-BUS7
 Text GLabel 4350 1900 0    50   Input ~ 0
+BUS7
+Text GLabel 4300 1800 0    50   Input ~ 0
 BUS0
-Text GLabel 4350 2200 0    50   Input ~ 0
+Text GLabel 4300 2100 0    50   Input ~ 0
 BUS1
-Text GLabel 4350 2500 0    50   Input ~ 0
+Text GLabel 4400 2400 0    50   Input ~ 0
 BUS2
-Text GLabel 4350 2800 0    50   Input ~ 0
+Text GLabel 4300 2700 0    50   Input ~ 0
 BUS3
 Wire Wire Line
 	4350 2500 4450 2500
@@ -372,9 +372,9 @@ Wire Wire Line
 	4350 2800 4450 2800
 Wire Wire Line
 	5450 2100 5500 2100
-Text GLabel 4400 2400 0    50   Input ~ 0
+Text GLabel 4350 2500 0    50   Input ~ 0
 CARRY_IN
-Text GLabel 4300 2700 0    50   Input ~ 0
+Text GLabel 4350 2800 0    50   Input ~ 0
 OV_IN
 $Comp
 L 74xx:74LS173 U5
@@ -1407,7 +1407,7 @@ Wire Wire Line
 Connection ~ 10050 3600
 Wire Wire Line
 	10050 3600 10050 3700
-Text GLabel 4300 2100 0    50   Input ~ 0
+Text GLabel 4350 2200 0    50   Input ~ 0
 Z_OUT
 Wire Wire Line
 	4300 2100 4450 2100
