@@ -284,12 +284,12 @@ $EndComp
 $Comp
 L 74xx:74LS08 U2
 U 3 1 5FDE6BF2
-P 2700 3700
-F 0 "U2" H 2700 3700 50  0000 C CNN
-F 1 "74HC08" H 2700 3934 50  0001 C CNN
-F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2700 3700 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 2700 3700 50  0001 C CNN
-	3    2700 3700
+P 2750 3300
+F 0 "U2" H 2750 3300 50  0000 C CNN
+F 1 "74HC08" H 2750 3534 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2750 3300 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 2750 3300 50  0001 C CNN
+	3    2750 3300
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -419,14 +419,12 @@ Wire Wire Line
 	2100 4300 2100 4350
 Wire Wire Line
 	2100 4350 2200 4350
-Text GLabel 3150 3700 2    50   Output ~ 0
+Text GLabel 8900 4850 2    50   Output ~ 0
 CARRY_OUT
 Wire Wire Line
-	3000 3700 3150 3700
-Text GLabel 2350 3600 0    50   Input ~ 0
+	8750 4850 8900 4850
+Text GLabel 8750 4850 0    50   Input ~ 0
 USE_CARRY
-Wire Wire Line
-	2350 3600 2400 3600
 Text GLabel 9450 2000 2    50   Output ~ 0
 Z_CTRL
 Text GLabel 9450 1800 2    50   Output ~ 0
@@ -1409,11 +1407,6 @@ Wire Wire Line
 Connection ~ 10050 3600
 Wire Wire Line
 	10050 3600 10050 3700
-Wire Wire Line
-	2400 3800 1800 3800
-Wire Wire Line
-	1800 3800 1800 3900
-Connection ~ 1800 3900
 Text GLabel 4300 2100 0    50   Input ~ 0
 Z_OUT
 Wire Wire Line
