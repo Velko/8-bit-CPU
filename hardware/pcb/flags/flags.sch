@@ -284,12 +284,12 @@ $EndComp
 $Comp
 L 74xx:74LS08 U2
 U 3 1 5FDE6BF2
-P 2750 3300
-F 0 "U2" H 2750 3300 50  0000 C CNN
-F 1 "74HC08" H 2750 3534 50  0001 C CNN
-F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2750 3300 50  0001 C CNN
-F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 2750 3300 50  0001 C CNN
-	3    2750 3300
+P 3250 3500
+F 0 "U2" H 3250 3500 50  0000 C CNN
+F 1 "74HC08" H 3250 3734 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 3250 3500 50  0001 C CNN
+F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 3250 3500 50  0001 C CNN
+	3    3250 3500
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -459,7 +459,7 @@ Text GLabel 9550 4300 0    50   Output ~ 0
 CARRY_IN
 Text GLabel 9550 4100 0    50   Input ~ 0
 CARRY_OUT
-Text GLabel 6400 4500 2    50   Output ~ 0
+Text GLabel 6400 4550 2    50   Output ~ 0
 USE_CARRY
 Text GLabel 6100 2800 0    50   Input ~ 0
 CLK
@@ -472,9 +472,9 @@ Wire Wire Line
 Text GLabel 6400 4100 2    50   Output ~ 0
 ~OUT~
 Text GLabel 6400 4250 2    50   Output ~ 0
-~LOAD~
+~B_LOAD~
 Text GLabel 6400 4400 2    50   Output ~ 0
-SEL
+~B_CALC~
 Wire Wire Line
 	6250 4300 6350 4300
 Wire Wire Line
@@ -690,10 +690,8 @@ Wire Wire Line
 	6350 4250 6400 4250
 Wire Wire Line
 	6250 4400 6400 4400
-Wire Wire Line
-	6250 4500 6400 4500
 Text GLabel 6150 2600 0    50   Input ~ 0
-~LOAD~
+~LATCH~
 Wire Wire Line
 	6150 2600 6200 2600
 Wire Wire Line
@@ -732,8 +730,6 @@ F 3 "" H 8700 1500 50  0001 C CNN
 	1    8700 1500
 	1    0    0    -1  
 $EndComp
-Text GLabel 4350 3000 0    50   Input ~ 0
-SEL
 Wire Wire Line
 	4350 3000 4450 3000
 $Comp
@@ -867,7 +863,7 @@ F 3 "~" H 5100 6300 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 Text GLabel 4350 6300 0    50   Input ~ 0
-~LOAD~
+~B_LOAD~
 Wire Wire Line
 	4350 6300 4550 6300
 Wire Wire Line
@@ -878,7 +874,7 @@ Wire Wire Line
 	5300 6300 5300 6050
 Connection ~ 5300 6050
 Text GLabel 4350 6550 0    50   Input ~ 0
-SEL
+~B_CALC~
 Text GLabel 4350 6800 0    50   Input ~ 0
 USE_CARRY
 $Comp
@@ -886,11 +882,11 @@ L Device:LED D7
 U 1 1 5FE9F524
 P 4700 6550
 F 0 "D7" H 4850 6500 50  0000 C CNN
-F 1 "BIN" H 4850 6600 50  0000 C CNN
+F 1 "CALC" H 4850 6600 50  0000 C CNN
 F 2 "LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 4700 6550 50  0001 C CNN
 F 3 "~" H 4700 6550 50  0001 C CNN
 	1    4700 6550
-	-1   0    0    1   
+	1    0    0    1   
 $EndComp
 $Comp
 L Device:R R9
@@ -947,10 +943,7 @@ $EndComp
 Wire Wire Line
 	5250 6550 5300 6550
 Wire Wire Line
-	5300 6550 5300 6800
-Wire Wire Line
 	5250 6800 5300 6800
-Connection ~ 5300 6800
 Wire Wire Line
 	5300 6800 5300 6950
 $Comp
@@ -1232,9 +1225,9 @@ $EndComp
 Text GLabel 7200 5250 0    50   Output ~ 0
 ~OUT~
 Text GLabel 7200 5450 0    50   Output ~ 0
-~LOAD~
+~B_LOAD~
 Text GLabel 7200 5650 0    50   Output ~ 0
-SEL
+~B_CALC~
 Text GLabel 7200 5850 0    50   Output ~ 0
 USE_CARRY
 Text GLabel 7200 6050 0    50   Output ~ 0
@@ -1325,9 +1318,6 @@ Wire Wire Line
 Connection ~ 7750 6050
 Wire Wire Line
 	7600 5650 7750 5650
-Wire Wire Line
-	7750 5650 7750 5850
-Connection ~ 7750 5850
 Wire Wire Line
 	7200 5250 7300 5250
 Wire Wire Line
@@ -1447,4 +1437,24 @@ Wire Wire Line
 	4300 2700 4450 2700
 Wire Wire Line
 	4400 2400 4450 2400
+Wire Wire Line
+	6250 4500 6350 4500
+Wire Wire Line
+	6350 4500 6350 4550
+Wire Wire Line
+	6350 4550 6400 4550
+Text GLabel 3550 3500 2    50   Output ~ 0
+~LATCH~
+Text GLabel 2950 3400 0    50   Input ~ 0
+~B_LOAD~
+Text GLabel 2950 3600 0    50   Input ~ 0
+~B_CALC~
+Wire Wire Line
+	7750 5650 7750 5450
+Connection ~ 7750 5450
+Text GLabel 4350 3000 0    50   Input ~ 0
+~B_LOAD~
+Wire Wire Line
+	5300 6550 5300 6300
+Connection ~ 5300 6300
 $EndSCHEMATC
