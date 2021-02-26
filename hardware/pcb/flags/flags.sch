@@ -352,29 +352,29 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS157" H 4950 2400 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	3900 1800 3950 1800
-Text GLabel 4350 1900 0    50   Input ~ 0
+Text GLabel 4350 2800 0    50   Input ~ 0
 BUS7
-Text GLabel 4300 1800 0    50   Input ~ 0
-BUS0
-Text GLabel 4300 2100 0    50   Input ~ 0
-BUS1
-Text GLabel 4400 2400 0    50   Input ~ 0
-BUS2
 Text GLabel 4300 2700 0    50   Input ~ 0
+BUS0
+Text GLabel 4300 2400 0    50   Input ~ 0
+BUS1
+Text GLabel 4400 2100 0    50   Input ~ 0
+BUS2
+Text GLabel 4300 1800 0    50   Input ~ 0
 BUS3
 Wire Wire Line
-	4350 2500 4450 2500
-Wire Wire Line
 	4350 2200 4450 2200
+Wire Wire Line
+	4350 2500 4450 2500
 Wire Wire Line
 	4350 1900 4450 1900
 Wire Wire Line
 	4350 2800 4450 2800
 Wire Wire Line
 	5450 2100 5500 2100
-Text GLabel 4350 2500 0    50   Input ~ 0
+Text GLabel 4350 2200 0    50   Input ~ 0
 CARRY_IN
-Text GLabel 4350 2800 0    50   Input ~ 0
+Text GLabel 4350 1900 0    50   Input ~ 0
 OV_IN
 $Comp
 L 74xx:74LS173 U5
@@ -500,13 +500,13 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS125" H 2450 5650 50  0001 C CNN
 $EndComp
 $Comp
 L 74xx:74LS125 U6
-U 2 1 5FFEC7F6
+U 4 1 5FFEC7F6
 P 2450 6150
 F 0 "U6" H 2450 6150 50  0000 C CNN
 F 1 "74HC125" H 2450 6376 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2450 6150 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS125" H 2450 6150 50  0001 C CNN
-	2    2450 6150
+	4    2450 6150
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -522,13 +522,13 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS125" H 2450 6650 50  0001 C CNN
 $EndComp
 $Comp
 L 74xx:74LS125 U6
-U 4 1 5FFED72B
+U 2 1 5FFED72B
 P 2450 7150
 F 0 "U6" H 2450 7150 50  0000 C CNN
 F 1 "74HC125" H 2450 7376 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2450 7150 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS125" H 2450 7150 50  0001 C CNN
-	4    2450 7150
+	2    2450 7150
 	1    0    0    -1  
 $EndComp
 Text GLabel 2950 5650 2    50   Input ~ 0
@@ -547,13 +547,13 @@ Wire Wire Line
 	2750 6650 2950 6650
 Wire Wire Line
 	2750 7150 2950 7150
-Text GLabel 7350 1800 2    50   Output ~ 0
-Z_D
-Text GLabel 7350 1900 2    50   Output ~ 0
-V_D
 Text GLabel 7350 2000 2    50   Output ~ 0
-N_D
+Z_D
+Text GLabel 7350 1800 2    50   Output ~ 0
+V_D
 Text GLabel 7350 2100 2    50   Output ~ 0
+N_D
+Text GLabel 7350 1900 2    50   Output ~ 0
 C_D
 Wire Wire Line
 	7200 1800 7350 1800
@@ -798,10 +798,10 @@ Wire Wire Line
 	7500 4100 7600 4100
 NoConn ~ 7450 4500
 $Comp
-L Device:LED D5
+L Device:LED D6
 U 1 1 5FE15F76
 P 4700 6050
-F 0 "D5" H 4850 6000 50  0000 C CNN
+F 0 "D6" H 4850 6000 50  0000 C CNN
 F 1 "BOUT" H 4850 6100 50  0000 C CNN
 F 2 "LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 4700 6050 50  0001 C CNN
 F 3 "~" H 4700 6050 50  0001 C CNN
@@ -841,10 +841,10 @@ Wire Wire Line
 Wire Wire Line
 	5300 6050 5300 5900
 $Comp
-L Device:LED D6
+L Device:LED D5
 U 1 1 5FE89725
 P 4700 6300
-F 0 "D6" H 4850 6250 50  0000 C CNN
+F 0 "D5" H 4850 6250 50  0000 C CNN
 F 1 "LOAD" H 4850 6350 50  0000 C CNN
 F 2 "LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 4700 6300 50  0001 C CNN
 F 3 "~" H 4700 6300 50  0001 C CNN
@@ -1397,19 +1397,19 @@ Wire Wire Line
 Connection ~ 10050 3600
 Wire Wire Line
 	10050 3600 10050 3700
-Text GLabel 4350 2200 0    50   Input ~ 0
+Text GLabel 4350 2500 0    50   Input ~ 0
 Z_OUT
 Wire Wire Line
-	4300 2100 4450 2100
+	4300 2400 4450 2400
 Wire Wire Line
 	4300 1800 4450 1800
-Text GLabel 6150 1800 0    50   Input ~ 0
-Z_I
-Text GLabel 6150 1900 0    50   Input ~ 0
-V_I
 Text GLabel 6150 2000 0    50   Input ~ 0
-N_I
+Z_I
+Text GLabel 6150 1800 0    50   Input ~ 0
+V_I
 Text GLabel 6150 2100 0    50   Input ~ 0
+N_I
+Text GLabel 6150 1900 0    50   Input ~ 0
 C_I
 Wire Wire Line
 	6150 1800 6200 1800
@@ -1419,13 +1419,13 @@ Wire Wire Line
 	6150 2000 6200 2000
 Wire Wire Line
 	6200 2100 6150 2100
-Text GLabel 5500 2100 2    50   Output ~ 0
-Z_I
-Text GLabel 5500 2700 2    50   Output ~ 0
-V_I
-Text GLabel 5500 1800 2    50   Output ~ 0
-N_I
 Text GLabel 5500 2400 2    50   Output ~ 0
+Z_I
+Text GLabel 5500 1800 2    50   Output ~ 0
+V_I
+Text GLabel 5500 2700 2    50   Output ~ 0
+N_I
+Text GLabel 5500 2100 2    50   Output ~ 0
 C_I
 Wire Wire Line
 	5450 1800 5500 1800
@@ -1436,7 +1436,7 @@ Wire Wire Line
 Wire Wire Line
 	4300 2700 4450 2700
 Wire Wire Line
-	4400 2400 4450 2400
+	4400 2100 4450 2100
 Wire Wire Line
 	6250 4500 6350 4500
 Wire Wire Line
