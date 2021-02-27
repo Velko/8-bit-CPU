@@ -216,21 +216,21 @@ F 3 "http://www.ti.com/lit/gpn/sn74hc02" H 2000 2400 50  0001 C CNN
 	2    2000 2400
 	1    0    0    -1  
 $EndComp
-Text GLabel 1600 1100 0    50   Input ~ 0
-BUS0
-Text GLabel 1600 1300 0    50   Input ~ 0
-BUS1
-Text GLabel 1600 1500 0    50   Input ~ 0
-BUS2
 Text GLabel 1600 1700 0    50   Input ~ 0
+BUS0
+Text GLabel 1600 1500 0    50   Input ~ 0
+BUS1
+Text GLabel 1600 2500 0    50   Input ~ 0
+BUS2
+Text GLabel 1600 2300 0    50   Input ~ 0
 BUS3
-Text GLabel 1600 1900 0    50   Input ~ 0
+Text GLabel 1600 1300 0    50   Input ~ 0
 BUS4
 Text GLabel 1600 2100 0    50   Input ~ 0
 BUS5
-Text GLabel 1600 2300 0    50   Input ~ 0
+Text GLabel 1600 1100 0    50   Input ~ 0
 BUS6
-Text GLabel 1600 2500 0    50   Input ~ 0
+Text GLabel 1600 1900 0    50   Input ~ 0
 BUS7
 Wire Wire Line
 	1600 1100 1700 1100
@@ -250,13 +250,13 @@ Wire Wire Line
 	1700 2500 1600 2500
 $Comp
 L 74xx:74LS08 U2
-U 2 1 5FDE00D8
+U 4 1 5FDE00D8
 P 2850 1400
 F 0 "U2" H 2850 1400 50  0000 C CNN
 F 1 "74HC08" H 2850 1634 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2850 1400 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 2850 1400 50  0001 C CNN
-	2    2850 1400
+	4    2850 1400
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -272,13 +272,13 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 2850 2200 50  0001 C CNN
 $EndComp
 $Comp
 L 74xx:74LS08 U2
-U 4 1 5FDE4BA9
+U 2 1 5FDE4BA9
 P 3600 1800
 F 0 "U2" H 3600 1800 50  0000 C CNN
 F 1 "74HC08" H 3600 2034 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 3600 1800 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 3600 1800 50  0001 C CNN
-	4    3600 1800
+	2    3600 1800
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -290,7 +290,7 @@ F 1 "74HC08" H 3250 3734 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 3250 3500 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS08" H 3250 3500 50  0001 C CNN
 	3    3250 3500
-	1    0    0    -1  
+	1    0    0    1   
 $EndComp
 Wire Wire Line
 	2300 1200 2450 1200
@@ -489,13 +489,13 @@ Text GLabel 9550 4400 0    50   Input ~ 0
 Z_OUT
 $Comp
 L 74xx:74LS125 U6
-U 1 1 5FFE8137
+U 3 1 5FFE8137
 P 2450 5650
 F 0 "U6" H 2450 5650 50  0000 C CNN
 F 1 "74HC125" H 2450 5876 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2450 5650 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS125" H 2450 5650 50  0001 C CNN
-	1    2450 5650
+	3    2450 5650
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -511,13 +511,13 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS125" H 2450 6150 50  0001 C CNN
 $EndComp
 $Comp
 L 74xx:74LS125 U6
-U 3 1 5FFECFFE
+U 1 1 5FFECFFE
 P 2450 6650
 F 0 "U6" H 2450 6650 50  0000 C CNN
 F 1 "74HC125" H 2450 6876 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2450 6650 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS125" H 2450 6650 50  0001 C CNN
-	3    2450 6650
+	1    2450 6650
 	1    0    0    -1  
 $EndComp
 $Comp
