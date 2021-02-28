@@ -1,14 +1,18 @@
 from .opcodes import opcodes, fetch
 from .DeviceSetup import PC, ProgMem
 from .markers import org, Bytes, Label
+from typing import List, Union, Iterator, Optional, Sequence, Tuple
+from .util import UninitializedError, ControlSignal
+from .cpu import CPUBackend, InvalidOpcodeException
 
 class ProgramInstruction:
-    def __init__(self, address, opcode):
+    def __init__(self, address: int, opcode: str):
         self.address = address
         self.opcode = opcode
-        self.args = []
+        self.bin_opcode: Optional[int] = None
+        self.args: List[Union[int, Bytes, Label]] = []
 
-    def eval_args(self):
+    def eval_args(self) -> Iterator[int]:
         for arg in self.args:
             if isinstance(arg, int):
                 yield arg
@@ -20,30 +24,31 @@ class ProgramInstruction:
                 raise TypeError
 
 
-    def print(self):
+    def print(self) -> None:
 
         argstr = "".join(map(lambda a: " {:02x}".format(a), self.eval_args()))
 
         print ("{:02x}  {:8}{}".format(self.address, self.opcode, argstr))
 
-    def write_bytes(self, stream):
+    def write_bytes(self, stream) -> None:
+        if self.bin_opcode is None: raise UninitializedError
+
         binary = bytes([self.bin_opcode] + list(self.eval_args()))
         stream.write(binary)
 
-class CPUBackendAssemble:
-    def __init__(self, control):
-        self.control = control
+class CPUBackendAssemble(CPUBackend):
+    def __init__(self):
         self.addr_counter = 0
         self.program = []
 
-    def advance_counter(self, steps):
+    def advance_counter(self, steps: Sequence[Sequence[ControlSignal]])->None:
         for step in steps:
             if PC.count in step:
                 self.addr_counter +=1
 
         org(self.addr_counter)
 
-    def execute_opcode(self, opcode, arg=None):
+    def execute_opcode(self, opcode: str, arg: Union[None, int, Bytes, Label]=None) -> Tuple[bool, Optional[int]]:
         if not opcode in opcodes:
             raise InvalidOpcodeException(opcode)
 
@@ -67,14 +72,10 @@ class CPUBackendAssemble:
 
         return False, None
 
-    def emit_arg(self):
-        self.current_instruction.args.append(self.current_immediate)
-
-
-    def list(self):
+    def list(self) -> None:
         for instr in self.program:
             instr.print()
 
-    def bin(self, stream):
+    def bin(self, stream) -> None:
         for instr in self.program:
             instr.write_bytes(stream)

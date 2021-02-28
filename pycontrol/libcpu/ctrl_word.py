@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
+from typing import Iterator, Optional, Tuple
 from .discovery import all_pins
+from .pin import PinBase
 
 class CtrlWord:
-    def __init__(self, pins=None):
+    def __init__(self, pins: Optional[Iterator[Tuple[str, PinBase]]]=None):
 
         if pins is None:
             pins = all_pins()
@@ -17,14 +19,14 @@ class CtrlWord:
         self.default = self.c_word
 
 
-    def set(self, pin):
+    def set(self, pin) -> None:
         self.c_word |= 1 << pin
 
-    def clr(self, pin):
+    def clr(self, pin) -> None:
         self.c_word &= ~(1 << pin)
 
-    def reset(self):
+    def reset(self) -> None:
         self.c_word = self.default
 
-    def is_set(self, pin):
+    def is_set(self, pin) -> bool:
         return (self.c_word & (1 << pin)) != 0

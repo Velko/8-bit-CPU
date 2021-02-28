@@ -1,28 +1,31 @@
 from .DeviceSetup import *
 from .opcode_builder import MicrocodeBuilder, MicroCode
+from .devices import Register
+from .pin import PinBase
+from typing import Sequence, Iterator, Tuple, Mapping
 
-gp_regs = [RegA, RegB]
+gp_regs: Sequence[Register] = [RegA, RegB]
 
-setup_imm = [PC.out, ProgMar.load]
+setup_imm: Sequence[PinBase] = [PC.out, ProgMar.load]
 
-fetch = MicroCode(-1, None)\
+fetch = MicroCode(-1, "Fetch")\
     .add_step([PC.out, ProgMar.load])\
     .add_step([ProgMem.out, IR.load, PC.count])
 
-def permute_gp_regs_all():
+def permute_gp_regs_all() -> Iterator[Tuple[Register, Register]]:
     for l in gp_regs:
         for r in gp_regs:
             yield l, r
 
 
-def permute_gp_regs_nsame():
+def permute_gp_regs_nsame() -> Iterator[Tuple[Register, Register]]:
     for l in gp_regs:
         for r in gp_regs:
             if l != r:
                 yield l, r
 
 
-def build_opcodes():
+def build_opcodes() -> Mapping[str, MicroCode]:
 
     builder = MicrocodeBuilder()
 

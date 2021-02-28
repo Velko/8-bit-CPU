@@ -1,7 +1,7 @@
-from .pin import Pin, Level
+from .pin import PinBase, Level
 
 class Register:
-    def __init__(self, name, out, load, alu_a, alu_b):
+    def __init__(self, name: str, out: PinBase, load: PinBase, alu_a: PinBase, alu_b: PinBase):
         self.name = name
         self.out = out
         self.load = load
@@ -16,14 +16,14 @@ class Register:
 
 
 class ALU:
-    def __init__(self, name, out, sub):
+    def __init__(self, name: str, out: PinBase, sub: PinBase):
         self.name = name
         self.out = out
         self.sub = sub
 
 
 class Flags:
-    def __init__(self, name, load, use_carry, bus_out, bus_in):
+    def __init__(self, name: str, load: PinBase, use_carry: PinBase, bus_out: PinBase, bus_in: PinBase):
         self.name = name
         self.load = load
         self.use_carry = use_carry
@@ -36,7 +36,7 @@ class Flags:
     N = 0b0001
 
     @staticmethod
-    def decode(val):
+    def decode(val: int) -> str:
         #VCZF
         val = int(val)
 
@@ -65,23 +65,23 @@ class Flags:
         return f
 
 class RAM:
-    def __init__(self, name, out, write):
+    def __init__(self, name: str, out: PinBase, write: PinBase):
         self.name = name
         self.out = out
         self.write = write
 
 class Clock:
-    def __init__(self, name, halt):
+    def __init__(self, name: str, halt: PinBase):
         self.name = name
         self.halt = halt
 
 class StepCounter:
-    def __init__(self, name, reset):
+    def __init__(self, name: str, reset: PinBase):
         self.name = name
         self.reset = reset
 
 class ProgramCounter:
-    def __init__(self, name, out, load, count):
+    def __init__(self, name: str, out: PinBase, load: PinBase, count: PinBase):
         self.name = name
         self.out = out
         self.load = load
@@ -96,6 +96,6 @@ class ProgramCounter:
 
 # Helper device for debugger
 class IRFetch:
-    def __init__(self, name, load):
+    def __init__(self, name: str, load: PinBase):
         self.name = name
         self.load = load

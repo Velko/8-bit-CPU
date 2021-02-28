@@ -1,8 +1,11 @@
+from typing import Union, Tuple, Optional
+from .markers import Bytes, Label
 from .pseudo_devices import Imm, EnableCallback
 from .DeviceSetup import OutPort, ProgMem
 from .opcodes import opcodes, fetch
+from .cpu import CPUBackend, InvalidOpcodeException
 
-class CPUBackendControl:
+class CPUBackendControl(CPUBackend):
     def __init__(self, client, control):
         self.client = client
         self.control = control
@@ -14,7 +17,7 @@ class CPUBackendControl:
         ProgMem.hook_out(EnableCallback(Imm.enable_out))
 
 
-    def execute_opcode(self, opcode, arg=None):
+    def execute_opcode(self, opcode: str, arg: Union[None, int, Bytes, Label]=None) -> Tuple[bool, Optional[int]]:
         if not opcode in opcodes:
             raise InvalidOpcodeException(opcode)
 
@@ -22,7 +25,7 @@ class CPUBackendControl:
 
         microcode = opcodes[opcode]
 
-        flags = None
+        flags = 0
 
         if microcode.is_flag_dependent():
             flags = self.client.flags_get()
@@ -59,6 +62,3 @@ class CPUBackendControl:
                 self.client.clock_tick()
 
         Imm.disable()
-
-class InvalidOpcodeException(Exception):
-    pass

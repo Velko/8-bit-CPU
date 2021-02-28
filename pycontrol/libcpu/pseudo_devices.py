@@ -1,10 +1,13 @@
 from .markers import Bytes, Label
+from typing import Union, Callable
+from .devices import RAM
+from .util import ControlSignal
 
-class EnableCallback:
-    def __init__(self, callback):
+class EnableCallback(ControlSignal):
+    def __init__(self, callback: Callable[[], None]):
         self.callback = callback
 
-    def enable(self):
+    def enable(self) -> None:
         self.callback()
 
 
@@ -17,7 +20,7 @@ class ImmediateValue:
     def connect(self, client):
         self.client = client
 
-    def set(self, value):
+    def set(self, value: Union[None, int, Bytes, Label]) -> None:
         if isinstance(value, int) or value is None:
             self.value = value
         elif isinstance(value, Bytes):
@@ -27,45 +30,45 @@ class ImmediateValue:
         else:
             raise TypeError
 
-    def clear(self):
+    def clear(self) -> None:
         self.value = None
 
-    def disable(self):
+    def disable(self) -> None:
         if self.write_enabled:
             self.client.bus_free()
             self.write_enabled = False
 
-    def enable_out(self):
+    def enable_out(self) -> None:
         if self.value is not None:
             self.client.bus_set(self.value)
             self.write_enabled = True
 
 
 class RamProxy:
-    def __init__(self, name, ram):
+    def __init__(self, name: str, ram: RAM):
         self.name = name
         self.ram = ram
         self.out = EnableCallback(self.enable_out)
         self.write = EnableCallback(self.enable_write)
 
-        self._ram_out = ram.out
-        self._ram_write = ram.write
+        self._ram_out: ControlSignal = ram.out
+        self._ram_write: ControlSignal = ram.write
 
     # update to intercept ram.out
-    def hook_out(self, hook):
+    def hook_out(self, hook: EnableCallback) -> None:
         self._ram_out = hook
 
     # update to intercept ram.write
-    def hook_write(self, hook):
+    def hook_write(self, hook: EnableCallback) -> None:
         self._ram_write = hook
 
-    def enable_out(self):
+    def enable_out(self) -> None:
         self._ram_out.enable()
 
-    def enable_write(self):
+    def enable_write(self) -> None:
         self._ram_write.enable()
 
-    def unhook_all(self):
+    def unhook_all(self) -> None:
         self._ram_out = self.ram.out
         self._ram_write = self.ram.write
 

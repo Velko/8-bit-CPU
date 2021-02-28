@@ -3,15 +3,15 @@
 
 next_addr = 0
 
-def org(address):
+def org(address: int) -> None:
     global next_addr
     next_addr = address
 
-def rewind(offset):
+def rewind(offset: int) -> None:
     global next_addr
     next_addr -= offset
 
-def align(alignment):
+def align(alignment: int) -> None:
     global next_addr
 
     mod = next_addr % alignment
@@ -19,7 +19,7 @@ def align(alignment):
         next_addr += alignment - mod
 
 class Bytes:
-    def __init__(self, size):
+    def __init__(self, size: int):
         global next_addr
 
         self.start = next_addr

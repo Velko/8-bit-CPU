@@ -6,7 +6,7 @@ from libcpu.cpu import *
 
 sieve_start = Label()
 
-def run():
+def run() -> None:
 
     # bootloader
     if True:       #edit True/False to include/exclude
