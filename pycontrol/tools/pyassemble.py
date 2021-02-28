@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
-import ast, pdb, astor
+import ast, pdb
+import astor # type: ignore
 
 #with open("demo_sieve.py", "r") as source:
 #    tree = ast.parse(source.read())

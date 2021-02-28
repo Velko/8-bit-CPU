@@ -18,3 +18,4 @@ zz_*.ino
 /sample/
 /temp/
 build-*/
+.mypy-cache/

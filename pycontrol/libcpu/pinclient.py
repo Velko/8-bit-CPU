@@ -1,4 +1,5 @@
-import serial, os
+import serial # type: ignore
+import os
 
 class PinClient:
 

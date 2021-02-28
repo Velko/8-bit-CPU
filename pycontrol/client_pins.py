@@ -3,7 +3,7 @@
 import sys, cmd
 import localpath
 
-from .libcpu.pinclient import PinClient
+from libcpu.pinclient import PinClient
 
 from libcpu.PyAsmExec import setup_live, control
 setup_live()
