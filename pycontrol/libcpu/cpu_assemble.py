@@ -19,6 +19,7 @@ class ProgramInstruction:
             elif isinstance(arg, Bytes):
                 yield arg.start
             elif isinstance(arg, Label):
+                if arg.addr is None: raise UninitializedError
                 yield arg.addr
             else:
                 raise TypeError

@@ -15,7 +15,7 @@ class InvalidOpcodeException(Exception):
 
 backend: Optional[CPUBackend] = None
 
-def install_cpu_backend(engine: CPUBackend):
+def install_cpu_backend(engine: CPUBackend) -> None:
     global backend
     backend = engine
 

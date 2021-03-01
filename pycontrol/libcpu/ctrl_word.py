@@ -29,5 +29,5 @@ class CtrlWord(CtrlBase):
     def reset(self) -> None:
         self.c_word = self.default
 
-    def is_set(self, pin) -> bool:
+    def is_set(self, pin: int) -> bool:
         return (self.c_word & (1 << pin)) != 0

@@ -1,7 +1,7 @@
 from .markers import Bytes, Label
 from typing import Union, Callable
 from .devices import RAM
-from .util import ControlSignal
+from .util import ControlSignal, UninitializedError
 from .pinclient import PinClient
 
 class EnableCallback(ControlSignal):
@@ -35,11 +35,13 @@ class ImmediateValue:
         self.value = None
 
     def disable(self) -> None:
+        if self.client is None: raise UninitializedError
         if self.write_enabled:
             self.client.bus_free()
             self.write_enabled = False
 
     def enable_out(self) -> None:
+        if self.client is None: raise UninitializedError
         if self.value is not None:
             self.client.bus_set(self.value)
             self.write_enabled = True

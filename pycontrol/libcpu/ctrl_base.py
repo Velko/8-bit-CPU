@@ -10,7 +10,7 @@ class CtrlBase:
     def clr(self, pin: int) -> None: pass
 
     @abstractmethod
-    def is_set(self, pin) -> bool: pass
+    def is_set(self, pin: int) -> bool: pass
 
     @abstractmethod
     def reset(self) -> None: pass
