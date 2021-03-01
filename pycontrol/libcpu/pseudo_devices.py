@@ -2,6 +2,7 @@ from .markers import Bytes, Label
 from typing import Union, Callable
 from .devices import RAM
 from .util import ControlSignal
+from .pinclient import PinClient
 
 class EnableCallback(ControlSignal):
     def __init__(self, callback: Callable[[], None]):
@@ -17,7 +18,7 @@ class ImmediateValue:
         self.value = None
         self.write_enabled = False
 
-    def connect(self, client):
+    def connect(self, client: PinClient) -> None:
         self.client = client
 
     def set(self, value: Union[None, int, Bytes, Label]) -> None:

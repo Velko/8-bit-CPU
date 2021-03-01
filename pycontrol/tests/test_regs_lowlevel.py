@@ -1,14 +1,16 @@
 #!/usr/bin/python3
 
-import pytest
+import pytest # type: ignore
 
 from libcpu.cpu import *
+from libcpu.DeviceSetup import IR, IRFetch
+from libcpu.cpu_exec import CPUBackendControl
 from libcpu.DeviceSetup import AddSub as alu
-
+from typing import Iterator
 
 pytestmark = pytest.mark.hardware
 
-def test_reg_a_latch(cpu_backend_real):
+def test_reg_a_latch(cpu_backend_real: CPUBackendControl) -> None:
         backend = cpu_backend_real
 
         ldi(A, 54)
@@ -41,14 +43,14 @@ def test_reg_a_latch(cpu_backend_real):
         assert value == 54
 
 
-def singlebit_vals():
+def singlebit_vals() -> Iterator[int]:
     yield 255
     for b in range(8):
         yield 1 << b
     yield 0
 
 @pytest.mark.parametrize("expected", singlebit_vals())
-def test_ir_load(cpu_backend_real, expected):
+def test_ir_load(cpu_backend_real: CPUBackendControl, expected: int):
     backend = cpu_backend_real
 
     backend.client.bus_set(expected)

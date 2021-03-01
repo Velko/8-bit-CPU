@@ -1,13 +1,15 @@
 #!/usr/bin/python3
 
-import pytest
+import pytest # type: ignore
 
 
 from libcpu.opcodes import opcodes
 from libcpu.DeviceSetup import PC
 from libcpu.devices import Flags
 
-def calc_flags_alt_PC_counts():
+from typing import Iterator, Tuple
+
+def calc_flags_alt_PC_counts() -> Iterator[Tuple[str, int, int, str, str]]:
 
     # all opcodes, that are flags-dependent
     for name, microcode in filter(lambda opc: opc[1].is_flag_dependent(), opcodes.items()):
@@ -28,7 +30,7 @@ def calc_flags_alt_PC_counts():
 
 
 @pytest.mark.parametrize("name,default_len,alt_len,mask,val",  calc_flags_alt_PC_counts())
-def test_opcode_pc_len_equal_in_flags_alt(name, default_len, alt_len, mask,val):
+def test_opcode_pc_len_equal_in_flags_alt(name: str, default_len: int, alt_len: int, mask: str, val: str):
 
 
         assert default_len == alt_len

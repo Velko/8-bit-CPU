@@ -1,15 +1,18 @@
-from typing import Union, Tuple, Optional
+from typing import Union, Tuple, Optional, Sequence
 from .markers import Bytes, Label
 from .pseudo_devices import Imm, EnableCallback
 from .DeviceSetup import OutPort, ProgMem
 from .opcodes import opcodes, fetch
 from .cpu import CPUBackend, InvalidOpcodeException
+from .pinclient import PinClient
+from .ctrl_word import CtrlWord
+from .util import ControlSignal
 
 class CPUBackendControl(CPUBackend):
-    def __init__(self, client, control):
+    def __init__(self, client: PinClient, control: CtrlWord):
         self.client = client
         self.control = control
-        self.out_hooked_val = None
+        self.out_hooked_val: Optional[int] = None
 
         Imm.connect(self.client)
 
@@ -38,7 +41,7 @@ class CPUBackendControl(CPUBackend):
 
         return not microcode.are_default(steps), self.out_hooked_val
 
-    def execute_step(self, microstep):
+    def execute_step(self, microstep: Sequence[ControlSignal]) -> None:
         self.control.reset()
 
         for pin in microstep:

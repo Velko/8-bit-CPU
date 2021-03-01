@@ -1,7 +1,7 @@
 from .opcodes import opcodes, fetch
 from .DeviceSetup import PC, ProgMem
 from .markers import org, Bytes, Label
-from typing import List, Union, Iterator, Optional, Sequence, Tuple
+from typing import List, Union, Iterator, Optional, Sequence, Tuple, BinaryIO
 from .util import UninitializedError, ControlSignal
 from .cpu import CPUBackend, InvalidOpcodeException
 
@@ -30,7 +30,7 @@ class ProgramInstruction:
 
         print ("{:02x}  {:8}{}".format(self.address, self.opcode, argstr))
 
-    def write_bytes(self, stream) -> None:
+    def write_bytes(self, stream: BinaryIO) -> None:
         if self.bin_opcode is None: raise UninitializedError
 
         binary = bytes([self.bin_opcode] + list(self.eval_args()))
@@ -76,6 +76,6 @@ class CPUBackendAssemble(CPUBackend):
         for instr in self.program:
             instr.print()
 
-    def bin(self, stream) -> None:
+    def bin(self, stream: BinaryIO) -> None:
         for instr in self.program:
             instr.write_bytes(stream)

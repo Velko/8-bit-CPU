@@ -1,5 +1,7 @@
-import pytest, random
+import pytest # type: ignore
+import random
 import localpath
+from typing import Sequence
 
 from libcpu.pinclient import PinClient
 from libcpu.cpu import install_cpu_backend
@@ -8,7 +10,7 @@ from libcpu.cpu_exec import CPUBackendControl
 
 
 @pytest.fixture(scope="session")
-def cpu_backend_real(request):
+def cpu_backend_real(request) -> CPUBackendControl:
     pins = PinClient()
     control = CtrlWord()
     backend = CPUBackendControl(pins, control)
@@ -18,7 +20,7 @@ def cpu_backend_real(request):
     return backend
 
 @pytest.fixture(scope="module")
-def random_bytes():
+def random_bytes() -> Sequence[int]:
     data = []
 
     for addr in range(256):

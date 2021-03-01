@@ -61,7 +61,7 @@ def out(source: Register) -> None:
     assert out_val is not None
     print ("{}".format(out_val), flush=True)
 
-def peek(source: Register) -> int:
+def peek(source: Union[Register, Flags]) -> int:
     if backend is None: raise UninitializedError
     opcode = "out_{}".format(source.name)
     _, out_val = backend.execute_opcode(opcode)
@@ -74,7 +74,7 @@ def mov(target: Register, source: Register) -> None:
     opcode = "mov_{}_{}".format(target.name, source.name)
     backend.execute_opcode(opcode)
 
-def st(addr: Byte, source: Register) -> None:
+def st(addr: Union[Byte, int], source: Register) -> None:
     if backend is None: raise UninitializedError
     opcode = "st_addr_{}".format(source.name)
     backend.execute_opcode(opcode, addr)
@@ -94,7 +94,7 @@ def tstabs(addr_reg: Register) -> None:
     opcode = "tstabs_{}".format(addr_reg.name)
     backend.execute_opcode(opcode)
 
-def ld(target: Register, addr: Byte) -> None:
+def ld(target: Register, addr: Union[Byte, int]) -> None:
     if backend is None: raise UninitializedError
     opcode = "ld_{}_addr".format(target.name)
     backend.execute_opcode(opcode, addr)

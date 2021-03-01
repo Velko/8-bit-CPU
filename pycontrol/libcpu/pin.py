@@ -1,6 +1,6 @@
-from typing import Optional,Sequence
+from typing import Optional, Sequence
 from enum import Enum
-from .ctrl_word import CtrlWord
+from .ctrl_base import CtrlBase
 from .util import UninitializedError, ControlSignal
 from abc import abstractmethod
 
@@ -10,7 +10,7 @@ class Level(Enum):
 
 class PinBase(ControlSignal):
     @abstractmethod
-    def connect(self, control_word: CtrlWord) -> None: pass
+    def connect(self, control_word: CtrlBase) -> None: pass
 
     @abstractmethod
     def disable(self) -> None: pass
@@ -21,11 +21,11 @@ class PinBase(ControlSignal):
 
 class Pin(PinBase):
     def __init__(self, num: int, level: Level):
-        self.control_word: Optional[CtrlWord] = None
+        self.control_word: Optional[CtrlBase] = None
         self.num = num
         self.level = level
 
-    def connect(self, control_word: CtrlWord) -> None:
+    def connect(self, control_word: CtrlBase) -> None:
         self.control_word = control_word
 
     def enable(self) -> None:
@@ -59,7 +59,7 @@ class NullPin(PinBase):
     def __init__(self, num: int, level: Level):
         self.num = None
 
-    def connect(self, control_word: CtrlWord) -> None:
+    def connect(self, control_word: CtrlBase) -> None:
         pass
 
     def enable(self) -> None:
@@ -74,11 +74,11 @@ class NullPin(PinBase):
 
 class Mux:
     def __init__(self, pins: Sequence[int], default: int):
-        self.control_word: Optional[CtrlWord]  = None
+        self.control_word: Optional[CtrlBase]  = None
         self.pins = pins
         self.default = default
 
-    def connect(self, control_word: CtrlWord) -> None:
+    def connect(self, control_word: CtrlBase) -> None:
         self.control_word = control_word
 
     def enable(self, num: int) -> None:
@@ -100,7 +100,7 @@ class Mux:
 
         result = 0
         for bit_idx, pin in enumerate(self.pins):
-            if (self.control_word.c_word & (1 << pin)) != 0:
+            if self.control_word.is_set(pin):
                 result |= (1 << bit_idx)
 
         return result
@@ -116,7 +116,7 @@ class MuxPin(PinBase):
     # for example: Mux.connect() is called for by each MuxPin's
     # connect(), while calling it only once per Mux should be
     # enough. But it does not make any noticable impact on peformance
-    def connect(self, control_word: CtrlWord) -> None:
+    def connect(self, control_word: CtrlBase) -> None:
         self.mux.connect(control_word)
 
     def enable(self) -> None:

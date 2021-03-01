@@ -1,12 +1,14 @@
 #!/usr/bin/python3
 
-import pytest
+import pytest # type: ignore
 
 pytestmark = pytest.mark.hardware
 
-from libcpu.cpu import *
+from libcpu.DeviceSetup import Mar, Ram
+from libcpu.cpu_exec import CPUBackendControl
+from typing import Iterator, Sequence
 
-def set_mar(backend, value):
+def set_mar(backend: CPUBackendControl, value: int) -> None:
 
     Mar.load.enable()
     backend.client.bus_set(value)
@@ -16,7 +18,7 @@ def set_mar(backend, value):
     backend.control.reset()
     backend.client.off(backend.control.default)
 
-def write_ram(backend, value):
+def write_ram(backend: CPUBackendControl, value: int) -> None:
     Ram.write.enable()
     backend.client.bus_set(value)
 
@@ -28,7 +30,7 @@ def write_ram(backend, value):
     backend.control.reset()
     backend.client.off(backend.control.default)
 
-def read_ram(backend):
+def read_ram(backend: CPUBackendControl) -> int:
     Ram.out.enable()
 
     backend.client.ctrl_commit(backend.control.c_word)
@@ -39,20 +41,24 @@ def read_ram(backend):
 
     return val
 
-def singlebit_addresses():
+def singlebit_addresses() -> Iterator[int]:
     yield 0
     for b in range(8):
         yield 1 << b
 
+class FillRam: pass
+
 @pytest.fixture(scope="module")
-def fill_ram(random_bytes, cpu_backend_real):
+def fill_ram(random_bytes: Sequence[int], cpu_backend_real: CPUBackendControl) -> FillRam:
     for addr in singlebit_addresses():
         set_mar(cpu_backend_real, addr)
         write_ram(cpu_backend_real, random_bytes[addr])
 
+    return FillRam()
+
 
 @pytest.mark.parametrize("addr", singlebit_addresses())
-def test_load_singlebit_addr(cpu_backend_real, random_bytes, fill_ram, addr):
+def test_load_singlebit_addr(cpu_backend_real: CPUBackendControl, random_bytes: Sequence[int], fill_ram: FillRam, addr: int):
 
     set_mar(cpu_backend_real, addr)
 

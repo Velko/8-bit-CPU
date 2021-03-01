@@ -3,18 +3,18 @@ from .devices import Register
 from typing import List, Tuple, Mapping, Sequence
 
 class FlagsAlt:
-    def __init__(self, owner: MicroCode, mask: int, value: int):
+    def __init__(self, owner: 'MicroCode', mask: int, value: int):
         self.owner = owner
         self.mask = mask
         self.value = value
         self.steps: List[Sequence[ControlSignal]] = []
 
-    def add_step(self, step: Sequence[ControlSignal]) -> FlagsAlt:
+    def add_step(self, step: Sequence[ControlSignal]) -> 'FlagsAlt':
         self.steps.append(step)
 
         return self
 
-    def add_condition(self, mask: int, value: int) -> FlagsAlt:
+    def add_condition(self, mask: int, value: int) -> 'FlagsAlt':
         return self.owner.add_condition(mask, value)
 
 class MicroCode:
@@ -42,7 +42,7 @@ class MicroCode:
     def are_default(self, steps: Sequence[Sequence[ControlSignal]]) -> bool:
         return steps == self._steps
 
-    def add_step(self, pins: Sequence[ControlSignal]) -> MicroCode:
+    def add_step(self, pins: Sequence[ControlSignal]) -> 'MicroCode':
         self._steps.append(pins)
 
         return self

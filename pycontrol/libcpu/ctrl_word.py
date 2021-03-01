@@ -3,8 +3,9 @@
 from typing import Iterator, Optional, Tuple
 from .discovery import all_pins
 from .pin import PinBase
+from .ctrl_base import CtrlBase
 
-class CtrlWord:
+class CtrlWord(CtrlBase):
     def __init__(self, pins: Optional[Iterator[Tuple[str, PinBase]]]=None):
 
         if pins is None:
@@ -19,10 +20,10 @@ class CtrlWord:
         self.default = self.c_word
 
 
-    def set(self, pin) -> None:
+    def set(self, pin: int) -> None:
         self.c_word |= 1 << pin
 
-    def clr(self, pin) -> None:
+    def clr(self, pin: int) -> None:
         self.c_word &= ~(1 << pin)
 
     def reset(self) -> None:

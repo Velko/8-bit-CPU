@@ -34,5 +34,5 @@ class Label:
     def __init__(self):
         self.addr = None
 
-    def here(self):
+    def here(self) -> None:
         self.addr = next_addr
