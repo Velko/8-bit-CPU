@@ -3,8 +3,10 @@
 import sys, cmd
 import localpath
 
+from libcpu.util import unwrap
 from libcpu.cpu import *
 from libcpu.devices import Flags
+from libcpu.DeviceSetup import Mar, Ram
 from libcpu.PyAsmExec import setup_live, control
 setup_live()
 from libcpu.PyAsmExec import pins
@@ -55,24 +57,27 @@ class TesterClient(cmd.Cmd):
         val = pins.flags_get()
         print (Flags.decode(val))
 
-    def do_load_mar(self, arg):
+    def do_load_mar(self, arg: str) -> None:
+        control.reset()
         Mar.load.enable()
-        pins.bus_set(arg)
-        pins.ctrl_commit(control.c_word)
-        pins.clock_tick()
+        p = unwrap(pins)
+        p.bus_set(arg)
+        p.ctrl_commit(control.c_word)
+        p.clock_tick()
 
         control.reset()
-        pins.off(control.default)
+        p.off(control.default)
 
-    def do_write_ram(self, arg):
+    def do_write_ram(self, arg: str) -> None:
         Ram.write.enable()
-        pins.bus_set(arg)
-        pins.ctrl_commit(control.c_word)
+        p = unwrap(pins)
+        p.bus_set(arg)
+        p.ctrl_commit(control.c_word)
 
-        pins.clock_tick()
+        p.clock_tick()
 
         control.reset()
-        pins.off(control.default)
+        p.off(control.default)
 
     def do_read_ram(self, arg):
         Ram.out.enable()
