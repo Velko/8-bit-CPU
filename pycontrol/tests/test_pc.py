@@ -8,6 +8,7 @@ from libcpu.DeviceSetup import PC
 from libcpu.cpu_exec import CPUBackendControl
 
 def load_pc(backend: CPUBackendControl, value: int) -> None:
+    backend.control.reset()
     backend.client.bus_set(value)
     PC.load.enable()
     backend.client.ctrl_commit(backend.control.c_word)
@@ -17,6 +18,7 @@ def load_pc(backend: CPUBackendControl, value: int) -> None:
     backend.client.off(backend.control.default)
 
 def read_pc(backend: CPUBackendControl) -> int:
+    backend.control.reset()
     PC.out.enable()
     backend.client.ctrl_commit(backend.control.c_word)
     value = backend.client.bus_get()

@@ -9,7 +9,7 @@ from libcpu.cpu_exec import CPUBackendControl
 from typing import Iterator, Sequence
 
 def set_mar(backend: CPUBackendControl, value: int) -> None:
-
+    backend.control.reset()
     Mar.load.enable()
     backend.client.bus_set(value)
     backend.client.ctrl_commit(backend.control.c_word)
@@ -19,6 +19,7 @@ def set_mar(backend: CPUBackendControl, value: int) -> None:
     backend.client.off(backend.control.default)
 
 def write_ram(backend: CPUBackendControl, value: int) -> None:
+    backend.control.reset()
     Ram.write.enable()
     backend.client.bus_set(value)
 
@@ -31,6 +32,7 @@ def write_ram(backend: CPUBackendControl, value: int) -> None:
     backend.client.off(backend.control.default)
 
 def read_ram(backend: CPUBackendControl) -> int:
+    backend.control.reset()
     Ram.out.enable()
 
     backend.client.ctrl_commit(backend.control.c_word)
