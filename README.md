@@ -256,8 +256,15 @@ Progress
   fail immediately. Once that was fixed, it appears to be rock-solid. I even pulled the capacitor from the
   astable clock, making it go as fast as it can. It's been running that way for over a week - not a single
   misstep.
+* Some shooting, video editing and [announcement on Reddit][first-announce].
+* Working on updated versions of boards, as there were design issues
+* Improving reliability of Python code by adding type annotations
+* Wrote emulators. Python-side instruction interpreter for quick code debugging and in-Arduino hardware
+  emulator. These should help to move software side forward while there is no combined Arduino- and
+  EEPROM-based control logic.
 
 [eater-net-8bit]: https://eater.net/8bit
 [velkoraspi]: https://velkoraspi.blogspot.com/
 [avr-instructions]: http://ww1.microchip.com/downloads/en/devicedoc/atmel-0856-avr-instruction-set-manual.pdf
 [pytest]: https://docs.pytest.org/en/stable/
+[first-announce]: https://www.reddit.com/r/beneater/comments/loy9kj/important_milestone_it_works/
