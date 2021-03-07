@@ -124,8 +124,7 @@ template <typename T>
 void SerProg<T>::InitOpbuf()
 {
     dprintf("INIT_OB\n");
-    memset(opbuf, 0, sizeof(opbuf));
-    opbuf_w_off = 0;
+    opbuf.init();
     Ack();
 }
 
@@ -134,18 +133,20 @@ void SerProg<T>::OpbufSize()
 {
     dprintf("Q_OB_SIZE\n");
     Ack();
-    sendInt(sizeof(opbuf), 2);
+    sendInt(opbuf.size(), 2);
 }
 
 template <typename T>
 void SerProg<T>::WriteOByte()
 {
-    opbuf[opbuf_w_off++] = S_CMD_O_WRITEB;
-    s_port.readBytes((uint8_t *)&opbuf[opbuf_w_off], 4);
+    *opbuf.write_into(1) = S_CMD_O_WRITEB;
 
-    uint32_t addr= (*((uint32_t *)(opbuf+opbuf_w_off)) & 0x00FFFFFF) - ADDR_OFFSET;
-    dprintf("WRITE_BYTE %06x %02x\n", addr, opbuf[opbuf_w_off+3]);
-    opbuf_w_off += 4;
+    s_port.readBytes(opbuf.write_into(4), 4);
+
+    uint32_t *p = (uint32_t *)opbuf.write_into(0);
+    uint32_t addr= (p[-1] & 0x00FFFFFF) - ADDR_OFFSET;
+    dprintf("WRITE_BYTE %06x %02x\n", addr, p[-1] >> 24);
+
     Ack();
 }
 
@@ -154,7 +155,7 @@ void SerProg<T>::OExec()
 {
     dprintf("OEXEC\n");
     Ack();
-    opbuf_w_off = 0;
+    opbuf.exec();
 }
 
 template <typename T>

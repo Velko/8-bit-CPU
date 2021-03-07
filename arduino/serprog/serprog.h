@@ -3,16 +3,15 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include "opbuf.h"
 
-#define OPBUF_SIZE      (256+7)
 
 template <typename T>
 class SerProg
 {
     private:
         T& s_port;
-        uint8_t opbuf[OPBUF_SIZE];
-        size_t opbuf_w_off;
+        OpBuf opbuf;
         void sendInt(uint32_t value, size_t bytes);
         uint32_t readInt(size_t bytes);
     public:
