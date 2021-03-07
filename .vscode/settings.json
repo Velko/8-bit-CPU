@@ -9,6 +9,7 @@
         "**/__pycache__": true,
         "**/build-uno": true,
         "**/build-nano-*": true,
-        "**/*.hex": true
+        "**/*.hex": true,
+        "**/*.o": true
     }
 }

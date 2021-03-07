@@ -14,6 +14,7 @@
 *.drl
 *.pyc
 *.hex
+*.o
 zz_*.ino
 /sample/
 /temp/

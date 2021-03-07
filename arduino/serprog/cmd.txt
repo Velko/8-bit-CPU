@@ -1,0 +1,6 @@
+/usr/sbin/flashrom -p serprog:dev=/dev/ttyACM0:115200
+/usr/sbin/flashrom -V -p serprog:dev=/dev/ttyACM0:115200 -c SST39SF010A -r /dev/null
+/usr/sbin/flashrom -V -p serprog:dev=/dev/ttyACM0:115200 -c SST39SF010A
+/usr/sbin/flashrom -V -p serprog:dev=pty0:115200 -c SST39SF010A -w somedata.bin
+
+socat PTY,link=pty0,raw,echo=0 PTY,link=pty1,raw,echo=0
