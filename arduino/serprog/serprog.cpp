@@ -1,5 +1,6 @@
 #include "serprog.h"
 #include "serprog-proto.h"
+#include "debug.h"
 
 #include <string.h>
 
@@ -12,17 +13,11 @@ template class SerProg<SerialHost>;
 #define PSTR(X) (X)
 #define strcpy_P strcpy
 
-#include <stdio.h>
-
-#define dprintf   printf
-
 #else
 
 /* Instantiate SerProg for Arduino */
 #include <HardwareSerial.h>
 template class SerProg<HardwareSerial>;
-
-#define dprintf(...)
 
 #endif
 
@@ -151,12 +146,32 @@ void SerProg<T>::WriteOByte()
 }
 
 template <typename T>
+void SerProg<T>::WriteNBytes()
+{
+    *opbuf.write_into(1) = S_CMD_O_WRITEN;
+
+    uint8_t *b = opbuf.write_into(6);
+    s_port.readBytes(b, 6);
+
+    uint32_t *p = (uint32_t *)b;
+    uint32_t len = *p & 0x00FFFFFF;
+    dprintf("WRITEN_BYTES %06x\n", len);
+
+    s_port.readBytes(opbuf.write_into(len), len);
+
+    Ack();
+}
+
+
+template <typename T>
 void SerProg<T>::OExec()
 {
     dprintf("OEXEC\n");
     Ack();
     opbuf.exec();
 }
+
+extern uint8_t *active_mem;
 
 template <typename T>
 void SerProg<T>::RByte()
@@ -168,17 +183,7 @@ void SerProg<T>::RByte()
 
     dprintf("RBYTE_%x\n", addr);
 
-    switch (addr) {
-    case 0x0:
-        s_port.write(0xBF);
-        break;
-    case 0x1:
-        s_port.write(0xB5);
-        break;
-    default:
-        s_port.write(0xFF);
-        break;
-   }
+    s_port.write(active_mem[addr]);
 }
 
 template <typename T>
@@ -201,8 +206,7 @@ void SerProg<T>::RNBytes()
 
     Ack();
 
-    for (unsigned i = 0; i < len; ++i)
-        s_port.write(0xFF);
+    s_port.write(active_mem + addr, len);
 }
 
 template <typename T>
@@ -262,8 +266,11 @@ void SerProg<T>::MainLoop()
         case S_CMD_R_NBYTES:
             RNBytes();
             break;
+        case S_CMD_O_WRITEN:
+            WriteNBytes();
+            break;
         default:
-            dprintf("Unimplemented cmd\n");
+            dprintf("Unimplemented cmd %x\n", b);
             Nak();
             break;
     }

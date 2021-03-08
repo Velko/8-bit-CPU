@@ -29,6 +29,7 @@ class SerProg
         void InitOpbuf();
         void OpbufSize();
         void WriteOByte();
+        void WriteNBytes();
         void OExec();
         void RByte();
         void Delay();
