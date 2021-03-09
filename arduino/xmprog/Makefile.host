@@ -1,0 +1,8 @@
+OBJS=serial_host.o main.o xmprog.o
+CXXFLAGS=-g -O0
+
+xmprog: $(OBJS)
+	$(CXX) -g -o $@ $(OBJS)
+
+clean:
+	rm -rf $(OBJS) xmprog
