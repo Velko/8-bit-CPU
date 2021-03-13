@@ -30,8 +30,8 @@ void SerialHost::begin(unsigned long baud)
     /* set input mode (non-canonical, no echo,...) */
     newtio.c_lflag = 0;
 
-    newtio.c_cc[VTIME]    = 0;   /* inter-character timer unused */
-    newtio.c_cc[VMIN]     = 5;   /* blocking read until 5 chars received */
+    newtio.c_cc[VTIME]    = 50;   /* 5 sec timeout */
+    newtio.c_cc[VMIN]     = 0;   /* unused */
 
     tcflush(fd, TCIFLUSH);
     tcsetattr(fd,TCSANOW,&newtio);
@@ -96,15 +96,6 @@ void SerialHost::println(const String &str)
 }
 
 
-String::String(std::string &&src)
-    : str{src}
-{
-}
-
-bool String::startsWith(const char *s) const
-{
-    return str.find(s) == 0;
-}
 
 SerialHost Serial;
 

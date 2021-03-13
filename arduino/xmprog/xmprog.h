@@ -4,14 +4,22 @@
 #include <stdint.h>
 #include <stddef.h>
 
-template <typename T>
+
+#ifdef __AVR__
+#else
+#include "serial_host.h"
+#endif
+
+
 class XmProg
 {
     private:
-        T& s_port;
+        HardwareSerial &s_port;
     public:
-        XmProg(T &serial);
+        XmProg(HardwareSerial &serial);
         void StepMainLoop();
+        void SendRomContents(const char *file_name);
+        void ReceiveRomContents(const char *file_name);
 };
 
 

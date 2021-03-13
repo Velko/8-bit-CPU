@@ -5,7 +5,7 @@
 #include "xmprog.h"
 
 
-XmProg<SerialHost> Prog(Serial);
+XmProg Prog(Serial);
 
 
 int main()

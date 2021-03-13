@@ -4,17 +4,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#include <string>
-
-class String
-{
-    private:
-        std::string str;
-    public:
-        String(std::string &&src);
-        const char *c_str() const { return str.c_str(); }
-        bool startsWith(const char *s) const;
-};
+#include "arduino_string.h"
 
 class SerialHost
 {
@@ -32,6 +22,8 @@ class SerialHost
 
         int read();
 };
+
+typedef SerialHost HardwareSerial;
 
 extern SerialHost Serial;
 
