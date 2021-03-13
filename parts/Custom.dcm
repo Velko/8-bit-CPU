@@ -1,5 +1,11 @@
 EESchema-DOCLIB  Version 2.0
 #
+$CMP 74HC597
+D 8-bit parallel in Shift Register
+K HCMOS
+F http://www.ti.com/lit/ds/symlink/sn74hc597.pdf
+$ENDCMP
+#
 $CMP AT28C256J
 D Paged Parallel EEPROM 256Kb (32K x 8), LCC-32
 K Parallel EEPROM 256Kb
