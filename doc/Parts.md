@@ -359,3 +359,20 @@ LED bars
 resistor networks 1K x 10
 MC21605H6WK-FPTLW-V2 - LCD screen
 Arduino Nano
+
+
+Next order
+==========
+
+74HC74  - dual D flip-flop with complementary out - for q-clock
+More breadboards
+74HC193 - up/down counters
+74HC595 SOIC (what is in stock)
+SST39SF010A - flash (can be slower ones)
+More PLLC-32 sockets
+RAM SMD - 256 Kbit, 32K x 8bit
+2x2 & 4x1 females
+SC52-11SRWA/SC52-11EWA - brighter displays (whichever is in stock)
+Or smaller - 4 digit one
+More yellow Leds, register, buffers
+MC14490 - bounce eliminator?
