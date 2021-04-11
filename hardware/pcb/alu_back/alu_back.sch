@@ -1752,13 +1752,13 @@ B6
 Text Label 9200 2150 1    50   ~ 0
 B7
 Entry Wire Line
-	8750 2200 8850 2300
+	8750 2200 8650 2300
 Entry Wire Line
-	8650 2200 8750 2300
+	8650 2200 8550 2300
 Entry Wire Line
-	8550 2200 8650 2300
+	8550 2200 8450 2300
 Entry Wire Line
-	8450 2200 8550 2300
+	8450 2200 8350 2300
 Wire Bus Line
 	9050 2250 9050 2550
 Text Label 8450 2200 1    50   ~ 0
@@ -1827,63 +1827,8 @@ Connection ~ 6000 2550
 Wire Bus Line
 	6050 600  9100 600 
 Connection ~ 6050 600 
-Connection ~ 7100 2300
 Wire Bus Line
-	7100 2300 7100 4400
-Wire Bus Line
-	5500 6450 7100 6450
-Wire Bus Line
-	5500 4400 7100 4400
-Wire Bus Line
-	5500 2300 7100 2300
-Wire Bus Line
-	7100 2300 8850 2300
-Wire Bus Line
-	6050 750  6750 750 
-Wire Bus Line
-	6050 2850 6750 2850
-Wire Bus Line
-	6050 4900 6750 4900
-Wire Bus Line
-	9100 750  9800 750 
-Wire Bus Line
-	2800 7500 3900 7500
-Wire Bus Line
-	2800 6050 3750 6050
-Wire Bus Line
-	1900 5950 4050 5950
-Wire Bus Line
-	2800 5750 3900 5750
-Wire Bus Line
-	2800 4300 3750 4300
-Wire Bus Line
-	1900 4200 4050 4200
-Wire Bus Line
-	2800 4000 3900 4000
-Wire Bus Line
-	2800 2550 3750 2550
-Wire Bus Line
-	1900 2450 4050 2450
-Wire Bus Line
-	2800 2250 3900 2250
-Wire Bus Line
-	2800 800  3750 800 
-Wire Bus Line
-	1900 700  4050 700 
-Wire Bus Line
-	6000 2250 6750 2250
-Wire Bus Line
-	4050 2800 5850 2800
-Wire Bus Line
-	6000 4350 6750 4350
-Wire Bus Line
-	4050 4850 5850 4850
-Wire Bus Line
-	6000 6400 6750 6400
-Wire Bus Line
-	9050 2250 9800 2250
-Wire Bus Line
-	4050 700  8900 700 
+	7100 2300 7100 2650
 Connection ~ 7100 4400
 Wire Bus Line
 	7100 4400 7100 6450
@@ -1951,4 +1896,217 @@ Text Label 6250 5150 1    50   ~ 0
 A6
 Text Label 6150 5150 1    50   ~ 0
 A7
+$Comp
+L CPU_Modules:Flags U9
+U 1 1 607C2303
+P 8900 3600
+F 0 "U9" H 8500 3600 50  0000 L CNN
+F 1 "Flags" H 9250 3600 50  0000 L CNN
+F 2 "CPU_Modules:Flags_board" H 7450 4950 50  0001 C CNN
+F 3 "" H 7450 4950 50  0001 C CNN
+	1    8900 3600
+	1    0    0    -1  
+$EndComp
+Entry Wire Line
+	8200 2800 8300 2900
+Entry Wire Line
+	8300 2800 8400 2900
+Entry Wire Line
+	8400 2800 8500 2900
+Entry Wire Line
+	8500 2800 8600 2900
+Entry Wire Line
+	8600 2800 8700 2900
+Entry Wire Line
+	8700 2800 8800 2900
+Entry Wire Line
+	8800 2800 8900 2900
+Entry Wire Line
+	8900 2800 9000 2900
+Wire Wire Line
+	8300 2900 8300 3100
+Wire Wire Line
+	8400 2900 8400 3100
+Wire Wire Line
+	8500 2900 8500 3100
+Wire Wire Line
+	8600 2900 8600 3100
+Wire Wire Line
+	8700 2900 8700 3100
+Wire Wire Line
+	8800 2900 8800 3100
+Wire Wire Line
+	8900 2900 8900 3100
+Wire Wire Line
+	9000 2900 9000 3100
+Text Label 9000 3100 1    50   ~ 0
+BUS0
+Text Label 8900 3100 1    50   ~ 0
+BUS1
+Text Label 8800 3100 1    50   ~ 0
+BUS2
+Text Label 8700 3100 1    50   ~ 0
+BUS3
+Text Label 8600 3100 1    50   ~ 0
+BUS4
+Text Label 8500 3100 1    50   ~ 0
+BUS5
+Text Label 8400 3100 1    50   ~ 0
+BUS6
+Text Label 8300 3100 1    50   ~ 0
+BUS7
+$Comp
+L power:VCC #PWR023
+U 1 1 607D3E2B
+P 7900 3100
+F 0 "#PWR023" H 7900 2950 50  0001 C CNN
+F 1 "VCC" H 7850 3250 50  0000 C CNN
+F 2 "" H 7900 3100 50  0001 C CNN
+F 3 "" H 7900 3100 50  0001 C CNN
+	1    7900 3100
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR024
+U 1 1 607D3E31
+P 8000 3100
+F 0 "#PWR024" H 8000 2850 50  0001 C CNN
+F 1 "GND" H 7900 3100 50  0000 C CNN
+F 2 "" H 8000 3100 50  0001 C CNN
+F 3 "" H 8000 3100 50  0001 C CNN
+	1    8000 3100
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR021
+U 1 1 607F61B0
+P 7700 3450
+F 0 "#PWR021" H 7700 3200 50  0001 C CNN
+F 1 "GND" V 7700 3250 50  0000 C CNN
+F 2 "" H 7700 3450 50  0001 C CNN
+F 3 "" H 7700 3450 50  0001 C CNN
+	1    7700 3450
+	0    1    1    0   
+$EndComp
+$Comp
+L power:VCC #PWR022
+U 1 1 607F67FA
+P 7700 3550
+F 0 "#PWR022" H 7700 3400 50  0001 C CNN
+F 1 "VCC" V 7715 3677 50  0000 L CNN
+F 2 "" H 7700 3550 50  0001 C CNN
+F 3 "" H 7700 3550 50  0001 C CNN
+	1    7700 3550
+	0    -1   -1   0   
+$EndComp
+Entry Wire Line
+	9900 2950 9800 2850
+Entry Wire Line
+	9800 2950 9700 2850
+Entry Wire Line
+	9700 2950 9600 2850
+Entry Wire Line
+	9600 2950 9500 2850
+Text Label 9600 2950 3    50   ~ 0
+CFA
+Wire Wire Line
+	9600 3100 9600 2950
+Wire Wire Line
+	9700 3100 9700 2950
+Wire Wire Line
+	9800 3100 9800 2950
+Wire Wire Line
+	9900 3100 9900 2950
+Text Label 9700 3050 3    50   ~ 0
+V
+Text Label 9800 2950 3    50   ~ 0
+CAF
+Text Label 9900 3050 3    50   ~ 0
+Z
+Wire Bus Line
+	9100 2850 9100 2650
+Wire Bus Line
+	9100 2650 7100 2650
+Connection ~ 7100 2650
+Wire Bus Line
+	7100 2650 7100 4400
+Connection ~ 7100 2300
+Text GLabel 8400 4200 3    50   Input ~ 0
+CLK
+Text GLabel 8550 4200 3    50   Input ~ 0
+~CLK~
+Text GLabel 8700 4200 3    50   Input ~ 0
+RESET
+Text GLabel 8850 4200 3    50   Input ~ 0
+~RESET~
+Wire Wire Line
+	8450 4150 8400 4150
+Wire Wire Line
+	8400 4150 8400 4200
+Wire Wire Line
+	8550 4200 8550 4150
+Wire Wire Line
+	8700 4200 8700 4150
+Wire Wire Line
+	8700 4150 8650 4150
+Wire Wire Line
+	8750 4150 8850 4150
+Wire Wire Line
+	8850 4150 8850 4200
+Wire Bus Line
+	5500 6450 7100 6450
+Wire Bus Line
+	5500 4400 7100 4400
+Wire Bus Line
+	5500 2300 7100 2300
+Wire Bus Line
+	9100 2850 9800 2850
+Wire Bus Line
+	7100 2300 8650 2300
+Wire Bus Line
+	6050 750  6750 750 
+Wire Bus Line
+	6050 2850 6750 2850
+Wire Bus Line
+	6050 4900 6750 4900
+Wire Bus Line
+	9100 750  9800 750 
+Wire Bus Line
+	2800 7500 3900 7500
+Wire Bus Line
+	2800 6050 3750 6050
+Wire Bus Line
+	1900 5950 4050 5950
+Wire Bus Line
+	2800 5750 3900 5750
+Wire Bus Line
+	2800 4300 3750 4300
+Wire Bus Line
+	1900 4200 4050 4200
+Wire Bus Line
+	2800 4000 3900 4000
+Wire Bus Line
+	2800 2550 3750 2550
+Wire Bus Line
+	1900 2450 4050 2450
+Wire Bus Line
+	2800 2250 3900 2250
+Wire Bus Line
+	2800 800  3750 800 
+Wire Bus Line
+	1900 700  4050 700 
+Wire Bus Line
+	6000 2250 6750 2250
+Wire Bus Line
+	6000 4350 6750 4350
+Wire Bus Line
+	4050 4850 5850 4850
+Wire Bus Line
+	6000 6400 6750 6400
+Wire Bus Line
+	9050 2250 9800 2250
+Wire Bus Line
+	4050 2800 8900 2800
+Wire Bus Line
+	4050 700  8900 700 
 $EndSCHEMATC
