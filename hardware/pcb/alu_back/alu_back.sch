@@ -121,37 +121,37 @@ Wire Wire Line
 	1950 2050 1900 2050
 Wire Wire Line
 	1900 2050 1900 2100
-Text GLabel 10450 750  2    50   Output ~ 0
+Text GLabel 10650 1000 2    50   Output ~ 0
 CLK
-Text GLabel 10450 900  2    50   Output ~ 0
+Text GLabel 10650 1150 2    50   Output ~ 0
 ~CLK~
-Text GLabel 10450 1050 2    50   Output ~ 0
+Text GLabel 10650 1300 2    50   Output ~ 0
 RESET
 $Comp
 L Connector:Conn_01x04_Female J1
 U 1 1 608088C3
-P 10150 950
-F 0 "J1" H 10042 525 50  0000 C CNN
-F 1 "Conn_01x04_Female" H 10042 616 50  0000 C CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical" H 10150 950 50  0001 C CNN
-F 3 "~" H 10150 950 50  0001 C CNN
-	1    10150 950 
+P 10350 1200
+F 0 "J1" H 10242 775 50  0000 C CNN
+F 1 "SYNC" H 10242 866 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical" H 10350 1200 50  0001 C CNN
+F 3 "~" H 10350 1200 50  0001 C CNN
+	1    10350 1200
 	-1   0    0    1   
 $EndComp
 Wire Wire Line
-	10350 750  10450 750 
+	10550 1000 10650 1000
 Wire Wire Line
-	10350 850  10400 850 
+	10550 1100 10600 1100
 Wire Wire Line
-	10400 850  10400 900 
+	10600 1100 10600 1150
 Wire Wire Line
-	10400 900  10450 900 
+	10600 1150 10650 1150
 Wire Wire Line
-	10350 950  10400 950 
+	10550 1200 10600 1200
 Wire Wire Line
-	10400 950  10400 1050
+	10600 1200 10600 1300
 Wire Wire Line
-	10400 1050 10450 1050
+	10600 1300 10650 1300
 Wire Wire Line
 	2400 800  2400 1000
 Wire Wire Line
@@ -906,8 +906,6 @@ Wire Bus Line
 Connection ~ 3900 4000
 Wire Bus Line
 	3900 4000 3900 5750
-Wire Bus Line
-	3900 5750 3900 7500
 Connection ~ 3900 5750
 Wire Bus Line
 	4050 5950 4050 4200
@@ -952,12 +950,12 @@ Wire Wire Line
 	2250 7300 2350 7300
 Wire Wire Line
 	2350 7300 2350 7350
-Text GLabel 10450 1200 2    50   Output ~ 0
+Text GLabel 10650 1450 2    50   Output ~ 0
 ~RESET~
 Wire Wire Line
-	10350 1050 10350 1200
+	10550 1300 10550 1450
 Wire Wire Line
-	10350 1200 10450 1200
+	10550 1450 10650 1450
 $Comp
 L CPU_Modules:ALU U5
 U 1 1 609174F7
@@ -1547,9 +1545,7 @@ Entry Wire Line
 Entry Wire Line
 	5400 6350 5500 6450
 Wire Bus Line
-	6000 6400 6000 6700
-Wire Bus Line
-	3900 6700 6000 6700
+	6000 6400 6000 6500
 Text Label 5400 6350 1    50   ~ 0
 CFA
 Wire Wire Line
@@ -2053,6 +2049,84 @@ Wire Wire Line
 	8750 4150 8850 4150
 Wire Wire Line
 	8850 4150 8850 4200
+$Comp
+L Connector:Conn_01x08_Female J2
+U 1 1 60999772
+P 4500 7150
+F 0 "J2" H 4650 7000 50  0000 C CNN
+F 1 "BUS" H 4650 7100 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical" H 4500 7150 50  0001 C CNN
+F 3 "~" H 4500 7150 50  0001 C CNN
+	1    4500 7150
+	1    0    0    1   
+$EndComp
+Entry Wire Line
+	4050 6650 4150 6750
+Wire Bus Line
+	6000 6500 3900 6500
+Wire Bus Line
+	3900 5750 3900 6500
+Connection ~ 3900 6500
+Wire Bus Line
+	3900 6500 3900 7500
+Entry Wire Line
+	4050 7350 4150 7450
+Connection ~ 4050 5950
+Entry Wire Line
+	4050 6750 4150 6850
+Entry Wire Line
+	4050 6850 4150 6950
+Entry Wire Line
+	4050 6950 4150 7050
+Entry Wire Line
+	4050 7050 4150 7150
+Entry Wire Line
+	4050 7150 4150 7250
+Entry Wire Line
+	4050 7250 4150 7350
+Text Label 4150 6750 0    50   ~ 0
+BUS0
+Text Label 4150 6850 0    50   ~ 0
+BUS1
+Text Label 4150 6950 0    50   ~ 0
+BUS2
+Text Label 4150 7050 0    50   ~ 0
+BUS3
+Text Label 4150 7150 0    50   ~ 0
+BUS4
+Text Label 4150 7250 0    50   ~ 0
+BUS5
+Text Label 4150 7350 0    50   ~ 0
+BUS6
+Text Label 4150 7450 0    50   ~ 0
+BUS7
+Wire Wire Line
+	4150 6750 4300 6750
+Wire Wire Line
+	4300 6850 4150 6850
+Wire Wire Line
+	4150 6950 4300 6950
+Wire Wire Line
+	4300 7050 4150 7050
+Wire Wire Line
+	4150 7150 4300 7150
+Wire Wire Line
+	4300 7250 4150 7250
+Wire Wire Line
+	4150 7350 4300 7350
+Wire Wire Line
+	4300 7450 4150 7450
+$Comp
+L Connector:Conn_01x04_Female J3
+U 1 1 60C74233
+P 9700 4350
+F 0 "J3" V 9546 4062 50  0000 R CNN
+F 1 "FLAGS" V 9637 4062 50  0000 R CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical" H 9700 4350 50  0001 C CNN
+F 3 "~" H 9700 4350 50  0001 C CNN
+	1    9700 4350
+	0    -1   1    0   
+$EndComp
 Wire Bus Line
 	5500 6450 7100 6450
 Wire Bus Line
@@ -2071,6 +2145,8 @@ Wire Bus Line
 	6050 4900 6750 4900
 Wire Bus Line
 	9100 750  9800 750 
+Wire Bus Line
+	4050 5950 4050 7350
 Wire Bus Line
 	2800 7500 3900 7500
 Wire Bus Line
