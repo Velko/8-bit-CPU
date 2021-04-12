@@ -1544,8 +1544,6 @@ Entry Wire Line
 	5500 6350 5600 6450
 Entry Wire Line
 	5400 6350 5500 6450
-Wire Bus Line
-	6000 6400 6000 6500
 Text Label 5400 6350 1    50   ~ 0
 CFA
 Wire Wire Line
@@ -1748,25 +1746,17 @@ B6
 Text Label 9200 2150 1    50   ~ 0
 B7
 Entry Wire Line
-	8750 2200 8650 2300
+	8750 2300 8650 2400
 Entry Wire Line
-	8650 2200 8550 2300
+	8650 2300 8550 2400
 Entry Wire Line
-	8550 2200 8450 2300
+	8550 2300 8450 2400
 Entry Wire Line
-	8450 2200 8350 2300
+	8450 2300 8350 2400
 Wire Bus Line
 	9050 2250 9050 2550
 Text Label 8450 2200 1    50   ~ 0
 CFA
-Wire Wire Line
-	8450 2050 8450 2200
-Wire Wire Line
-	8550 2050 8550 2200
-Wire Wire Line
-	8650 2050 8650 2200
-Wire Wire Line
-	8750 2050 8750 2200
 Text Label 8550 2200 1    50   ~ 0
 V
 Text Label 8650 2200 1    50   ~ 0
@@ -1824,7 +1814,7 @@ Wire Bus Line
 	6050 600  9100 600 
 Connection ~ 6050 600 
 Wire Bus Line
-	7100 2300 7100 2650
+	7100 2300 7100 2400
 Connection ~ 7100 4400
 Wire Bus Line
 	7100 4400 7100 6450
@@ -2026,7 +2016,6 @@ Wire Bus Line
 Connection ~ 7100 2650
 Wire Bus Line
 	7100 2650 7100 4400
-Connection ~ 7100 2300
 Text GLabel 8400 4200 3    50   Input ~ 0
 CLK
 Text GLabel 8550 4200 3    50   Input ~ 0
@@ -2062,13 +2051,6 @@ F 3 "~" H 4500 7150 50  0001 C CNN
 $EndComp
 Entry Wire Line
 	4050 6650 4150 6750
-Wire Bus Line
-	6000 6500 3900 6500
-Wire Bus Line
-	3900 5750 3900 6500
-Connection ~ 3900 6500
-Wire Bus Line
-	3900 6500 3900 7500
 Entry Wire Line
 	4050 7350 4150 7450
 Connection ~ 4050 5950
@@ -2127,6 +2109,169 @@ F 3 "~" H 9700 4350 50  0001 C CNN
 	1    9700 4350
 	0    -1   1    0   
 $EndComp
+Text GLabel 1400 2050 3    50   Input ~ 0
+OUT_A
+Text GLabel 1500 2050 3    50   Input ~ 0
+LOAD_A
+Text GLabel 1600 2050 3    50   Input ~ 0
+ARG_AA
+Text GLabel 1700 2050 3    50   Input ~ 0
+ARG_AB
+Text GLabel 1400 3800 3    50   Input ~ 0
+OUT_B
+Text GLabel 1500 3800 3    50   Input ~ 0
+LOAD_B
+Text GLabel 1600 3800 3    50   Input ~ 0
+ARG_BA
+Text GLabel 1700 3800 3    50   Input ~ 0
+ARG_BB
+Text GLabel 1400 5550 3    50   Input ~ 0
+OUT_C
+Text GLabel 1500 5550 3    50   Input ~ 0
+LOAD_C
+Text GLabel 1600 5550 3    50   Input ~ 0
+ARG_CA
+Text GLabel 1700 5550 3    50   Input ~ 0
+ARG_CB
+Text GLabel 1400 7300 3    50   Input ~ 0
+OUT_D
+Text GLabel 1500 7300 3    50   Input ~ 0
+LOAD_D
+Text GLabel 1600 7300 3    50   Input ~ 0
+ARG_DA
+Text GLabel 1700 7300 3    50   Input ~ 0
+ARG_DB
+Text GLabel 4850 2050 3    50   Input ~ 0
+OUT_AS
+Text GLabel 4950 2050 3    50   Input ~ 0
+ALT_AS
+Text GLabel 4850 4150 3    50   Input ~ 0
+OUT_AO
+Text GLabel 4950 4150 3    50   Input ~ 0
+ALT_AO
+Text GLabel 4850 6200 3    50   Input ~ 0
+OUT_XN
+Text GLabel 4950 6200 3    50   Input ~ 0
+ALT_XN
+Wire Bus Line
+	3900 6600 6000 6600
+Connection ~ 3900 6600
+Wire Bus Line
+	3900 6600 3900 7500
+Wire Bus Line
+	6000 6400 6000 6600
+Wire Bus Line
+	3900 5750 3900 6600
+Text GLabel 7900 2050 3    50   Input ~ 0
+OUT_S
+Text GLabel 8000 2050 3    50   Input ~ 0
+ALT_S
+Connection ~ 7100 2400
+Wire Bus Line
+	7100 2400 7100 2650
+Wire Wire Line
+	8450 2050 8450 2300
+Wire Wire Line
+	8550 2050 8550 2300
+Wire Wire Line
+	8650 2050 8650 2300
+Wire Wire Line
+	8750 2050 8750 2300
+$Comp
+L Connector:Conn_01x08_Female J4
+U 1 1 60A3EB8D
+P 7450 5600
+F 0 "J4" H 7250 5050 50  0000 C CNN
+F 1 "OUT" H 7050 5050 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical" H 7450 5600 50  0001 C CNN
+F 3 "~" H 7450 5600 50  0001 C CNN
+	1    7450 5600
+	-1   0    0    1   
+$EndComp
+$Comp
+L Connector:Conn_01x04_Female J6
+U 1 1 60A41B94
+P 8150 5400
+F 0 "J6" H 7950 5100 50  0000 C CNN
+F 1 "LOAD" H 7750 5100 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical" H 8150 5400 50  0001 C CNN
+F 3 "~" H 8150 5400 50  0001 C CNN
+	1    8150 5400
+	-1   0    0    1   
+$EndComp
+$Comp
+L Connector:Conn_01x04_Female J8
+U 1 1 60A674DE
+P 8850 5400
+F 0 "J8" H 8750 5050 50  0000 C CNN
+F 1 "ARG_A" H 8500 5050 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical" H 8850 5400 50  0001 C CNN
+F 3 "~" H 8850 5400 50  0001 C CNN
+	1    8850 5400
+	-1   0    0    1   
+$EndComp
+$Comp
+L Connector:Conn_01x04_Female J5
+U 1 1 60A67D60
+P 8000 4350
+F 0 "J5" V 8100 4500 50  0000 R CNN
+F 1 "F_CTRL" V 8100 4350 50  0000 R CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical" H 8000 4350 50  0001 C CNN
+F 3 "~" H 8000 4350 50  0001 C CNN
+	1    8000 4350
+	0    -1   1    0   
+$EndComp
+$Comp
+L Connector:Conn_01x04_Female J9
+U 1 1 60A69B1B
+P 8850 6000
+F 0 "J9" H 8750 5700 50  0000 C CNN
+F 1 "ARG_B" H 8500 5700 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical" H 8850 6000 50  0001 C CNN
+F 3 "~" H 8850 6000 50  0001 C CNN
+	1    8850 6000
+	-1   0    0    1   
+$EndComp
+Text GLabel 7650 5900 2    50   Output ~ 0
+OUT_A
+Text GLabel 7650 5800 2    50   Output ~ 0
+OUT_B
+Text GLabel 7650 5700 2    50   Output ~ 0
+OUT_C
+Text GLabel 7650 5600 2    50   Output ~ 0
+OUT_D
+Text GLabel 7650 5500 2    50   Output ~ 0
+OUT_AS
+Text GLabel 7650 5400 2    50   Output ~ 0
+OUT_AO
+Text GLabel 7650 5300 2    50   Output ~ 0
+OUT_S
+Text GLabel 7650 5200 2    50   Output ~ 0
+OUT_XN
+Text GLabel 8350 5500 2    50   Output ~ 0
+LOAD_A
+Text GLabel 8350 5400 2    50   Output ~ 0
+LOAD_B
+Text GLabel 8350 5300 2    50   Output ~ 0
+LOAD_C
+Text GLabel 8350 5200 2    50   Output ~ 0
+LOAD_D
+Text GLabel 9050 5500 2    50   Input ~ 0
+ARG_AA
+Text GLabel 9050 5400 2    50   Input ~ 0
+ARG_BA
+Text GLabel 9050 5300 2    50   Input ~ 0
+ARG_CA
+Text GLabel 9050 5200 2    50   Input ~ 0
+ARG_DA
+Text GLabel 9050 6100 2    50   Input ~ 0
+ARG_AB
+Text GLabel 9050 6000 2    50   Input ~ 0
+ARG_BB
+Text GLabel 9050 5900 2    50   Input ~ 0
+ARG_CB
+Text GLabel 9050 5800 2    50   Input ~ 0
+ARG_DB
 Wire Bus Line
 	5500 6450 7100 6450
 Wire Bus Line
@@ -2136,7 +2281,7 @@ Wire Bus Line
 Wire Bus Line
 	9100 2850 9800 2850
 Wire Bus Line
-	7100 2300 8650 2300
+	7100 2400 8650 2400
 Wire Bus Line
 	6050 750  6750 750 
 Wire Bus Line
@@ -2185,4 +2330,23 @@ Wire Bus Line
 	4050 2800 8900 2800
 Wire Bus Line
 	4050 700  8900 700 
+$Comp
+L Connector:Conn_01x04_Female J7
+U 1 1 60B96D3C
+P 8150 6000
+F 0 "J7" H 7950 5700 50  0000 C CNN
+F 1 "ALT" H 7750 5700 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical" H 8150 6000 50  0001 C CNN
+F 3 "~" H 8150 6000 50  0001 C CNN
+	1    8150 6000
+	-1   0    0    1   
+$EndComp
+Text GLabel 8350 6100 2    50   Output ~ 0
+ALT_AS
+Text GLabel 8350 6000 2    50   Output ~ 0
+ALT_AO
+Text GLabel 8350 5900 2    50   Output ~ 0
+ALT_S
+Text GLabel 8350 5800 2    50   Output ~ 0
+ALT_XN
 $EndSCHEMATC
