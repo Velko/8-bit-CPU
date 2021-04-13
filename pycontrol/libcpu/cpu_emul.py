@@ -13,7 +13,7 @@ def do_sub_reg(arg0: int, arg1: int) -> Tuple[int, bool]:
 
 
 class CPUBackendEmulate(CPUBackend):
-    def __init__(self):
+    def __init__(self) -> None:
         self.memory = [0]*256
         self.A = 0
         self.B = 0
@@ -27,7 +27,7 @@ class CPUBackendEmulate(CPUBackend):
         if isinstance(arg, Bytes):
             arg = arg.start
 
-        res = attr(arg)
+        res: Tuple[bool, Optional[int]] = attr(arg)
 
         if res is None:
             return False, None

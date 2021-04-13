@@ -4,7 +4,7 @@ from typing import Union, Iterator
 
 class PinClient:
 
-    def __init__(self, serial: serial.Serial=None):
+    def __init__(self, serial: serial.Serial=None) -> None:
 
         if serial is not None:
             self.serial = serial
@@ -24,7 +24,8 @@ class PinClient:
 
     def query(self, cmd: str) -> str:
         self.send_cmd(cmd)
-        return self.serial.readline().decode('ascii').strip()
+        line: bytes = self.serial.readline()
+        return line.decode('ascii').strip()
 
     def identify(self) -> str:
         return self.query('I')

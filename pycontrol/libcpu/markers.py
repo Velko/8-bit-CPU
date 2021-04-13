@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from typing import Optional
 
 next_addr = 0
 
@@ -19,7 +20,7 @@ def align(alignment: int) -> None:
         next_addr += alignment - mod
 
 class Bytes:
-    def __init__(self, size: int):
+    def __init__(self, size: int) -> None:
         global next_addr
 
         self.start = next_addr
@@ -27,12 +28,12 @@ class Bytes:
         next_addr += size
 
 class Byte(Bytes):
-    def __init__(self):
+    def __init__(self) -> None:
         Bytes.__init__(self, 1)
 
 class Label:
-    def __init__(self):
-        self.addr = None
+    def __init__(self) -> None:
+        self.addr: Optional[int] = None
 
     def here(self) -> None:
         self.addr = next_addr

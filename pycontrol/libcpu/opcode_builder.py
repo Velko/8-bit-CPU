@@ -54,7 +54,7 @@ class MicroCode:
         return alt
 
 class MicrocodeBuilder:
-    def __init__(self):
+    def __init__(self) -> None:
         self.opcodes: List[Tuple[str, MicroCode]] = []
 
     def add_instruction(self, name: str, *fmt: Register) -> MicroCode:

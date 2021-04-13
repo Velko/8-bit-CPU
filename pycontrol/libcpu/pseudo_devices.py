@@ -1,11 +1,11 @@
 from .markers import Bytes, Label
-from typing import Union, Callable
+from typing import Union, Callable, Optional
 from .devices import RAM
 from .util import ControlSignal, UninitializedError
 from .pinclient import PinClient
 
 class EnableCallback(ControlSignal):
-    def __init__(self, callback: Callable[[], None]):
+    def __init__(self, callback: Callable[[], None]) -> None:
         self.callback = callback
 
     def enable(self) -> None:
@@ -13,9 +13,9 @@ class EnableCallback(ControlSignal):
 
 
 class ImmediateValue:
-    def __init__(self):
-        self.client = None
-        self.value = None
+    def __init__(self) -> None:
+        self.client: Optional[PinClient] = None
+        self.value: Optional[int] = None
         self.write_enabled = False
 
     def connect(self, client: PinClient) -> None:
@@ -48,7 +48,7 @@ class ImmediateValue:
 
 
 class RamProxy:
-    def __init__(self, name: str, ram: RAM):
+    def __init__(self, name: str, ram: RAM) -> None:
         self.name = name
         self.ram = ram
         self.out = EnableCallback(self.enable_out)

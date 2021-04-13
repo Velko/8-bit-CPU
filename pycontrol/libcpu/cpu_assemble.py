@@ -38,9 +38,9 @@ class ProgramInstruction:
         stream.write(binary)
 
 class CPUBackendAssemble(CPUBackend):
-    def __init__(self):
+    def __init__(self) -> None:
         self.addr_counter = 0
-        self.program = []
+        self.program: List[ProgramInstruction] = []
 
     def advance_counter(self, steps: Sequence[Sequence[ControlSignal]])->None:
         for step in steps:

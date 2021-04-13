@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import ast, pdb
+from typing import List, Tuple
 import astor # type: ignore
 
 #with open("demo_sieve.py", "r") as source:
@@ -10,10 +11,10 @@ import astor # type: ignore
 tree = astor.parse_file("../demo/prime_sieve.py")
 
 class AsmVisitor(ast.NodeTransformer):
-    def __init__(self):
+    def __init__(self) -> None:
         ast.NodeTransformer.__init__(self)
         self.label_idx = 1
-        self.label_stack = list()
+        self.label_stack: List[Tuple[str, str]] = []
         self.label_parent = None
 
     def visit_FunctionDef(self, node):

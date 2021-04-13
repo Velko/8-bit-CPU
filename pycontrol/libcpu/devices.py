@@ -1,29 +1,29 @@
 from .pin import PinBase, Level
 
 class Register:
-    def __init__(self, name: str, out: PinBase, load: PinBase, alu_a: PinBase, alu_b: PinBase):
+    def __init__(self, name: str, out: PinBase, load: PinBase, alu_a: PinBase, alu_b: PinBase) -> None:
         self.name = name
         self.out = out
         self.load = load
         self.alu_a = alu_a
         self.alu_b = alu_b
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.name
 
 
 class ALU:
-    def __init__(self, name: str, out: PinBase, sub: PinBase):
+    def __init__(self, name: str, out: PinBase, sub: PinBase) -> None:
         self.name = name
         self.out = out
         self.sub = sub
 
 
 class Flags:
-    def __init__(self, name: str, load: PinBase, use_carry: PinBase, bus_out: PinBase, bus_in: PinBase):
+    def __init__(self, name: str, load: PinBase, use_carry: PinBase, bus_out: PinBase, bus_in: PinBase) -> None:
         self.name = name
         self.load = load
         self.use_carry = use_carry
@@ -65,37 +65,37 @@ class Flags:
         return f
 
 class RAM:
-    def __init__(self, name: str, out: PinBase, write: PinBase):
+    def __init__(self, name: str, out: PinBase, write: PinBase) -> None:
         self.name = name
         self.out = out
         self.write = write
 
 class Clock:
-    def __init__(self, name: str, halt: PinBase):
+    def __init__(self, name: str, halt: PinBase) -> None:
         self.name = name
         self.halt = halt
 
 class StepCounter:
-    def __init__(self, name: str, reset: PinBase):
+    def __init__(self, name: str, reset: PinBase) -> None:
         self.name = name
         self.reset = reset
 
 class ProgramCounter:
-    def __init__(self, name: str, out: PinBase, load: PinBase, count: PinBase):
+    def __init__(self, name: str, out: PinBase, load: PinBase, count: PinBase) -> None:
         self.name = name
         self.out = out
         self.load = load
         self.count = count
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.name
 
 
 # Helper device for debugger
 class IRFetch:
-    def __init__(self, name: str, load: PinBase):
+    def __init__(self, name: str, load: PinBase) -> None:
         self.name = name
         self.load = load
