@@ -52,12 +52,12 @@ class FlagsReg
         uint8_t latched_primary;
         uint8_t latched_secondary;
         bool load_enabled;
-        bool load_raw;
+        bool calc_enabled;
     public:
         FlagsReg();
         void set_out(bool enabled);
         void set_load(bool enabled);
-        void set_sel(bool loadraw);
+        void set_calc(bool enabled);
         void clock_pulse();
         void clock_inverted();
         uint8_t read_tap();

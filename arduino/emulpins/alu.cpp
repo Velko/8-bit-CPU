@@ -22,19 +22,11 @@ void ALU_AddSub::set_out(bool enabled)
     uint16_t a_arg = A.read_tap_b();
     uint16_t b_adj = (uint16_t)B.read_tap_b();
 
-    uint8_t c_val = 0;
+    uint8_t c_val = carry ? 1 : 0;
 
     if (sub) {
         b_adj = (~b_adj) & 0xFF;
-        c_val = 1;
-    }
-
-    if (carry && (Flags.read_tap() & FLAG_C))
-    {
-        if (!sub)
-            c_val = 1;
-        else
-            c_val = 0;
+        c_val = 1 - c_val;
     }
 
     if (enabled)

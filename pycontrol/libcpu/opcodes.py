@@ -41,29 +41,31 @@ def build_opcodes() -> Mapping[str, MicroCode]:
 
     builder.add_instruction("ldi_F_imm")\
         .add_step(setup_imm)\
-        .add_step([Flags.load, Flags.bus_in, ProgMem.out, PC.count])
+        .add_step([Flags.bus_load, ProgMem.out, PC.count])
 
     for l, r in permute_gp_regs_all():
         builder.add_instruction("add_{}_{}", l, r)\
-            .add_step([l.load, l.alu_a, r.alu_b, AddSub.out, Flags.load])
+            .add_step([l.load, l.alu_a, r.alu_b, AddSub.out, Flags.calc])
 
     for l, r in permute_gp_regs_all():
         builder.add_instruction("adc_{}_{}", l, r)\
-            .add_step([l.load, l.alu_a, r.alu_b, AddSub.out, Flags.load])\
+            .add_step([l.load, l.alu_a, r.alu_b, AddSub.out, Flags.calc])\
             .add_condition(mask=Flags.C, value=Flags.C)\
-                .add_step([l.load, l.alu_a, r.alu_b, AddSub.out, Flags.load, Flags.use_carry])
+                .add_step([l.load, l.alu_a, r.alu_b, AddSub.out, Flags.calc, Flags.carry])
 
     for l, r in permute_gp_regs_nsame():
         builder.add_instruction("sub_{}_{}", l, r)\
-            .add_step([l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.load])
+            .add_step([l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.calc])
 
     for l, r in permute_gp_regs_nsame():
         builder.add_instruction("sbb_{}_{}", l, r)\
-            .add_step([l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.load, Flags.use_carry])
+            .add_step([l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.calc])\
+            .add_condition(mask=Flags.C, value=Flags.C)\
+                .add_step([l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.calc, Flags.carry])
 
     for l, r in permute_gp_regs_nsame():
         builder.add_instruction("cmp_{}_{}", l, r)\
-            .add_step([l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.load])
+            .add_step([l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.calc])
 
     for l, r in permute_gp_regs_nsame():
         builder.add_instruction("mov_{}_{}", l, r)\
@@ -88,17 +90,17 @@ def build_opcodes() -> Mapping[str, MicroCode]:
         builder.add_instruction("ld_{}_addr", r)\
             .add_step(setup_imm)\
             .add_step([ProgMem.out, Mar.load, PC.count])\
-            .add_step([Ram.out, r.load, Flags.load])
+            .add_step([Ram.out, r.load, Flags.calc])
 
     for v, a in permute_gp_regs_all():
         builder.add_instruction("ldabs_{}_{}", v, a)\
             .add_step([a.out, Mar.load])\
-            .add_step([v.load, Ram.out, Flags.load])
+            .add_step([v.load, Ram.out, Flags.calc])
 
     for r in gp_regs:
         builder.add_instruction("tstabs_{}", r)\
             .add_step([r.out, Mar.load])\
-            .add_step([Ram.out, Flags.load])
+            .add_step([Ram.out, Flags.calc])
 
     builder.add_instruction("jmp_addr")\
         .add_step(setup_imm)\

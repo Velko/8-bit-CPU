@@ -23,12 +23,12 @@ class ALU:
 
 
 class Flags:
-    def __init__(self, name: str, load: PinBase, use_carry: PinBase, bus_out: PinBase, bus_in: PinBase) -> None:
+    def __init__(self, name: str, calc: PinBase, carry: PinBase, bus_out: PinBase, bus_load: PinBase) -> None:
         self.name = name
-        self.load = load
-        self.use_carry = use_carry
+        self.calc = calc
+        self.carry = carry
         self.bus_out = bus_out
-        self.bus_in = bus_in
+        self.bus_load = bus_load
 
     V = 0b1000
     C = 0b0100

@@ -22,10 +22,10 @@ AddSub = dev.ALU("AddSub",
     sub = Pin(4, Level.HIGH))
 
 Flags = dev.Flags("F",
-    load = Pin(6, Level.LOW),
-    use_carry = Pin(11, Level.HIGH),
+    calc = Pin(6, Level.LOW),
+    carry = Pin(11, Level.HIGH),
     bus_out = MuxPin(OutMux, 4),
-    bus_in = Pin(3, Level.HIGH))
+    bus_load = Pin(3, Level.LOW))
 
 Mar = dev.Register("MAR",
     out = NullPin(-1, Level.LOW),
