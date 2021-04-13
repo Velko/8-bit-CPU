@@ -34,7 +34,7 @@ class TesterClient(cmd.Cmd):
         ldi(B, int(arg, 0))
 
     def do_load_f(self, arg):
-        ldi(F, arg)
+        ldi(F, int(arg, 0))
 
     def do_add_ab(self, arg):
         add(A, B)
