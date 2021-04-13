@@ -74,7 +74,7 @@ def write_opcodes(hfile):
 def write_default_cword(hfile):
     control.reset()
 
-    hfile.write("#define CTRL_DEFAULT                    0b{:016b}\n\n".format(control.c_word))
+    hfile.write("#define CTRL_DEFAULT                    0b{:024b}\n\n".format(control.c_word))
 
 
 def write_mux(hfile, name, mux):
@@ -85,7 +85,7 @@ def write_mux(hfile, name, mux):
 
     name = name.replace("Mux", "").upper()
     define = "#define MUX_{}_MASK".format(name)
-    hfile.write("{:40}0b{:016b}\n".format(define, mask))
+    hfile.write("{:40}0b{:024b}\n".format(define, mask))
 
     for pname, pin in all_pins():
         if isinstance(pin, MuxPin):
@@ -95,7 +95,7 @@ def write_mux(hfile, name, mux):
                 pin.enable()
 
                 define = "#define MPIN_{}_BITS".format(pname)
-                hfile.write("{:40}0b{:016b}\n".format(define, control.c_word & mask))
+                hfile.write("{:40}0b{:024b}\n".format(define, control.c_word & mask))
     hfile.write("\n")
 
 
@@ -108,7 +108,7 @@ def write_simple_pins(hfile):
             prefix = "L" if pin.level == Level.LOW else "H"
 
             define = "#define {}PIN_{}_BIT".format(prefix, name)
-            hfile.write("{:40}0b{:016b}\n".format(define, val))
+            hfile.write("{:40}0b{:024b}\n".format(define, val))
 
 
 

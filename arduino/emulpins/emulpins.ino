@@ -8,9 +8,9 @@
 
 
 void load_default_cword();
-void store_default_cword(uint16_t cword);
+void store_default_cword(uint32_t cword);
 
-uint16_t default_cword;
+uint32_t default_cword;
 
 void setup()
 {
@@ -26,7 +26,7 @@ void loop()
 
     if (cmd < 0) return;
 
-    uint16_t val = 0;
+    uint32_t val = 0;
 
     switch (cmd)
     {
@@ -89,7 +89,7 @@ void loop()
     }
 }
 
-void store_default_cword(uint16_t cword)
+void store_default_cword(uint32_t cword)
 {
     if (cword != default_cword)
     {

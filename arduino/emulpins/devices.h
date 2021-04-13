@@ -8,7 +8,7 @@ extern uint8_t flags_bus;
 extern uint8_t alu_arg_a_bus;
 extern uint8_t alu_arg_b_bus;
 
-void set_control(uint16_t control_word);
+void set_control(uint32_t control_word);
 void clock_pulse();
 void clock_inverted();
 

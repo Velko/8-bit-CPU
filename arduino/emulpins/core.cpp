@@ -10,7 +10,7 @@ Register A;
 Register B;
 Register IR;
 
-void set_control(uint16_t control_word)
+void set_control(uint32_t control_word)
 {
     A.set_load((control_word & MUX_LOAD_MASK) == MPIN_A_LOAD_BITS);
     B.set_load((control_word & MUX_LOAD_MASK) == MPIN_B_LOAD_BITS);
