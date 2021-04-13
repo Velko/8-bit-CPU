@@ -10,6 +10,8 @@
         "**/build-uno": true,
         "**/build-nano-*": true,
         "**/*.hex": true,
-        "**/*.o": true
+        "**/*.o": true,
+        "**/.mypy_cache": true,
+        "**/.pytest_cache": true
     }
 }
