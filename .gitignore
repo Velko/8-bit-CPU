@@ -20,3 +20,5 @@ zz_*.ino
 /temp/
 build-*/
 .mypy-cache/
+*.img
+sym-lib-table
