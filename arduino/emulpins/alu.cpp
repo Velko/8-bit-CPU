@@ -19,8 +19,8 @@ void ALU_AddSub::set_carry(bool c)
 
 void ALU_AddSub::set_out(bool enabled)
 {
-    uint16_t a_arg = A.read_tap_b();
-    uint16_t b_adj = (uint16_t)B.read_tap_b();
+    uint16_t a_arg = alu_arg_a_bus;
+    uint16_t b_adj = alu_arg_b_bus;
 
     uint8_t c_val = carry ? 1 : 0;
 

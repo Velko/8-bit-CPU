@@ -2,10 +2,7 @@
 
 Register::Register()
 {
-    out_enabled = false;
     load_enabled = false;
-    tap_a_enabled = false;
-    tap_b_enabled = true; // hardwired for now
 }
 
 void Register::clock_pulse()
@@ -26,23 +23,23 @@ void Register::set_load(bool enabled)
 
 void Register::set_out(bool enabled)
 {
-    out_enabled = enabled;
-    if (out_enabled)
+    if (enabled)
         main_bus = latched_primary;
 }
 
-uint8_t Register::read_tap_a()
+uint8_t Register::read_tap()
 {
-    if (tap_a_enabled)
-        return latched_secondary;
-    else
-        return 0;
+    return latched_secondary;
 }
 
-uint8_t Register::read_tap_b()
+void Register::set_tap_a(bool enabled)
 {
-    if (tap_b_enabled)
-        return latched_secondary;
-    else
-        return 0;
+    if (enabled)
+        alu_arg_a_bus = latched_secondary;
+}
+
+void Register::set_tap_b(bool enabled)
+{
+    if (enabled)
+        alu_arg_b_bus = latched_secondary;
 }

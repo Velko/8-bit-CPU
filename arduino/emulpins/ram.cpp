@@ -7,7 +7,7 @@ void Memory::set_out(bool enabled)
 {
     if (enabled)
     {
-        main_bus = data[MAR.read_tap_b()];
+        main_bus = data[MAR.read_tap()];
     }
 }
 
@@ -20,6 +20,6 @@ void Memory::clock_pulse()
 {
     if (write_enabled)
     {
-        data[MAR.read_tap_b()] = main_bus;
+        data[MAR.read_tap()] = main_bus;
     }
 }

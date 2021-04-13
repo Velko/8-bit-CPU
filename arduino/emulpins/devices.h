@@ -5,6 +5,8 @@
 
 extern uint8_t main_bus;
 extern uint8_t flags_bus;
+extern uint8_t alu_arg_a_bus;
+extern uint8_t alu_arg_b_bus;
 
 void set_control(uint16_t control_word);
 void clock_pulse();
@@ -15,15 +17,13 @@ class Register {
         uint8_t latched_primary;
         uint8_t latched_secondary;
         bool load_enabled;
-        bool out_enabled;
-        bool tap_a_enabled;
-        bool tap_b_enabled;
     public:
         Register();
         void set_load(bool enabled);
         void set_out(bool enabled);
-        uint8_t read_tap_a();
-        uint8_t read_tap_b();
+        void set_tap_a(bool enabled);
+        void set_tap_b(bool enabled);
+        uint8_t read_tap();
         void clock_pulse();
         void clock_inverted();
 };

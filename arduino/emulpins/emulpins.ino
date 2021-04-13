@@ -80,7 +80,7 @@ void loop()
 
     case 'r':
         val = Serial.parseInt();
-        Serial.println(IR.read_tap_b());
+        Serial.println(IR.read_tap());
         break;
 
     default:

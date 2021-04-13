@@ -3,6 +3,8 @@
 
 uint8_t flags;
 uint8_t main_bus;
+uint8_t alu_arg_a_bus;
+uint8_t alu_arg_b_bus;
 
 Register A;
 Register B;
@@ -30,6 +32,11 @@ void set_control(uint16_t control_word)
 
     AddSub.set_sub((control_word & HPIN_ADDSUB_SUB_BIT) != 0);
     AddSub.set_carry((control_word & HPIN_F_CARRY_BIT) != 0);
+
+    // hardwired
+    A.set_tap_a(true);
+    B.set_tap_b(true);
+
     // should be one of the latest, after registers' tap config
     AddSub.set_out((control_word & MUX_OUT_MASK) == MPIN_ADDSUB_OUT_BITS);
 }
