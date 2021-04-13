@@ -2,8 +2,8 @@ from . import devices as dev
 from .pseudo_devices import RamProxy
 from .pin import Pin, NullPin, Level, Mux, MuxPin
 
-OutMux = Mux([0, 1, 2], 7) # bits 5-7 in Control Word, defaults to 7
-LoadMux = Mux([8, 9, 10], 7)
+OutMux = Mux([0, 1, 2, 3], 15) # bits 0-3 in Control Word, defaults to 15
+LoadMux = Mux([8, 9, 10, 11], 15)
 
 RegA = dev.Register("A",
     out = MuxPin(OutMux, 0),
@@ -23,9 +23,9 @@ AddSub = dev.ALU("AddSub",
 
 Flags = dev.Flags("F",
     calc = Pin(6, Level.LOW),
-    carry = Pin(11, Level.HIGH),
+    carry = Pin(14, Level.HIGH),
     bus_out = MuxPin(OutMux, 4),
-    bus_load = Pin(3, Level.LOW))
+    bus_load = MuxPin(LoadMux, 7))
 
 Mar = dev.Register("MAR",
     out = NullPin(-1, Level.LOW),

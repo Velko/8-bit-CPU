@@ -25,7 +25,7 @@ void set_control(uint16_t control_word)
     RAM.set_out((control_word & MUX_OUT_MASK) == MPIN_RAM_OUT_BITS);
 
     Flags.set_calc((control_word & LPIN_F_CALC_BIT) == 0);
-    Flags.set_load((control_word & LPIN_F_BUS_LOAD_BIT) == 0);
+    Flags.set_load((control_word & MUX_LOAD_MASK) == MPIN_F_BUS_LOAD_BITS);
     Flags.set_out((control_word & MUX_OUT_MASK) == MPIN_F_BUS_OUT_BITS);
 
     PC.set_count((control_word & HPIN_PC_COUNT_BIT) != 0);
