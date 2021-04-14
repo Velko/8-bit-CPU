@@ -4,6 +4,7 @@ from .util import UninitializedError
 from .DeviceSetup import RegA, RegB, Flags as RegFlags
 from .devices import Register, Flags
 from .markers import Bytes, Byte, Label
+from .opcodes import opcodes
 
 class CPUBackend:
     @abstractmethod
@@ -137,3 +138,9 @@ def jmp(label: Label) -> bool:
 def hlt() -> None:
     if backend is None: raise UninitializedError
     backend.execute_opcode("hlt")
+
+def opcode_of(instr: str) -> int:
+    if backend is None: raise UninitializedError
+    if not instr in opcodes:
+        raise InvalidOpcodeException(opcode)
+    return opcodes[instr].opcode

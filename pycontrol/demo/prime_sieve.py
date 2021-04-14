@@ -29,8 +29,8 @@ def run() -> None:
             break
 
         # after address wrap-around B should be 0, the address we need;
-        # replace the value there with opcode for jmp (be careful with microcode updates)
-        ldi (A, 0x24)
+        # replace the value there with opcode for jmp
+        ldi (A, opcode_of("jmp_addr"))
         stabs (B, A)
 
         # run halt in a loop in case it is not wired properly
