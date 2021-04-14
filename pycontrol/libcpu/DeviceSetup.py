@@ -7,6 +7,8 @@ LoadMux = Mux([8, 9, 10, 11], 15)
 AluArgA = Mux([16, 17], 4)
 AluArgB = Mux([18, 19, 20], 7)
 
+AluAltFn = Pin(4, Level.HIGH)
+
 RegA = dev.Register("A",
     out = MuxPin(OutMux, 0),
     load = MuxPin(LoadMux, 0),
@@ -33,13 +35,12 @@ RegD = dev.Register("D",
 
 AddSub = dev.ALU("AddSub",
     out = MuxPin(OutMux, 2),
-    alt = Pin(4, Level.HIGH))
+    alt = AluAltFn)
 
 AndOr = dev.ALU("AndOr",
     out = MuxPin(OutMux, 6),
-    alt = Pin(4, Level.HIGH))
+    alt = AluAltFn)
 
-Shift = dev.ALU("Shift",
 Flags = dev.Flags("F",
     calc = Pin(6, Level.LOW),
     carry = Pin(14, Level.HIGH),
