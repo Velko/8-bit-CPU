@@ -8,12 +8,16 @@ uint8_t alu_arg_b_bus;
 
 Register A;
 Register B;
+Register C;
+Register D;
 Register IR;
 
 void set_control(uint32_t control_word)
 {
     A.set_load((control_word & MUX_LOAD_MASK) == MPIN_A_LOAD_BITS);
     B.set_load((control_word & MUX_LOAD_MASK) == MPIN_B_LOAD_BITS);
+    C.set_load((control_word & MUX_LOAD_MASK) == MPIN_C_LOAD_BITS);
+    D.set_load((control_word & MUX_LOAD_MASK) == MPIN_D_LOAD_BITS);
     IR.set_load((control_word & MUX_LOAD_MASK) == MPIN_IR_LOAD_BITS);
     PC.set_load((control_word & MUX_LOAD_MASK) == MPIN_PC_LOAD_BITS);
     MAR.set_load((control_word & MUX_LOAD_MASK) == MPIN_MAR_LOAD_BITS);
@@ -21,6 +25,8 @@ void set_control(uint32_t control_word)
 
     A.set_out((control_word & MUX_OUT_MASK) == MPIN_A_OUT_BITS);
     B.set_out((control_word & MUX_OUT_MASK) == MPIN_B_OUT_BITS);
+    C.set_out((control_word & MUX_OUT_MASK) == MPIN_C_OUT_BITS);
+    D.set_out((control_word & MUX_OUT_MASK) == MPIN_D_OUT_BITS);
     PC.set_out((control_word & MUX_OUT_MASK) == MPIN_PC_OUT_BITS);
     RAM.set_out((control_word & MUX_OUT_MASK) == MPIN_RAM_OUT_BITS);
 
@@ -40,6 +46,11 @@ void set_control(uint32_t control_word)
     A.set_tap_b((control_word & MUX_ALUARGB_MASK) == MPIN_A_ALU_B_BITS);
     B.set_tap_a((control_word & MUX_ALUARGA_MASK) == MPIN_B_ALU_A_BITS);
     B.set_tap_b((control_word & MUX_ALUARGB_MASK) == MPIN_B_ALU_B_BITS);
+    C.set_tap_a((control_word & MUX_ALUARGA_MASK) == MPIN_C_ALU_A_BITS);
+    C.set_tap_b((control_word & MUX_ALUARGB_MASK) == MPIN_C_ALU_B_BITS);
+    D.set_tap_a((control_word & MUX_ALUARGA_MASK) == MPIN_D_ALU_A_BITS);
+    D.set_tap_b((control_word & MUX_ALUARGB_MASK) == MPIN_D_ALU_B_BITS);
+
 
     // should be one of the latest, after registers' tap config
     AddSub.set_out((control_word & MUX_OUT_MASK) == MPIN_ADDSUB_OUT_BITS);
@@ -49,6 +60,8 @@ void clock_pulse()
 {
     A.clock_pulse();
     B.clock_pulse();
+    C.clock_pulse();
+    D.clock_pulse();
     IR.clock_pulse();
     Flags.clock_pulse();
     PC.clock_pulse();
@@ -60,6 +73,8 @@ void clock_inverted()
 {
     A.clock_inverted();
     B.clock_inverted();
+    C.clock_inverted();
+    D.clock_inverted();
     IR.clock_inverted();
     Flags.clock_inverted();
     MAR.clock_inverted();

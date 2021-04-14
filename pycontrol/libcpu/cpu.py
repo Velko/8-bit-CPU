@@ -1,7 +1,7 @@
 from typing import Optional, Union, Tuple
 from abc import abstractmethod
 from .util import UninitializedError
-from .DeviceSetup import RegA, RegB, Flags as RegFlags
+from .DeviceSetup import RegA, RegB, RegC, RegD, Flags as RegFlags
 from .devices import Register, Flags
 from .markers import Bytes, Byte, Label
 from .opcodes import opcodes
@@ -22,6 +22,8 @@ def install_cpu_backend(engine: CPUBackend) -> None:
 
 A = RegA
 B = RegB
+C = RegC
+D = RegD
 F = RegFlags
 
 def ldi(target: Union[Register, Flags], value: Union[int, Bytes, Label]) -> None:

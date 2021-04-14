@@ -19,6 +19,18 @@ RegB = dev.Register("B",
     alu_a = MuxPin(AluArgA, 1),
     alu_b = MuxPin(AluArgB, 1))
 
+RegC = dev.Register("C",
+    out = MuxPin(OutMux, 8),
+    load = MuxPin(LoadMux, 8),
+    alu_a = MuxPin(AluArgA, 2),
+    alu_b = MuxPin(AluArgB, 2))
+
+RegD = dev.Register("D",
+    out = MuxPin(OutMux, 9),
+    load = MuxPin(LoadMux, 9),
+    alu_a = MuxPin(AluArgA, 3),
+    alu_b = MuxPin(AluArgB, 3))
+
 AddSub = dev.ALU("AddSub",
     out = MuxPin(OutMux, 2),
     sub = Pin(4, Level.HIGH))

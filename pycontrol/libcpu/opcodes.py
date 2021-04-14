@@ -4,7 +4,7 @@ from .devices import Register
 from .pin import PinBase
 from typing import Sequence, Iterator, Tuple, Mapping
 
-gp_regs: Sequence[Register] = [RegA, RegB]
+gp_regs: Sequence[Register] = [RegA, RegB, RegC, RegD]
 
 setup_imm: Sequence[PinBase] = [PC.out, ProgMar.load]
 
