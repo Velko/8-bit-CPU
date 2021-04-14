@@ -40,6 +40,8 @@ void set_control(uint32_t control_word)
     AddSub.set_carry((control_word & HPIN_F_CARRY_BIT) != 0);
 
 
+    AndOr.set_or((control_word & HPIN_ANDOR_ALT_BIT) != 0);
+
     alu_arg_a_bus = alu_arg_b_bus = 0; // emulate "pull-down"
 
     A.set_tap_a((control_word & MUX_ALUARGA_MASK) == MPIN_A_ALU_A_BITS);
@@ -54,6 +56,7 @@ void set_control(uint32_t control_word)
 
     // should be one of the latest, after registers' tap config
     AddSub.set_out((control_word & MUX_OUT_MASK) == MPIN_ADDSUB_OUT_BITS);
+    AndOr.set_out((control_word & MUX_OUT_MASK) == MPIN_ANDOR_OUT_BITS);
 }
 
 void clock_pulse()

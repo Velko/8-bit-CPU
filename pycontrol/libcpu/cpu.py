@@ -51,6 +51,16 @@ def sbb(target: Register, arg: Register) -> None:
     opcode = "sbb_{}_{}".format(target.name, arg.name)
     backend.execute_opcode(opcode)
 
+def andb(target: Register, arg: Register) -> None:
+    if backend is None: raise UninitializedError
+    opcode = "and_{}_{}".format(target.name, arg.name)
+    backend.execute_opcode(opcode)
+
+def orb(target: Register, arg: Register) -> None:
+    if backend is None: raise UninitializedError
+    opcode = "or_{}_{}".format(target.name, arg.name)
+    backend.execute_opcode(opcode)
+
 def inc(target: Register) -> None:
     if backend is None: raise UninitializedError
     opcode = f"inc_{target.name}"

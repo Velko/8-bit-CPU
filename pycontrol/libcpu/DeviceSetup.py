@@ -35,6 +35,11 @@ AddSub = dev.ALU("AddSub",
     out = MuxPin(OutMux, 2),
     alt = Pin(4, Level.HIGH))
 
+AndOr = dev.ALU("AndOr",
+    out = MuxPin(OutMux, 6),
+    alt = Pin(4, Level.HIGH))
+
+Shift = dev.ALU("Shift",
 Flags = dev.Flags("F",
     calc = Pin(6, Level.LOW),
     carry = Pin(14, Level.HIGH),

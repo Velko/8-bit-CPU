@@ -1,6 +1,7 @@
 #include "devices.h"
 
 ALU_AddSub AddSub;
+ALU_AndOr  AndOr;
 
 ALU_AddSub::ALU_AddSub()
 {
@@ -40,5 +41,28 @@ void ALU_AddSub::set_out(bool enabled)
 
         if ((a_arg & 0x80) != (result & 0x80) && (b_adj & 0x80) != (result & 0x80))
             flags_bus |= FLAG_V;
+    }
+}
+
+ALU_AndOr::ALU_AndOr()
+{
+}
+
+void ALU_AndOr::set_or(bool logical_or)
+{
+    op_or = logical_or;
+}
+
+void ALU_AndOr::set_out(bool enabled)
+{
+    if (enabled)
+    {
+        if (op_or)
+            main_bus = alu_arg_a_bus | alu_arg_b_bus;
+        else
+            main_bus = alu_arg_a_bus & alu_arg_b_bus;
+
+        // no need to update flags as N and Z is calculated
+        // by flags register itself
     }
 }
