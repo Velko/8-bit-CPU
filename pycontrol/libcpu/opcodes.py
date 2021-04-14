@@ -53,7 +53,7 @@ def build_opcodes() -> Mapping[str, MicroCode]:
             .add_condition(mask=Flags.C, value=Flags.C)\
                 .add_step([l.load, l.alu_a, r.alu_b, AddSub.out, Flags.calc, Flags.carry])
 
-    for l, r in permute_gp_regs_nsame():
+    for l, r in permute_gp_regs_all():
         builder.add_instruction("sub_{}_{}", l, r)\
             .add_step([l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.calc])
 

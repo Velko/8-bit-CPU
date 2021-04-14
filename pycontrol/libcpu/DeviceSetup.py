@@ -4,18 +4,20 @@ from .pin import Pin, NullPin, Level, Mux, MuxPin
 
 OutMux = Mux([0, 1, 2, 3], 15) # bits 0-3 in Control Word, defaults to 15
 LoadMux = Mux([8, 9, 10, 11], 15)
+AluArgA = Mux([16, 17], 4)
+AluArgB = Mux([18, 19, 20], 7)
 
 RegA = dev.Register("A",
     out = MuxPin(OutMux, 0),
     load = MuxPin(LoadMux, 0),
-    alu_a = NullPin(10, Level.LOW),
-    alu_b = NullPin(11, Level.LOW))
+    alu_a = MuxPin(AluArgA, 0),
+    alu_b = MuxPin(AluArgB, 0))
 
 RegB = dev.Register("B",
     out = MuxPin(OutMux, 1),
     load = MuxPin(LoadMux, 1),
-    alu_a = NullPin(12, Level.LOW),
-    alu_b = NullPin(13, Level.LOW))
+    alu_a = MuxPin(AluArgA, 1),
+    alu_b = MuxPin(AluArgB, 1))
 
 AddSub = dev.ALU("AddSub",
     out = MuxPin(OutMux, 2),

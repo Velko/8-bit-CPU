@@ -153,7 +153,6 @@ def test_sub_flags_zero_again(cpu_backend_real: CPUBackendControl) -> None:
     flags = Flags.decode(cpu_backend_real.client.flags_get())
     assert flags == "--Z-"
 
-@pytest.mark.xfail
 def test_sub_ba_result_small(cpu_backend_real: CPUBackendControl) -> None:
     ldi(A, 3)
     ldi(B, 4)

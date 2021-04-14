@@ -7,7 +7,7 @@ from libcpu.cpu_exec import CPUBackendControl
 
 pytestmark = pytest.mark.hardware
 
-hardwired_alu = True
+hardwired_alu = False
 hardwired_reason = "unsupported with hardwired ALU inputs"
 
 @pytest.mark.skipif(hardwired_alu, reason=hardwired_reason)

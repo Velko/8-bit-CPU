@@ -33,9 +33,13 @@ void set_control(uint32_t control_word)
     AddSub.set_sub((control_word & HPIN_ADDSUB_SUB_BIT) != 0);
     AddSub.set_carry((control_word & HPIN_F_CARRY_BIT) != 0);
 
-    // hardwired
-    A.set_tap_a(true);
-    B.set_tap_b(true);
+
+    alu_arg_a_bus = alu_arg_b_bus = 0; // emulate "pull-down"
+
+    A.set_tap_a((control_word & MUX_ALUARGA_MASK) == MPIN_A_ALU_A_BITS);
+    A.set_tap_b((control_word & MUX_ALUARGB_MASK) == MPIN_A_ALU_B_BITS);
+    B.set_tap_a((control_word & MUX_ALUARGA_MASK) == MPIN_B_ALU_A_BITS);
+    B.set_tap_b((control_word & MUX_ALUARGB_MASK) == MPIN_B_ALU_B_BITS);
 
     // should be one of the latest, after registers' tap config
     AddSub.set_out((control_word & MUX_OUT_MASK) == MPIN_ADDSUB_OUT_BITS);
