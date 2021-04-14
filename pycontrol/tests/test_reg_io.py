@@ -1,19 +1,20 @@
 #!/usr/bin/python3
 
 import pytest # type: ignore
+import random
 
 from libcpu.cpu import *
 from libcpu.devices import Register
 from libcpu.cpu_exec import CPUBackendControl
 from typing import Iterator, Tuple
+from libcpu.opcodes import permute_gp_regs_nsame, gp_regs
 
 pytestmark = pytest.mark.hardware
 
 def all_regs_and_bits() -> Iterator[Tuple[Register, int]]:
-    regs = [A, B]
     bits = range(8)
 
-    for r in regs:
+    for r in gp_regs:
         yield r, 255
         for b in bits:
             yield r, 1 << b
@@ -33,21 +34,13 @@ def test_load_store_flags(cpu_backend_real: CPUBackendControl, value: int) -> No
 
     assert value == received
 
+@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
+def test_mov_a_b(cpu_backend_real: CPUBackendControl, lhs: Register, rhs: Register) -> None:
+    ldi(lhs, 0)
+    val = random.randrange(256)
+    ldi(rhs, val)
 
-def test_mov_a_b(cpu_backend_real: CPUBackendControl) -> None:
-    ldi(A, 0)
-    ldi(B, 42)
+    mov(lhs, rhs)
 
-    mov(A, B)
-
-    value = peek(A)
-    assert value == 42
-
-def test_mov_b_a(cpu_backend_real: CPUBackendControl) -> None:
-    ldi(A, 34)
-    ldi(B, 0)
-
-    mov(B, A)
-
-    value = peek(B)
-    assert value == 34
+    value = peek(lhs)
+    assert value == val
