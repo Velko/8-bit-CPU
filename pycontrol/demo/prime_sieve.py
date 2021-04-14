@@ -40,6 +40,10 @@ def run() -> None:
     # now the program
     sieve_start.here()
 
+    # value of 16 is commonly used for comparisons, keep it
+    # in register for quick access
+    ldi (D, 16)
+
     ldi (A, 2)
 
     # fill seg0 with non-zero values
@@ -54,8 +58,7 @@ def run() -> None:
         inc (A)
 
         # are we done?
-        ldi (B, 16)
-        cmp (A, B)
+        cmp (A, D)
 
         # emulate conditional jump back to start of the loop
         if bne(): continue
@@ -84,8 +87,7 @@ def run() -> None:
             while True:
 
                 # less than 16?
-                ldi (B, 16)
-                cmp (A, B)
+                cmp (A, D)
                 if bcc(): break
 
                 # store for later
@@ -119,14 +121,13 @@ def run() -> None:
         inc (A)
 
         # are we done?
-        ldi (B, 16)
-        cmp (A, B)
+        cmp (A, D)
 
         if bne(): continue
         break
 
     # Continue with segmented sieve
-    ldi (A, 16)
+    mov (A, D)
 
     while True:
         st (r_low, A)
@@ -144,8 +145,7 @@ def run() -> None:
             inc (A)
 
             # are we done?
-            ldi (B, 16)
-            cmp (A, B)
+            cmp (A, D)
 
             # emulate conditional jump back to start of the loop
             if bne(): continue
@@ -169,8 +169,7 @@ def run() -> None:
                 while True:
                     # check at the beginning, because A could already
                     # be >= 16
-                    ldi (B, 16)
-                    cmp (A, B)
+                    cmp (A, D)
                     if bcc(): break
 
                     # store, as we will need A for other purposes
@@ -207,8 +206,7 @@ def run() -> None:
             inc (A)
 
             # done with seg0?
-            ldi (B, 16)
-            cmp (A, B)
+            cmp (A, D)
 
             # next iteration
             if bne(): continue
@@ -235,8 +233,7 @@ def run() -> None:
             inc (A)
 
             # are we done?
-            ldi (B, 16)
-            cmp (A, B)
+            cmp (A, D)
 
             if bne(): continue
             break
@@ -244,8 +241,7 @@ def run() -> None:
 
         # next segment
         ld (A, r_low)
-        ldi (B, 16)
-        add (A, B)
+        add (A, D)
 
         # all done
         if bcc(): continue
