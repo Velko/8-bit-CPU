@@ -3,73 +3,47 @@
 import pytest # type: ignore
 
 from libcpu.cpu_exec import CPUBackendControl
+from libcpu.opcodes import permute_gp_regs_all, permute_gp_regs_nsame, gp_regs
+from libcpu.devices import Register
 
 pytestmark = pytest.mark.hardware
 
 from libcpu.cpu import *
 
-def test_add_ab_result_small(cpu_backend_real: CPUBackendControl) -> None:
-    ldi(A, 24)
-    ldi(B, 18)
+def add_ab_result_test_args():
+    yield "small", 24, 18, 42, "----"
+    yield "wraparound", 245, 18, 7, "-C--"
+    yield "overflow_to_negative", 126, 4, 130, "V--N"
+    yield "overflow_to_positive", 226, 145, 115, "VC--"
+    yield "to_zero", 246, 10, 0, "-CZ-"
 
-    add(A, B)
+def add_aa_result_test_args():
+    yield "small", 25, 50, "----"
 
-    value = peek(A)
-    assert value == 42
+@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
+@pytest.mark.parametrize("desc,val_a,val_b,result,xflags", add_ab_result_test_args())
+def test_add_ab(cpu_backend_real: CPUBackendControl, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+    ldi(lhs, val_a)
+    ldi(rhs, val_b)
 
-def test_add_ab_flags_small(cpu_backend_real: CPUBackendControl) -> None:
-    ldi(A, 24)
-    ldi(B, 18)
+    add(lhs, rhs)
 
-    add(A, B)
-
+    value = peek(lhs)
     flags = Flags.decode(cpu_backend_real.client.flags_get())
-    assert flags == "----"
+    assert value == result
+    assert flags == xflags
 
-def test_add_ab_result_wraparound(cpu_backend_real: CPUBackendControl) -> None:
-    ldi(A, 245)
-    ldi(B, 18)
+@pytest.mark.parametrize("reg", gp_regs)
+@pytest.mark.parametrize("desc,val,result,xflags", add_aa_result_test_args())
+def test_add_aa(cpu_backend_real: CPUBackendControl, reg: Register, desc: str, val: int, result: int, xflags: str) -> None:
+    ldi(reg, val)
 
-    add(A, B)
+    add(reg, reg)
 
-    value = peek(A)
-    assert value == 7
-
-def test_add_ab_flags_carry(cpu_backend_real: CPUBackendControl) -> None:
-    ldi(A, 245)
-    ldi(B, 18)
-
-    add(A, B)
-
+    value = peek(reg)
     flags = Flags.decode(cpu_backend_real.client.flags_get())
-    assert flags == "-C--"
-
-def test_add_ab_flags_overflow_to_negative(cpu_backend_real: CPUBackendControl) -> None:
-    ldi(A, 126)
-    ldi(B, 4)
-
-    add(A, B)
-
-    flags = Flags.decode(cpu_backend_real.client.flags_get())
-    assert flags == "V--N"
-
-def test_add_ab_flags_overflow_to_positive(cpu_backend_real: CPUBackendControl) -> None:
-    ldi(A, 226)
-    ldi(B, 145)
-
-    add(A, B)
-
-    flags = Flags.decode(cpu_backend_real.client.flags_get())
-    assert flags == "VC--"
-
-def test_add_ab_flags_zero(cpu_backend_real: CPUBackendControl) -> None:
-    ldi(A, 246)
-    ldi(B, 10)
-
-    add(A, B)
-
-    flags = Flags.decode(cpu_backend_real.client.flags_get())
-    assert flags == "-CZ-"
+    assert value == result
+    assert flags == xflags
 
 def test_sub_result_small(cpu_backend_real: CPUBackendControl) -> None:
     ldi(A, 4)
