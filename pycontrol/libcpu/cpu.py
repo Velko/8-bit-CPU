@@ -48,6 +48,16 @@ def sbb(target: Register, arg: Register) -> None:
     opcode = "sbb_{}_{}".format(target.name, arg.name)
     backend.execute_opcode(opcode)
 
+def inc(target: Register) -> None:
+    if backend is None: raise UninitializedError
+    opcode = f"inc_{target.name}"
+    backend.execute_opcode(opcode)
+
+def dec(target: Register) -> None:
+    if backend is None: raise UninitializedError
+    opcode = f"dec_{target.name}"
+    backend.execute_opcode(opcode)
+
 def cmp(target: Register, arg: Register) -> None:
     if backend is None: raise UninitializedError
     opcode = "cmp_{}_{}".format(target.name, arg.name)

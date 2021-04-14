@@ -55,3 +55,60 @@ def test_sub_b_b(cpu_backend_real: CPUBackendControl) -> None:
 
     value = peek(B)
     assert value == 0
+
+def test_inc_a(cpu_backend_real: CPUBackendControl) -> None:
+    ldi(A, 4)
+
+    inc(A)
+
+    value = peek(A)
+    assert value == 5
+
+def test_dec_a(cpu_backend_real: CPUBackendControl) -> None:
+    ldi(A, 4)
+
+    dec(A)
+
+    value = peek(A)
+    assert value == 3
+
+def test_inc_flags_cz(cpu_backend_real: CPUBackendControl) -> None:
+    ldi(A, 255)
+
+    inc(A)
+
+    flags = Flags.decode(cpu_backend_real.client.flags_get())
+    assert flags == "-CZ-"
+
+def test_inc_flags_v(cpu_backend_real: CPUBackendControl) -> None:
+    ldi(A, 127)
+
+    inc(A)
+
+    flags = Flags.decode(cpu_backend_real.client.flags_get())
+    assert flags == "V--N"
+
+
+def test_dec_flags_z(cpu_backend_real: CPUBackendControl) -> None:
+    ldi(A, 1)
+
+    dec(A)
+
+    flags = Flags.decode(cpu_backend_real.client.flags_get())
+    assert flags == "--Z-"
+
+def test_dec_flags_cn(cpu_backend_real: CPUBackendControl) -> None:
+    ldi(A, 0)
+
+    dec(A)
+
+    flags = Flags.decode(cpu_backend_real.client.flags_get())
+    assert flags == "-C-N"
+
+def test_dec_flags_v(cpu_backend_real: CPUBackendControl) -> None:
+    ldi(A, 128)
+
+    dec(A)
+
+    flags = Flags.decode(cpu_backend_real.client.flags_get())
+    assert flags == "V---"
