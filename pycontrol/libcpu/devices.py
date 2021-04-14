@@ -16,10 +16,10 @@ class Register:
 
 
 class ALU:
-    def __init__(self, name: str, out: PinBase, sub: PinBase) -> None:
+    def __init__(self, name: str, out: PinBase, alt: PinBase) -> None:
         self.name = name
         self.out = out
-        self.sub = sub
+        self.alt = alt
 
 
 class Flags:

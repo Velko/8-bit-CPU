@@ -55,13 +55,13 @@ def build_opcodes() -> Mapping[str, MicroCode]:
 
     for l, r in permute_gp_regs_all():
         builder.add_instruction("sub_{}_{}", l, r)\
-            .add_step([l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.calc])
+            .add_step([l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.alt, Flags.calc])
 
     for l, r in permute_gp_regs_nsame():
         builder.add_instruction("sbb_{}_{}", l, r)\
-            .add_step([l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.calc])\
+            .add_step([l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.alt, Flags.calc])\
             .add_condition(mask=Flags.C, value=Flags.C)\
-                .add_step([l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.calc, Flags.carry])
+                .add_step([l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.alt, Flags.calc, Flags.carry])
 
     for r in gp_regs:
         builder.add_instruction("inc_{}", r)\
@@ -69,11 +69,11 @@ def build_opcodes() -> Mapping[str, MicroCode]:
 
     for r in gp_regs:
         builder.add_instruction("dec_{}", r)\
-            .add_step([r.load, r.alu_a, AddSub.out, AddSub.sub, Flags.calc, Flags.carry])
+            .add_step([r.load, r.alu_a, AddSub.out, AddSub.alt, Flags.calc, Flags.carry])
 
     for l, r in permute_gp_regs_nsame():
         builder.add_instruction("cmp_{}_{}", l, r)\
-            .add_step([l.alu_a, r.alu_b, AddSub.out, AddSub.sub, Flags.calc])
+            .add_step([l.alu_a, r.alu_b, AddSub.out, AddSub.alt, Flags.calc])
 
     for l, r in permute_gp_regs_nsame():
         builder.add_instruction("mov_{}_{}", l, r)\

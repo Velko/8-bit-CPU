@@ -33,7 +33,7 @@ RegD = dev.Register("D",
 
 AddSub = dev.ALU("AddSub",
     out = MuxPin(OutMux, 2),
-    sub = Pin(4, Level.HIGH))
+    alt = Pin(4, Level.HIGH))
 
 Flags = dev.Flags("F",
     calc = Pin(6, Level.LOW),

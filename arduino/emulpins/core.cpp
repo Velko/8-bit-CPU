@@ -36,7 +36,7 @@ void set_control(uint32_t control_word)
 
     PC.set_count((control_word & HPIN_PC_COUNT_BIT) != 0);
 
-    AddSub.set_sub((control_word & HPIN_ADDSUB_SUB_BIT) != 0);
+    AddSub.set_sub((control_word & HPIN_ADDSUB_ALT_BIT) != 0);
     AddSub.set_carry((control_word & HPIN_F_CARRY_BIT) != 0);
 
 
