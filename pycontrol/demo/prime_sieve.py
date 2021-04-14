@@ -24,8 +24,7 @@ def run() -> None:
         while True:
             ldabs (A, B)
             stabs (B, A)
-            ldi (A, 1)
-            add (B, A)
+            inc (B)
             if bcc(): continue
             break
 
@@ -52,8 +51,7 @@ def run() -> None:
         stabs (B, A) # store "something" there (for starters, any non-zero value will do)
 
         # next index in A
-        ldi (B, 1)
-        add (A, B)
+        inc (A)
 
         # are we done?
         ldi (B, 16)
@@ -118,8 +116,7 @@ def run() -> None:
 
         # next index in A
         ld (A, p)
-        ldi (B, 1)
-        add (A, B)
+        inc (A)
 
         # are we done?
         ldi (B, 16)
@@ -144,8 +141,7 @@ def run() -> None:
             stabs(B, B) # can not write A, as it may be zero this time
 
             # next index in A
-            ldi (B, 1)
-            add (A, B)
+            inc (A)
 
             # are we done?
             ldi (B, 16)
@@ -208,8 +204,7 @@ def run() -> None:
 
             # next index in seg0
             ld (A, p)
-            ldi (B, 1)
-            add (A, B)
+            inc (A)
 
             # done with seg0?
             ldi (B, 16)
@@ -237,8 +232,7 @@ def run() -> None:
                 out(B)
 
             # next index in A
-            ldi (B, 1)
-            add (A, B)
+            inc (A)
 
             # are we done?
             ldi (B, 16)
