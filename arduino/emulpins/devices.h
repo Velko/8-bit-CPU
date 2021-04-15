@@ -49,6 +49,18 @@ class ALU_AndOr {
         void set_out(bool enabled);
 };
 
+class ALU_ShiftSwap {
+    private:
+        bool op_swap;
+        bool carry;
+    public:
+        ALU_ShiftSwap();
+        void set_swap(bool swap);
+        void set_carry(bool carry);
+        void set_out(bool enabled);
+};
+
+
 #define FLAG_V  0b1000
 #define FLAG_C  0b0100
 #define FLAG_Z  0b0010
@@ -102,6 +114,7 @@ extern Register IR;
 extern Register MAR;
 extern ALU_AddSub AddSub;
 extern ALU_AndOr AndOr;
+extern ALU_ShiftSwap ShiftSwap;
 extern FlagsReg Flags;
 extern ProgramCounter PC;
 extern Memory RAM;

@@ -79,6 +79,28 @@ def build_opcodes() -> Mapping[str, MicroCode]:
         builder.add_instruction("dec_{}", r)\
             .add_step([r.load, r.alu_a, AddSub.out, AddSub.alt, Flags.calc, Flags.carry])
 
+    for r in gp_regs:
+        builder.add_instruction("shr_{}", r)\
+            .add_step([r.load, r.alu_a, ShiftSwap.out, Flags.calc])
+
+    for r in gp_regs:
+        builder.add_instruction("ror_{}", r)\
+            .add_step([r.load, r.alu_a, ShiftSwap.out, Flags.calc])\
+            .add_condition(mask=Flags.C, value=Flags.C)\
+                .add_step([r.load, r.alu_a, ShiftSwap.out, Flags.calc, Flags.carry])
+
+    # probably won't work using current microcode interpreter
+    for r in gp_regs:
+        builder.add_instruction("asr_{}", r)\
+            .add_step([r.out, Flags.calc])\
+            .add_step([r.load, r.alu_a, ShiftSwap.out, Flags.calc])\
+            .add_condition(mask=Flags.N, value=Flags.N)\
+                .add_step([r.load, r.alu_a, ShiftSwap.out, Flags.calc, Flags.carry])
+
+    for r in gp_regs:
+        builder.add_instruction("swap_{}", r)\
+            .add_step([r.load, r.alu_a, ShiftSwap.out, ShiftSwap.alt, Flags.calc])
+
     for l, r in permute_gp_regs_nsame():
         builder.add_instruction("cmp_{}_{}", l, r)\
             .add_step([l.alu_a, r.alu_b, AddSub.out, AddSub.alt, Flags.calc])

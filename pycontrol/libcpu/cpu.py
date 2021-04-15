@@ -61,6 +61,26 @@ def orb(target: Register, arg: Register) -> None:
     opcode = "or_{}_{}".format(target.name, arg.name)
     backend.execute_opcode(opcode)
 
+def shr(target: Register) -> None:
+    if backend is None: raise UninitializedError
+    opcode = f"shr_{target.name}"
+    backend.execute_opcode(opcode)
+
+def ror(target: Register) -> None:
+    if backend is None: raise UninitializedError
+    opcode = f"ror_{target.name}"
+    backend.execute_opcode(opcode)
+
+def asr(target: Register) -> None:
+    if backend is None: raise UninitializedError
+    opcode = f"asr_{target.name}"
+    backend.execute_opcode(opcode)
+
+def swap(target: Register) -> None:
+    if backend is None: raise UninitializedError
+    opcode = f"swap_{target.name}"
+    backend.execute_opcode(opcode)
+
 def inc(target: Register) -> None:
     if backend is None: raise UninitializedError
     opcode = f"inc_{target.name}"

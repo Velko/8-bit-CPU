@@ -2,6 +2,7 @@
 
 ALU_AddSub AddSub;
 ALU_AndOr  AndOr;
+ALU_ShiftSwap ShiftSwap;
 
 ALU_AddSub::ALU_AddSub()
 {
@@ -64,5 +65,40 @@ void ALU_AndOr::set_out(bool enabled)
 
         // no need to update flags as N and Z is calculated
         // by flags register itself
+    }
+}
+
+
+ALU_ShiftSwap::ALU_ShiftSwap()
+{
+}
+
+void ALU_ShiftSwap::set_swap(bool swap)
+{
+    op_swap = swap;
+}
+
+void ALU_ShiftSwap::set_carry(bool c)
+{
+    carry = c;
+}
+
+void ALU_ShiftSwap::set_out(bool enabled)
+{
+    if (enabled)
+    {
+        if (op_swap)
+            main_bus = alu_arg_a_bus << 4 | alu_arg_a_bus >> 4;
+        else
+        {
+            main_bus = alu_arg_a_bus >> 1;
+
+            if (carry)
+                main_bus |= 0x80;
+
+            flags_bus = 0;
+            if ((alu_arg_a_bus & 1) != 0)
+                flags_bus |= FLAG_C;
+        }
     }
 }
