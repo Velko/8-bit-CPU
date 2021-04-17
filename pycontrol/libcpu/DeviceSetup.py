@@ -93,6 +93,12 @@ PC = dev.ProgramCounter("PC",
     load = MuxPin(LoadMux, 5),
     count = Pin(5, Level.HIGH))
 
+SP = dev.StackPointer("SP",
+    out = MuxPin(OutMux, 11),
+    load = MuxPin(LoadMux, 11),
+    inc = Pin(21, Level.LOW),
+    dec = Pin(22, Level.LOW))
+
 OutPort = dev.Register("Out",
     out = NullPin(-1, Level.LOW),
     load = MuxPin(LoadMux, 6),

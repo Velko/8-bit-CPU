@@ -93,6 +93,20 @@ class ProgramCounter:
     def __repr__(self) -> str:
         return self.name
 
+class StackPointer:
+    def __init__(self, name: str, out: PinBase, load: PinBase, inc: PinBase, dec: PinBase) -> None:
+        self.name = name
+        self.out = out
+        self.load = load
+        self.inc = inc
+        self.dec = dec
+
+    def __str__(self) -> str:
+        return self.name
+
+    def __repr__(self) -> str:
+        return self.name
+
 
 # Helper device for debugger
 class IRFetch:

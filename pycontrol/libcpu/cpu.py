@@ -186,3 +186,13 @@ def opcode_of(instr: str) -> int:
     if not instr in opcodes:
         raise InvalidOpcodeException(opcode)
     return opcodes[instr].opcode
+
+def push(source: Register) -> None:
+    if backend is None: raise UninitializedError
+    opcode = f"push_{source.name}"
+    backend.execute_opcode(opcode)
+
+def pop(target: Register) -> None:
+    if backend is None: raise UninitializedError
+    opcode = f"push_{target.name}"
+    backend.execute_opcode(opcode)

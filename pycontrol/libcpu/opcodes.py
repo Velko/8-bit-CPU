@@ -19,8 +19,11 @@ def permute_gp_regs_all() -> Iterator[Tuple[Register, Register]]:
 
 
 def permute_gp_regs_nsame() -> Iterator[Tuple[Register, Register]]:
-    for l in gp_regs:
-        for r in gp_regs:
+    return permute_regs_nsame(gp_regs)
+
+def permute_regs_nsame(regs: Sequence[Register]) -> Iterator[Tuple[Register, Register]]:
+    for l in regs:
+        for r in regs:
             if l != r:
                 yield l, r
 
@@ -114,7 +117,7 @@ def build_opcodes() -> Mapping[str, MicroCode]:
         builder.add_instruction("cmp_{}_{}", l, r)\
             .add_step([l.alu_a, r.alu_b, AddSub.out, AddSub.alt, Flags.calc])
 
-    for l, r in permute_gp_regs_nsame():
+    for l, r in permute_regs_nsame(gp_regs + [SP]):
         builder.add_instruction("mov_{}_{}", l, r)\
             .add_step([l.load, r.out])
 
@@ -179,6 +182,26 @@ def build_opcodes() -> Mapping[str, MicroCode]:
 
     builder.add_instruction("out_F")\
         .add_step([Flags.bus_out, OutPort.load])
+
+    for r in gp_regs:
+        builder.add_instruction("push_{}", r)\
+            .add_step([SP.dec])\
+            .add_step([SP.out, Mar.load])\
+            .add_step([r.out, Ram.write])
+
+    builder.add_instruction("push_F")\
+            .add_step([SP.dec])\
+            .add_step([SP.out, Mar.load])\
+            .add_step([Flags.bus_out, Ram.write])
+
+    for r in gp_regs:
+        builder.add_instruction("pop_{}", r)\
+            .add_step([SP.out, Mar.load])\
+            .add_step([Ram.out, r.load, SP.inc])
+
+    builder.add_instruction("pop_F")\
+        .add_step([SP.out, Mar.load])\
+        .add_step([Ram.out, Flags.bus_load, SP.inc])
 
     builder.add_instruction("hlt")\
         .add_step([Clock.halt])
