@@ -28,20 +28,23 @@ class MicroCode:
         return any(self.f_alt)
 
     def steps(self, flags_getter: Callable[[], int] ) -> Iterator[Sequence[ControlSignal]]:
-        if self.f_alt:
+        for s_idx in range(8):
             flags = flags_getter()
+
             matches = list(filter(lambda alt: flags & alt.mask == alt.value, self.f_alt))
 
             if len(matches) > 1:
                 raise Exception("Multiple options found")
 
             if len(matches) == 1:
-                for step in matches[0].steps:
-                    yield step
-                return
+                steps = matches[0].steps
+            else:
+                steps = self._steps
 
-        for step in self._steps:
-            yield step
+            if s_idx < len(steps):
+                yield steps[s_idx]
+            else:
+                return
 
     def add_step(self, pins: Sequence[ControlSignal]) -> 'MicroCode':
         self._steps.append(pins)
