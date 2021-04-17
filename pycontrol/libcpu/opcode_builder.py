@@ -1,6 +1,6 @@
 from .util import ControlSignal
 from .devices import Register
-from typing import List, Tuple, Mapping, Sequence
+from typing import List, Tuple, Mapping, Sequence, Callable, Iterator
 
 class FlagsAlt:
     def __init__(self, owner: 'MicroCode', mask: int, value: int):
@@ -27,17 +27,21 @@ class MicroCode:
     def is_flag_dependent(self) -> bool:
         return any(self.f_alt)
 
-    def steps(self, flags: int) -> Sequence[Sequence[ControlSignal]]:
+    def steps(self, flags_getter: Callable[[], int] ) -> Iterator[Sequence[ControlSignal]]:
         if self.f_alt:
+            flags = flags_getter()
             matches = list(filter(lambda alt: flags & alt.mask == alt.value, self.f_alt))
 
             if len(matches) > 1:
                 raise Exception("Multiple options found")
 
             if len(matches) == 1:
-                return matches[0].steps
+                for step in matches[0].steps:
+                    yield step
+                return
 
-        return self._steps
+        for step in self._steps:
+            yield step
 
     def are_default(self, steps: Sequence[Sequence[ControlSignal]]) -> bool:
         return steps == self._steps

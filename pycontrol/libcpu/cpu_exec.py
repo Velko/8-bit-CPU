@@ -28,12 +28,7 @@ class CPUBackendControl(CPUBackend):
 
         microcode = opcodes[opcode]
 
-        flags = 0
-
-        if microcode.is_flag_dependent():
-            flags = self.client.flags_get()
-
-        steps = microcode.steps(flags)
+        steps = microcode.steps(lambda: self.client.flags_get())
         for microstep in steps:
             self.execute_step(microstep)
 

@@ -6,6 +6,8 @@ import pytest # type: ignore
 from libcpu.opcodes import opcodes
 from libcpu.DeviceSetup import PC
 from libcpu.devices import Flags
+from libcpu.opcode_builder import MicrocodeBuilder
+from libcpu.pseudo_devices import EnableCallback
 
 from typing import Iterator, Tuple
 
@@ -34,3 +36,64 @@ def test_opcode_pc_len_equal_in_flags_alt(name: str, default_len: int, alt_len: 
 
 
         assert default_len == alt_len
+
+
+class OpcodeFixture:
+    def __init__(self):
+        builder = MicrocodeBuilder()
+
+        builder.add_instruction("dummy")\
+            .add_step([EnableCallback(self.log_default)])\
+            .add_condition(mask=Flags.C, value=Flags.C)\
+                .add_step([EnableCallback(self.log_alt)])
+
+        self.opcodes = builder.build()
+
+        self.reset()
+
+    def log_default(self):
+        self.default_taken = True
+
+    def log_alt(self):
+        self.alt_taken = True
+
+    def reset(self):
+        self.default_taken = False
+        self.alt_taken = False
+
+
+
+
+@pytest.fixture
+def fake_opcodes():
+    return OpcodeFixture()
+
+def test_opcode_flag_taken(fake_opcodes):
+
+    op = fake_opcodes.opcodes["dummy"]
+
+    fake_opcodes.reset()
+
+    steps = op.steps(lambda: 0b0100)
+
+    for c in steps:
+        for e in c:
+            e.enable()
+
+    assert fake_opcodes.alt_taken == True
+    assert fake_opcodes.default_taken == False
+
+def test_opcode_flag_default(fake_opcodes):
+
+    op = fake_opcodes.opcodes["dummy"]
+
+    fake_opcodes.reset()
+
+    steps = op.steps(lambda: 0)
+
+    for c in steps:
+        for e in c:
+            e.enable()
+
+    assert fake_opcodes.alt_taken == False
+    assert fake_opcodes.default_taken == True
