@@ -41,6 +41,10 @@ AndOr = dev.ALU("AndOr",
     out = MuxPin(OutMux, 6),
     alt = AluAltFn)
 
+XorNot = dev.ALU("XorNot",
+    out = MuxPin(OutMux, 10),
+    alt = AluAltFn)
+
 ShiftSwap = dev.ALU("ShiftSwap",
     out = MuxPin(OutMux, 7),
     alt = AluAltFn)

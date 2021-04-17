@@ -60,6 +60,15 @@ class ALU_ShiftSwap {
         void set_out(bool enabled);
 };
 
+class ALU_XorNot {
+    private:
+        bool op_not;
+    public:
+        ALU_XorNot();
+        void set_not(bool logical_not);
+        void set_out(bool enabled);
+};
+
 
 #define FLAG_V  0b1000
 #define FLAG_C  0b0100
@@ -115,6 +124,7 @@ extern Register MAR;
 extern ALU_AddSub AddSub;
 extern ALU_AndOr AndOr;
 extern ALU_ShiftSwap ShiftSwap;
+extern ALU_XorNot XorNot;
 extern FlagsReg Flags;
 extern ProgramCounter PC;
 extern Memory RAM;

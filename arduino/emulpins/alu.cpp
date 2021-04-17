@@ -3,6 +3,7 @@
 ALU_AddSub AddSub;
 ALU_AndOr  AndOr;
 ALU_ShiftSwap ShiftSwap;
+ALU_XorNot XorNot;
 
 ALU_AddSub::ALU_AddSub()
 {
@@ -100,5 +101,27 @@ void ALU_ShiftSwap::set_out(bool enabled)
             if ((alu_arg_a_bus & 1) != 0)
                 flags_bus |= FLAG_C;
         }
+    }
+}
+
+ALU_XorNot::ALU_XorNot()
+{
+}
+
+void ALU_XorNot::set_not(bool logical_not)
+{
+    op_not = logical_not;
+}
+
+void ALU_XorNot::set_out(bool enabled)
+{
+    if (enabled)
+    {
+        uint8_t arg_b = alu_arg_b_bus;
+
+        if (op_not)
+            arg_b = 0xFF;
+
+        main_bus = alu_arg_a_bus ^ arg_b;
     }
 }

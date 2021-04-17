@@ -71,6 +71,14 @@ def build_opcodes() -> Mapping[str, MicroCode]:
         builder.add_instruction("or_{}_{}", l, r)\
             .add_step([l.load, l.alu_a, r.alu_b, AndOr.out, AndOr.alt, Flags.calc])
 
+    for l, r in permute_gp_regs_all():
+        builder.add_instruction("xor_{}_{}", l, r)\
+            .add_step([l.load, l.alu_a, r.alu_b, XorNot.out, Flags.calc])
+
+    for r in gp_regs:
+        builder.add_instruction("not_{}", r)\
+            .add_step([r.load, r.alu_a, XorNot.out, XorNot.alt, Flags.calc])
+
     for r in gp_regs:
         builder.add_instruction("inc_{}", r)\
             .add_step([r.load, r.alu_a, AddSub.out, Flags.calc, Flags.carry])

@@ -151,3 +151,41 @@ def test_swap(cpu_backend_real: CPUBackendControl, reg: Register, desc: str, car
     flags = Flags.decode(cpu_backend_real.client.flags_get() & 0b0011)
     assert value == result
     assert flags == xflags
+
+
+def xor_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
+    yield "small", 230, 92, 186, "---N"
+    yield "fill", 0xa5, 0x5a, 0xff, "---N"
+    yield "zero", 0x142, 0x142, 0, "--Z-"
+
+@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
+@pytest.mark.parametrize("desc,val_a,val_b,result,xflags", xor_test_args())
+def test_xor(cpu_backend_real: CPUBackendControl, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+    ldi(lhs, val_a)
+    ldi(rhs, val_b)
+
+    xor(lhs, rhs)
+
+    value = peek(lhs)
+    flags = Flags.decode(cpu_backend_real.client.flags_get() & 0b0011) # we are only interested in Z and N flags
+    assert value == result
+    assert flags == xflags
+
+
+def not_args() -> Iterator[Tuple[str, int, int, str]]:
+    yield "normal", 25, 230, "---N"
+    yield "zero", 0xFF, 0, "--Z-"
+
+@pytest.mark.parametrize("reg", gp_regs)
+@pytest.mark.parametrize("desc,val,result,xflags", not_args())
+def test_not(cpu_backend_real: CPUBackendControl, reg: Register, desc: str, val: int, result: int, xflags: str) -> None:
+
+    ldi(reg, val)
+
+    notb(reg)
+
+    value = peek(reg)
+    flags = Flags.decode(cpu_backend_real.client.flags_get() & 0b0011)
+    assert value == result
+    assert flags == xflags
+
