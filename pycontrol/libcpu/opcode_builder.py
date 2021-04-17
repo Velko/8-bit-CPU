@@ -43,9 +43,6 @@ class MicroCode:
         for step in self._steps:
             yield step
 
-    def are_default(self, steps: Sequence[Sequence[ControlSignal]]) -> bool:
-        return steps == self._steps
-
     def add_step(self, pins: Sequence[ControlSignal]) -> 'MicroCode':
         self._steps.append(pins)
 

@@ -6,6 +6,7 @@ pytestmark = pytest.mark.hardware
 
 from libcpu.DeviceSetup import PC
 from libcpu.cpu_exec import CPUBackendControl
+from libcpu.cpu import *
 
 def load_pc(backend: CPUBackendControl, value: int) -> None:
     backend.control.reset()
@@ -66,3 +67,59 @@ def test_pc_count(cpu_backend_real: CPUBackendControl, set_pc_next8: PCNext8, ex
     value = read_pc(cpu_backend_real)
 
     assert value == expected
+
+def test_beq_taken(cpu_backend_real: CPUBackendControl) -> None:
+    ldi (F, 0b0010)
+
+    taken = beq()
+
+    assert taken == True
+
+def test_beq_fallthrough(cpu_backend_real: CPUBackendControl) -> None:
+    ldi (F, 0b0000)
+
+    taken = beq()
+
+    assert taken == False
+
+def test_bne_taken(cpu_backend_real: CPUBackendControl) -> None:
+    ldi (F, 0b0000)
+
+    taken = bne()
+
+    assert taken == True
+
+def test_bne_fallthrough(cpu_backend_real: CPUBackendControl) -> None:
+    ldi (F, 0b0010)
+
+    taken = bne()
+
+    assert taken == False
+
+def test_bcs_taken(cpu_backend_real: CPUBackendControl) -> None:
+    ldi (F, 0b0100)
+
+    taken = bcs()
+
+    assert taken == True
+
+def test_bcs_fallthrough(cpu_backend_real: CPUBackendControl) -> None:
+    ldi (F, 0b0000)
+
+    taken = bcs()
+
+    assert taken == False
+
+def test_bcc_taken(cpu_backend_real: CPUBackendControl) -> None:
+    ldi (F, 0b0000)
+
+    taken = bcc()
+
+    assert taken == True
+
+def test_bcc_fallthrough(cpu_backend_real: CPUBackendControl) -> None:
+    ldi (F, 0b0100)
+
+    taken = bcc()
+
+    assert taken == False

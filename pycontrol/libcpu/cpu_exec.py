@@ -1,7 +1,7 @@
 from typing import Union, Tuple, Optional, Sequence
 from .markers import Bytes, Label
 from .pseudo_devices import Imm, EnableCallback
-from .DeviceSetup import OutPort, ProgMem
+from .DeviceSetup import OutPort, ProgMem, PC
 from .opcodes import opcodes, fetch
 from .cpu import CPUBackend, InvalidOpcodeException
 from .pinclient import PinClient
@@ -13,6 +13,7 @@ class CPUBackendControl(CPUBackend):
         self.client = client
         self.control = control
         self.out_hooked_val: Optional[int] = None
+        self.branch_taken = False
 
         Imm.connect(self.client)
 
@@ -25,6 +26,7 @@ class CPUBackendControl(CPUBackend):
             raise InvalidOpcodeException(opcode)
 
         Imm.set(arg)
+        self.branch_taken = False
 
         microcode = opcodes[opcode]
 
@@ -34,7 +36,7 @@ class CPUBackendControl(CPUBackend):
 
         Imm.clear()
 
-        return not microcode.are_default(steps), self.out_hooked_val
+        return self.branch_taken, self.out_hooked_val
 
     def execute_step(self, microstep: Sequence[ControlSignal]) -> None:
         self.control.reset()
@@ -58,5 +60,8 @@ class CPUBackendControl(CPUBackend):
                 self.client.clock_inverted()
             else:
                 self.client.clock_tick()
+
+            if PC.load.is_enabled():
+                self.branch_taken = True
 
         Imm.disable()
