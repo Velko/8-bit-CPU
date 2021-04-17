@@ -105,9 +105,8 @@ def asr_args() -> Iterator[Tuple[str, int, int, str]]:
     yield "carry_out_1", 25, 12, "-C--"
     yield "carry_out_0", 122, 61, "----"
     yield "signext", 128, 192, "---N"
-    yield "zero", 1, 0, "--Z-"
+    yield "zero", 1, 0, "-CZ-"
 
-@pytest.mark.xfail
 @pytest.mark.parametrize("reg", gp_regs)
 @pytest.mark.parametrize("desc,val,result,xflags", asr_args())
 @pytest.mark.parametrize("carry_in", [False, True])

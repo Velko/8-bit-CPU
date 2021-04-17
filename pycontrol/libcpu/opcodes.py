@@ -95,6 +95,7 @@ def build_opcodes() -> Mapping[str, MicroCode]:
             .add_step([r.out, Flags.calc])\
             .add_step([r.load, r.alu_a, ShiftSwap.out, Flags.calc])\
             .add_condition(mask=Flags.N, value=Flags.N)\
+                .add_step([r.out, Flags.calc])\
                 .add_step([r.load, r.alu_a, ShiftSwap.out, Flags.calc, Flags.carry])
 
     for r in gp_regs:
