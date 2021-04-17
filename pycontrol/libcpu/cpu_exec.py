@@ -1,7 +1,7 @@
 from typing import Union, Tuple, Optional, Sequence
 from .markers import Bytes, Label
 from .pseudo_devices import Imm, EnableCallback
-from .DeviceSetup import OutPort, ProgMem, PC
+from .DeviceSetup import OutPort, ProgMem, PC, Flags
 from .opcodes import opcodes, fetch
 from .cpu import CPUBackend, InvalidOpcodeException
 from .pinclient import PinClient
@@ -14,6 +14,7 @@ class CPUBackendControl(CPUBackend):
         self.control = control
         self.out_hooked_val: Optional[int] = None
         self.branch_taken = False
+        self.flags_cache: Optional[int] = None
 
         Imm.connect(self.client)
 
@@ -30,7 +31,7 @@ class CPUBackendControl(CPUBackend):
 
         microcode = opcodes[opcode]
 
-        steps = microcode.steps(lambda: self.client.flags_get())
+        steps = microcode.steps(lambda: self.get_flags_cached())
         for microstep in steps:
             self.execute_step(microstep)
 
@@ -64,4 +65,13 @@ class CPUBackendControl(CPUBackend):
             if PC.load.is_enabled():
                 self.branch_taken = True
 
+            if Flags.calc.is_enabled() or Flags.bus_load.is_enabled():
+                self.flags_cache = None
+
         Imm.disable()
+
+    def get_flags_cached(self) -> int:
+        if self.flags_cache is None:
+            self.flags_cache = self.client.flags_get()
+
+        return self.flags_cache
