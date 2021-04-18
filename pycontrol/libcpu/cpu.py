@@ -194,5 +194,5 @@ def push(source: Register) -> None:
 
 def pop(target: Register) -> None:
     if backend is None: raise UninitializedError
-    opcode = f"push_{target.name}"
+    opcode = f"pop_{target.name}"
     backend.execute_opcode(opcode)

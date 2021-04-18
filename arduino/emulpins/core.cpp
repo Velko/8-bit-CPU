@@ -20,6 +20,7 @@ void set_control(uint32_t control_word)
     D.set_load((control_word & MUX_LOAD_MASK) == MPIN_D_LOAD_BITS);
     IR.set_load((control_word & MUX_LOAD_MASK) == MPIN_IR_LOAD_BITS);
     PC.set_load((control_word & MUX_LOAD_MASK) == MPIN_PC_LOAD_BITS);
+    r_SP.set_load((control_word & MUX_LOAD_MASK) == MPIN_SP_LOAD_BITS);
     MAR.set_load((control_word & MUX_LOAD_MASK) == MPIN_MAR_LOAD_BITS);
     RAM.set_write((control_word & MUX_LOAD_MASK) == MPIN_RAM_WRITE_BITS);
 
@@ -28,6 +29,7 @@ void set_control(uint32_t control_word)
     C.set_out((control_word & MUX_OUT_MASK) == MPIN_C_OUT_BITS);
     D.set_out((control_word & MUX_OUT_MASK) == MPIN_D_OUT_BITS);
     PC.set_out((control_word & MUX_OUT_MASK) == MPIN_PC_OUT_BITS);
+    r_SP.set_out((control_word & MUX_OUT_MASK) == MPIN_SP_OUT_BITS);
     RAM.set_out((control_word & MUX_OUT_MASK) == MPIN_RAM_OUT_BITS);
 
     Flags.set_calc((control_word & LPIN_F_CALC_BIT) == 0);
@@ -35,6 +37,9 @@ void set_control(uint32_t control_word)
     Flags.set_out((control_word & MUX_OUT_MASK) == MPIN_F_BUS_OUT_BITS);
 
     PC.set_count((control_word & HPIN_PC_COUNT_BIT) != 0);
+
+    r_SP.set_inc((control_word & LPIN_SP_INC_BIT) == 0);
+    r_SP.set_dec((control_word & LPIN_SP_DEC_BIT) == 0);
 
     AddSub.set_sub((control_word & HPIN_ADDSUB_ALT_BIT) != 0);
     AddSub.set_carry((control_word & HPIN_F_CARRY_BIT) != 0);
@@ -75,6 +80,7 @@ void clock_pulse()
     IR.clock_pulse();
     Flags.clock_pulse();
     PC.clock_pulse();
+    r_SP.clock_pulse();
     MAR.clock_pulse();
     RAM.clock_pulse();
 }

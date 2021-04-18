@@ -106,6 +106,21 @@ class ProgramCounter
         void clock_pulse();
 };
 
+class StackPointer
+{
+    private:
+        uint8_t val;
+        bool inc_enabled;
+        bool dec_enabled;
+        bool load_enabled;
+    public:
+        void set_out(bool enabled);
+        void set_load(bool enabled);
+        void set_inc(bool enabled);
+        void set_dec(bool enabled);
+        void clock_pulse();
+};
+
 class Memory
 {
     private:
@@ -127,6 +142,7 @@ extern ALU_ShiftSwap ShiftSwap;
 extern ALU_XorNot XorNot;
 extern FlagsReg Flags;
 extern ProgramCounter PC;
+extern StackPointer r_SP;
 extern Memory RAM;
 
 #endif  /* DEVICES_H */
