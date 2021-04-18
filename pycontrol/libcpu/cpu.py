@@ -184,7 +184,7 @@ def hlt() -> None:
 def opcode_of(instr: str) -> int:
     if backend is None: raise UninitializedError
     if not instr in opcodes:
-        raise InvalidOpcodeException(opcode)
+        raise InvalidOpcodeException(instr)
     return opcodes[instr].opcode
 
 def push(source: Register) -> None:
