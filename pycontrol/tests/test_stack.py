@@ -136,3 +136,27 @@ def test_pop_a(cpu_backend_real: CPUBackendControl) -> None:
     assert spval == 55
     assert regval == 23
 
+def test_push_pop(cpu_backend_real: CPUBackendControl) -> None:
+
+    load_sp(cpu_backend_real, 44)
+    ldi (C, 45)
+
+    push (C)
+    ldi (C, 20)
+    pop (C)
+
+    val = peek(C)
+    assert val == 45
+
+def test_push_popf(cpu_backend_real: CPUBackendControl) -> None:
+
+    load_sp(cpu_backend_real, 88)
+    ldi (F, 0b1101)
+
+    push (F)
+    ldi (F, 0)
+    pop (F)
+
+    val = peek(F)
+    assert val == 0b1101
+
