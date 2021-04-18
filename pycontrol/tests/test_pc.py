@@ -4,7 +4,7 @@ import pytest # type: ignore
 
 pytestmark = pytest.mark.hardware
 
-from libcpu.DeviceSetup import PC
+from libcpu.DeviceSetup import PC, LR
 from libcpu.cpu_exec import CPUBackendControl
 from libcpu.cpu import *
 
@@ -21,6 +21,17 @@ def load_pc(backend: CPUBackendControl, value: int) -> None:
 def read_pc(backend: CPUBackendControl) -> int:
     backend.control.reset()
     PC.out.enable()
+    backend.client.ctrl_commit(backend.control.c_word)
+    value = backend.client.bus_get()
+
+    backend.control.reset()
+    backend.client.off(backend.control.default)
+
+    return value
+
+def read_lr(backend: CPUBackendControl) -> int:
+    backend.control.reset()
+    LR.out.enable()
     backend.client.ctrl_commit(backend.control.c_word)
     value = backend.client.bus_get()
 
@@ -123,3 +134,26 @@ def test_bcc_fallthrough(cpu_backend_real: CPUBackendControl) -> None:
     taken = bcc()
 
     assert taken == False
+
+def test_lr_pc_swap(cpu_backend_real: CPUBackendControl):
+    load_pc(cpu_backend_real, 0xaa)
+    ldi (B, 43)
+    mov (LR, B)
+
+    ret()
+
+    value = read_pc(cpu_backend_real)
+
+    assert value == 43
+
+def test_call_addr(cpu_backend_real: CPUBackendControl):
+    load_pc(cpu_backend_real, 0xbb)
+
+    call (52)
+
+    value = read_pc(cpu_backend_real)
+
+    retaddr = read_lr(cpu_backend_real)
+
+    assert value == 52
+    assert retaddr == 0xbc

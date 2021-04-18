@@ -3,6 +3,7 @@ from .opcode_builder import MicrocodeBuilder, MicroCode
 from .devices import Register
 from .pin import PinBase
 from typing import Sequence, Iterator, Tuple, Mapping
+from itertools import chain
 
 gp_regs: Sequence[Register] = [RegA, RegB, RegC, RegD]
 
@@ -27,6 +28,10 @@ def permute_regs_nsame(regs: Sequence[Register]) -> Iterator[Tuple[Register, Reg
             if l != r:
                 yield l, r
 
+def permute_regs_lr(lregs: Sequence[Register], rregs: Sequence[Register]) -> Iterator[Tuple[Register, Register]]:
+    for l in lregs:
+        for r in rregs:
+            yield l, r
 
 def build_opcodes() -> Mapping[str, MicroCode]:
 
@@ -117,7 +122,7 @@ def build_opcodes() -> Mapping[str, MicroCode]:
         builder.add_instruction("cmp_{}_{}", l, r)\
             .add_step([l.alu_a, r.alu_b, AddSub.out, AddSub.alt, Flags.calc])
 
-    for l, r in permute_regs_nsame(gp_regs + [SP]):
+    for l, r in chain(permute_gp_regs_nsame(), permute_regs_lr([SP, LR], gp_regs), permute_regs_lr(gp_regs, [SP, LR])) :
         builder.add_instruction("mov_{}_{}", l, r)\
             .add_step([l.load, r.out])
 
@@ -202,6 +207,14 @@ def build_opcodes() -> Mapping[str, MicroCode]:
     builder.add_instruction("pop_F")\
         .add_step([SP.out, Mar.load])\
         .add_step([Ram.out, Flags.bus_load, SP.inc])
+
+    builder.add_instruction("call_addr")\
+        .add_step(setup_imm)\
+        .add_step([ProgMem.out, LR.load, PC.count])\
+        .add_step([PSW.swap])
+
+    builder.add_instruction("ret")\
+        .add_step([PSW.swap])
 
     builder.add_instruction("hlt")\
         .add_step([Clock.halt])

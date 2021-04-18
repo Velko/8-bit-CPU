@@ -196,3 +196,11 @@ def pop(target: Register) -> None:
     if backend is None: raise UninitializedError
     opcode = f"pop_{target.name}"
     backend.execute_opcode(opcode)
+
+def ret() -> None:
+    if backend is None: raise UninitializedError
+    backend.execute_opcode("ret")
+
+def call(addr: Union[int, Label]) -> None:
+    if backend is None: raise UninitializedError
+    backend.execute_opcode("call_addr", addr)
