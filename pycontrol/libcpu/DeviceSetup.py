@@ -99,6 +99,14 @@ SP = dev.StackPointer("SP",
     inc = Pin(21, Level.LOW),
     dec = Pin(22, Level.LOW))
 
+LR = dev.ProgramCounter("LR",
+    out = MuxPin(OutMux, 12),
+    load = MuxPin(LoadMux, 12),
+    count = NullPin(-1, Level.LOW))
+
+PSW = dev.PCLR("PCLR",
+    swap = Pin(15, Level.HIGH))
+
 OutPort = dev.Register("Out",
     out = NullPin(-1, Level.LOW),
     load = MuxPin(LoadMux, 6),

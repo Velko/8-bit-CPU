@@ -106,6 +106,15 @@ class ProgramCounter
         void clock_pulse();
 };
 
+class PCSwap
+{
+    private:
+        bool sw_enabled;
+    public:
+        void set_swap(bool enabled);
+        void clock_pulse();
+};
+
 class StackPointer
 {
     private:
@@ -141,8 +150,10 @@ extern ALU_AndOr AndOr;
 extern ALU_ShiftSwap ShiftSwap;
 extern ALU_XorNot XorNot;
 extern FlagsReg Flags;
-extern ProgramCounter PC;
+extern ProgramCounter *PC;
 extern StackPointer r_SP;
+extern ProgramCounter *LR;
+extern PCSwap PCSW;
 extern Memory RAM;
 
 #endif  /* DEVICES_H */
