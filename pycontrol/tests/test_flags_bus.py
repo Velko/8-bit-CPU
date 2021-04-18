@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 
-import pytest # type: ignore
+import pytest
 
 pytestmark = pytest.mark.hardware
 
 from libcpu.cpu import *
 from libcpu.cpu_exec import CPUBackendControl
+from libcpu.devices import Flags
 
 def test_flags_out_n(cpu_backend_real: CPUBackendControl) -> None:
     ldi(A, 230)

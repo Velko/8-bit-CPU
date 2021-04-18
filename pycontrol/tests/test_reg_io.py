@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import pytest # type: ignore
+import pytest
 import random
 
 from libcpu.cpu import *

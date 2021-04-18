@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
-from typing import Iterator, Optional, Tuple
+from typing import Iterable, Optional, Tuple, Any
 from .discovery import all_pins
 from .pin import PinBase
 from .ctrl_base import CtrlBase
 
 class CtrlWord(CtrlBase):
-    def __init__(self, pins: Optional[Iterator[Tuple[str, PinBase]]]=None):
+    def __init__(self, pins: Optional[Iterable[Tuple[Any, PinBase]]]=None):
 
         if pins is None:
             pins = all_pins()

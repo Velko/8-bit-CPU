@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import pytest # type: ignore
+import pytest
 import random
 
 from libcpu.cpu import *
@@ -27,7 +27,7 @@ random_addr = make_random_addr()
 class FillRam: pass
 
 @pytest.fixture(scope="module")
-def fill_ram(random_bytes, cpu_backend_real: CPUBackendControl) -> FillRam:
+def fill_ram(random_bytes: Sequence[int], cpu_backend_real: CPUBackendControl) -> FillRam:
     for addr in random_addr:
         ldi (A, random_bytes[addr])
         st (addr, A)
@@ -36,7 +36,7 @@ def fill_ram(random_bytes, cpu_backend_real: CPUBackendControl) -> FillRam:
 
 
 @pytest.mark.parametrize("addr", random_addr)
-def test_store_load(cpu_backend_real: CPUBackendControl, random_bytes: Sequence[int], fill_ram: FillRam, addr: int):
+def test_store_load(cpu_backend_real: CPUBackendControl, random_bytes: Sequence[int], fill_ram: FillRam, addr: int) -> None:
 
     ld (A, addr)
     actual = peek(A)

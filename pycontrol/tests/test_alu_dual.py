@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 
-import pytest # type: ignore
+import pytest
 
 from libcpu.cpu import *
 from libcpu.cpu_exec import CPUBackendControl
+from libcpu.devices import Flags
 
 pytestmark = pytest.mark.hardware
 

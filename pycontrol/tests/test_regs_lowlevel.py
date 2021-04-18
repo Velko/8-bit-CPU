@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import pytest # type: ignore
+import pytest
 
 from libcpu.cpu import *
 from libcpu.DeviceSetup import IR, IRFetch
@@ -50,7 +50,7 @@ def singlebit_vals() -> Iterator[int]:
     yield 0
 
 @pytest.mark.parametrize("expected", singlebit_vals())
-def test_ir_load(cpu_backend_real: CPUBackendControl, expected: int):
+def test_ir_load(cpu_backend_real: CPUBackendControl, expected: int) -> None:
     backend = cpu_backend_real
 
     backend.client.bus_set(expected)

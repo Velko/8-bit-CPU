@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 
-import pytest # type: ignore
+import pytest
 
 from libcpu.discovery import simple_pins, all_muxes, mux_pins
-from libcpu.pin import Pin, MuxPin
+from libcpu.pin import Pin, MuxPin, Mux
 from typing import Iterator, Tuple
 
 def simple_pin_nums() -> Iterator[Tuple[str, int]]:
@@ -25,12 +25,12 @@ def each_simple_pin_and_addr_with_others() -> Iterator[Tuple[str, int, str, int]
 
 
 @pytest.mark.parametrize("name_a,pin_a,name_b,pin_b", each_simple_pin_and_addr_with_others())
-def test_simple_pin_and_mux_addr_overlap(name_a: str, pin_a: int, name_b: str, pin_b: int):
+def test_simple_pin_and_mux_addr_overlap(name_a: str, pin_a: int, name_b: str, pin_b: int) -> None:
 
     assert pin_a != pin_b
 
 
-def pins_in_mux(mux) -> Iterator[Tuple[str, int]]:
+def pins_in_mux(mux: Mux) -> Iterator[Tuple[str, int]]:
     for name, pin in mux_pins(mux):
         yield name, pin.num
 
@@ -47,6 +47,6 @@ def each_pin_with_others_in_mux() -> Iterator[Tuple[str, int, str, int]]:
                 yield "{}.{}".format(mux_name, a_name), a_num, "{}.{}".format(mux_name, b_name), b_num
 
 @pytest.mark.parametrize("name_a,pin_a,name_b,pin_b", each_pin_with_others_in_mux())
-def test_mux_pin_overlap(name_a: str, pin_a: int, name_b: str, pin_b: int):
+def test_mux_pin_overlap(name_a: str, pin_a: int, name_b: str, pin_b: int) -> None:
 
     assert pin_a != pin_b

@@ -1,10 +1,10 @@
 import serial
 import os
-from typing import Union, Iterator
+from typing import Union, Iterator, Optional
 
 class PinClient:
 
-    def __init__(self, serial: serial.Serial=None) -> None:
+    def __init__(self, serial: Optional[serial.Serial]=None) -> None:
 
         if serial is not None:
             self.serial = serial

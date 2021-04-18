@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import pytest # type: ignore
+import pytest
 
 pytestmark = pytest.mark.hardware
 
@@ -135,7 +135,7 @@ def test_bcc_fallthrough(cpu_backend_real: CPUBackendControl) -> None:
 
     assert taken == False
 
-def test_lr_pc_swap(cpu_backend_real: CPUBackendControl):
+def test_lr_pc_swap(cpu_backend_real: CPUBackendControl) -> None:
     load_pc(cpu_backend_real, 0xaa)
     ldi (B, 43)
     mov (LR, B)
@@ -146,7 +146,7 @@ def test_lr_pc_swap(cpu_backend_real: CPUBackendControl):
 
     assert value == 43
 
-def test_call_addr(cpu_backend_real: CPUBackendControl):
+def test_call_addr(cpu_backend_real: CPUBackendControl) -> None:
     load_pc(cpu_backend_real, 0xbb)
 
     call (52)

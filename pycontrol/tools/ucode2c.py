@@ -3,16 +3,19 @@
 import localpath
 
 from libcpu.opcodes import opcodes, fetch
+from libcpu.util import ControlSignal
 from libcpu.devices import Flags
-from libcpu.pin import Pin, MuxPin, Level
+from libcpu.pin import Pin, MuxPin, Level, Mux
 from libcpu.discovery import all_pins, all_muxes
+
+from typing import TextIO, Iterable, Iterator
 
 from libcpu.ctrl_word import CtrlWord
 
 control = CtrlWord()
 
 
-def generate_microcode(cfile):
+def generate_microcode(cfile: TextIO) -> None:
     cfile.write ("#include \"microcode.h\"\n\n")
 
     words = process_steps(fetch._steps)
@@ -45,7 +48,7 @@ def generate_microcode(cfile):
 
     cfile.write ("};\n")
 
-def process_steps(steps):
+def process_steps(steps: Iterable[Iterable[ControlSignal]]) -> Iterator[str]:
     for pins in steps:
         control.reset()
         for pin in pins:
@@ -53,14 +56,14 @@ def process_steps(steps):
 
         yield "0x{:04x}".format(control.c_word)
 
-def write_header(hfile):
+def write_header(hfile: TextIO) -> None:
     hfile.write("#ifndef OP_DEFS_H\n")
     hfile.write("#define OP_DEFS_H\n\n")
 
-def write_footer(hfile):
+def write_footer(hfile: TextIO) -> None:
     hfile.write("#endif /* OP_DEFS_H */\n")
 
-def write_opcodes(hfile):
+def write_opcodes(hfile: TextIO) -> None:
     hfile.write("/* Opcodes */\n")
     for key, microcode in opcodes.items():
         name = key.upper()
@@ -71,13 +74,13 @@ def write_opcodes(hfile):
 
     hfile.write("\n")
 
-def write_default_cword(hfile):
+def write_default_cword(hfile: TextIO) -> None:
     control.reset()
 
     hfile.write("#define CTRL_DEFAULT                    0b{:024b}\n\n".format(control.c_word))
 
 
-def write_mux(hfile, name, mux):
+def write_mux(hfile: TextIO, name: str, mux: Mux) -> None:
 
     mask = 0
     for bit in mux.pins:
@@ -99,7 +102,7 @@ def write_mux(hfile, name, mux):
     hfile.write("\n")
 
 
-def write_simple_pins(hfile):
+def write_simple_pins(hfile: TextIO) -> None:
     for name, pin in all_pins():
         if isinstance(pin, Pin):
             name = name.replace(".", "_").upper()
@@ -112,7 +115,7 @@ def write_simple_pins(hfile):
 
 
 
-def generate_defines(hfile):
+def generate_defines(hfile: TextIO) -> None:
     write_header(hfile)
     write_opcodes(hfile)
 

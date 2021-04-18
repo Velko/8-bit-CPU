@@ -1,4 +1,4 @@
-import pytest # type: ignore
+import pytest
 import random
 import localpath
 from typing import Sequence
@@ -10,7 +10,7 @@ from libcpu.cpu_exec import CPUBackendControl
 
 
 @pytest.fixture(scope="session")
-def cpu_backend_real(request) -> CPUBackendControl:
+def cpu_backend_real() -> CPUBackendControl:
     pins = PinClient()
     control = CtrlWord()
     backend = CPUBackendControl(pins, control)

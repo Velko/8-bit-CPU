@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import pytest # type: ignore
+import pytest
 
 
 from libcpu.opcodes import opcodes
@@ -32,14 +32,14 @@ def calc_flags_alt_PC_counts() -> Iterator[Tuple[str, int, int, str, str]]:
 
 
 @pytest.mark.parametrize("name,default_len,alt_len,mask,val",  calc_flags_alt_PC_counts())
-def test_opcode_pc_len_equal_in_flags_alt(name: str, default_len: int, alt_len: int, mask: str, val: str):
+def test_opcode_pc_len_equal_in_flags_alt(name: str, default_len: int, alt_len: int, mask: str, val: str) -> None:
 
 
         assert default_len == alt_len
 
 
 class OpcodeFixture:
-    def __init__(self):
+    def __init__(self) -> None:
         builder = MicrocodeBuilder()
 
         builder.add_instruction("dummy")\
@@ -51,13 +51,13 @@ class OpcodeFixture:
 
         self.reset()
 
-    def log_default(self):
+    def log_default(self) -> None:
         self.default_taken = True
 
-    def log_alt(self):
+    def log_alt(self) -> None:
         self.alt_taken = True
 
-    def reset(self):
+    def reset(self) -> None:
         self.default_taken = False
         self.alt_taken = False
 
@@ -65,10 +65,10 @@ class OpcodeFixture:
 
 
 @pytest.fixture
-def fake_opcodes():
+def fake_opcodes() -> OpcodeFixture:
     return OpcodeFixture()
 
-def test_opcode_flag_taken(fake_opcodes):
+def test_opcode_flag_taken(fake_opcodes: OpcodeFixture) -> None:
 
     op = fake_opcodes.opcodes["dummy"]
 
@@ -83,7 +83,7 @@ def test_opcode_flag_taken(fake_opcodes):
     assert fake_opcodes.alt_taken == True
     assert fake_opcodes.default_taken == False
 
-def test_opcode_flag_default(fake_opcodes):
+def test_opcode_flag_default(fake_opcodes: OpcodeFixture) -> None:
 
     op = fake_opcodes.opcodes["dummy"]
 

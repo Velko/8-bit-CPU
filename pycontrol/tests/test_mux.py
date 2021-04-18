@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import pytest # type: ignore
+import pytest
 
 
 from libcpu.pin import Mux, MuxPin
@@ -9,7 +9,7 @@ from libcpu.ctrl_word import CtrlWord
 
 
 class MuxFixture:
-    def __init__(self):
+    def __init__(self) -> None:
         self.mux = Mux([6, 9, 2], 5)
         self.pin = MuxPin(self.mux, 3)
         self.control = CtrlWord([(None, self.pin)])

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import pytest # type: ignore
+import pytest
 
 pytestmark = pytest.mark.hardware
 
@@ -60,7 +60,7 @@ def fill_ram(random_bytes: Sequence[int], cpu_backend_real: CPUBackendControl) -
 
 
 @pytest.mark.parametrize("addr", singlebit_addresses())
-def test_load_singlebit_addr(cpu_backend_real: CPUBackendControl, random_bytes: Sequence[int], fill_ram: FillRam, addr: int):
+def test_load_singlebit_addr(cpu_backend_real: CPUBackendControl, random_bytes: Sequence[int], fill_ram: FillRam, addr: int) -> None:
 
     set_mar(cpu_backend_real, addr)
 
