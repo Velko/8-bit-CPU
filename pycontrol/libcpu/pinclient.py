@@ -1,4 +1,4 @@
-import serial # type: ignore
+import serial
 import os
 from typing import Union, Iterator
 
