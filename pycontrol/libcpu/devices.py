@@ -1,18 +1,23 @@
 from .pin import PinBase, Level
 
 class Register:
-    def __init__(self, name: str, out: PinBase, load: PinBase, alu_a: PinBase, alu_b: PinBase) -> None:
+    def __init__(self, name: str, out: PinBase, load: PinBase) -> None:
         self.name = name
         self.out = out
         self.load = load
-        self.alu_a = alu_a
-        self.alu_b = alu_b
 
     def __str__(self) -> str:
         return self.name
 
     def __repr__(self) -> str:
         return self.name
+
+
+class GPRegister(Register):
+    def __init__(self, name: str, out: PinBase, load: PinBase, alu_a: PinBase, alu_b: PinBase) -> None:
+        Register.__init__(self, name, out, load)
+        self.alu_a = alu_a
+        self.alu_b = alu_b
 
 
 class ALU:
@@ -22,13 +27,11 @@ class ALU:
         self.alt = alt
 
 
-class Flags:
-    def __init__(self, name: str, calc: PinBase, carry: PinBase, bus_out: PinBase, bus_load: PinBase) -> None:
-        self.name = name
+class Flags(Register):
+    def __init__(self, name: str, out: PinBase, load: PinBase, calc: PinBase, carry: PinBase) -> None:
+        Register.__init__(self, name, out, load)
         self.calc = calc
         self.carry = carry
-        self.bus_out = bus_out
-        self.bus_load = bus_load
 
     V = 0b1000
     C = 0b0100
@@ -80,24 +83,14 @@ class StepCounter:
         self.name = name
         self.reset = reset
 
-class ProgramCounter:
+class ProgramCounter(Register):
     def __init__(self, name: str, out: PinBase, load: PinBase, count: PinBase) -> None:
-        self.name = name
-        self.out = out
-        self.load = load
+        Register.__init__(self, name, out, load)
         self.count = count
 
-    def __str__(self) -> str:
-        return self.name
-
-    def __repr__(self) -> str:
-        return self.name
-
-class StackPointer:
+class StackPointer(Register):
     def __init__(self, name: str, out: PinBase, load: PinBase, inc: PinBase, dec: PinBase) -> None:
-        self.name = name
-        self.out = out
-        self.load = load
+        Register.__init__(self, name, out, load)
         self.inc = inc
         self.dec = dec
 

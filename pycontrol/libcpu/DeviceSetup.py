@@ -9,25 +9,25 @@ AluArgB = Mux([18, 19, 20], 7)
 
 AluAltFn = Pin(4, Level.HIGH)
 
-RegA = dev.Register("A",
+RegA = dev.GPRegister("A",
     out = MuxPin(OutMux, 0),
     load = MuxPin(LoadMux, 0),
     alu_a = MuxPin(AluArgA, 0),
     alu_b = MuxPin(AluArgB, 0))
 
-RegB = dev.Register("B",
+RegB = dev.GPRegister("B",
     out = MuxPin(OutMux, 1),
     load = MuxPin(LoadMux, 1),
     alu_a = MuxPin(AluArgA, 1),
     alu_b = MuxPin(AluArgB, 1))
 
-RegC = dev.Register("C",
+RegC = dev.GPRegister("C",
     out = MuxPin(OutMux, 8),
     load = MuxPin(LoadMux, 8),
     alu_a = MuxPin(AluArgA, 2),
     alu_b = MuxPin(AluArgB, 2))
 
-RegD = dev.Register("D",
+RegD = dev.GPRegister("D",
     out = MuxPin(OutMux, 9),
     load = MuxPin(LoadMux, 9),
     alu_a = MuxPin(AluArgA, 3),
@@ -50,16 +50,14 @@ ShiftSwap = dev.ALU("ShiftSwap",
     alt = AluAltFn)
 
 Flags = dev.Flags("F",
+    out = MuxPin(OutMux, 4),
+    load = MuxPin(LoadMux, 7),
     calc = Pin(6, Level.LOW),
-    carry = Pin(14, Level.HIGH),
-    bus_out = MuxPin(OutMux, 4),
-    bus_load = MuxPin(LoadMux, 7))
+    carry = Pin(14, Level.HIGH))
 
 Mar = dev.Register("MAR",
     out = NullPin(-1, Level.LOW),
-    load = MuxPin(LoadMux, 2),
-    alu_a = NullPin(-1, Level.LOW),
-    alu_b = NullPin(-1, Level.LOW))
+    load = MuxPin(LoadMux, 2))
 
 # currently same as regular MAR, can be redefined for different
 # hardware configuration. Will not require changes in instruction
@@ -75,9 +73,7 @@ ProgMem = RamProxy("ProgMem",
 
 IR = dev.Register("IR",
     out = NullPin(-1, Level.LOW),
-    load = MuxPin(LoadMux, 4),
-    alu_a = NullPin(-1, Level.LOW),
-    alu_b = NullPin(-1, Level.LOW))
+    load = MuxPin(LoadMux, 4))
 
 Clock = dev.Clock("Clock",
     halt = Pin(13, Level.LOW))
@@ -109,6 +105,4 @@ PSW = dev.PCLR("PCLR",
 
 OutPort = dev.Register("Out",
     out = NullPin(-1, Level.LOW),
-    load = MuxPin(LoadMux, 6),
-    alu_a = NullPin(-1, Level.LOW),
-    alu_b = NullPin(-1, Level.LOW))
+    load = MuxPin(LoadMux, 6))

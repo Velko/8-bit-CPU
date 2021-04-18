@@ -1,11 +1,11 @@
 from .DeviceSetup import *
 from .opcode_builder import MicrocodeBuilder, MicroCode
-from .devices import Register
+from .devices import Register, GPRegister
 from .pin import PinBase
 from typing import Sequence, Iterator, Tuple, Mapping
 from itertools import chain
 
-gp_regs: Sequence[Register] = [RegA, RegB, RegC, RegD]
+gp_regs: Sequence[GPRegister] = [RegA, RegB, RegC, RegD]
 
 setup_imm: Sequence[PinBase] = [PC.out, ProgMar.load]
 
@@ -13,18 +13,15 @@ fetch = MicroCode(-1, "Fetch")\
     .add_step([PC.out, ProgMar.load])\
     .add_step([ProgMem.out, IR.load, PC.count])
 
-def permute_gp_regs_all() -> Iterator[Tuple[Register, Register]]:
+def permute_gp_regs_all() -> Iterator[Tuple[GPRegister, GPRegister]]:
     for l in gp_regs:
         for r in gp_regs:
             yield l, r
 
 
-def permute_gp_regs_nsame() -> Iterator[Tuple[Register, Register]]:
-    return permute_regs_nsame(gp_regs)
-
-def permute_regs_nsame(regs: Sequence[Register]) -> Iterator[Tuple[Register, Register]]:
-    for l in regs:
-        for r in regs:
+def permute_gp_regs_nsame() -> Iterator[Tuple[GPRegister, GPRegister]]:
+    for l in gp_regs:
+        for r in gp_regs:
             if l != r:
                 yield l, r
 
@@ -49,7 +46,7 @@ def build_opcodes() -> Mapping[str, MicroCode]:
 
     builder.add_instruction("ldi_F_imm")\
         .add_step(setup_imm)\
-        .add_step([Flags.bus_load, ProgMem.out, PC.count])
+        .add_step([Flags.load, ProgMem.out, PC.count])
 
     for l, r in permute_gp_regs_all():
         builder.add_instruction("add_{}_{}", l, r)\
@@ -122,9 +119,9 @@ def build_opcodes() -> Mapping[str, MicroCode]:
         builder.add_instruction("cmp_{}_{}", l, r)\
             .add_step([l.alu_a, r.alu_b, AddSub.out, AddSub.alt, Flags.calc])
 
-    for l, r in chain(permute_gp_regs_nsame(), permute_regs_lr([SP, LR], gp_regs), permute_regs_lr(gp_regs, [SP, LR])) :
-        builder.add_instruction("mov_{}_{}", l, r)\
-            .add_step([l.load, r.out])
+    for al, ar in chain(permute_gp_regs_nsame(), permute_regs_lr([SP, LR], gp_regs), permute_regs_lr(gp_regs, [SP, LR])):
+        builder.add_instruction("mov_{}_{}", al, ar)\
+            .add_step([al.load, ar.out])
 
     for r in gp_regs:
         builder.add_instruction("out_{}", r)\
@@ -186,7 +183,7 @@ def build_opcodes() -> Mapping[str, MicroCode]:
             .add_step([ProgMem.out, PC.load])
 
     builder.add_instruction("out_F")\
-        .add_step([Flags.bus_out, OutPort.load])
+        .add_step([Flags.out, OutPort.load])
 
     for r in gp_regs:
         builder.add_instruction("push_{}", r)\
@@ -197,7 +194,7 @@ def build_opcodes() -> Mapping[str, MicroCode]:
     builder.add_instruction("push_F")\
             .add_step([SP.dec])\
             .add_step([SP.out, Mar.load])\
-            .add_step([Flags.bus_out, Ram.write])
+            .add_step([Flags.out, Ram.write])
 
     for r in gp_regs:
         builder.add_instruction("pop_{}", r)\
@@ -206,7 +203,7 @@ def build_opcodes() -> Mapping[str, MicroCode]:
 
     builder.add_instruction("pop_F")\
         .add_step([SP.out, Mar.load])\
-        .add_step([Ram.out, Flags.bus_load, SP.inc])
+        .add_step([Ram.out, Flags.load, SP.inc])
 
     builder.add_instruction("call_addr")\
         .add_step(setup_imm)\

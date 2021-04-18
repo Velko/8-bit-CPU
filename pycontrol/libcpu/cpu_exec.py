@@ -65,7 +65,7 @@ class CPUBackendControl(CPUBackend):
             if PC.load.is_enabled():
                 self.branch_taken = True
 
-            if Flags.calc.is_enabled() or Flags.bus_load.is_enabled():
+            if Flags.calc.is_enabled() or Flags.load.is_enabled():
                 self.flags_cache = None
 
         Imm.disable()
