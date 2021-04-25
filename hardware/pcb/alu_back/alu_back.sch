@@ -2790,6 +2790,134 @@ Connection ~ 13100 2150
 Wire Wire Line
 	12750 2450 13100 2450
 Connection ~ 13100 2450
+$Comp
+L power:VCC #PWR040
+U 1 1 60B4F563
+P 12750 2150
+F 0 "#PWR040" H 12750 2000 50  0001 C CNN
+F 1 "VCC" H 12700 2300 50  0000 C CNN
+F 2 "" H 12750 2150 50  0001 C CNN
+F 3 "" H 12750 2150 50  0001 C CNN
+	1    12750 2150
+	1    0    0    -1  
+$EndComp
+Connection ~ 12750 2150
+$Comp
+L power:GND #PWR041
+U 1 1 60B4FE9C
+P 12750 2450
+F 0 "#PWR041" H 12750 2200 50  0001 C CNN
+F 1 "GND" H 12650 2450 50  0000 C CNN
+F 2 "" H 12750 2450 50  0001 C CNN
+F 3 "" H 12750 2450 50  0001 C CNN
+	1    12750 2450
+	1    0    0    -1  
+$EndComp
+Connection ~ 12750 2450
+$Comp
+L Device:C C3
+U 1 1 60B51DE1
+P 13450 2300
+F 0 "C3" H 13500 2400 50  0000 L CNN
+F 1 "100nF" H 13500 2200 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" H 13488 2150 50  0001 C CNN
+F 3 "~" H 13450 2300 50  0001 C CNN
+	1    13450 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C4
+U 1 1 60B52033
+P 13750 2300
+F 0 "C4" H 13800 2400 50  0000 L CNN
+F 1 "100nF" H 13800 2200 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" H 13788 2150 50  0001 C CNN
+F 3 "~" H 13750 2300 50  0001 C CNN
+	1    13750 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C5
+U 1 1 60B52278
+P 14050 2300
+F 0 "C5" H 14100 2400 50  0000 L CNN
+F 1 "100nF" H 14100 2200 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" H 14088 2150 50  0001 C CNN
+F 3 "~" H 14050 2300 50  0001 C CNN
+	1    14050 2300
+	1    0    0    -1  
+$EndComp
+Connection ~ 13750 2150
+Connection ~ 13750 2450
+Connection ~ 13450 2150
+Connection ~ 13450 2450
+Wire Wire Line
+	13100 2150 13450 2150
+Wire Wire Line
+	13100 2450 13450 2450
+Wire Wire Line
+	13450 2150 13750 2150
+Wire Wire Line
+	13450 2450 13750 2450
+$Comp
+L Mechanical:MountingHole H1
+U 1 1 60B9F84A
+P 13900 3150
+F 0 "H1" H 14000 3196 50  0000 L CNN
+F 1 "MountingHole" H 14000 3105 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3mm" H 13900 3150 50  0001 C CNN
+F 3 "~" H 13900 3150 50  0001 C CNN
+	1    13900 3150
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H2
+U 1 1 60BA087E
+P 13900 3400
+F 0 "H2" H 14000 3446 50  0000 L CNN
+F 1 "MountingHole" H 14000 3355 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3mm" H 13900 3400 50  0001 C CNN
+F 3 "~" H 13900 3400 50  0001 C CNN
+	1    13900 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H3
+U 1 1 60BA0B6F
+P 13900 3650
+F 0 "H3" H 14000 3696 50  0000 L CNN
+F 1 "MountingHole" H 14000 3605 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3mm" H 13900 3650 50  0001 C CNN
+F 3 "~" H 13900 3650 50  0001 C CNN
+	1    13900 3650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H4
+U 1 1 60BA0DA2
+P 13900 3900
+F 0 "H4" H 14000 3946 50  0000 L CNN
+F 1 "MountingHole" H 14000 3855 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3mm" H 13900 3900 50  0001 C CNN
+F 3 "~" H 13900 3900 50  0001 C CNN
+	1    13900 3900
+	1    0    0    -1  
+$EndComp
+$Comp
+L Mechanical:MountingHole H5
+U 1 1 60BA0F2F
+P 13900 4150
+F 0 "H5" H 14000 4196 50  0000 L CNN
+F 1 "MountingHole" H 14000 4105 50  0000 L CNN
+F 2 "MountingHole:MountingHole_3mm" H 13900 4150 50  0001 C CNN
+F 3 "~" H 13900 4150 50  0001 C CNN
+	1    13900 4150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	13750 2150 14050 2150
+Wire Wire Line
+	13750 2450 14050 2450
 Wire Bus Line
 	10500 3350 11200 3350
 Wire Bus Line
@@ -2850,138 +2978,4 @@ Wire Bus Line
 	5450 3300 10300 3300
 Wire Bus Line
 	5450 1200 10300 1200
-$Comp
-L power:VCC #PWR040
-U 1 1 60B4F563
-P 12750 2150
-F 0 "#PWR040" H 12750 2000 50  0001 C CNN
-F 1 "VCC" H 12700 2300 50  0000 C CNN
-F 2 "" H 12750 2150 50  0001 C CNN
-F 3 "" H 12750 2150 50  0001 C CNN
-	1    12750 2150
-	1    0    0    -1  
-$EndComp
-Connection ~ 12750 2150
-$Comp
-L power:GND #PWR041
-U 1 1 60B4FE9C
-P 12750 2450
-F 0 "#PWR041" H 12750 2200 50  0001 C CNN
-F 1 "GND" H 12650 2450 50  0000 C CNN
-F 2 "" H 12750 2450 50  0001 C CNN
-F 3 "" H 12750 2450 50  0001 C CNN
-	1    12750 2450
-	1    0    0    -1  
-$EndComp
-Connection ~ 12750 2450
-$Comp
-L Device:C C3
-U 1 1 60B51DE1
-P 13450 2300
-F 0 "C3" H 13500 2400 50  0000 L CNN
-F 1 "100nF" H 13500 2200 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" H 13488 2150 50  0001 C CNN
-F 3 "~" H 13450 2300 50  0001 C CNN
-	1    13450 2300
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:C C4
-U 1 1 60B52033
-P 13750 2300
-F 0 "C4" H 13800 2400 50  0000 L CNN
-F 1 "100nF" H 13800 2200 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" H 13788 2150 50  0001 C CNN
-F 3 "~" H 13750 2300 50  0001 C CNN
-	1    13750 2300
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:C C5
-U 1 1 60B52278
-P 14050 2300
-F 0 "C5" H 14100 2400 50  0000 L CNN
-F 1 "100nF" H 14100 2200 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" H 14088 2150 50  0001 C CNN
-F 3 "~" H 14050 2300 50  0001 C CNN
-	1    14050 2300
-	1    0    0    -1  
-$EndComp
-Connection ~ 14000 2150
-Wire Wire Line
-	14000 2150 14050 2150
-Connection ~ 14000 2450
-Wire Wire Line
-	14000 2450 14050 2450
-Connection ~ 13750 2150
-Wire Wire Line
-	13750 2150 14000 2150
-Connection ~ 13750 2450
-Wire Wire Line
-	13750 2450 14000 2450
-Connection ~ 13450 2150
-Connection ~ 13450 2450
-Wire Wire Line
-	13100 2150 13450 2150
-Wire Wire Line
-	13100 2450 13450 2450
-Wire Wire Line
-	13450 2150 13750 2150
-Wire Wire Line
-	13450 2450 13750 2450
-$Comp
-L Mechanical:MountingHole H1
-U 1 1 60B9F84A
-P 6100 9900
-F 0 "H1" H 6200 9946 50  0000 L CNN
-F 1 "MountingHole" H 6200 9855 50  0000 L CNN
-F 2 "MountingHole:MountingHole_3mm" H 6100 9900 50  0001 C CNN
-F 3 "~" H 6100 9900 50  0001 C CNN
-	1    6100 9900
-	1    0    0    -1  
-$EndComp
-$Comp
-L Mechanical:MountingHole H2
-U 1 1 60BA087E
-P 6100 10150
-F 0 "H2" H 6200 10196 50  0000 L CNN
-F 1 "MountingHole" H 6200 10105 50  0000 L CNN
-F 2 "MountingHole:MountingHole_3mm" H 6100 10150 50  0001 C CNN
-F 3 "~" H 6100 10150 50  0001 C CNN
-	1    6100 10150
-	1    0    0    -1  
-$EndComp
-$Comp
-L Mechanical:MountingHole H3
-U 1 1 60BA0B6F
-P 6100 10400
-F 0 "H3" H 6200 10446 50  0000 L CNN
-F 1 "MountingHole" H 6200 10355 50  0000 L CNN
-F 2 "MountingHole:MountingHole_3mm" H 6100 10400 50  0001 C CNN
-F 3 "~" H 6100 10400 50  0001 C CNN
-	1    6100 10400
-	1    0    0    -1  
-$EndComp
-$Comp
-L Mechanical:MountingHole H4
-U 1 1 60BA0DA2
-P 6100 10650
-F 0 "H4" H 6200 10696 50  0000 L CNN
-F 1 "MountingHole" H 6200 10605 50  0000 L CNN
-F 2 "MountingHole:MountingHole_3mm" H 6100 10650 50  0001 C CNN
-F 3 "~" H 6100 10650 50  0001 C CNN
-	1    6100 10650
-	1    0    0    -1  
-$EndComp
-$Comp
-L Mechanical:MountingHole H5
-U 1 1 60BA0F2F
-P 6100 10900
-F 0 "H5" H 6200 10946 50  0000 L CNN
-F 1 "MountingHole" H 6200 10855 50  0000 L CNN
-F 2 "MountingHole:MountingHole_3mm" H 6100 10900 50  0001 C CNN
-F 3 "~" H 6100 10900 50  0001 C CNN
-	1    6100 10900
-	1    0    0    -1  
-$EndComp
 $EndSCHEMATC
