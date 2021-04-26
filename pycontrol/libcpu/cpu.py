@@ -172,7 +172,7 @@ def bne(label: Optional[Label]=None) -> bool:
     taken, _ = backend.execute_opcode("bne_addr", label)
     return taken
 
-def jmp(label: Label) -> bool:
+def jmp(label: Union[Label, int]) -> bool:
     if backend is None: raise UninitializedError
     taken, _ = backend.execute_opcode("jmp_addr", label)
     return taken

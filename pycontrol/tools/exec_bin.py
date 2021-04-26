@@ -2,14 +2,16 @@
 
 import localpath
 from libcpu.PyAsmExec import setup_live, control
+from libcpu.util import unwrap
 setup_live()
 from libcpu.PyAsmExec import pins
+client = unwrap(pins)
 
-from libcpu.DeviceSetup import ProgMem, IRFetch, Clock
+from libcpu.DeviceSetup import ProgMem, IRFetch, Clock, OutPort
 from libcpu.cpu import *
 from libcpu.opcodes import fetch, opcodes
 
-def upload():
+def upload() -> None:
 
     with open("sieve.bin", "rb") as f:
         binary = f.read()
@@ -25,7 +27,7 @@ def upload():
 
 
 
-def run():
+def run() -> None:
     # Reset PC and detach hooks for immediate value handling
     jmp (0)
     ProgMem.unhook_all()
@@ -44,37 +46,36 @@ def run():
 
     while True:
         # fetch the instruction
-        for step in fetch.steps(None):
+        for step in fetch.steps(lambda: 0):
             control.reset()
             for pin in step:
                 pin.enable()
-            pins.ctrl_commit(control.c_word)
-            pins.clock_tick()
+            client.ctrl_commit(control.c_word)
+            client.clock_tick()
 
         # load opcode from IR register and flags
-        opcode = pins.ir_get(irf_word)
-        flags = pins.flags_get()
+        opcode = client.ir_get(irf_word)
 
         # apply all steps
         microcode = ops_by_num[opcode]
-        for step in microcode.steps(flags):
+        for step in microcode.steps(lambda: client.flags_get()):
 
             # set up and send control word
             control.reset()
             for pin in step:
                 pin.enable()
-            pins.ctrl_commit(control.c_word)
+            client.ctrl_commit(control.c_word)
 
             # pulse a clock
             if OutPort.load.is_enabled():
                 # special handling for OutPort: intercept
                 # the value and print it out here as well
-                pins.clock_pulse()
-                out_val = pins.bus_get()
-                pins.clock_inverted()
+                client.clock_pulse()
+                out_val = client.bus_get()
+                client.clock_inverted()
                 print (out_val, flush=True)
             else:
-                pins.clock_tick()
+                client.clock_tick()
 
             # are we done?
             if Clock.halt.is_enabled():

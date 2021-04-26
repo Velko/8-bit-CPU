@@ -7,113 +7,114 @@ from libcpu.util import unwrap
 from libcpu.cpu import *
 from libcpu.devices import Flags
 from libcpu.DeviceSetup import Mar, Ram
+from libcpu.pinclient import PinClient
 from libcpu.PyAsmExec import setup_live, control
 setup_live()
 from libcpu.PyAsmExec import pins
 
+client = unwrap(pins)
+
 class TesterClient(cmd.Cmd):
 
-    def do_EOF(self, arg):
-        pins.close()
+    def do_EOF(self, arg: str) -> None:
+        client.close()
         sys.exit(0)
 
-    def do_identify(self, arg):
+    def do_identify(self, arg: str) -> None:
         'Identify device'
-        chr = pins.identify()
+        chr = client.identify()
         print (chr)
 
-    def do_off(self, arg):
+    def do_off(self, arg: str) -> None:
         control.reset()
-        pins.off(control.default)
+        client.off(control.default)
         print (bin(control.default))
 
-    def do_load_a(self, arg):
+    def do_load_a(self, arg: str) -> None:
         ldi(A, int(arg, 0))
 
-    def do_load_b(self, arg):
+    def do_load_b(self, arg: str) -> None:
         ldi(B, int(arg, 0))
 
-    def do_load_f(self, arg):
+    def do_load_f(self, arg: str) -> None:
         ldi(F, int(arg, 0))
 
-    def do_add_ab(self, arg):
+    def do_add_ab(self, arg: str) -> None:
         add(A, B)
 
-    def do_add_ba(self, arg):
+    def do_add_ba(self, arg: str) -> None:
         add(B, A)
 
-    def do_sub_ab(self, arg):
+    def do_sub_ab(self, arg: str) -> None:
         sub(A, B)
 
-    def do_out_a(self, arg):
+    def do_out_a(self, arg: str) -> None:
         val = peek(A)
         print(val)
 
-    def do_out_b(self, arg):
+    def do_out_b(self, arg: str) -> None:
         val = peek(B)
         print(val)
 
-    def do_flags_get(self, arg):
-        val = pins.flags_get()
+    def do_flags_get(self, arg: str) -> None:
+        val = client.flags_get()
         print (Flags.decode(val))
 
     def do_load_mar(self, arg: str) -> None:
         control.reset()
         Mar.load.enable()
-        p = unwrap(pins)
-        p.bus_set(arg)
-        p.ctrl_commit(control.c_word)
-        p.clock_tick()
+        client.bus_set(arg)
+        client.ctrl_commit(control.c_word)
+        client.clock_tick()
 
         control.reset()
-        p.off(control.default)
+        client.off(control.default)
 
     def do_write_ram(self, arg: str) -> None:
         Ram.write.enable()
-        p = unwrap(pins)
-        p.bus_set(arg)
-        p.ctrl_commit(control.c_word)
+        client.bus_set(arg)
+        client.ctrl_commit(control.c_word)
 
-        p.clock_tick()
+        client.clock_tick()
 
         control.reset()
-        p.off(control.default)
+        client.off(control.default)
 
-    def do_read_ram(self, arg):
+    def do_read_ram(self, arg: str) -> None:
         Ram.out.enable()
 
-        pins.ctrl_commit(control.c_word)
-        val = pins.bus_get()
+        client.ctrl_commit(control.c_word)
+        val = client.bus_get()
 
         control.reset()
-        pins.off(control.default)
+        client.off(control.default)
 
         print (hex(val))
 
-    def do_run(self, arg):
+    def do_run(self, arg: str) -> None:
         try:
-            for line in pins.run_program():
+            for line in client.run_program():
                 print (line, end="", flush=True)
         except KeyboardInterrupt:
             pass
 
-    def do_upload(self, arg):
+    def do_upload(self, arg: str) -> None:
         with open(arg, "rb") as f:
             for addr, data in enumerate(f.read()):
                 control.reset()
                 Mar.load.enable()
-                pins.bus_set(addr)
-                pins.ctrl_commit(control.c_word)
-                pins.clock_tick()
+                client.bus_set(addr)
+                client.ctrl_commit(control.c_word)
+                client.clock_tick()
                 control.reset()
 
                 Ram.write.enable()
-                pins.bus_set(data)
-                pins.ctrl_commit(control.c_word)
-                pins.clock_tick()
+                client.bus_set(data)
+                client.ctrl_commit(control.c_word)
+                client.clock_tick()
 
                 control.reset()
-                pins.off(control.default)
+                client.off(control.default)
                 print (".", end="", flush=True)
         print ()
 

@@ -3,11 +3,14 @@
 import sys, cmd
 import localpath
 from typing import Dict, Sequence
+from libcpu.util import unwrap
 from libcpu.pinclient import PinClient
 
 from libcpu.PyAsmExec import setup_live, control
 setup_live()
 from libcpu.PyAsmExec import pins
+
+client = unwrap(pins)
 
 from libcpu import DeviceSetup, devices
 from libcpu.pin import PinBase, Pin, MuxPin
@@ -33,37 +36,31 @@ class TesterClient(cmd.Cmd):
 
     def do_identify(self, arg: str) -> None:
         'Identify device'
-        if pins is None: raise UninitializedError
-        chr = pins.identify()
+        chr = client.identify()
         print (chr)
 
     def do_off(self, arg: str) -> None:
         'Turn everything off, release Bus'
-        if pins is None: raise UninitializedError
         control.reset()
-        pins.off(control.default)
+        client.off(control.default)
         print(bin(control.c_word))
 
     def do_send(self, arg: str) -> None:
         'Send value on to the Bus'
-        if pins is None: raise UninitializedError
-        pins.bus_set(arg)
+        client.bus_set(arg)
 
     def do_bus(self, arg: str) -> None:
         'Read current value on the Bus'
-        if pins is None: raise UninitializedError
-        chr = pins.bus_get()
+        chr = client.bus_get()
         print (chr)
 
     def do_release(self, arg: str) -> None:
         'Release bus'
-        if pins is None: raise UninitializedError
-        pins.bus_free()
+        client.bus_free()
 
     def do_flags(self, arg: str) -> None:
         'Read flags'
-        if pins is None: raise UninitializedError
-        print (pins.flags_get())
+        print (client.flags_get())
 
     def do_set(self, arg: str) -> None:
         'Set control pin ignoring active-high/low setting'
@@ -109,51 +106,45 @@ class TesterClient(cmd.Cmd):
 
     def do_commit(self, arg: str) -> None:
         'Send the control word to Arduino'
-        if pins is None: raise UninitializedError
-        pins.ctrl_commit(control.c_word)
+        client.ctrl_commit(control.c_word)
 
     def do_pulse(self, arg: str) -> None:
         'Pulse normal clock'
-        if pins is None: raise UninitializedError
-        pins.clock_pulse()
+        client.clock_pulse()
 
     def do_inverted(self, arg: str) -> None:
         'Pulse inverted clock'
-        if pins is None: raise UninitializedError
-        pins.clock_inverted()
+        client.clock_inverted()
 
     def do_tick(self, arg: str) -> None:
         'Pulse both clocks'
-        if pins is None: raise UninitializedError
-        pins.clock_tick()
+        client.clock_tick()
 
     def do_ir_get(self, arg: str) -> None:
-        if pins is None: raise UninitializedError
         control.reset()
         pin_map['irfetch.load'].enable()
-        rv = pins.ir_get(control.c_word)
+        rv = client.ir_get(control.c_word)
         print (rv)
 
 
     def do_add_sample(self, arg: str) -> None:
-        if pins is None: raise UninitializedError
-        pins.off(control.default)
-        pins.bus_set(24)
+        client.off(control.default)
+        client.bus_set(24)
         control.clr(0)
-        pins.ctrl_commit(control.c_word)
-        pins.clock_tick()
+        client.ctrl_commit(control.c_word)
+        client.clock_tick()
         control.set(0)
         control.clr(2)
-        pins.ctrl_commit(control.c_word)
-        pins.bus_set(18)
-        pins.clock_tick()
-        pins.bus_free()
+        client.ctrl_commit(control.c_word)
+        client.bus_set(18)
+        client.clock_tick()
+        client.bus_free()
         control.set(2)
         control.clr(3)
-        pins.ctrl_commit(control.c_word)
-        print(pins.bus_get())
+        client.ctrl_commit(control.c_word)
+        print(client.bus_get())
         control.set(3)
-        pins.ctrl_commit(control.c_word)
+        client.ctrl_commit(control.c_word)
 
 def build_pinmap() -> None:
     for name, attr in all_pins():

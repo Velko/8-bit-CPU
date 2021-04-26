@@ -3,7 +3,7 @@
 import localpath
 from libcpu.cpu import *
 
-def run():
+def run() -> None:
 
     # "Low power mode" - turn off as many LEDs as
     # possible

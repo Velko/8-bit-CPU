@@ -3,7 +3,7 @@
 import localpath
 from libcpu.cpu import *
 
-def run():
+def run() -> None:
     ldi(A, 0)
     ldi(B, 1)
 
