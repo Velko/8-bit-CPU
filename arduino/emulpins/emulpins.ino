@@ -17,6 +17,7 @@ void setup()
     Serial.begin(115200);
     load_default_cword();
     set_control(default_cword);
+    RAM.setup();
 }
 
 

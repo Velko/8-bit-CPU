@@ -133,9 +133,9 @@ class StackPointer
 class Memory
 {
     private:
-        uint8_t data[256];
         bool write_enabled;
     public:
+        void setup();
         void set_out(bool enabled);
         void set_write(bool enabled);
         void clock_pulse();
