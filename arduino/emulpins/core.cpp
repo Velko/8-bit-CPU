@@ -24,6 +24,7 @@ void set_control(uint32_t control_word)
     LR->set_load((control_word & MUX_LOAD_MASK) == MPIN_LR_LOAD_BITS);
     MAR.set_load((control_word & MUX_LOAD_MASK) == MPIN_MAR_LOAD_BITS);
     RAM.set_write((control_word & MUX_LOAD_MASK) == MPIN_RAM_WRITE_BITS);
+    HAS.set_load((control_word & MUX_LOAD_MASK) == MPIN_HAS_LOAD_BITS);
 
     A.set_out((control_word & MUX_OUT_MASK) == MPIN_A_OUT_BITS);
     B.set_out((control_word & MUX_OUT_MASK) == MPIN_B_OUT_BITS);
@@ -33,6 +34,7 @@ void set_control(uint32_t control_word)
     r_SP.set_out((control_word & MUX_OUT_MASK) == MPIN_SP_OUT_BITS);
     LR->set_out((control_word & MUX_OUT_MASK) == MPIN_LR_OUT_BITS);
     RAM.set_out((control_word & MUX_OUT_MASK) == MPIN_RAM_OUT_BITS);
+    HAS.set_out((control_word & MUX_OUT_MASK) == MPIN_HAS_OUT_BITS);
 
     Flags.set_calc((control_word & LPIN_F_CALC_BIT) == 0);
     Flags.set_load((control_word & MUX_LOAD_MASK) == MPIN_F_LOAD_BITS);
@@ -92,6 +94,7 @@ void clock_pulse()
     MAR.clock_pulse();
     RAM.clock_pulse();
     PCSW.clock_pulse();
+    HAS.clock_pulse();
 }
 
 void clock_inverted()

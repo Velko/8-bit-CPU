@@ -4,14 +4,21 @@ import pytest
 
 pytestmark = pytest.mark.hardware
 
-from libcpu.DeviceSetup import Mar, Ram
+from libcpu.DeviceSetup import Mar, Ram, Has
 from libcpu.cpu_exec import CPUBackendControl
 from typing import Iterator, Sequence
 
 def set_mar(backend: CPUBackendControl, value: int) -> None:
     backend.control.reset()
+    Has.load.enable()
+    backend.client.bus_set(value >> 8)
+    backend.client.ctrl_commit(backend.control.c_word)
+    backend.client.clock_tick()
+
+    backend.control.reset()
+    Has.out.enable()
     Mar.load.enable()
-    backend.client.bus_set(value)
+    backend.client.bus_set(value & 0xFF)
     backend.client.ctrl_commit(backend.control.c_word)
     backend.client.clock_tick()
 
@@ -45,7 +52,7 @@ def read_ram(backend: CPUBackendControl) -> int:
 
 def singlebit_addresses() -> Iterator[int]:
     yield 0
-    for b in range(8):
+    for b in range(16):
         yield 1 << b
 
 class FillRam: pass

@@ -155,6 +155,17 @@ class Memory
         void clock_pulse();
 };
 
+class HighAddrStagingReg
+{
+    private:
+        uint8_t val;
+        bool load_enabled;
+    public:
+        void set_out(bool enabled);
+        void set_load(bool enabled);
+        void clock_pulse();
+};
+
 extern Register A;
 extern Register B;
 extern Register IR;
@@ -169,5 +180,6 @@ extern StackPointer r_SP;
 extern ProgramCounter *LR;
 extern PCSwap PCSW;
 extern Memory RAM;
+extern HighAddrStagingReg HAS;
 
 #endif  /* DEVICES_H */

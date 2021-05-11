@@ -3,6 +3,7 @@
 
 MaRegister MAR;
 Memory RAM;
+HighAddrStagingReg HAS;
 
 #define RAM_CS  SS
 
@@ -78,7 +79,7 @@ void MaRegister::set_load(bool enabled)
 void MaRegister::clock_pulse()
 {
     if (load_enabled)
-        latched_primary = (addr_high_bus << 8) | main_bus;
+            latched_primary = (addr_high_bus << 8) | main_bus;
 }
 
 void MaRegister::clock_inverted()
@@ -89,4 +90,20 @@ void MaRegister::clock_inverted()
 uint16_t MaRegister::read_tap()
 {
     return latched_secondary;
+}
+
+void HighAddrStagingReg::set_out(bool enabled)
+{
+    addr_high_bus = val;
+}
+
+void HighAddrStagingReg::set_load(bool enabled)
+{
+    load_enabled = enabled;
+}
+
+void HighAddrStagingReg::clock_pulse()
+{
+    if (load_enabled)
+        val = main_bus;
 }

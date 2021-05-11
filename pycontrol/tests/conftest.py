@@ -23,7 +23,7 @@ def cpu_backend_real() -> CPUBackendControl:
 def random_bytes() -> Sequence[int]:
     data = []
 
-    for addr in range(256):
+    for addr in range(0x10000):
         value = random.randrange(256)
         data.append(value)
 
