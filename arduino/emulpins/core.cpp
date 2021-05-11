@@ -2,6 +2,7 @@
 #include "op-defs.h"
 
 uint8_t main_bus;
+uint8_t addr_high_bus;
 uint8_t alu_arg_a_bus;
 uint8_t alu_arg_b_bus;
 

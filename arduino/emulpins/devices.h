@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 extern uint8_t main_bus;
+extern uint8_t addr_high_bus;
 extern uint8_t flags_bus;
 extern uint8_t alu_arg_a_bus;
 extern uint8_t alu_arg_b_bus;
@@ -130,6 +131,19 @@ class StackPointer
         void clock_pulse();
 };
 
+class MaRegister {
+    private:
+        uint16_t latched_primary;
+        uint16_t latched_secondary;
+        bool load_enabled;
+    public:
+        MaRegister();
+        void set_load(bool enabled);
+        void clock_pulse();
+        void clock_inverted();
+        uint16_t read_tap();
+};
+
 class Memory
 {
     private:
@@ -144,7 +158,7 @@ class Memory
 extern Register A;
 extern Register B;
 extern Register IR;
-extern Register MAR;
+extern MaRegister MAR;
 extern ALU_AddSub AddSub;
 extern ALU_AndOr AndOr;
 extern ALU_ShiftSwap ShiftSwap;

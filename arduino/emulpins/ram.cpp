@@ -1,7 +1,7 @@
 #include <SPI.h>
 #include "devices.h"
 
-Register MAR;
+MaRegister MAR;
 Memory RAM;
 
 #define RAM_CS  SS
@@ -37,8 +37,9 @@ void Memory::set_out(bool enabled)
     {
         digitalWrite(RAM_CS, LOW);
         SPI.transfer(READ_CMD);
-        SPI.transfer(0);                // address MSB
-        SPI.transfer(MAR.read_tap());   // address LSB
+        uint16_t addr = MAR.read_tap();
+        SPI.transfer(addr >> 8);        // address MSB
+        SPI.transfer(addr & 0xFF);      // address LSB
         main_bus = SPI.transfer(0xFF);
         digitalWrite(RAM_CS, HIGH);
     }
@@ -55,9 +56,37 @@ void Memory::clock_pulse()
     {
         digitalWrite(RAM_CS, LOW);
         SPI.transfer(WRITE_CMD);
-        SPI.transfer(0);                // address MSB
-        SPI.transfer(MAR.read_tap());   // address LSB
+        uint16_t addr = MAR.read_tap();
+        SPI.transfer(addr >> 8);        // address MSB
+        SPI.transfer(addr & 0xFF);      // address LSB
         SPI.transfer(main_bus);
         digitalWrite(RAM_CS, HIGH);
     }
+}
+
+
+MaRegister::MaRegister()
+{
+    load_enabled = false;
+}
+
+void MaRegister::set_load(bool enabled)
+{
+    load_enabled = enabled;
+}
+
+void MaRegister::clock_pulse()
+{
+    if (load_enabled)
+        latched_primary = (addr_high_bus << 8) | main_bus;
+}
+
+void MaRegister::clock_inverted()
+{
+    latched_secondary = latched_primary;
+}
+
+uint16_t MaRegister::read_tap()
+{
+    return latched_secondary;
 }
