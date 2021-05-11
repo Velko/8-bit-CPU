@@ -7,8 +7,6 @@ from itertools import chain
 
 gp_regs: Sequence[GPRegister] = [RegA, RegB, RegC, RegD]
 
-setup_imm: Sequence[PinBase] = [PC.out, ProgMar.load]
-
 fetch = MicroCode(-1, "Fetch")\
     .add_step([PC.out, ProgMar.load])\
     .add_step([ProgMem.out, IR.load, PC.count])
@@ -41,11 +39,11 @@ def build_opcodes() -> Mapping[str, MicroCode]:
 
     for r in gp_regs:
         builder.add_instruction("ldi_{}_imm", r)\
-            .add_step(setup_imm)\
+            .add_step([PC.out, ProgMar.load])\
             .add_step([r.load, ProgMem.out, PC.count])
 
     builder.add_instruction("ldi_F_imm")\
-        .add_step(setup_imm)\
+        .add_step([PC.out, ProgMar.load])\
         .add_step([Flags.load, ProgMem.out, PC.count])
 
     for l, r in permute_gp_regs_all():
@@ -129,9 +127,9 @@ def build_opcodes() -> Mapping[str, MicroCode]:
 
     for v in gp_regs:
         builder.add_instruction("st_addr_{}", v)\
-            .add_step(setup_imm)\
+            .add_step([PC.out, ProgMar.load])\
             .add_step([ProgMem.out, Has.load, PC.count])\
-            .add_step(setup_imm)\
+            .add_step([PC.out, ProgMar.load])\
             .add_step([ProgMem.out, Mar.load, PC.count])\
             .add_step([v.out, Ram.write])
 
@@ -142,9 +140,9 @@ def build_opcodes() -> Mapping[str, MicroCode]:
 
     for r in gp_regs:
         builder.add_instruction("ld_{}_addr", r)\
-            .add_step(setup_imm)\
+            .add_step([PC.out, ProgMar.load])\
             .add_step([ProgMem.out, Has.load, PC.count])\
-            .add_step(setup_imm)\
+            .add_step([PC.out, ProgMar.load])\
             .add_step([ProgMem.out, Has.out, Mar.load, PC.count])\
             .add_step([Ram.out, r.load, Flags.calc])
 
@@ -159,31 +157,31 @@ def build_opcodes() -> Mapping[str, MicroCode]:
             .add_step([Ram.out, Flags.calc])
 
     builder.add_instruction("jmp_addr")\
-        .add_step(setup_imm)\
+        .add_step([PC.out, ProgMar.load])\
         .add_step([ProgMem.out, PC.load])
 
     builder.add_instruction("beq_addr")\
         .add_step([PC.count])\
         .add_condition(mask=Flags.Z, value=Flags.Z)\
-            .add_step(setup_imm)\
+            .add_step([PC.out, ProgMar.load])\
             .add_step([ProgMem.out, PC.load])
 
     builder.add_instruction("bne_addr")\
         .add_step([PC.count])\
         .add_condition(mask=Flags.Z, value=0)\
-            .add_step(setup_imm)\
+            .add_step([PC.out, ProgMar.load])\
             .add_step([ProgMem.out, PC.load])
 
     builder.add_instruction("bcs_addr")\
         .add_step([PC.count])\
         .add_condition(mask=Flags.C, value=Flags.C)\
-            .add_step(setup_imm)\
+            .add_step([PC.out, ProgMar.load])\
             .add_step([ProgMem.out, PC.load])
 
     builder.add_instruction("bcc_addr")\
         .add_step([PC.count])\
         .add_condition(mask=Flags.C, value=0)\
-            .add_step(setup_imm)\
+            .add_step([PC.out, ProgMar.load])\
             .add_step([ProgMem.out, PC.load])
 
     builder.add_instruction("out_F")\
@@ -210,7 +208,7 @@ def build_opcodes() -> Mapping[str, MicroCode]:
         .add_step([Ram.out, Flags.load, SP.inc])
 
     builder.add_instruction("call_addr")\
-        .add_step(setup_imm)\
+        .add_step([PC.out, ProgMar.load])\
         .add_step([ProgMem.out, LR.load, PC.count])\
         .add_step([PSW.swap])
 
