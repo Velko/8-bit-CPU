@@ -130,6 +130,8 @@ def build_opcodes() -> Mapping[str, MicroCode]:
     for v in gp_regs:
         builder.add_instruction("st_addr_{}", v)\
             .add_step(setup_imm)\
+            .add_step([ProgMem.out, Has.load, PC.count])\
+            .add_step(setup_imm)\
             .add_step([ProgMem.out, Mar.load, PC.count])\
             .add_step([v.out, Ram.write])
 
@@ -141,7 +143,9 @@ def build_opcodes() -> Mapping[str, MicroCode]:
     for r in gp_regs:
         builder.add_instruction("ld_{}_addr", r)\
             .add_step(setup_imm)\
-            .add_step([ProgMem.out, Mar.load, PC.count])\
+            .add_step([ProgMem.out, Has.load, PC.count])\
+            .add_step(setup_imm)\
+            .add_step([ProgMem.out, Has.out, Mar.load, PC.count])\
             .add_step([Ram.out, r.load, Flags.calc])
 
     for v, a in permute_gp_regs_all():
