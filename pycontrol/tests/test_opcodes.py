@@ -11,6 +11,8 @@ from libcpu.pseudo_devices import EnableCallback
 
 from typing import Iterator, Tuple
 
+from libcpu.util import ControlSignal
+
 def calc_flags_alt_PC_counts() -> Iterator[Tuple[str, int, int, str, str]]:
 
     # all opcodes, that are flags-dependent
@@ -37,15 +39,21 @@ def test_opcode_pc_len_equal_in_flags_alt(name: str, default_len: int, alt_len: 
 
         assert default_len == alt_len
 
+class DummySignal(ControlSignal):
+    def enable(self) -> None:
+        raise Exception("Should not reach")
 
 class OpcodeFixture:
     def __init__(self) -> None:
         builder = MicrocodeBuilder()
 
+        self.orig_default = DummySignal()
+        self.orig_alt = DummySignal()
+
         builder.add_instruction("dummy")\
-            .add_step([EnableCallback(self.log_default)])\
+            .add_step([EnableCallback(self.log_default, self.orig_default)])\
             .add_condition(mask=Flags.C, value=Flags.C)\
-                .add_step([EnableCallback(self.log_alt)])
+                .add_step([EnableCallback(self.log_alt, self.orig_alt)])
 
         self.opcodes = builder.build()
 

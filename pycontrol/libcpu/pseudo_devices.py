@@ -5,11 +5,15 @@ from .util import ControlSignal, UninitializedError
 from .pinclient import PinClient
 
 class EnableCallback(ControlSignal):
-    def __init__(self, callback: Callable[[], None]) -> None:
+    def __init__(self, callback: Callable[[], None], original: ControlSignal) -> None:
         self.callback = callback
+        self.s_orig = original
 
     def enable(self) -> None:
         self.callback()
+
+    def original(self) -> ControlSignal:
+        return self.s_orig
 
 
 class ImmediateValue:
@@ -55,8 +59,8 @@ class RamProxy:
     def __init__(self, name: str, ram: RAM) -> None:
         self.name = name
         self.ram = ram
-        self.out = EnableCallback(self.enable_out)
-        self.write = EnableCallback(self.enable_write)
+        self.out = EnableCallback(self.enable_out, ram.out)
+        self.write = EnableCallback(self.enable_write, ram.write)
 
         self._ram_out: ControlSignal = ram.out
         self._ram_write: ControlSignal = ram.write

@@ -19,7 +19,7 @@ class CPUBackendControl(CPUBackend):
         Imm.connect(self.client)
 
         # hook into ProgMem read routine
-        ProgMem.hook_out(EnableCallback(Imm.enable_out))
+        ProgMem.hook_out(EnableCallback(Imm.enable_out, ProgMem.out))
 
 
     def execute_opcode(self, opcode: str, arg: Union[None, int, Bytes, Label]=None) -> Tuple[bool, Optional[int]]:
