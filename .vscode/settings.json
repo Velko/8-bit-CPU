@@ -13,5 +13,6 @@
         "**/*.o": true,
         "**/.mypy_cache": true,
         "**/.pytest_cache": true
-    }
+    },
+    "python.analysis.extraPaths": ["pycontrol"]
 }
