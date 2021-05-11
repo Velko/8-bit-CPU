@@ -34,7 +34,7 @@ void set_control(uint32_t control_word)
     r_SP.set_out((control_word & MUX_OUT_MASK) == MPIN_SP_OUT_BITS);
     LR->set_out((control_word & MUX_OUT_MASK) == MPIN_LR_OUT_BITS);
     RAM.set_out((control_word & MUX_OUT_MASK) == MPIN_RAM_OUT_BITS);
-    HAS.set_out((control_word & MUX_OUT_MASK) == MPIN_HAS_OUT_BITS);
+    HAS.set_out((control_word & LPIN_HAS_OUT_BIT) == 0);
 
     Flags.set_calc((control_word & LPIN_F_CALC_BIT) == 0);
     Flags.set_load((control_word & MUX_LOAD_MASK) == MPIN_F_LOAD_BITS);
