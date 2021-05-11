@@ -1,7 +1,6 @@
 #include "devices.h"
 #include "op-defs.h"
 
-uint8_t flags;
 uint8_t main_bus;
 uint8_t alu_arg_a_bus;
 uint8_t alu_arg_b_bus;
@@ -35,8 +34,8 @@ void set_control(uint32_t control_word)
     RAM.set_out((control_word & MUX_OUT_MASK) == MPIN_RAM_OUT_BITS);
 
     Flags.set_calc((control_word & LPIN_F_CALC_BIT) == 0);
-    Flags.set_load((control_word & MUX_LOAD_MASK) == MPIN_F_BUS_LOAD_BITS);
-    Flags.set_out((control_word & MUX_OUT_MASK) == MPIN_F_BUS_OUT_BITS);
+    Flags.set_load((control_word & MUX_LOAD_MASK) == MPIN_F_LOAD_BITS);
+    Flags.set_out((control_word & MUX_OUT_MASK) == MPIN_F_OUT_BITS);
 
     PC->set_count((control_word & HPIN_PC_COUNT_BIT) != 0);
 
@@ -56,7 +55,10 @@ void set_control(uint32_t control_word)
 
     PCSW.set_swap((control_word & HPIN_PCLR_SWAP_BIT) != 0);
 
-    alu_arg_a_bus = alu_arg_b_bus = 0; // emulate "pull-down"
+    if ((control_word & MUX_ALUARGB_MASK) == (CTRL_DEFAULT & MUX_ALUARGB_MASK))
+        alu_arg_b_bus = 0; // default value forces B input to 0
+
+    // A input is always connected to one of registers
 
     A.set_tap_a((control_word & MUX_ALUARGA_MASK) == MPIN_A_ALU_A_BITS);
     A.set_tap_b((control_word & MUX_ALUARGB_MASK) == MPIN_A_ALU_B_BITS);

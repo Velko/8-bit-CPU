@@ -5,7 +5,7 @@ from .pin import Pin, NullPin, Level, Mux, MuxPin
 OutMux = Mux([0, 1, 2, 3], 15) # bits 0-3 in Control Word, defaults to 15
 LoadMux = Mux([8, 9, 10, 11], 15)
 AluArgA = Mux([16, 17], 4)
-AluArgB = Mux([18, 19, 20], 7)
+AluArgB = Mux([18, 19, 20], 0)
 
 AluAltFn = Pin(4, Level.HIGH)
 
@@ -13,25 +13,25 @@ RegA = dev.GPRegister("A",
     out = MuxPin(OutMux, 0),
     load = MuxPin(LoadMux, 0),
     alu_a = MuxPin(AluArgA, 0),
-    alu_b = MuxPin(AluArgB, 0))
+    alu_b = MuxPin(AluArgB, 4))
 
 RegB = dev.GPRegister("B",
     out = MuxPin(OutMux, 1),
     load = MuxPin(LoadMux, 1),
     alu_a = MuxPin(AluArgA, 1),
-    alu_b = MuxPin(AluArgB, 1))
+    alu_b = MuxPin(AluArgB, 5))
 
 RegC = dev.GPRegister("C",
     out = MuxPin(OutMux, 8),
     load = MuxPin(LoadMux, 8),
     alu_a = MuxPin(AluArgA, 2),
-    alu_b = MuxPin(AluArgB, 2))
+    alu_b = MuxPin(AluArgB, 6))
 
 RegD = dev.GPRegister("D",
     out = MuxPin(OutMux, 9),
     load = MuxPin(LoadMux, 9),
     alu_a = MuxPin(AluArgA, 3),
-    alu_b = MuxPin(AluArgB, 3))
+    alu_b = MuxPin(AluArgB, 7))
 
 AddSub = dev.ALU("AddSub",
     out = MuxPin(OutMux, 2),
