@@ -130,7 +130,7 @@ def build_opcodes() -> Mapping[str, MicroCode]:
             .add_step([PC.out, ProgMar.load])\
             .add_step([ProgMem.out, Has.load, PC.count])\
             .add_step([PC.out, ProgMar.load])\
-            .add_step([ProgMem.out, Mar.load, PC.count])\
+            .add_step([ProgMem.out, Has.out, Mar.load, PC.count])\
             .add_step([v.out, Ram.write])
 
     for a, v in permute_gp_regs_all():

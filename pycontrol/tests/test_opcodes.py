@@ -7,9 +7,10 @@ from libcpu.opcodes import opcodes
 from libcpu.DeviceSetup import PC
 from libcpu.devices import Flags
 from libcpu.opcode_builder import MicrocodeBuilder
+from libcpu.pin import MuxPin
 from libcpu.pseudo_devices import EnableCallback
 
-from typing import Iterator, Tuple
+from typing import Iterator, Tuple, List
 
 from libcpu.util import ControlSignal
 
@@ -105,3 +106,26 @@ def test_opcode_flag_default(fake_opcodes: OpcodeFixture) -> None:
 
     assert fake_opcodes.alt_taken == False
     assert fake_opcodes.default_taken == True
+
+
+
+def all_steps() -> Iterator[Tuple[str, str, int, List[ControlSignal]]]:
+    for name, op in opcodes.items():
+        for steps in op._steps:
+            yield name, "default", 0, steps
+
+@pytest.mark.parametrize("name,flags,vfal,steps", all_steps())
+def test_mux_enables(name: str, flags: str, vfal: int, steps: List[ControlSignal]) -> None:
+#    instr = opcodes["ld_A_addr"]
+#    steps = instr._steps[3]
+
+    muxes_found = []
+
+    for step in steps:
+        if isinstance(step, MuxPin):
+            assert step.mux not in muxes_found
+            muxes_found.append(step.mux)
+        if isinstance(step, EnableCallback):
+            if isinstance(step.original, MuxPin):
+                assert step.original.mux not in muxes_found
+                muxes_found.append(step.original.mux)

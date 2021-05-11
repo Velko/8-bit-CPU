@@ -7,13 +7,10 @@ from .pinclient import PinClient
 class EnableCallback(ControlSignal):
     def __init__(self, callback: Callable[[], None], original: ControlSignal) -> None:
         self.callback = callback
-        self.s_orig = original
+        self.original = original
 
     def enable(self) -> None:
         self.callback()
-
-    def original(self) -> ControlSignal:
-        return self.s_orig
 
 
 class ImmediateValue:
