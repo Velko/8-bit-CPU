@@ -26,6 +26,8 @@ void set_control(uint32_t control_word)
     RAM.set_write((control_word & MUX_LOAD_MASK) == MPIN_RAM_WRITE_BITS);
     HAS.set_load((control_word & MUX_LOAD_MASK) == MPIN_HAS_LOAD_BITS);
 
+    HAS.set_dir((control_word & HPIN_HAS_DIR_BIT) != 0); // should set before enabling Out
+
     A.set_out((control_word & MUX_OUT_MASK) == MPIN_A_OUT_BITS);
     B.set_out((control_word & MUX_OUT_MASK) == MPIN_B_OUT_BITS);
     C.set_out((control_word & MUX_OUT_MASK) == MPIN_C_OUT_BITS);

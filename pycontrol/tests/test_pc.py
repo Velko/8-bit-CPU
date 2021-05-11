@@ -4,14 +4,21 @@ import pytest
 
 pytestmark = pytest.mark.hardware
 
-from libcpu.DeviceSetup import PC, LR
+from libcpu.DeviceSetup import PC, LR, Has
 from libcpu.cpu_exec import CPUBackendControl
 from libcpu.cpu import *
 from libcpu.markers import Addr
 
 def load_pc(backend: CPUBackendControl, value: int) -> None:
     backend.control.reset()
-    backend.client.bus_set(value)
+    backend.client.bus_set(value >> 8)
+    Has.load.enable()
+    backend.client.ctrl_commit(backend.control.c_word)
+    backend.client.clock_tick()
+
+    backend.control.reset()
+    backend.client.bus_set(value & 0xFF)
+    Has.out.enable()
     PC.load.enable()
     backend.client.ctrl_commit(backend.control.c_word)
     backend.client.clock_tick()
@@ -22,10 +29,18 @@ def load_pc(backend: CPUBackendControl, value: int) -> None:
 def read_pc(backend: CPUBackendControl) -> int:
     backend.control.reset()
     PC.out.enable()
+    Has.dir.enable()
+    Has.load.enable()
     backend.client.ctrl_commit(backend.control.c_word)
+    backend.client.clock_tick()
     value = backend.client.bus_get()
 
     backend.control.reset()
+    Has.dir.enable()
+    Has.out.enable()
+    backend.client.ctrl_commit(backend.control.c_word)
+    value |= backend.client.bus_get() << 8
+
     backend.client.off(backend.control.default)
 
     return value
@@ -33,8 +48,17 @@ def read_pc(backend: CPUBackendControl) -> int:
 def read_lr(backend: CPUBackendControl) -> int:
     backend.control.reset()
     LR.out.enable()
+    Has.dir.enable()
+    Has.load.enable()
     backend.client.ctrl_commit(backend.control.c_word)
+    backend.client.clock_tick()
     value = backend.client.bus_get()
+
+    backend.control.reset()
+    Has.dir.enable()
+    Has.out.enable()
+    backend.client.ctrl_commit(backend.control.c_word)
+    value |= backend.client.bus_get() << 8
 
     backend.control.reset()
     backend.client.off(backend.control.default)
@@ -42,7 +66,7 @@ def read_lr(backend: CPUBackendControl) -> int:
     return value
 
 
-@pytest.mark.parametrize("expected", [255, 1, 2, 4, 8, 16, 32, 64, 128, 0])
+@pytest.mark.parametrize("expected", [65535, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 0])
 def test_pc_load(cpu_backend_real: CPUBackendControl, expected: int) -> None:
 
     backend = cpu_backend_real
@@ -148,13 +172,13 @@ def test_lr_pc_swap(cpu_backend_real: CPUBackendControl) -> None:
     assert value == 43
 
 def test_call_addr(cpu_backend_real: CPUBackendControl) -> None:
-    load_pc(cpu_backend_real, 0xbb)
+    load_pc(cpu_backend_real, 0x12bb)
 
-    call (Addr(52))
+    call (Addr(452))
 
     value = read_pc(cpu_backend_real)
 
     retaddr = read_lr(cpu_backend_real)
 
-    assert value == 52
-    assert retaddr == 0xbd
+    assert value == 452
+    assert retaddr == 0x12bd

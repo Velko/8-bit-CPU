@@ -94,7 +94,13 @@ uint16_t MaRegister::read_tap()
 
 void HighAddrStagingReg::set_out(bool enabled)
 {
-    addr_high_bus = val;
+    if (enabled)
+    {
+        if (to_main)
+            main_bus = val;
+        else
+            addr_high_bus = val;
+    }
 }
 
 void HighAddrStagingReg::set_load(bool enabled)
@@ -102,8 +108,18 @@ void HighAddrStagingReg::set_load(bool enabled)
     load_enabled = enabled;
 }
 
+void HighAddrStagingReg::set_dir(bool _to_main)
+{
+    to_main = _to_main;
+}
+
 void HighAddrStagingReg::clock_pulse()
 {
     if (load_enabled)
-        val = main_bus;
+    {
+        if (to_main)
+            val = addr_high_bus;
+        else
+            val = main_bus;
+    }
 }

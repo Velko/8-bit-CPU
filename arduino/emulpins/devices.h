@@ -97,7 +97,7 @@ class FlagsReg
 class ProgramCounter
 {
     private:
-        uint8_t val;
+        uint16_t val;
         bool count_enabled;
         bool load_enabled;
     public:
@@ -160,9 +160,11 @@ class HighAddrStagingReg
     private:
         uint8_t val;
         bool load_enabled;
+        bool to_main;
     public:
         void set_out(bool enabled);
         void set_load(bool enabled);
+        void set_dir(bool to_main);
         void clock_pulse();
 };
 

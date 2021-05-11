@@ -73,6 +73,11 @@ class RAM:
         self.out = out
         self.write = write
 
+class HasRegister(Register):
+     def __init__(self, name: str, out: PinBase, load: PinBase, dir: PinBase) -> None:
+        Register.__init__(self, name, out, load)
+        self.dir = dir
+
 class Clock:
     def __init__(self, name: str, halt: PinBase) -> None:
         self.name = name
