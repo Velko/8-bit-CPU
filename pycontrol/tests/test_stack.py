@@ -7,6 +7,7 @@ pytestmark = pytest.mark.hardware
 from libcpu.DeviceSetup import SP
 from libcpu.cpu_exec import CPUBackendControl
 from libcpu.cpu import *
+from libcpu.markers import Addr
 
 
 def load_sp(backend: CPUBackendControl, value: int) -> None:
@@ -54,7 +55,7 @@ def test_sp_move_into(cpu_backend_real: CPUBackendControl) -> None:
 
 def test_sp_move_from(cpu_backend_real: CPUBackendControl) -> None:
     load_sp(cpu_backend_real, 132)
-    ldi (A, 0)
+    ldi (A, Addr(0))
 
     mov (A, SP)
 
@@ -96,7 +97,7 @@ def test_push_a(cpu_backend_real: CPUBackendControl) -> None:
 
     # preparation - clear value at address 17
     ldi (B, 0)
-    st (17, B)
+    st (Addr(17), B)
 
     # initialize SP
     load_sp(cpu_backend_real, 18)
@@ -107,7 +108,7 @@ def test_push_a(cpu_backend_real: CPUBackendControl) -> None:
 
     # read back sp and value at address 17
     spval = read_sp(cpu_backend_real)
-    ld (B, 17)
+    ld (B, Addr(17))
     memval = peek(B)
 
     assert spval == 17
@@ -118,7 +119,7 @@ def test_pop_a(cpu_backend_real: CPUBackendControl) -> None:
 
     # preparation - set value at address 54
     ldi (B, 23)
-    st (54, B)
+    st (Addr(54), B)
 
     # load target with different value
     ldi (A, 0)

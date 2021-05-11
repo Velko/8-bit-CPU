@@ -1,5 +1,5 @@
-from .markers import Bytes, Label
-from typing import Union, Callable, Optional
+from .markers import AddrBase
+from typing import Union, Callable, Optional, List
 from .devices import RAM
 from .util import ControlSignal, UninitializedError
 from .pinclient import PinClient
@@ -15,24 +15,28 @@ class EnableCallback(ControlSignal):
 class ImmediateValue:
     def __init__(self) -> None:
         self.client: Optional[PinClient] = None
-        self.value: Optional[int] = None
+        self.value: List[int] = []
         self.write_enabled = False
 
     def connect(self, client: PinClient) -> None:
         self.client = client
 
-    def set(self, value: Union[None, int, Bytes, Label]) -> None:
-        if isinstance(value, int) or value is None:
-            self.value = value
-        elif isinstance(value, Bytes):
-            self.value = value.start
-        elif isinstance(value, Label):
-            self.value = value.addr
+    def set(self, value: Union[None, int, AddrBase]) -> None:
+        if value is None:
+            self.value = []
+        elif isinstance(value, int):
+            self.value = [value]
+        elif isinstance(value, AddrBase):
+            self.value = value.a_bytes()
         else:
             raise TypeError
 
     def clear(self) -> None:
-        self.value = None
+        self.value = []
+
+    def consume(self) -> None:
+        if len(self.value) > 0:
+            del self.value[0]
 
     def disable(self) -> None:
         if self.client is None: raise UninitializedError
@@ -42,8 +46,8 @@ class ImmediateValue:
 
     def enable_out(self) -> None:
         if self.client is None: raise UninitializedError
-        if self.value is not None:
-            self.client.bus_set(self.value)
+        if len(self.value) > 0:
+            self.client.bus_set(self.value[0])
             self.write_enabled = True
 
 

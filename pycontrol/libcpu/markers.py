@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from typing import Optional
+from typing import List, Optional
 
 next_addr = 0
 
@@ -19,6 +19,20 @@ def align(alignment: int) -> None:
     if mod != 0:
         next_addr += alignment - mod
 
+class AddrBase:
+    def a_bytes(self) -> List[int]: ...
+
+    @staticmethod
+    def make_bytes(addr: int) -> List[int]:
+        return [(addr >> 8) & 0xFF, addr & 0xFF]
+
+class Addr(AddrBase):
+    def __init__(self, addr):
+        self.addr = addr
+
+    def a_bytes(self) -> List[int]:
+        return AddrBase.make_bytes(self.addr)
+
 class Bytes:
     def __init__(self, size: int) -> None:
         global next_addr
@@ -26,6 +40,10 @@ class Bytes:
         self.start = next_addr
         self.size = size
         next_addr += size
+
+    def a_bytes(self) -> List[int]:
+        return AddrBase.make_bytes(self.start)
+
 
 class Byte(Bytes):
     def __init__(self) -> None:
@@ -37,3 +55,6 @@ class Label:
 
     def here(self) -> None:
         self.addr = next_addr
+
+    def a_bytes(self) -> List[int]:
+        return AddrBase.make_bytes(self.addr)
