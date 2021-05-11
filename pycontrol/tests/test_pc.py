@@ -7,6 +7,7 @@ pytestmark = pytest.mark.hardware
 from libcpu.DeviceSetup import PC, LR
 from libcpu.cpu_exec import CPUBackendControl
 from libcpu.cpu import *
+from libcpu.markers import Addr
 
 def load_pc(backend: CPUBackendControl, value: int) -> None:
     backend.control.reset()
@@ -149,11 +150,11 @@ def test_lr_pc_swap(cpu_backend_real: CPUBackendControl) -> None:
 def test_call_addr(cpu_backend_real: CPUBackendControl) -> None:
     load_pc(cpu_backend_real, 0xbb)
 
-    call (52)
+    call (Addr(52))
 
     value = read_pc(cpu_backend_real)
 
     retaddr = read_lr(cpu_backend_real)
 
     assert value == 52
-    assert retaddr == 0xbc
+    assert retaddr == 0xbd

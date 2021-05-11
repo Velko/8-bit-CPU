@@ -209,7 +209,9 @@ def build_opcodes() -> Mapping[str, MicroCode]:
 
     builder.add_instruction("call_addr")\
         .add_step([PC.out, ProgMar.load])\
-        .add_step([ProgMem.out, LR.load, PC.count])\
+        .add_step([ProgMem.out, Has.load, PC.count])\
+        .add_step([PC.out, ProgMar.load])\
+        .add_step([ProgMem.out, Has.out, LR.load, PC.count])\
         .add_step([PSW.swap])
 
     builder.add_instruction("ret")\
