@@ -1,6 +1,6 @@
 from .opcodes import opcodes, fetch
 from .DeviceSetup import PC, ProgMem
-from .markers import org, Bytes, Label
+from .markers import org, Bytes, Label, AddrBase
 from typing import List, Union, Iterator, Optional, Sequence, Tuple, BinaryIO
 from .util import UninitializedError, ControlSignal
 from .cpu import CPUBackend, InvalidOpcodeException
@@ -10,7 +10,7 @@ class ProgramInstruction:
         self.address = address
         self.opcode = opcode
         self.bin_opcode: Optional[int] = None
-        self.args: List[Union[int, Bytes, Label]] = []
+        self.args: List[Union[int, AddrBase]] = []
 
     def eval_args(self) -> Iterator[int]:
         for arg in self.args:
@@ -49,7 +49,7 @@ class CPUBackendAssemble(CPUBackend):
 
         org(self.addr_counter)
 
-    def execute_opcode(self, opcode: str, arg: Union[None, int, Bytes, Label]=None) -> Tuple[bool, Optional[int]]:
+    def execute_opcode(self, opcode: str, arg: Union[None, int, AddrBase]=None) -> Tuple[bool, Optional[int]]:
         if not opcode in opcodes:
             raise InvalidOpcodeException(opcode)
 

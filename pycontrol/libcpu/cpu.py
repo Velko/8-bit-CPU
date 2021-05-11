@@ -3,12 +3,12 @@ from abc import abstractmethod
 from .util import UninitializedError
 from .DeviceSetup import RegA, RegB, RegC, RegD, Flags as RegFlags
 from .devices import Register, Flags
-from .markers import Bytes, Byte, Label
+from .markers import AddrBase
 from .opcodes import opcodes
 
 class CPUBackend:
     @abstractmethod
-    def execute_opcode(self, opcode: str, arg: Union[None, int, Bytes, Label]=None) -> Tuple[bool, Optional[int]]: pass
+    def execute_opcode(self, opcode: str, arg: Union[None, int, AddrBase]=None) -> Tuple[bool, Optional[int]]: pass
 
 class InvalidOpcodeException(Exception):
     pass
@@ -26,7 +26,7 @@ C = RegC
 D = RegD
 F = RegFlags
 
-def ldi(target: Union[Register, Flags], value: Union[int, Bytes, Label]) -> None:
+def ldi(target: Union[Register, Flags], value: int) -> None:
     if backend is None: raise UninitializedError
     opcode = "ldi_{}_imm".format(target.name)
     backend.execute_opcode(opcode, value)
@@ -127,7 +127,7 @@ def mov(target: Register, source: Register) -> None:
     opcode = "mov_{}_{}".format(target.name, source.name)
     backend.execute_opcode(opcode)
 
-def st(addr: Union[Byte, int], source: Register) -> None:
+def st(addr: AddrBase, source: Register) -> None:
     if backend is None: raise UninitializedError
     opcode = "st_addr_{}".format(source.name)
     backend.execute_opcode(opcode, addr)
@@ -147,32 +147,32 @@ def tstabs(addr_reg: Register) -> None:
     opcode = "tstabs_{}".format(addr_reg.name)
     backend.execute_opcode(opcode)
 
-def ld(target: Register, addr: Union[Byte, int]) -> None:
+def ld(target: Register, addr: AddrBase) -> None:
     if backend is None: raise UninitializedError
     opcode = "ld_{}_addr".format(target.name)
     backend.execute_opcode(opcode, addr)
 
-def bcs(label: Optional[Label]=None) -> bool:
+def bcs(label: Optional[AddrBase]=None) -> bool:
     if backend is None: raise UninitializedError
     taken, _ = backend.execute_opcode("bcs_addr", label)
     return taken
 
-def bcc(label: Optional[Label]=None) -> bool:
+def bcc(label: Optional[AddrBase]=None) -> bool:
     if backend is None: raise UninitializedError
     taken, _ = backend.execute_opcode("bcc_addr", label)
     return taken
 
-def beq(label: Optional[Label]=None) -> bool:
+def beq(label: Optional[AddrBase]=None) -> bool:
     if backend is None: raise UninitializedError
     taken, _ = backend.execute_opcode("beq_addr", label)
     return taken
 
-def bne(label: Optional[Label]=None) -> bool:
+def bne(label: Optional[AddrBase]=None) -> bool:
     if backend is None: raise UninitializedError
     taken, _ = backend.execute_opcode("bne_addr", label)
     return taken
 
-def jmp(label: Union[Label, int]) -> bool:
+def jmp(label: AddrBase) -> bool:
     if backend is None: raise UninitializedError
     taken, _ = backend.execute_opcode("jmp_addr", label)
     return taken
@@ -201,6 +201,6 @@ def ret() -> None:
     if backend is None: raise UninitializedError
     backend.execute_opcode("ret")
 
-def call(addr: Union[int, Label]) -> None:
+def call(addr: AddrBase) -> None:
     if backend is None: raise UninitializedError
     backend.execute_opcode("call_addr", addr)

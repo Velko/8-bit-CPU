@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from typing import List, Optional
+from libcpu.util import unwrap
 
 next_addr = 0
 
@@ -57,4 +58,4 @@ class Label:
         self.addr = next_addr
 
     def a_bytes(self) -> List[int]:
-        return AddrBase.make_bytes(self.addr)
+        return AddrBase.make_bytes(unwrap(self.addr))

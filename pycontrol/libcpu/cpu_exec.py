@@ -1,5 +1,5 @@
 from typing import Union, Tuple, Optional, Sequence
-from .markers import Bytes, Label
+from .markers import AddrBase
 from .pseudo_devices import Imm, EnableCallback
 from .DeviceSetup import OutPort, ProgMem, PC, Flags
 from .opcodes import opcodes, fetch
@@ -22,7 +22,7 @@ class CPUBackendControl(CPUBackend):
         ProgMem.hook_out(EnableCallback(Imm.enable_out, ProgMem.out))
 
 
-    def execute_opcode(self, opcode: str, arg: Union[None, int, Bytes, Label]=None) -> Tuple[bool, Optional[int]]:
+    def execute_opcode(self, opcode: str, arg: Union[None, int, AddrBase]=None) -> Tuple[bool, Optional[int]]:
         if not opcode in opcodes:
             raise InvalidOpcodeException(opcode)
 

@@ -1,6 +1,6 @@
 from .cpu import CPUBackend, InvalidOpcodeException
 from typing import Union, Tuple, Optional
-from .markers import Bytes, Label
+from .markers import Bytes, AddrBase
 from .devices import Flags
 
 def do_add_reg(arg0: int, arg1: int) -> Tuple[int, bool]:
@@ -19,7 +19,7 @@ class CPUBackendEmulate(CPUBackend):
         self.B = 0
         self.Flags = 0
 
-    def execute_opcode(self, opcode: str, arg: Union[None, int, Bytes, Label]=None) -> Tuple[bool, Optional[int]]:
+    def execute_opcode(self, opcode: str, arg: Union[None, int, AddrBase]=None) -> Tuple[bool, Optional[int]]:
         attr = getattr(self, "op_"+opcode)
         if attr is None:
             raise InvalidOpcodeException(opcode)

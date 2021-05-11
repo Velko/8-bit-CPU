@@ -55,7 +55,7 @@ def test_sp_move_into(cpu_backend_real: CPUBackendControl) -> None:
 
 def test_sp_move_from(cpu_backend_real: CPUBackendControl) -> None:
     load_sp(cpu_backend_real, 132)
-    ldi (A, Addr(0))
+    ldi (A, 0)
 
     mov (A, SP)
 
