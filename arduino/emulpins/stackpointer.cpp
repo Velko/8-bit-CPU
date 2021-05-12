@@ -5,8 +5,10 @@ StackPointer r_SP;
 
 void StackPointer::set_out(bool enabled)
 {
-    if (enabled)
+    if (enabled) {
         main_bus = val;
+        addr_high_bus = 0;
+    }
 }
 
 void StackPointer::set_load(bool enabled)

@@ -200,6 +200,13 @@ def build_opcodes() -> Mapping[str, MicroCode]:
             .add_step([SP.out, Mar.load])\
             .add_step([Flags.out, Ram.write])
 
+    builder.add_instruction("push_LR")\
+            .add_step([SP.dec, LR.out, Has.load, Has.dir])\
+            .add_step([SP.out, Mar.load])\
+            .add_step([LR.out, Ram.write, SP.dec])\
+            .add_step([SP.out, Mar.load])\
+            .add_step([Has.out, Has.dir, Ram.write])
+
     for r in gp_regs:
         builder.add_instruction("pop_{}", r)\
             .add_step([SP.out, Mar.load])\
@@ -208,6 +215,12 @@ def build_opcodes() -> Mapping[str, MicroCode]:
     builder.add_instruction("pop_F")\
         .add_step([SP.out, Mar.load])\
         .add_step([Ram.out, Flags.load, SP.inc])
+
+    builder.add_instruction("pop_LR")\
+        .add_step([SP.out, Mar.load])\
+        .add_step([Ram.out, Has.load, SP.inc])\
+        .add_step([SP.out, Mar.load])\
+        .add_step([Ram.out, Has.out, LR.load, SP.inc])
 
     builder.add_instruction("call_addr")\
         .add_step([PC.out, ProgMar.load])\
