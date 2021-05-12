@@ -158,7 +158,9 @@ def build_opcodes() -> Mapping[str, MicroCode]:
 
     builder.add_instruction("jmp_addr")\
         .add_step([PC.out, ProgMar.load])\
-        .add_step([ProgMem.out, PC.load])
+        .add_step([ProgMem.out, Has.load, PC.count])\
+        .add_step([PC.out, ProgMar.load])\
+        .add_step([ProgMem.out, Has.out, PC.load])
 
     builder.add_instruction("beq_addr")\
         .add_step([PC.count])\

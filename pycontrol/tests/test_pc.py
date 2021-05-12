@@ -182,3 +182,11 @@ def test_call_addr(cpu_backend_real: CPUBackendControl) -> None:
 
     assert value == 452
     assert retaddr == 0x12bd
+
+def test_jmp_addr(cpu_backend_real: CPUBackendControl) -> None:
+    load_pc(cpu_backend_real, 0)
+
+    jmp(Addr(0x1084))
+
+    value = read_pc(cpu_backend_real)
+    assert value == 0x1084
