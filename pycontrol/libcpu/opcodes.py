@@ -114,7 +114,7 @@ def build_opcodes() -> Mapping[str, MicroCode]:
         builder.add_instruction("cmp_{}_{}", l, r)\
             .add_step([l.alu_a, r.alu_b, AddSub.out, AddSub.alt, Flags.calc])
 
-    for al, ar in chain(permute_gp_regs_nsame(), permute_regs_lr([SP, LR], gp_regs), permute_regs_lr(gp_regs, [SP, LR])):
+    for al, ar in permute_gp_regs_nsame():
         builder.add_instruction("mov_{}_{}", al, ar)\
             .add_step([al.load, ar.out])
 
