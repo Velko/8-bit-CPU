@@ -39,24 +39,6 @@ def test_add_b_b(cpu_backend_real: CPUBackendControl) -> None:
     value = peek(B)
     assert value == 36
 
-@pytest.mark.skipif(hardwired_alu, reason=hardwired_reason)
-def test_sub_a_a(cpu_backend_real: CPUBackendControl) -> None:
-    ldi(A, 32)
-
-    sub(A, A)
-
-    value = peek(A)
-    assert value == 0
-
-@pytest.mark.skipif(hardwired_alu, reason=hardwired_reason)
-def test_sub_b_b(cpu_backend_real: CPUBackendControl) -> None:
-    ldi(B, 63)
-
-    sub(B, B)
-
-    value = peek(B)
-    assert value == 0
-
 def test_inc_a(cpu_backend_real: CPUBackendControl) -> None:
     ldi(A, 4)
 

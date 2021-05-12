@@ -43,28 +43,6 @@ def test_sp_load(cpu_backend_real: CPUBackendControl, expected: int) -> None:
     assert value == expected
 
 
-def test_sp_move_into(cpu_backend_real: CPUBackendControl) -> None:
-    load_sp(cpu_backend_real, 0)
-    ldi (A, 123)
-
-    mov (SP, A)
-
-    value = read_sp(cpu_backend_real)
-
-    assert value == 123
-
-
-def test_sp_move_from(cpu_backend_real: CPUBackendControl) -> None:
-    load_sp(cpu_backend_real, 132)
-    ldi (A, 0)
-
-    mov (A, SP)
-
-    value = peek(A)
-
-    assert value == 132
-
-
 def test_sp_inc(cpu_backend_real: CPUBackendControl) -> None:
     load_sp(cpu_backend_real, 12)
 
