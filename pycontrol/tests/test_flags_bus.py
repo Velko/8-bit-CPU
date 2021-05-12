@@ -13,7 +13,7 @@ def test_flags_out_n(cpu_backend_real: CPUBackendControl) -> None:
     ldi(B, 5)
     add(A, B)
 
-    f = peek(F)
+    f = cpu_backend_real.client.flags_get()
 
     flags = Flags.decode(f)
     assert flags == "---N"
@@ -23,7 +23,7 @@ def test_flags_out_z(cpu_backend_real: CPUBackendControl) -> None:
     ldi(B, 5)
     sub(A, B)
 
-    f = peek(F)
+    f = cpu_backend_real.client.flags_get()
 
     flags = Flags.decode(f)
     assert flags == "--Z-"
@@ -33,7 +33,7 @@ def test_flags_out_c(cpu_backend_real: CPUBackendControl) -> None:
     ldi(B, 40)
     add(A, B)
 
-    f = peek(F)
+    f = cpu_backend_real.client.flags_get()
 
     flags = Flags.decode(f)
     assert flags == "-C--"
@@ -43,7 +43,7 @@ def test_flags_out_v(cpu_backend_real: CPUBackendControl) -> None:
     ldi(B, 20)
     sub(A, B)
 
-    f = peek(F)
+    f = cpu_backend_real.client.flags_get()
 
     flags = Flags.decode(f)
     assert flags == "V---"

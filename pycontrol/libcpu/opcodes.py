@@ -183,9 +183,6 @@ def build_opcodes() -> Mapping[str, MicroCode]:
             .add_step([PC.out, ProgMar.load])\
             .add_step([ProgMem.out, PC.load])
 
-    builder.add_instruction("out_F")\
-        .add_step([Flags.out, OutPort.load])
-
     for r in gp_regs:
         builder.add_instruction("push_{}", r)\
             .add_step([SP.dec])\

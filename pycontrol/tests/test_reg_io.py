@@ -30,7 +30,7 @@ def test_load_store_reg(cpu_backend_real: CPUBackendControl, register: Register,
 @pytest.mark.parametrize("value", [0xF, 1, 2, 4, 8, 0])
 def test_load_store_flags(cpu_backend_real: CPUBackendControl, value: int) -> None:
     ldi (F, value)
-    received = peek(F)
+    received = cpu_backend_real.client.flags_get()
 
     assert value == received
 

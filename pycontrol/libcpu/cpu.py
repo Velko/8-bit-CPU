@@ -114,7 +114,7 @@ def out(source: Register) -> None:
     assert out_val is not None
     print ("{}".format(out_val), flush=True)
 
-def peek(source: Union[Register, Flags]) -> int:
+def peek(source: Register) -> int:
     if backend is None: raise UninitializedError
     opcode = "out_{}".format(source.name)
     _, out_val = backend.execute_opcode(opcode)

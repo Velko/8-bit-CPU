@@ -110,7 +110,7 @@ def test_push_popf(cpu_helper: CPUHelper) -> None:
     ldi (F, 0)
     pop (F)
 
-    val = peek(F)
+    val = cpu_helper.backend.client.flags_get()
     assert val == 0b1101
 
 def test_push_lr(cpu_helper: CPUHelper) -> None:
