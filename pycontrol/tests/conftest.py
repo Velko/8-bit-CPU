@@ -1,6 +1,6 @@
 import pytest
 import random
-import localpath
+from libcpu.test_helpers import CPUHelper
 from typing import Sequence
 
 from libcpu.pinclient import PinClient
@@ -28,3 +28,8 @@ def random_bytes() -> Sequence[int]:
         data.append(value)
 
     return data
+
+
+@pytest.fixture(scope="session")
+def cpu_helper(cpu_backend_real: CPUBackendControl) -> CPUHelper:
+    return CPUHelper(cpu_backend_real)
