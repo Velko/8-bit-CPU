@@ -2,7 +2,7 @@
 
 from libcpu.devices import Register
 from libcpu.cpu_exec import CPUBackendControl
-from libcpu.DeviceSetup import Has
+from libcpu.DeviceSetup import Has, Mar, Ram
 
 
 class CPUHelper:
@@ -45,3 +45,26 @@ class CPUHelper:
 
         return value
 
+    def read_ram(self, addr: int) -> int:
+        self.load_reg16(Mar, addr)
+        Ram.out.enable()
+        self.backend.client.ctrl_commit(self.backend.control.c_word)
+
+        value = self.backend.client.bus_get()
+
+        self.backend.control.reset()
+        self.backend.client.off(self.backend.control.default)
+
+        return value
+
+    def write_ram(self, addr: int, value: int) -> None:
+        self.load_reg16(Mar, addr)
+        Ram.write.enable()
+        self.backend.client.ctrl_commit(self.backend.control.c_word)
+
+        self.backend.client.bus_set(value)
+
+        self.backend.client.clock_tick()
+
+        self.backend.control.reset()
+        self.backend.client.off(self.backend.control.default)

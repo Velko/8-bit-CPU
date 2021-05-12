@@ -169,10 +169,8 @@ def test_push_lr(cpu_helper: CPUHelper) -> None:
 
     push (LR)
 
-    ld (A, Addr(0x87))
-    ld (B, Addr(0x86))
-    l = peek(A)
-    h = peek(B)
+    l = cpu_helper.read_ram(0x87)
+    h = cpu_helper.read_ram(0x86)
 
     assert h == 0x12
     assert l == 0x34
@@ -181,11 +179,8 @@ def test_pop_lr(cpu_helper: CPUHelper) -> None:
     load_sp(cpu_helper.backend, 0x21)
     cpu_helper.load_reg16(LR, 0)
 
-
-    ldi (C, 0x54)
-    push (C)
-    ldi (C, 0x83)
-    push (C)
+    cpu_helper.write_ram(0x22, 0x54)
+    cpu_helper.write_ram(0x21, 0x83)
 
     pop (LR)
 
