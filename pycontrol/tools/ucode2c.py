@@ -70,7 +70,7 @@ def write_opcodes(hfile: TextIO) -> None:
 
         hfile.write("#define OP_{:20}0x{:02x}\n".format(name, microcode.opcode))
 
-    hfile.write("#define NUM_OPS                0x{:02x}\n".format(len(opcodes)))
+    hfile.write("#define NUM_OPS                {:02}\n".format(len(opcodes)))
 
     hfile.write("\n")
 
