@@ -5,7 +5,7 @@ import random
 
 from libcpu.cpu import *
 from libcpu.markers import Addr
-from libcpu.cpu_exec import CPUBackendControl
+from libcpu.test_helpers import CPUHelper
 from typing import Sequence
 
 pytestmark = pytest.mark.hardware
@@ -28,7 +28,7 @@ random_addr = make_random_addr()
 class FillRam: pass
 
 @pytest.fixture(scope="module")
-def fill_ram(random_bytes: Sequence[int], cpu_backend_real: CPUBackendControl) -> FillRam:
+def fill_ram(random_bytes: Sequence[int], cpu_helper: CPUHelper) -> FillRam:
     for addr in random_addr:
         ldi (A, random_bytes[addr])
         st (Addr(addr), A)
@@ -37,9 +37,9 @@ def fill_ram(random_bytes: Sequence[int], cpu_backend_real: CPUBackendControl) -
 
 
 @pytest.mark.parametrize("addr", random_addr)
-def test_store_load(cpu_backend_real: CPUBackendControl, random_bytes: Sequence[int], fill_ram: FillRam, addr: int) -> None:
+def test_store_load(cpu_helper: CPUHelper, random_bytes: Sequence[int], fill_ram: FillRam, addr: int) -> None:
 
     ld (A, Addr(addr))
-    actual = peek(A)
+    actual = cpu_helper.read_reg8(A)
 
     assert random_bytes[addr] == actual

@@ -84,7 +84,7 @@ def test_pop_a(cpu_helper: CPUHelper) -> None:
 
     # read back sp and value in register
     spval = cpu_helper.read_reg16(SP)
-    regval = peek(A)
+    regval = cpu_helper.read_reg8(A)
 
     assert spval == 55
     assert regval == 23
@@ -98,7 +98,7 @@ def test_push_pop(cpu_helper: CPUHelper) -> None:
     ldi (C, 20)
     pop (C)
 
-    val = peek(C)
+    val = cpu_helper.read_reg8(C)
     assert val == 45
 
 def test_push_popf(cpu_helper: CPUHelper) -> None:

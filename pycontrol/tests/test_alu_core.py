@@ -7,6 +7,8 @@ from libcpu.opcodes import permute_gp_regs_all, permute_gp_regs_nsame, gp_regs
 from libcpu.devices import Register, Flags
 from typing import Iterator, Tuple
 
+from libcpu.test_helpers import CPUHelper
+
 pytestmark = pytest.mark.hardware
 
 from libcpu.cpu import *
@@ -23,26 +25,26 @@ def add_aa_test_args() -> Iterator[Tuple[str, int, int, str]]:
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
 @pytest.mark.parametrize("desc,val_a,val_b,result,xflags", add_ab_test_args())
-def test_add_ab(cpu_backend_real: CPUBackendControl, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+def test_add_ab(cpu_helper: CPUHelper, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
     ldi(lhs, val_a)
     ldi(rhs, val_b)
 
     add(lhs, rhs)
 
-    value = peek(lhs)
-    flags = Flags.decode(cpu_backend_real.client.flags_get())
+    value = cpu_helper.read_reg8(lhs)
+    flags = Flags.decode(cpu_helper.get_flags())
     assert value == result
     assert flags == xflags
 
 @pytest.mark.parametrize("reg", gp_regs)
 @pytest.mark.parametrize("desc,val,result,xflags", add_aa_test_args())
-def test_add_aa(cpu_backend_real: CPUBackendControl, reg: Register, desc: str, val: int, result: int, xflags: str) -> None:
+def test_add_aa(cpu_helper: CPUHelper, reg: Register, desc: str, val: int, result: int, xflags: str) -> None:
     ldi(reg, val)
 
     add(reg, reg)
 
-    value = peek(reg)
-    flags = Flags.decode(cpu_backend_real.client.flags_get())
+    value = cpu_helper.read_reg8(reg)
+    flags = Flags.decode(cpu_helper.get_flags())
     assert value == result
     assert flags == xflags
 
@@ -57,14 +59,14 @@ def sub_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
 @pytest.mark.parametrize("desc,val_a,val_b,result,xflags", sub_test_args())
-def test_sub(cpu_backend_real: CPUBackendControl, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+def test_sub(cpu_helper: CPUHelper, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
     ldi(lhs, val_a)
     ldi(rhs, val_b)
 
     sub(lhs, rhs)
 
-    value = peek(lhs)
-    flags = Flags.decode(cpu_backend_real.client.flags_get())
+    value = cpu_helper.read_reg8(lhs)
+    flags = Flags.decode(cpu_helper.get_flags())
     assert value == result
     assert flags == xflags
 
@@ -78,29 +80,29 @@ def adc_ab_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
 @pytest.mark.parametrize("desc,val_a,val_b,result,xflags", adc_ab_test_args())
-def test_adc_ab_c_set(cpu_backend_real: CPUBackendControl, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+def test_adc_ab_c_set(cpu_helper: CPUHelper, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
     ldi (F, 0b0100)
     ldi (lhs, val_a)
     ldi (rhs, val_b)
 
     adc(lhs, rhs)
 
-    value = peek(lhs)
-    flags = Flags.decode(cpu_backend_real.client.flags_get())
+    value = cpu_helper.read_reg8(lhs)
+    flags = Flags.decode(cpu_helper.get_flags())
     assert value == result
     assert flags == xflags
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
 @pytest.mark.parametrize("desc,val_a,val_b,result,xflags", add_ab_test_args())
-def test_adc_ab_c_clear(cpu_backend_real: CPUBackendControl, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+def test_adc_ab_c_clear(cpu_helper: CPUHelper, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
     ldi (F, 0)
     ldi (lhs, val_a)
     ldi (rhs, val_b)
 
     adc(lhs, rhs)
 
-    value = peek(lhs)
-    flags = Flags.decode(cpu_backend_real.client.flags_get())
+    value = cpu_helper.read_reg8(lhs)
+    flags = Flags.decode(cpu_helper.get_flags())
     assert value == result
     assert flags == xflags
 
@@ -114,28 +116,28 @@ def sbb_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
 @pytest.mark.parametrize("desc,val_a,val_b,result,xflags", sbb_test_args())
-def test_sbb_c_set(cpu_backend_real: CPUBackendControl, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+def test_sbb_c_set(cpu_helper: CPUHelper, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
     ldi (F, 0b0100)
     ldi(lhs, val_a)
     ldi(rhs, val_b)
 
     sbb(lhs, rhs)
 
-    value = peek(lhs)
-    flags = Flags.decode(cpu_backend_real.client.flags_get())
+    value = cpu_helper.read_reg8(lhs)
+    flags = Flags.decode(cpu_helper.get_flags())
     assert value == result
     assert flags == xflags
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
 @pytest.mark.parametrize("desc,val_a,val_b,result,xflags", sub_test_args())
-def test_sbb_c_clear(cpu_backend_real: CPUBackendControl, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+def test_sbb_c_clear(cpu_helper: CPUHelper, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
     ldi (F, 0)
     ldi(lhs, val_a)
     ldi(rhs, val_b)
 
     sbb(lhs, rhs)
 
-    value = peek(lhs)
-    flags = Flags.decode(cpu_backend_real.client.flags_get())
+    value = cpu_helper.read_reg8(lhs)
+    flags = Flags.decode(cpu_helper.get_flags())
     assert value == result
     assert flags == xflags

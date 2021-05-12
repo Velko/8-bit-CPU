@@ -114,14 +114,6 @@ def out(source: Register) -> None:
     assert out_val is not None
     print ("{}".format(out_val), flush=True)
 
-def peek(source: Register) -> int:
-    if backend is None: raise UninitializedError
-    opcode = "out_{}".format(source.name)
-    _, out_val = backend.execute_opcode(opcode)
-
-    assert out_val is not None
-    return out_val
-
 def mov(target: Register, source: Register) -> None:
     if backend is None: raise UninitializedError
     opcode = "mov_{}_{}".format(target.name, source.name)

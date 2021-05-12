@@ -68,3 +68,16 @@ class CPUHelper:
 
         self.backend.control.reset()
         self.backend.client.off(self.backend.control.default)
+
+    def get_flags(self) -> int:
+        return self.backend.client.flags_get()
+
+    def read_reg8(self, reg: Register) -> int:
+        self.backend.control.reset()
+        reg.out.enable()
+        self.backend.client.ctrl_commit(self.backend.control.c_word)
+        value = self.backend.client.bus_get()
+
+        self.backend.client.off(self.backend.control.default)
+
+        return value

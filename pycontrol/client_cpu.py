@@ -7,7 +7,6 @@ from libcpu.util import unwrap
 from libcpu.cpu import *
 from libcpu.devices import Flags
 from libcpu.DeviceSetup import Mar, Ram
-from libcpu.pinclient import PinClient
 from libcpu.PyAsmExec import setup_live, control
 setup_live()
 from libcpu.PyAsmExec import pins
@@ -49,12 +48,10 @@ class TesterClient(cmd.Cmd):
         sub(A, B)
 
     def do_out_a(self, arg: str) -> None:
-        val = peek(A)
-        print(val)
+        out(A)
 
     def do_out_b(self, arg: str) -> None:
-        val = peek(B)
-        print(val)
+        out(B)
 
     def do_flags_get(self, arg: str) -> None:
         val = client.flags_get()
