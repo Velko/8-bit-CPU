@@ -1,9 +1,7 @@
 from .DeviceSetup import *
 from .opcode_builder import MicrocodeBuilder, MicroCode
 from .devices import Register, GPRegister
-from .pin import PinBase
 from typing import Sequence, Iterator, Tuple, Mapping
-from itertools import chain
 
 gp_regs: Sequence[GPRegister] = [RegA, RegB, RegC, RegD]
 
@@ -56,7 +54,7 @@ def build_opcodes() -> Mapping[str, MicroCode]:
             .add_condition(mask=Flags.C, value=Flags.C)\
                 .add_step([l.load, l.alu_a, r.alu_b, AddSub.out, Flags.calc, Flags.carry])
 
-    for l, r in permute_gp_regs_all():
+    for l, r in permute_gp_regs_nsame():
         builder.add_instruction("sub_{}_{}", l, r)\
             .add_step([l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.alt, Flags.calc])
 
@@ -66,15 +64,15 @@ def build_opcodes() -> Mapping[str, MicroCode]:
             .add_condition(mask=Flags.C, value=Flags.C)\
                 .add_step([l.load, l.alu_a, r.alu_b, AddSub.out, AddSub.alt, Flags.calc, Flags.carry])
 
-    for l, r in permute_gp_regs_all():
+    for l, r in permute_gp_regs_nsame():
         builder.add_instruction("and_{}_{}", l, r)\
             .add_step([l.load, l.alu_a, r.alu_b, AndOr.out, Flags.calc])
 
-    for l, r in permute_gp_regs_all():
+    for l, r in permute_gp_regs_nsame():
         builder.add_instruction("or_{}_{}", l, r)\
             .add_step([l.load, l.alu_a, r.alu_b, AndOr.out, AndOr.alt, Flags.calc])
 
-    for l, r in permute_gp_regs_all():
+    for l, r in permute_gp_regs_nsame():
         builder.add_instruction("xor_{}_{}", l, r)\
             .add_step([l.load, l.alu_a, r.alu_b, XorNot.out, Flags.calc])
 
@@ -100,7 +98,6 @@ def build_opcodes() -> Mapping[str, MicroCode]:
             .add_condition(mask=Flags.C, value=Flags.C)\
                 .add_step([r.load, r.alu_a, ShiftSwap.out, Flags.calc, Flags.carry])
 
-    # probably won't work using current microcode interpreter
     for r in gp_regs:
         builder.add_instruction("asr_{}", r)\
             .add_step([r.out, Flags.calc])\
