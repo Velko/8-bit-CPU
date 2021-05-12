@@ -4,8 +4,9 @@ import pytest
 
 pytestmark = pytest.mark.hardware
 
-from libcpu.DeviceSetup import SP, LR, Has
+from libcpu.DeviceSetup import SP, LR
 from libcpu.cpu_exec import CPUBackendControl
+from libcpu.test_helpers import CPUHelper
 from libcpu.cpu import *
 from libcpu.markers import Addr
 
@@ -30,27 +31,6 @@ def read_sp(backend: CPUBackendControl) -> int:
     backend.client.off(backend.control.default)
 
     return value
-
-def read_lr(backend: CPUBackendControl) -> int:
-    backend.control.reset()
-    LR.out.enable()
-    Has.dir.enable()
-    Has.load.enable()
-    backend.client.ctrl_commit(backend.control.c_word)
-    backend.client.clock_tick()
-    value = backend.client.bus_get()
-
-    backend.control.reset()
-    Has.dir.enable()
-    Has.out.enable()
-    backend.client.ctrl_commit(backend.control.c_word)
-    value |= backend.client.bus_get() << 8
-
-    backend.control.reset()
-    backend.client.off(backend.control.default)
-
-    return value
-
 
 @pytest.mark.parametrize("expected", [255, 1, 2, 4, 8, 16, 32, 64, 128, 0])
 def test_sp_load(cpu_backend_real: CPUBackendControl, expected: int) -> None:
@@ -182,12 +162,10 @@ def test_push_popf(cpu_backend_real: CPUBackendControl) -> None:
     val = peek(F)
     assert val == 0b1101
 
-def test_push_lr(cpu_backend_real: CPUBackendControl) -> None:
-    load_sp(cpu_backend_real, 0x88)
+def test_push_lr(cpu_helper: CPUHelper) -> None:
+    load_sp(cpu_helper.backend, 0x88)
 
-    # Get 0x1234 into LR
-    jmp (Addr(0x1234))
-    ret()
+    cpu_helper.load_reg16(LR, 0x1234)
 
     push (LR)
 
@@ -199,8 +177,10 @@ def test_push_lr(cpu_backend_real: CPUBackendControl) -> None:
     assert h == 0x12
     assert l == 0x34
 
-def test_pop_lr(cpu_backend_real: CPUBackendControl) -> None:
-    load_sp(cpu_backend_real, 0x21)
+def test_pop_lr(cpu_helper: CPUHelper) -> None:
+    load_sp(cpu_helper.backend, 0x21)
+    cpu_helper.load_reg16(LR, 0)
+
 
     ldi (C, 0x54)
     push (C)
@@ -209,22 +189,19 @@ def test_pop_lr(cpu_backend_real: CPUBackendControl) -> None:
 
     pop (LR)
 
-    val = read_lr(cpu_backend_real)
+    val = cpu_helper.read_reg16(LR)
 
     assert val == 0x8354
 
-def test_push_pop_lr(cpu_backend_real: CPUBackendControl) -> None:
-    load_sp(cpu_backend_real, 0x40)
+def test_push_pop_lr(cpu_helper: CPUHelper) -> None:
+    load_sp(cpu_helper.backend, 0x40)
 
-    # Get 0x5314 into LR
-    jmp (Addr(0x5314))
-    ret()
-
+    cpu_helper.load_reg16(LR, 0x5314)
     push (LR)
-    ret()
+    cpu_helper.load_reg16(LR, 0)
 
     pop (LR)
 
-    val = read_lr(cpu_backend_real)
+    val = cpu_helper.read_reg16(LR)
     assert val == 0x5314
 
