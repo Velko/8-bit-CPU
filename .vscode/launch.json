@@ -15,6 +15,7 @@
             "name": "Python: Current Tests file",
             "type": "python",
             "request": "launch",
+            "cwd": "${workspaceFolder}/pycontrol",
             "module": "pytest",
             "args": [
                 "-k",

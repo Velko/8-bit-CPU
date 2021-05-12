@@ -2,14 +2,12 @@
 
 import pytest
 
-from libcpu.test_helpers import CPUHelper
-
 pytestmark = pytest.mark.hardware
 
 from libcpu.DeviceSetup import PC, LR
-from libcpu.cpu_exec import CPUBackendControl
 from libcpu.cpu import *
 from libcpu.markers import Addr
+from libcpu.test_helpers import CPUHelper
 
 @pytest.mark.parametrize("expected", [65535, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 0])
 def test_pc_load(cpu_helper: CPUHelper, expected: int) -> None:
@@ -38,8 +36,6 @@ def set_pc_next8(cpu_helper: CPUHelper) -> PCNext8:
 
 @pytest.mark.parametrize("expected", range(8, 40))
 def test_pc_count(cpu_helper: CPUHelper, set_pc_next8: PCNext8, expected: int) -> None:
-
-
     PC.count.enable()
     cpu_helper.backend.client.ctrl_commit(cpu_helper.backend.control.c_word)
     cpu_helper.backend.client.clock_tick()
@@ -48,61 +44,86 @@ def test_pc_count(cpu_helper: CPUHelper, set_pc_next8: PCNext8, expected: int) -
 
     assert value == expected
 
-def test_beq_taken(cpu_backend_real: CPUBackendControl) -> None:
+def test_beq_taken(cpu_helper: CPUHelper) -> None:
     ldi (F, 0b0010)
+    cpu_helper.load_reg16(PC, 0x1234)
 
-    taken = beq()
+    taken = beq(Addr(0x4321))
+    pcaddr = cpu_helper.read_reg16(PC)
 
     assert taken == True
+    assert pcaddr == 0x4321
 
-def test_beq_fallthrough(cpu_backend_real: CPUBackendControl) -> None:
+def test_beq_fallthrough(cpu_helper: CPUHelper) -> None:
     ldi (F, 0b0000)
+    cpu_helper.load_reg16(PC, 0x1234)
 
-    taken = beq()
+    taken = beq(Addr(0x4321))
+    pcaddr = cpu_helper.read_reg16(PC)
 
     assert taken == False
+    assert pcaddr == 0x1236
 
-def test_bne_taken(cpu_backend_real: CPUBackendControl) -> None:
+
+def test_bne_taken(cpu_helper: CPUHelper) -> None:
     ldi (F, 0b0000)
+    cpu_helper.load_reg16(PC, 0x1234)
 
-    taken = bne()
+    taken = bne(Addr(0x4321))
+    pcaddr = cpu_helper.read_reg16(PC)
 
     assert taken == True
+    assert pcaddr == 0x4321
 
-def test_bne_fallthrough(cpu_backend_real: CPUBackendControl) -> None:
+def test_bne_fallthrough(cpu_helper: CPUHelper) -> None:
     ldi (F, 0b0010)
+    cpu_helper.load_reg16(PC, 0x1234)
 
-    taken = bne()
+    taken = bne(Addr(0x4321))
+    pcaddr = cpu_helper.read_reg16(PC)
 
     assert taken == False
+    assert pcaddr == 0x1236
 
-def test_bcs_taken(cpu_backend_real: CPUBackendControl) -> None:
+def test_bcs_taken(cpu_helper: CPUHelper) -> None:
     ldi (F, 0b0100)
+    cpu_helper.load_reg16(PC, 0x1234)
 
-    taken = bcs()
+    taken = bcs(Addr(0x4321))
+    pcaddr = cpu_helper.read_reg16(PC)
 
     assert taken == True
+    assert pcaddr == 0x4321
 
-def test_bcs_fallthrough(cpu_backend_real: CPUBackendControl) -> None:
+def test_bcs_fallthrough(cpu_helper: CPUHelper) -> None:
     ldi (F, 0b0000)
+    cpu_helper.load_reg16(PC, 0x1234)
 
-    taken = bcs()
+    taken = bcs(Addr(0x4321))
+    pcaddr = cpu_helper.read_reg16(PC)
 
     assert taken == False
+    assert pcaddr == 0x1236
 
-def test_bcc_taken(cpu_backend_real: CPUBackendControl) -> None:
+def test_bcc_taken(cpu_helper: CPUHelper) -> None:
     ldi (F, 0b0000)
+    cpu_helper.load_reg16(PC, 0x1234)
 
-    taken = bcc()
+    taken = bcc(Addr(0x4321))
+    pcaddr = cpu_helper.read_reg16(PC)
 
     assert taken == True
+    assert pcaddr == 0x4321
 
-def test_bcc_fallthrough(cpu_backend_real: CPUBackendControl) -> None:
+def test_bcc_fallthrough(cpu_helper: CPUHelper) -> None:
     ldi (F, 0b0100)
+    cpu_helper.load_reg16(PC, 0x1234)
 
-    taken = bcc()
+    taken = bcc(Addr(0x4321))
+    pcaddr = cpu_helper.read_reg16(PC)
 
     assert taken == False
+    assert pcaddr == 0x1236
 
 def test_lr_pc_swap(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg16(PC, 0xaa)

@@ -161,27 +161,39 @@ def build_opcodes() -> Mapping[str, MicroCode]:
 
     builder.add_instruction("beq_addr")\
         .add_step([PC.count])\
+        .add_step([PC.count])\
         .add_condition(mask=Flags.Z, value=Flags.Z)\
             .add_step([PC.out, ProgMar.load])\
-            .add_step([ProgMem.out, PC.load])
+            .add_step([ProgMem.out, Has.load, PC.count])\
+            .add_step([PC.out, ProgMar.load])\
+            .add_step([ProgMem.out, Has.out, PC.load])
 
     builder.add_instruction("bne_addr")\
         .add_step([PC.count])\
+        .add_step([PC.count])\
         .add_condition(mask=Flags.Z, value=0)\
             .add_step([PC.out, ProgMar.load])\
-            .add_step([ProgMem.out, PC.load])
+            .add_step([ProgMem.out, Has.load, PC.count])\
+            .add_step([PC.out, ProgMar.load])\
+            .add_step([ProgMem.out, Has.out, PC.load])
 
     builder.add_instruction("bcs_addr")\
         .add_step([PC.count])\
+        .add_step([PC.count])\
         .add_condition(mask=Flags.C, value=Flags.C)\
             .add_step([PC.out, ProgMar.load])\
-            .add_step([ProgMem.out, PC.load])
+            .add_step([ProgMem.out, Has.load, PC.count])\
+            .add_step([PC.out, ProgMar.load])\
+            .add_step([ProgMem.out, Has.out, PC.load])
 
     builder.add_instruction("bcc_addr")\
         .add_step([PC.count])\
+        .add_step([PC.count])\
         .add_condition(mask=Flags.C, value=0)\
             .add_step([PC.out, ProgMar.load])\
-            .add_step([ProgMem.out, PC.load])
+            .add_step([ProgMem.out, Has.load, PC.count])\
+            .add_step([PC.out, ProgMar.load])\
+            .add_step([ProgMem.out, Has.out, PC.load])
 
     for r in gp_regs:
         builder.add_instruction("push_{}", r)\
