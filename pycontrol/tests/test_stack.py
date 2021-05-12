@@ -5,120 +5,93 @@ import pytest
 pytestmark = pytest.mark.hardware
 
 from libcpu.DeviceSetup import SP, LR
-from libcpu.cpu_exec import CPUBackendControl
 from libcpu.test_helpers import CPUHelper
 from libcpu.cpu import *
-from libcpu.markers import Addr
 
-
-def load_sp(backend: CPUBackendControl, value: int) -> None:
-    backend.control.reset()
-    backend.client.bus_set(value)
-    SP.load.enable()
-    backend.client.ctrl_commit(backend.control.c_word)
-    backend.client.clock_tick()
-
-    backend.control.reset()
-    backend.client.off(backend.control.default)
-
-def read_sp(backend: CPUBackendControl) -> int:
-    backend.control.reset()
-    SP.out.enable()
-    backend.client.ctrl_commit(backend.control.c_word)
-    value = backend.client.bus_get()
-
-    backend.control.reset()
-    backend.client.off(backend.control.default)
-
-    return value
 
 @pytest.mark.parametrize("expected", [255, 1, 2, 4, 8, 16, 32, 64, 128, 0])
-def test_sp_load(cpu_backend_real: CPUBackendControl, expected: int) -> None:
+def test_sp_load(cpu_helper: CPUHelper, expected: int) -> None:
 
-    backend = cpu_backend_real
+    cpu_helper.load_reg16(SP, expected)
 
-    load_sp(backend, expected)
-    value = read_sp(backend)
+    value = cpu_helper.read_reg16(SP)
 
     assert value == expected
 
 
-def test_sp_inc(cpu_backend_real: CPUBackendControl) -> None:
-    load_sp(cpu_backend_real, 12)
+def test_sp_inc(cpu_helper: CPUHelper) -> None:
+    cpu_helper.load_reg16(SP, 12)
 
-    cpu_backend_real.control.reset()
+    cpu_helper.backend.control.reset()
     SP.inc.enable()
-    cpu_backend_real.client.ctrl_commit(cpu_backend_real.control.c_word)
-    cpu_backend_real.client.clock_tick()
-    cpu_backend_real.control.reset()
-    cpu_backend_real.client.off(cpu_backend_real.control.default)
+    cpu_helper.backend.client.ctrl_commit(cpu_helper.backend.control.c_word)
+    cpu_helper.backend.client.clock_tick()
+    cpu_helper.backend.control.reset()
+    cpu_helper.backend.client.off(cpu_helper.backend.control.default)
 
 
-    value = read_sp(cpu_backend_real)
+    value = cpu_helper.read_reg16(SP)
     assert value == 13
 
-def test_sp_dec(cpu_backend_real: CPUBackendControl) -> None:
-    load_sp(cpu_backend_real, 12)
+def test_sp_dec(cpu_helper: CPUHelper) -> None:
+    cpu_helper.load_reg16(SP, 12)
 
-    cpu_backend_real.control.reset()
+    cpu_helper.backend.control.reset()
     SP.dec.enable()
-    cpu_backend_real.client.ctrl_commit(cpu_backend_real.control.c_word)
-    cpu_backend_real.client.clock_tick()
-    cpu_backend_real.control.reset()
-    cpu_backend_real.client.off(cpu_backend_real.control.default)
+    cpu_helper.backend.client.ctrl_commit(cpu_helper.backend.control.c_word)
+    cpu_helper.backend.client.clock_tick()
+    cpu_helper.backend.control.reset()
+    cpu_helper.backend.client.off(cpu_helper.backend.control.default)
 
 
-    value = read_sp(cpu_backend_real)
+    value = cpu_helper.read_reg16(SP)
     assert value == 11
 
 
-def test_push_a(cpu_backend_real: CPUBackendControl) -> None:
+def test_push_a(cpu_helper: CPUHelper) -> None:
 
     # preparation - clear value at address 17
-    ldi (B, 0)
-    st (Addr(17), B)
+    cpu_helper.write_ram(17, 0)
 
     # initialize SP
-    load_sp(cpu_backend_real, 18)
+    cpu_helper.load_reg16(SP, 18)
 
     # push 72 onto stack
     ldi (A, 72)
     push (A)
 
     # read back sp and value at address 17
-    spval = read_sp(cpu_backend_real)
-    ld (B, Addr(17))
-    memval = peek(B)
+    spval = cpu_helper.read_reg16(SP)
+    memval = cpu_helper.read_ram(17)
 
     assert spval == 17
     assert memval == 72
 
 
-def test_pop_a(cpu_backend_real: CPUBackendControl) -> None:
+def test_pop_a(cpu_helper: CPUHelper) -> None:
 
     # preparation - set value at address 54
-    ldi (B, 23)
-    st (Addr(54), B)
+    cpu_helper.write_ram(54, 23)
 
     # load target with different value
     ldi (A, 0)
 
     # initialize SP
-    load_sp(cpu_backend_real, 54)
+    cpu_helper.load_reg16(SP, 54)
 
     # load in from stack
     pop (A)
 
     # read back sp and value in register
-    spval = read_sp(cpu_backend_real)
+    spval = cpu_helper.read_reg16(SP)
     regval = peek(A)
 
     assert spval == 55
     assert regval == 23
 
-def test_push_pop(cpu_backend_real: CPUBackendControl) -> None:
+def test_push_pop(cpu_helper: CPUHelper) -> None:
 
-    load_sp(cpu_backend_real, 44)
+    cpu_helper.load_reg16(SP, 44)
     ldi (C, 45)
 
     push (C)
@@ -128,9 +101,9 @@ def test_push_pop(cpu_backend_real: CPUBackendControl) -> None:
     val = peek(C)
     assert val == 45
 
-def test_push_popf(cpu_backend_real: CPUBackendControl) -> None:
+def test_push_popf(cpu_helper: CPUHelper) -> None:
 
-    load_sp(cpu_backend_real, 88)
+    cpu_helper.load_reg16(SP, 88)
     ldi (F, 0b1101)
 
     push (F)
@@ -141,7 +114,7 @@ def test_push_popf(cpu_backend_real: CPUBackendControl) -> None:
     assert val == 0b1101
 
 def test_push_lr(cpu_helper: CPUHelper) -> None:
-    load_sp(cpu_helper.backend, 0x88)
+    cpu_helper.load_reg16(SP, 0x88)
 
     cpu_helper.load_reg16(LR, 0x1234)
 
@@ -154,7 +127,7 @@ def test_push_lr(cpu_helper: CPUHelper) -> None:
     assert l == 0x34
 
 def test_pop_lr(cpu_helper: CPUHelper) -> None:
-    load_sp(cpu_helper.backend, 0x21)
+    cpu_helper.load_reg16(SP, 0x21)
     cpu_helper.load_reg16(LR, 0)
 
     cpu_helper.write_ram(0x22, 0x54)
@@ -167,7 +140,7 @@ def test_pop_lr(cpu_helper: CPUHelper) -> None:
     assert val == 0x8354
 
 def test_push_pop_lr(cpu_helper: CPUHelper) -> None:
-    load_sp(cpu_helper.backend, 0x40)
+    cpu_helper.load_reg16(SP, 0x40)
 
     cpu_helper.load_reg16(LR, 0x5314)
     push (LR)
