@@ -19,6 +19,11 @@ class GPRegister(Register):
         self.alu_a = alu_a
         self.alu_b = alu_b
 
+class MaRegister(Register):
+    def __init__(self, name: str, out: PinBase, load: PinBase, add: PinBase) -> None:
+        Register.__init__(self, name, out, load)
+        self.add = add
+
 
 class ALU:
     def __init__(self, name: str, out: PinBase, alt: PinBase) -> None:

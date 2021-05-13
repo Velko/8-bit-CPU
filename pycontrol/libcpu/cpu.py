@@ -143,9 +143,9 @@ def stabs(addr_reg: Register, source: Register) -> None:
     opcode = "stabs_{}_{}".format(addr_reg.name, source.name)
     backend.execute_opcode(opcode)
 
-def ldabs(target: Register, addr_reg: Register) -> None:
+def ldrel(target: Register, base_reg: Register, idx_reg: Register) -> None:
     if backend is None: raise UninitializedError
-    opcode = "ldabs_{}_{}".format(target.name, addr_reg.name)
+    opcode = "ldrel_{}_{}_{}".format(target.name, base_reg.name, idx_reg.name)
     backend.execute_opcode(opcode)
 
 def tstabs(addr_reg: Register) -> None:

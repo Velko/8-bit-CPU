@@ -76,10 +76,22 @@ void MaRegister::set_load(bool enabled)
     load_enabled = enabled;
 }
 
+void MaRegister::set_add(bool _add)
+{
+    add_enabled = _add;
+}
+
 void MaRegister::clock_pulse()
 {
     if (load_enabled)
-            latched_primary = (addr_high_bus << 8) | main_bus;
+        latched_primary = (addr_high_bus << 8) | main_bus;
+
+    if (add_enabled)
+    {
+        int8_t smain = main_bus;
+        int16_t offset = smain;
+        latched_primary = latched_primary + offset;
+    }
 }
 
 void MaRegister::clock_inverted()

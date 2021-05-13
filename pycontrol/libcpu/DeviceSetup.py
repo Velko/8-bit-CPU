@@ -60,9 +60,10 @@ Has = dev.HasRegister("HAS",
     load = MuxPin(LoadMux, 13),
     dir = Pin(24, Level.HIGH))
 
-Mar = dev.Register("MAR",
+Mar = dev.MaRegister("MAR",
     out = NullPin(-1, Level.LOW),
-    load = MuxPin(LoadMux, 2))
+    load = MuxPin(LoadMux, 2),
+    add = Pin(25, Level.HIGH))
 
 # currently same as regular MAR, can be redefined for different
 # hardware configuration. Will not require changes in instruction

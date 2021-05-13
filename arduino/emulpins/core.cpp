@@ -61,6 +61,8 @@ void set_control(uint32_t control_word)
 
     XorNot.set_not((control_word & HPIN_ADDSUB_ALT_BIT) != 0);
 
+    MAR.set_add((control_word & HPIN_MAR_ADD_BIT) != 0);
+
     PCSW.set_swap((control_word & HPIN_PCLR_SWAP_BIT) != 0);
 
     if ((control_word & MUX_ALUARGB_MASK) == (CTRL_DEFAULT & MUX_ALUARGB_MASK))

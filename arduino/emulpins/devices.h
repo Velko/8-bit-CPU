@@ -136,9 +136,11 @@ class MaRegister {
         uint16_t latched_primary;
         uint16_t latched_secondary;
         bool load_enabled;
+        bool add_enabled;
     public:
         MaRegister();
         void set_load(bool enabled);
+        void set_add(bool add);
         void clock_pulse();
         void clock_inverted();
         uint16_t read_tap();

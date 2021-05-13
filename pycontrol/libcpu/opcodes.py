@@ -153,9 +153,10 @@ def build_opcodes() -> Mapping[str, MicroCode]:
             .add_step([ProgMem.out, Has.out, Mar.load, PC.count])\
             .add_step([Ram.out, r.load, Flags.calc])
 
-    for v, a in permute_gp_regs_all():
-        builder.add_instruction("ldabs_{}_{}", v, a)\
-            .add_step([a.out, Mar.load])\
+    for v, i in permute_gp_regs_all():
+        builder.add_instruction("ldrel_{}_DP_{}", v, i)\
+            .add_step([DP.out, Mar.load])\
+            .add_step([i.out, Mar.add])\
             .add_step([v.load, Ram.out, Flags.calc])
 
     for r in gp_regs:
