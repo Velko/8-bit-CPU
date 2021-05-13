@@ -111,3 +111,7 @@ PSW = dev.PCLR("PCLR",
 OutPort = dev.Register("Out",
     out = NullPin(-1, Level.LOW),
     load = MuxPin(LoadMux, 6))
+
+COutPort = dev.Register("Cout",
+    out = NullPin(-1, Level.LOW),
+    load = MuxPin(LoadMux, 10))

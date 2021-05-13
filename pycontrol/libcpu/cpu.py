@@ -114,6 +114,15 @@ def out(source: Register) -> None:
     assert out_val is not None
     print ("{}".format(out_val), flush=True)
 
+def cout(source: Register) -> None:
+    if backend is None: raise UninitializedError
+    opcode = "cout_{}".format(source.name)
+    _, out_val = backend.execute_opcode(opcode)
+
+    assert out_val is not None
+    print (chr(out_val), flush=True, end="")
+
+
 def mov(target: Register, source: Register) -> None:
     if backend is None: raise UninitializedError
     opcode = "mov_{}_{}".format(target.name, source.name)

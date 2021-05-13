@@ -1,7 +1,7 @@
 from typing import Union, Tuple, Optional, Sequence
 from .markers import AddrBase
 from .pseudo_devices import Imm, EnableCallback
-from .DeviceSetup import OutPort, ProgMem, PC, Flags
+from .DeviceSetup import COutPort, OutPort, ProgMem, PC, Flags
 from .opcodes import opcodes, fetch
 from .cpu import CPUBackend, InvalidOpcodeException
 from .pinclient import PinClient
@@ -55,7 +55,7 @@ class CPUBackendControl(CPUBackend):
             # has rised, but inverted is not
             # in other cases it does not matter, using faster
             # version
-            if OutPort.load.is_enabled():
+            if OutPort.load.is_enabled() or COutPort.load.is_enabled():
                 self.client.clock_pulse()
                 self.out_hooked_val = self.client.bus_get()
                 self.client.clock_inverted()

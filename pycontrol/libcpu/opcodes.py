@@ -122,6 +122,10 @@ def build_opcodes() -> Mapping[str, MicroCode]:
         builder.add_instruction("out_{}", r)\
             .add_step([r.out, OutPort.load])
 
+    for r in gp_regs:
+        builder.add_instruction("cout_{}", r)\
+            .add_step([r.out, COutPort.load])
+
     for v in gp_regs:
         builder.add_instruction("st_addr_{}", v)\
             .add_step([PC.out, ProgMar.load])\
