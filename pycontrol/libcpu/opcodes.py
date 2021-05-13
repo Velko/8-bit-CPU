@@ -44,6 +44,12 @@ def build_opcodes() -> Mapping[str, MicroCode]:
         .add_step([PC.out, ProgMar.load])\
         .add_step([Flags.load, ProgMem.out, PC.count])
 
+    builder.add_instruction("lea_DP_addr")\
+        .add_step([PC.out, ProgMar.load])\
+        .add_step([ProgMem.out, Has.load, PC.count])\
+        .add_step([PC.out, ProgMar.load])\
+        .add_step([ProgMem.out, Has.out, DP.load, PC.count])
+
     for l, r in permute_gp_regs_all():
         builder.add_instruction("add_{}_{}", l, r)\
             .add_step([l.load, l.alu_a, r.alu_b, AddSub.out, Flags.calc])

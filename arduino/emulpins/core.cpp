@@ -11,6 +11,7 @@ Register B;
 Register C;
 Register D;
 Register IR;
+AddressReg DP;
 
 void set_control(uint32_t control_word)
 {
@@ -25,6 +26,7 @@ void set_control(uint32_t control_word)
     MAR.set_load((control_word & MUX_LOAD_MASK) == MPIN_MAR_LOAD_BITS);
     RAM.set_write((control_word & MUX_LOAD_MASK) == MPIN_RAM_WRITE_BITS);
     HAS.set_load((control_word & MUX_LOAD_MASK) == MPIN_HAS_LOAD_BITS);
+    DP.set_load((control_word & MUX_LOAD_MASK) == MPIN_DP_LOAD_BITS);
 
     HAS.set_dir((control_word & HPIN_HAS_DIR_BIT) != 0); // should set before enabling Out
 
@@ -37,6 +39,7 @@ void set_control(uint32_t control_word)
     LR->set_out((control_word & MUX_OUT_MASK) == MPIN_LR_OUT_BITS);
     RAM.set_out((control_word & MUX_OUT_MASK) == MPIN_RAM_OUT_BITS);
     HAS.set_out((control_word & LPIN_HAS_OUT_BIT) == 0);
+    DP.set_out((control_word & MUX_OUT_MASK) == MPIN_DP_OUT_BITS);
 
     Flags.set_calc((control_word & LPIN_F_CALC_BIT) == 0);
     Flags.set_load((control_word & MUX_LOAD_MASK) == MPIN_F_LOAD_BITS);
@@ -97,6 +100,7 @@ void clock_pulse()
     RAM.clock_pulse();
     PCSW.clock_pulse();
     HAS.clock_pulse();
+    DP.clock_pulse();
 }
 
 void clock_inverted()

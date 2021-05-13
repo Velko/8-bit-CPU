@@ -31,6 +31,11 @@ def ldi(target: Union[Register, Flags], value: int) -> None:
     opcode = "ldi_{}_imm".format(target.name)
     backend.execute_opcode(opcode, value)
 
+def lea(target: Union[Register], addr: AddrBase) -> None:
+    if backend is None: raise UninitializedError
+    opcode = "lea_{}_addr".format(target.name)
+    backend.execute_opcode(opcode, addr)
+
 def add(target: Register, arg: Register) -> None:
     if backend is None: raise UninitializedError
     opcode = "add_{}_{}".format(target.name, arg.name)

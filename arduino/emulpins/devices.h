@@ -168,6 +168,17 @@ class HighAddrStagingReg
         void clock_pulse();
 };
 
+class AddressReg
+{
+    private:
+        uint16_t val;
+        bool load_enabled;
+    public:
+        void set_out(bool enabled);
+        void set_load(bool enabled);
+        void clock_pulse();
+};
+
 extern Register A;
 extern Register B;
 extern Register IR;
@@ -183,5 +194,6 @@ extern ProgramCounter *LR;
 extern PCSwap PCSW;
 extern Memory RAM;
 extern HighAddrStagingReg HAS;
+extern AddressReg   DP;
 
 #endif  /* DEVICES_H */

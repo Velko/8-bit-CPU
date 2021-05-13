@@ -100,6 +100,10 @@ SP = dev.StackPointer("SP",
     inc = Pin(21, Level.LOW),
     dec = Pin(22, Level.LOW))
 
+DP = dev.Register("DP",
+    out = MuxPin(OutMux, 14),
+    load = MuxPin(LoadMux, 14))
+
 LR = dev.ProgramCounter("LR",
     out = MuxPin(OutMux, 12),
     load = MuxPin(LoadMux, 12),

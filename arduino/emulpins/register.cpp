@@ -43,3 +43,24 @@ void Register::set_tap_b(bool enabled)
     if (enabled)
         alu_arg_b_bus = latched_secondary;
 }
+
+void AddressReg::set_load(bool enabled)
+{
+    load_enabled = enabled;
+}
+
+void AddressReg::set_out(bool enabled)
+{
+    if (enabled) {
+        main_bus = val & 0xFF;
+        addr_high_bus = val >> 8;
+    }
+}
+
+void AddressReg::clock_pulse()
+{
+    if (load_enabled)
+    {
+        val = (addr_high_bus << 8 ) | main_bus;
+    }
+}
