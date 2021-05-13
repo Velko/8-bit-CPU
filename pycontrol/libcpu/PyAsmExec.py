@@ -5,6 +5,8 @@ from .ctrl_word import CtrlWord
 from .cpu_exec import CPUBackendControl
 from .cpu_assemble import CPUBackendAssemble
 from .cpu_emul import CPUBackendEmulate
+from .markers import String
+from .test_helpers import CPUHelper
 from typing import Callable, Optional
 
 control = CtrlWord()
@@ -15,6 +17,10 @@ def setup_live() -> None:
     pins = PinClient()
     backend = CPUBackendControl(pins, control)
     cpu.install_cpu_backend(backend)
+
+def setup_data(s: String) -> None:
+    helper = CPUHelper(cpu.backend)
+    helper.write_data(s)
 
 def compile(program: Callable[[], None]) -> None:
     backend = CPUBackendAssemble()

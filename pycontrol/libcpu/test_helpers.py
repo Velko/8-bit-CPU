@@ -3,6 +3,7 @@
 from libcpu.devices import Register
 from libcpu.cpu_exec import CPUBackendControl
 from libcpu.DeviceSetup import Has, Mar, Ram
+from libcpu.markers import String
 
 
 class CPUHelper:
@@ -68,6 +69,10 @@ class CPUHelper:
 
         self.backend.control.reset()
         self.backend.client.off(self.backend.control.default)
+
+    def write_data(self, data: String) -> None:
+        for i in range(data.size):
+            self.write_ram(data.start + i, data.data[i]);
 
     def get_flags(self) -> int:
         return self.backend.client.flags_get()

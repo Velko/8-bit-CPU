@@ -34,7 +34,7 @@ class Addr(AddrBase):
     def a_bytes(self) -> List[int]:
         return AddrBase.make_bytes(self.addr)
 
-class Bytes:
+class Bytes(AddrBase):
     def __init__(self, size: int) -> None:
         global next_addr
 
@@ -50,7 +50,7 @@ class Byte(Bytes):
     def __init__(self) -> None:
         Bytes.__init__(self, 1)
 
-class Label:
+class Label(AddrBase):
     def __init__(self) -> None:
         self.addr: Optional[int] = None
 
@@ -59,3 +59,8 @@ class Label:
 
     def a_bytes(self) -> List[int]:
         return AddrBase.make_bytes(unwrap(self.addr))
+
+class String(Bytes):
+    def __init__(self, text: str) -> None:
+        self.data = text.encode("ascii") + b'\0'
+        Bytes.__init__(self, len(self.data))
