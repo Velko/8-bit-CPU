@@ -12,4 +12,22 @@ K Parallel EEPROM 256Kb
 F http://ww1.microchip.com/downloads/en/DeviceDoc/doc0006.pdf
 $ENDCMP
 #
+$CMP SC39-11SRWA
+D Single digit 7 segment display, super bright red, common cathode
+K display LED 7-segment
+F http://www.kingbrightusa.com/images/catalog/SPEC/sc56-11srwa.pdf
+$ENDCMP
+#
+$CMP SC39-11YWA
+D Single digit 7 segment display, yellow, common cathode
+K display LED 7-segment
+F http://www.kingbrightusa.com/images/catalog/SPEC/sc56-11ywa.pdf
+$ENDCMP
+#
+$CMP SC56-11GWA
+D Single digit 7 segment display, green, common cathode
+K display LED 7-segment
+F http://www.kingbrightusa.com/images/catalog/SPEC/sc56-11gwa.pdf
+$ENDCMP
+#
 #End Doc Library
