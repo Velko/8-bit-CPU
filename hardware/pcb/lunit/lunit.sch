@@ -4,7 +4,7 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
-Title "Arithmetic Unit"
+Title "Logic Unit (AND/OR)"
 Date "2020-07-23"
 Rev "1"
 Comp "Velko"
@@ -25,21 +25,21 @@ F 3 "http://www.ti.com/lit/gpn/sn74HC245" H 7800 1850 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text GLabel 7250 1350 0    50   Input ~ 0
-SUM0
+RES0
 Text GLabel 7250 1450 0    50   Input ~ 0
-SUM1
+RES1
 Text GLabel 7250 1550 0    50   Input ~ 0
-SUM2
+RES2
 Text GLabel 7250 1650 0    50   Input ~ 0
-SUM3
+RES3
 Text GLabel 7250 1750 0    50   Input ~ 0
-SUM4
+RES4
 Text GLabel 7250 1850 0    50   Input ~ 0
-SUM5
+RES5
 Text GLabel 7250 1950 0    50   Input ~ 0
-SUM6
+RES6
 Text GLabel 7250 2050 0    50   Input ~ 0
-SUM7
+RES7
 Wire Wire Line
 	7250 1350 7300 1350
 Wire Wire Line
@@ -302,21 +302,21 @@ F 3 "~" H 1950 6350 50  0001 C CNN
 	0    1    1    0   
 $EndComp
 Text GLabel 1300 4950 0    50   Input ~ 0
-SUM0
+RES0
 Text GLabel 1300 5150 0    50   Input ~ 0
-SUM1
+RES1
 Text GLabel 1300 5350 0    50   Input ~ 0
-SUM2
+RES2
 Text GLabel 1300 5550 0    50   Input ~ 0
-SUM3
+RES3
 Text GLabel 1300 5750 0    50   Input ~ 0
-SUM4
+RES4
 Text GLabel 1300 5950 0    50   Input ~ 0
-SUM5
+RES5
 Text GLabel 1300 6150 0    50   Input ~ 0
-SUM6
+RES6
 Text GLabel 1300 6350 0    50   Input ~ 0
-SUM7
+RES7
 $Comp
 L power:GND #PWR01
 U 1 1 5F450848
@@ -376,7 +376,7 @@ L Device:LED D10
 U 1 1 5F54765E
 P 3350 5650
 F 0 "D10" H 3200 5700 50  0000 C CNN
-F 1 "SUB" H 3342 5486 50  0001 C CNN
+F 1 "OR" H 3342 5486 50  0001 C CNN
 F 2 "LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 3350 5650 50  0001 C CNN
 F 3 "~" H 3350 5650 50  0001 C CNN
 	1    3350 5650
@@ -539,12 +539,6 @@ Wire Wire Line
 	7950 3550 7950 3600
 Wire Wire Line
 	7950 3600 8000 3600
-Text GLabel 9850 2250 0    50   Output ~ 0
-CIN
-Text GLabel 9850 2350 0    50   Input ~ 0
-OOUT
-Text GLabel 9850 2450 0    50   Input ~ 0
-COUT
 $Comp
 L Connector:Conn_01x04_Male J5
 U 1 1 5F79C5A0
@@ -706,12 +700,6 @@ Wire Wire Line
 Wire Wire Line
 	7750 3700 8000 3700
 Connection ~ 7750 3700
-Wire Wire Line
-	9850 2250 9950 2250
-Wire Wire Line
-	9850 2350 9950 2350
-Wire Wire Line
-	9850 2450 9950 2450
 Text Notes 8350 750  0    50   ~ 0
 Output
 Wire Notes Line
@@ -1306,21 +1294,21 @@ Wire Wire Line
 Wire Wire Line
 	4000 2100 3950 2100
 Text GLabel 6250 3450 2    50   Output ~ 0
-SUM0
+RES0
 Text GLabel 6250 3150 2    50   Output ~ 0
-SUM1
+RES1
 Text GLabel 6250 2850 2    50   Output ~ 0
-SUM2
+RES2
 Text GLabel 6250 2550 2    50   Output ~ 0
-SUM3
+RES3
 Text GLabel 5050 2000 2    50   Output ~ 0
-SUM4
+RES4
 Text GLabel 5050 1700 2    50   Output ~ 0
-SUM5
+RES5
 Text GLabel 5050 1400 2    50   Output ~ 0
-SUM6
+RES6
 Text GLabel 5050 1100 2    50   Output ~ 0
-SUM7
+RES7
 Wire Wire Line
 	5050 1100 5000 1100
 Wire Wire Line
@@ -1699,4 +1687,7 @@ Wire Wire Line
 	6900 6000 7350 6000
 Wire Wire Line
 	6450 6000 6900 6000
+NoConn ~ 9950 2250
+NoConn ~ 9950 2350
+NoConn ~ 9950 2450
 $EndSCHEMATC
