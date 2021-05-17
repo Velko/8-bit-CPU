@@ -60,7 +60,12 @@ class Label(AddrBase):
     def a_bytes(self) -> List[int]:
         return AddrBase.make_bytes(unwrap(self.addr))
 
-class String(Bytes):
-    def __init__(self, text: str) -> None:
-        self.data = text.encode("ascii") + b'\0'
+class InitializedBuffer(Bytes):
+    def __init__(self, data: bytes) -> None:
+        self.data = data
         Bytes.__init__(self, len(self.data))
+
+class String(InitializedBuffer):
+    def __init__(self, text: str) -> None:
+        encoded = text.encode("ascii") + b'\0'
+        InitializedBuffer.__init__(self, encoded)

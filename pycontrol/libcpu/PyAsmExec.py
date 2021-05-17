@@ -5,7 +5,7 @@ from .ctrl_word import CtrlWord
 from .cpu_exec import CPUBackendControl
 from .cpu_assemble import CPUBackendAssemble
 from .cpu_emul import CPUBackendEmulate
-from .markers import String
+from .markers import InitializedBuffer
 from .test_helpers import CPUHelper
 from typing import Callable, Optional
 
@@ -18,7 +18,7 @@ def setup_live() -> None:
     backend = CPUBackendControl(pins, control)
     cpu.install_cpu_backend(backend)
 
-def setup_data(s: String) -> None:
+def setup_data(s: InitializedBuffer) -> None:
     helper = CPUHelper(cpu.backend)
     helper.write_data(s)
 

@@ -3,7 +3,7 @@
 from libcpu.devices import Register
 from libcpu.cpu_exec import CPUBackendControl
 from libcpu.DeviceSetup import Has, Mar, Ram
-from libcpu.markers import String
+from libcpu.markers import InitializedBuffer
 
 
 class CPUHelper:
@@ -70,7 +70,7 @@ class CPUHelper:
         self.backend.control.reset()
         self.backend.client.off(self.backend.control.default)
 
-    def write_data(self, data: String) -> None:
+    def write_data(self, data: InitializedBuffer) -> None:
         for i in range(data.size):
             self.write_ram(data.start + i, data.data[i]);
 
