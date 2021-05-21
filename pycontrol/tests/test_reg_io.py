@@ -38,9 +38,9 @@ def test_load_store_flags(cpu_helper: CPUHelper, value: int) -> None:
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
 def test_mov_a_b(cpu_helper: CPUHelper, lhs: Register, rhs: Register) -> None:
-    ldi(lhs, 0)
+    cpu_helper.load_reg8(lhs, 0)
     val = random.randrange(256)
-    ldi(rhs, val)
+    cpu_helper.load_reg8(rhs, val)
 
     mov(lhs, rhs)
 

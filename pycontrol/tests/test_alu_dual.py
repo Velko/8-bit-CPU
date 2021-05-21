@@ -13,8 +13,8 @@ hardwired_reason = "unsupported with hardwired ALU inputs"
 
 @pytest.mark.skipif(hardwired_alu, reason=hardwired_reason)
 def test_sub_b_a_small(cpu_helper: CPUHelper) -> None:
-    ldi(A, 3)
-    ldi(B, 4)
+    cpu_helper.load_reg8(A, 3)
+    cpu_helper.load_reg8(B, 4)
 
     sub(B, A)
 
@@ -23,7 +23,7 @@ def test_sub_b_a_small(cpu_helper: CPUHelper) -> None:
 
 @pytest.mark.skipif(hardwired_alu, reason=hardwired_reason)
 def test_add_a_a(cpu_helper: CPUHelper) -> None:
-    ldi(A, 21)
+    cpu_helper.load_reg8(A, 21)
 
     add(A, A)
 
@@ -32,7 +32,7 @@ def test_add_a_a(cpu_helper: CPUHelper) -> None:
 
 @pytest.mark.skipif(hardwired_alu, reason=hardwired_reason)
 def test_add_b_b(cpu_helper: CPUHelper) -> None:
-    ldi(B, 18)
+    cpu_helper.load_reg8(B, 18)
 
     add(B, B)
 
@@ -40,7 +40,7 @@ def test_add_b_b(cpu_helper: CPUHelper) -> None:
     assert value == 36
 
 def test_inc_a(cpu_helper: CPUHelper) -> None:
-    ldi(A, 4)
+    cpu_helper.load_reg8(A, 4)
 
     inc(A)
 
@@ -48,7 +48,7 @@ def test_inc_a(cpu_helper: CPUHelper) -> None:
     assert value == 5
 
 def test_dec_a(cpu_helper: CPUHelper) -> None:
-    ldi(A, 4)
+    cpu_helper.load_reg8(A, 4)
 
     dec(A)
 
@@ -56,7 +56,7 @@ def test_dec_a(cpu_helper: CPUHelper) -> None:
     assert value == 3
 
 def test_inc_flags_cz(cpu_helper: CPUHelper) -> None:
-    ldi(A, 255)
+    cpu_helper.load_reg8(A, 255)
 
     inc(A)
 
@@ -64,7 +64,7 @@ def test_inc_flags_cz(cpu_helper: CPUHelper) -> None:
     assert flags == "-CZ-"
 
 def test_inc_flags_v(cpu_helper: CPUHelper) -> None:
-    ldi(A, 127)
+    cpu_helper.load_reg8(A, 127)
 
     inc(A)
 
@@ -73,7 +73,7 @@ def test_inc_flags_v(cpu_helper: CPUHelper) -> None:
 
 
 def test_dec_flags_z(cpu_helper: CPUHelper) -> None:
-    ldi(A, 1)
+    cpu_helper.load_reg8(A, 1)
 
     dec(A)
 
@@ -81,7 +81,7 @@ def test_dec_flags_z(cpu_helper: CPUHelper) -> None:
     assert flags == "--Z-"
 
 def test_dec_flags_cn(cpu_helper: CPUHelper) -> None:
-    ldi(A, 0)
+    cpu_helper.load_reg8(A, 0)
 
     dec(A)
 
@@ -89,7 +89,7 @@ def test_dec_flags_cn(cpu_helper: CPUHelper) -> None:
     assert flags == "-C-N"
 
 def test_dec_flags_v(cpu_helper: CPUHelper) -> None:
-    ldi(A, 128)
+    cpu_helper.load_reg8(A, 128)
 
     dec(A)
 

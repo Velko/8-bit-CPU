@@ -30,8 +30,7 @@ class FillRam: pass
 @pytest.fixture(scope="module")
 def fill_ram(random_bytes: Sequence[int], cpu_helper: CPUHelper) -> FillRam:
     for addr in random_addr:
-        ldi (A, random_bytes[addr])
-        st (Addr(addr), A)
+        cpu_helper.write_ram(addr, random_bytes[addr])
 
     return FillRam()
 

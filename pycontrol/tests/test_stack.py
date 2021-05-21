@@ -57,7 +57,7 @@ def test_push_a(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg16(SP, 18)
 
     # push 72 onto stack
-    ldi (A, 72)
+    cpu_helper.load_reg8(A, 72)
     push (A)
 
     # read back sp and value at address 17
@@ -74,7 +74,7 @@ def test_pop_a(cpu_helper: CPUHelper) -> None:
     cpu_helper.write_ram(54, 23)
 
     # load target with different value
-    ldi (A, 0)
+    cpu_helper.load_reg8(A, 0)
 
     # initialize SP
     cpu_helper.load_reg16(SP, 54)
@@ -92,10 +92,10 @@ def test_pop_a(cpu_helper: CPUHelper) -> None:
 def test_push_pop(cpu_helper: CPUHelper) -> None:
 
     cpu_helper.load_reg16(SP, 44)
-    ldi (C, 45)
+    cpu_helper.load_reg8(C, 45)
 
     push (C)
-    ldi (C, 20)
+    cpu_helper.load_reg8(C, 20)
     pop (C)
 
     val = cpu_helper.read_reg8(C)

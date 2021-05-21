@@ -18,8 +18,8 @@ def and_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
 @pytest.mark.parametrize("desc,val_a,val_b,result,xflags", and_test_args())
 def test_and(cpu_helper: CPUHelper, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
-    ldi(lhs, val_a)
-    ldi(rhs, val_b)
+    cpu_helper.load_reg8(lhs, val_a)
+    cpu_helper.load_reg8(rhs, val_b)
 
     andb(lhs, rhs)
 
@@ -36,8 +36,8 @@ def or_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
 @pytest.mark.parametrize("desc,val_a,val_b,result,xflags", or_test_args())
 def test_or(cpu_helper: CPUHelper, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
-    ldi(lhs, val_a)
-    ldi(rhs, val_b)
+    cpu_helper.load_reg8(lhs, val_a)
+    cpu_helper.load_reg8(rhs, val_b)
 
     orb(lhs, rhs)
 
@@ -64,7 +64,7 @@ def test_shr(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: bool, va
     else:
         ldi(F, 0)
 
-    ldi(reg, val)
+    cpu_helper.load_reg8(reg, val)
 
     shr(reg)
 
@@ -92,7 +92,7 @@ def test_ror(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: bool, va
     else:
         ldi(F, 0)
 
-    ldi(reg, val)
+    cpu_helper.load_reg8(reg, val)
 
     ror(reg)
 
@@ -117,7 +117,7 @@ def test_asr(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: bool, va
     else:
         ldi(F, 0)
 
-    ldi(reg, val)
+    cpu_helper.load_reg8(reg, val)
 
     asr(reg)
 
@@ -143,7 +143,7 @@ def test_swap(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: bool, v
     else:
         ldi(F, 0)
 
-    ldi(reg, val)
+    cpu_helper.load_reg8(reg, val)
 
     swap(reg)
 
@@ -161,8 +161,8 @@ def xor_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
 @pytest.mark.parametrize("desc,val_a,val_b,result,xflags", xor_test_args())
 def test_xor(cpu_helper: CPUHelper, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
-    ldi(lhs, val_a)
-    ldi(rhs, val_b)
+    cpu_helper.load_reg8(lhs, val_a)
+    cpu_helper.load_reg8(rhs, val_b)
 
     xor(lhs, rhs)
 
@@ -180,7 +180,7 @@ def not_args() -> Iterator[Tuple[str, int, int, str]]:
 @pytest.mark.parametrize("desc,val,result,xflags", not_args())
 def test_not(cpu_helper: CPUHelper, reg: Register, desc: str, val: int, result: int, xflags: str) -> None:
 
-    ldi(reg, val)
+    cpu_helper.load_reg8(reg, val)
 
     notb(reg)
 

@@ -4,17 +4,17 @@ import pytest
 
 from libcpu.cpu import *
 from libcpu.DeviceSetup import IR, IRFetch
-from libcpu.cpu_exec import CPUBackendControl
+from libcpu.test_helpers import CPUHelper
 from libcpu.DeviceSetup import AddSub as alu
 from typing import Iterator
 
 pytestmark = pytest.mark.hardware
 
-def test_reg_a_latch(cpu_backend_real: CPUBackendControl) -> None:
-        backend = cpu_backend_real
+def test_reg_a_latch(cpu_helper: CPUHelper) -> None:
+        backend = cpu_helper.backend
 
-        ldi(A, 54)
-        ldi(B, 0)
+        cpu_helper.load_reg8(A, 54)
+        cpu_helper.load_reg8(B, 0)
 
         # Load another value into A, but "forget" to pulse the
         # inverted clock
@@ -50,8 +50,8 @@ def singlebit_vals() -> Iterator[int]:
     yield 0
 
 @pytest.mark.parametrize("expected", singlebit_vals())
-def test_ir_load(cpu_backend_real: CPUBackendControl, expected: int) -> None:
-    backend = cpu_backend_real
+def test_ir_load(cpu_helper: CPUHelper, expected: int) -> None:
+    backend = cpu_helper.backend
 
     backend.client.bus_set(expected)
     IR.load.enable()

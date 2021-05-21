@@ -86,3 +86,12 @@ class CPUHelper:
         self.backend.client.off(self.backend.control.default)
 
         return value
+
+    def load_reg8(self, reg: Register, value: int) -> None:
+        self.backend.control.reset()
+        reg.load.enable()
+        self.backend.client.bus_set(value)
+        self.backend.client.ctrl_commit(self.backend.control.c_word)
+        self.backend.client.clock_tick()
+        self.backend.control.reset()
+        self.backend.client.off(self.backend.control.default)
