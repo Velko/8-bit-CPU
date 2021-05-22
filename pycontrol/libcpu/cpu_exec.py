@@ -1,4 +1,5 @@
 from typing import Union, Tuple, Optional, Sequence
+from .opcode_builder import MicroCode
 from .markers import AddrBase
 from .pseudo_devices import Imm, EnableCallback
 from .DeviceSetup import COutPort, OutPort, ProgMem, PC, Flags
@@ -27,15 +28,21 @@ class CPUBackendControl(CPUBackend):
             raise InvalidOpcodeException(opcode)
 
         Imm.set(arg)
-        self.branch_taken = False
 
         microcode = opcodes[opcode]
+
+        exec_result = self.execute_microcode(microcode)
+
+        Imm.clear()
+
+        return exec_result
+
+    def execute_microcode(self, microcode: MicroCode) -> Tuple[bool, Optional[int]]:
+        self.branch_taken = False
 
         steps = microcode.steps(lambda: self.get_flags_cached())
         for microstep in steps:
             self.execute_step(microstep)
-
-        Imm.clear()
 
         return self.branch_taken, self.out_hooked_val
 
