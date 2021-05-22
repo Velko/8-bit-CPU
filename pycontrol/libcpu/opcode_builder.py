@@ -1,6 +1,7 @@
+from enum import Enum
 from .util import ControlSignal
 from .devices import Register
-from typing import List, Tuple, Mapping, Sequence, Callable, Iterator
+from typing import List, Tuple, Mapping, Sequence, Callable, Iterator, Union
 
 class FlagsAlt:
     def __init__(self, owner: 'MicroCode', mask: int, value: int):
@@ -17,12 +18,25 @@ class FlagsAlt:
     def add_condition(self, mask: int, value: int) -> 'FlagsAlt':
         return self.owner.add_condition(mask, value)
 
+
+class OpcodeArg(Enum):
+    BYTE = 1
+    ADDR = 2
+
+    def __str__(self) -> str:
+        if (self == OpcodeArg.BYTE): return "imm"
+        if (self == OpcodeArg.ADDR): return "addr"
+
+        raise TypeError # suppress warning, something's really wrong
+
 class MicroCode:
-    def __init__(self, opcode: int, name: str):
+    def __init__(self, opcode: int, name: str, args: Sequence[Union[Register, OpcodeArg]]):
         self._steps: List[Sequence[ControlSignal]] = []
         self.f_alt: List[FlagsAlt] = []
         self.opcode = opcode
         self.name = name
+        self.args = args
+
 
     def is_flag_dependent(self) -> bool:
         return any(self.f_alt)
@@ -61,9 +75,9 @@ class MicrocodeBuilder:
     def __init__(self) -> None:
         self.opcodes: List[Tuple[str, MicroCode]] = []
 
-    def add_instruction(self, name: str, *fmt: Register) -> MicroCode:
-        opcode = name.format(*fmt)
-        ucode = MicroCode(len(self.opcodes), opcode)
+    def add_instruction(self, name: str, *args: Union[Register, OpcodeArg]) -> MicroCode:
+        opcode = "_".join([name] + list(map(lambda a: str(a), args)))
+        ucode = MicroCode(len(self.opcodes), name, args)
 
         self.opcodes.append((opcode, ucode))
         return ucode
