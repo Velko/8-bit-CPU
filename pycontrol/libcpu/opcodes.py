@@ -140,9 +140,13 @@ def build_opcodes() -> Mapping[str, MicroCode]:
             .add_step([ProgMem.out, Has.out, Mar.load, PC.count])\
             .add_step([v.out, Ram.write])
 
-    for a, v in permute_gp_regs_all():
-        builder.add_instruction("stabs", a, v)\
-            .add_step([a.out, Mar.load])\
+    for i, v in permute_gp_regs_all():
+        builder.add_instruction("stx", OpcodeArg.ADDR, i, v)\
+            .add_step([PC.out, ProgMar.load])\
+            .add_step([ProgMem.out, Has.load, PC.count])\
+            .add_step([PC.out, ProgMar.load])\
+            .add_step([ProgMem.out, Has.out, Mar.load, PC.count])\
+            .add_step([i.out, Mar.add])\
             .add_step([v.out, Ram.write])
 
     for r in gp_regs:
@@ -153,15 +157,22 @@ def build_opcodes() -> Mapping[str, MicroCode]:
             .add_step([ProgMem.out, Has.out, Mar.load, PC.count])\
             .add_step([Ram.out, r.load, Flags.calc])
 
-    for v, i in permute_gp_regs_all():
-        builder.add_instruction("ldrel", v, DP, i)\
-            .add_step([DP.out, Mar.load])\
+    for t, i in permute_gp_regs_all():
+        builder.add_instruction("ldx", t, OpcodeArg.ADDR, i)\
+            .add_step([PC.out, ProgMar.load])\
+            .add_step([ProgMem.out, Has.load, PC.count])\
+            .add_step([PC.out, ProgMar.load])\
+            .add_step([ProgMem.out, Has.out, Mar.load, PC.count])\
             .add_step([i.out, Mar.add])\
-            .add_step([v.load, Ram.out, Flags.calc])
+            .add_step([t.load, Ram.out, Flags.calc])
 
-    for r in gp_regs:
-        builder.add_instruction("tstabs", r)\
-            .add_step([r.out, Mar.load])\
+    for i in gp_regs:
+        builder.add_instruction("tstx", OpcodeArg.ADDR, i)\
+            .add_step([PC.out, ProgMar.load])\
+            .add_step([ProgMem.out, Has.load, PC.count])\
+            .add_step([PC.out, ProgMar.load])\
+            .add_step([ProgMem.out, Has.out, Mar.load, PC.count])\
+            .add_step([i.out, Mar.add])\
             .add_step([Ram.out, Flags.calc])
 
     builder.add_instruction("jmp", OpcodeArg.ADDR)\

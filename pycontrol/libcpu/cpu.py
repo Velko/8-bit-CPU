@@ -138,20 +138,20 @@ def st(addr: AddrBase, source: Register) -> None:
     opcode = "st_addr_{}".format(source.name)
     backend.execute_opcode(opcode, addr)
 
-def stabs(addr_reg: Register, source: Register) -> None:
+def stx(base: AddrBase, idx_reg: Register, source: Register) -> None:
     if backend is None: raise UninitializedError
-    opcode = "stabs_{}_{}".format(addr_reg.name, source.name)
-    backend.execute_opcode(opcode)
+    opcode = "stx_addr_{}_{}".format(idx_reg.name, source.name)
+    backend.execute_opcode(opcode, base)
 
-def ldrel(target: Register, base_reg: Register, idx_reg: Register) -> None:
+def ldx(target: Register, base: AddrBase, idx_reg: Register) -> None:
     if backend is None: raise UninitializedError
-    opcode = "ldrel_{}_{}_{}".format(target.name, base_reg.name, idx_reg.name)
-    backend.execute_opcode(opcode)
+    opcode = "ldx_{}_addr_{}".format(target.name, idx_reg.name)
+    backend.execute_opcode(opcode, base)
 
-def tstabs(addr_reg: Register) -> None:
+def tstx(base: AddrBase, idx_reg: Register) -> None:
     if backend is None: raise UninitializedError
-    opcode = "tstabs_{}".format(addr_reg.name)
-    backend.execute_opcode(opcode)
+    opcode = "tstx_addr_{}".format(idx_reg.name)
+    backend.execute_opcode(opcode, base)
 
 def ld(target: Register, addr: AddrBase) -> None:
     if backend is None: raise UninitializedError

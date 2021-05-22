@@ -48,11 +48,9 @@ def run() -> None:
 
     # fill seg0 with non-zero values
     while True:
-        # calculate target address of seg0[A] in B
-        ldi (B, seg0)
-        add (B, A)
 
-        stabs (B, A) # store "something" there (for starters, any non-zero value will do)
+        # calculate target address of seg0[A] in B
+        stx (seg0, A, A) # store "something" there (for starters, any non-zero value will do)
 
         # next index in A
         inc (A)
@@ -72,9 +70,7 @@ def run() -> None:
         st (p, A)   # store for later
 
         # calculate flags for seg0[A]
-        ldi (B, seg0)
-        add (B, A)
-        tstabs (B) # test byte in RAM
+        tstx (seg0, A) # test byte in RAM
 
         if not beq(): # emulate jumping over block
 
@@ -94,10 +90,8 @@ def run() -> None:
                 st (m, A)
 
                 # write zero at seg0[A]
-                ldi (B, seg0)
-                add (B, A)
-                ldi (A, 0)
-                stabs (B, A)
+                ldi (B, 0)
+                stx (seg0, A, B)
 
                 # reload stored values and calculate
                 # next multiple
@@ -110,11 +104,9 @@ def run() -> None:
 
             # at address of seg0[p]
             ld (A, p)
-            ldi (B, seg0)
-            add (B, A)
 
-            ld (A, m)
-            stabs (B, A)
+            ld (B, m)
+            stx (seg0, A, B)
 
         # next index in A
         ld (A, p)
@@ -136,10 +128,7 @@ def run() -> None:
         ldi (A, 0)
         while True:
             # write non-zero in seg_n[A]
-            ldi (B, seg_n)
-            add (B, A)
-
-            stabs(B, B) # can not write A, as it may be zero this time
+            stx (seg_n, A, D) # can not write A, as it may be zero this time
 
             # next index in A
             inc (A)
@@ -156,9 +145,7 @@ def run() -> None:
             st (p, A) # save for later
 
             # load seg0[A], getting the latest calculated multiple
-            ldi (B, seg0)
-            add (B, A)
-            ldabs (A, B) # it also calculates flags accordingly
+            ldx (A, seg0, A) # it also calculates flags accordingly
 
             if not beq():   # jump over if not prime
 
@@ -176,12 +163,10 @@ def run() -> None:
                     st (m, A)
 
                     # address of seg_n[A]
-                    ldi (B, seg_n)
-                    add (B, A)
+                    ldi (B, 0)
 
                     # write a zero over it
-                    ldi (A, 0)
-                    stabs (B, A)
+                    stx (seg_n, A, B)
 
                     # reload A and add p for next multiple
                     ld (A, m)
@@ -195,11 +180,8 @@ def run() -> None:
 
                 # and store it into the seg0[p]
                 st (m, A)
-                ld (A, p)
-                ldi (B, seg0)
-                add (B, A)
-                ld (A, m)
-                stabs (B, A)
+                ld (B, p)
+                stx (seg0, B, A)
 
             # next index in seg0
             ld (A, p)
@@ -217,9 +199,7 @@ def run() -> None:
         while True:
 
             # check byte at seg_n[A]
-            ldi (B, seg_n)
-            add (B, A)
-            tstabs(B)
+            tstx(seg_n, A)
 
             if not beq():
 
