@@ -57,13 +57,12 @@ def test_lea(cpu_helper: CPUHelper) -> None:
 
     assert val == 0x4314
 
-def test_mar_dp_minus(cpu_helper: CPUHelper) -> None:
+def test_mar_idx_minus(cpu_helper: CPUHelper) -> None:
 
     cpu_helper.write_ram(42, 0xB5)
-    cpu_helper.load_reg16(DP, 45)
     ldi (B, -3)
 
-    ldrel(A, DP, B);
+    ldx (A, Addr(45), B);
 
     val = cpu_helper.read_reg8(A)
 
