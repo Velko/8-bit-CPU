@@ -49,11 +49,11 @@ class CPUBackendAssemble(CPUBackend):
 
         org(self.addr_counter)
 
-    def execute_opcode(self, opcode: str, arg: Union[None, int, AddrBase]=None) -> Tuple[bool, Optional[int]]:
-        if not opcode in opcodes:
-            raise InvalidOpcodeException(opcode)
+    def execute_mnemonic(self, mnemonic: str, arg: Union[None, int, AddrBase]=None) -> Tuple[bool, Optional[int]]:
+        if not mnemonic in opcodes:
+            raise InvalidOpcodeException(mnemonic)
 
-        instr = ProgramInstruction(self.addr_counter, opcode)
+        instr = ProgramInstruction(self.addr_counter, mnemonic)
         self.program.append(instr)
 
         if arg is not None:
@@ -61,7 +61,7 @@ class CPUBackendAssemble(CPUBackend):
 
         self.advance_counter(fetch._steps)
 
-        microcode = opcodes[opcode]
+        microcode = opcodes[mnemonic]
 
         instr.bin_opcode = microcode.opcode
 

@@ -23,13 +23,13 @@ class CPUBackendControl(CPUBackend):
         ProgMem.hook_out(EnableCallback(Imm.enable_out, ProgMem.out))
 
 
-    def execute_opcode(self, opcode: str, arg: Union[None, int, AddrBase]=None) -> Tuple[bool, Optional[int]]:
-        if not opcode in opcodes:
-            raise InvalidOpcodeException(opcode)
+    def execute_mnemonic(self, mnemonic: str, arg: Union[None, int, AddrBase]=None) -> Tuple[bool, Optional[int]]:
+        if not mnemonic in opcodes:
+            raise InvalidOpcodeException(mnemonic)
 
         Imm.set(arg)
 
-        microcode = opcodes[opcode]
+        microcode = opcodes[mnemonic]
 
         exec_result = self.execute_microcode(microcode)
 

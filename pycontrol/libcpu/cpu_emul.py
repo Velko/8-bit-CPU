@@ -19,10 +19,10 @@ class CPUBackendEmulate(CPUBackend):
         self.B = 0
         self.Flags = 0
 
-    def execute_opcode(self, opcode: str, arg: Union[None, int, AddrBase]=None) -> Tuple[bool, Optional[int]]:
-        attr = getattr(self, "op_"+opcode)
+    def execute_mnemonic(self, mnemonic: str, arg: Union[None, int, AddrBase]=None) -> Tuple[bool, Optional[int]]:
+        attr = getattr(self, "op_"+mnemonic)
         if attr is None:
-            raise InvalidOpcodeException(opcode)
+            raise InvalidOpcodeException(mnemonic)
 
         if isinstance(arg, Bytes):
             arg = arg.start
