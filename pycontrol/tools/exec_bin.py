@@ -3,6 +3,7 @@
 import localpath
 from libcpu.PyAsmExec import setup_live, control
 from libcpu.util import unwrap
+from libcpu.markers import Addr
 setup_live()
 from libcpu.PyAsmExec import pins
 client = unwrap(pins)
@@ -20,7 +21,7 @@ def upload() -> None:
 
     for addr, byte in enumerate(binary):
         ldi (A, byte)
-        st (addr, A)
+        st (Addr(addr), A)
         print (".", end="", flush=True)
 
     print (" OK")
@@ -29,7 +30,7 @@ def upload() -> None:
 
 def run() -> None:
     # Reset PC and detach hooks for immediate value handling
-    jmp (0)
+    jmp (Addr(0))
     ProgMem.unhook_all()
 
     # prepare control word for IRFetch

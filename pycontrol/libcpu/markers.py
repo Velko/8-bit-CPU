@@ -28,7 +28,7 @@ class AddrBase:
         return [(addr >> 8) & 0xFF, addr & 0xFF]
 
 class Addr(AddrBase):
-    def __init__(self, addr):
+    def __init__(self, addr: int) -> None:
         self.addr = addr
 
     def a_bytes(self) -> List[int]:

@@ -19,6 +19,8 @@ def setup_live() -> None:
     cpu.install_cpu_backend(backend)
 
 def setup_data(s: InitializedBuffer) -> None:
+    if not isinstance(cpu.backend, CPUBackendControl):
+        raise TypeError
     helper = CPUHelper(cpu.backend)
     helper.write_data(s)
 
