@@ -9,13 +9,14 @@ sieve_start:
     ; also, value of 0 is used frequently
     ldi (C, 0)
 
+    ; start with seg0[2]
     ldi (A, 2)
 
     ; fill seg0 with non-zero values
     fill0_loop:
 
-        ; calculate target address of seg0[A] in B
-        stx (seg0, A, A) ; store "something" there (for starters, any non-zero value will do)
+        ; store "something" in seg0[A] (any non-zero value will do)
+        stx (seg0, A, D)
 
         ; next index in A
         inc (A)
@@ -23,26 +24,26 @@ sieve_start:
         ; are we done?
         cmp (A, D)
 
-        ; emulate conditional jump back to start of the loop
+        ; jump back to start of the loop
         bne(fill0_loop)
 
 
     ; Simple sieve for first 16
-    ldi (A, 2)
+    ldi (B, 2)  ; B holds current prime tested/processed
 
     seg0_loop:
-        st (p, A)   ; store for later
+        ; calculate flags for seg0[B]
+        tstx (seg0, B) ; test byte in RAM
 
-        ; calculate flags for seg0[A]
-        tstx (seg0, A) ; test byte in RAM
-
+        ; anything non-zero means prime found
         beq(seg0_next)
 
-            out(A)
+            ; print out
+            out(B)
 
-            ; start from next multiple
-            mov (B, A)
-            add (A, B)
+            ; mark multiples, starting from next one
+            mov (A, B)
+            add (A, A)
 
             seg0_fill_m_loop:
 
@@ -50,39 +51,26 @@ sieve_start:
                 cmp (A, D)
                 bcc(seg0_fill_m_end)
 
-                ; store for later
-                st (m, A)
-
                 ; write zero at seg0[A]
                 stx (seg0, A, C)
 
-                ; reload stored values and calculate
-                ; next multiple
-                ld (A, m)
-                ld (B, p)
+                ; calculate next multiple
                 add (A, B)
 
                 jmp (seg0_fill_m_loop)
 
             seg0_fill_m_end:
 
-            ; store largest multiple
-            st (m, A)
-
-            ; at address of seg0[p]
-            ld (A, p)
-
-            ld (B, m)
-            stx (seg0, A, B)
+            ; store largest multiple at seg0[B]
+            stx (seg0, B, A)
 
         seg0_next:
 
-        ; next index in A
-        ld (A, p)
-        inc (A)
+        ; next index in B
+        inc (B)
 
         ; are we done?
-        cmp (A, D)
+        cmp (B, D)
 
         bne(seg0_loop)
 
