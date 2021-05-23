@@ -2,15 +2,14 @@
 
 
 import sys, localpath
-from libcpu.PyAsmExec import setup_live, control
+from libcpu.PyAsmExec import setup_live
 from libcpu.util import unwrap
 setup_live(False)
 from libcpu.PyAsmExec import pins
 client = unwrap(pins)
 
-from libcpu.DeviceSetup import COutPort, OutPort, PC, IRFetch, Clock
-from libcpu.cpu import C, backend
-from libcpu.opcodes import fetch
+from libcpu.DeviceSetup import COutPort, OutPort, PC, Clock
+from libcpu.cpu import backend
 from libcpu.test_helpers import CPUHelper
 
 cpu_helper: CPUHelper = CPUHelper(backend)
@@ -36,23 +35,12 @@ def run() -> None:
     # Reset PC
     cpu_helper.load_reg16(PC, 0)
 
-    # prepare control word for IRFetch
-    control.reset()
-    IRFetch.load.enable()
-    irf_word = control.c_word
-
     # Drumroll... now it should happen for real
     print ("# Running ...", flush=True, file=sys.stderr)
 
     while True:
-        # fetch the instruction
-        cpu_helper.backend.execute_microcode(fetch)
-
-        # load opcode from IR register and flags
-        opcode = client.ir_get(irf_word)
-
-        # apply all steps
-        _, outval = cpu_helper.backend.execute_opcode(opcode)
+        # fetch and execute an instruction
+        outval = cpu_helper.backend.fetch_and_execute()
 
         # are we done?
         if Clock.halt.is_enabled():

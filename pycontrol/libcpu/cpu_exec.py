@@ -2,9 +2,9 @@ from typing import Union, Tuple, Optional, Sequence
 from .opcode_builder import MicroCode
 from .markers import AddrBase
 from .pseudo_devices import Imm, EnableCallback
-from .DeviceSetup import COutPort, OutPort, ProgMem, PC, Flags
-from .opcodes import opcodes, ops_by_code
-from .cpu import CPUBackend, InvalidOpcodeException
+from .DeviceSetup import COutPort, IRFetch, OutPort, ProgMem, PC, Flags
+from .opcodes import opcodes, ops_by_code, fetch
+from .cpu import CPUBackend, InvalidOpcodeException, ret
 from .pinclient import PinClient
 from .ctrl_word import CtrlWord
 from .util import ControlSignal
@@ -16,6 +16,11 @@ class CPUBackendControl(CPUBackend):
         self.out_hooked_val: Optional[int] = None
         self.branch_taken = False
         self.flags_cache: Optional[int] = None
+
+        # prepare control word for IRFetch
+        self.control.reset()
+        IRFetch.load.enable()
+        self.irf_word = control.c_word
 
         if install_hooks:
             Imm.connect(self.client)
@@ -95,3 +100,15 @@ class CPUBackendControl(CPUBackend):
             self.flags_cache = self.client.flags_get()
 
         return self.flags_cache
+
+    def fetch_and_execute(self) -> Optional[int]:
+        # fetch the instruction
+        self.execute_microcode(fetch)
+
+        # load opcode from IR register and flags
+        opcode = self.client.ir_get(self.irf_word)
+
+        # apply all steps
+        _, outval = self.execute_opcode(opcode)
+
+        return outval
