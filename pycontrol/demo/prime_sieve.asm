@@ -84,8 +84,9 @@ sieve_start:
         ; Fill seg_n with non-zeros
         mov (A, C)
         seg_n0_loop:
-            ; write non-zero in seg_n[A]
-            stx (seg_n, A, D) ; can not write A, as it may be zero this time
+
+            ; store "something" in seg0[A] (any non-zero value will do)
+            stx (seg_n, A, D)
 
             ; next index in A
             inc (A)
@@ -96,12 +97,14 @@ sieve_start:
             ; conditional jump back to start of the loop
             bne(seg_n0_loop)
 
-        ldi (A, 2)
-        seg_n_mark_loop:
-            st (p, A) ; save for later
+        ; process items from seg0, starting with 2
+        ldi (B, 2)
 
-            ; load seg0[A], getting the latest calculated multiple
-            ldx (A, seg0, A) ; it also calculates flags accordingly
+        seg_n_mark_loop:
+            st (p, B) ; save for later
+
+            ; load seg0[B], getting the latest calculated multiple
+            ldx (A, seg0, B) ; it also calculates flags accordingly
 
             beq(seg_n_mark_next)   ; jump over if not prime
 
@@ -115,15 +118,10 @@ sieve_start:
                     cmp (A, D)
                     bcc(seg_n_mark_mult_end)
 
-                    ; store, as we will need A for other purposes
-                    st (m, A)
-
-                    ; address of seg_n[A]
-                    ; write a zero over it
+                    ; write a zero over seg_n[A]
                     stx (seg_n, A, C)
 
-                    ; reload A and add p for next multiple
-                    ld (A, m)
+                    ; add p for next multiple
                     ld (B, p)
                     add (A, B)
 
@@ -144,11 +142,11 @@ sieve_start:
             seg_n_mark_next:
 
             ; next index in seg0
-            ld (A, p)
-            inc (A)
+            ld (B, p)
+            inc (B)
 
             ; done with seg0?
-            cmp (A, D)
+            cmp (B, D)
 
             ; next iteration
             bne(seg_n_mark_loop)
