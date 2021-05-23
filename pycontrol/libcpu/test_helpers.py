@@ -2,7 +2,7 @@
 
 from libcpu.devices import Register
 from libcpu.cpu_exec import CPUBackendControl
-from libcpu.DeviceSetup import Has, Mar, Ram
+from libcpu.DeviceSetup import Flags, Has, Mar, Ram
 from libcpu.markers import InitializedBuffer
 
 
@@ -76,6 +76,9 @@ class CPUHelper:
 
     def get_flags(self) -> int:
         return self.backend.client.flags_get()
+
+    def get_flags_s(self) -> str:
+        return Flags.decode(self.get_flags())
 
     def read_reg8(self, reg: Register) -> int:
         self.backend.control.reset()
