@@ -260,6 +260,9 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
     builder.add_instruction("ret")\
         .add_step([PSW.swap])
 
+    builder.add_instruction("brk")\
+        .add_step([Clock.brk])
+
     builder.add_instruction("hlt")\
         .add_step([Clock.halt])
 

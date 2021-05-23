@@ -223,5 +223,6 @@
     pop  (LR) => 0xdb
     call  ({address0}) => 0xdc @ address0[15:8] @ address0[7:0]
     ret  () => 0xdd
-    hlt  () => 0xde
+    brk  () => 0xde
+    hlt  () => 0xdf
 }

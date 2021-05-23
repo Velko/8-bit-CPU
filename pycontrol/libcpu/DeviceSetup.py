@@ -82,7 +82,8 @@ IR = dev.Register("IR",
     load = MuxPin(LoadMux, 4))
 
 Clock = dev.Clock("Clock",
-    halt = Pin(13, Level.LOW))
+    halt = Pin(13, Level.LOW),
+    brk = Pin(26, Level.HIGH))
 
 StepCounter = dev.StepCounter("Steps",
     reset = Pin(7, Level.LOW))

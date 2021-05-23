@@ -1,10 +1,11 @@
 #!/usr/bin/python3
 
 import sys, cmd
+from typing import Dict, Optional
 import localpath
 
-from libcpu.DeviceSetup import COutPort, LR, OutPort, PC, Clock, SP
-
+from libcpu.DeviceSetup import COutPort, IR, LR, OutPort, PC, Clock, SP
+from libcpu.opcodes import opcodes
 from libcpu.PyAsmExec import setup_live
 setup_live(False)
 from libcpu.cpu import A, B, C, D, backend
@@ -41,7 +42,7 @@ class DebugCmd(cmd.Cmd):
             print ("Usage:\nmem <start> [len]")
             return
 
-        a_start = int(nums[0], 0)
+        a_start = int(nums[0], 16)
 
         a_len = 1
         if len(nums) > 1:
@@ -62,9 +63,29 @@ class DebugCmd(cmd.Cmd):
         print (f"LR = {cpu_helper.read_reg16(LR):04x}")
         print (f"SP = {cpu_helper.read_reg16(SP):04x}")
 
+    def do_break(self, arg: str) -> None:
+        if not arg:
+            print ("Usage:\nbreak <addr>")
+            return
+
+        b_addr = int(arg, 16)
+
+        debugger.set_breakpoint(b_addr)
+
+
+class Breakpoint:
+    def __init__(self, addr: int, orig_op: int):
+        self.addr = addr
+        self.orig_op = orig_op
+
 class Debugger:
     def __init__(self) -> None:
         self.halted = False
+        self.stopped = True
+
+        self.breakpoints: Dict[int, Breakpoint] = {}
+
+        self.current_break: Optional[Breakpoint] = None
 
     def upload(self, file: str) -> None:
 
@@ -86,13 +107,24 @@ class Debugger:
             print ("# Halted", flush=True, file=sys.stderr)
             return
 
-        # fetch and execute an instruction
-        outval = cpu_helper.backend.fetch_and_execute()
+        if self.current_break is not None:
+            # special case: active breakpoint
+            _, outval = cpu_helper.backend.execute_opcode(self.current_break.orig_op)
+            self.current_break = None
+        else:
+            # fetch and execute an instruction
+            outval = cpu_helper.backend.fetch_and_execute()
 
         # are we done?
         if Clock.halt.is_enabled():
             print ("# Halted", flush=True, file=sys.stderr)
             self.halted = True
+            self.stopped = True
+
+        # breakpoint?
+        if Clock.brk.is_enabled():
+            self.stopped = True
+            self.break_hit()
 
         # catch output value
         if OutPort.load.is_enabled():
@@ -104,8 +136,11 @@ class Debugger:
 
         if self.halted:
             print ("# Halted", flush=True, file=sys.stderr)
+            return
 
-        while not self.halted:
+        self.stopped = False
+
+        while not self.stopped:
             self.step()
 
     def reset(self) -> None:
@@ -121,6 +156,27 @@ class Debugger:
         # Drumroll... now it should happen for real
         print ("# Running ...", flush=True, file=sys.stderr)
         self.cont()
+
+    def set_breakpoint(self, addr: int) -> None:
+
+        pmem = cpu_helper.read_ram(addr)
+
+        bkp = Breakpoint(addr, pmem)
+
+        self.breakpoints[addr] = bkp
+
+        # replace it with brk()
+        cpu_helper.write_ram(addr, opcodes["brk"].opcode)
+
+    def break_hit(self) -> None:
+        addr = cpu_helper.read_reg16(PC) - 1
+
+        if addr in self.breakpoints:
+            self.current_break = self.breakpoints[addr]
+            cpu_helper.load_reg8(IR, self.current_break.orig_op)
+            print (f"# Breakpoint @ {addr:04x}")
+        else:
+            print (f"# Hardcoded breakpoint @ {addr:04x}")
 
 
 

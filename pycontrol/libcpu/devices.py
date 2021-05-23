@@ -84,9 +84,10 @@ class HasRegister(Register):
         self.dir = dir
 
 class Clock:
-    def __init__(self, name: str, halt: PinBase) -> None:
+    def __init__(self, name: str, halt: PinBase, brk: PinBase) -> None:
         self.name = name
         self.halt = halt
+        self.brk  = brk
 
 class StepCounter:
     def __init__(self, name: str, reset: PinBase) -> None:
