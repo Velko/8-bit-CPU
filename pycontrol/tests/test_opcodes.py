@@ -56,7 +56,7 @@ class OpcodeFixture:
             .add_condition(mask=Flags.C, value=Flags.C)\
                 .add_step([EnableCallback(self.log_alt, self.orig_alt)])
 
-        self.opcodes = builder.build()
+        self.opcodes, self.ops_by_code = builder.build()
 
         self.reset()
 

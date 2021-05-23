@@ -82,5 +82,5 @@ class MicrocodeBuilder:
         self.opcodes.append((opcode, ucode))
         return ucode
 
-    def build(self) -> Mapping[str, MicroCode]:
-        return dict(self.opcodes)
+    def build(self) -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
+        return dict(self.opcodes), list(map(lambda o: o[1], self.opcodes))

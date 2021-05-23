@@ -40,7 +40,7 @@ class ImmediateValue:
             del self.value[0]
 
     def disable(self) -> None:
-        if self.client is None: raise UninitializedError
+        if self.client is None: return
         if self.write_enabled:
             self.client.bus_free()
             self.write_enabled = False

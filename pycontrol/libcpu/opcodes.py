@@ -1,7 +1,7 @@
 from .DeviceSetup import *
 from .opcode_builder import MicrocodeBuilder, MicroCode, OpcodeArg
 from .devices import Register, GPRegister
-from typing import Sequence, Iterator, Tuple, Mapping
+from typing import List, Sequence, Iterator, Tuple, Mapping
 
 gp_regs: Sequence[GPRegister] = [RegA, RegB, RegC, RegD]
 
@@ -26,7 +26,7 @@ def permute_regs_lr(lregs: Sequence[Register], rregs: Sequence[Register]) -> Ite
         for r in rregs:
             yield l, r
 
-def build_opcodes() -> Mapping[str, MicroCode]:
+def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
 
     builder = MicrocodeBuilder()
 
@@ -267,4 +267,4 @@ def build_opcodes() -> Mapping[str, MicroCode]:
     return builder.build()
 
 
-opcodes = build_opcodes()
+opcodes, ops_by_code = build_opcodes()

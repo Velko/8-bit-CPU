@@ -3,24 +3,25 @@ from .opcode_builder import MicroCode
 from .markers import AddrBase
 from .pseudo_devices import Imm, EnableCallback
 from .DeviceSetup import COutPort, OutPort, ProgMem, PC, Flags
-from .opcodes import opcodes, fetch
+from .opcodes import opcodes, ops_by_code
 from .cpu import CPUBackend, InvalidOpcodeException
 from .pinclient import PinClient
 from .ctrl_word import CtrlWord
 from .util import ControlSignal
 
 class CPUBackendControl(CPUBackend):
-    def __init__(self, client: PinClient, control: CtrlWord):
+    def __init__(self, client: PinClient, control: CtrlWord, install_hooks: bool=True):
         self.client = client
         self.control = control
         self.out_hooked_val: Optional[int] = None
         self.branch_taken = False
         self.flags_cache: Optional[int] = None
 
-        Imm.connect(self.client)
+        if install_hooks:
+            Imm.connect(self.client)
 
-        # hook into ProgMem read routine
-        ProgMem.hook_out(EnableCallback(Imm.enable_out, ProgMem.out))
+            # hook into ProgMem read routine
+            ProgMem.hook_out(EnableCallback(Imm.enable_out, ProgMem.out))
 
 
     def execute_mnemonic(self, mnemonic: str, arg: Union[None, int, AddrBase]=None) -> Tuple[bool, Optional[int]]:
@@ -36,6 +37,14 @@ class CPUBackendControl(CPUBackend):
         Imm.clear()
 
         return exec_result
+
+    def execute_opcode(self, opcode: int) -> Tuple[bool, Optional[int]]:
+        if opcode >= len(ops_by_code):
+            raise InvalidOpcodeException(opcode)
+
+        microcode = ops_by_code[opcode]
+
+        return self.execute_microcode(microcode)
 
     def execute_microcode(self, microcode: MicroCode) -> Tuple[bool, Optional[int]]:
         self.branch_taken = False
