@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import sys, cmd
-from typing import Dict, Optional
+from typing import Dict, Mapping, Optional, Union
 import localpath
 
 from libcpu.DeviceSetup import COutPort, IR, LR, OutPort, PC, Clock, SP
@@ -54,14 +54,16 @@ class DebugCmd(cmd.Cmd):
         print()
 
     def do_regs(self, arg: str) -> None:
-        print (f"A = {cpu_helper.read_reg8(A):02x}")
-        print (f"B = {cpu_helper.read_reg8(B):02x}")
-        print (f"C = {cpu_helper.read_reg8(C):02x}")
-        print (f"D = {cpu_helper.read_reg8(D):02x}")
-        print (f"Flags = {cpu_helper.get_flags_s()}")
-        print (f"PC = {cpu_helper.read_reg16(PC):04x}")
-        print (f"LR = {cpu_helper.read_reg16(LR):04x}")
-        print (f"SP = {cpu_helper.read_reg16(SP):04x}")
+        regs = debugger.get_registers()
+
+        print (f"A = {regs['A']:02x}")
+        print (f"B = {regs['B']:02x}")
+        print (f"C = {regs['C']:02x}")
+        print (f"D = {regs['D']:02x}")
+        print (f"Flags = {regs['Flags']}")
+        print (f"PC = {regs['PC']:04x}")
+        print (f"LR = {regs['LR']:04x}")
+        print (f"SP = {regs['SP']:04x}")
 
     def do_break(self, arg: str) -> None:
         if not arg:
@@ -178,6 +180,25 @@ class Debugger:
         else:
             print (f"# Hardcoded breakpoint @ {addr:04x}")
 
+    def get_registers(self) -> Mapping[str, Union[int, str]]:
+        registers = {
+            "A": cpu_helper.read_reg8(A),
+            "B": cpu_helper.read_reg8(B),
+            "C": cpu_helper.read_reg8(C),
+            "D": cpu_helper.read_reg8(D),
+            "Flags": cpu_helper.get_flags_s(),
+            "LR": cpu_helper.read_reg16(LR),
+            "SP": cpu_helper.read_reg16(SP)
+        }
+
+        # if breakpoint just hit, PC is not accurate
+        # show breakpoint address instead
+        if self.current_break is not None:
+            registers["PC"] = self.current_break.addr
+        else:
+            registers["PC"] = cpu_helper.read_reg16(PC)
+
+        return registers
 
 
 debugger = Debugger()
