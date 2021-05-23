@@ -6,6 +6,8 @@ sieve_start:
     ; value of 16 is commonly used for comparisons, keep it
     ; in register for quick access
     ldi (D, 16)
+    ; also, value of 0 is used frequently
+    ldi (C, 0)
 
     ldi (A, 2)
 
@@ -52,8 +54,7 @@ sieve_start:
                 st (m, A)
 
                 ; write zero at seg0[A]
-                ldi (B, 0)
-                stx (seg0, A, B)
+                stx (seg0, A, C)
 
                 ; reload stored values and calculate
                 ; next multiple
@@ -93,7 +94,7 @@ sieve_start:
         st (r_low, A)
 
         ; Fill seg_n with non-zeros
-        ldi (A, 0)
+        mov (A, C)
         seg_n0_loop:
             ; write non-zero in seg_n[A]
             stx (seg_n, A, D) ; can not write A, as it may be zero this time
@@ -130,10 +131,8 @@ sieve_start:
                     st (m, A)
 
                     ; address of seg_n[A]
-                    ldi (B, 0)
-
                     ; write a zero over it
-                    stx (seg_n, A, B)
+                    stx (seg_n, A, C)
 
                     ; reload A and add p for next multiple
                     ld (A, m)
@@ -167,7 +166,7 @@ sieve_start:
             bne(seg_n_mark_loop)
 
         ; segment done, print it out
-        ldi (A, 0)
+        mov (A, C)
         seg_n_print_loop:
 
             ; check byte at seg_n[A]
