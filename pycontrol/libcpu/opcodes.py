@@ -44,11 +44,11 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
         .add_step([PC.out, ProgMar.load])\
         .add_step([Flags.load, ProgMem.out, PC.count])
 
-    builder.add_instruction("lea", DP, OpcodeArg.ADDR)\
+    builder.add_instruction("lea", SP, OpcodeArg.ADDR)\
         .add_step([PC.out, ProgMar.load])\
         .add_step([ProgMem.out, Has.load, PC.count])\
         .add_step([PC.out, ProgMar.load])\
-        .add_step([ProgMem.out, Has.out, DP.load, PC.count])
+        .add_step([ProgMem.out, Has.out, SP.load, PC.count])
 
     for l, r in permute_gp_regs_all():
         builder.add_instruction("add", l, r)\
@@ -217,13 +217,31 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
             .add_step([PC.out, ProgMar.load])\
             .add_step([ProgMem.out, Has.out, PC.load])
 
+    builder.add_instruction("bmi", OpcodeArg.ADDR)\
+        .add_step([PC.count])\
+        .add_step([PC.count])\
+        .add_condition(mask=Flags.N, value=Flags.N)\
+            .add_step([PC.out, ProgMar.load])\
+            .add_step([ProgMem.out, Has.load, PC.count])\
+            .add_step([PC.out, ProgMar.load])\
+            .add_step([ProgMem.out, Has.out, PC.load])
+
+    builder.add_instruction("bpl", OpcodeArg.ADDR)\
+        .add_step([PC.count])\
+        .add_step([PC.count])\
+        .add_condition(mask=Flags.N, value=0)\
+            .add_step([PC.out, ProgMar.load])\
+            .add_step([ProgMem.out, Has.load, PC.count])\
+            .add_step([PC.out, ProgMar.load])\
+            .add_step([ProgMem.out, Has.out, PC.load])
+
     for r in gp_regs:
         builder.add_instruction("push", r)\
             .add_step([SP.dec])\
             .add_step([SP.out, Mar.load])\
             .add_step([r.out, Ram.write])
 
-    builder.add_instruction("push_F")\
+    builder.add_instruction("pushf")\
             .add_step([SP.dec])\
             .add_step([SP.out, Mar.load])\
             .add_step([Flags.out, Ram.write])
@@ -240,7 +258,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
             .add_step([SP.out, Mar.load])\
             .add_step([Ram.out, r.load, SP.inc])
 
-    builder.add_instruction("pop_F")\
+    builder.add_instruction("popf")\
         .add_step([SP.out, Mar.load])\
         .add_step([Ram.out, Flags.load, SP.inc])
 
