@@ -68,6 +68,9 @@ void set_control(uint32_t control_word)
     if ((control_word & MUX_ALUARGB_MASK) == (CTRL_DEFAULT & MUX_ALUARGB_MASK))
         alu_arg_b_bus = 0; // default value forces B input to 0
 
+    // "pull" to current value (relevant to C and V flags)
+    flags_bus = Flags.read_tap();
+
     // A input is always connected to one of registers
 
     A.set_tap_a((control_word & MUX_ALUARGA_MASK) == MPIN_A_ALU_A_BITS);
