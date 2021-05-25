@@ -3,6 +3,13 @@
 start:
     lea (SP, stack)
 
+    call (convert_number)
+    call (print_digits)
+
+    hlt()
+
+; ---------------------------------------------------------------------------------------
+convert_number:
     ldi (D, 32)  ; repeat for each bit
     ldi (B, 5)   ; for comparison
 
@@ -64,6 +71,7 @@ add3_skip:
     ; convert contents of digits to ASCTI characters
     ldi (B, 0x30) ; code of '0'
     ldi (C, 9)
+
 to_char_loop:
 
     ldx (A, digits, C)
@@ -73,35 +81,38 @@ to_char_loop:
     dec (C)
     bpl (to_char_loop)
 
+    ret ()
 
+; ---------------------------------------------------------------------------------------
+print_digits:
     ; find first non-0 digit
-    ; B still contains ASCII of '0'
+    ldi (B, 0x30) ; code of '0'
     ldi (D, 9)  ; upper limit for search
     clr (C)
 find0_loop:
     ldx (A, digits, C)
     cmp (A, B)
-    bne (print_digits)
+    bne (found_non0)
 
     inc (C)
     cmp (C, D)
     bne (find0_loop)
 
-print_digits:
+found_non0:
     ldx (A, digits, C)
     beq (print_end)
     cout (A)
     inc (C)
-    jmp (print_digits)
+    jmp (found_non0)
 
 print_end:
     ldi (A, 10) ; \n
     cout (A)
 
-    hlt()
+    ret ()
 
-; digits[] and number[] should be placed next to each other, as they are sometimes accessed
-; as one big array
+; digits[] and number[] should be placed next to each other, as number[] serves
+; as \0 separator after conversion is complete
 digits:
     #d8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 number:
