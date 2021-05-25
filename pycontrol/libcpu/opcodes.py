@@ -87,6 +87,10 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
             .add_step([r.load, r.alu_a, XorNot.out, XorNot.alt, Flags.calc])
 
     for r in gp_regs:
+        builder.add_instruction("clr", r)\
+            .add_step([r.load, r.alu_a, r.alu_b, XorNot.out, Flags.calc])
+
+    for r in gp_regs:
         builder.add_instruction("inc", r)\
             .add_step([r.load, r.alu_a, AddSub.out, Flags.calc, Flags.carry])
 

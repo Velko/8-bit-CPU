@@ -28,7 +28,7 @@ add3_skip:
 
 
     ; push on stack initial flags value
-    ldi (A, 0)
+    clr (A)
     push (A)
 
     ldi (C, 13)  ; index in digits[] + number[]
@@ -66,7 +66,7 @@ to_char_loop:
     ; find first non-0 digit
     ; B still contains ASCII of '0'
     ldi (D, 9)  ; upper limit for search
-    ldi (C, 0)
+    clr (C)
 find0_loop:
     ldx (A, digits, C)
     cmp (A, B)
