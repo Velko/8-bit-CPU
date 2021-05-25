@@ -3,50 +3,61 @@
 start:
     lea (SP, stack)
 
-    ldi (D, 32) ; repeat for each bit
+    ldi (D, 32)  ; repeat for each bit
+    ldi (B, 5)   ; for comparison
+
 double_loop:
+    push (D)
+    ldi (D, 123) ; to add if >= 5
+
+    ; push initial flags value (C = 0)
+    clr (A)
+    push (A)
+
+    ldi (C, 3)  ; index in number[]
+num_shift_loop:
+    ldx (A, number, C)
+    popf () ; load flags (initial C = 0, or one from previous iteration)
+    adc (A, A)
+    stx (number, C, A)
+
+    pushf () ; store for next iteration
+
+    ; next number[]
+    dec (C)
+    bpl (num_shift_loop)
+
+    ; now number[] is shifted left one place, flags with C bit on stack
 
     ldi (C, 9)  ; index in digits[]
-add3_loop:
+add3_shift_loop:
 
     ; check each digit if >=5
     ldx (A, digits, C)
-    ldi (B, 5)
     cmp (A, B)
 
     bcs (add3_skip)
 
     ; adjust it for '10s carry'
-    ldi (B, 123)
-    add (A, B)
-    stx (digits, C, A)
+    add (A, D)
 
 add3_skip:
-    dec (C)
 
-    bpl (add3_loop)
-
-
-    ; push on stack initial flags value
-    clr (A)
-    push (A)
-
-    ldi (C, 13)  ; index in digits[] + number[]
-shift_loop:
-
-    ldx (A, digits, C)
-    popf () ; load flags (initial C = 0, or one from previous iteration)
+    ; now shift
+    popf () ; load flags (one from previous iteration)
     adc (A, A)
     stx (digits, C, A)
 
     pushf () ; store for next iteration
 
+    ; next digits[]
     dec (C)
-    bpl (shift_loop)
+    bpl (add3_shift_loop)
 
     pop (A) ; discard last flags on stack
 
     ; next outer loop iteration
+    pop (D)
     dec (D)
     bne (double_loop)
 
