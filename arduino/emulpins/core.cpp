@@ -1,5 +1,6 @@
 #include "devices.h"
 #include "op-defs.h"
+#include "device_interface.h"
 
 uint8_t main_bus;
 uint8_t addr_high_bus;
@@ -13,7 +14,7 @@ Register D;
 Register IR;
 AddressReg DP;
 
-void set_control(uint32_t control_word)
+uint32_t Control::write32(uint32_t control_word)
 {
     A.set_load((control_word & MUX_LOAD_MASK) == MPIN_A_LOAD_BITS);
     B.set_load((control_word & MUX_LOAD_MASK) == MPIN_B_LOAD_BITS);
@@ -90,7 +91,7 @@ void set_control(uint32_t control_word)
     XorNot.set_out((control_word & MUX_OUT_MASK) == MPIN_XORNOT_OUT_BITS);
 }
 
-void clock_pulse()
+void Clock::pulse()
 {
     A.clock_pulse();
     B.clock_pulse();
@@ -108,7 +109,7 @@ void clock_pulse()
     DP.clock_pulse();
 }
 
-void clock_inverted()
+void InvClock::pulse()
 {
     A.clock_inverted();
     B.clock_inverted();

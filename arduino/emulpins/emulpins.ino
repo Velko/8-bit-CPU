@@ -5,10 +5,13 @@
 #include <EEPROM.h>
 #include "op-defs.h"
 #include "devices.h"
+#include "device_interface.h"
 
 
 void load_default_cword();
 void store_default_cword(uint32_t cword);
+
+DeviceInterface dev;
 
 uint32_t default_cword;
 
@@ -16,7 +19,7 @@ void setup()
 {
     Serial.begin(115200);
     load_default_cword();
-    set_control(default_cword);
+    dev.control.write32(default_cword);
     RAM.setup();
 }
 
@@ -36,30 +39,35 @@ void loop()
         break;
 
     case 'B':
-        main_bus = Serial.parseInt();
+        val = Serial.parseInt();
+        dev.mainBus.write(val);
         break;
 
     case 'b':
-        Serial.println(main_bus);
+        dev.mainBus.set_input();
+        val = dev.mainBus.read();
+        Serial.println(val);
         break;
 
     case 's':
-        Serial.println(Flags.read_tap());
+        val = dev.flagsBus.read();
+        Serial.println(val);
         break;
 
     case 'f':
+        dev.mainBus.set_input();
         break;
 
     case 'O':
         val = Serial.parseInt();
         store_default_cword(val);
-        set_control(val);
-        main_bus = 0;
+        dev.control.write32(val);
+        dev.mainBus.set_input();
         break;
 
     case 'M':
         val = Serial.parseInt();
-        set_control(val);
+        dev.control.write32(val);
         break;
 
     case 'N':
@@ -67,16 +75,16 @@ void loop()
         break;
 
     case 'c':
-        clock_pulse();
+        dev.clock.pulse();
         break;
 
     case 'C':
-        clock_inverted();
+        dev.inv_clock.pulse();
         break;
 
     case 'T':
-        clock_pulse();
-        clock_inverted();
+        dev.clock.pulse();
+        dev.inv_clock.pulse();
         break;
 
     case 'r':
