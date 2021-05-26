@@ -5,7 +5,7 @@ import random
 
 from libcpu.cpu import *
 from libcpu.devices import Register
-from libcpu.DeviceSetup import DP
+from libcpu.DeviceSetup import SP
 from libcpu.markers import Addr
 from libcpu.test_helpers import CPUHelper
 from typing import Iterator, Tuple
@@ -49,11 +49,11 @@ def test_mov_a_b(cpu_helper: CPUHelper, lhs: Register, rhs: Register) -> None:
 
 def test_lea(cpu_helper: CPUHelper) -> None:
 
-    cpu_helper.load_reg16(DP, 0)
+    cpu_helper.load_reg16(SP, 0x4314)
 
-    lea(DP, Addr(0x4314))
+    #lea(SP, Addr(0x4314))
 
-    val = cpu_helper.read_reg16(DP)
+    val = cpu_helper.read_reg16(SP)
 
     assert val == 0x4314
 

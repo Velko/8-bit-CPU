@@ -119,7 +119,7 @@ class PCSwap
 class StackPointer
 {
     private:
-        uint8_t val;
+        uint16_t val;
         bool inc_enabled;
         bool dec_enabled;
         bool load_enabled;
