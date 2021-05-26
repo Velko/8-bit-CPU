@@ -70,6 +70,15 @@ void execute_steps()
                 delay(250);
             }
 
+            /* special handling to intercept character output */
+            if ((steps[i] & MUX_LOAD_MASK) ==  MPIN_COUT_LOAD_BITS)
+            {
+                uint8_t out_val = dev.mainBus.read();
+                sprintf(txt_buf, "%c", out_val);
+                Serial.print(txt_buf);
+                delay(5);
+            }
+
             dev.inv_clock.pulse();
 
             if ((steps[i] & LPIN_CLOCK_HALT_BIT) == 0)
