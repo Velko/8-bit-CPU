@@ -94,6 +94,7 @@ class Mux:
     def disable(self) -> None:
         self.enable(self.default)
 
+    @property
     def current(self) -> int:
         if self.control_word is None:
             raise UninitializedError
@@ -126,4 +127,4 @@ class MuxPin(PinBase):
         self.mux.disable()
 
     def is_enabled(self) -> bool:
-        return self.mux.current() == self.num
+        return self.mux.current == self.num
