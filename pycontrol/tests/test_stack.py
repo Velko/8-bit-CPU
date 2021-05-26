@@ -106,9 +106,9 @@ def test_push_popf(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg16(SP, 88)
     ldi (F, 0b1101)
 
-    push (F)
+    pushf ()
     ldi (F, 0)
-    pop (F)
+    popf ()
 
     val = cpu_helper.backend.client.flags_get()
     assert val == 0b1101

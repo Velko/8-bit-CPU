@@ -203,6 +203,14 @@ def pop(target: Register) -> None:
     opcode = f"pop_{target.name}"
     backend.execute_mnemonic(opcode)
 
+def pushf() -> None:
+    if backend is None: raise UninitializedError
+    backend.execute_mnemonic("pushf")
+
+def popf() -> None:
+    if backend is None: raise UninitializedError
+    backend.execute_mnemonic("popf")
+
 def ret() -> None:
     if backend is None: raise UninitializedError
     backend.execute_mnemonic("ret")
