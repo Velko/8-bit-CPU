@@ -7,7 +7,7 @@
 #include "devices.h"
 #include "device_interface.h"
 
-
+void run_program();
 void load_default_cword();
 void store_default_cword(uint32_t cword);
 
@@ -90,6 +90,15 @@ void loop()
     case 'r':
         val = Serial.parseInt();
         Serial.println(IR.read_tap());
+        break;
+
+    case 'R':
+        if (default_cword != CTRL_DEFAULT)
+        {
+            Serial.println(F("Wiring updated, re-upload sketch!"));
+            break;
+        }
+        run_program();
         break;
 
     default:
