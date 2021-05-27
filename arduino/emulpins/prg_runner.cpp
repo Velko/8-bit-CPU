@@ -8,18 +8,6 @@ extern DeviceInterface dev;
 
 char txt_buf[80];
 
-void reset_pc()
-{
-    /* write 0 into PC */
-    dev.control.write32(MAKE_MUX_CWORD(MUX_LOAD_MASK, MPIN_PC_LOAD_BITS));
-    dev.mainBus.write(0);
-    dev.clock.pulse();
-    dev.inv_clock.pulse();
-
-    /* release the bus */
-    dev.mainBus.set_input();
-}
-
 uint8_t fetch_instruction()
 {
     dev.control.write32(op_fetch[0]);
@@ -65,7 +53,7 @@ void execute_steps()
             if ((steps[i] & MUX_LOAD_MASK) ==  MPIN_OUT_LOAD_BITS)
             {
                 uint8_t out_val = dev.mainBus.read();
-                sprintf(txt_buf, "%d", out_val);
+                sprintf(txt_buf, "#IOUT#%d", out_val);
                 Serial.println(txt_buf);
                 delay(250);
             }
@@ -74,8 +62,8 @@ void execute_steps()
             if ((steps[i] & MUX_LOAD_MASK) ==  MPIN_COUT_LOAD_BITS)
             {
                 uint8_t out_val = dev.mainBus.read();
-                sprintf(txt_buf, "%c", out_val);
-                Serial.print(txt_buf);
+                sprintf(txt_buf, "#COUT#%d", out_val);
+                Serial.println(txt_buf);
                 delay(5);
             }
 
@@ -83,7 +71,13 @@ void execute_steps()
 
             if ((steps[i] & LPIN_CLOCK_HALT_BIT) == 0)
             {
-                Serial.println("Halted");
+                Serial.println("#HLT");
+                return;
+            }
+
+            if ((steps[i] & HPIN_CLOCK_BRK_BIT) != 0)
+            {
+                Serial.println("#BRK");
                 return;
             }
         }
@@ -92,6 +86,5 @@ void execute_steps()
 
 void run_program()
 {
-    reset_pc();
     execute_steps();
 }

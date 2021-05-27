@@ -142,8 +142,32 @@ class Debugger:
 
         self.stopped = False
 
-        while not self.stopped:
+        # if stopped on breakpoint, complete the instruction
+        # before resuming hardware-side execution
+        if self.current_break is not None:
             self.step()
+
+        out = cpu_helper.backend.client.run_program();
+
+        for line in out:
+            line = line.strip()
+            if line == "#HLT":
+                print ("# Halted", flush=True, file=sys.stderr)
+                self.halted = True
+                self.stopped = True
+                break
+
+            elif line == "#BRK":
+                self.stopped = True
+                self.break_hit()
+                break
+
+            elif line.startswith("#IOUT#"):
+                print(line[6:])
+            elif line.startswith("#COUT#"):
+                c = chr(int(line[6:]))
+                print(c, end="")
+
 
     def reset(self) -> None:
         # Reset PC
