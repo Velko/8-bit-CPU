@@ -1,6 +1,18 @@
 import serial
 import os
 from typing import Union, Iterator, Optional
+from enum import Enum
+
+class RunMessage:
+    class Reason(Enum):
+        OUT  = 0
+        HALT = 1
+        BRK  = 2
+
+    def __init__(self, reason: Reason, payload: Optional[str]=None):
+        self.reason = reason
+        self.payload = payload
+
 
 class PinClient:
 
@@ -65,12 +77,25 @@ class PinClient:
     def ir_get(self, c_word: int) -> int:
         return int(self.query("r{}N".format(c_word)))
 
-    def run_program(self) -> Iterator[str]:
+    def run_program(self) -> Iterator[RunMessage]:
         self.send_cmd('R')
         while True:
-            line = self.serial.readline().decode('ascii')
-            yield line
+            line = self.serial.readline().decode('ascii').strip()
 
+            if line == "#HLT":
+                yield RunMessage(RunMessage.Reason.HALT)
+                break
+
+            elif line == "#BRK":
+                yield RunMessage(RunMessage.Reason.BRK)
+                break
+
+            elif line.startswith("#IOUT#"):
+                yield RunMessage(RunMessage.Reason.OUT, f"{line[6:]}\n")
+
+            elif line.startswith("#COUT#"):
+                c = chr(int(line[6:]))
+                yield RunMessage(RunMessage.Reason.OUT, c)
 
 def find_port() -> str:
     ports = list(filter(lambda fn: fn.startswith("ttyACM") or fn.startswith("ttyUSB"),  os.listdir("/dev")))

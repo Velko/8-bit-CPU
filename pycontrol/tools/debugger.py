@@ -5,6 +5,7 @@ from typing import Dict, Mapping, Optional, Union
 import localpath
 
 from libcpu.DeviceSetup import COutPort, IR, LR, OutPort, PC, Clock, SP
+from libcpu.pinclient import RunMessage
 from libcpu.opcodes import opcodes
 from libcpu.PyAsmExec import setup_live
 setup_live(False)
@@ -149,24 +150,21 @@ class Debugger:
 
         out = cpu_helper.backend.client.run_program();
 
-        for line in out:
-            line = line.strip()
-            if line == "#HLT":
+        for msg in out:
+
+            if msg.reason == RunMessage.Reason.HALT:
                 print ("# Halted", flush=True, file=sys.stderr)
                 self.halted = True
                 self.stopped = True
                 break
 
-            elif line == "#BRK":
+            elif msg.reason == RunMessage.Reason.BRK:
                 self.stopped = True
                 self.break_hit()
                 break
 
-            elif line.startswith("#IOUT#"):
-                print(line[6:])
-            elif line.startswith("#COUT#"):
-                c = chr(int(line[6:]))
-                print(c, end="")
+            elif msg.reason == RunMessage.Reason.OUT:
+                print(msg.payload, end="", flush=True)
 
 
     def reset(self) -> None:

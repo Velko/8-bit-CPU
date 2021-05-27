@@ -2,13 +2,14 @@
 
 
 import sys, localpath
+from libcpu.pinclient import RunMessage
 from libcpu.PyAsmExec import setup_live
 from libcpu.util import unwrap
 setup_live(False)
 from libcpu.PyAsmExec import pins
 client = unwrap(pins)
 
-from libcpu.DeviceSetup import COutPort, OutPort, PC, Clock
+from libcpu.DeviceSetup import PC
 from libcpu.cpu import backend
 from libcpu.test_helpers import CPUHelper
 
@@ -38,20 +39,20 @@ def run() -> None:
     # Drumroll... now it should happen for real
     print ("# Running ...", flush=True, file=sys.stderr)
 
-    while True:
-        # fetch and execute an instruction
-        outval = cpu_helper.backend.fetch_and_execute()
+    out = cpu_helper.backend.client.run_program();
 
-        # are we done?
-        if Clock.halt.is_enabled():
+    for msg in out:
+
+        if msg.reason == RunMessage.Reason.HALT:
             print ("# Halted", flush=True, file=sys.stderr)
-            return
+            break
 
-        # catch output value
-        if OutPort.load.is_enabled():
-            print (outval, flush=True)
-        if COutPort.load.is_enabled():
-            print (chr(outval), end="", flush=True)
+        elif msg.reason == RunMessage.Reason.BRK:
+            print ("# Break", flush=True, file=sys.stderr)
+            break
+
+        elif msg.reason == RunMessage.Reason.OUT:
+            print(msg.payload, end="", flush=True)
 
 
 if __name__ == "__main__":
