@@ -29,8 +29,6 @@ void execute_steps()
         uint8_t opcode = fetch_instruction();
         uint8_t flags = dev.flagsBus.read();
 
-        delay(1);
-
         struct op_microcode instruction;
 
         memcpy_P(&instruction, &microcode[opcode], sizeof(struct op_microcode));
@@ -55,7 +53,6 @@ void execute_steps()
                 uint8_t out_val = dev.mainBus.read();
                 sprintf(txt_buf, "#IOUT#%d", out_val);
                 Serial.println(txt_buf);
-                delay(250);
             }
 
             /* special handling to intercept character output */
@@ -64,7 +61,6 @@ void execute_steps()
                 uint8_t out_val = dev.mainBus.read();
                 sprintf(txt_buf, "#COUT#%d", out_val);
                 Serial.println(txt_buf);
-                delay(5);
             }
 
             dev.inv_clock.pulse();
