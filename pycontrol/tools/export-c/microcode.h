@@ -30,7 +30,7 @@ struct op_microcode {
 };
 
 extern const struct op_microcode microcode[] PROGMEM;
-extern const uint16_t op_fetch[];
+extern const uint32_t op_fetch[];
 
 #define     MAKE_MUX_CWORD(MUX_MASK, MPIN_BITS)   ((CTRL_DEFAULT & (~MUX_MASK)) | MPIN_BITS)
 

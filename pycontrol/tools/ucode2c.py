@@ -19,7 +19,7 @@ def generate_microcode(cfile: TextIO) -> None:
     cfile.write ("#include \"microcode.h\"\n\n")
 
     words = process_steps(fetch._steps)
-    cfile.write ("const uint16_t op_fetch[] = {{{}}};\n\n".format(", ".join(words)))
+    cfile.write ("const uint32_t op_fetch[] = {{{}}};\n\n".format(", ".join(words)))
 
     cfile.write ("const struct op_microcode microcode[] PROGMEM = {\n")
 

@@ -1,6 +1,6 @@
 #include "microcode.h"
 
-const uint16_t op_fetch[] = {0xe032c5, 0xe034e3};
+const uint32_t op_fetch[] = {0xe032c5, 0xe034e3};
 
 const struct op_microcode microcode[] PROGMEM = {
 
