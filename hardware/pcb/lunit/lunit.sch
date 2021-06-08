@@ -1069,37 +1069,37 @@ Wire Notes Line
 	10300 6450 10300 4300
 Wire Notes Line
 	4400 6450 10300 6450
-Text GLabel 1000 900  0    50   Input ~ 0
-A7
-Text GLabel 1000 1250 0    50   Input ~ 0
-A6
-Text GLabel 1000 1600 0    50   Input ~ 0
-A5
 Text GLabel 1000 1950 0    50   Input ~ 0
+A7
+Text GLabel 1000 1600 0    50   Input ~ 0
+A6
+Text GLabel 1000 1250 0    50   Input ~ 0
+A5
+Text GLabel 1000 900  0    50   Input ~ 0
 A4
-Text GLabel 1000 2600 0    50   Input ~ 0
+Text GLabel 1000 3650 0    50   Input ~ 0
 A3
-Text GLabel 1000 2950 0    50   Input ~ 0
+Text GLabel 1000 2600 0    50   Input ~ 0
 A2
 Text GLabel 1000 3300 0    50   Input ~ 0
 A1
-Text GLabel 1000 3650 0    50   Input ~ 0
+Text GLabel 1000 2950 0    50   Input ~ 0
 A0
-Text GLabel 2400 900  0    50   Input ~ 0
-A7
-Text GLabel 2400 1250 0    50   Input ~ 0
-A6
-Text GLabel 2400 1600 0    50   Input ~ 0
-A5
 Text GLabel 2400 1950 0    50   Input ~ 0
+A7
+Text GLabel 2400 1600 0    50   Input ~ 0
+A6
+Text GLabel 2400 1250 0    50   Input ~ 0
+A5
+Text GLabel 2400 900  0    50   Input ~ 0
 A4
-Text GLabel 2400 2600 0    50   Input ~ 0
+Text GLabel 2400 3650 0    50   Input ~ 0
 A3
-Text GLabel 2400 2950 0    50   Input ~ 0
+Text GLabel 2400 2600 0    50   Input ~ 0
 A2
 Text GLabel 2400 3300 0    50   Input ~ 0
 A1
-Text GLabel 2400 3650 0    50   Input ~ 0
+Text GLabel 2400 2950 0    50   Input ~ 0
 A0
 Wire Wire Line
 	1000 2600 1100 2600
@@ -1133,21 +1133,21 @@ Wire Wire Line
 	2500 900  2400 900 
 Wire Wire Line
 	1000 900  1100 900 
-Text GLabel 1000 3850 0    50   Input ~ 0
+Text GLabel 1000 3150 0    50   Input ~ 0
 B0
 Text GLabel 1000 3500 0    50   Input ~ 0
 B1
-Text GLabel 1000 3150 0    50   Input ~ 0
-B2
 Text GLabel 1000 2800 0    50   Input ~ 0
+B2
+Text GLabel 1000 3850 0    50   Input ~ 0
 B3
-Text GLabel 1000 2150 0    50   Input ~ 0
-B4
-Text GLabel 1000 1800 0    50   Input ~ 0
-B5
-Text GLabel 1000 1450 0    50   Input ~ 0
-B6
 Text GLabel 1000 1100 0    50   Input ~ 0
+B4
+Text GLabel 1000 1450 0    50   Input ~ 0
+B5
+Text GLabel 1000 1800 0    50   Input ~ 0
+B6
+Text GLabel 1000 2150 0    50   Input ~ 0
 B7
 Wire Wire Line
 	1000 1100 1100 1100
@@ -1165,13 +1165,13 @@ Wire Wire Line
 	1000 3500 1100 3500
 Wire Wire Line
 	1000 3850 1100 3850
-Text GLabel 2400 3850 0    50   Input ~ 0
+Text GLabel 2400 3150 0    50   Input ~ 0
 B0
 Text GLabel 2400 3500 0    50   Input ~ 0
 B1
-Text GLabel 2400 3150 0    50   Input ~ 0
-B2
 Text GLabel 2400 2800 0    50   Input ~ 0
+B2
+Text GLabel 2400 3850 0    50   Input ~ 0
 B3
 Wire Wire Line
 	2400 2800 2500 2800
@@ -1181,13 +1181,13 @@ Wire Wire Line
 	2400 3500 2500 3500
 Wire Wire Line
 	2400 3850 2500 3850
-Text GLabel 2400 2150 0    50   Input ~ 0
-B4
-Text GLabel 2400 1800 0    50   Input ~ 0
-B5
-Text GLabel 2400 1450 0    50   Input ~ 0
-B6
 Text GLabel 2400 1100 0    50   Input ~ 0
+B4
+Text GLabel 2400 1450 0    50   Input ~ 0
+B5
+Text GLabel 2400 1800 0    50   Input ~ 0
+B6
+Text GLabel 2400 2150 0    50   Input ~ 0
 B7
 Wire Wire Line
 	2400 1100 2500 1100
@@ -1197,37 +1197,37 @@ Wire Wire Line
 	2400 1800 2500 1800
 Wire Wire Line
 	2400 2150 2500 2150
-Text GLabel 1750 1000 2    50   Output ~ 0
-AND7
-Text GLabel 1750 1350 2    50   Output ~ 0
-AND6
-Text GLabel 1750 1700 2    50   Output ~ 0
-AND5
 Text GLabel 1750 2050 2    50   Output ~ 0
+AND7
+Text GLabel 1750 1700 2    50   Output ~ 0
+AND6
+Text GLabel 1750 1350 2    50   Output ~ 0
+AND5
+Text GLabel 1750 1000 2    50   Output ~ 0
 AND4
-Text GLabel 1750 2700 2    50   Output ~ 0
+Text GLabel 1750 3750 2    50   Output ~ 0
 AND3
-Text GLabel 1750 3050 2    50   Output ~ 0
+Text GLabel 1750 2700 2    50   Output ~ 0
 AND2
 Text GLabel 1750 3400 2    50   Output ~ 0
 AND1
-Text GLabel 1750 3750 2    50   Output ~ 0
+Text GLabel 1750 3050 2    50   Output ~ 0
 AND0
-Text GLabel 3150 1000 2    50   Output ~ 0
-OR7
-Text GLabel 3150 1350 2    50   Output ~ 0
-OR6
-Text GLabel 3150 1700 2    50   Output ~ 0
-OR5
 Text GLabel 3150 2050 2    50   Output ~ 0
+OR7
+Text GLabel 3150 1700 2    50   Output ~ 0
+OR6
+Text GLabel 3150 1350 2    50   Output ~ 0
+OR5
+Text GLabel 3150 1000 2    50   Output ~ 0
 OR4
-Text GLabel 3150 2700 2    50   Output ~ 0
+Text GLabel 3150 3750 2    50   Output ~ 0
 OR3
-Text GLabel 3150 3050 2    50   Output ~ 0
+Text GLabel 3150 2700 2    50   Output ~ 0
 OR2
 Text GLabel 3150 3400 2    50   Output ~ 0
 OR1
-Text GLabel 3150 3750 2    50   Output ~ 0
+Text GLabel 3150 3050 2    50   Output ~ 0
 OR0
 Wire Wire Line
 	1700 1000 1750 1000
@@ -1261,21 +1261,21 @@ Wire Wire Line
 	3100 3050 3150 3050
 Wire Wire Line
 	3100 2700 3150 2700
-Text GLabel 3950 1100 0    50   Input ~ 0
-AND7
-Text GLabel 3950 1200 0    50   Input ~ 0
-OR7
-Text GLabel 3950 1400 0    50   Input ~ 0
-AND6
-Text GLabel 3950 1500 0    50   Input ~ 0
-OR6
-Text GLabel 3950 1700 0    50   Input ~ 0
-AND5
-Text GLabel 3950 1800 0    50   Input ~ 0
-OR5
 Text GLabel 3950 2000 0    50   Input ~ 0
-AND4
+AND7
 Text GLabel 3950 2100 0    50   Input ~ 0
+OR7
+Text GLabel 3950 1700 0    50   Input ~ 0
+AND6
+Text GLabel 3950 1800 0    50   Input ~ 0
+OR6
+Text GLabel 3950 1400 0    50   Input ~ 0
+AND5
+Text GLabel 3950 1500 0    50   Input ~ 0
+OR5
+Text GLabel 3950 1100 0    50   Input ~ 0
+AND4
+Text GLabel 3950 1200 0    50   Input ~ 0
 OR4
 Wire Wire Line
 	3950 1100 4000 1100
@@ -1293,21 +1293,21 @@ Wire Wire Line
 	3950 2000 4000 2000
 Wire Wire Line
 	4000 2100 3950 2100
-Text GLabel 6250 3450 2    50   Output ~ 0
+Text GLabel 6250 2850 2    50   Output ~ 0
 RES0
 Text GLabel 6250 3150 2    50   Output ~ 0
 RES1
-Text GLabel 6250 2850 2    50   Output ~ 0
-RES2
 Text GLabel 6250 2550 2    50   Output ~ 0
+RES2
+Text GLabel 6250 3450 2    50   Output ~ 0
 RES3
-Text GLabel 5050 2000 2    50   Output ~ 0
-RES4
-Text GLabel 5050 1700 2    50   Output ~ 0
-RES5
-Text GLabel 5050 1400 2    50   Output ~ 0
-RES6
 Text GLabel 5050 1100 2    50   Output ~ 0
+RES4
+Text GLabel 5050 1400 2    50   Output ~ 0
+RES5
+Text GLabel 5050 1700 2    50   Output ~ 0
+RES6
+Text GLabel 5050 2000 2    50   Output ~ 0
 RES7
 Wire Wire Line
 	5050 1100 5000 1100
@@ -1317,21 +1317,21 @@ Wire Wire Line
 	5050 1700 5000 1700
 Wire Wire Line
 	5000 2000 5050 2000
-Text GLabel 5150 2550 0    50   Input ~ 0
+Text GLabel 5150 3450 0    50   Input ~ 0
 AND3
-Text GLabel 5150 2850 0    50   Input ~ 0
+Text GLabel 5150 2550 0    50   Input ~ 0
 AND2
 Text GLabel 5150 3150 0    50   Input ~ 0
 AND1
-Text GLabel 5150 3450 0    50   Input ~ 0
+Text GLabel 5150 2850 0    50   Input ~ 0
 AND0
-Text GLabel 5150 2650 0    50   Input ~ 0
+Text GLabel 5150 3550 0    50   Input ~ 0
 OR3
-Text GLabel 5150 2950 0    50   Input ~ 0
+Text GLabel 5150 2650 0    50   Input ~ 0
 OR2
 Text GLabel 5150 3250 0    50   Input ~ 0
 OR1
-Text GLabel 5150 3550 0    50   Input ~ 0
+Text GLabel 5150 2950 0    50   Input ~ 0
 OR0
 Wire Wire Line
 	5150 2550 5200 2550
@@ -1436,58 +1436,58 @@ Connection ~ 6000 5000
 Connection ~ 6000 6000
 $Comp
 L 74xx:74LS08 U1
-U 1 1 60A5AD92
+U 3 1 60A5AD92
 P 1400 1000
 F 0 "U1" H 1400 1000 50  0000 C CNN
 F 1 "74HC08" H 1400 1234 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 1400 1000 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS32" H 1400 1000 50  0001 C CNN
-	1    1400 1000
+	3    1400 1000
 	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74LS08 U1
-U 2 1 60A5D4C5
+U 4 1 60A5D4C5
 P 1400 1350
 F 0 "U1" H 1400 1350 50  0000 C CNN
 F 1 "74HC08" H 1400 1584 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 1400 1350 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS32" H 1400 1350 50  0001 C CNN
-	2    1400 1350
+	4    1400 1350
 	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74LS08 U1
-U 3 1 60A69F5B
+U 1 1 60A69F5B
 P 1400 1700
 F 0 "U1" H 1400 1700 50  0000 C CNN
 F 1 "74HC08" H 1400 1934 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 1400 1700 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS32" H 1400 1700 50  0001 C CNN
-	3    1400 1700
-	1    0    0    -1  
+	1    1400 1700
+	1    0    0    1   
 $EndComp
 $Comp
 L 74xx:74LS08 U1
-U 4 1 60A6AE83
+U 2 1 60A6AE83
 P 1400 2050
 F 0 "U1" H 1400 2050 50  0000 C CNN
 F 1 "74HC08" H 1400 2284 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 1400 2050 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS32" H 1400 2050 50  0001 C CNN
-	4    1400 2050
-	1    0    0    -1  
+	2    1400 2050
+	1    0    0    1   
 $EndComp
 $Comp
 L 74xx:74LS08 U2
 U 1 1 60A6BCBF
 P 1400 2700
 F 0 "U2" H 1400 2700 50  0000 C CNN
-F 1 "74HC08" H 1400 2934 50  0000 C CNN
+F 1 "74HC08" H 1400 2500 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 1400 2700 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS32" H 1400 2700 50  0001 C CNN
 	1    1400 2700
-	1    0    0    -1  
+	1    0    0    1   
 $EndComp
 $Comp
 L 74xx:74LS08 U2
@@ -1498,7 +1498,7 @@ F 1 "74HC08" H 1400 3284 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 1400 3050 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS32" H 1400 3050 50  0001 C CNN
 	2    1400 3050
-	1    0    0    -1  
+	1    0    0    1   
 $EndComp
 $Comp
 L 74xx:74LS08 U2
@@ -1524,47 +1524,47 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS32" H 1400 3750 50  0001 C CNN
 $EndComp
 $Comp
 L 74xx:74LS32 U3
-U 1 1 60A8A99F
+U 3 1 60A8A99F
 P 2800 1000
 F 0 "U3" H 2800 1000 50  0000 C CNN
 F 1 "74HC32" H 2800 1234 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2800 1000 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS32" H 2800 1000 50  0001 C CNN
-	1    2800 1000
+	3    2800 1000
 	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74LS32 U3
-U 2 1 60A8FFC8
+U 4 1 60A8FFC8
 P 2800 1350
 F 0 "U3" H 2800 1350 50  0000 C CNN
 F 1 "74HC32" H 2800 1584 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2800 1350 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS32" H 2800 1350 50  0001 C CNN
-	2    2800 1350
+	4    2800 1350
 	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74LS32 U3
-U 3 1 60A918B1
+U 1 1 60A918B1
 P 2800 1700
 F 0 "U3" H 2800 1700 50  0000 C CNN
 F 1 "74HC32" H 2800 1934 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2800 1700 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS32" H 2800 1700 50  0001 C CNN
-	3    2800 1700
-	1    0    0    -1  
+	1    2800 1700
+	1    0    0    1   
 $EndComp
 $Comp
 L 74xx:74LS32 U3
-U 4 1 60A924E1
+U 2 1 60A924E1
 P 2800 2050
 F 0 "U3" H 2800 2050 50  0000 C CNN
 F 1 "74HC32" H 2800 2284 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2800 2050 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS32" H 2800 2050 50  0001 C CNN
-	4    2800 2050
-	1    0    0    -1  
+	2    2800 2050
+	1    0    0    1   
 $EndComp
 $Comp
 L 74xx:74LS32 U4
