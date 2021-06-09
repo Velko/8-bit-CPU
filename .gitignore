@@ -22,3 +22,6 @@ build-*/
 .mypy-cache/
 *.img
 sym-lib-table
+
+fp-info-cache
+*.sch-bak
