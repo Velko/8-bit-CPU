@@ -262,9 +262,17 @@ Progress
 * Wrote emulators. Python-side instruction interpreter for quick code debugging and in-Arduino hardware
   emulator. These should help to move software side forward while there is no combined Arduino- and
   EEPROM-based control logic.
+* Fixed/redesigned new versions for Arithmetic Unit and Flags boards. An experimental ALU backplane.
+* Extended in-Arduino hardware emulator to 16-bit addressing. An easy way to check out various ideas
+  before actually building the hardware.
+* Adopted [CustomAsm][customasm] for machine code generation. Can retire my own Python-Assembly.
+* Developed a debugger (breakpoints, single step, live register inspection).
+* Designing additional ALU modules, miniaturized Display module.
 
 [eater-net-8bit]: https://eater.net/8bit
 [velkoraspi]: https://velkoraspi.blogspot.com/
 [avr-instructions]: http://ww1.microchip.com/downloads/en/devicedoc/atmel-0856-avr-instruction-set-manual.pdf
 [pytest]: https://docs.pytest.org/en/stable/
 [first-announce]: https://www.reddit.com/r/beneater/comments/loy9kj/important_milestone_it_works/
+[customasm]: https://github.com/hlorenzi/customasm
+
