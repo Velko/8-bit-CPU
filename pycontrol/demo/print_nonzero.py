@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from libcpu.markers import Label
 import localpath
 from libcpu.cpu import *
 
@@ -22,17 +23,18 @@ def run():
         # each iteration begins with A holding value of i
 
         # calculate address of data[i]
-        ldi (B, data)
-        add (B, A)
+        ldi (B, data)   # load address of data into B
+        add (B, A)      # add offset
 
-        # load value (flags are updated)
+        # load value from address=B into A
+        # this also updates flags
         ldabs (A, B)
 
-        # output if non-zero
+        # output if flag Z is not set (value not zero)
         if not beq():
             out(A)
 
-        # A was changed by ldabs(), reload
+        # A was changed by ldabs(), load back index
         ld (A, i)
 
         # increment it (current ISA is a bit limited)
