@@ -3,7 +3,7 @@
 import pytest
 
 from libcpu.cpu import *
-from libcpu.DeviceSetup import IR, IRFetch
+from libcpu.DeviceSetup import IR, IRFetch, TH,TL, TX
 from libcpu.test_helpers import CPUHelper
 from libcpu.DeviceSetup import AddSub as alu
 from typing import Iterator
@@ -67,3 +67,12 @@ def test_ir_load(cpu_helper: CPUHelper, expected: int) -> None:
     backend.client.off(backend.control.default)
 
     assert readback == expected
+
+def test_tx_load(cpu_helper: CPUHelper) -> None:
+    cpu_helper.load_reg8(TH, 0x12)
+    cpu_helper.load_reg8(TL, 0x34)
+
+
+    loaded = cpu_helper.read_reg16(TX)
+
+    assert loaded == 0x1234

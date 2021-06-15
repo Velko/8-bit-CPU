@@ -7,6 +7,7 @@ pytestmark = pytest.mark.hardware
 from libcpu.DeviceSetup import SP, LR
 from libcpu.test_helpers import CPUHelper
 from libcpu.cpu import *
+from libcpu.markers import Addr
 
 
 @pytest.mark.parametrize("expected", [255, 1, 2, 4, 8, 16, 32, 64, 128, 0])
@@ -18,6 +19,13 @@ def test_sp_load(cpu_helper: CPUHelper, expected: int) -> None:
 
     assert value == expected
 
+def test_lea_sp(cpu_helper: CPUHelper) -> None:
+
+    lea (SP, Addr(0x1234))
+
+    value = cpu_helper.read_reg16(SP)
+
+    assert value == 0x1234
 
 def test_sp_inc(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg16(SP, 12)
