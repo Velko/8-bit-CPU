@@ -30,6 +30,7 @@ def random_bytes() -> Sequence[int]:
     return data
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 def cpu_helper(cpu_backend_real: CPUBackendControl) -> CPUHelper:
+    cpu_backend_real.control.reset()
     return CPUHelper(cpu_backend_real)
