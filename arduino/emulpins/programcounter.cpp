@@ -14,8 +14,7 @@ PCSwap PCSW;
 void ProgramCounter::set_out(bool enabled)
 {
     if (enabled) {
-        main_bus = val & 0xFF;
-        addr_high_bus = val >> 8;
+        address_bus = val;
     }
 }
 
@@ -34,7 +33,7 @@ void ProgramCounter::clock_pulse()
     if (count_enabled)
         ++val;
     if (load_enabled)
-        val = (addr_high_bus << 8) | main_bus;
+        val = address_bus;
 }
 
 void PCSwap::set_swap(bool enabled)

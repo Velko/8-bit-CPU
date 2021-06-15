@@ -6,8 +6,7 @@ StackPointer r_SP;
 void StackPointer::set_out(bool enabled)
 {
     if (enabled) {
-        main_bus = val;
-        addr_high_bus = val >> 8;
+        address_bus = val;
     }
 }
 
@@ -33,5 +32,5 @@ void StackPointer::clock_pulse()
     if (dec_enabled)
         --val;
     if (load_enabled)
-        val = (addr_high_bus << 8 ) | main_bus;
+        val = address_bus;
 }

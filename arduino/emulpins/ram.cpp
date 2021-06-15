@@ -1,9 +1,7 @@
 #include <SPI.h>
 #include "devices.h"
 
-MaRegister MAR;
 Memory RAM;
-HighAddrStagingReg HAS;
 
 #define RAM_CS  SS
 
@@ -38,7 +36,7 @@ void Memory::set_out(bool enabled)
     {
         digitalWrite(RAM_CS, LOW);
         SPI.transfer(READ_CMD);
-        uint16_t addr = MAR.read_tap();
+        uint16_t addr = address_bus;
         SPI.transfer(addr >> 8);        // address MSB
         SPI.transfer(addr & 0xFF);      // address LSB
         main_bus = SPI.transfer(0xFF);
@@ -57,81 +55,10 @@ void Memory::clock_pulse()
     {
         digitalWrite(RAM_CS, LOW);
         SPI.transfer(WRITE_CMD);
-        uint16_t addr = MAR.read_tap();
+        uint16_t addr = address_bus;
         SPI.transfer(addr >> 8);        // address MSB
         SPI.transfer(addr & 0xFF);      // address LSB
         SPI.transfer(main_bus);
         digitalWrite(RAM_CS, HIGH);
-    }
-}
-
-
-MaRegister::MaRegister()
-{
-    load_enabled = false;
-}
-
-void MaRegister::set_load(bool enabled)
-{
-    load_enabled = enabled;
-}
-
-void MaRegister::set_add(bool _add)
-{
-    add_enabled = _add;
-}
-
-void MaRegister::clock_pulse()
-{
-    if (load_enabled)
-        latched_primary = (addr_high_bus << 8) | main_bus;
-
-    if (add_enabled)
-    {
-        int8_t smain = main_bus;
-        int16_t offset = smain;
-        latched_primary = latched_primary + offset;
-    }
-}
-
-void MaRegister::clock_inverted()
-{
-    latched_secondary = latched_primary;
-}
-
-uint16_t MaRegister::read_tap()
-{
-    return latched_secondary;
-}
-
-void HighAddrStagingReg::set_out(bool enabled)
-{
-    if (enabled)
-    {
-        if (to_main)
-            main_bus = val;
-        else
-            addr_high_bus = val;
-    }
-}
-
-void HighAddrStagingReg::set_load(bool enabled)
-{
-    load_enabled = enabled;
-}
-
-void HighAddrStagingReg::set_dir(bool _to_main)
-{
-    to_main = _to_main;
-}
-
-void HighAddrStagingReg::clock_pulse()
-{
-    if (load_enabled)
-    {
-        if (to_main)
-            val = addr_high_bus;
-        else
-            val = main_bus;
     }
 }
