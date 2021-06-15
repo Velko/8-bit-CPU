@@ -4,6 +4,8 @@ from .pin import Pin, NullPin, Level, Mux, MuxPin
 
 OutMux = Mux([0, 1, 2, 3], 15) # bits 0-3 in Control Word, defaults to 15
 LoadMux = Mux([8, 9, 10, 11], 15)
+AddrOutMux = Mux([23, 24, 25], 7)
+AddrLoadMux = Mux([27, 28, 29], 7)
 AluArgA = Mux([16, 17], 4)
 AluArgB = Mux([18, 19, 20], 0)
 
@@ -55,21 +57,6 @@ Flags = dev.Flags("F",
     calc = Pin(6, Level.LOW),
     carry = Pin(14, Level.HIGH))
 
-Has = dev.HasRegister("HAS",
-    out = Pin(23, Level.LOW),
-    load = MuxPin(LoadMux, 13),
-    dir = Pin(24, Level.HIGH))
-
-Mar = dev.MaRegister("MAR",
-    out = NullPin(-1, Level.LOW),
-    load = MuxPin(LoadMux, 2),
-    add = Pin(25, Level.HIGH))
-
-# currently same as regular MAR, can be redefined for different
-# hardware configuration. Will not require changes in instruction
-# definitions
-ProgMar = Mar
-
 Ram = dev.RAM("Ram",
     out = MuxPin(OutMux, 3),
     write = MuxPin(LoadMux, 3))
@@ -92,23 +79,23 @@ IRFetch = dev.IRFetch("IRFetch",
     load = Pin(12, Level.LOW))
 
 PC = dev.ProgramCounter("PC",
-    out = MuxPin(OutMux, 5),
-    load = MuxPin(LoadMux, 5),
+    out = MuxPin(AddrOutMux, 5),
+    load = MuxPin(AddrLoadMux, 5),
     count = Pin(5, Level.HIGH))
 
 SP = dev.StackPointer("SP",
-    out = MuxPin(OutMux, 11),
-    load = MuxPin(LoadMux, 11),
+    out = MuxPin(AddrOutMux, 11),
+    load = MuxPin(AddrLoadMux, 11),
     inc = Pin(21, Level.LOW),
     dec = Pin(22, Level.LOW))
 
-DP = dev.Register("DP",
-    out = MuxPin(OutMux, 14),
-    load = MuxPin(LoadMux, 14))
+#DP = dev.Register("DP",
+#    out = MuxPin(OutMux, 14),
+#    load = MuxPin(LoadMux, 14))
 
 LR = dev.ProgramCounter("LR",
-    out = MuxPin(OutMux, 12),
-    load = MuxPin(LoadMux, 12),
+    out = MuxPin(AddrOutMux, 12),
+    load = MuxPin(AddrLoadMux, 12),
     count = NullPin(-1, Level.LOW))
 
 PSW = dev.PCLR("PCLR",
@@ -121,3 +108,18 @@ OutPort = dev.Register("Out",
 COutPort = dev.Register("Cout",
     out = NullPin(-1, Level.LOW),
     load = MuxPin(LoadMux, 10))
+
+TX = dev.TransferRegister("TX",
+    out = MuxPin(AddrOutMux, 0),
+    load = MuxPin(AddrLoadMux, 0),
+    add = NullPin(-1, Level.HIGH))
+
+TH = dev.TransferRegister("TH",
+    out = MuxPin(OutMux, 8),
+    load = MuxPin(LoadMux, 8),
+    add = NullPin(-1, Level.HIGH))
+
+TL = dev.TransferRegister("TL",
+    out = MuxPin(OutMux, 9),
+    load = MuxPin(LoadMux, 9),
+    add = Pin(30, Level.HIGH))

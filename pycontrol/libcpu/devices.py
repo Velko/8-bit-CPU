@@ -19,12 +19,6 @@ class GPRegister(Register):
         self.alu_a = alu_a
         self.alu_b = alu_b
 
-class MaRegister(Register):
-    def __init__(self, name: str, out: PinBase, load: PinBase, add: PinBase) -> None:
-        Register.__init__(self, name, out, load)
-        self.add = add
-
-
 class ALU:
     def __init__(self, name: str, out: PinBase, alt: PinBase) -> None:
         self.name = name
@@ -78,11 +72,6 @@ class RAM:
         self.out = out
         self.write = write
 
-class HasRegister(Register):
-     def __init__(self, name: str, out: PinBase, load: PinBase, dir: PinBase) -> None:
-        Register.__init__(self, name, out, load)
-        self.dir = dir
-
 class Clock:
     def __init__(self, name: str, halt: PinBase, brk: PinBase) -> None:
         self.name = name
@@ -115,6 +104,11 @@ class PCLR:
     def __init__(self, name: str, swap: PinBase) -> None:
         self.name = name
         self.swap = swap
+
+class TransferRegister(Register):
+    def __init__(self, name: str, out: PinBase, load: PinBase, add: PinBase) -> None:
+        Register.__init__(self, name, out, load)
+        self.add = add
 
 # Helper device for debugger
 class IRFetch:
