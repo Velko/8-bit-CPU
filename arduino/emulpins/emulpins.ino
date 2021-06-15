@@ -49,6 +49,17 @@ void loop()
         Serial.println(val);
         break;
 
+    case 'A':
+        val = Serial.parseInt();
+        dev.addressBus.write(val);
+        break;
+
+    case 'a':
+        dev.addressBus.set_input();
+        val = dev.addressBus.read();
+        Serial.println(val);
+        break;
+
     case 's':
         val = dev.flagsBus.read();
         Serial.println(val);

@@ -115,11 +115,11 @@ TX = dev.TransferRegister("TX",
     add = NullPin(-1, Level.HIGH))
 
 TH = dev.TransferRegister("TH",
-    out = MuxPin(OutMux, 8),
-    load = MuxPin(LoadMux, 8),
+    out = MuxPin(OutMux, 5),
+    load = MuxPin(LoadMux, 5),
     add = NullPin(-1, Level.HIGH))
 
 TL = dev.TransferRegister("TL",
-    out = MuxPin(OutMux, 9),
-    load = MuxPin(LoadMux, 9),
+    out = MuxPin(OutMux, 11),
+    load = MuxPin(LoadMux, 11),
     add = Pin(30, Level.HIGH))

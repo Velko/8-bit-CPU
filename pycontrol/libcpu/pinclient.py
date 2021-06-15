@@ -56,6 +56,14 @@ class PinClient:
     def bus_get(self) -> int:
         return int(self.query("b"))
 
+    def addr_set(self, arg: Union[int, str]) -> None:
+        if isinstance(arg, str):
+            arg = int(arg, 0)
+        self.send_cmd("A{}N".format(arg))
+
+    def addr_get(self) -> int:
+        return int(self.query("a"))
+
     def flags_get(self) -> int:
         return int(self.query("s"))
 

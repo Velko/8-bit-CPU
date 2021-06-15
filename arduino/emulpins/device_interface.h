@@ -11,6 +11,15 @@ class MainBus
         uint8_t read();
 };
 
+
+class AddressBus
+{
+    public:
+        void write(uint16_t val);
+        void set_input();
+        uint16_t read();
+};
+
 class FlagsBus
 {
     public:
@@ -41,6 +50,7 @@ class DeviceInterface
     public:
         MainBus mainBus;
         FlagsBus flagsBus;
+        AddressBus addressBus;
         Clock clock;
         InvClock inv_clock;
         Control control;

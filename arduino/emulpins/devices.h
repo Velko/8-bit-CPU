@@ -153,6 +153,26 @@ class AddressReg
         void clock_pulse();
 };
 
+class TransferReg
+{
+    private:
+        uint16_t val;
+        bool load_x_enabled;
+        bool load_h_enabled;
+        bool load_l_enabled;
+        bool add_enabled;
+    public:
+        void set_out_x(bool enabled);
+        void set_load_x(bool enabled);
+        void set_out_h(bool enabled);
+        void set_load_h(bool enabled);
+        void set_out_l(bool enabled);
+        void set_load_l(bool enabled);
+        void set_add(bool enabled);
+        void clock_pulse();
+};
+
+
 extern Register A;
 extern Register B;
 extern Register IR;
@@ -167,5 +187,6 @@ extern ProgramCounter *LR;
 extern PCSwap PCSW;
 extern Memory RAM;
 extern AddressReg   DP;
+extern TransferReg  TR;
 
 #endif  /* DEVICES_H */

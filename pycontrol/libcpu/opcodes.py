@@ -245,9 +245,9 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
 
     builder.add_instruction("push", LR)\
             .add_step([SP.dec, LR.out, TX.load])\
-            .add_step([SP.out, TH.out, Ram.write])\
+            .add_step([SP.out, TL.out, Ram.write])\
             .add_step([SP.dec])\
-            .add_step([SP.out, TL.out, Ram.write])
+            .add_step([SP.out, TH.out, Ram.write])
 
     for r in gp_regs:
         builder.add_instruction("pop", r)\
@@ -259,9 +259,9 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
         .add_step([SP.inc])
 
     builder.add_instruction("pop", LR)\
-        .add_step([SP.out, Ram.out, TL.load])\
-        .add_step([SP.inc])\
         .add_step([SP.out, Ram.out, TH.load])\
+        .add_step([SP.inc])\
+        .add_step([SP.out, Ram.out, TL.load])\
         .add_step([TX.out, LR.load, SP.inc])
 
     builder.add_instruction("call", OpcodeArg.ADDR)\

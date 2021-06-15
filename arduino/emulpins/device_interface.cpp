@@ -20,3 +20,18 @@ uint8_t FlagsBus::read()
 {
     return Flags.read_tap();
 }
+
+
+void AddressBus::write(uint16_t val)
+{
+    address_bus = val;
+}
+
+void AddressBus::set_input()
+{
+}
+
+uint16_t AddressBus::read()
+{
+    return address_bus;
+}
