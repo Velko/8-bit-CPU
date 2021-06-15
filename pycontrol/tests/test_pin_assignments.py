@@ -30,17 +30,18 @@ def test_simple_pin_and_mux_addr_overlap(name_a: str, pin_a: int, name_b: str, p
     assert pin_a != pin_b
 
 
-def pins_in_mux(mux: Mux) -> Iterator[Tuple[str, int]]:
+def pins_in_mux(mux: Mux, include_default: bool) -> Iterator[Tuple[str, int]]:
     for name, pin in mux_pins(mux):
         yield name, pin.num
 
     # also add default as assigned pin
-    yield "default", mux.default
+    if include_default:
+        yield "default", mux.default
 
 def each_pin_with_others_in_mux() -> Iterator[Tuple[str, int, str, int]]:
 
    for mux_name, mux in all_muxes():
-        mpins = list(pins_in_mux(mux))
+        mpins = list(pins_in_mux(mux, True))
 
         for a_id, (a_name, a_num) in enumerate(mpins):
             for b_name, b_num in mpins[a_id+1:]:
@@ -50,3 +51,17 @@ def each_pin_with_others_in_mux() -> Iterator[Tuple[str, int, str, int]]:
 def test_mux_pin_overlap(name_a: str, pin_a: int, name_b: str, pin_b: int) -> None:
 
     assert pin_a != pin_b
+
+
+def each_pin_with_capacity_in_mux() -> Iterator[Tuple[str, int, int]]:
+    for mux_name, mux in all_muxes():
+        mpins = list(pins_in_mux(mux, False))
+        capacity = 2**len(mux.pins)
+        for p_name, p_num in mpins:
+            yield f"{mux_name}.{p_name}", p_num, capacity
+
+
+@pytest.mark.parametrize("name,pin,capacity", each_pin_with_capacity_in_mux())
+def test_mux_capacity(name: str, pin: int, capacity: int) -> None:
+
+        assert pin < capacity
