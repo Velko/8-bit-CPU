@@ -149,7 +149,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
             .add_step([PC.count])\
             .add_step([PC.out, ProgMem.out, TL.load])\
             .add_step([i.out, TL.add, PC.count])\
-            .add_step([v.out, Ram.write])
+            .add_step([TX.out, v.out, Ram.write])
 
     for r in gp_regs:
         builder.add_instruction("ld", r, OpcodeArg.ADDR)\
