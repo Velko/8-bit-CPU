@@ -84,8 +84,8 @@ PC = dev.ProgramCounter("PC",
     count = Pin(5, Level.HIGH))
 
 SP = dev.StackPointer("SP",
-    out = MuxPin(AddrOutMux, 11),
-    load = MuxPin(AddrLoadMux, 11),
+    out = MuxPin(AddrOutMux, 3),
+    load = MuxPin(AddrLoadMux, 3),
     inc = Pin(21, Level.LOW),
     dec = Pin(22, Level.LOW))
 
@@ -94,8 +94,8 @@ SP = dev.StackPointer("SP",
 #    load = MuxPin(LoadMux, 14))
 
 LR = dev.ProgramCounter("LR",
-    out = MuxPin(AddrOutMux, 12),
-    load = MuxPin(AddrLoadMux, 12),
+    out = MuxPin(AddrOutMux, 4),
+    load = MuxPin(AddrLoadMux, 4),
     count = NullPin(-1, Level.LOW))
 
 PSW = dev.PCLR("PCLR",
