@@ -4,6 +4,7 @@ import pytest
 import random
 
 from libcpu.cpu import *
+from libcpu.cpu_exec import CPUBackendControl
 from libcpu.markers import Addr
 from libcpu.test_helpers import CPUHelper
 from typing import Sequence
@@ -28,7 +29,8 @@ random_addr = make_random_addr()
 class FillRam: pass
 
 @pytest.fixture(scope="module")
-def fill_ram(random_bytes: Sequence[int], cpu_helper: CPUHelper) -> FillRam:
+def fill_ram(random_bytes: Sequence[int], cpu_backend_real: CPUBackendControl) -> FillRam:
+    cpu_helper = CPUHelper(cpu_backend_real)
     for addr in random_addr:
         cpu_helper.write_ram(addr, random_bytes[addr])
 
