@@ -1,12 +1,8 @@
 #include "devices.h"
 
 
-ProgramCounter PC0;
-ProgramCounter LR0;
-
-ProgramCounter *PC = &PC0;
-ProgramCounter *LR = &LR0;
-
+ProgramCounter PC;
+ProgramCounter LR;
 
 void ProgramCounter::set_out(bool enabled)
 {

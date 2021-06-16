@@ -22,9 +22,9 @@ uint32_t Control::write32(uint32_t control_word)
     C.set_load((control_word & MUX_LOAD_MASK) == MPIN_C_LOAD_BITS);
     D.set_load((control_word & MUX_LOAD_MASK) == MPIN_D_LOAD_BITS);
     IR.set_load((control_word & MUX_LOAD_MASK) == MPIN_IR_LOAD_BITS);
-    PC->set_load((control_word & MUX_ADDRLOAD_MASK) == MPIN_PC_LOAD_BITS);
+    PC.set_load((control_word & MUX_ADDRLOAD_MASK) == MPIN_PC_LOAD_BITS);
     r_SP.set_load((control_word & MUX_ADDRLOAD_MASK) == MPIN_SP_LOAD_BITS);
-    LR->set_load((control_word & MUX_ADDRLOAD_MASK) == MPIN_LR_LOAD_BITS);
+    LR.set_load((control_word & MUX_ADDRLOAD_MASK) == MPIN_LR_LOAD_BITS);
     RAM.set_write((control_word & MUX_LOAD_MASK) == MPIN_RAM_WRITE_BITS);
     TR.set_load_x((control_word & MUX_ADDRLOAD_MASK) == MPIN_TX_LOAD_BITS);
     TR.set_load_h((control_word & MUX_LOAD_MASK) == MPIN_TH_LOAD_BITS);
@@ -34,9 +34,9 @@ uint32_t Control::write32(uint32_t control_word)
     B.set_out((control_word & MUX_OUT_MASK) == MPIN_B_OUT_BITS);
     C.set_out((control_word & MUX_OUT_MASK) == MPIN_C_OUT_BITS);
     D.set_out((control_word & MUX_OUT_MASK) == MPIN_D_OUT_BITS);
-    PC->set_out((control_word & MUX_ADDROUT_MASK) == MPIN_PC_OUT_BITS);
+    PC.set_out((control_word & MUX_ADDROUT_MASK) == MPIN_PC_OUT_BITS);
     r_SP.set_out((control_word & MUX_ADDROUT_MASK) == MPIN_SP_OUT_BITS);
-    LR->set_out((control_word & MUX_ADDROUT_MASK) == MPIN_LR_OUT_BITS);
+    LR.set_out((control_word & MUX_ADDROUT_MASK) == MPIN_LR_OUT_BITS);
     TR.set_out_x((control_word & MUX_ADDROUT_MASK) == MPIN_TX_OUT_BITS);
     TR.set_out_h((control_word & MUX_OUT_MASK) == MPIN_TH_OUT_BITS);
     TR.set_out_l((control_word & MUX_OUT_MASK) == MPIN_TL_OUT_BITS);
@@ -100,9 +100,9 @@ void Clock::pulse()
     D.clock_pulse();
     IR.clock_pulse();
     Flags.clock_pulse();
-    PC->clock_pulse();
+    PC.clock_pulse();
     r_SP.clock_pulse();
-    LR->clock_pulse();
+    LR.clock_pulse();
     RAM.clock_pulse();
     TR.clock_pulse();
 }
@@ -115,6 +115,6 @@ void InvClock::pulse()
     D.clock_inverted();
     IR.clock_inverted();
     Flags.clock_inverted();
-    PC->clock_inverted();
-    LR->clock_inverted();
+    PC.clock_inverted();
+    LR.clock_inverted();
 }
