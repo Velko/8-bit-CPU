@@ -32,16 +32,16 @@ uint8_t Register::read_tap()
     return latched_secondary;
 }
 
-void Register::set_tap_a(bool enabled)
+void Register::set_tap_l(bool enabled)
 {
     if (enabled)
-        alu_arg_a_bus = latched_secondary;
+        alu_arg_l_bus = latched_secondary;
 }
 
-void Register::set_tap_b(bool enabled)
+void Register::set_tap_r(bool enabled)
 {
     if (enabled)
-        alu_arg_b_bus = latched_secondary;
+        alu_arg_r_bus = latched_secondary;
 }
 
 void AddressReg::set_load(bool enabled)

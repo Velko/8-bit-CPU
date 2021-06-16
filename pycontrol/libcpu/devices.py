@@ -14,10 +14,10 @@ class Register:
 
 
 class GPRegister(Register):
-    def __init__(self, name: str, out: PinBase, load: PinBase, alu_a: PinBase, alu_b: PinBase) -> None:
+    def __init__(self, name: str, out: PinBase, load: PinBase, alu_l: PinBase, alu_r: PinBase) -> None:
         Register.__init__(self, name, out, load)
-        self.alu_a = alu_a
-        self.alu_b = alu_b
+        self.alu_l = alu_l
+        self.alu_r = alu_r
 
 class ALU:
     def __init__(self, name: str, out: PinBase, alt: PinBase) -> None:

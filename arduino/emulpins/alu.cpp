@@ -22,8 +22,8 @@ void ALU_AddSub::set_carry(bool c)
 
 void ALU_AddSub::set_out(bool enabled)
 {
-    uint16_t a_arg = alu_arg_a_bus;
-    uint16_t b_adj = alu_arg_b_bus;
+    uint16_t a_arg = alu_arg_l_bus;
+    uint16_t b_adj = alu_arg_r_bus;
 
     uint8_t c_val = carry ? 1 : 0;
 
@@ -60,9 +60,9 @@ void ALU_AndOr::set_out(bool enabled)
     if (enabled)
     {
         if (op_or)
-            main_bus = alu_arg_a_bus | alu_arg_b_bus;
+            main_bus = alu_arg_l_bus | alu_arg_r_bus;
         else
-            main_bus = alu_arg_a_bus & alu_arg_b_bus;
+            main_bus = alu_arg_l_bus & alu_arg_r_bus;
 
         // no need to update flags as N and Z is calculated
         // by flags register itself
@@ -89,16 +89,16 @@ void ALU_ShiftSwap::set_out(bool enabled)
     if (enabled)
     {
         if (op_swap)
-            main_bus = alu_arg_a_bus << 4 | alu_arg_a_bus >> 4;
+            main_bus = alu_arg_l_bus << 4 | alu_arg_l_bus >> 4;
         else
         {
-            main_bus = alu_arg_a_bus >> 1;
+            main_bus = alu_arg_l_bus >> 1;
 
             if (carry)
                 main_bus |= 0x80;
 
             flags_bus = 0;
-            if ((alu_arg_a_bus & 1) != 0)
+            if ((alu_arg_l_bus & 1) != 0)
                 flags_bus |= FLAG_C;
         }
     }
@@ -117,11 +117,11 @@ void ALU_XorNot::set_out(bool enabled)
 {
     if (enabled)
     {
-        uint8_t arg_b = alu_arg_b_bus;
+        uint8_t arg_b = alu_arg_r_bus;
 
         if (op_not)
             arg_b = 0xFF;
 
-        main_bus = alu_arg_a_bus ^ arg_b;
+        main_bus = alu_arg_l_bus ^ arg_b;
     }
 }

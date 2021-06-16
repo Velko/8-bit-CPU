@@ -4,8 +4,8 @@
 
 uint8_t main_bus;
 uint16_t address_bus;
-uint8_t alu_arg_a_bus;
-uint8_t alu_arg_b_bus;
+uint8_t alu_arg_l_bus;
+uint8_t alu_arg_r_bus;
 
 ControlSignal a_load(MUX_LOAD_MASK, MPIN_A_LOAD_BITS);
 ControlSignal b_load(MUX_LOAD_MASK, MPIN_B_LOAD_BITS);
@@ -18,14 +18,14 @@ ControlSignal b_out(MUX_OUT_MASK, MPIN_B_OUT_BITS);
 ControlSignal c_out(MUX_OUT_MASK, MPIN_C_OUT_BITS);
 ControlSignal d_out(MUX_OUT_MASK, MPIN_D_OUT_BITS);
 
-ControlSignal a_tap_a(MUX_ALUARGA_MASK, MPIN_A_ALU_A_BITS);
-ControlSignal a_tap_b(MUX_ALUARGB_MASK, MPIN_A_ALU_B_BITS);
-ControlSignal b_tap_a(MUX_ALUARGA_MASK, MPIN_B_ALU_A_BITS);
-ControlSignal b_tap_b(MUX_ALUARGB_MASK, MPIN_B_ALU_B_BITS);
-ControlSignal c_tap_a(MUX_ALUARGA_MASK, MPIN_C_ALU_A_BITS);
-ControlSignal c_tap_b(MUX_ALUARGB_MASK, MPIN_C_ALU_B_BITS);
-ControlSignal d_tap_a(MUX_ALUARGA_MASK, MPIN_D_ALU_A_BITS);
-ControlSignal d_tap_b(MUX_ALUARGB_MASK, MPIN_D_ALU_B_BITS);
+ControlSignal a_tap_l(MUX_ALUARGL_MASK, MPIN_A_ALU_L_BITS);
+ControlSignal a_tap_r(MUX_ALUARGR_MASK, MPIN_A_ALU_R_BITS);
+ControlSignal b_tap_l(MUX_ALUARGL_MASK, MPIN_B_ALU_L_BITS);
+ControlSignal b_tap_r(MUX_ALUARGR_MASK, MPIN_B_ALU_R_BITS);
+ControlSignal c_tap_l(MUX_ALUARGL_MASK, MPIN_C_ALU_L_BITS);
+ControlSignal c_tap_r(MUX_ALUARGR_MASK, MPIN_C_ALU_R_BITS);
+ControlSignal d_tap_l(MUX_ALUARGL_MASK, MPIN_D_ALU_L_BITS);
+ControlSignal d_tap_r(MUX_ALUARGR_MASK, MPIN_D_ALU_R_BITS);
 
 
 Register A;
@@ -40,23 +40,23 @@ uint32_t Control::write32(uint32_t control_word)
 
     A.set_load(a_load.is_enabled(control_word));
     A.set_out(a_out.is_enabled(control_word));
-    A.set_tap_a(a_tap_a.is_enabled(control_word));
-    A.set_tap_b(a_tap_b.is_enabled(control_word));
+    A.set_tap_l(a_tap_l.is_enabled(control_word));
+    A.set_tap_r(a_tap_r.is_enabled(control_word));
 
     B.set_load(b_load.is_enabled(control_word));
     B.set_out(b_out.is_enabled(control_word));
-    B.set_tap_a(b_tap_a.is_enabled(control_word));
-    B.set_tap_b(b_tap_b.is_enabled(control_word));
+    B.set_tap_l(b_tap_l.is_enabled(control_word));
+    B.set_tap_r(b_tap_r.is_enabled(control_word));
 
     C.set_load(c_load.is_enabled(control_word));
     C.set_out(c_out.is_enabled(control_word));
-    C.set_tap_a(c_tap_a.is_enabled(control_word));
-    C.set_tap_b(c_tap_b.is_enabled(control_word));
+    C.set_tap_l(c_tap_l.is_enabled(control_word));
+    C.set_tap_r(c_tap_r.is_enabled(control_word));
 
     D.set_load(d_load.is_enabled(control_word));
     D.set_out(d_out.is_enabled(control_word));
-    D.set_tap_a(d_tap_a.is_enabled(control_word));
-    D.set_tap_b(d_tap_b.is_enabled(control_word));
+    D.set_tap_l(d_tap_l.is_enabled(control_word));
+    D.set_tap_r(d_tap_r.is_enabled(control_word));
 
     IR.set_load(ir_load.is_enabled(control_word));
     PC.set_load((control_word & MUX_ADDRLOAD_MASK) == MPIN_PC_LOAD_BITS);
@@ -98,8 +98,8 @@ uint32_t Control::write32(uint32_t control_word)
 
     TR.set_add((control_word & HPIN_TL_ADD_BIT) != 0);
 
-    if ((control_word & MUX_ALUARGB_MASK) == (CTRL_DEFAULT & MUX_ALUARGB_MASK))
-        alu_arg_b_bus = 0; // default value forces B input to 0
+    if ((control_word & MUX_ALUARGR_MASK) == (CTRL_DEFAULT & MUX_ALUARGR_MASK))
+        alu_arg_r_bus = 0; // default value forces R input to 0
 
     // "pull" to current value (relevant to C and V flags)
     flags_bus = Flags.read_tap();

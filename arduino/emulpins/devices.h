@@ -7,8 +7,8 @@
 extern uint8_t main_bus;
 extern uint16_t address_bus;
 extern uint8_t flags_bus;
-extern uint8_t alu_arg_a_bus;
-extern uint8_t alu_arg_b_bus;
+extern uint8_t alu_arg_l_bus;
+extern uint8_t alu_arg_r_bus;
 
 void set_control(uint32_t control_word);
 void clock_pulse();
@@ -32,8 +32,8 @@ class Register {
         Register();
         void set_load(bool enabled);
         void set_out(bool enabled);
-        void set_tap_a(bool enabled);
-        void set_tap_b(bool enabled);
+        void set_tap_l(bool enabled);
+        void set_tap_r(bool enabled);
         uint8_t read_tap();
         void clock_pulse();
         void clock_inverted();

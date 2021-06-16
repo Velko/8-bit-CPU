@@ -31,8 +31,8 @@ def test_reg_a_latch(cpu_helper: CPUHelper) -> None:
         # Not try to sense what it sends to ALU by enabling it and
         # reading value on the bus
         alu.out.enable()
-        A.alu_a.enable()
-        B.alu_b.enable()
+        A.alu_l.enable()
+        B.alu_r.enable()
         backend.client.ctrl_commit(backend.control.c_word)
         value = backend.client.bus_get()
 
