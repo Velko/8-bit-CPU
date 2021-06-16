@@ -38,9 +38,25 @@ uint32_t Control::write32(uint32_t control_word)
 {
 
     A.set_load(a_load.is_enabled(control_word));
+    A.set_out(a_out.is_enabled(control_word));
+    A.set_tap_a(a_tap_a.is_enabled(control_word));
+    A.set_tap_b(a_tap_b.is_enabled(control_word));
+
     B.set_load(b_load.is_enabled(control_word));
+    B.set_out(b_out.is_enabled(control_word));
+    B.set_tap_a(b_tap_a.is_enabled(control_word));
+    B.set_tap_b(b_tap_b.is_enabled(control_word));
+
     C.set_load(c_load.is_enabled(control_word));
+    C.set_out(c_out.is_enabled(control_word));
+    C.set_tap_a(c_tap_a.is_enabled(control_word));
+    C.set_tap_b(c_tap_b.is_enabled(control_word));
+
     D.set_load(d_load.is_enabled(control_word));
+    D.set_out(d_out.is_enabled(control_word));
+    D.set_tap_a(d_tap_a.is_enabled(control_word));
+    D.set_tap_b(d_tap_b.is_enabled(control_word));
+
     IR.set_load((control_word & MUX_LOAD_MASK) == MPIN_IR_LOAD_BITS);
     PC.set_load((control_word & MUX_ADDRLOAD_MASK) == MPIN_PC_LOAD_BITS);
     r_SP.set_load((control_word & MUX_ADDRLOAD_MASK) == MPIN_SP_LOAD_BITS);
@@ -50,10 +66,6 @@ uint32_t Control::write32(uint32_t control_word)
     TR.set_load_h((control_word & MUX_LOAD_MASK) == MPIN_TH_LOAD_BITS);
     TR.set_load_l((control_word & MUX_LOAD_MASK) == MPIN_TL_LOAD_BITS);
 
-    A.set_out(a_out.is_enabled(control_word));
-    B.set_out(b_out.is_enabled(control_word));
-    C.set_out(c_out.is_enabled(control_word));
-    D.set_out(d_out.is_enabled(control_word));
     PC.set_out((control_word & MUX_ADDROUT_MASK) == MPIN_PC_OUT_BITS);
     r_SP.set_out((control_word & MUX_ADDROUT_MASK) == MPIN_SP_OUT_BITS);
     LR.set_out((control_word & MUX_ADDROUT_MASK) == MPIN_LR_OUT_BITS);
@@ -93,14 +105,6 @@ uint32_t Control::write32(uint32_t control_word)
 
     // A input is always connected to one of registers
 
-    A.set_tap_a(a_tap_a.is_enabled(control_word));
-    A.set_tap_b(a_tap_b.is_enabled(control_word));
-    B.set_tap_a(b_tap_a.is_enabled(control_word));
-    B.set_tap_b(b_tap_b.is_enabled(control_word));
-    C.set_tap_a(c_tap_a.is_enabled(control_word));
-    C.set_tap_b(c_tap_b.is_enabled(control_word));
-    D.set_tap_a(d_tap_a.is_enabled(control_word));
-    D.set_tap_b(d_tap_b.is_enabled(control_word));
 
 
     // should be one of the latest, after registers' tap config
