@@ -17,20 +17,21 @@
 #define NUM_FLAGS       4
 #define NUM_STEP_BITS   3
 
+typedef uint32_t cword_t;
 
 struct op_flags_alt {
     uint8_t mask;
     uint8_t value;
-    uint32_t steps[MAX_STEPS];
+    cword_t steps[MAX_STEPS];
 };
 
 struct op_microcode {
-    uint32_t default_steps[MAX_STEPS];
+    cword_t default_steps[MAX_STEPS];
     struct op_flags_alt f_alt[MAX_ALTS];
 };
 
 extern const struct op_microcode microcode[] PROGMEM;
-extern const uint32_t op_fetch[];
+extern const cword_t op_fetch[];
 
 #define     MAKE_MUX_CWORD(MUX_MASK, MPIN_BITS)   ((CTRL_DEFAULT & (~MUX_MASK)) | MPIN_BITS)
 

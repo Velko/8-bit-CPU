@@ -1,6 +1,6 @@
 #include "microcode.h"
 
-const uint32_t op_fetch[] = {0x3ae034c3};
+const cword_t op_fetch[] = {0x3ae034c3};
 
 const struct op_microcode microcode[] PROGMEM = {
 
