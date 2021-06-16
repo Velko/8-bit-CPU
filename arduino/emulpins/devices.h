@@ -2,6 +2,7 @@
 #define DEVICES_H
 
 #include <stdint.h>
+#include "microcode.h"
 
 extern uint8_t main_bus;
 extern uint16_t address_bus;
@@ -12,6 +13,15 @@ extern uint8_t alu_arg_b_bus;
 void set_control(uint32_t control_word);
 void clock_pulse();
 void clock_inverted();
+
+class ControlSignal {
+        cword_t _mask;
+        cword_t _bits;
+    public:
+        ControlSignal(cword_t mask, cword_t bits);
+        ControlSignal(bool on);
+        bool is_enabled(cword_t control);
+};
 
 class Register {
     private:
