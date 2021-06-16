@@ -80,8 +80,7 @@ IRFetch = dev.IRFetch("IRFetch",
 
 PC = dev.ProgramCounter("PC",
     out = MuxPin(AddrOutMux, 5),
-    load = MuxPin(AddrLoadMux, 5),
-    count = Pin(5, Level.HIGH))
+    load = MuxPin(AddrLoadMux, 5))
 
 SP = dev.StackPointer("SP",
     out = MuxPin(AddrOutMux, 3),
@@ -95,8 +94,7 @@ SP = dev.StackPointer("SP",
 
 LR = dev.ProgramCounter("LR",
     out = MuxPin(AddrOutMux, 4),
-    load = MuxPin(AddrLoadMux, 4),
-    count = NullPin(-1, Level.LOW))
+    load = MuxPin(AddrLoadMux, 4))
 
 OutPort = dev.Register("Out",
     out = NullPin(-1, Level.LOW),

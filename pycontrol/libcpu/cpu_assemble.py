@@ -44,7 +44,7 @@ class CPUBackendAssemble(CPUBackend):
 
     def advance_counter(self, steps: Sequence[Sequence[ControlSignal]])->None:
         for step in steps:
-            if PC.count in step:
+            if PC.out in step:
                 self.addr_counter +=1
 
         org(self.addr_counter)

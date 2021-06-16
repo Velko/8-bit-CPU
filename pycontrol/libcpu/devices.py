@@ -84,9 +84,8 @@ class StepCounter:
         self.reset = reset
 
 class ProgramCounter(Register):
-    def __init__(self, name: str, out: PinBase, load: PinBase, count: PinBase) -> None:
+    def __init__(self, name: str, out: PinBase, load: PinBase) -> None:
         Register.__init__(self, name, out, load)
-        self.count = count
 
 class StackPointer(Register):
     def __init__(self, name: str, out: PinBase, load: PinBase, inc: PinBase, dec: PinBase) -> None:

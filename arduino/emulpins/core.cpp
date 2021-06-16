@@ -49,8 +49,6 @@ uint32_t Control::write32(uint32_t control_word)
     Flags.set_load((control_word & MUX_LOAD_MASK) == MPIN_F_LOAD_BITS);
     Flags.set_out((control_word & MUX_OUT_MASK) == MPIN_F_OUT_BITS);
 
-    PC->set_count((control_word & HPIN_PC_COUNT_BIT) != 0);
-
     r_SP.set_inc((control_word & LPIN_SP_INC_BIT) == 0);
     r_SP.set_dec((control_word & LPIN_SP_DEC_BIT) == 0);
 
@@ -66,8 +64,6 @@ uint32_t Control::write32(uint32_t control_word)
     XorNot.set_not((control_word & HPIN_ADDSUB_ALT_BIT) != 0);
 
     TR.set_add((control_word & HPIN_TL_ADD_BIT) != 0);
-
-    PCSW.set_swap((control_word & HPIN_PCLR_SWAP_BIT) != 0);
 
     if ((control_word & MUX_ALUARGB_MASK) == (CTRL_DEFAULT & MUX_ALUARGB_MASK))
         alu_arg_b_bus = 0; // default value forces B input to 0
@@ -108,7 +104,6 @@ void Clock::pulse()
     r_SP.clock_pulse();
     LR->clock_pulse();
     RAM.clock_pulse();
-    PCSW.clock_pulse();
     TR.clock_pulse();
 }
 
@@ -120,4 +115,6 @@ void InvClock::pulse()
     D.clock_inverted();
     IR.clock_inverted();
     Flags.clock_inverted();
+    PC->clock_inverted();
+    LR->clock_inverted();
 }

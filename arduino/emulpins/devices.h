@@ -97,23 +97,15 @@ class FlagsReg
 class ProgramCounter
 {
     private:
-        uint16_t val;
+        uint16_t primary;
+        uint16_t secondary;
         bool count_enabled;
         bool load_enabled;
     public:
         void set_out(bool enabled);
         void set_load(bool enabled);
-        void set_count(bool enabled);
         void clock_pulse();
-};
-
-class PCSwap
-{
-    private:
-        bool sw_enabled;
-    public:
-        void set_swap(bool enabled);
-        void clock_pulse();
+        void clock_inverted();
 };
 
 class StackPointer
@@ -184,7 +176,6 @@ extern FlagsReg Flags;
 extern ProgramCounter *PC;
 extern StackPointer r_SP;
 extern ProgramCounter *LR;
-extern PCSwap PCSW;
 extern Memory RAM;
 extern AddressReg   DP;
 extern TransferReg  TR;

@@ -14,11 +14,6 @@ uint8_t fetch_instruction()
     dev.clock.pulse();
     dev.inv_clock.pulse();
 
-    /* combine last fetch step with IRFETCH enable */
-    dev.control.write32(op_fetch[1]);
-    dev.clock.pulse();
-    dev.inv_clock.pulse();
-
     return IR.read_tap();
 }
 

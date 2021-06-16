@@ -6,15 +6,13 @@ ProgramCounter LR0;
 
 ProgramCounter *PC = &PC0;
 ProgramCounter *LR = &LR0;
-PCSwap PCSW;
-
-
 
 
 void ProgramCounter::set_out(bool enabled)
 {
+    count_enabled = enabled;
     if (enabled) {
-        address_bus = val;
+        address_bus = secondary;
     }
 }
 
@@ -23,30 +21,15 @@ void ProgramCounter::set_load(bool enabled)
     load_enabled = enabled;
 }
 
-void ProgramCounter::set_count(bool enabled)
-{
-    count_enabled = enabled;
-}
-
 void ProgramCounter::clock_pulse()
 {
     if (count_enabled)
-        ++val;
+        ++primary;
     if (load_enabled)
-        val = address_bus;
+        primary = address_bus;
 }
 
-void PCSwap::set_swap(bool enabled)
+void ProgramCounter::clock_inverted()
 {
-    sw_enabled = enabled;
-}
-
-void PCSwap::clock_pulse()
-{
-    if (sw_enabled)
-    {
-        ProgramCounter *tmp = PC;
-        PC = LR;
-        LR = tmp;
-    }
+    secondary = primary;
 }

@@ -38,7 +38,7 @@ def set_pc_next8(cpu_backend_real: CPUBackendControl) -> PCNext8:
 
 @pytest.mark.parametrize("expected", range(8, 40))
 def test_pc_count(cpu_helper: CPUHelper, set_pc_next8: PCNext8, expected: int) -> None:
-    PC.count.enable()
+    PC.out.enable()
     cpu_helper.backend.client.ctrl_commit(cpu_helper.backend.control.c_word)
     cpu_helper.backend.client.clock_tick()
 
