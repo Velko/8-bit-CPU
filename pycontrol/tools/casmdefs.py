@@ -29,8 +29,8 @@ def generate_casmdefs(rdfile: TextIO) -> None:
                     glue_args.append(f"value{i}`8")
                 elif arg == OpcodeArg.ADDR:
                     in_args.append(f"{{address{i}}}")
-                    glue_args.append(f"address{i}[15:8]")
                     glue_args.append(f"address{i}[7:0]")
+                    glue_args.append(f"address{i}[15:8]")
                 else:
                     raise TypeError
             else:
