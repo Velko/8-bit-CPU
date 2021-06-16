@@ -11,6 +11,7 @@ ControlSignal a_load(MUX_LOAD_MASK, MPIN_A_LOAD_BITS);
 ControlSignal b_load(MUX_LOAD_MASK, MPIN_B_LOAD_BITS);
 ControlSignal c_load(MUX_LOAD_MASK, MPIN_C_LOAD_BITS);
 ControlSignal d_load(MUX_LOAD_MASK, MPIN_D_LOAD_BITS);
+ControlSignal ir_load(MUX_LOAD_MASK, MPIN_IR_LOAD_BITS);
 
 ControlSignal a_out(MUX_OUT_MASK, MPIN_A_OUT_BITS);
 ControlSignal b_out(MUX_OUT_MASK, MPIN_B_OUT_BITS);
@@ -57,7 +58,7 @@ uint32_t Control::write32(uint32_t control_word)
     D.set_tap_a(d_tap_a.is_enabled(control_word));
     D.set_tap_b(d_tap_b.is_enabled(control_word));
 
-    IR.set_load((control_word & MUX_LOAD_MASK) == MPIN_IR_LOAD_BITS);
+    IR.set_load(ir_load.is_enabled(control_word));
     PC.set_load((control_word & MUX_ADDRLOAD_MASK) == MPIN_PC_LOAD_BITS);
     r_SP.set_load((control_word & MUX_ADDRLOAD_MASK) == MPIN_SP_LOAD_BITS);
     LR.set_load((control_word & MUX_ADDRLOAD_MASK) == MPIN_LR_LOAD_BITS);
