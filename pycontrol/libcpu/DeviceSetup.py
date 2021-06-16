@@ -98,9 +98,6 @@ LR = dev.ProgramCounter("LR",
     load = MuxPin(AddrLoadMux, 4),
     count = NullPin(-1, Level.LOW))
 
-PSW = dev.PCLR("PCLR",
-    swap = Pin(15, Level.HIGH))
-
 OutPort = dev.Register("Out",
     out = NullPin(-1, Level.LOW),
     load = MuxPin(LoadMux, 6))

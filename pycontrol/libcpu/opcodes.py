@@ -268,11 +268,12 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
         .add_step([PC.out, ProgMem.out, TH.load])\
         .add_step([PC.count])\
         .add_step([PC.out, ProgMem.out, TL.load])\
-        .add_step([TX.out, LR.load, PC.count])\
-        .add_step([PSW.swap])
+        .add_step([PC.count])\
+        .add_step([PC.out, LR.load])\
+        .add_step([TX.out, PC.load])
 
     builder.add_instruction("ret")\
-        .add_step([PSW.swap])
+        .add_step([LR.out, PC.load])
 
     builder.add_instruction("brk")\
         .add_step([Clock.brk])
