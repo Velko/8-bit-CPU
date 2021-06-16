@@ -1,13 +1,13 @@
 #include "devices.h"
 
-Register::Register()
+Register::Register(ControlSignal out, ControlSignal load, ControlSignal tap_l, ControlSignal tap_r)
+    : _out{out}, _load{load}, _tap_l{tap_l}, _tap_r{tap_r}
 {
-    load_enabled = false;
 }
 
 void Register::clock_pulse()
 {
-    if (load_enabled)
+    if (_load.is_enabled(_control))
         latched_primary = main_bus;
 }
 
@@ -16,32 +16,20 @@ void Register::clock_inverted()
     latched_secondary = latched_primary;
 }
 
-void Register::set_load(bool enabled)
+void Register::apply_control(cword_t control)
 {
-    load_enabled = enabled;
-}
-
-void Register::set_out(bool enabled)
-{
-    if (enabled)
+    _control = control;
+    if (_out.is_enabled(_control))
         main_bus = latched_primary;
+    if (_tap_l.is_enabled(_control))
+        alu_arg_l_bus = latched_secondary;
+    if (_tap_r.is_enabled(_control))
+        alu_arg_r_bus = latched_secondary;
 }
 
 uint8_t Register::read_tap()
 {
     return latched_secondary;
-}
-
-void Register::set_tap_l(bool enabled)
-{
-    if (enabled)
-        alu_arg_l_bus = latched_secondary;
-}
-
-void Register::set_tap_r(bool enabled)
-{
-    if (enabled)
-        alu_arg_r_bus = latched_secondary;
 }
 
 void AddressReg::set_load(bool enabled)

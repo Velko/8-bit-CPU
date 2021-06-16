@@ -27,13 +27,14 @@ class Register {
     private:
         uint8_t latched_primary;
         uint8_t latched_secondary;
-        bool load_enabled;
+        cword_t _control;
+        ControlSignal _out;
+        ControlSignal _load;
+        ControlSignal _tap_l;
+        ControlSignal _tap_r;
     public:
-        Register();
-        void set_load(bool enabled);
-        void set_out(bool enabled);
-        void set_tap_l(bool enabled);
-        void set_tap_r(bool enabled);
+        Register(ControlSignal out, ControlSignal load, ControlSignal tap_l, ControlSignal tap_r);
+        void apply_control(cword_t control);
         uint8_t read_tap();
         void clock_pulse();
         void clock_inverted();

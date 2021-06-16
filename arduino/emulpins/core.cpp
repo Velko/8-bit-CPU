@@ -7,58 +7,43 @@ uint16_t address_bus;
 uint8_t alu_arg_l_bus;
 uint8_t alu_arg_r_bus;
 
-ControlSignal a_load(MUX_LOAD_MASK, MPIN_A_LOAD_BITS);
-ControlSignal b_load(MUX_LOAD_MASK, MPIN_B_LOAD_BITS);
-ControlSignal c_load(MUX_LOAD_MASK, MPIN_C_LOAD_BITS);
-ControlSignal d_load(MUX_LOAD_MASK, MPIN_D_LOAD_BITS);
-ControlSignal ir_load(MUX_LOAD_MASK, MPIN_IR_LOAD_BITS);
+Register A(ControlSignal(MUX_OUT_MASK, MPIN_A_OUT_BITS),
+           ControlSignal(MUX_LOAD_MASK, MPIN_A_LOAD_BITS),
+           ControlSignal(MUX_ALUARGL_MASK, MPIN_A_ALU_L_BITS),
+           ControlSignal(MUX_ALUARGR_MASK, MPIN_A_ALU_R_BITS));
 
-ControlSignal a_out(MUX_OUT_MASK, MPIN_A_OUT_BITS);
-ControlSignal b_out(MUX_OUT_MASK, MPIN_B_OUT_BITS);
-ControlSignal c_out(MUX_OUT_MASK, MPIN_C_OUT_BITS);
-ControlSignal d_out(MUX_OUT_MASK, MPIN_D_OUT_BITS);
+Register B(ControlSignal(MUX_OUT_MASK, MPIN_B_OUT_BITS),
+           ControlSignal(MUX_LOAD_MASK, MPIN_B_LOAD_BITS),
+           ControlSignal(MUX_ALUARGL_MASK, MPIN_B_ALU_L_BITS),
+           ControlSignal(MUX_ALUARGR_MASK, MPIN_B_ALU_R_BITS));
 
-ControlSignal a_tap_l(MUX_ALUARGL_MASK, MPIN_A_ALU_L_BITS);
-ControlSignal a_tap_r(MUX_ALUARGR_MASK, MPIN_A_ALU_R_BITS);
-ControlSignal b_tap_l(MUX_ALUARGL_MASK, MPIN_B_ALU_L_BITS);
-ControlSignal b_tap_r(MUX_ALUARGR_MASK, MPIN_B_ALU_R_BITS);
-ControlSignal c_tap_l(MUX_ALUARGL_MASK, MPIN_C_ALU_L_BITS);
-ControlSignal c_tap_r(MUX_ALUARGR_MASK, MPIN_C_ALU_R_BITS);
-ControlSignal d_tap_l(MUX_ALUARGL_MASK, MPIN_D_ALU_L_BITS);
-ControlSignal d_tap_r(MUX_ALUARGR_MASK, MPIN_D_ALU_R_BITS);
+Register C(ControlSignal(MUX_OUT_MASK, MPIN_C_OUT_BITS),
+           ControlSignal(MUX_LOAD_MASK, MPIN_C_LOAD_BITS),
+           ControlSignal(MUX_ALUARGL_MASK, MPIN_C_ALU_L_BITS),
+           ControlSignal(MUX_ALUARGR_MASK, MPIN_C_ALU_R_BITS));
 
+Register D(ControlSignal(MUX_OUT_MASK, MPIN_D_OUT_BITS),
+           ControlSignal(MUX_LOAD_MASK, MPIN_D_LOAD_BITS),
+           ControlSignal(MUX_ALUARGL_MASK, MPIN_D_ALU_L_BITS),
+           ControlSignal(MUX_ALUARGR_MASK, MPIN_D_ALU_R_BITS));
 
-Register A;
-Register B;
-Register C;
-Register D;
-Register IR;
+Register IR(ControlSignal(false),
+            ControlSignal(MUX_LOAD_MASK, MPIN_IR_LOAD_BITS),
+            ControlSignal(false),
+            ControlSignal(false));
+
 AddressReg DP;
 
 uint32_t Control::write32(uint32_t control_word)
 {
 
-    A.set_load(a_load.is_enabled(control_word));
-    A.set_out(a_out.is_enabled(control_word));
-    A.set_tap_l(a_tap_l.is_enabled(control_word));
-    A.set_tap_r(a_tap_r.is_enabled(control_word));
+    A.apply_control(control_word);
+    B.apply_control(control_word);
+    C.apply_control(control_word);
+    D.apply_control(control_word);
 
-    B.set_load(b_load.is_enabled(control_word));
-    B.set_out(b_out.is_enabled(control_word));
-    B.set_tap_l(b_tap_l.is_enabled(control_word));
-    B.set_tap_r(b_tap_r.is_enabled(control_word));
+    IR.apply_control(control_word);
 
-    C.set_load(c_load.is_enabled(control_word));
-    C.set_out(c_out.is_enabled(control_word));
-    C.set_tap_l(c_tap_l.is_enabled(control_word));
-    C.set_tap_r(c_tap_r.is_enabled(control_word));
-
-    D.set_load(d_load.is_enabled(control_word));
-    D.set_out(d_out.is_enabled(control_word));
-    D.set_tap_l(d_tap_l.is_enabled(control_word));
-    D.set_tap_r(d_tap_r.is_enabled(control_word));
-
-    IR.set_load(ir_load.is_enabled(control_word));
     PC.set_load((control_word & MUX_ADDRLOAD_MASK) == MPIN_PC_LOAD_BITS);
     r_SP.set_load((control_word & MUX_ADDRLOAD_MASK) == MPIN_SP_LOAD_BITS);
     LR.set_load((control_word & MUX_ADDRLOAD_MASK) == MPIN_LR_LOAD_BITS);
