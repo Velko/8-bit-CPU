@@ -128,8 +128,8 @@ def test_push_lr(cpu_helper: CPUHelper) -> None:
 
     push (LR)
 
-    l = cpu_helper.read_ram(0x87)
-    h = cpu_helper.read_ram(0x86)
+    h = cpu_helper.read_ram(0x87)
+    l = cpu_helper.read_ram(0x86)
 
     assert h == 0x12
     assert l == 0x34
@@ -138,8 +138,8 @@ def test_pop_lr(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg16(SP, 0x21)
     cpu_helper.load_reg16(LR, 0)
 
-    cpu_helper.write_ram(0x22, 0x54)
-    cpu_helper.write_ram(0x21, 0x83)
+    cpu_helper.write_ram(0x21, 0x54)
+    cpu_helper.write_ram(0x22, 0x83)
 
     pop (LR)
 

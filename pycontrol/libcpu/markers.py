@@ -25,7 +25,7 @@ class AddrBase:
 
     @staticmethod
     def make_bytes(addr: int) -> List[int]:
-        return [(addr >> 8) & 0xFF, addr & 0xFF]
+        return [addr & 0xFF, (addr >> 8) & 0xFF]
 
 class Addr(AddrBase):
     def __init__(self, addr: int) -> None:
