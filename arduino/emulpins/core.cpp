@@ -27,10 +27,7 @@ Register D(ControlSignal(MUX_OUT_MASK, MPIN_D_OUT_BITS),
            ControlSignal(MUX_ALUARGL_MASK, MPIN_D_ALU_L_BITS),
            ControlSignal(MUX_ALUARGR_MASK, MPIN_D_ALU_R_BITS));
 
-Register IR(ControlSignal(false),
-            ControlSignal(MUX_LOAD_MASK, MPIN_IR_LOAD_BITS),
-            ControlSignal(false),
-            ControlSignal(false));
+InstructionRegister IR(MPIN_IR_LOAD_BITS);
 
 AddressReg DP;
 

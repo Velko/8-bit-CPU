@@ -40,6 +40,19 @@ class Register {
         void clock_inverted();
 };
 
+class InstructionRegister {
+    private:
+        uint8_t latched_primary;
+        uint8_t latched_secondary;
+        cword_t _control;
+        ControlSignal _load;
+    public:
+        InstructionRegister(cword_t load);
+        void apply_control(cword_t control);
+        uint8_t read_tap();
+        void clock_pulse();
+        void clock_inverted();
+};
 
 class ALU_AddSub {
     private:
@@ -178,7 +191,7 @@ class TransferReg
 
 extern Register A;
 extern Register B;
-extern Register IR;
+extern InstructionRegister IR;
 extern ALU_AddSub AddSub;
 extern ALU_AndOr AndOr;
 extern ALU_ShiftSwap ShiftSwap;
