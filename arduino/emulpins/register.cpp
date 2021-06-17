@@ -29,21 +29,21 @@ void Register::control_updated()
         alu_arg_r_bus = latched_secondary;
 }
 
-void AddressReg::set_load(bool enabled)
-{
-    load_enabled = enabled;
-}
+AddressReg::AddressReg(cword_t out, cword_t load)
+    : _out(MUX_ADDROUT_MASK, out),
+      _load(MUX_ADDRLOAD_MASK, load)
+{}
 
-void AddressReg::set_out(bool enabled)
+void AddressReg::control_updated()
 {
-    if (enabled) {
+    if (_out.is_enabled(_control)) {
         address_bus = val;
     }
 }
 
 void AddressReg::clock_pulse()
 {
-    if (load_enabled)
+    if (_load.is_enabled(_control))
     {
         val = address_bus;
     }

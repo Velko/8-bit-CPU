@@ -29,8 +29,6 @@ Register D(MPIN_D_OUT_BITS,
 
 InstructionRegister IR(MPIN_IR_LOAD_BITS);
 
-AddressReg DP;
-
 uint32_t Control::write32(uint32_t control_word)
 {
 

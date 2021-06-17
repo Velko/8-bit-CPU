@@ -165,15 +165,17 @@ class Memory : public CpuDevice
         void clock_pulse() override;
 };
 
-class AddressReg
+class AddressReg : public CpuDevice
 {
     private:
         uint16_t val;
-        bool load_enabled;
+        ControlSignal _out;
+        ControlSignal _load;
+    protected:
+        void control_updated() override;
     public:
-        void set_out(bool enabled);
-        void set_load(bool enabled);
-        void clock_pulse();
+        AddressReg(cword_t out, cword_t load);
+        void clock_pulse() override;
 };
 
 class TransferReg : public CpuDevice
@@ -208,9 +210,8 @@ extern ALU_XorNot XorNot;
 extern FlagsReg Flags;
 extern ProgramCounter PC;
 extern StackPointer r_SP;
-extern ProgramCounter LR;
+extern AddressReg LR;
 extern Memory RAM;
-extern AddressReg   DP;
 extern TransferReg  TR;
 
 #endif  /* DEVICES_H */
