@@ -180,23 +180,25 @@ class AddressReg
         void clock_pulse();
 };
 
-class TransferReg
+class TransferReg : public CpuDevice
 {
     private:
         uint16_t val;
-        bool load_x_enabled;
-        bool load_h_enabled;
-        bool load_l_enabled;
-        bool add_enabled;
+        ControlSignal _out_x;
+        ControlSignal _load_x;
+        ControlSignal _out_l;
+        ControlSignal _load_l;
+        ControlSignal _out_h;
+        ControlSignal _load_h;
+        ControlSignal _add;
+    protected:
+        void control_updated() override;
     public:
-        void set_out_x(bool enabled);
-        void set_load_x(bool enabled);
-        void set_out_h(bool enabled);
-        void set_load_h(bool enabled);
-        void set_out_l(bool enabled);
-        void set_load_l(bool enabled);
-        void set_add(bool enabled);
-        void clock_pulse();
+        TransferReg(cword_t out_x, cword_t load_x,
+                  cword_t out_l, cword_t load_l,
+                  cword_t out_h, cword_t load_h,
+                  cword_t add);
+        void clock_pulse() override;
 };
 
 

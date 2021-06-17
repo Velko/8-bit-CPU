@@ -44,13 +44,7 @@ uint32_t Control::write32(uint32_t control_word)
     PC.apply_control(control_word);
     r_SP.apply_control(control_word);
     LR.apply_control(control_word);
-    TR.set_load_x((control_word & MUX_ADDRLOAD_MASK) == MPIN_TX_LOAD_BITS);
-    TR.set_load_h((control_word & MUX_LOAD_MASK) == MPIN_TH_LOAD_BITS);
-    TR.set_load_l((control_word & MUX_LOAD_MASK) == MPIN_TL_LOAD_BITS);
-
-    TR.set_out_x((control_word & MUX_ADDROUT_MASK) == MPIN_TX_OUT_BITS);
-    TR.set_out_h((control_word & MUX_OUT_MASK) == MPIN_TH_OUT_BITS);
-    TR.set_out_l((control_word & MUX_OUT_MASK) == MPIN_TL_OUT_BITS);
+    TR.apply_control(control_word);
 
     // RAM out should be enabled after registers had an opportunity to
     // put an address on the bus
@@ -71,8 +65,6 @@ uint32_t Control::write32(uint32_t control_word)
     ShiftSwap.set_carry((control_word & HPIN_F_CARRY_BIT) != 0);
 
     XorNot.set_not((control_word & HPIN_ADDSUB_ALT_BIT) != 0);
-
-    TR.set_add((control_word & HPIN_TL_ADD_BIT) != 0);
 
     if ((control_word & MUX_ALUARGR_MASK) == (CTRL_DEFAULT & MUX_ALUARGR_MASK))
         alu_arg_r_bus = 0; // default value forces R input to 0
