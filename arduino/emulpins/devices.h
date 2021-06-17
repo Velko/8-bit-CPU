@@ -109,20 +109,20 @@ class ALU_XorNot {
 #define FLAG_N  0b0001
 
 
-class FlagsReg
+class FlagsReg : public CpuDevice
 {
     private:
         uint8_t latched_primary;
         uint8_t latched_secondary;
-        bool load_enabled;
-        bool calc_enabled;
+        ControlSignal _out;
+        ControlSignal _load;
+        ControlSignal _calc;
+    protected:
+        void control_updated() override;
     public:
-        FlagsReg();
-        void set_out(bool enabled);
-        void set_load(bool enabled);
-        void set_calc(bool enabled);
-        void clock_pulse();
-        void clock_inverted();
+        FlagsReg(cword_t out, cword_t load, cword_t calc);
+        void clock_pulse() override;
+        void clock_inverted() override;
         uint8_t read_tap();
 };
 

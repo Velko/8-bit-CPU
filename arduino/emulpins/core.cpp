@@ -50,9 +50,7 @@ uint32_t Control::write32(uint32_t control_word)
     // put an address on the bus
     RAM.apply_control(control_word);
 
-    Flags.set_calc((control_word & LPIN_F_CALC_BIT) == 0);
-    Flags.set_load((control_word & MUX_LOAD_MASK) == MPIN_F_LOAD_BITS);
-    Flags.set_out((control_word & MUX_OUT_MASK) == MPIN_F_OUT_BITS);
+    Flags.apply_control(control_word);
 
 
     AddSub.set_sub((control_word & HPIN_ADDSUB_ALT_BIT) != 0);
