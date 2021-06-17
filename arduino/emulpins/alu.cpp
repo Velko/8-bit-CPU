@@ -2,9 +2,9 @@
 #include "op-defs.h"
 
 ALU_AddSub AddSub(MPIN_ADDSUB_OUT_BITS, HPIN_ADDSUB_ALT_BIT, HPIN_F_CARRY_BIT);
-ALU_AndOr  AndOr;
-ALU_ShiftSwap ShiftSwap;
-ALU_XorNot XorNot;
+ALU_AndOr  AndOr(MPIN_ANDOR_OUT_BITS, HPIN_ADDSUB_ALT_BIT);
+ALU_ShiftSwap ShiftSwap(MPIN_SHIFTSWAP_OUT_BITS, HPIN_ADDSUB_ALT_BIT, HPIN_F_CARRY_BIT);
+ALU_XorNot XorNot(MPIN_XORNOT_OUT_BITS, HPIN_ADDSUB_ALT_BIT);
 
 
 ALU_Unit::ALU_Unit(cword_t out, cword_t alt, cword_t carry)
@@ -45,20 +45,16 @@ void ALU_AddSub::control_updated()
     }
 }
 
-ALU_AndOr::ALU_AndOr()
+ALU_AndOr::ALU_AndOr(cword_t out, cword_t alt)
+    : ALU_Unit(out, alt, 0)
 {
 }
 
-void ALU_AndOr::set_or(bool logical_or)
+void ALU_AndOr::control_updated()
 {
-    op_or = logical_or;
-}
-
-void ALU_AndOr::set_out(bool enabled)
-{
-    if (enabled)
+    if (_out.is_enabled(_control))
     {
-        if (op_or)
+        if (_alt.is_enabled(_control))
             main_bus = alu_arg_l_bus | alu_arg_r_bus;
         else
             main_bus = alu_arg_l_bus & alu_arg_r_bus;
@@ -69,31 +65,22 @@ void ALU_AndOr::set_out(bool enabled)
 }
 
 
-ALU_ShiftSwap::ALU_ShiftSwap()
+ALU_ShiftSwap::ALU_ShiftSwap(cword_t out, cword_t alt, cword_t carry)
+    : ALU_Unit(out, alt, carry)
 {
 }
 
-void ALU_ShiftSwap::set_swap(bool swap)
+void ALU_ShiftSwap::control_updated()
 {
-    op_swap = swap;
-}
-
-void ALU_ShiftSwap::set_carry(bool c)
-{
-    carry = c;
-}
-
-void ALU_ShiftSwap::set_out(bool enabled)
-{
-    if (enabled)
+    if (_out.is_enabled(_control))
     {
-        if (op_swap)
+        if (_alt.is_enabled(_control))
             main_bus = alu_arg_l_bus << 4 | alu_arg_l_bus >> 4;
         else
         {
             main_bus = alu_arg_l_bus >> 1;
 
-            if (carry)
+            if (_carry.is_enabled(_control))
                 main_bus |= 0x80;
 
             flags_bus = 0;
@@ -103,22 +90,18 @@ void ALU_ShiftSwap::set_out(bool enabled)
     }
 }
 
-ALU_XorNot::ALU_XorNot()
+ALU_XorNot::ALU_XorNot(cword_t out, cword_t alt)
+    : ALU_Unit(out, alt, 0)
 {
 }
 
-void ALU_XorNot::set_not(bool logical_not)
+void ALU_XorNot::control_updated()
 {
-    op_not = logical_not;
-}
-
-void ALU_XorNot::set_out(bool enabled)
-{
-    if (enabled)
+    if (_out.is_enabled(_control))
     {
         uint8_t arg_b = alu_arg_r_bus;
 
-        if (op_not)
+        if (_alt.is_enabled(_control))
             arg_b = 0xFF;
 
         main_bus = alu_arg_l_bus ^ arg_b;

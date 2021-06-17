@@ -52,13 +52,6 @@ uint32_t Control::write32(uint32_t control_word)
 
     Flags.apply_control(control_word);
 
-    AndOr.set_or((control_word & HPIN_ADDSUB_ALT_BIT) != 0);
-
-    ShiftSwap.set_swap((control_word & HPIN_ADDSUB_ALT_BIT) != 0);
-    ShiftSwap.set_carry((control_word & HPIN_F_CARRY_BIT) != 0);
-
-    XorNot.set_not((control_word & HPIN_ADDSUB_ALT_BIT) != 0);
-
     if ((control_word & MUX_ALUARGR_MASK) == (CTRL_DEFAULT & MUX_ALUARGR_MASK))
         alu_arg_r_bus = 0; // default value forces R input to 0
 
@@ -71,9 +64,9 @@ uint32_t Control::write32(uint32_t control_word)
 
     // should be one of the latest, after registers' tap config
     AddSub.apply_control(control_word);
-    AndOr.set_out((control_word & MUX_OUT_MASK) == MPIN_ANDOR_OUT_BITS);
-    ShiftSwap.set_out((control_word & MUX_OUT_MASK) == MPIN_SHIFTSWAP_OUT_BITS);
-    XorNot.set_out((control_word & MUX_OUT_MASK) == MPIN_XORNOT_OUT_BITS);
+    AndOr.apply_control(control_word);
+    ShiftSwap.apply_control(control_word);
+    XorNot.apply_control(control_word);
 
     return 0;
 }

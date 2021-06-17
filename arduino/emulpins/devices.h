@@ -78,33 +78,25 @@ class ALU_AddSub : public ALU_Unit {
         ALU_AddSub(cword_t out, cword_t alt, cword_t carry);
 };
 
-class ALU_AndOr {
-    private:
-        bool op_or;
+class ALU_AndOr : public ALU_Unit {
+    protected:
+        void control_updated() override;
     public:
-        ALU_AndOr();
-        void set_or(bool logical_or);
-        void set_out(bool enabled);
+        ALU_AndOr(cword_t out, cword_t alt);
 };
 
-class ALU_ShiftSwap {
-    private:
-        bool op_swap;
-        bool carry;
+class ALU_ShiftSwap : public ALU_Unit {
+    protected:
+        void control_updated() override;
     public:
-        ALU_ShiftSwap();
-        void set_swap(bool swap);
-        void set_carry(bool carry);
-        void set_out(bool enabled);
+        ALU_ShiftSwap(cword_t out, cword_t alt, cword_t carry);
 };
 
-class ALU_XorNot {
-    private:
-        bool op_not;
+class ALU_XorNot : public ALU_Unit {
+    protected:
+        void control_updated() override;
     public:
-        ALU_XorNot();
-        void set_not(bool logical_not);
-        void set_out(bool enabled);
+        ALU_XorNot(cword_t out, cword_t alt);
 };
 
 
