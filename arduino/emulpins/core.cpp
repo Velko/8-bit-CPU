@@ -93,5 +93,6 @@ void InvClock::pulse()
     IR.clock_inverted();
     Flags.clock_inverted();
     PC.clock_inverted();
+    r_SP.clock_inverted();
     LR.clock_inverted();
 }

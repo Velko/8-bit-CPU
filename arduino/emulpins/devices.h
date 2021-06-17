@@ -140,7 +140,8 @@ class ProgramCounter : public CpuDevice
 class StackPointer : public CpuDevice
 {
     private:
-        uint16_t val;
+        uint16_t primary;
+        uint16_t secondary;
         ControlSignal _out;
         ControlSignal _load;
         ControlSignal _inc;
@@ -150,6 +151,7 @@ class StackPointer : public CpuDevice
     public:
         StackPointer(cword_t out, cword_t load, cword_t inc, cword_t dec);
         void clock_pulse() override;
+        void clock_inverted() override;
 };
 
 class Memory : public CpuDevice
