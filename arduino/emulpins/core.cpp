@@ -41,17 +41,15 @@ uint32_t Control::write32(uint32_t control_word)
 
     IR.apply_control(control_word);
 
-    PC.set_load((control_word & MUX_ADDRLOAD_MASK) == MPIN_PC_LOAD_BITS);
+    PC.apply_control(control_word);
     r_SP.set_load((control_word & MUX_ADDRLOAD_MASK) == MPIN_SP_LOAD_BITS);
-    LR.set_load((control_word & MUX_ADDRLOAD_MASK) == MPIN_LR_LOAD_BITS);
+    LR.apply_control(control_word);
     RAM.set_write((control_word & MUX_LOAD_MASK) == MPIN_RAM_WRITE_BITS);
     TR.set_load_x((control_word & MUX_ADDRLOAD_MASK) == MPIN_TX_LOAD_BITS);
     TR.set_load_h((control_word & MUX_LOAD_MASK) == MPIN_TH_LOAD_BITS);
     TR.set_load_l((control_word & MUX_LOAD_MASK) == MPIN_TL_LOAD_BITS);
 
-    PC.set_out((control_word & MUX_ADDROUT_MASK) == MPIN_PC_OUT_BITS);
     r_SP.set_out((control_word & MUX_ADDROUT_MASK) == MPIN_SP_OUT_BITS);
-    LR.set_out((control_word & MUX_ADDROUT_MASK) == MPIN_LR_OUT_BITS);
     TR.set_out_x((control_word & MUX_ADDROUT_MASK) == MPIN_TX_OUT_BITS);
     TR.set_out_h((control_word & MUX_OUT_MASK) == MPIN_TH_OUT_BITS);
     TR.set_out_l((control_word & MUX_OUT_MASK) == MPIN_TL_OUT_BITS);

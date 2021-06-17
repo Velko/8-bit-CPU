@@ -126,18 +126,19 @@ class FlagsReg
         uint8_t read_tap();
 };
 
-class ProgramCounter
+class ProgramCounter : public CpuDevice
 {
     private:
         uint16_t primary;
         uint16_t secondary;
-        bool count_enabled;
-        bool load_enabled;
+        ControlSignal _out_cnt;
+        ControlSignal _load;
+    protected:
+        void control_updated() override;
     public:
-        void set_out(bool enabled);
-        void set_load(bool enabled);
-        void clock_pulse();
-        void clock_inverted();
+        ProgramCounter(cword_t out_cnt, cword_t load);
+        void clock_pulse() override;
+        void clock_inverted() override;
 };
 
 class StackPointer
