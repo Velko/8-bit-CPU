@@ -19,9 +19,8 @@ void Register::clock_inverted()
     latched_secondary = latched_primary;
 }
 
-void Register::apply_control(cword_t control)
+void Register::control_updated()
 {
-    _control = control;
     if (_out.is_enabled(_control))
         main_bus = latched_primary;
     if (_tap_l.is_enabled(_control))

@@ -5,11 +5,6 @@ InstructionRegister::InstructionRegister(cword_t load)
     : _load(MUX_LOAD_MASK, load)
 {}
 
-void InstructionRegister::apply_control(cword_t control)
-{
-    _control = control;
-}
-
 uint8_t InstructionRegister::read_tap()
 {
     return latched_secondary;

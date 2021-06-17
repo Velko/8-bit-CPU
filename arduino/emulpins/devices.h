@@ -14,6 +14,16 @@ void set_control(uint32_t control_word);
 void clock_pulse();
 void clock_inverted();
 
+class CpuDevice {
+    protected:
+        cword_t _control;
+        virtual void control_updated();
+    public:
+        void apply_control(cword_t control);
+        virtual void clock_pulse();
+        virtual void clock_inverted();
+};
+
 class ControlSignal {
         cword_t _mask;
         cword_t _bits;
@@ -23,35 +33,33 @@ class ControlSignal {
         bool is_enabled(cword_t control);
 };
 
-class Register {
+class Register : public CpuDevice {
     private:
         uint8_t latched_primary;
         uint8_t latched_secondary;
-        cword_t _control;
         ControlSignal _out;
         ControlSignal _load;
         ControlSignal _tap_l;
         ControlSignal _tap_r;
+    protected:
+        void control_updated() override;
     public:
         Register(cword_t out, cword_t load, cword_t tap_l, cword_t tap_r);
-        void apply_control(cword_t control);
         uint8_t read_tap();
-        void clock_pulse();
-        void clock_inverted();
+        void clock_pulse() override;
+        void clock_inverted() override;
 };
 
-class InstructionRegister {
+class InstructionRegister : public CpuDevice {
     private:
         uint8_t latched_primary;
         uint8_t latched_secondary;
-        cword_t _control;
         ControlSignal _load;
     public:
         InstructionRegister(cword_t load);
-        void apply_control(cword_t control);
         uint8_t read_tap();
-        void clock_pulse();
-        void clock_inverted();
+        void clock_pulse() override;
+        void clock_inverted() override;
 };
 
 class ALU_AddSub {

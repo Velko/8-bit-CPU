@@ -12,3 +12,13 @@ bool ControlSignal::is_enabled(cword_t control)
 {
     return (control & _mask) == _bits;
 }
+
+void CpuDevice::apply_control(cword_t control)
+{
+    _control = control;
+    control_updated();
+}
+
+void CpuDevice::control_updated() {}
+void CpuDevice::clock_pulse() {}
+void CpuDevice::clock_inverted() {}
