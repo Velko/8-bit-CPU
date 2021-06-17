@@ -1,38 +1,37 @@
 #include "devices.h"
+#include "op-defs.h"
 
-ALU_AddSub AddSub;
+ALU_AddSub AddSub(MPIN_ADDSUB_OUT_BITS, HPIN_ADDSUB_ALT_BIT, HPIN_F_CARRY_BIT);
 ALU_AndOr  AndOr;
 ALU_ShiftSwap ShiftSwap;
 ALU_XorNot XorNot;
 
-ALU_AddSub::ALU_AddSub()
-{
-}
+
+ALU_Unit::ALU_Unit(cword_t out, cword_t alt, cword_t carry)
+    : _out(MUX_OUT_MASK, out),
+      _alt(alt, alt),
+      _carry(carry, carry)
+{}
+
+ALU_AddSub::ALU_AddSub(cword_t out, cword_t alt, cword_t carry)
+    : ALU_Unit(out, alt, carry)
+{}
 
 
-void ALU_AddSub::set_sub(bool subtract)
-{
-    sub = subtract;
-}
-
-void ALU_AddSub::set_carry(bool c)
-{
-    carry = c;
-}
-
-void ALU_AddSub::set_out(bool enabled)
+void ALU_AddSub::control_updated()
 {
     uint16_t a_arg = alu_arg_l_bus;
     uint16_t b_adj = alu_arg_r_bus;
 
-    uint8_t c_val = carry ? 1 : 0;
+    uint8_t c_val = _carry.is_enabled(_control) ? 1 : 0;
+    bool sub = _alt.is_enabled(_control);
 
     if (sub) {
         b_adj = (~b_adj) & 0xFF;
         c_val = 1 - c_val;
     }
 
-    if (enabled)
+    if (_out.is_enabled(_control))
     {
         uint16_t result = a_arg + b_adj + c_val;
         main_bus = result & 0xFF;

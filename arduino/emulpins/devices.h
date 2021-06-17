@@ -62,15 +62,20 @@ class InstructionRegister : public CpuDevice {
         void clock_inverted() override;
 };
 
-class ALU_AddSub {
-    private:
-        bool sub;
-        bool carry;
+class ALU_Unit : public CpuDevice {
+    protected:
+        ControlSignal _out;
+        ControlSignal _alt;
+        ControlSignal _carry;
     public:
-        ALU_AddSub();
-        void set_sub(bool subtract);
-        void set_carry(bool carry);
-        void set_out(bool enabled);
+        ALU_Unit(cword_t out, cword_t alt, cword_t carry);
+};
+
+class ALU_AddSub : public ALU_Unit {
+    protected:
+        void control_updated() override;
+    public:
+        ALU_AddSub(cword_t out, cword_t alt, cword_t carry);
 };
 
 class ALU_AndOr {
