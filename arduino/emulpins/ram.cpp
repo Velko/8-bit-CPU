@@ -1,7 +1,8 @@
 #include <SPI.h>
 #include "devices.h"
+#include "op-defs.h"
 
-Memory RAM;
+Memory RAM(MPIN_RAM_OUT_BITS, MPIN_RAM_WRITE_BITS);
 
 #define RAM_CS  SS
 
@@ -10,6 +11,11 @@ Memory RAM;
 #define WRMR_CMD    0x01
 #define WRITE_CMD   0x02
 #define READ_CMD    0x03
+
+Memory::Memory(cword_t out, cword_t write)
+    : _out(MUX_OUT_MASK, out),
+      _write(MUX_LOAD_MASK, write)
+{}
 
 void Memory::setup()
 {
@@ -30,9 +36,9 @@ void Memory::setup()
     digitalWrite(RAM_CS, HIGH);
 }
 
-void Memory::set_out(bool enabled)
+void Memory::control_updated()
 {
-    if (enabled)
+    if (_out.is_enabled(_control))
     {
         digitalWrite(RAM_CS, LOW);
         SPI.transfer(READ_CMD);
@@ -44,14 +50,9 @@ void Memory::set_out(bool enabled)
     }
 }
 
-void Memory::set_write(bool enabled)
-{
-    write_enabled = enabled;
-}
-
 void Memory::clock_pulse()
 {
-    if (write_enabled)
+    if (_write.is_enabled(_control))
     {
         digitalWrite(RAM_CS, LOW);
         SPI.transfer(WRITE_CMD);

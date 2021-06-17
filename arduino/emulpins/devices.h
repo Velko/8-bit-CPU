@@ -156,15 +156,17 @@ class StackPointer : public CpuDevice
         void clock_pulse() override;
 };
 
-class Memory
+class Memory : public CpuDevice
 {
     private:
-        bool write_enabled;
+        ControlSignal _out;
+        ControlSignal _write;
+    protected:
+        void control_updated() override;
     public:
+        Memory(cword_t out, cword_t write);
         void setup();
-        void set_out(bool enabled);
-        void set_write(bool enabled);
-        void clock_pulse();
+        void clock_pulse() override;
 };
 
 class AddressReg

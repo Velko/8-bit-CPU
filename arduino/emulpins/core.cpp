@@ -44,7 +44,6 @@ uint32_t Control::write32(uint32_t control_word)
     PC.apply_control(control_word);
     r_SP.apply_control(control_word);
     LR.apply_control(control_word);
-    RAM.set_write((control_word & MUX_LOAD_MASK) == MPIN_RAM_WRITE_BITS);
     TR.set_load_x((control_word & MUX_ADDRLOAD_MASK) == MPIN_TX_LOAD_BITS);
     TR.set_load_h((control_word & MUX_LOAD_MASK) == MPIN_TH_LOAD_BITS);
     TR.set_load_l((control_word & MUX_LOAD_MASK) == MPIN_TL_LOAD_BITS);
@@ -55,7 +54,7 @@ uint32_t Control::write32(uint32_t control_word)
 
     // RAM out should be enabled after registers had an opportunity to
     // put an address on the bus
-    RAM.set_out((control_word & MUX_OUT_MASK) == MPIN_RAM_OUT_BITS);
+    RAM.apply_control(control_word);
 
     Flags.set_calc((control_word & LPIN_F_CALC_BIT) == 0);
     Flags.set_load((control_word & MUX_LOAD_MASK) == MPIN_F_LOAD_BITS);
