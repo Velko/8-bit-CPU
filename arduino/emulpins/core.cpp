@@ -7,25 +7,25 @@ uint16_t address_bus;
 uint8_t alu_arg_l_bus;
 uint8_t alu_arg_r_bus;
 
-Register A(ControlSignal(MUX_OUT_MASK, MPIN_A_OUT_BITS),
-           ControlSignal(MUX_LOAD_MASK, MPIN_A_LOAD_BITS),
-           ControlSignal(MUX_ALUARGL_MASK, MPIN_A_ALU_L_BITS),
-           ControlSignal(MUX_ALUARGR_MASK, MPIN_A_ALU_R_BITS));
+Register A(MPIN_A_OUT_BITS,
+           MPIN_A_LOAD_BITS,
+           MPIN_A_ALU_L_BITS,
+           MPIN_A_ALU_R_BITS);
 
-Register B(ControlSignal(MUX_OUT_MASK, MPIN_B_OUT_BITS),
-           ControlSignal(MUX_LOAD_MASK, MPIN_B_LOAD_BITS),
-           ControlSignal(MUX_ALUARGL_MASK, MPIN_B_ALU_L_BITS),
-           ControlSignal(MUX_ALUARGR_MASK, MPIN_B_ALU_R_BITS));
+Register B(MPIN_B_OUT_BITS,
+           MPIN_B_LOAD_BITS,
+           MPIN_B_ALU_L_BITS,
+           MPIN_B_ALU_R_BITS);
 
-Register C(ControlSignal(MUX_OUT_MASK, MPIN_C_OUT_BITS),
-           ControlSignal(MUX_LOAD_MASK, MPIN_C_LOAD_BITS),
-           ControlSignal(MUX_ALUARGL_MASK, MPIN_C_ALU_L_BITS),
-           ControlSignal(MUX_ALUARGR_MASK, MPIN_C_ALU_R_BITS));
+Register C(MPIN_C_OUT_BITS,
+           MPIN_C_LOAD_BITS,
+           MPIN_C_ALU_L_BITS,
+           MPIN_C_ALU_R_BITS);
 
-Register D(ControlSignal(MUX_OUT_MASK, MPIN_D_OUT_BITS),
-           ControlSignal(MUX_LOAD_MASK, MPIN_D_LOAD_BITS),
-           ControlSignal(MUX_ALUARGL_MASK, MPIN_D_ALU_L_BITS),
-           ControlSignal(MUX_ALUARGR_MASK, MPIN_D_ALU_R_BITS));
+Register D(MPIN_D_OUT_BITS,
+           MPIN_D_LOAD_BITS,
+           MPIN_D_ALU_L_BITS,
+           MPIN_D_ALU_R_BITS);
 
 InstructionRegister IR(MPIN_IR_LOAD_BITS);
 

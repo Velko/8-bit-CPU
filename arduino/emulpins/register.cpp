@@ -1,9 +1,12 @@
 #include "devices.h"
+#include "op-defs.h"
 
-Register::Register(ControlSignal out, ControlSignal load, ControlSignal tap_l, ControlSignal tap_r)
-    : _out{out}, _load{load}, _tap_l{tap_l}, _tap_r{tap_r}
-{
-}
+Register::Register(cword_t out, cword_t load, cword_t tap_l, cword_t tap_r)
+    : _out(MUX_OUT_MASK, out),
+      _load(MUX_LOAD_MASK, load),
+      _tap_l(MUX_ALUARGL_MASK, tap_l),
+      _tap_r(MUX_ALUARGR_MASK, tap_r)
+{}
 
 void Register::clock_pulse()
 {

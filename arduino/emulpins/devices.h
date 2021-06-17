@@ -33,7 +33,7 @@ class Register {
         ControlSignal _tap_l;
         ControlSignal _tap_r;
     public:
-        Register(ControlSignal out, ControlSignal load, ControlSignal tap_l, ControlSignal tap_r);
+        Register(cword_t out, cword_t load, cword_t tap_l, cword_t tap_r);
         void apply_control(cword_t control);
         uint8_t read_tap();
         void clock_pulse();
