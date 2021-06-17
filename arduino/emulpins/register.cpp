@@ -29,11 +29,6 @@ void Register::control_updated()
         alu_arg_r_bus = latched_secondary;
 }
 
-uint8_t Register::read_tap()
-{
-    return latched_secondary;
-}
-
 void AddressReg::set_load(bool enabled)
 {
     load_enabled = enabled;

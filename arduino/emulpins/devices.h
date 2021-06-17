@@ -45,7 +45,6 @@ class Register : public CpuDevice {
         void control_updated() override;
     public:
         Register(cword_t out, cword_t load, cword_t tap_l, cword_t tap_r);
-        uint8_t read_tap();
         void clock_pulse() override;
         void clock_inverted() override;
 };
