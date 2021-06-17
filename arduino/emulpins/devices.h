@@ -141,19 +141,19 @@ class ProgramCounter : public CpuDevice
         void clock_inverted() override;
 };
 
-class StackPointer
+class StackPointer : public CpuDevice
 {
     private:
         uint16_t val;
-        bool inc_enabled;
-        bool dec_enabled;
-        bool load_enabled;
+        ControlSignal _out;
+        ControlSignal _load;
+        ControlSignal _inc;
+        ControlSignal _dec;
+    protected:
+        void control_updated() override;
     public:
-        void set_out(bool enabled);
-        void set_load(bool enabled);
-        void set_inc(bool enabled);
-        void set_dec(bool enabled);
-        void clock_pulse();
+        StackPointer(cword_t out, cword_t load, cword_t inc, cword_t dec);
+        void clock_pulse() override;
 };
 
 class Memory

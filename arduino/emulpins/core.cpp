@@ -42,14 +42,13 @@ uint32_t Control::write32(uint32_t control_word)
     IR.apply_control(control_word);
 
     PC.apply_control(control_word);
-    r_SP.set_load((control_word & MUX_ADDRLOAD_MASK) == MPIN_SP_LOAD_BITS);
+    r_SP.apply_control(control_word);
     LR.apply_control(control_word);
     RAM.set_write((control_word & MUX_LOAD_MASK) == MPIN_RAM_WRITE_BITS);
     TR.set_load_x((control_word & MUX_ADDRLOAD_MASK) == MPIN_TX_LOAD_BITS);
     TR.set_load_h((control_word & MUX_LOAD_MASK) == MPIN_TH_LOAD_BITS);
     TR.set_load_l((control_word & MUX_LOAD_MASK) == MPIN_TL_LOAD_BITS);
 
-    r_SP.set_out((control_word & MUX_ADDROUT_MASK) == MPIN_SP_OUT_BITS);
     TR.set_out_x((control_word & MUX_ADDROUT_MASK) == MPIN_TX_OUT_BITS);
     TR.set_out_h((control_word & MUX_OUT_MASK) == MPIN_TH_OUT_BITS);
     TR.set_out_l((control_word & MUX_OUT_MASK) == MPIN_TL_OUT_BITS);
@@ -62,8 +61,6 @@ uint32_t Control::write32(uint32_t control_word)
     Flags.set_load((control_word & MUX_LOAD_MASK) == MPIN_F_LOAD_BITS);
     Flags.set_out((control_word & MUX_OUT_MASK) == MPIN_F_OUT_BITS);
 
-    r_SP.set_inc((control_word & LPIN_SP_INC_BIT) == 0);
-    r_SP.set_dec((control_word & LPIN_SP_DEC_BIT) == 0);
 
     AddSub.set_sub((control_word & HPIN_ADDSUB_ALT_BIT) != 0);
     AddSub.set_carry((control_word & HPIN_F_CARRY_BIT) != 0);
