@@ -142,8 +142,8 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
         builder.add_instruction("stx", OpcodeArg.ADDR, i, v)\
             .add_step([PC.out, ProgMem.out, TL.load])\
             .add_step([PC.out, ProgMem.out, TH.load])\
-            .add_step([i.out, TL.add])\
-            .add_step([TX.out, v.out, Ram.write])
+            .add_step([i.out, TX.out, ACalc.load])\
+            .add_step([ACalc.out, v.out, Ram.write])
 
     for r in gp_regs:
         builder.add_instruction("ld", r, OpcodeArg.ADDR)\
@@ -155,15 +155,15 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
         builder.add_instruction("ldx", t, OpcodeArg.ADDR, i)\
             .add_step([PC.out, ProgMem.out, TL.load])\
             .add_step([PC.out, ProgMem.out, TH.load])\
-            .add_step([i.out, TL.add])\
-            .add_step([TX.out, t.load, Ram.out, Flags.calc])
+            .add_step([i.out, TX.out, ACalc.load])\
+            .add_step([ACalc.out, t.load, Ram.out, Flags.calc])
 
     for i in gp_regs:
         builder.add_instruction("tstx", OpcodeArg.ADDR, i)\
             .add_step([PC.out, ProgMem.out, TL.load])\
             .add_step([PC.out, ProgMem.out, TH.load])\
-            .add_step([i.out, TL.add])\
-            .add_step([TX.out, Ram.out, Flags.calc])
+            .add_step([i.out, TX.out, ACalc.load])\
+            .add_step([ACalc.out, Ram.out, Flags.calc])
 
     builder.add_instruction("jmp", OpcodeArg.ADDR)\
         .add_step([PC.out, ProgMem.out, TL.load])\

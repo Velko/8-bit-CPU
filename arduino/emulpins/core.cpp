@@ -43,6 +43,7 @@ uint32_t Control::write32(uint32_t control_word)
     r_SP.apply_control(control_word);
     LR.apply_control(control_word);
     TR.apply_control(control_word);
+    ACalc.apply_control(control_word);
 
     // RAM out should be enabled after registers had an opportunity to
     // put an address on the bus
@@ -82,6 +83,7 @@ void Clock::pulse()
     LR.clock_pulse();
     RAM.clock_pulse();
     TR.clock_pulse();
+    ACalc.clock_pulse();
 }
 
 void InvClock::pulse()

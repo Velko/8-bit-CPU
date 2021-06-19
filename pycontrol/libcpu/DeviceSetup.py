@@ -106,15 +106,16 @@ COutPort = dev.Register("Cout",
 
 TX = dev.TransferRegister("TX",
     out = MuxPin(AddrOutMux, 0),
-    load = MuxPin(AddrLoadMux, 0),
-    add = NullPin(-1, Level.HIGH))
+    load = MuxPin(AddrLoadMux, 0))
 
 TH = dev.TransferRegister("TH",
     out = MuxPin(OutMux, 5),
-    load = MuxPin(LoadMux, 5),
-    add = NullPin(-1, Level.HIGH))
+    load = MuxPin(LoadMux, 5))
 
 TL = dev.TransferRegister("TL",
     out = MuxPin(OutMux, 11),
-    load = MuxPin(LoadMux, 11),
-    add = Pin(30, Level.HIGH))
+    load = MuxPin(LoadMux, 11))
+
+ACalc = dev.AddressCalculator("ACal",
+    out = MuxPin(AddrOutMux, 2),
+    load = MuxPin(AddrLoadMux, 2))

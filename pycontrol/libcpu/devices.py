@@ -105,9 +105,12 @@ class PCLR:
         self.swap = swap
 
 class TransferRegister(Register):
-    def __init__(self, name: str, out: PinBase, load: PinBase, add: PinBase) -> None:
+    def __init__(self, name: str, out: PinBase, load: PinBase) -> None:
         Register.__init__(self, name, out, load)
-        self.add = add
+
+class AddressCalculator(Register):
+    def __init__(self, name: str, out: PinBase, load: PinBase) -> None:
+        Register.__init__(self, name, out, load)
 
 # Helper device for debugger
 class IRFetch:

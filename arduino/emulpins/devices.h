@@ -190,17 +190,27 @@ class TransferReg : public CpuDevice
         ControlSignal _load_l;
         ControlSignal _out_h;
         ControlSignal _load_h;
-        ControlSignal _add;
     protected:
         void control_updated() override;
     public:
         TransferReg(cword_t out_x, cword_t load_x,
                   cword_t out_l, cword_t load_l,
-                  cword_t out_h, cword_t load_h,
-                  cword_t add);
+                  cword_t out_h, cword_t load_h);
         void clock_pulse() override;
 };
 
+class AddressCalculator : public CpuDevice
+{
+    private:
+        uint16_t val;
+        ControlSignal _out;
+        ControlSignal _load;
+    protected:
+        void control_updated() override;
+    public:
+        AddressCalculator(cword_t out, cword_t load);
+        void clock_pulse() override;
+};
 
 extern Register A;
 extern Register B;
@@ -215,5 +225,6 @@ extern StackPointer r_SP;
 extern AddressReg LR;
 extern Memory RAM;
 extern TransferReg  TR;
+extern AddressCalculator ACalc;
 
 #endif  /* DEVICES_H */
