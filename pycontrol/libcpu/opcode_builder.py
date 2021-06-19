@@ -10,8 +10,8 @@ class FlagsAlt:
         self.value = value
         self.steps: List[Sequence[ControlSignal]] = []
 
-    def add_step(self, step: Sequence[ControlSignal]) -> 'FlagsAlt':
-        self.steps.append(step)
+    def add_step(self, *args: ControlSignal) -> 'FlagsAlt':
+        self.steps.append(args)
 
         return self
 
@@ -60,8 +60,8 @@ class MicroCode:
             else:
                 return
 
-    def add_step(self, pins: Sequence[ControlSignal]) -> 'MicroCode':
-        self._steps.append(pins)
+    def add_step(self, *args: ControlSignal) -> 'MicroCode':
+        self._steps.append(args)
 
         return self
 

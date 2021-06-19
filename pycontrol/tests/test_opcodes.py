@@ -52,9 +52,9 @@ class OpcodeFixture:
         self.orig_alt = DummySignal()
 
         builder.add_instruction("dummy")\
-            .add_step([EnableCallback(self.log_default, self.orig_default)])\
+            .add_step(EnableCallback(self.log_default, self.orig_default))\
             .add_condition(mask=Flags.C, value=Flags.C)\
-                .add_step([EnableCallback(self.log_alt, self.orig_alt)])
+                .add_step(EnableCallback(self.log_alt, self.orig_alt))
 
         self.opcodes, self.ops_by_code = builder.build()
 
