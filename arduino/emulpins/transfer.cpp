@@ -1,10 +1,6 @@
 #include "devices.h"
 #include "op-defs.h"
 
-TransferReg  TR(MPIN_TX_OUT_BITS, MPIN_TX_LOAD_BITS,
-                MPIN_TL_OUT_BITS, MPIN_TL_LOAD_BITS,
-                MPIN_TH_OUT_BITS, MPIN_TH_LOAD_BITS);
-
 TransferReg::TransferReg(cword_t out_x, cword_t load_x,
                          cword_t out_l, cword_t load_l,
                          cword_t out_h, cword_t load_h)

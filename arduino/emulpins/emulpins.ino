@@ -20,7 +20,7 @@ void setup()
     Serial.begin(115200);
     load_default_cword();
     dev.control.write32(default_cword);
-    RAM.setup();
+    Processor.runtime_setup();
 }
 
 
@@ -100,7 +100,7 @@ void loop()
 
     case 'r':
         val = Serial.parseInt();
-        Serial.println(IR.read_tap());
+        Serial.println(Processor.current_opcode());
         break;
 
     case 'R':

@@ -4,8 +4,6 @@
 
 uint8_t flags_bus;
 
-FlagsReg Flags(MPIN_F_OUT_BITS, MPIN_F_LOAD_BITS, LPIN_F_CALC_BIT);
-
 FlagsReg::FlagsReg(cword_t out, cword_t load, cword_t calc)
     : _out(MUX_OUT_MASK, out),
       _load(MUX_LOAD_MASK, load),

@@ -212,19 +212,41 @@ class AddressCalculator : public CpuDevice
         void clock_pulse() override;
 };
 
-extern Register A;
-extern Register B;
-extern InstructionRegister IR;
-extern ALU_AddSub AddSub;
-extern ALU_AndOr AndOr;
-extern ALU_ShiftSwap ShiftSwap;
-extern ALU_XorNot XorNot;
-extern FlagsReg Flags;
-extern ProgramCounter PC;
-extern StackPointer r_SP;
-extern AddressReg LR;
-extern Memory RAM;
-extern TransferReg  TR;
-extern AddressCalculator ACalc;
+class CPU
+{
+    private:
+        Register A;
+        Register B;
+        Register C;
+        Register D;
+
+        InstructionRegister IR;
+
+        ProgramCounter PC;
+        StackPointer r_SP;
+        AddressReg LR;
+
+        TransferReg  TR;
+        AddressCalculator ACalc;
+
+        Memory RAM;
+
+        FlagsReg Flags;
+        ALU_AddSub AddSub;
+        ALU_AndOr AndOr;
+        ALU_ShiftSwap ShiftSwap;
+        ALU_XorNot XorNot;
+    public:
+        CPU();
+        void runtime_setup();
+        void apply_control(cword_t control_word);
+        void clock_pulse();
+        void clock_inverted();
+
+        uint8_t current_flags();
+        uint8_t current_opcode();
+};
+
+extern CPU Processor;
 
 #endif  /* DEVICES_H */

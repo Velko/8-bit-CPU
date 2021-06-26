@@ -1,8 +1,6 @@
 #include "devices.h"
 #include "op-defs.h"
 
-AddressCalculator ACalc(MPIN_ACAL_OUT_BITS, MPIN_ACAL_LOAD_BITS);
-
 AddressCalculator::AddressCalculator(cword_t out, cword_t load)
     : _out(MUX_ADDROUT_MASK, out),
       _load(MUX_ADDRLOAD_MASK, load)

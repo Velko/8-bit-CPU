@@ -2,8 +2,6 @@
 #include "devices.h"
 #include "op-defs.h"
 
-Memory RAM(MPIN_RAM_OUT_BITS, MPIN_RAM_WRITE_BITS);
-
 #define RAM_CS  SS
 
 #define RAM_MODE_BYTE   0

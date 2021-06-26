@@ -14,7 +14,7 @@ uint8_t fetch_instruction()
     dev.clock.pulse();
     dev.inv_clock.pulse();
 
-    return IR.read_tap();
+    return Processor.current_opcode();
 }
 
 void execute_steps()

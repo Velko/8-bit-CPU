@@ -18,7 +18,7 @@ uint8_t MainBus::read()
 
 uint8_t FlagsBus::read()
 {
-    return Flags.read_tap();
+    return Processor.current_flags();
 }
 
 

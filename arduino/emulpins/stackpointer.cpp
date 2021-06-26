@@ -2,8 +2,6 @@
 #include "op-defs.h"
 
 
-StackPointer r_SP(MPIN_SP_OUT_BITS, MPIN_SP_LOAD_BITS, LPIN_SP_INC_BIT, LPIN_SP_DEC_BIT);
-
 StackPointer::StackPointer(cword_t out, cword_t load, cword_t inc, cword_t dec)
     : _out(MUX_ADDROUT_MASK, out),
       _load(MUX_ADDRLOAD_MASK, load),

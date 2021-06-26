@@ -1,12 +1,6 @@
 #include "devices.h"
 #include "op-defs.h"
 
-ALU_AddSub AddSub(MPIN_ADDSUB_OUT_BITS, HPIN_ADDSUB_ALT_BIT, HPIN_F_CARRY_BIT);
-ALU_AndOr  AndOr(MPIN_ANDOR_OUT_BITS, HPIN_ADDSUB_ALT_BIT);
-ALU_ShiftSwap ShiftSwap(MPIN_SHIFTSWAP_OUT_BITS, HPIN_ADDSUB_ALT_BIT, HPIN_F_CARRY_BIT);
-ALU_XorNot XorNot(MPIN_XORNOT_OUT_BITS, HPIN_ADDSUB_ALT_BIT);
-
-
 ALU_Unit::ALU_Unit(cword_t out, cword_t alt, cword_t carry)
     : _out(MUX_OUT_MASK, out),
       _alt(alt, alt),
