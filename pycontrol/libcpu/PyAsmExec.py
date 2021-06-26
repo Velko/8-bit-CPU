@@ -12,11 +12,13 @@ from typing import Callable, Optional
 control = CtrlWord()
 pins: Optional[PinClient] = None
 
-def setup_live(install_hooks: bool = True) -> None:
+def setup_live(install_hooks: bool = True) -> CPUBackendControl:
     global pins
     pins = PinClient()
     backend = CPUBackendControl(pins, control, install_hooks)
     cpu.install_cpu_backend(backend)
+
+    return backend
 
 def setup_data(s: InitializedBuffer) -> None:
     if not isinstance(cpu.backend, CPUBackendControl):

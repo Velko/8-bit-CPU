@@ -4,16 +4,10 @@
 import sys, localpath
 from libcpu.pinclient import RunMessage
 from libcpu.PyAsmExec import setup_live
-from libcpu.util import unwrap
-setup_live(False)
-from libcpu.PyAsmExec import pins
-client = unwrap(pins)
-
 from libcpu.DeviceSetup import PC
-from libcpu.cpu import backend
 from libcpu.test_helpers import CPUHelper
 
-cpu_helper: CPUHelper = CPUHelper(backend)
+cpu_helper: CPUHelper = CPUHelper(setup_live(False))
 
 def upload() -> None:
 

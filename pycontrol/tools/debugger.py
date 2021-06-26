@@ -4,15 +4,15 @@ import sys, cmd
 from typing import Dict, Mapping, Optional, Union
 import localpath
 
+from libcpu.util import unwrap
 from libcpu.DeviceSetup import COutPort, IR, LR, OutPort, PC, Clock, SP
 from libcpu.pinclient import RunMessage
 from libcpu.opcodes import opcodes
 from libcpu.PyAsmExec import setup_live
-setup_live(False)
-from libcpu.cpu import A, B, C, D, backend
+from libcpu.cpu import A, B, C, D
 
 from libcpu.test_helpers import CPUHelper
-cpu_helper = CPUHelper(backend)
+cpu_helper: CPUHelper = CPUHelper(setup_live(False))
 
 
 class DebugCmd(cmd.Cmd):
@@ -131,9 +131,9 @@ class Debugger:
 
         # catch output value
         if OutPort.load.is_enabled():
-            print (outval, flush=True)
+            print (unwrap(outval), flush=True)
         if COutPort.load.is_enabled():
-            print (chr(outval), end="", flush=True)
+            print (chr(unwrap(outval)), end="", flush=True)
 
     def cont(self) -> None:
 
@@ -203,7 +203,7 @@ class Debugger:
             print (f"# Hardcoded breakpoint @ {addr:04x}")
 
     def get_registers(self) -> Mapping[str, Union[int, str]]:
-        registers = {
+        registers: Dict[str, Union[int, str]] = {
             "A": cpu_helper.read_reg8(A),
             "B": cpu_helper.read_reg8(B),
             "C": cpu_helper.read_reg8(C),
