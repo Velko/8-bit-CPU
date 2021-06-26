@@ -1,5 +1,7 @@
 import pytest
 import random
+import localpath
+
 from libcpu.test_helpers import CPUHelper
 from typing import Sequence
 
