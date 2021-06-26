@@ -1,0 +1,39 @@
+# This workflow will install Python dependencies, check type annotations and run tests
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: PyControl checks
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install mypy pytest pyserial
+    - name: Install localpath helper
+      working-directory: ./pycontrol/localpath
+      run: |
+        python setup.py install
+    - name: Check typing with MyPy
+      working-directory: ./pycontrol
+      env:
+        MYPYPATH: stubs
+      run: |
+        python -m mypy --strict libcpu tests tools
+    - name: Test pure-Python
+      working-directory: ./pycontrol
+      run: |
+        python -m pytest -k 'not hardware'
