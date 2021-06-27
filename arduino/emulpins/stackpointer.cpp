@@ -5,8 +5,8 @@
 StackPointer::StackPointer(cword_t out, cword_t load, cword_t inc, cword_t dec)
     : _out(MUX_ADDROUT_MASK, out),
       _load(MUX_ADDRLOAD_MASK, load),
-      _inc(LPIN_SP_INC_BIT, 0),
-      _dec(LPIN_SP_DEC_BIT, 0)
+      _inc(inc, 0),
+      _dec(dec, 0)
 {}
 
 void StackPointer::control_updated()

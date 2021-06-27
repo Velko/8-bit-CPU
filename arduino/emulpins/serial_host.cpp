@@ -20,6 +20,8 @@
 
 void SerialHost::begin(unsigned long baud)
 {
+    (void)(baud); // suppress unused parameter warning
+
     struct termios newtio;
 
     fd = open(MODEMDEVICE, O_RDWR | O_NOCTTY );

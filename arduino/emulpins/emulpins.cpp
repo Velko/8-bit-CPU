@@ -137,6 +137,8 @@ void store_default_cword(uint32_t cword)
         EEPROM.put(0, cword);
         default_cword = cword;
     }
+    #else
+        (void)(cword); // suppress unused parameter warning
     #endif
 }
 
