@@ -29,7 +29,6 @@ class ControlSignal {
         cword_t _bits;
     public:
         ControlSignal(cword_t mask, cword_t bits);
-        ControlSignal(bool on);
         bool is_enabled(cword_t control);
 };
 

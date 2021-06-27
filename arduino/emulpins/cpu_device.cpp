@@ -4,10 +4,6 @@ ControlSignal::ControlSignal(cword_t mask, cword_t bits)
     : _mask{mask}, _bits{bits}
 {}
 
-ControlSignal::ControlSignal(bool on)
-    : _mask{0}, _bits{on ? 0UL : 1UL}
-{}
-
 bool ControlSignal::is_enabled(cword_t control)
 {
     return (control & _mask) == _bits;
