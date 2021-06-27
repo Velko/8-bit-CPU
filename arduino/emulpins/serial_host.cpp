@@ -118,7 +118,6 @@ uint32_t SerialHost::parseInt()
         str += c;
     }
 
-    std::cout << "/" << str << "/\n";
     return std::stoul(str);
 }
 
