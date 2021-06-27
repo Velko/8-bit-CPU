@@ -106,8 +106,9 @@ class PinClient:
                 yield RunMessage(RunMessage.Reason.OUT, c)
 
 def find_port() -> str:
-    if "SER_PORT" in os.environ:
-        return os.environ.get("SER_PORT")
+    port = os.environ.get("SER_PORT")
+    if port is not None:
+        return port
 
     ports = list(filter(lambda fn: fn.startswith("ttyACM") or fn.startswith("ttyUSB"),  os.listdir("/dev")))
 
