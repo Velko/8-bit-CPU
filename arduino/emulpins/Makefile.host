@@ -1,0 +1,10 @@
+SRC=$(wildcard *.cpp)
+
+OBJS=$(SRC:.cpp=.o) microcode.o
+CXXFLAGS=-g -O0
+
+emulpins: $(OBJS)
+	$(CXX) -g -o $@ $(OBJS)
+
+clean:
+	rm -rf $(OBJS) emulpins

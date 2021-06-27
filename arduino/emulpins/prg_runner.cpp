@@ -1,4 +1,15 @@
+#ifdef __AVR__
+
 #include <Arduino.h>
+
+#else
+
+#include <cstring>
+#include "serial_host.h"
+#define memcpy_P    memcpy
+
+#endif
+
 #include "device_interface.h"
 #include "microcode.h"
 #include "op-defs.h"

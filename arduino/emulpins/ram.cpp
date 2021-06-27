@@ -1,6 +1,14 @@
-#include <SPI.h>
 #include "devices.h"
 #include "op-defs.h"
+
+Memory::Memory(cword_t out, cword_t write)
+    : _out(MUX_OUT_MASK, out),
+      _write(MUX_LOAD_MASK, write)
+{}
+
+#ifdef __AVR__
+
+#include <SPI.h>
 
 #define RAM_CS  SS
 
@@ -9,11 +17,6 @@
 #define WRMR_CMD    0x01
 #define WRITE_CMD   0x02
 #define READ_CMD    0x03
-
-Memory::Memory(cword_t out, cword_t write)
-    : _out(MUX_OUT_MASK, out),
-      _write(MUX_LOAD_MASK, write)
-{}
 
 void Memory::setup()
 {
@@ -61,3 +64,31 @@ void Memory::clock_pulse()
         digitalWrite(RAM_CS, HIGH);
     }
 }
+
+#else
+
+uint8_t memory_array[0x10000]; // 64 KiB - emulated memory chip
+
+void Memory::setup()
+{
+}
+
+void Memory::control_updated()
+{
+    if (_out.is_enabled(_control))
+    {
+        uint16_t addr = address_bus;
+        main_bus = memory_array[addr];
+    }
+}
+
+void Memory::clock_pulse()
+{
+    if (_write.is_enabled(_control))
+    {
+        uint16_t addr = address_bus;
+        memory_array[addr] = main_bus;
+    }
+}
+
+#endif

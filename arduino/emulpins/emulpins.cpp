@@ -2,8 +2,18 @@
   Utility to test functionality of various modules
  */
 
+#ifdef __AVR__
+
 #include <Arduino.h>
 #include <EEPROM.h>
+
+#else
+
+#include "serial_host.h"
+#define F(X)        (X)
+
+#endif
+
 #include "op-defs.h"
 #include "devices.h"
 #include "device_interface.h"
@@ -121,14 +131,20 @@ void loop()
 
 void store_default_cword(uint32_t cword)
 {
+    #ifdef __AVR__
     if (cword != default_cword)
     {
         EEPROM.put(0, cword);
         default_cword = cword;
     }
+    #endif
 }
 
 void load_default_cword()
 {
-     EEPROM.get(0, default_cword);
+    #ifdef __AVR__
+    EEPROM.get(0, default_cword);
+    #else
+    default_cword = CTRL_DEFAULT;
+    #endif
 }
