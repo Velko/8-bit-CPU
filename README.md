@@ -309,6 +309,7 @@ Progress
 * Adopted [CustomAsm][customasm] for machine code generation. Can retire my own Python-Assembly.
 * Developed a debugger (breakpoints, single step, live register inspection).
 * Designing additional ALU modules, miniaturized Display module.
+* Ported hardware emulator to run on PC. Configured GitHub Actions to run tests.
 
 [eater-net-8bit]: https://eater.net/8bit
 [velkoraspi]: https://velkoraspi.blogspot.com/
