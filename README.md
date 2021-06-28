@@ -206,6 +206,47 @@ Ben's version, but wiring is different, because it uses Arduino's SPI module to 
 "data bus" pins, so the board can be used for different purposes when no EEPROMs need to be programmed.
 I used it as the Test Module at first.
 
+Repository index
+================
+
+* **.github** - configuration files for GitHub integration, e.g. workflows for GitHub Actions
+* **.vscode** - configuration for Visual Studio Code
+* **arduino** - Arduino sketches and C++ code, to help test and automate things
+    * **bouncyy** - software button debouncer and "rebouncer"
+    * **eeprom_burner** - sketch to write 7-seg, microcode and program ROM, onboard content generation
+    * **emulpins** - hardware emulator. Speaks same protocol as **pincontrol**. Can also be built for/ran on Linux
+    * **lib** - some common routines
+    * **modules_test** - (deprecated) module tester
+    * **pincontrol** - substitute Control Logic. Controlled via serial link from **pycontrol**
+    * **serprog** - (abandoned experiment) attempting to implement SerProg ([FlashROM][flashrom]) for EEPROM programmer
+    * **xmprog** - (very early stage) XMODEM-compatible EEPROM programmer
+* **doc** - some (mostly outdated) design thoughts, BOM, etc.
+* **hardware** - hardware schematics, boards, etc.
+    * **breadboard** - Fritzig projects for some modules
+    * **pcb** - KiCad schematics and boards
+        * **alu_back** - backplane board for ALU and GP registers
+        * **aunit** - Arithmetic Unit (ALU module for addition and subtraction)
+        * **clock** - (unfinished) Clock module
+        * **control** - (unfinished) Control Logic
+        * **display_back** - backend board for Output module (7-seg display)
+        * **display_front** - frontend board for Output module (7-seg display)
+        * **eeprom_burner** - EEPROM writer as Arduino Uno shield
+        * **flags** - Flags register
+        * **keyboard** - (unfinished) 4x4 keyboard scanner module
+        * **lunit** - Logic Unit (ALU module for AND and OR)
+        * **modules** - Register, ALU, etc. boards as KiCad footprints (for backplane)
+        * **ram** - (unfinished) RAM module
+        * **register** - GP register
+* **parts** - custom KiCad symbols and footprints for missing components
+* **pycontrol** - Python-based control logic, microcode, tests, demo programs, etc.
+    * **demo** - demo programs in PyASM or Assembly
+    * **libcpu** - main implementation of control logic, microcode
+    * **localpath** - helper lib, bring arbitary locations in package search path
+    * **stubs** - MyPy type definitions for packages that lack those
+    * **tests** - PyTest scripts, testing (real or emulated) hardware and PyControl itself
+    * **tools** - various tools that generates microcode, customasm definitions, execute and debug binaries
+        * **export-c** - exported C and .def files
+* **simulation** - [Logisim][logisim] and [Digital][digital] simulations for tricky logic
 
 Progress
 ========
@@ -275,4 +316,6 @@ Progress
 [pytest]: https://docs.pytest.org/en/stable/
 [first-announce]: https://www.reddit.com/r/beneater/comments/loy9kj/important_milestone_it_works/
 [customasm]: https://github.com/hlorenzi/customasm
-
+[flashrom]: https://flashrom.org/Flashrom
+[digital]: https://github.com/hneemann/Digital
+[logisim]: http://www.cburch.com/logisim/
