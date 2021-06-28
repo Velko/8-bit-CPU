@@ -3,6 +3,7 @@
     "editor.insertSpaces": true,
     "editor.tabSize": 4,
     "editor.detectIndentation": false,
+    "editor.renderWhitespace": "all",
     "files.trimTrailingWhitespace": true,
     "files.exclude": {
         "**/.git": true,
