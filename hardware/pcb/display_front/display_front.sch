@@ -294,13 +294,13 @@ F 3 "~" H 3800 2200 50  0001 C CNN
 $EndComp
 $Comp
 L 74xx:74HC04 U1
-U 1 1 60DAC25A
+U 3 1 60DAC25A
 P 3500 2550
 F 0 "U1" H 3500 2867 50  0000 C CNN
 F 1 "74HC04" H 3500 2776 50  0000 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 3500 2550 50  0001 C CNN
 F 3 "https://assets.nexperia.com/documents/data-sheet/74HC_HCT04.pdf" H 3500 2550 50  0001 C CNN
-	1    3500 2550
+	3    3500 2550
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
@@ -325,13 +325,13 @@ Text GLabel 4750 2900 3    50   Input ~ 0
 CA2
 $Comp
 L 74xx:74HC04 U1
-U 2 1 60DD8BEC
+U 4 1 60DD8BEC
 P 4750 2550
 F 0 "U1" V 4796 2370 50  0000 R CNN
 F 1 "74HC04" V 4705 2370 50  0000 R CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 4750 2550 50  0001 C CNN
 F 3 "https://assets.nexperia.com/documents/data-sheet/74HC_HCT04.pdf" H 4750 2550 50  0001 C CNN
-	2    4750 2550
+	4    4750 2550
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
@@ -342,13 +342,13 @@ Text GLabel 5950 2900 3    50   Input ~ 0
 CA1
 $Comp
 L 74xx:74HC04 U1
-U 3 1 60DD96F0
+U 5 1 60DD96F0
 P 5950 2550
 F 0 "U1" V 5996 2370 50  0000 R CNN
 F 1 "74HC04" V 5905 2370 50  0000 R CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 5950 2550 50  0001 C CNN
 F 3 "https://assets.nexperia.com/documents/data-sheet/74HC_HCT04.pdf" H 5950 2550 50  0001 C CNN
-	3    5950 2550
+	5    5950 2550
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
@@ -359,13 +359,13 @@ Text GLabel 7150 2900 3    50   Input ~ 0
 CA0
 $Comp
 L 74xx:74HC04 U1
-U 4 1 60DDA7B8
+U 6 1 60DDA7B8
 P 7150 2550
 F 0 "U1" V 7196 2370 50  0000 R CNN
 F 1 "74HC04" V 7105 2370 50  0000 R CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 7150 2550 50  0001 C CNN
 F 3 "https://assets.nexperia.com/documents/data-sheet/74HC_HCT04.pdf" H 7150 2550 50  0001 C CNN
-	4    7150 2550
+	6    7150 2550
 	0    -1   -1   0   
 $EndComp
 Wire Wire Line
@@ -557,12 +557,12 @@ $EndComp
 $Comp
 L Device:Q_NMOS_GSD Q3
 U 1 1 60E0AD70
-P 3450 4500
-F 0 "Q3" H 3654 4500 50  0000 L CNN
-F 1 "Q_NMOS_GSD" H 3654 4455 50  0001 L CNN
-F 2 "Package_TO_SOT_SMD:SOT-23" H 3650 4600 50  0001 C CNN
-F 3 "~" H 3450 4500 50  0001 C CNN
-	1    3450 4500
+P 4950 4500
+F 0 "Q3" H 5154 4500 50  0000 L CNN
+F 1 "Q_NMOS_GSD" H 5154 4455 50  0001 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 5150 4600 50  0001 C CNN
+F 3 "~" H 4950 4500 50  0001 C CNN
+	1    4950 4500
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -579,12 +579,12 @@ $EndComp
 $Comp
 L Device:Q_NMOS_GSD Q5
 U 1 1 60E0BB01
-P 4950 4500
-F 0 "Q5" H 5154 4500 50  0000 L CNN
-F 1 "Q_NMOS_GSD" H 5154 4455 50  0001 L CNN
-F 2 "Package_TO_SOT_SMD:SOT-23" H 5150 4600 50  0001 C CNN
-F 3 "~" H 4950 4500 50  0001 C CNN
-	1    4950 4500
+P 3450 4500
+F 0 "Q5" H 3654 4500 50  0000 L CNN
+F 1 "Q_NMOS_GSD" H 3654 4455 50  0001 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 3650 4600 50  0001 C CNN
+F 3 "~" H 3450 4500 50  0001 C CNN
+	1    3450 4500
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -949,24 +949,24 @@ Wire Wire Line
 	1800 2350 1700 2350
 $Comp
 L 74xx:74HC04 U1
-U 5 1 60EC9D8E
+U 1 1 60EC9D8E
 P 9250 3950
 F 0 "U1" V 9296 3770 50  0000 R CNN
 F 1 "74HC04" V 9205 3770 50  0000 R CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 9250 3950 50  0001 C CNN
 F 3 "https://assets.nexperia.com/documents/data-sheet/74HC_HCT04.pdf" H 9250 3950 50  0001 C CNN
-	5    9250 3950
+	1    9250 3950
 	0    -1   -1   0   
 $EndComp
 $Comp
 L 74xx:74HC04 U1
-U 6 1 60ECA5E2
+U 2 1 60ECA5E2
 P 9900 3950
 F 0 "U1" V 9946 3770 50  0000 R CNN
 F 1 "74HC04" V 9855 3770 50  0000 R CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 9900 3950 50  0001 C CNN
 F 3 "https://assets.nexperia.com/documents/data-sheet/74HC_HCT04.pdf" H 9900 3950 50  0001 C CNN
-	6    9900 3950
+	2    9900 3950
 	0    -1   -1   0   
 $EndComp
 NoConn ~ 9900 3650
@@ -1034,4 +1034,24 @@ Wire Wire Line
 	10450 3450 10450 3550
 Wire Wire Line
 	10450 4550 10450 4600
+Wire Wire Line
+	7450 1550 7500 1550
+Wire Wire Line
+	7500 1550 7500 1650
+Connection ~ 7500 1650
+Wire Wire Line
+	6250 1550 6300 1550
+Wire Wire Line
+	6300 1550 6300 1650
+Connection ~ 6300 1650
+Wire Wire Line
+	5050 1550 5100 1550
+Wire Wire Line
+	5100 1550 5100 1650
+Connection ~ 5100 1650
+Wire Wire Line
+	3850 1550 3900 1550
+Wire Wire Line
+	3900 1550 3900 1650
+Connection ~ 3900 1650
 $EndSCHEMATC
