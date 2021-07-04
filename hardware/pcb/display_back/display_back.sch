@@ -4,9 +4,9 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
-Title ""
-Date ""
-Rev ""
+Title "Output module, backend"
+Date "2021-07-04"
+Rev "1"
 Comp ""
 Comment1 ""
 Comment2 ""
@@ -62,7 +62,7 @@ L Device:C C2
 U 1 1 60C156AC
 P 1300 2100
 F 0 "C2" H 1300 2200 50  0000 L CNN
-F 1 "C" H 1300 2000 50  0000 L CNN
+F 1 "10nF" H 1300 2000 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" H 1338 1950 50  0001 C CNN
 F 3 "~" H 1300 2100 50  0001 C CNN
 	1    1300 2100
@@ -832,23 +832,23 @@ Wire Wire Line
 $Comp
 L Connector:Conn_01x08_Female J5
 U 1 1 60C6C15C
-P 6700 3400
-F 0 "J5" H 6800 3300 50  0000 C CNN
-F 1 "DISP_ANODES" H 7000 3400 50  0000 C CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical" H 6700 3400 50  0001 C CNN
-F 3 "~" H 6700 3400 50  0001 C CNN
-	1    6700 3400
+P 6900 3400
+F 0 "J5" H 7000 3300 50  0000 C CNN
+F 1 "DISP_ANODES" H 7200 3400 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical" H 6900 3400 50  0001 C CNN
+F 3 "~" H 6900 3400 50  0001 C CNN
+	1    6900 3400
 	1    0    0    1   
 $EndComp
 $Comp
 L Connector:Conn_01x04_Female J6
 U 1 1 60C6D3E3
-P 5900 1150
-F 0 "J6" H 6000 1100 50  0000 C CNN
-F 1 "DISP_CATHODES" H 6300 1200 50  0000 C CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical" H 5900 1150 50  0001 C CNN
-F 3 "~" H 5900 1150 50  0001 C CNN
-	1    5900 1150
+P 6050 1150
+F 0 "J6" H 6150 1100 50  0000 C CNN
+F 1 "DISP_CATHODES" H 6450 1200 50  0000 C CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical" H 6050 1150 50  0001 C CNN
+F 3 "~" H 6050 1150 50  0001 C CNN
+	1    6050 1150
 	1    0    0    -1  
 $EndComp
 Text GLabel 4700 6150 0    50   Input ~ 0
@@ -1344,4 +1344,52 @@ Wire Wire Line
 	1450 6550 1400 6550
 Wire Wire Line
 	1400 6700 1450 6700
+Wire Wire Line
+	5700 1050 5850 1050
+Wire Wire Line
+	5700 1150 5850 1150
+Wire Wire Line
+	5700 1250 5850 1250
+Wire Wire Line
+	5700 1350 5850 1350
+Text Label 5700 1050 0    50   ~ 0
+CA0
+Text Label 5700 1150 0    50   ~ 0
+CA1
+Text Label 5700 1250 0    50   ~ 0
+CA2
+Text Label 5700 1350 0    50   ~ 0
+CA3
+Wire Wire Line
+	6500 3000 6700 3000
+Wire Wire Line
+	6500 3100 6700 3100
+Wire Wire Line
+	6500 3200 6700 3200
+Wire Wire Line
+	6500 3300 6700 3300
+Wire Wire Line
+	6500 3400 6700 3400
+Wire Wire Line
+	6500 3500 6700 3500
+Wire Wire Line
+	6500 3600 6700 3600
+Wire Wire Line
+	6500 3700 6700 3700
+Text Label 6550 3600 0    50   ~ 0
+DA6
+Text Label 6550 3500 0    50   ~ 0
+DA5
+Text Label 6550 3400 0    50   ~ 0
+DA4
+Text Label 6550 3300 0    50   ~ 0
+DA3
+Text Label 6550 3200 0    50   ~ 0
+DA2
+Text Label 6550 3100 0    50   ~ 0
+DA1
+Text Label 6550 3000 0    50   ~ 0
+DA0
+Text Label 6550 3700 0    50   ~ 0
+DA7
 $EndSCHEMATC
