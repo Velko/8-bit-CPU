@@ -376,3 +376,14 @@ SC52-11SRWA/SC52-11EWA - brighter displays (whichever is in stock)
 Or smaller - 4 digit one
 More yellow Leds, register, buffers
 MC14490 - bounce eliminator?
+
+
+Output module PCB+
+=================
+
+* TLC555 timer SOIC
+* 100 ohm resistors 0805
+*  50 ohm resistors (in case 100 is still too large)
+* 10nF capacitors 0805
+* SC39-11GWA displays
+
