@@ -4,9 +4,9 @@ EELAYER END
 $Descr A3 16535 11693
 encoding utf-8
 Sheet 1 1
-Title ""
-Date ""
-Rev ""
+Title "ALU backplane"
+Date "2021-07-04"
+Rev "1.1"
 Comp ""
 Comment1 ""
 Comment2 ""
@@ -2114,33 +2114,33 @@ OUT_A
 Text GLabel 2900 2550 3    50   Input ~ 0
 LOAD_A
 Text GLabel 3000 2550 3    50   Input ~ 0
-ARG_AA
+ARG_AL
 Text GLabel 3100 2550 3    50   Input ~ 0
-ARG_AB
+ARG_AR
 Text GLabel 2800 4300 3    50   Input ~ 0
 OUT_B
 Text GLabel 2900 4300 3    50   Input ~ 0
 LOAD_B
 Text GLabel 3000 4300 3    50   Input ~ 0
-ARG_BA
+ARG_BL
 Text GLabel 3100 4300 3    50   Input ~ 0
-ARG_BB
+ARG_BR
 Text GLabel 2800 6050 3    50   Input ~ 0
 OUT_C
 Text GLabel 2900 6050 3    50   Input ~ 0
 LOAD_C
 Text GLabel 3000 6050 3    50   Input ~ 0
-ARG_CA
+ARG_CL
 Text GLabel 3100 6050 3    50   Input ~ 0
-ARG_CB
+ARG_CR
 Text GLabel 2800 7800 3    50   Input ~ 0
 OUT_D
 Text GLabel 2900 7800 3    50   Input ~ 0
 LOAD_D
 Text GLabel 3000 7800 3    50   Input ~ 0
-ARG_DA
+ARG_DL
 Text GLabel 3100 7800 3    50   Input ~ 0
-ARG_DB
+ARG_DR
 Text GLabel 6250 2550 3    50   Input ~ 0
 OUT_AS
 Text GLabel 6350 2550 3    50   Input ~ 0
@@ -2245,22 +2245,22 @@ Text GLabel 11950 2400 2    50   Output ~ 0
 LOAD_C
 Text GLabel 11950 2300 2    50   Output ~ 0
 LOAD_D
-Text GLabel 10400 8050 2    50   Input ~ 0
-ARG_AA
-Text GLabel 10400 8150 2    50   Input ~ 0
-ARG_BA
-Text GLabel 10400 8250 2    50   Input ~ 0
-ARG_CA
-Text GLabel 10400 8350 2    50   Input ~ 0
-ARG_DA
 Text GLabel 11350 6000 2    50   Input ~ 0
-ARG_AB
+ARG_AL
 Text GLabel 11350 6100 2    50   Input ~ 0
-ARG_BB
+ARG_BL
 Text GLabel 11350 6200 2    50   Input ~ 0
-ARG_CB
+ARG_CL
 Text GLabel 11350 6300 2    50   Input ~ 0
-ARG_DB
+ARG_DL
+Text GLabel 10400 7650 2    50   Input ~ 0
+ARG_AR
+Text GLabel 10400 7750 2    50   Input ~ 0
+ARG_BR
+Text GLabel 10400 7850 2    50   Input ~ 0
+ARG_CR
+Text GLabel 10400 7950 2    50   Input ~ 0
+ARG_DR
 Text GLabel 4350 8850 2    50   Output ~ 0
 ALT_AS
 Text GLabel 4350 9300 2    50   Output ~ 0
@@ -2275,7 +2275,7 @@ U 1 1 6089B08B
 P 3050 8850
 F 0 "U10" H 3000 8850 50  0000 C CNN
 F 1 "74HC125" H 3250 8750 50  0000 C CNN
-F 2 "Package_SO:SO-14_3.9x8.65mm_P1.27mm" H 3050 8850 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 3050 8850 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS125" H 3050 8850 50  0001 C CNN
 	1    3050 8850
 	1    0    0    -1  
@@ -2286,7 +2286,7 @@ U 2 1 608A640C
 P 3050 9300
 F 0 "U10" H 3000 9300 50  0000 C CNN
 F 1 "74HC125" H 3250 9200 50  0001 C CNN
-F 2 "Package_SO:SO-14_3.9x8.65mm_P1.27mm" H 3050 9300 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 3050 9300 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS125" H 3050 9300 50  0001 C CNN
 	2    3050 9300
 	1    0    0    -1  
@@ -2297,7 +2297,7 @@ U 3 1 608A9ADD
 P 4050 8850
 F 0 "U10" H 4000 8850 50  0000 C CNN
 F 1 "74HC125" H 4250 8750 50  0001 C CNN
-F 2 "Package_SO:SO-14_3.9x8.65mm_P1.27mm" H 4050 8850 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 4050 8850 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS125" H 4050 8850 50  0001 C CNN
 	3    4050 8850
 	1    0    0    -1  
@@ -2321,7 +2321,7 @@ U 4 1 6093E4F7
 P 4050 9300
 F 0 "U10" H 4000 9300 50  0000 C CNN
 F 1 "74HC125" H 4250 9200 50  0001 C CNN
-F 2 "Package_SO:SO-14_3.9x8.65mm_P1.27mm" H 4050 9300 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 4050 9300 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS125" H 4050 9300 50  0001 C CNN
 	4    4050 9300
 	1    0    0    -1  
@@ -2355,23 +2355,23 @@ Connection ~ 3050 9100
 $Comp
 L 74xx:74LS138 U13
 U 1 1 609D6F35
-P 9900 7950
-F 0 "U13" H 9650 8400 50  0000 C CNN
-F 1 "74HC138" H 10100 8400 50  0000 C CNN
-F 2 "Package_SO:SO-16_3.9x9.9mm_P1.27mm" H 9900 7950 50  0001 C CNN
-F 3 "" H 9900 7950 50  0001 C CNN
-	1    9900 7950
+P 10850 6300
+F 0 "U13" H 10600 6750 50  0000 C CNN
+F 1 "74HC138" H 11050 6750 50  0000 C CNN
+F 2 "Package_SO:SOIC-16_3.9x9.9mm_P1.27mm" H 10850 6300 50  0001 C CNN
+F 3 "" H 10850 6300 50  0001 C CNN
+	1    10850 6300
 	1    0    0    -1  
 $EndComp
 $Comp
 L 74xx:74LS138 U12
 U 1 1 60ABDEC3
-P 10850 6300
-F 0 "U12" H 10600 6750 50  0000 C CNN
-F 1 "74HC138" H 11050 6750 50  0000 C CNN
-F 2 "Package_SO:SO-16_3.9x9.9mm_P1.27mm" H 10850 6300 50  0001 C CNN
-F 3 "" H 10850 6300 50  0001 C CNN
-	1    10850 6300
+P 9900 7950
+F 0 "U12" H 9650 8400 50  0000 C CNN
+F 1 "74HC138" H 10100 8400 50  0000 C CNN
+F 2 "Package_SO:SOIC-16_3.9x9.9mm_P1.27mm" H 9900 7950 50  0001 C CNN
+F 3 "" H 9900 7950 50  0001 C CNN
+	1    9900 7950
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -2424,7 +2424,7 @@ U 5 1 60C20A3C
 P 5150 9050
 F 0 "U10" H 5100 9050 50  0000 C CNN
 F 1 "74HC125" V 5300 9050 50  0000 C CNN
-F 2 "Package_SO:SO-14_3.9x8.65mm_P1.27mm" H 5150 9050 50  0001 C CNN
+F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 5150 9050 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS125" H 5150 9050 50  0001 C CNN
 	5    5150 9050
 	1    0    0    -1  
@@ -2452,23 +2452,19 @@ F 3 "" H 5150 8550 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text GLabel 9050 6000 2    50   Output ~ 0
-ARG_A0
-Text GLabel 9050 6100 2    50   Output ~ 0
-ARG_A1
-Text GLabel 9050 6200 2    50   Output ~ 0
-ARG_B0
+ARG_L0
 Text GLabel 9050 6300 2    50   Output ~ 0
-ARG_B1
+ARG_R1
 Text GLabel 9050 6400 2    50   Output ~ 0
-ARG_B2
+ARG_R2
 Text GLabel 9050 6500 2    50   Output ~ 0
 ALT
 NoConn ~ 9050 6600
 NoConn ~ 9050 6700
 Text GLabel 10350 6000 0    50   Input ~ 0
-ARG_A0
+ARG_L0
 Text GLabel 10350 6100 0    50   Input ~ 0
-ARG_A1
+ARG_L1
 $Comp
 L power:VCC #PWR032
 U 1 1 60DCBE6D
@@ -2506,11 +2502,11 @@ Wire Wire Line
 Wire Wire Line
 	10250 6700 10350 6700
 Text GLabel 9400 7650 0    50   Input ~ 0
-ARG_B0
+ARG_R0
 Text GLabel 9400 7750 0    50   Input ~ 0
-ARG_B1
+ARG_R1
 Text GLabel 9400 7850 0    50   Input ~ 0
-ARG_B2
+ARG_R2
 $Comp
 L power:VCC #PWR033
 U 1 1 60FF32B2
@@ -2538,10 +2534,9 @@ Wire Wire Line
 Connection ~ 9350 8350
 Wire Wire Line
 	9350 8350 9350 8650
-NoConn ~ 10400 7650
-NoConn ~ 10400 7750
-NoConn ~ 10400 7850
-NoConn ~ 10400 7950
+NoConn ~ 10400 8050
+NoConn ~ 10400 8150
+NoConn ~ 10400 8350
 $Comp
 L 74xx:74HC245 U11
 U 1 1 6115C4D3
@@ -2554,7 +2549,7 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS125" H 7750 8400 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Text GLabel 7250 8900 0    50   Input ~ 0
-ARG_B2
+ARG_ZR
 $Comp
 L power:VCC #PWR030
 U 1 1 6118E612
@@ -2918,6 +2913,12 @@ Wire Wire Line
 	13750 2150 14050 2150
 Wire Wire Line
 	13750 2450 14050 2450
+Text GLabel 9050 6100 2    50   Output ~ 0
+ARG_L1
+Text GLabel 9050 6200 2    50   Output ~ 0
+ARG_R0
+Text GLabel 10400 8250 2    50   Output ~ 0
+ARG_ZR
 Wire Bus Line
 	10500 3350 11200 3350
 Wire Bus Line
