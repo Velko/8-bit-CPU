@@ -987,4 +987,28 @@ const struct op_microcode microcode[] PROGMEM = {
 
     /* e5 hlt        */
     { .default_steps = {0x3bf81fcf},},
+
+    /* e6 ldr_A_SP_imm */
+    { .default_steps = {0x3af83bc3, 0x11f83fcb, 0x39783083},},
+
+    /* e7 ldr_B_SP_imm */
+    { .default_steps = {0x3af83bc3, 0x11f83fcb, 0x39783183},},
+
+    /* e8 ldr_C_SP_imm */
+    { .default_steps = {0x3af83bc3, 0x11f83fcb, 0x39783883},},
+
+    /* e9 ldr_D_SP_imm */
+    { .default_steps = {0x3af83bc3, 0x11f83fcb, 0x39783983},},
+
+    /* ea str_SP_imm_A */
+    { .default_steps = {0x3af83bc3, 0x11f83fcb, 0x397833c0},},
+
+    /* eb str_SP_imm_B */
+    { .default_steps = {0x3af83bc3, 0x11f83fcb, 0x397833c1},},
+
+    /* ec str_SP_imm_C */
+    { .default_steps = {0x3af83bc3, 0x11f83fcb, 0x397833c8},},
+
+    /* ed str_SP_imm_D */
+    { .default_steps = {0x3af83bc3, 0x11f83fcb, 0x397833c9},},
 };

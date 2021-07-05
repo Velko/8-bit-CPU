@@ -232,7 +232,15 @@
 #define OP_RET                 0xe3
 #define OP_BRK                 0xe4
 #define OP_HLT                 0xe5
-#define NUM_OPS                230
+#define OP_LDR_A_SP_IMM        0xe6
+#define OP_LDR_B_SP_IMM        0xe7
+#define OP_LDR_C_SP_IMM        0xe8
+#define OP_LDR_D_SP_IMM        0xe9
+#define OP_STR_SP_IMM_A        0xea
+#define OP_STR_SP_IMM_B        0xeb
+#define OP_STR_SP_IMM_C        0xec
+#define OP_STR_SP_IMM_D        0xed
+#define NUM_OPS                238
 
 /* Fetch */
 #define NUM_FETCH_STEPS        1

@@ -159,3 +159,36 @@ def test_push_pop_lr(cpu_helper: CPUHelper) -> None:
     val = cpu_helper.read_reg16(LR)
     assert val == 0x5314
 
+def test_ldr_sp_plus(cpu_helper: CPUHelper) -> None:
+    cpu_helper.load_reg16(SP, 0x30)
+    cpu_helper.write_ram(0x33, 0x88)
+    cpu_helper.load_reg8(A, 0)
+
+    ldr (A, SP, 3)
+
+    val = cpu_helper.read_reg8(A)
+
+    assert val == 0x88
+
+def test_ldr_sp_minus(cpu_helper: CPUHelper) -> None:
+    cpu_helper.load_reg16(SP, 0x30)
+    cpu_helper.write_ram(0x20, 0x44)
+    cpu_helper.load_reg8(A, 0)
+
+    ldr (A, SP, -16)
+
+    val = cpu_helper.read_reg8(A)
+
+    assert val == 0x44
+
+
+def test_str_sp_plus(cpu_helper: CPUHelper) -> None:
+    cpu_helper.load_reg16(SP, 0x30)
+    cpu_helper.write_ram(0x33, 0)
+    cpu_helper.load_reg8(A, 0x56)
+
+    strel (SP, 3, A)
+
+    val = cpu_helper.read_ram(0x33)
+
+    assert val == 0x56

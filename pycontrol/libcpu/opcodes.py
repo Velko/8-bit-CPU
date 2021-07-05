@@ -259,6 +259,18 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
     builder.add_instruction("hlt")\
         .add_step(Clock.halt)
 
+    for r in gp_regs:
+        builder.add_instruction("ldr", r, SP, OpcodeArg.BYTE)\
+            .add_step(PC.out, ProgMem.out, TL.load)\
+            .add_step(SP.out, TL.out, ACalc.load)\
+            .add_step(ACalc.out, Ram.out, r.load, Flags.calc)
+
+    for r in gp_regs:
+        builder.add_instruction("str", SP, OpcodeArg.BYTE, r)\
+            .add_step(PC.out, ProgMem.out, TL.load)\
+            .add_step(SP.out, TL.out, ACalc.load)\
+            .add_step(ACalc.out, r.out, Ram.write)
+
 
     return builder.build()
 

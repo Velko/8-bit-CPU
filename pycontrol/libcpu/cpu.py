@@ -218,3 +218,13 @@ def ret() -> None:
 def call(addr: AddrBase) -> None:
     if backend is None: raise UninitializedError
     backend.execute_mnemonic("call_addr", addr)
+
+def ldr(target: Register, base: Register, offset: int) -> None:
+    if backend is None: raise UninitializedError
+    opcode = f"ldr_{target.name}_{base.name}_imm"
+    backend.execute_mnemonic(opcode, offset)
+
+def strel(base: Register, offset: int, source: Register) -> None:
+    if backend is None: raise UninitializedError
+    opcode = f"str_{base.name}_imm_{source.name}"
+    backend.execute_mnemonic(opcode, offset)

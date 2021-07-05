@@ -231,4 +231,12 @@
     ret  () => 0xe3
     brk  () => 0xe4
     hlt  () => 0xe5
+    ldr  (A, SP, {value2}) => 0xe6 @ value2`8
+    ldr  (B, SP, {value2}) => 0xe7 @ value2`8
+    ldr  (C, SP, {value2}) => 0xe8 @ value2`8
+    ldr  (D, SP, {value2}) => 0xe9 @ value2`8
+    str  (SP, {value1}, A) => 0xea @ value1`8
+    str  (SP, {value1}, B) => 0xeb @ value1`8
+    str  (SP, {value1}, C) => 0xec @ value1`8
+    str  (SP, {value1}, D) => 0xed @ value1`8
 }
