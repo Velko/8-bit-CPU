@@ -6,7 +6,9 @@ Register::Register(cword_t out, cword_t load, cword_t tap_l, cword_t tap_r)
       _load(MUX_LOAD_MASK, load),
       _tap_l(MUX_ALUARGL_MASK, tap_l),
       _tap_r(MUX_ALUARGR_MASK, tap_r)
-{}
+{
+    latched_primary = latched_secondary = 0;
+}
 
 void Register::clock_pulse()
 {

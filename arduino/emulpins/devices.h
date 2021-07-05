@@ -19,6 +19,7 @@ class CpuDevice {
         cword_t _control;
         virtual void control_updated();
     public:
+        CpuDevice();
         void apply_control(cword_t control);
         virtual void clock_pulse();
         virtual void clock_inverted();

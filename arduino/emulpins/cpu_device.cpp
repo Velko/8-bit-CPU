@@ -1,7 +1,12 @@
 #include "devices.h"
+#include "op-defs.h"
 
 ControlSignal::ControlSignal(cword_t mask, cword_t bits)
     : _mask{mask}, _bits{bits}
+{}
+
+CpuDevice::CpuDevice()
+    : _control{CTRL_DEFAULT}
 {}
 
 bool ControlSignal::is_enabled(cword_t control)
