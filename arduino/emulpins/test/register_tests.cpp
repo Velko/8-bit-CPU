@@ -46,4 +46,17 @@ SUITE(GPRegister)
 
         CHECK_EQUAL(6, (int)alu_arg_l_bus);
     }
+
+    TEST_FIXTURE(RegisterFixture, Load_AluL_KeepsOriginal)
+    {
+        main_bus = 6;
+
+        reg.apply_control(LOAD_A);
+        reg.clock_pulse();
+        // deliberately not calling clock_inverted()
+
+        reg.apply_control(ARG_LA);
+
+        CHECK_EQUAL(0, (int)alu_arg_l_bus);
+    }
 }
