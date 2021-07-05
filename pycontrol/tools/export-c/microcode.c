@@ -1011,4 +1011,7 @@ const struct op_microcode microcode[] PROGMEM = {
 
     /* ed str_SP_imm_D */
     { .default_steps = {0x3af83bc3, 0x11f83fcb, 0x397833c9},},
+
+    /* ee xprefix    */
+    { .default_steps = {0x3af834e3},},
 };

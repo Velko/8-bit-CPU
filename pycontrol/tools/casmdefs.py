@@ -15,11 +15,25 @@ def generate_casmdefs(rdfile: TextIO) -> None:
     rdfile.write("#ruledef\n")
     rdfile.write("{\n")
 
+    xprefix = opcodes["xprefix"]
+
     for microcode in opcodes.values():
 
+        # xprefix is not an instruction, skip it
+        if microcode == xprefix: continue
 
         in_args = []
-        glue_args = ["0x{:02x}".format(microcode.opcode)]
+        glue_args = []
+
+        # insert xprefix if opcode > 255, CPU will fetch
+        # next byte for remainder
+        opcode = microcode.opcode
+        while opcode > 0xFF:
+            glue_args.append(f"0x{xprefix.opcode:02x}")
+            opcode -= 0x100
+
+        glue_args.append(f"0x{opcode:02x}")
+
         for i, arg in enumerate(microcode.args):
             if isinstance(arg, Register):
                 in_args.append(str(arg))

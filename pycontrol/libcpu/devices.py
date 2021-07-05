@@ -79,9 +79,10 @@ class Clock:
         self.brk  = brk
 
 class StepCounter:
-    def __init__(self, name: str, reset: PinBase) -> None:
+    def __init__(self, name: str, reset: PinBase, extended: PinBase) -> None:
         self.name = name
         self.reset = reset
+        self.extended = extended
 
 class ProgramCounter(Register):
     def __init__(self, name: str, out: PinBase, load: PinBase) -> None:

@@ -271,6 +271,8 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
             .add_step(SP.out, TL.out, ACalc.load)\
             .add_step(ACalc.out, r.out, Ram.write)
 
+    builder.add_instruction("xprefix")\
+        .add_step(PC.out, ProgMem.out, IR.load, StepCounter.extended)
 
     return builder.build()
 
