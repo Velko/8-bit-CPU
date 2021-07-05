@@ -7,7 +7,7 @@ LoadMux = Mux([8, 9, 10, 11], 15)
 AddrOutMux = Mux([23, 24, 25], 7)
 AddrLoadMux = Mux([27, 28, 29], 7)
 AluArgL = Mux([16, 17], 4)
-AluArgR = Mux([18, 19, 20], 0)
+AluArgR = Mux([18, 19, 20], 6)
 
 AluAltFn = Pin(4, Level.HIGH)
 
@@ -15,25 +15,25 @@ RegA = dev.GPRegister("A",
     out = MuxPin(OutMux, 0),
     load = MuxPin(LoadMux, 0),
     alu_l = MuxPin(AluArgL, 0),
-    alu_r = MuxPin(AluArgR, 4))
+    alu_r = MuxPin(AluArgR, 0))
 
 RegB = dev.GPRegister("B",
     out = MuxPin(OutMux, 1),
     load = MuxPin(LoadMux, 1),
     alu_l = MuxPin(AluArgL, 1),
-    alu_r = MuxPin(AluArgR, 5))
+    alu_r = MuxPin(AluArgR, 1))
 
 RegC = dev.GPRegister("C",
     out = MuxPin(OutMux, 8),
     load = MuxPin(LoadMux, 8),
     alu_l = MuxPin(AluArgL, 2),
-    alu_r = MuxPin(AluArgR, 6))
+    alu_r = MuxPin(AluArgR, 2))
 
 RegD = dev.GPRegister("D",
     out = MuxPin(OutMux, 9),
     load = MuxPin(LoadMux, 9),
     alu_l = MuxPin(AluArgL, 3),
-    alu_r = MuxPin(AluArgR, 7))
+    alu_r = MuxPin(AluArgR, 3))
 
 AddSub = dev.ALU("AddSub",
     out = MuxPin(OutMux, 2),
