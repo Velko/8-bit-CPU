@@ -73,8 +73,7 @@ void CPU::apply_control(cword_t control_word)
 
     Flags.apply_control(control_word);
 
-    if ((control_word & MUX_ALUARGR_MASK) == (CTRL_DEFAULT & MUX_ALUARGR_MASK))
-        alu_arg_r_bus = 0; // default value forces R input to 0
+    ALUArgR.apply_control(control_word);
 
     // "pull" to current value (relevant to C and V flags)
     flags_bus = Flags.read_tap();

@@ -101,3 +101,15 @@ void ALU_XorNot::control_updated()
         main_bus = alu_arg_l_bus ^ arg_b;
     }
 }
+
+AluArgRAssert::AluArgRAssert()
+    : _out(MUX_ALUARGR_MASK, CTRL_DEFAULT & MUX_ALUARGR_MASK)
+{}
+
+void AluArgRAssert::control_updated()
+{
+    if (_out.is_enabled(_control))
+    {
+        alu_arg_r_bus = 0;
+    }
+}

@@ -212,6 +212,16 @@ class AddressCalculator : public CpuDevice
         void clock_pulse() override;
 };
 
+class AluArgRAssert : public CpuDevice
+{
+    private:
+        ControlSignal _out;
+    protected:
+        void control_updated() override;
+    public:
+        AluArgRAssert();
+};
+
 class CPU
 {
     private:
@@ -236,6 +246,8 @@ class CPU
         ALU_AndOr AndOr;
         ALU_ShiftSwap ShiftSwap;
         ALU_XorNot XorNot;
+
+        AluArgRAssert ALUArgR;
     public:
         CPU();
         void runtime_setup();
