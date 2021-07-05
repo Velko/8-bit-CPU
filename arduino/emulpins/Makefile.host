@@ -1,11 +1,16 @@
 SRC=$(wildcard *.cpp)
+TEST_SRC=$(wildcard test/*.cpp)
 
 RUN_MAIN=main.o
 OBJS=$(SRC:.cpp=.o) microcode.o
-CXXFLAGS=-g -Og -Wall -Wextra -std=c++11
+TEST_OBJS=$(TEST_SRC:.cpp=.o)
+CXXFLAGS=-g -Og -Wall -Wextra -std=c++11 -I.
 
 emulpins: $(OBJS) $(RUN_MAIN)
 	$(CXX) -g -o $@ $(OBJS) $(RUN_MAIN)
 
+tests: $(OBJS) $(TEST_OBJS)
+	$(CXX) -g -lUnitTest++ -o $@ $(OBJS) $(TEST_OBJS)
+
 clean:
-	rm -rf $(OBJS) $(RUN_MAIN) emulpins
+	rm -rf $(OBJS) $(RUN_MAIN) $(TEST_OBJS) emulpins tests
