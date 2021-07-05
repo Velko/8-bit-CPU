@@ -10,7 +10,7 @@ emulpins: $(OBJS) $(RUN_MAIN)
 	$(CXX) -g -o $@ $(OBJS) $(RUN_MAIN)
 
 tests: $(OBJS) $(TEST_OBJS)
-	$(CXX) -g -lUnitTest++ -o $@ $(OBJS) $(TEST_OBJS)
+	$(CXX) -g -o $@ $(OBJS) $(TEST_OBJS) -lUnitTest++
 
 clean:
 	rm -rf $(OBJS) $(RUN_MAIN) $(TEST_OBJS) emulpins tests
