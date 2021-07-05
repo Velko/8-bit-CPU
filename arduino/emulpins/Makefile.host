@@ -1,10 +1,11 @@
 SRC=$(wildcard *.cpp)
 
+RUN_MAIN=main.o
 OBJS=$(SRC:.cpp=.o) microcode.o
 CXXFLAGS=-g -Og -Wall -Wextra -std=c++11
 
-emulpins: $(OBJS)
-	$(CXX) -g -o $@ $(OBJS)
+emulpins: $(OBJS) $(RUN_MAIN)
+	$(CXX) -g -o $@ $(OBJS) $(RUN_MAIN)
 
 clean:
-	rm -rf $(OBJS) emulpins
+	rm -rf $(OBJS) $(RUN_MAIN) emulpins
