@@ -16,6 +16,7 @@ class CPUBackendControl(CPUBackend):
         self.out_hooked_val: Optional[int] = None
         self.branch_taken = False
         self.flags_cache: Optional[int] = None
+        self.opcode_cache: Optional[int] = None
 
         # prepare control word for IRFetch
         self.control.reset()
@@ -35,27 +36,21 @@ class CPUBackendControl(CPUBackend):
 
         Imm.set(arg)
 
-        microcode = opcodes[mnemonic]
-
-        exec_result = self.execute_microcode(microcode)
+        exec_result = self.execute_opcode(opcodes[mnemonic].opcode)
 
         Imm.clear()
 
         return exec_result
 
-    def execute_opcode(self, opcode: int) -> Tuple[bool, Optional[int]]:
-        if opcode >= len(ops_by_code):
-            raise InvalidOpcodeException(opcode)
+    def execute_opcode(self, opcode: Optional[int]) -> Tuple[bool, Optional[int]]:
 
-        microcode = ops_by_code[opcode]
+        # Reset/force current opcode
+        self.opcode_cache = opcode
 
-        return self.execute_microcode(microcode)
-
-    def execute_microcode(self, microcode: MicroCode) -> Tuple[bool, Optional[int]]:
         self.branch_taken = False
 
         for s_idx in range(8-len(fetch)):
-            microstep = microcode.get_step(s_idx, self.get_flags_cached())
+            microstep = ops_by_code[self.get_opcode_cached()].get_step(s_idx, self.get_flags_cached())
             if microstep is None: break
             self.execute_step(microstep)
 
@@ -102,15 +97,23 @@ class CPUBackendControl(CPUBackend):
 
         return self.flags_cache
 
+    def get_opcode_cached(self) -> int:
+        if self.opcode_cache is None:
+            self.opcode_cache = self.client.ir_get(self.irf_word)
+
+        if self.opcode_cache >= len(ops_by_code):
+            raise InvalidOpcodeException(self.opcode_cache)
+
+        return self.opcode_cache
+
+
+
     def fetch_and_execute(self) -> Optional[int]:
         # fetch the instruction
         for microstep in fetch:
             self.execute_step(microstep)
 
-        # load opcode from IR register and flags
-        opcode = self.client.ir_get(self.irf_word)
-
-        # apply all steps
-        _, outval = self.execute_opcode(opcode)
+        # and execute it (will retrieve opcode automatically)
+        _, outval = self.execute_opcode(None)
 
         return outval
