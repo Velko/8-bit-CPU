@@ -18,7 +18,7 @@ control = CtrlWord()
 def generate_microcode(cfile: TextIO) -> None:
     cfile.write ("#include \"microcode.h\"\n\n")
 
-    words = process_steps(fetch._steps)
+    words = process_steps(fetch)
     cfile.write ("const cword_t op_fetch[] = {{{}}};\n\n".format(", ".join(words)))
 
     cfile.write ("const struct op_microcode microcode[] PROGMEM = {\n")
@@ -120,7 +120,7 @@ def generate_defines(hfile: TextIO) -> None:
     write_opcodes(hfile)
 
     hfile.write("/* Fetch */\n")
-    hfile.write("#define NUM_FETCH_STEPS        {}\n\n".format(len(fetch._steps)))
+    hfile.write("#define NUM_FETCH_STEPS        {}\n\n".format(len(fetch)))
 
     hfile.write("/* Device setup */\n")
     write_default_cword(hfile)

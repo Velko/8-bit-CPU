@@ -54,8 +54,9 @@ class CPUBackendControl(CPUBackend):
     def execute_microcode(self, microcode: MicroCode) -> Tuple[bool, Optional[int]]:
         self.branch_taken = False
 
-        steps = microcode.steps(lambda: self.get_flags_cached())
-        for microstep in steps:
+        for s_idx in range(8-len(fetch)):
+            microstep = microcode.get_step(s_idx, self.get_flags_cached())
+            if microstep is None: break
             self.execute_step(microstep)
 
         return self.branch_taken, self.out_hooked_val
@@ -103,7 +104,8 @@ class CPUBackendControl(CPUBackend):
 
     def fetch_and_execute(self) -> Optional[int]:
         # fetch the instruction
-        self.execute_microcode(fetch)
+        for microstep in fetch:
+            self.execute_step(microstep)
 
         # load opcode from IR register and flags
         opcode = self.client.ir_get(self.irf_word)

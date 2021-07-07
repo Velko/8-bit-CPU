@@ -59,7 +59,7 @@ class CPUBackendAssemble(CPUBackend):
         if arg is not None:
             instr.args.append(arg)
 
-        self.advance_counter(fetch._steps)
+        self.advance_counter(fetch)
 
         microcode = opcodes[mnemonic]
 

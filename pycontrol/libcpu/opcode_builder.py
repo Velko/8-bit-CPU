@@ -1,7 +1,7 @@
 from enum import Enum
 from .util import ControlSignal
 from .devices import Register
-from typing import List, Tuple, Mapping, Sequence, Callable, Iterator, Union
+from typing import List, Optional, Tuple, Mapping, Sequence, Callable, Iterator, Union
 
 class FlagsAlt:
     def __init__(self, owner: 'MicroCode', mask: int, value: int):
@@ -41,24 +41,21 @@ class MicroCode:
     def is_flag_dependent(self) -> bool:
         return any(self.f_alt)
 
-    def steps(self, flags_getter: Callable[[], int] ) -> Iterator[Sequence[ControlSignal]]:
-        for s_idx in range(8):
-            flags = flags_getter()
+    def get_step(self, step_index: int, flags: int) -> Optional[Sequence[ControlSignal]]:
+        matches = list(filter(lambda alt: flags & alt.mask == alt.value, self.f_alt))
 
-            matches = list(filter(lambda alt: flags & alt.mask == alt.value, self.f_alt))
+        if len(matches) > 1:
+            raise Exception("Multiple options found")
 
-            if len(matches) > 1:
-                raise Exception("Multiple options found")
+        if len(matches) == 1:
+            steps = matches[0].steps
+        else:
+            steps = self._steps
 
-            if len(matches) == 1:
-                steps = matches[0].steps
-            else:
-                steps = self._steps
+        if step_index < len(steps):
+            return steps[step_index]
 
-            if s_idx < len(steps):
-                yield steps[s_idx]
-            else:
-                return
+        return None
 
     def add_step(self, *args: ControlSignal) -> 'MicroCode':
         self._steps.append(args)

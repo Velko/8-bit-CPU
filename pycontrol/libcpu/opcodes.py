@@ -1,3 +1,4 @@
+from libcpu.util import ControlSignal
 from .DeviceSetup import *
 from .opcode_builder import MicrocodeBuilder, MicroCode, OpcodeArg
 from .devices import Register, GPRegister
@@ -5,8 +6,7 @@ from typing import List, Sequence, Iterator, Tuple, Mapping
 
 gp_regs: Sequence[GPRegister] = [RegA, RegB, RegC, RegD]
 
-fetch = MicroCode(-1, "Fetch", ())\
-    .add_step(PC.out, ProgMem.out, IR.load)
+fetch: List[Sequence[ControlSignal]] = [[PC.out, ProgMem.out, IR.load]]
 
 def permute_gp_regs_all() -> Iterator[Tuple[GPRegister, GPRegister]]:
     for l in gp_regs:

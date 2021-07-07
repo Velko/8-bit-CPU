@@ -2,7 +2,7 @@
 
 import localpath
 
-from typing import Iterator, List, Sequence
+from typing import Iterator, Sequence
 from libcpu.opcode_builder import MicroCode
 from libcpu.util import ControlSignal
 from libcpu.opcodes import opcodes, fetch
@@ -11,27 +11,26 @@ from libcpu.ctrl_word import CtrlWord
 
 control = CtrlWord()
 
-def finalize_steps(steps: Iterator[Sequence[ControlSignal]]) -> Sequence[Sequence[ControlSignal]]:
+def finalize_steps(microcode: MicroCode, flags: int) -> Iterator[Sequence[ControlSignal]]:
 
-    # prepend fetch stage
-    work_steps = list(fetch.steps(lambda: 0)) + list(steps)
+    # fetch stage
+    for f_step in fetch:
+        yield f_step
 
-    # patch last "meaningful" step to reset step counter
-    #work_steps[-1].append(StepCounter.reset)
-
-    # list of empty lists to pad total count to 8
-    padding: List[Sequence[ControlSignal]] = [[]] * (8 - len(work_steps))
-
-    return work_steps + padding
+    for s_idx in range(8-len(fetch)):
+        step = microcode.get_step(s_idx, flags)
+        if step is not None:
+            yield step
+        else:
+            yield []
 
 def generate_microcode() -> None:
     for key, microcode in opcodes.items():
         for f in range(16):
             process_steps(key, microcode, f)
 
-
 def process_steps(key: str, microcode: MicroCode, flags: int) -> None:
-    for step, pins in enumerate(finalize_steps(microcode.steps(lambda: flags))):
+    for step, pins in enumerate(finalize_steps(microcode, flags)):
         control.reset()
         for pin in pins:
             pin.enable()

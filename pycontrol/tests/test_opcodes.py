@@ -83,9 +83,9 @@ def test_opcode_flag_taken(fake_opcodes: OpcodeFixture) -> None:
 
     fake_opcodes.reset()
 
-    steps = op.steps(lambda: 0b0100)
-
-    for c in steps:
+    for s_idx in range(8):
+        c = op.get_step(s_idx, 0b0100)
+        if c is None: break
         for e in c:
             e.enable()
 
@@ -98,9 +98,9 @@ def test_opcode_flag_default(fake_opcodes: OpcodeFixture) -> None:
 
     fake_opcodes.reset()
 
-    steps = op.steps(lambda: 0)
-
-    for c in steps:
+    for s_idx in range(8):
+        c = op.get_step(s_idx, 0)
+        if c is None: break
         for e in c:
             e.enable()
 
