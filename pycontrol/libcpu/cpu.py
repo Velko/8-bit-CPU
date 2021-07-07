@@ -228,3 +228,8 @@ def strel(base: Register, offset: int, source: Register) -> None:
     if backend is None: raise UninitializedError
     opcode = f"str_{base.name}_imm_{source.name}"
     backend.execute_mnemonic(opcode, offset)
+
+def dummy_ext(value: int) -> None:
+    if backend is None: raise UninitializedError
+    opcode = "dummyext_imm"
+    backend.execute_mnemonic(opcode, value)

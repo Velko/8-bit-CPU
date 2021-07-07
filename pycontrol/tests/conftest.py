@@ -9,6 +9,7 @@ from libcpu.pinclient import PinClient
 from libcpu.cpu import install_cpu_backend
 from libcpu.ctrl_word import CtrlWord
 from libcpu.cpu_exec import CPUBackendControl
+from libcpu.DeviceSetup import ProgMem
 
 
 @pytest.fixture(scope="session")
@@ -36,3 +37,10 @@ def random_bytes() -> Sequence[int]:
 def cpu_helper(cpu_backend_real: CPUBackendControl) -> CPUHelper:
     cpu_backend_real.control.reset()
     return CPUHelper(cpu_backend_real)
+
+@pytest.fixture
+def cpu_helper_unhooked(cpu_backend_real: CPUBackendControl) -> CPUHelper:
+    cpu_backend_real.control.reset()
+    ProgMem.unhook_all()
+    yield CPUHelper(cpu_backend_real)
+    cpu_backend_real.hook_progmem()

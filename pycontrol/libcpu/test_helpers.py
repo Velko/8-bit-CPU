@@ -64,6 +64,10 @@ class CPUHelper:
         for i in range(data.size):
             self.write_ram(data.start + i, data.data[i]);
 
+    def write_bytes(self, addr: int, data: bytes) -> None:
+        for i, b in enumerate(data):
+            self.write_ram(addr + i, data[i])
+
     def get_flags(self) -> int:
         return self.backend.client.flags_get()
 

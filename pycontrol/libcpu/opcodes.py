@@ -274,6 +274,15 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
     builder.add_instruction("xprefix")\
         .add_step(PC.out, ProgMem.out, IR.load, StepCounter.extended)
 
+    # create a bunch of NOPs to exceed 255 instructions
+    for n in range(30):
+        builder.add_instruction(f"padding{n}")\
+            .add_step()
+
+    # dummy instruction - same as ldi (A, imm)
+    builder.add_instruction("dummyext", OpcodeArg.BYTE)\
+        .add_step(PC.out, ProgMem.out, RegA.load)
+
     return builder.build()
 
 

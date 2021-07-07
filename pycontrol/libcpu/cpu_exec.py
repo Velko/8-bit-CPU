@@ -2,7 +2,7 @@ from typing import Union, Tuple, Optional, Sequence
 from .opcode_builder import MicroCode
 from .markers import AddrBase
 from .pseudo_devices import Imm, EnableCallback
-from .DeviceSetup import COutPort, IRFetch, OutPort, ProgMem, PC, Flags
+from .DeviceSetup import COutPort, IRFetch, OutPort, ProgMem, PC, Flags, StepCounter
 from .opcodes import opcodes, ops_by_code, fetch
 from .cpu import CPUBackend, InvalidOpcodeException, ret
 from .pinclient import PinClient
@@ -17,6 +17,7 @@ class CPUBackendControl(CPUBackend):
         self.branch_taken = False
         self.flags_cache: Optional[int] = None
         self.opcode_cache: Optional[int] = None
+        self.op_extension = 0
 
         # prepare control word for IRFetch
         self.control.reset()
@@ -25,9 +26,11 @@ class CPUBackendControl(CPUBackend):
 
         if install_hooks:
             Imm.connect(self.client)
+            self.hook_progmem()
 
-            # hook into ProgMem read routine
-            ProgMem.hook_out(EnableCallback(Imm.enable_out, ProgMem.out))
+    def hook_progmem(self) -> None:
+        # hook into ProgMem read routine
+        ProgMem.hook_out(EnableCallback(Imm.enable_out, ProgMem.out))
 
 
     def execute_mnemonic(self, mnemonic: str, arg: Union[None, int, AddrBase]=None) -> Tuple[bool, Optional[int]]:
@@ -44,13 +47,21 @@ class CPUBackendControl(CPUBackend):
 
     def execute_opcode(self, opcode: Optional[int]) -> Tuple[bool, Optional[int]]:
 
+        # reset op_extension when starting new instruction
+        # the variable adds multiples of 256 to the opcode from IR and
+        # also simulates skipping microstep counter increment
+        # see get_opcode_cached() and parameter for get_step()
+        self.op_extension = 0
+
         # Reset/force current opcode
         self.opcode_cache = opcode
 
         self.branch_taken = False
 
         for s_idx in range(8-len(fetch)):
-            microstep = ops_by_code[self.get_opcode_cached()].get_step(s_idx, self.get_flags_cached())
+            # re-evaluate opcode, as it may change mid-instruction (when extended is loaded)
+            microcode = ops_by_code[self.get_opcode_cached()]
+            microstep = microcode.get_step(s_idx - self.op_extension , self.get_flags_cached())
             if microstep is None: break
             self.execute_step(microstep)
 
@@ -89,6 +100,11 @@ class CPUBackendControl(CPUBackend):
             if Flags.calc.is_enabled() or Flags.load.is_enabled():
                 self.flags_cache = None
 
+            # Drop current opcode since it was a prefix for extended one
+            if StepCounter.extended.is_enabled():
+                self.opcode_cache = None
+                self.op_extension += 1
+
         Imm.disable()
 
     def get_flags_cached(self) -> int:
@@ -99,7 +115,7 @@ class CPUBackendControl(CPUBackend):
 
     def get_opcode_cached(self) -> int:
         if self.opcode_cache is None:
-            self.opcode_cache = self.client.ir_get(self.irf_word)
+            self.opcode_cache = self.client.ir_get(self.irf_word) + (self.op_extension * 0x100)
 
         if self.opcode_cache >= len(ops_by_code):
             raise InvalidOpcodeException(self.opcode_cache)
