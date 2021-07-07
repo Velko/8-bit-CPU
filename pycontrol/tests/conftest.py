@@ -3,7 +3,7 @@ import random
 import localpath
 
 from libcpu.test_helpers import CPUHelper
-from typing import Sequence
+from typing import Iterator, Sequence
 
 from libcpu.pinclient import PinClient
 from libcpu.cpu import install_cpu_backend
@@ -39,7 +39,7 @@ def cpu_helper(cpu_backend_real: CPUBackendControl) -> CPUHelper:
     return CPUHelper(cpu_backend_real)
 
 @pytest.fixture
-def cpu_helper_unhooked(cpu_backend_real: CPUBackendControl) -> CPUHelper:
+def cpu_helper_unhooked(cpu_backend_real: CPUBackendControl) -> Iterator[CPUHelper]:
     cpu_backend_real.control.reset()
     ProgMem.unhook_all()
     yield CPUHelper(cpu_backend_real)
