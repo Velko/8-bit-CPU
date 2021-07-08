@@ -36,11 +36,15 @@ def random_bytes() -> Sequence[int]:
 @pytest.fixture
 def cpu_helper(cpu_backend_real: CPUBackendControl) -> CPUHelper:
     cpu_backend_real.control.reset()
+    cpu_backend_real.flags_cache = None
+    cpu_backend_real.opcode_cache = None
     return CPUHelper(cpu_backend_real)
 
 @pytest.fixture
 def cpu_helper_unhooked(cpu_backend_real: CPUBackendControl) -> Iterator[CPUHelper]:
     cpu_backend_real.control.reset()
+    cpu_backend_real.flags_cache = None
+    cpu_backend_real.opcode_cache = None
     ProgMem.unhook_all()
     yield CPUHelper(cpu_backend_real)
     cpu_backend_real.hook_progmem()
