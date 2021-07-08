@@ -48,3 +48,10 @@ def test_flags_out_v(cpu_helper: CPUHelper) -> None:
 
     flags = Flags.decode(f)
     assert flags == "V---"
+
+@pytest.mark.parametrize("flags", range(16))
+def test_flags_preload(cpu_helper: CPUHelper, flags: int) -> None:
+    cpu_helper.load_reg8(F, flags)
+
+    f = cpu_helper.get_flags()
+    assert f == flags
