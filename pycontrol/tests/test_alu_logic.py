@@ -60,9 +60,9 @@ def shr_args() -> Iterator[Tuple[str, int, int, str]]:
 def test_shr(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     if carry_in:
-        ldi(F, 0b0100)
+        cpu_helper.load_reg8(F, 0b0100)
     else:
-        ldi(F, 0)
+        cpu_helper.load_reg8(F, 0)
 
     cpu_helper.load_reg8(reg, val)
 
@@ -88,9 +88,9 @@ def ror_args() -> Iterator[Tuple[str, bool, int, int, str]]:
 def test_ror(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     if carry_in:
-        ldi(F, 0b0100)
+        cpu_helper.load_reg8(F, 0b0100)
     else:
-        ldi(F, 0)
+        cpu_helper.load_reg8(F, 0)
 
     cpu_helper.load_reg8(reg, val)
 
@@ -113,9 +113,9 @@ def asr_args() -> Iterator[Tuple[str, int, int, str]]:
 def test_asr(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     if carry_in:
-        ldi(F, 0b0100)
+        cpu_helper.load_reg8(F, 0b0100)
     else:
-        ldi(F, 0)
+        cpu_helper.load_reg8(F, 0)
 
     cpu_helper.load_reg8(reg, val)
 
@@ -139,9 +139,9 @@ def swap_args() -> Iterator[Tuple[str, int, int, str]]:
 def test_swap(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     if carry_in:
-        ldi(F, 0b0100)
+        cpu_helper.load_reg8(F, 0b0100)
     else:
-        ldi(F, 0)
+        cpu_helper.load_reg8(F, 0)
 
     cpu_helper.load_reg8(reg, val)
 
