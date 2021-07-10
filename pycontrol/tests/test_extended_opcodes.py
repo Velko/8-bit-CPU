@@ -21,10 +21,10 @@ def test_dummy_local(cpu_helper: CPUHelper) -> None:
 
     assert val == 45
 
-def test_dummy_fetch(cpu_helper_unhooked: CPUHelper) -> None:
+def test_dummy_fetch(cpu_helper: CPUHelper) -> None:
 
     # reset A, to see if changed
-    cpu_helper_unhooked.load_reg8(A, 0)
+    cpu_helper.load_reg8(A, 0)
 
     # build a byte sequence
     xprefix = opcode_of("xprefix")
@@ -32,11 +32,11 @@ def test_dummy_fetch(cpu_helper_unhooked: CPUHelper) -> None:
     test_binary = bytes([xprefix, dummy_ext & 0xFF, 123])
 
     # load into CPU, point to it
-    cpu_helper_unhooked.write_bytes(32, test_binary)
-    cpu_helper_unhooked.load_reg16(PC, 32)
+    cpu_helper.write_bytes(32, test_binary)
+    cpu_helper.load_reg16(PC, 32)
 
     # act
-    cpu_helper_unhooked.backend.fetch_and_execute()
+    cpu_helper.backend.fetch_and_execute()
 
-    val = cpu_helper_unhooked.read_reg8(A)
+    val = cpu_helper.read_reg8(A)
     assert val == 123

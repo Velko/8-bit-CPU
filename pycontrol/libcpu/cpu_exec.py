@@ -10,7 +10,7 @@ from .ctrl_word import CtrlWord
 from .util import ControlSignal
 
 class CPUBackendControl(CPUBackend):
-    def __init__(self, client: PinClient, control: CtrlWord, install_hooks: bool=True):
+    def __init__(self, client: PinClient, control: CtrlWord):
         self.client = client
         self.control = control
         self.out_hooked_val: Optional[int] = None
@@ -24,14 +24,9 @@ class CPUBackendControl(CPUBackend):
         IRFetch.load.enable()
         self.irf_word = control.c_word
 
-        if install_hooks:
-            Imm.connect(self.client)
-            self.hook_progmem()
-
-    def hook_progmem(self) -> None:
-        # hook into ProgMem read routine
+        # RAM hooks
+        Imm.connect(self.client)
         ProgMem.hook_out(Imm)
-
 
     def execute_mnemonic(self, mnemonic: str, arg: Union[None, int, AddrBase]=None) -> Tuple[bool, Optional[int]]:
         if not mnemonic in opcodes:

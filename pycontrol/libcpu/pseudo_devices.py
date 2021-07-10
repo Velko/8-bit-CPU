@@ -93,9 +93,5 @@ class RamProxy:
         else:
             self.ram.write.enable()
 
-    def unhook_all(self) -> None:
-        self._ram_out = self.ram.out
-        self._ram_write = self.ram.write
-
 
 Imm = ImmediateValue()

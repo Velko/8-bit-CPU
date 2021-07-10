@@ -7,7 +7,7 @@ from libcpu.PyAsmExec import setup_live
 from libcpu.DeviceSetup import PC
 from libcpu.test_helpers import CPUHelper
 
-cpu_helper: CPUHelper = CPUHelper(setup_live(False))
+cpu_helper: CPUHelper = CPUHelper(setup_live())
 
 def upload() -> None:
 

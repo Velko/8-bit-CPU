@@ -12,10 +12,10 @@ from typing import Callable, Optional
 control = CtrlWord()
 pins: Optional[PinClient] = None
 
-def setup_live(install_hooks: bool = True) -> CPUBackendControl:
+def setup_live() -> CPUBackendControl:
     global pins
     pins = PinClient()
-    backend = CPUBackendControl(pins, control, install_hooks)
+    backend = CPUBackendControl(pins, control)
     cpu.install_cpu_backend(backend)
 
     return backend
