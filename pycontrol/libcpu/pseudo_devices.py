@@ -70,8 +70,8 @@ class RamProxy:
         self.out = EnableCallback(self.enable_out, ram.out)
         self.write = EnableCallback(self.enable_write, ram.write)
 
-        self._ram_out: ControlSignal = ram.out
-        self._ram_write: ControlSignal = ram.write
+        self._out_hook: Optional[RamHook] = None
+        self._write_hook: Optional[RamHook] = None
 
     # update to intercept ram.out
     def hook_out(self, hook: RamHook) -> None:
@@ -82,13 +82,13 @@ class RamProxy:
         self._write_hook = hook
 
     def enable_out(self) -> None:
-        if self._out_hook.is_active():
+        if self._out_hook is not None and self._out_hook.is_active():
             self._out_hook.invoke()
         else:
             self.ram.out.enable()
 
     def enable_write(self) -> None:
-        if self._write_hook.is_active():
+        if self._write_hook is not None and self._write_hook.is_active():
             self._write_hook.invoke()
         else:
             self.ram.write.enable()
