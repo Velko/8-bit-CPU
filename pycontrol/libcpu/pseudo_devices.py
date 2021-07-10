@@ -1,3 +1,4 @@
+from abc import abstractmethod
 from .markers import AddrBase
 from typing import Union, Callable, Optional, List
 from .devices import RAM
@@ -13,7 +14,14 @@ class EnableCallback(ControlSignal):
         self.callback()
 
 
-class ImmediateValue:
+class RamHook:
+    @abstractmethod
+    def is_active(self) -> bool: ...
+
+    @abstractmethod
+    def invoke(self) -> None: ...
+
+class ImmediateValue(RamHook):
     def __init__(self) -> None:
         self.client: Optional[PinClient] = None
         self.value: List[int] = []
@@ -45,11 +53,14 @@ class ImmediateValue:
             self.client.bus_free()
             self.write_enabled = False
 
-    def enable_out(self) -> None:
+    def invoke(self) -> None:
         if self.client is None: raise UninitializedError
         if len(self.value) > 0:
             self.client.bus_set(self.value[0])
             self.write_enabled = True
+
+    def is_active(self) -> bool:
+        return len(self.value) > 0
 
 
 class RamProxy:
@@ -63,18 +74,24 @@ class RamProxy:
         self._ram_write: ControlSignal = ram.write
 
     # update to intercept ram.out
-    def hook_out(self, hook: EnableCallback) -> None:
-        self._ram_out = hook
+    def hook_out(self, hook: RamHook) -> None:
+        self._out_hook = hook
 
     # update to intercept ram.write
-    def hook_write(self, hook: EnableCallback) -> None:
-        self._ram_write = hook
+    def hook_write(self, hook: RamHook) -> None:
+        self._write_hook = hook
 
     def enable_out(self) -> None:
-        self._ram_out.enable()
+        if self._out_hook.is_active():
+            self._out_hook.invoke()
+        else:
+            self.ram.out.enable()
 
     def enable_write(self) -> None:
-        self._ram_write.enable()
+        if self._write_hook.is_active():
+            self._write_hook.invoke()
+        else:
+            self.ram.write.enable()
 
     def unhook_all(self) -> None:
         self._ram_out = self.ram.out

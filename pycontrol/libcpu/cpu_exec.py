@@ -30,7 +30,7 @@ class CPUBackendControl(CPUBackend):
 
     def hook_progmem(self) -> None:
         # hook into ProgMem read routine
-        ProgMem.hook_out(EnableCallback(Imm.enable_out, ProgMem.out))
+        ProgMem.hook_out(Imm)
 
 
     def execute_mnemonic(self, mnemonic: str, arg: Union[None, int, AddrBase]=None) -> Tuple[bool, Optional[int]]:
