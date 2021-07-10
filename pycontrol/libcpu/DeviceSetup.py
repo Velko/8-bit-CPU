@@ -2,12 +2,12 @@ from . import devices as dev
 from .pseudo_devices import RamProxy
 from .pin import Pin, NullPin, Level, Mux, MuxPin
 
-OutMux = Mux([0, 1, 2, 3], 15) # bits 0-3 in Control Word, defaults to 15
-LoadMux = Mux([8, 9, 10, 11], 15)
-AddrOutMux = Mux([23, 24, 25], 7)
-AddrLoadMux = Mux([27, 28, 29], 7)
-AluArgL = Mux([16, 17], 4)
-AluArgR = Mux([18, 19, 20], 6)
+OutMux = Mux("OutMux", [0, 1, 2, 3], 15) # bits 0-3 in Control Word, defaults to 15
+LoadMux = Mux("LoadMux", [8, 9, 10, 11], 15)
+AddrOutMux = Mux("AddrOutMux", [23, 24, 25], 7)
+AddrLoadMux = Mux("AddrLoadMux", [27, 28, 29], 7)
+AluArgL = Mux("AluArgL", [16, 17], 4)
+AluArgR = Mux("AluArgR", [18, 19, 20], 6)
 
 AluAltFn = Pin(4, Level.HIGH)
 

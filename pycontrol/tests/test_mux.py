@@ -10,7 +10,7 @@ from libcpu.ctrl_word import CtrlWord
 
 class MuxFixture:
     def __init__(self) -> None:
-        self.mux = Mux([6, 9, 2], 5)
+        self.mux = Mux("TestMux", [6, 9, 2], 5)
         self.pin = MuxPin(self.mux, 3)
         self.control = CtrlWord([(None, self.pin)])
 

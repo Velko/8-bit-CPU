@@ -73,7 +73,8 @@ class NullPin(PinBase):
 
 
 class Mux:
-    def __init__(self, pins: Sequence[int], default: int):
+    def __init__(self, name: str, pins: Sequence[int], default: int):
+        self.name = name
         self.control_word: Optional[CtrlBase]  = None
         self.pins = pins
         self.default = default
