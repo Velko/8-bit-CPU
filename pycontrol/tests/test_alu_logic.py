@@ -148,6 +148,27 @@ def test_asr(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: bool, va
     assert value == result
     assert flags == xflags
 
+@pytest.mark.parametrize("reg", gp_regs)
+@pytest.mark.parametrize("desc,val,result,xflags", asr_args())
+@pytest.mark.parametrize("carry_in", [False, True])
+def test_asr_real(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
+
+    asr_test_prog = bytes([opcode_of(f"asr_{reg.name}")])
+
+    if carry_in:
+        cpu_helper.load_reg8(F, 0b0100)
+    else:
+        cpu_helper.load_reg8(F, 0)
+
+    cpu_helper.load_reg8(reg, val)
+
+    cpu_helper.run_snippet(23, asr_test_prog)
+
+    value = cpu_helper.read_reg8(reg)
+    flags = Flags.decode(cpu_helper.get_flags())
+    assert value == result
+    assert flags == xflags
+
 
 def swap_args() -> Iterator[Tuple[str, int, int, str]]:
     yield "simple", 0xa2, 0x2a, "----"

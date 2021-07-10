@@ -39,17 +39,20 @@ void execute_steps()
 
         memcpy_P(&instruction, &microcode[opcode], sizeof(struct op_microcode));
 
-        uint32_t *steps = instruction.default_steps;
-
-        /* currently only single flags_alt is allowed, this makes things simpler */
-        if (instruction.f_alt[0].mask)
+        for (uint8_t i = 0; i < MAX_STEPS; ++i)
         {
-            if ((flags & instruction.f_alt[0].mask) == instruction.f_alt[0].value)
-                steps = instruction.f_alt[0].steps;
-        }
+            /* re-evaluate steps each time, because flags may change mid-instruction */
+            uint32_t *steps = instruction.default_steps;
 
-        for (uint8_t i = 0; i < MAX_STEPS && steps[i]; ++i)
-        {
+            /* currently only single flags_alt is allowed, this makes things simpler */
+            if (instruction.f_alt[0].mask)
+            {
+                if ((flags & instruction.f_alt[0].mask) == instruction.f_alt[0].value)
+                    steps = instruction.f_alt[0].steps;
+            }
+
+            if (steps[i] == 0) break;
+
             dev.control.write32(steps[i]);
             dev.clock.pulse();
 
@@ -81,6 +84,13 @@ void execute_steps()
             {
                 Serial.println("#BRK");
                 return;
+            }
+
+            /* reload flags value if changed */
+            if ((steps[i] & LPIN_F_CALC_BIT) == 0 ||
+                (steps[i] & MUX_LOAD_MASK) == MPIN_F_LOAD_BITS)
+            {
+                flags = dev.flagsBus.read();
             }
         }
     }
