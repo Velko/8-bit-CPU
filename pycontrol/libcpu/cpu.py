@@ -188,7 +188,6 @@ def hlt() -> None:
     backend.execute_mnemonic("hlt")
 
 def opcode_of(instr: str) -> int:
-    if backend is None: raise UninitializedError
     if not instr in opcodes:
         raise InvalidOpcodeException(instr)
     return opcodes[instr].opcode

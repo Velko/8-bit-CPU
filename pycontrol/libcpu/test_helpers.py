@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
+from libcpu.cpu import opcode_of
 from libcpu.devices import Register
 from libcpu.cpu_exec import CPUBackendControl
-from libcpu.DeviceSetup import Flags, Ram
+from libcpu.DeviceSetup import Flags, PC, Ram
 from libcpu.markers import InitializedBuffer
+from libcpu.pinclient import RunMessage
 
 
 class CPUHelper:
@@ -92,3 +94,18 @@ class CPUHelper:
         self.backend.client.clock_tick()
         self.backend.control.reset()
         self.backend.client.off(self.backend.control.default)
+
+    def load_snippet(self, addr: int, code: bytes) -> None:
+        self.write_bytes(addr, code)
+        self.load_reg16(PC, addr)
+
+    def run_snippet(self, addr: int, code: bytes) -> None:
+
+        # append 'brk'
+        code_terminated = bytearray(code)
+        code_terminated.append(opcode_of('brk'))
+
+        self.load_snippet(addr, bytes(code_terminated))
+
+        for msg in self.backend.client.run_program():
+            if msg.reason == RunMessage.Reason.BRK: break
