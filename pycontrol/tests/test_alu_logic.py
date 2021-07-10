@@ -73,6 +73,28 @@ def test_shr(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: bool, va
     assert value == result
     assert flags == xflags
 
+@pytest.mark.parametrize("reg", gp_regs)
+@pytest.mark.parametrize("desc,val,result,xflags", shr_args())
+@pytest.mark.parametrize("carry_in", [False, True])
+def test_shr_real(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
+
+    shr_test_prog = bytes([opcode_of(f"shr_{reg.name}")])
+
+    if carry_in:
+        cpu_helper.load_reg8(F, 0b0100)
+    else:
+        cpu_helper.load_reg8(F, 0)
+
+    cpu_helper.load_reg8(reg, val)
+
+    cpu_helper.run_snippet(66, shr_test_prog)
+
+    value = cpu_helper.read_reg8(reg)
+    flags = Flags.decode(cpu_helper.get_flags())
+    assert value == result
+    assert flags == xflags
+
+
 def ror_args() -> Iterator[Tuple[str, bool, int, int, str]]:
     yield "carry_out_1", False, 25, 12, "-C--"
     yield "carry_out_0", False, 122, 61, "----"
