@@ -32,7 +32,8 @@ void execute_steps()
 {
     for(;;)
     {
-        uint8_t opcode = fetch_instruction();
+        uint16_t op_extension = 0;
+        uint16_t opcode = fetch_instruction();
         uint8_t flags = dev.flagsBus.read();
 
         struct op_microcode instruction;
@@ -91,6 +92,16 @@ void execute_steps()
                 (steps[i] & MUX_LOAD_MASK) == MPIN_F_LOAD_BITS)
             {
                 flags = dev.flagsBus.read();
+            }
+
+            /* reload opcode for extended one */
+            if ((steps[i] & HPIN_STEPS_EXTENDED_BIT) != 0)
+            {
+                --i; // next iteration should use same step-counter value
+                // advance extension and reload opcode
+                op_extension += 0x100;
+                opcode = Processor.current_opcode() + op_extension;
+                memcpy_P(&instruction, &microcode[opcode], sizeof(struct op_microcode));
             }
         }
     }

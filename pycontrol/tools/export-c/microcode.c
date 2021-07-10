@@ -1014,4 +1014,97 @@ const struct op_microcode microcode[] PROGMEM = {
 
     /* ee xprefix    */
     { .default_steps = {0x3af834e3},},
+
+    /* ef padding0   */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* f0 padding1   */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* f1 padding2   */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* f2 padding3   */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* f3 padding4   */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* f4 padding5   */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* f5 padding6   */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* f6 padding7   */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* f7 padding8   */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* f8 padding9   */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* f9 padding10  */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* fa padding11  */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* fb padding12  */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* fc padding13  */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* fd padding14  */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* fe padding15  */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* ff padding16  */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* 100 padding17  */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* 101 padding18  */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* 102 padding19  */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* 103 padding20  */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* 104 padding21  */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* 105 padding22  */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* 106 padding23  */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* 107 padding24  */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* 108 padding25  */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* 109 padding26  */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* 10a padding27  */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* 10b padding28  */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* 10c padding29  */
+    { .default_steps = {0x3bf83fcf},},
+
+    /* 10d dummyext_imm */
+    { .default_steps = {0x3af830c3},},
 };

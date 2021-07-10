@@ -1,10 +1,6 @@
 #!/usr/bin/python3
 
 import pytest
-from libcpu import cpu
-from libcpu.DeviceSetup import PC, ProgMem
-from libcpu.markers import InitializedBuffer
-from libcpu.pseudo_devices import Imm
 
 pytestmark = pytest.mark.hardware
 
@@ -21,22 +17,34 @@ def test_dummy_local(cpu_helper: CPUHelper) -> None:
 
     assert val == 45
 
+
+fetch_test_prog = bytes([opcode_of("xprefix"),
+                         opcode_of("dummyext_imm") & 0xFF,
+                         123])
+
 def test_dummy_fetch(cpu_helper: CPUHelper) -> None:
+
+    # load program into ram
+    cpu_helper.load_snippet(32, fetch_test_prog)
 
     # reset A, to see if changed
     cpu_helper.load_reg8(A, 0)
 
-    # build a byte sequence
-    xprefix = opcode_of("xprefix")
-    dummy_ext = opcode_of("dummyext_imm")
-    test_binary = bytes([xprefix, dummy_ext & 0xFF, 123])
-
-    # load into CPU, point to it
-    cpu_helper.write_bytes(32, test_binary)
-    cpu_helper.load_reg16(PC, 32)
-
     # act
     cpu_helper.backend.fetch_and_execute()
 
+    # assert
+    val = cpu_helper.read_reg8(A)
+    assert val == 123
+
+#@pytest.mark.skip("Not supported by current emulator")
+def test_dummy_fetch_on_hw(cpu_helper: CPUHelper) -> None:
+    # reset A, to see if changed
+    cpu_helper.load_reg8(A, 0)
+
+    # run program on hardware
+    cpu_helper.run_snippet(54, fetch_test_prog)
+
+    # assert
     val = cpu_helper.read_reg8(A)
     assert val == 123
