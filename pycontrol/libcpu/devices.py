@@ -100,11 +100,6 @@ class StackPointer(Register):
     def __repr__(self) -> str:
         return self.name
 
-class PCLR:
-    def __init__(self, name: str, swap: PinBase) -> None:
-        self.name = name
-        self.swap = swap
-
 class TransferRegister(Register):
     def __init__(self, name: str, out: PinBase, load: PinBase) -> None:
         Register.__init__(self, name, out, load)
