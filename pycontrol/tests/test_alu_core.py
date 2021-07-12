@@ -80,7 +80,7 @@ def adc_ab_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
 @pytest.mark.parametrize("desc,val_a,val_b,result,xflags", adc_ab_test_args())
 def test_adc_ab_c_set(cpu_helper: CPUHelper, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
-    cpu_helper.load_reg8(F, 0b0100)
+    cpu_helper.load_reg8(F, Flags.C)
     cpu_helper.load_reg8(lhs, val_a)
     cpu_helper.load_reg8(rhs, val_b)
 
@@ -116,7 +116,7 @@ def sbb_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
 @pytest.mark.parametrize("desc,val_a,val_b,result,xflags", sbb_test_args())
 def test_sbb_c_set(cpu_helper: CPUHelper, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
-    cpu_helper.load_reg8(F, 0b0100)
+    cpu_helper.load_reg8(F, Flags.C)
     cpu_helper.load_reg8(lhs, val_a)
     cpu_helper.load_reg8(rhs, val_b)
 

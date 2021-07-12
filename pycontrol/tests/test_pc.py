@@ -8,7 +8,7 @@ from libcpu.DeviceSetup import PC, LR
 from libcpu.cpu import *
 from libcpu.markers import Addr
 from libcpu.test_helpers import CPUHelper
-from libcpu.cpu_exec import CPUBackendControl
+from libcpu.devices import Flags
 
 @pytest.mark.parametrize("expected", [65535, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 0])
 def test_pc_load(cpu_helper: CPUHelper, expected: int) -> None:
@@ -40,7 +40,7 @@ def test_pc_count(cpu_helper: CPUHelper, expected: int) -> None:
     assert value == expected
 
 def test_beq_taken(cpu_helper: CPUHelper) -> None:
-    cpu_helper.load_reg8(F, 0b0010)
+    cpu_helper.load_reg8(F, Flags.Z)
     cpu_helper.load_reg16(PC, 0x1234)
 
     taken = beq(Addr(0x4321))
@@ -50,7 +50,7 @@ def test_beq_taken(cpu_helper: CPUHelper) -> None:
     assert pcaddr == 0x4321
 
 def test_beq_fallthrough(cpu_helper: CPUHelper) -> None:
-    cpu_helper.load_reg8(F, 0b0000)
+    cpu_helper.load_reg8(F, 0)
     cpu_helper.load_reg16(PC, 0x1234)
 
     taken = beq(Addr(0x4321))
@@ -61,7 +61,7 @@ def test_beq_fallthrough(cpu_helper: CPUHelper) -> None:
 
 
 def test_bne_taken(cpu_helper: CPUHelper) -> None:
-    cpu_helper.load_reg8(F, 0b0000)
+    cpu_helper.load_reg8(F, 0)
     cpu_helper.load_reg16(PC, 0x1234)
 
     taken = bne(Addr(0x4321))
@@ -71,7 +71,7 @@ def test_bne_taken(cpu_helper: CPUHelper) -> None:
     assert pcaddr == 0x4321
 
 def test_bne_fallthrough(cpu_helper: CPUHelper) -> None:
-    cpu_helper.load_reg8(F, 0b0010)
+    cpu_helper.load_reg8(F, Flags.Z)
     cpu_helper.load_reg16(PC, 0x1234)
 
     taken = bne(Addr(0x4321))
@@ -81,7 +81,7 @@ def test_bne_fallthrough(cpu_helper: CPUHelper) -> None:
     assert pcaddr == 0x1236
 
 def test_bcs_taken(cpu_helper: CPUHelper) -> None:
-    cpu_helper.load_reg8(F, 0b0100)
+    cpu_helper.load_reg8(F, Flags.C)
     cpu_helper.load_reg16(PC, 0x1234)
 
     taken = bcs(Addr(0x4321))
@@ -91,7 +91,7 @@ def test_bcs_taken(cpu_helper: CPUHelper) -> None:
     assert pcaddr == 0x4321
 
 def test_bcs_fallthrough(cpu_helper: CPUHelper) -> None:
-    cpu_helper.load_reg8(F, 0b0000)
+    cpu_helper.load_reg8(F, 0)
     cpu_helper.load_reg16(PC, 0x1234)
 
     taken = bcs(Addr(0x4321))
@@ -101,7 +101,7 @@ def test_bcs_fallthrough(cpu_helper: CPUHelper) -> None:
     assert pcaddr == 0x1236
 
 def test_bcc_taken(cpu_helper: CPUHelper) -> None:
-    cpu_helper.load_reg8(F, 0b0000)
+    cpu_helper.load_reg8(F, 0)
     cpu_helper.load_reg16(PC, 0x1234)
 
     taken = bcc(Addr(0x4321))
@@ -111,7 +111,7 @@ def test_bcc_taken(cpu_helper: CPUHelper) -> None:
     assert pcaddr == 0x4321
 
 def test_bcc_fallthrough(cpu_helper: CPUHelper) -> None:
-    cpu_helper.load_reg8(F, 0b0100)
+    cpu_helper.load_reg8(F, Flags.C)
     cpu_helper.load_reg16(PC, 0x1234)
 
     taken = bcc(Addr(0x4321))

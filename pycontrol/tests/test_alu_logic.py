@@ -24,7 +24,7 @@ def test_and(cpu_helper: CPUHelper, lhs: Register, rhs: Register, desc: str, val
     andb(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = Flags.decode(cpu_helper.get_flags() & 0b0011) # we are only interested in Z and N flags
+    flags = Flags.decode(cpu_helper.get_flags() & (Flags.Z | Flags.N)) # we are only interested in Z and N flags
     assert value == result
     assert flags == xflags
 
@@ -42,7 +42,7 @@ def test_or(cpu_helper: CPUHelper, lhs: Register, rhs: Register, desc: str, val_
     orb(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = Flags.decode(cpu_helper.get_flags() & 0b0011)
+    flags = Flags.decode(cpu_helper.get_flags() & (Flags.Z | Flags.N))
     assert value == result
     assert flags == xflags
 
@@ -60,7 +60,7 @@ def shr_args() -> Iterator[Tuple[str, int, int, str]]:
 def test_shr(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     if carry_in:
-        cpu_helper.load_reg8(F, 0b0100)
+        cpu_helper.load_reg8(F, Flags.C)
     else:
         cpu_helper.load_reg8(F, 0)
 
@@ -81,7 +81,7 @@ def test_shr_real(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: boo
     shr_test_prog = bytes([opcode_of(f"shr_{reg.name}")])
 
     if carry_in:
-        cpu_helper.load_reg8(F, 0b0100)
+        cpu_helper.load_reg8(F, Flags.C)
     else:
         cpu_helper.load_reg8(F, 0)
 
@@ -110,7 +110,7 @@ def ror_args() -> Iterator[Tuple[str, bool, int, int, str]]:
 def test_ror(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     if carry_in:
-        cpu_helper.load_reg8(F, 0b0100)
+        cpu_helper.load_reg8(F, Flags.C)
     else:
         cpu_helper.load_reg8(F, 0)
 
@@ -135,7 +135,7 @@ def asr_args() -> Iterator[Tuple[str, int, int, str]]:
 def test_asr(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     if carry_in:
-        cpu_helper.load_reg8(F, 0b0100)
+        cpu_helper.load_reg8(F, Flags.C)
     else:
         cpu_helper.load_reg8(F, 0)
 
@@ -156,7 +156,7 @@ def test_asr_real(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: boo
     asr_test_prog = bytes([opcode_of(f"asr_{reg.name}")])
 
     if carry_in:
-        cpu_helper.load_reg8(F, 0b0100)
+        cpu_helper.load_reg8(F, Flags.C)
     else:
         cpu_helper.load_reg8(F, 0)
 
@@ -182,7 +182,7 @@ def swap_args() -> Iterator[Tuple[str, int, int, str]]:
 def test_swap(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     if carry_in:
-        cpu_helper.load_reg8(F, 0b0100)
+        cpu_helper.load_reg8(F, Flags.C)
     else:
         cpu_helper.load_reg8(F, 0)
 
@@ -191,7 +191,7 @@ def test_swap(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: bool, v
     swap(reg)
 
     value = cpu_helper.read_reg8(reg)
-    flags = Flags.decode(cpu_helper.get_flags() & 0b0011)
+    flags = Flags.decode(cpu_helper.get_flags() & (Flags.Z | Flags.N))
     assert value == result
     assert flags == xflags
 
@@ -210,7 +210,7 @@ def test_xor(cpu_helper: CPUHelper, lhs: Register, rhs: Register, desc: str, val
     xor(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = Flags.decode(cpu_helper.get_flags() & 0b0011) # we are only interested in Z and N flags
+    flags = Flags.decode(cpu_helper.get_flags() & (Flags.Z | Flags.N)) # we are only interested in Z and N flags
     assert value == result
     assert flags == xflags
 
@@ -228,7 +228,7 @@ def test_not(cpu_helper: CPUHelper, reg: Register, desc: str, val: int, result: 
     notb(reg)
 
     value = cpu_helper.read_reg8(reg)
-    flags = Flags.decode(cpu_helper.get_flags() & 0b0011)
+    flags = Flags.decode(cpu_helper.get_flags() & (Flags.Z | Flags.N))
     assert value == result
     assert flags == xflags
 

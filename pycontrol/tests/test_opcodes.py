@@ -84,7 +84,7 @@ def test_opcode_flag_taken(fake_opcodes: OpcodeFixture) -> None:
     fake_opcodes.reset()
 
     for s_idx in range(8):
-        c = op.get_step(s_idx, 0b0100)
+        c = op.get_step(s_idx, Flags.C)
         if c is None: break
         for e in c:
             e.enable()
