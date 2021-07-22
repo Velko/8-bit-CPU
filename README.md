@@ -232,11 +232,13 @@ Repository index
         * **display_front** - frontend board for Output module (7-seg display)
         * **eeprom_burner** - EEPROM writer as Arduino Uno shield
         * **flags** - Flags register
+        * **flash_writer** - Arduino Uno shield - writer for SST39SF0*-series Flash chips (chosen EEPROM replacement)
         * **keyboard** - (unfinished) 4x4 keyboard scanner module
         * **lunit** - Logic Unit (ALU module for AND and OR)
         * **modules** - Register, ALU, etc. boards as KiCad footprints (for backplane)
         * **ram** - (unfinished) RAM module
         * **register** - GP register
+        * **transfer** - transfer register (between Main Bus and Address Bus)
 * **parts** - custom KiCad symbols and footprints for missing components
 * **pycontrol** - Python-based control logic, microcode, tests, demo programs, etc.
     * **demo** - demo programs in PyASM or Assembly
