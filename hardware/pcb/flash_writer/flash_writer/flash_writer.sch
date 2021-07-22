@@ -928,21 +928,6 @@ F 3 "" H 3400 3950 50  0000 C CNN
 $EndComp
 Wire Wire Line
 	3400 3950 3400 4000
-$Comp
-L power:GND #PWR01
-U 1 1 611A5A01
-P 2500 6350
-F 0 "#PWR01" H 2500 6100 50  0001 C CNN
-F 1 "GND" H 2400 6250 50  0000 C CNN
-F 2 "" H 2500 6350 50  0001 C CNN
-F 3 "" H 2500 6350 50  0001 C CNN
-	1    2500 6350
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	2800 6300 2500 6300
-Wire Wire Line
-	2500 6300 2500 6350
 Text GLabel 9600 5900 2    50   Output ~ 0
 ~WE~
 Text GLabel 9200 5900 2    50   Output ~ 0
@@ -1016,7 +1001,6 @@ Wire Wire Line
 	9550 5500 9550 5550
 Wire Wire Line
 	9150 5500 9150 5550
-NoConn ~ 9050 2550
 NoConn ~ 9050 2650
 NoConn ~ 9050 2750
 NoConn ~ 9050 2850
@@ -1027,4 +1011,44 @@ NoConn ~ 5400 1800
 NoConn ~ 5400 1900
 NoConn ~ 5400 2000
 NoConn ~ 5400 2100
+Text GLabel 2750 6250 0    50   Input ~ 0
+~CE~
+Wire Wire Line
+	2750 6250 2800 6250
+Wire Wire Line
+	2800 6250 2800 6300
+Text GLabel 8900 2550 0    50   Output ~ 0
+~CE~
+Wire Wire Line
+	8900 2550 9050 2550
+Text GLabel 8900 5900 2    50   Output ~ 0
+~CE~
+$Comp
+L Device:R R?
+U 1 1 612E09B3
+P 8800 5700
+F 0 "R?" H 8870 5746 50  0000 L CNN
+F 1 "10K" H 8870 5655 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" V 8730 5700 50  0001 C CNN
+F 3 "~" H 8800 5700 50  0001 C CNN
+	1    8800 5700
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR?
+U 1 1 612E09B9
+P 8800 5500
+F 0 "#PWR?" H 8800 5350 50  0001 C CNN
+F 1 "+5V" H 8750 5650 50  0000 C CNN
+F 2 "" H 8800 5500 50  0000 C CNN
+F 3 "" H 8800 5500 50  0000 C CNN
+	1    8800 5500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8800 5500 8800 5550
+Wire Wire Line
+	8800 5850 8800 5900
+Wire Wire Line
+	8800 5900 8900 5900
 $EndSCHEMATC
