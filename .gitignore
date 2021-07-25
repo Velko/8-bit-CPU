@@ -25,3 +25,4 @@ sym-lib-table
 
 fp-info-cache
 *.sch-bak
+*_gerbers/
