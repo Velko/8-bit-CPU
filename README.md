@@ -228,6 +228,7 @@ Repository index
         * **aunit** - Arithmetic Unit (ALU module for addition and subtraction)
         * **clock** - (unfinished) Clock module
         * **control** - (unfinished) Control Logic
+        * **counter** - Program Counter
         * **display_back** - backend board for Output module (7-seg display)
         * **display_front** - frontend board for Output module (7-seg display)
         * **eeprom_burner** - EEPROM writer as Arduino Uno shield
@@ -312,6 +313,7 @@ Progress
 * Developed a debugger (breakpoints, single step, live register inspection).
 * Designing additional ALU modules, miniaturized Display module.
 * Ported hardware emulator to run on PC. Configured GitHub Actions to run tests.
+* Designed boards for AND/OR unit, Display module, Program Counter, Transfer Register, Flash Writer
 
 [eater-net-8bit]: https://eater.net/8bit
 [velkoraspi]: https://velkoraspi.blogspot.com/
