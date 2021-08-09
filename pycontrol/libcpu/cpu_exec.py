@@ -2,7 +2,7 @@ from typing import Union, Tuple, Optional, Sequence
 from .opcode_builder import MicroCode
 from .markers import AddrBase
 from .pseudo_devices import Imm, EnableCallback
-from .DeviceSetup import COutPort, IRFetch, OutPort, ProgMem, PC, Flags, StepCounter
+from .DeviceSetup import IRFetch, OutPort, ProgMem, PC, Flags, StepCounter
 from .opcodes import opcodes, ops_by_code, fetch
 from .cpu import CPUBackend, InvalidOpcodeException, ret
 from .pinclient import PinClient
@@ -78,7 +78,7 @@ class CPUBackendControl(CPUBackend):
             # has rised, but inverted is not
             # in other cases it does not matter, using faster
             # version
-            if OutPort.load.is_enabled() or COutPort.load.is_enabled():
+            if OutPort.load.is_enabled():
                 self.client.clock_pulse()
                 self.out_hooked_val = self.client.bus_get()
                 self.client.clock_inverted()
@@ -94,11 +94,6 @@ class CPUBackendControl(CPUBackend):
 
             if Flags.calc.is_enabled() or Flags.load.is_enabled():
                 self.flags_cache = None
-
-            # Drop current opcode since it was a prefix for extended one
-            if StepCounter.extended.is_enabled():
-                self.opcode_cache = None
-                self.op_extension += 1
 
         Imm.disable()
 

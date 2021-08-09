@@ -73,20 +73,19 @@ class RAM:
         self.write = write
 
 class Clock:
-    def __init__(self, name: str, halt: PinBase, brk: PinBase) -> None:
+    def __init__(self, name: str, halt: PinBase) -> None:
         self.name = name
         self.halt = halt
-        self.brk  = brk
 
 class StepCounter:
-    def __init__(self, name: str, reset: PinBase, extended: PinBase) -> None:
+    def __init__(self, name: str, reset: PinBase) -> None:
         self.name = name
         self.reset = reset
-        self.extended = extended
 
 class ProgramCounter(Register):
-    def __init__(self, name: str, out: PinBase, load: PinBase) -> None:
+    def __init__(self, name: str, out: PinBase, load: PinBase, count: PinBase) -> None:
         Register.__init__(self, name, out, load)
+        self.count = count
 
 class StackPointer(Register):
     def __init__(self, name: str, out: PinBase, load: PinBase, inc: PinBase, dec: PinBase) -> None:
