@@ -45,7 +45,7 @@
 #define OP_BCC_ADDR            0x28
 #define OP_OUT_F               0x29
 #define OP_HLT                 0x2a
-#define NUM_OPS                0x2b
+#define NUM_OPS                43
 
 /* Fetch */
 #define NUM_FETCH_STEPS        2
@@ -54,7 +54,7 @@
 #define CTRL_DEFAULT                    0b0011011111000111
 
 #define MUX_OUT_MASK                    0b0000000000000111
-#define MPIN_F_BUS_OUT_BITS             0b0000000000000100
+#define MPIN_F_OUT_BITS                 0b0000000000000100
 #define MPIN_A_OUT_BITS                 0b0000000000000000
 #define MPIN_B_OUT_BITS                 0b0000000000000001
 #define MPIN_ADDSUB_OUT_BITS            0b0000000000000010
@@ -70,13 +70,13 @@
 #define MPIN_PC_LOAD_BITS               0b0000010100000000
 #define MPIN_OUT_LOAD_BITS              0b0000011000000000
 
-#define LPIN_F_LOAD_BIT                 0b0000000001000000
-#define HPIN_F_USE_CARRY_BIT            0b0000100000000000
-#define HPIN_F_BUS_IN_BIT               0b0000000000001000
+#define LPIN_F_CALC_BIT                 0b0000000001000000
+#define HPIN_F_CARRY_BIT                0b0000100000000000
+#define HPIN_F_LOAD_BIT                 0b0000000000001000
 #define LPIN_CLOCK_HALT_BIT             0b0010000000000000
 #define LPIN_STEPS_RESET_BIT            0b0000000010000000
 #define LPIN_IRFETCH_LOAD_BIT           0b0001000000000000
-#define HPIN_ADDSUB_SUB_BIT             0b0000000000010000
+#define HPIN_ADDSUB_ALT_BIT             0b0000000000010000
 #define HPIN_PC_COUNT_BIT               0b0000000000100000
 
 #endif /* OP_DEFS_H */
