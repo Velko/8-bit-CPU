@@ -56,8 +56,6 @@ class Pin(PinBase):
             return not self.control_word.is_set(self.num)
 
 class NullPin(PinBase):
-    def __init__(self, num: int, level: Level):
-        self.num = None
 
     def connect(self, control_word: CtrlBase) -> None:
         pass

@@ -65,7 +65,7 @@ ProgMem = RamProxy("ProgMem",
     ram = Ram)
 
 IR = dev.Register("IR",
-    out = NullPin(-1, Level.LOW),
+    out = NullPin(),
     load = MuxPin(LoadMux, 4))
 
 Clock = dev.Clock("Clock",
@@ -98,11 +98,11 @@ LR = dev.ProgramCounter("LR",
     load = MuxPin(AddrLoadMux, 4))
 
 OutPort = dev.Register("Out",
-    out = NullPin(-1, Level.LOW),
+    out = NullPin(),
     load = MuxPin(LoadMux, 6))
 
 COutPort = dev.Register("Cout",
-    out = NullPin(-1, Level.LOW),
+    out = NullPin(),
     load = MuxPin(LoadMux, 10))
 
 TX = dev.TransferRegister("TX",
