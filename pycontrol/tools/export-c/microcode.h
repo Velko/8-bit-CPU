@@ -17,7 +17,7 @@
 #define NUM_FLAGS       4
 #define NUM_STEP_BITS   3
 
-typedef uint32_t cword_t;
+typedef uint16_t cword_t;
 
 struct op_flags_alt {
     uint8_t mask;

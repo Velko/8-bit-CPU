@@ -14,7 +14,7 @@
 
 uint16_t uc_output_address;
 
-void write_cword(uint16_t cword, int rom_idx)
+void write_cword(cword_t cword, int rom_idx)
 {
     //printf("        %02x\n", cword >> (rom_idx << 3) & 0xFF);
     printf("        %04x\n", cword);
@@ -22,7 +22,7 @@ void write_cword(uint16_t cword, int rom_idx)
     ++uc_output_address;
 }
 
-void verify_cword(uint16_t cword, int rom_idx)
+void verify_cword(cword_t cword, int rom_idx)
 {
     eeprom_verify(uc_output_address, cword >> (rom_idx << 3) & 0xFF);
     ++uc_output_address;
@@ -50,7 +50,7 @@ void write_microcode(int rom_idx)
 
             memcpy_P(&instruction, &microcode[opcode], sizeof(struct op_microcode));
 
-            const uint16_t *steps = instruction.default_steps - NUM_FETCH_STEPS;
+            const cword_t *steps = instruction.default_steps - NUM_FETCH_STEPS;
 
             for (int alt = 0; alt < MAX_ALTS && instruction.f_alt[alt].mask; ++alt)
             {
@@ -106,7 +106,7 @@ void verify_microcode(int rom_idx)
 
             memcpy_P(&instruction, &microcode[opcode], sizeof(struct op_microcode));
 
-            const uint16_t *steps = instruction.default_steps - NUM_FETCH_STEPS;
+            const cword_t *steps = instruction.default_steps - NUM_FETCH_STEPS;
 
             for (int alt = 0; alt < MAX_ALTS && instruction.f_alt[alt].mask; ++alt)
             {
