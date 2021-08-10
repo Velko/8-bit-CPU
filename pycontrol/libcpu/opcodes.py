@@ -59,7 +59,9 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
 
     for l, r in permute_gp_regs_nsame():
         builder.add_instruction("sbb", l, r)\
-            .add_step(l.load, l.alu_l, r.alu_r, AddSub.out, AddSub.alt, Flags.calc, Flags.carry)
+            .add_step(l.load, l.alu_l, r.alu_r, AddSub.out, AddSub.alt, Flags.calc)\
+            .add_condition(mask=Flags.C, value=Flags.C)\
+                .add_step(l.load, l.alu_l, r.alu_r, AddSub.out, AddSub.alt, Flags.calc, Flags.carry)
 
     for l, r in permute_gp_regs_nsame():
         builder.add_instruction("cmp", l, r)\

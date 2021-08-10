@@ -75,10 +75,24 @@ const struct op_microcode microcode[] PROGMEM = {
     { .default_steps = {0x1192},},
 
     /* 0e sbb_A_B    */
-    { .default_steps = {0x1892},},
+    { .default_steps = {0x1092},
+      .f_alt = {
+          /* mask: -C-- value: -C-- */
+          { .mask = 0x04, .value = 0x04,
+            .steps = {0x1892},
+          },
+      },
+    },
 
     /* 0f sbb_B_A    */
-    { .default_steps = {0x1992},},
+    { .default_steps = {0x1192},
+      .f_alt = {
+          /* mask: -C-- value: -C-- */
+          { .mask = 0x04, .value = 0x04,
+            .steps = {0x1992},
+          },
+      },
+    },
 
     /* 10 cmp_A_B    */
     { .default_steps = {0x1792},},
