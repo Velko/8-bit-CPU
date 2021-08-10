@@ -314,6 +314,12 @@ Progress
 * Designing additional ALU modules, miniaturized Display module.
 * Ported hardware emulator to run on PC. Configured GitHub Actions to run tests.
 * Designed boards for AND/OR unit, Display module, Program Counter, Transfer Register, Flash Writer
+* Started re-trace branch. Software side and emulation has progressed quite far since first demo.
+  On the hardware side, new boards are just starting to roll in, and I need microcode and programs
+  to test the build. Can not really just follow the original version history path, because then I
+  will not have access to latest software improvements. (CustomAsm, MyPy, etc.), Instead I took the
+  "latest and greatest" and removed all features that are not supported by hardware yet. Will gradually
+  add those back as I assemble the CPU.
 
 [eater-net-8bit]: https://eater.net/8bit
 [velkoraspi]: https://velkoraspi.blogspot.com/
