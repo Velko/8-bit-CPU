@@ -51,7 +51,7 @@
 #define NUM_FETCH_STEPS        2
 
 /* Device setup */
-#define CTRL_DEFAULT                    0b0011011111000111
+#define CTRL_DEFAULT                    0b0001011111000111
 
 #define MUX_OUT_MASK                    0b0000000000000111
 #define MPIN_F_OUT_BITS                 0b0000000000000100
@@ -73,7 +73,7 @@
 #define LPIN_F_CALC_BIT                 0b0000000001000000
 #define HPIN_F_CARRY_BIT                0b0000100000000000
 #define HPIN_F_LOAD_BIT                 0b0000000000001000
-#define LPIN_CLOCK_HALT_BIT             0b0010000000000000
+#define HPIN_CLOCK_HALT_BIT             0b0010000000000000
 #define LPIN_STEPS_RESET_BIT            0b0000000010000000
 #define LPIN_IRFETCH_LOAD_BIT           0b0001000000000000
 #define HPIN_ADDSUB_ALT_BIT             0b0000000000010000
