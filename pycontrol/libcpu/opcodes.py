@@ -41,7 +41,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
 
     builder.add_instruction("ldi_F", OpcodeArg.BYTE)\
         .add_step(PC.out, ProgMar.load)\
-        .add_step(Flags.calc, Flags.load, ProgMem.out, PC.count)
+        .add_step(Flags.load, ProgMem.out, PC.count)
 
     for l, r in permute_gp_regs_all():
         builder.add_instruction("add", l, r)\

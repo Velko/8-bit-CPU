@@ -25,7 +25,7 @@ Flags = dev.Flags("F",
     calc = Pin(6, Level.LOW),
     carry = Pin(11, Level.HIGH),
     out = MuxPin(OutMux, 4),
-    load = Pin(3, Level.HIGH))
+    load = Pin(3, Level.LOW))
 
 Mar = dev.Register("MAR",
     out = NullPin(),
