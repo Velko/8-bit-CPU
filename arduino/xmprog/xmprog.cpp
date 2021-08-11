@@ -58,25 +58,32 @@ void XmProg::SendRomContents(const char *file_name)
 
     for (size_t data = 1; data <= 1024; ++data)
     {
-        s_port.write(SOH);
-        s_port.write(data & 0xFF);
-        s_port.write((0xFF - data) & 0xFF);
+        bool repeat_package = true;
+        while (repeat_package) {
+            s_port.write(SOH);
+            s_port.write(data & 0xFF);
+            s_port.write((0xFF - data) & 0xFF);
 
-        s_port.write(chipmem, 128);
+            s_port.write(chipmem, 128);
 
-        uint16_t crc = calcrc((char *)chipmem, 128);
+            uint16_t crc = calcrc((char *)chipmem, 128);
 
-        s_port.write(crc >> 8);
-        s_port.write(crc & 0xFF);
+            s_port.write(crc >> 8);
+            s_port.write(crc & 0xFF);
 
-        for (;;)
-        {
-            int ack = s_port.read();
-            if (ack == ACK)
+            for (;;)
             {
-                break;
+                int ack = s_port.read();
+                if (ack == ACK || ack == NAK)
+                {
+                    repeat_package = ack == NAK;
+
+                    if (repeat_package)
+                        dprintf("Resend: %d\n", data);
+                    break;
+                }
+                dprintf("WTF on ack??? %x\n", ack);
             }
-            dprintf("WTF on ack??? %x\n", ack);
         }
     }
 
