@@ -44,4 +44,8 @@
     bcc  ({address0}) => 0x28 @ address0[7:0]
     out_F  () => 0x29
     hlt  () => 0x2a
+    and  (A, B) => 0x2b
+    and  (B, A) => 0x2c
+    or  (A, B) => 0x2d
+    or  (B, A) => 0x2e
 }

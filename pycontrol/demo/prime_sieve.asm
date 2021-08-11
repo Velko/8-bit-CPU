@@ -39,7 +39,7 @@ sieve_start:
 fill0_loop:
         ; calculate target address of seg0[A] in B
         ldi (B, seg0)
-        add (B, A)
+        or (B, A)
 
         ; store "something" in seg0[A] (any non-zero value will do)
         stabs (B, A)
@@ -49,8 +49,8 @@ fill0_loop:
         add (A, B)
 
         ; are we done?
-        ldi (B, 16)
-        cmp (A, B)
+        ldi (B, 15)
+        and (A, B)
 
         ; jump back to start of the loop
         bne(fill0_loop)
@@ -64,7 +64,7 @@ seg0_loop:
 
         ; calculate flags for seg0[A]
         ldi (B, seg0)
-        add (B, A)
+        or (B, A)
         tstabs (B) ; test byte in RAM
 
         ; anything non-zero means prime found
@@ -88,7 +88,7 @@ seg0_loop:
                 st (m, A)
                 ; write zero at seg0[A]
                 ldi (B, seg0)
-                add (B, A)
+                or (B, A)
                 ldi (A, 0)
                 stabs (B, A)
 
@@ -108,7 +108,7 @@ seg0_loop:
             ; at address of seg0[p]
             ld (A, p)
             ldi (B, seg0)
-            add (B, A)
+            or (B, A)
 
             ld (A, m)
             stabs (B, A)
@@ -121,8 +121,8 @@ seg0_loop:
         add (A, B)
 
         ; are we done?
-        ldi (B, 16)
-        cmp (A, B)
+        ldi (B, 15)
+        and (A, B)
 
         bne(seg0_loop)
 
@@ -139,7 +139,7 @@ seg0_loop:
 
             ; write non-zero in seg_n[A]
             ldi (B, seg_n)
-            add (B, A)
+            or (B, A)
 
             stabs(B, B) ; can not write A, as it may be zero this time
 
@@ -148,8 +148,8 @@ seg0_loop:
             add (A, B)
 
             ; are we done?
-            ldi (B, 16)
-            cmp (A, B)
+            ldi (B, 15)
+            and (A, B)
 
             ; conditional jump back to start of the loop
             bne(seg_n0_loop)
@@ -161,7 +161,7 @@ seg0_loop:
 
             ; load seg0[A], getting the latest calculated multiple
             ldi (B, seg0)
-            add (B, A)
+            or (B, A)
             ldabs (A, B) ; it also calculates flags accordingly
 
             beq(seg_n_mark_next)   ; jump over if not prime
@@ -182,7 +182,7 @@ seg0_loop:
 
                     ; address of seg_n[A]
                     ldi (B, seg_n)
-                    add (B, A)
+                    or (B, A)
 
                     ; write a zero over it
                     ldi (A, 0)
@@ -206,7 +206,7 @@ seg0_loop:
                 st (m, A)
                 ld (A, p)
                 ldi (B, seg0)
-                add (B, A)
+                or (B, A)
                 ld (A, m)
                 stabs (B, A)
             seg_n_mark_next:
@@ -217,8 +217,8 @@ seg0_loop:
             add (A, B)
 
             ; done with seg0?
-            ldi (B, 16)
-            cmp (A, B)
+            ldi (B, 15)
+            and (A, B)
 
             ; next iteration
             bne(seg_n_mark_loop)
@@ -229,7 +229,7 @@ seg0_loop:
 
             ; check byte at seg_n[A]
             ldi (B, seg_n)
-            add (B, A)
+            or (B, A)
             tstabs(B)
 
             beq(seg_n_print_skip)
@@ -247,8 +247,8 @@ seg0_loop:
             add (A, B)
 
             ; are we done?
-            ldi (B, 16)
-            cmp (A, B)
+            ldi (B, 15)
+            and (A, B)
 
             bne(seg_n_print_loop)
 
@@ -268,6 +268,8 @@ seg0_loop:
 ; original code placed data at 0xc0
 ; while it does not generally matter
 ; keeping it for verification purposes
+; it is, however, important that arrays are aligned to 16 bytes, because
+; code uses bitwise OR for address calculation (just to demo that module works)
 #addr 0xc0
 ; the seg0 array serves dual purpose
 ; - the fact that there is something non-zero at seg0[n] indicates that n is a prime

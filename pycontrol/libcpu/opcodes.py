@@ -136,6 +136,13 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
     builder.add_instruction("hlt")\
         .add_step(Clock.halt)
 
+    for l, r in permute_gp_regs_nsame():
+        builder.add_instruction("and", l, r)\
+            .add_step(l.load, l.alu_l, r.alu_r, AndOr.out, Flags.calc)
+
+    for l, r in permute_gp_regs_nsame():
+        builder.add_instruction("or", l, r)\
+            .add_step(l.load, l.alu_l, r.alu_r, AndOr.out, AndOr.alt, Flags.calc)
 
     return builder.build()
 

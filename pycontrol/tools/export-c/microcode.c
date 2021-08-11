@@ -202,4 +202,16 @@ const struct op_microcode microcode[] PROGMEM = {
 
     /* 2a hlt        */
     { .default_steps = {0x37cf},},
+
+    /* 2b and_A_B    */
+    { .default_steps = {0x108e},},
+
+    /* 2c and_B_A    */
+    { .default_steps = {0x118e},},
+
+    /* 2d or_A_B     */
+    { .default_steps = {0x109e},},
+
+    /* 2e or_B_A     */
+    { .default_steps = {0x119e},},
 };

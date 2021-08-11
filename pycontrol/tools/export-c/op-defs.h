@@ -45,7 +45,11 @@
 #define OP_BCC_ADDR            0x28
 #define OP_OUT_F               0x29
 #define OP_HLT                 0x2a
-#define NUM_OPS                43
+#define OP_AND_A_B             0x2b
+#define OP_AND_B_A             0x2c
+#define OP_OR_A_B              0x2d
+#define OP_OR_B_A              0x2e
+#define NUM_OPS                47
 
 /* Fetch */
 #define NUM_FETCH_STEPS        2
@@ -57,6 +61,7 @@
 #define MPIN_A_OUT_BITS                 0b0000000000000000
 #define MPIN_B_OUT_BITS                 0b0000000000000001
 #define MPIN_ADDSUB_OUT_BITS            0b0000000000000010
+#define MPIN_ANDOR_OUT_BITS             0b0000000000000110
 #define MPIN_F_OUT_BITS                 0b0000000000000100
 #define MPIN_RAM_OUT_BITS               0b0000000000000011
 #define MPIN_PC_OUT_BITS                0b0000000000000101

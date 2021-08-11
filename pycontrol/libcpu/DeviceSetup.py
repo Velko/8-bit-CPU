@@ -17,9 +17,15 @@ RegB = dev.GPRegister("B",
     alu_l = NullPin(),
     alu_r = NullPin())
 
+AluAltFn = Pin(4, Level.HIGH)
+
 AddSub = dev.ALU("AddSub",
     out = MuxPin(OutMux, 2),
-    alt = Pin(4, Level.HIGH))
+    alt = AluAltFn)
+
+AndOr = dev.ALU("AndOr",
+    out = MuxPin(OutMux, 6),
+    alt = AluAltFn)
 
 Flags = dev.Flags("F",
     calc = Pin(6, Level.LOW),
