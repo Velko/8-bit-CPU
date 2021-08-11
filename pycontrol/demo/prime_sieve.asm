@@ -16,13 +16,16 @@ sieve_start:
     fill0_loop:
 
         ; store "something" in seg0[A] (any non-zero value will do)
-        stx (seg0, A, D)
+        ldi (B, seg0)
+        or (B, A)
+        stx (256, B, D) ; 256 because current stx uses signed math and 0x90 is "negative"
 
         ; next index in A
         inc (A)
 
         ; are we done?
-        cmp (A, D)
+        ldi (B, 15)
+        and (B, A)
 
         ; jump back to start of the loop
         bne(fill0_loop)
@@ -193,6 +196,9 @@ sieve_start:
 ; - the fact that there is something non-zero at seg0[n] indicates that n is a prime
 ; - contents of seg0[n] is a largest (so far) calculated multiple of that n
 ; because seg0[0:1] are never used, re-use locations for m and p variables
+; arrays are aligned to 16 byte boundary, so that bitwise OR can be used for
+; calculations (just to demonstrate that And/Or unit works)
+#align 128
 seg0:
 p:
 	#res 1
