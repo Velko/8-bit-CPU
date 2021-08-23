@@ -4,8 +4,8 @@ from .pin import Pin, NullPin, Level, Mux, MuxPin
 
 OutMux = Mux("OutMux", [0, 1, 2], 7) # bits 5-7 in Control Word, defaults to 7
 LoadMux = Mux("LoadMux", [8, 9, 10], 7)
-AddrOutMux = Mux("AddrOutMux", [14], 2)
-AddrLoadMux = Mux("AddrLoadMux", [15], 2)
+AddrOutMux = Mux("AddrOutMux", [3], 2)
+AddrLoadMux = Mux("AddrLoadMux", [14, 15], 2)
 
 RegA = dev.GPRegister("A",
     out = MuxPin(OutMux, 0),
