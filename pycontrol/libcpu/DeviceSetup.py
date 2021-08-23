@@ -4,6 +4,8 @@ from .pin import Pin, NullPin, Level, Mux, MuxPin
 
 OutMux = Mux("OutMux", [0, 1, 2], 7) # bits 5-7 in Control Word, defaults to 7
 LoadMux = Mux("LoadMux", [8, 9, 10], 7)
+AddrOutMux = Mux("AddrOutMux", [14], 2)
+AddrLoadMux = Mux("AddrLoadMux", [15], 2)
 
 RegA = dev.GPRegister("A",
     out = MuxPin(OutMux, 0),
@@ -31,16 +33,7 @@ Flags = dev.Flags("F",
     calc = Pin(6, Level.LOW),
     carry = Pin(11, Level.HIGH),
     out = MuxPin(OutMux, 4),
-    load = Pin(3, Level.LOW))
-
-Mar = dev.Register("MAR",
-    out = NullPin(),
     load = MuxPin(LoadMux, 2))
-
-# currently same as regular MAR, can be redefined for different
-# hardware configuration. Will not require changes in instruction
-# definitions
-ProgMar = Mar
 
 Ram = dev.RAM("Ram",
     out = MuxPin(OutMux, 3),
@@ -63,10 +56,18 @@ IRFetch = dev.IRFetch("IRFetch",
     load = Pin(12, Level.LOW))
 
 PC = dev.ProgramCounter("PC",
-    out = MuxPin(OutMux, 5),
-    load = MuxPin(LoadMux, 5),
+    out = MuxPin(AddrOutMux, 0),
+    load = MuxPin(AddrLoadMux, 0),
     count = Pin(5, Level.HIGH))
 
 OutPort = dev.Register("Out",
     out = NullPin(),
     load = MuxPin(LoadMux, 6))
+
+TX = dev.TransferRegister("TX",
+    out = MuxPin(AddrOutMux, 1),
+    load = MuxPin(AddrLoadMux, 1))
+
+TL = dev.TransferRegister("TL",
+    out = MuxPin(OutMux, 5),
+    load = MuxPin(LoadMux, 5))

@@ -6,7 +6,7 @@ from typing import List, Sequence, Iterator, Tuple, Mapping
 
 gp_regs: Sequence[GPRegister] = [RegA, RegB]
 
-fetch: List[Sequence[ControlSignal]] = [[PC.out, ProgMar.load], [ProgMem.out, IR.load, PC.count]]
+fetch: List[Sequence[ControlSignal]] = [[PC.out, ProgMem.out, IR.load, PC.count]]
 
 def permute_gp_regs_all() -> Iterator[Tuple[GPRegister, GPRegister]]:
     for l in gp_regs:
@@ -36,12 +36,10 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
 
     for r in gp_regs:
         builder.add_instruction("ldi", r, OpcodeArg.BYTE)\
-            .add_step(PC.out, ProgMar.load)\
-            .add_step(r.load, ProgMem.out, PC.count)
+            .add_step(PC.out, r.load, ProgMem.out, PC.count)
 
     builder.add_instruction("ldi_F", OpcodeArg.BYTE)\
-        .add_step(PC.out, ProgMar.load)\
-        .add_step(Flags.load, ProgMem.out, PC.count)
+        .add_step(PC.out, Flags.load, ProgMem.out, PC.count)
 
     for l, r in permute_gp_regs_all():
         builder.add_instruction("add", l, r)\
@@ -77,58 +75,56 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
 
     for v in gp_regs:
         builder.add_instruction("st", OpcodeArg.ADDR, v)\
-            .add_step(PC.out, ProgMar.load)\
-            .add_step(ProgMem.out, Mar.load, PC.count)\
-            .add_step(v.out, Ram.write)
+            .add_step(PC.out, ProgMem.out, TL.load, PC.count)\
+            .add_step(TX.out, v.out, Ram.write)
 
     for a, v in permute_gp_regs_all():
         builder.add_instruction("stabs", a, v)\
-            .add_step(a.out, Mar.load)\
-            .add_step(v.out, Ram.write)
+            .add_step(a.out, TL.load)\
+            .add_step(TX.out, v.out, Ram.write)
 
     for r in gp_regs:
         builder.add_instruction("ld", r, OpcodeArg.ADDR)\
-            .add_step(PC.out, ProgMar.load)\
-            .add_step(ProgMem.out, Mar.load, PC.count)\
-            .add_step(Ram.out, r.load, Flags.calc)
+            .add_step(PC.out, ProgMem.out, TL.load, PC.count)\
+            .add_step(TX.out, Ram.out, r.load, Flags.calc)
 
     for v, a in permute_gp_regs_all():
         builder.add_instruction("ldabs", v, a)\
-            .add_step(a.out, Mar.load)\
-            .add_step(v.load, Ram.out, Flags.calc)
+            .add_step(a.out, TL.load)\
+            .add_step(TX.out, v.load, Ram.out, Flags.calc)
 
     for r in gp_regs:
         builder.add_instruction("tstabs", r)\
-            .add_step(r.out, Mar.load)\
-            .add_step(Ram.out, Flags.calc)
+            .add_step(r.out, TL.load)\
+            .add_step(TX.out, Ram.out, Flags.calc)
 
     builder.add_instruction("jmp", OpcodeArg.ADDR)\
-        .add_step(PC.out, ProgMar.load)\
-        .add_step(ProgMem.out, PC.load)
+        .add_step(PC.out, ProgMem.out, TL.load, PC.count)\
+        .add_step(TX.out, PC.load)
 
     builder.add_instruction("beq", OpcodeArg.ADDR)\
         .add_step(PC.count)\
         .add_condition(mask=Flags.Z, value=Flags.Z)\
-            .add_step(PC.out, ProgMar.load)\
-            .add_step(ProgMem.out, PC.load)
+            .add_step(PC.out, ProgMem.out, TL.load, PC.count)\
+            .add_step(TX.out, PC.load)
 
     builder.add_instruction("bne", OpcodeArg.ADDR)\
         .add_step(PC.count)\
         .add_condition(mask=Flags.Z, value=0)\
-            .add_step(PC.out, ProgMar.load)\
-            .add_step(ProgMem.out, PC.load)
+            .add_step(PC.out, ProgMem.out, TL.load, PC.count)\
+            .add_step(TX.out, PC.load)
 
     builder.add_instruction("bcs", OpcodeArg.ADDR)\
         .add_step(PC.count)\
         .add_condition(mask=Flags.C, value=Flags.C)\
-            .add_step(PC.out, ProgMar.load)\
-            .add_step(ProgMem.out, PC.load)
+            .add_step(PC.out, ProgMem.out, TL.load, PC.count)\
+            .add_step(TX.out, PC.load)
 
     builder.add_instruction("bcc", OpcodeArg.ADDR)\
         .add_step(PC.count)\
         .add_condition(mask=Flags.C, value=0)\
-            .add_step(PC.out, ProgMar.load)\
-            .add_step(ProgMem.out, PC.load)
+            .add_step(PC.out, ProgMem.out, TL.load, PC.count)\
+            .add_step(TX.out, PC.load)
 
     builder.add_instruction("out_F")\
         .add_step(Flags.out, OutPort.load)
