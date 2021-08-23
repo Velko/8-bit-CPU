@@ -15,7 +15,11 @@ for name, mux in all_muxes():
     for i, mp in enumerate(mux.pins):
         pinmap[mp] = f"{name}.{i}"
 
-for p in range(32):
+# auto-adjust size of control word
+largest = max(pinmap.keys())
+totalpins = (largest + 8) & ~7
+
+for p in range(totalpins):
     if p in pinmap:
         print (f"{p:2} {pinmap[p]}")
     else:
