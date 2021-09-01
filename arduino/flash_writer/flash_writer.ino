@@ -19,6 +19,8 @@ void loop()
 {
     String command = Serial.readStringUntil('\n');
 
+    command.trim();
+
     if (command.length() == 0) return;
 
     if (command.equals("help"))
@@ -32,6 +34,14 @@ void loop()
     else if (command.equals("read"))
     {
         flash_read_contents();
+    }
+    else if (command.equals("erase"))
+    {
+        flash_erase_all();
+    }
+    else if (command.equals("hello"))
+    {
+        flash_write_test();
     }
     else
     {

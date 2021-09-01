@@ -69,15 +69,19 @@ void flash_send_command(uint32_t addr, uint8_t value)
     write_pin.off();
 }
 
-uint8_t flash_read(uint32_t addr)
+uint8_t flash_read()
 {
     data_bus.set_input(); /* Set as inputs */
     oe_pin.on();
+    uint8_t data = data_bus.read();
+    oe_pin.off();
+
+    return data;
+}
+
+
+uint8_t flash_read_addr(uint32_t addr)
+{
     flash_set_address(addr);
-
-    /* pause for EEPROM. Worst case scenario - it takes 250 ns to settle.
-       So 1 uS (1000 ns) should be enough */
-    delayMicroseconds(1);
-
-    return data_bus.read();
+    return flash_read();
 }

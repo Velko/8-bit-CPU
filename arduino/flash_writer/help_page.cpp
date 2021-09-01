@@ -6,4 +6,5 @@ void display_help()
     Serial.println(F("    help   - display this page"));
     Serial.println(F("    identify - identify the chip"));
     Serial.println(F("    read   - read all contents"));
+    Serial.println(F("    erase  - erase all contents"));
 }
