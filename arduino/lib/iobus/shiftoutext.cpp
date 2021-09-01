@@ -44,3 +44,14 @@ uint16_t ShiftOutExt::write16(uint16_t data)
 
     return din_l | (din_h << 8);
 }
+
+uint32_t ShiftOutExt::write24(uint32_t data)
+{
+    uint8_t din_l = SPI.transfer((data >> 16) & 0xFF);
+    uint16_t din_m = SPI.transfer((data >> 8) & 0xFF);
+    uint32_t din_h = SPI.transfer(data & 0xFF);
+    latch.on();
+    latch.off();
+
+    return din_l | (din_m << 8) | (din_h << 16);
+}
