@@ -1,7 +1,7 @@
 #ifndef ADDR_PORT_H
 #define ADDR_PORT_H
 
-#include <ctrlpin.h>
+#include <outpin.h>
 
 class AddrPort
 {
@@ -10,7 +10,7 @@ class AddrPort
         void setup();
         void write24(uint32_t data);
     private:
-        CtrlPin latch;
+        OutPinH latch;
 };
 
 #endif /* ADDR_PORT_H */

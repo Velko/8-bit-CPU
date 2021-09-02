@@ -4,7 +4,7 @@
 #define LATCH_PIN  10
 
 AddrPort::AddrPort()
-    : latch(LATCH_PIN, CtrlPin::ACTIVE_HIGH)
+    : latch(LATCH_PIN)
 {
 }
 
