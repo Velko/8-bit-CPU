@@ -1,12 +1,11 @@
-#ifndef IO_BUS_8BIT_L2R_H
-#define IO_BUS_8BIT_L2R_H
+#ifndef DATA_PORT_H
+#define DATA_PORT_H
 
 #include <stdint.h>
 
-class IOBus8bitL2R
+class DataPort
 {
     public:
-        IOBus8bitL2R();
         void set_input();
         uint8_t read();
         void write(uint8_t value);

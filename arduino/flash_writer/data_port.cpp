@@ -19,24 +19,19 @@
    and shift left 2 places for PORTD
 */
 
-IOBus8bitL2R::IOBus8bitL2R()
-{
-
-}
-
-void IOBus8bitL2R::set_input()
+void DataPort::set_input()
 {
     DDRB &= 0xfc;
     DDRD &= 0x03;
 }
 
-uint8_t IOBus8bitL2R::read()
+uint8_t DataPort::read()
 {
     uint8_t value = (PIND >> 2) | (PINB << 6);
     return value;
 }
 
-void IOBus8bitL2R::write(uint8_t value)
+void DataPort::write(uint8_t value)
 {
     /* no worries with PORTD - changing PD0 and PD1 won't affect UART */
     DDRD |= 0xfc;
@@ -46,4 +41,3 @@ void IOBus8bitL2R::write(uint8_t value)
     DDRB |= 0x03;
     PORTB = (PORTB & 0xfc ) | (value >> 6);
 }
-

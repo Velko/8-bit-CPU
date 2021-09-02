@@ -13,7 +13,6 @@
 #define CS1         A0
 #define OE          SDA
 
-//TODO: software selectable
 #define CURRENT_CS  CS1
 
 
@@ -22,7 +21,7 @@ CtrlPin cs_pin(CURRENT_CS, CtrlPin::ACTIVE_LOW);
 CtrlPin oe_pin(OE, CtrlPin::ACTIVE_LOW);
 
 /* Pins for data IO. LSB first */
-IOBus8bitL2R data_bus;
+DataPort data_port;
 
 ShiftOutExt addr_out;
 
@@ -32,7 +31,7 @@ void flash_setup()
     cs_pin.setup();
     oe_pin.setup();
 
-    data_bus.set_input();
+    data_port.set_input();
 
     addr_out.setup();
 
@@ -47,7 +46,7 @@ void flash_set_address(uint32_t addr)
 
 void flash_prepare_write()
 {
-    data_bus.set_input(); /* To be sure, set as inputs */
+    data_port.set_input(); /* To be sure, set as inputs */
     oe_pin.off(); /* EEPROM as input */
 }
 
@@ -55,14 +54,14 @@ void flash_end_write()
 {
     /* Switch back to inputs as soon as possible:
        let EEPROM control data lines */
-    data_bus.set_input();
+    data_port.set_input();
 }
 
 void flash_send_command(uint32_t addr, uint8_t value)
 {
     flash_set_address(addr);
 
-    data_bus.write(value);
+    data_port.write(value);
 
     /* Pulse the WE pin to start write */
     write_pin.on();
@@ -71,9 +70,9 @@ void flash_send_command(uint32_t addr, uint8_t value)
 
 uint8_t flash_read()
 {
-    data_bus.set_input(); /* Set as inputs */
+    data_port.set_input(); /* Set as inputs */
     oe_pin.on();
-    uint8_t data = data_bus.read();
+    uint8_t data = data_port.read();
     oe_pin.off();
 
     return data;
