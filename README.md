@@ -215,6 +215,7 @@ Repository index
     * **bouncyy** - software button debouncer and "rebouncer"
     * **eeprom_burner** - sketch to write 7-seg, microcode and program ROM, onboard content generation
     * **emulpins** - hardware emulator. Speaks same protocol as **pincontrol**. Can also be built for/ran on Linux
+    * **flash_writer** - simple sketch to write SST39SF*** Flash chips.
     * **lib** - some common routines
     * **modules_test** - (deprecated) module tester
     * **pincontrol** - substitute Control Logic. Controlled via serial link from **pycontrol**
