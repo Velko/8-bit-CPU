@@ -1,30 +1,22 @@
 #include <avr/io.h>
 #include "iobus8bitl2r.h"
 
-/* 8-bit IOBus is connected always to Arduino pins
-    2, 3, 4, 5, 6, 7, 8, 9 (LSB - MSB)
+/* Flash chip's data pins are connected to Arduino pins
+    9, 8, 7, 6, 5, 4, 3, 2 (MSB - LSB)
 
    According to UNO layout that is:
-   PD2, PD3, PD4, PD5, PD6, PD7, PB0, PB1
+   PB1, PB0, PD7, PD6, PD5, PD4, PD3, PD2
     7    6    5    4    3    2    1    0
 
-   First: we should reverse the bit order
-
-   PB1, PB0, PD7, PD6, PD5, PD4, PD3, PD2
-    0    1    2    3    4    5    6    7
-
-   Now: split off PORTB and PORTD parts
+   we should split off PORTB and PORTD parts
    PB1, PB0
-    0    1
+    7    6
 
    PD7, PD6, PD5, PD4, PD3, PD2
-    2    3    4    5    6    7
+    5    4    3    2    1    0
 
    So, we should shift right 6 places for PORTB
    and shift left 2 places for PORTD
-
-   TODO: is it possible to optimize even more? shift right 6 places is not
-         too efficient
 */
 
 IOBus8bitL2R::IOBus8bitL2R()
