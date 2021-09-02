@@ -6,7 +6,6 @@
 void flash_setup();
 uint8_t flash_read_addr(uint32_t addr);
 uint8_t flash_read();
-void flash_set_address(uint32_t addr);
 void flash_prepare_write();
 void flash_send_command(uint32_t addr, uint8_t value);
 void flash_end_write();

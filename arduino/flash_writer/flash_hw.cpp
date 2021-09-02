@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <shiftoutext.h>
+#include "addr_port.h"
 #include "data_port.h"
 #include "flash_hw.h"
 
@@ -23,7 +23,7 @@ CtrlPin oe_pin(OE, CtrlPin::ACTIVE_LOW);
 /* Pins for data IO. LSB first */
 DataPort data_port;
 
-ShiftOutExt addr_out;
+AddrPort addr_out;
 
 void flash_setup()
 {
@@ -37,11 +37,6 @@ void flash_setup()
 
     // Turn on DIP EEPROM
     cs_pin.on();
-}
-
-void flash_set_address(uint32_t addr)
-{
-    addr_out.write24(addr);
 }
 
 void flash_prepare_write()
@@ -59,7 +54,7 @@ void flash_end_write()
 
 void flash_send_command(uint32_t addr, uint8_t value)
 {
-    flash_set_address(addr);
+    addr_out.write24(addr);
 
     data_port.write(value);
 
@@ -81,6 +76,6 @@ uint8_t flash_read()
 
 uint8_t flash_read_addr(uint32_t addr)
 {
-    flash_set_address(addr);
+    addr_out.write24(addr);
     return flash_read();
 }
