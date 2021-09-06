@@ -240,6 +240,7 @@ Repository index
         * **modules** - Register, ALU, etc. boards as KiCad footprints (for backplane)
         * **ram** - (unfinished) RAM module
         * **register** - GP register
+        * **sunit** - Shift Unit (ALU module for shift and nibble swap)
         * **transfer** - transfer register (between Main Bus and Address Bus)
 * **parts** - custom KiCad symbols and footprints for missing components
 * **pycontrol** - Python-based control logic, microcode, tests, demo programs, etc.
