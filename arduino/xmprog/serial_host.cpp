@@ -1,7 +1,6 @@
-#include "serial_host.h"
-
-/* Skip everything if building for AVR */
 #ifndef __AVR__
+
+#include "serial_host.h"
 
 #include <termios.h>
 #include <fcntl.h>

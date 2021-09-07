@@ -6,6 +6,7 @@
 
 
 #ifdef __AVR__
+#include <Arduino.h>
 #else
 #include "serial_host.h"
 #endif

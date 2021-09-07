@@ -1,3 +1,5 @@
+#ifndef __AVR__
+
 #include "arduino_string.h"
 
 String::String(std::string &&src)
@@ -19,3 +21,5 @@ String String::substring(size_t from) const
 {
     return String(str.substr(from));
 }
+
+#endif

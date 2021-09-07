@@ -1,20 +1,19 @@
-/* Skip everything if building for AVR */
-#ifndef __AVR__
+#include "wrap_arduino.h"
 
-#include "serial_host.h"
 #include "xmprog.h"
 
 
 XmProg Prog(Serial);
 
+#ifndef __AVR__
 
 int main()
 {
-    Serial.begin(115200);
+    
 
     for(;;)
     {
-        Prog.StepMainLoop();
+        loop();
     }
 
     return 0;
@@ -22,3 +21,13 @@ int main()
 
 
 #endif /* __AVR__ */
+
+void setup()
+{
+    Serial.begin(115200);
+}
+
+void loop()
+{
+    Prog.StepMainLoop();
+}
