@@ -9,7 +9,7 @@ XmProg Prog(Serial);
 
 int main()
 {
-    
+
 
     for(;;)
     {
@@ -25,6 +25,8 @@ int main()
 void setup()
 {
     Serial.begin(115200);
+    while (!Serial);
+    Serial.println("XMODEM writer 0.1");
 }
 
 void loop()

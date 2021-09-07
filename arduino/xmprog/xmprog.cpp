@@ -19,7 +19,9 @@ XmProg::XmProg(HardwareSerial &s)
 
 void XmProg::StepMainLoop()
 {
-    String cmd = s_port.readStringUntil('\r');
+    String cmd = s_port.readStringUntil('\n');
+
+    cmd.trim();
 
     if (cmd.equals("")) return;
 
@@ -44,6 +46,8 @@ uint8_t chipmem[128];
 void XmProg::SendRomContents(const char *file_name)
 {
     dprintf("Sending file: '%s'\n", file_name);
+    Serial.print("Sending file: ");
+    Serial.println(file_name);
 
     memset(chipmem, 0xFF, 128);
 
