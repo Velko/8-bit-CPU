@@ -156,3 +156,11 @@ def test_jmp_addr(cpu_helper: CPUHelper) -> None:
 
     value = cpu_helper.read_reg16(PC)
     assert value == 0x1084
+
+def test_rjmp_offset(cpu_helper: CPUHelper) -> None:
+    cpu_helper.load_reg16(PC, 32)
+
+    rjmp(14)
+
+    value = cpu_helper.read_reg16(PC)
+    assert value == 46

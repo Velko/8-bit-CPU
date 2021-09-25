@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from libcpu.cpu import opcode_of
+from libcpu.cpu import InvalidOpcodeException, opcode_of
 from libcpu.devices import Register
 from libcpu.cpu_exec import CPUBackendControl
 from libcpu.DeviceSetup import Flags, PC, Ram
@@ -100,6 +100,16 @@ class CPUHelper:
         self.load_reg16(PC, addr)
 
     def run_snippet(self, addr: int, code: bytes) -> None:
+        """Run pre-compiled binary snippet. BRK instruction is appended automatically
+           and execution terminates when it is reached.
+
+           Args:
+                addr: where code is loaded and PC is pointed to.
+                code: byte array of binary code to execute.
+
+           Raises:
+                InvalidOpcodeException: If code execution encounters HLT instruction.
+        """
 
         # append 'brk'
         code_terminated = bytearray(code)
@@ -109,3 +119,4 @@ class CPUHelper:
 
         for msg in self.backend.client.run_program():
             if msg.reason == RunMessage.Reason.BRK: break
+            if msg.reason == RunMessage.Reason.HALT: raise InvalidOpcodeException("Unexpected exit")

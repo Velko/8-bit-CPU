@@ -183,6 +183,11 @@ def jmp(label: AddrBase) -> bool:
     taken, _ = backend.execute_mnemonic("jmp_addr", label)
     return taken
 
+def rjmp(offset: int) -> bool:
+    if backend is None: raise UninitializedError
+    taken, _ = backend.execute_mnemonic("rjmp_imm", offset)
+    return taken
+
 def hlt() -> None:
     if backend is None: raise UninitializedError
     backend.execute_mnemonic("hlt")

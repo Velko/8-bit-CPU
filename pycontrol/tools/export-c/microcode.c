@@ -1015,8 +1015,8 @@ const struct op_microcode microcode[] PROGMEM = {
     /* ee xprefix    */
     { .default_steps = {0x3af834e3},},
 
-    /* ef padding0   */
-    { .default_steps = {0x3bf83fcf},},
+    /* ef rjmp_imm   */
+    { .default_steps = {0x12f83fc3, 0x29783fcf},},
 
     /* f0 padding1   */
     { .default_steps = {0x3bf83fcf},},

@@ -241,7 +241,7 @@
 #define OP_STR_SP_IMM_C        0xec
 #define OP_STR_SP_IMM_D        0xed
 #define OP_XPREFIX             0xee
-#define OP_PADDING0            0xef
+#define OP_RJMP_IMM            0xef
 #define OP_PADDING1            0xf0
 #define OP_PADDING2            0xf1
 #define OP_PADDING3            0xf2
