@@ -271,3 +271,4 @@
     padding29  () => 0xee @ 0x0c
     dummyext  ({value0}) => 0xee @ 0x0d @ value0`8
 }
+#include "aliases.def"

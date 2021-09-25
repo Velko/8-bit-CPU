@@ -1,0 +1,15 @@
+#ruledef
+{
+    jmp ({target}) =>
+    {
+        offset = target - $ - 1
+        assert (offset <= 127)
+        assert (offset >= -128)
+        asm { rjmp (offset) }
+    }
+
+    jmp ({target}) =>
+    {
+        asm { ljmp (target) }
+    }
+}

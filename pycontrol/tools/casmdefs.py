@@ -61,6 +61,7 @@ def generate_casmdefs(rdfile: TextIO) -> None:
 
 
     rdfile.write("}\n")
+    rdfile.write("#include \"aliases.def\"\n")
 
 
 if __name__ == "__main__":
