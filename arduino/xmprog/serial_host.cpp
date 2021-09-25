@@ -95,6 +95,16 @@ void SerialHost::println(const String &str)
 }
 
 
+void SerialHost::setTimeout(size_t delay)
+{
+
+}
+
+bool SerialHost::operator!() const
+{
+    return true;
+}
+
 
 SerialHost Serial;
 

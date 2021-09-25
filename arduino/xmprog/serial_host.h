@@ -19,6 +19,8 @@ class SerialHost
         void print(const char *str);
         void println(const char *str);
         void println(const String &str);
+        void setTimeout(size_t delay);
+        bool operator!() const;
 
         int read();
 };

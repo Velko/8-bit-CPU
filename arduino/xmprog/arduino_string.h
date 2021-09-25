@@ -13,6 +13,7 @@ class String
         bool startsWith(const char *s) const;
         bool equals(const char *s) const;
         String substring(size_t from) const;
+        void trim();
 };
 
 

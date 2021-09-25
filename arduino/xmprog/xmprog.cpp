@@ -46,8 +46,6 @@ uint8_t chipmem[128];
 void XmProg::SendRomContents(const char *file_name)
 {
     dprintf("Sending file: '%s'\n", file_name);
-    Serial.print("Sending file: ");
-    Serial.println(file_name);
 
     memset(chipmem, 0xFF, 128);
 
