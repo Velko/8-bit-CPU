@@ -180,7 +180,7 @@ def bne(label: Optional[AddrBase]=None) -> bool:
 
 def jmp(label: AddrBase) -> bool:
     if backend is None: raise UninitializedError
-    taken, _ = backend.execute_mnemonic("jmp_addr", label)
+    taken, _ = backend.execute_mnemonic("ljmp_addr", label)
     return taken
 
 def rjmp(offset: int) -> bool:
