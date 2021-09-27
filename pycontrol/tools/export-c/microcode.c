@@ -880,7 +880,7 @@ const struct op_microcode microcode[] PROGMEM = {
     /* cf ljmp_addr  */
     { .default_steps = {0x3af83bc3, 0x3af835c3, 0x28783fcf},},
 
-    /* d0 beq_addr   */
+    /* d0 beql_addr  */
     { .default_steps = {0x3af83fcf, 0x3af83fcf},
       .f_alt = {
           /* mask: --Z- value: --Z- */
@@ -890,7 +890,7 @@ const struct op_microcode microcode[] PROGMEM = {
       },
     },
 
-    /* d1 bne_addr   */
+    /* d1 bnel_addr  */
     { .default_steps = {0x3af83fcf, 0x3af83fcf},
       .f_alt = {
           /* mask: --Z- value: ---- */
@@ -900,7 +900,7 @@ const struct op_microcode microcode[] PROGMEM = {
       },
     },
 
-    /* d2 bcs_addr   */
+    /* d2 bcsl_addr  */
     { .default_steps = {0x3af83fcf, 0x3af83fcf},
       .f_alt = {
           /* mask: -C-- value: -C-- */
@@ -910,7 +910,7 @@ const struct op_microcode microcode[] PROGMEM = {
       },
     },
 
-    /* d3 bcc_addr   */
+    /* d3 bccl_addr  */
     { .default_steps = {0x3af83fcf, 0x3af83fcf},
       .f_alt = {
           /* mask: -C-- value: ---- */
@@ -920,7 +920,7 @@ const struct op_microcode microcode[] PROGMEM = {
       },
     },
 
-    /* d4 bmi_addr   */
+    /* d4 bmil_addr  */
     { .default_steps = {0x3af83fcf, 0x3af83fcf},
       .f_alt = {
           /* mask: ---N value: ---N */
@@ -930,7 +930,7 @@ const struct op_microcode microcode[] PROGMEM = {
       },
     },
 
-    /* d5 bpl_addr   */
+    /* d5 bpll_addr  */
     { .default_steps = {0x3af83fcf, 0x3af83fcf},
       .f_alt = {
           /* mask: ---N value: ---- */
@@ -976,7 +976,7 @@ const struct op_microcode microcode[] PROGMEM = {
     /* e1 pop_LR     */
     { .default_steps = {0x39d83bc3, 0x39d835c3, 0x20783fcf},},
 
-    /* e2 call_addr  */
+    /* e2 callf_addr */
     { .default_steps = {0x3af83bc3, 0x3af835c3, 0x22f83fcf, 0x28783fcf},},
 
     /* e3 ret        */
@@ -1018,26 +1018,68 @@ const struct op_microcode microcode[] PROGMEM = {
     /* ef rjmp_imm   */
     { .default_steps = {0x12f83fc3, 0x29783fcf},},
 
-    /* f0 padding1   */
-    { .default_steps = {0x3bf83fcf},},
+    /* f0 beqr_imm   */
+    { .default_steps = {0x3af83fcf},
+      .f_alt = {
+          /* mask: --Z- value: --Z- */
+          { .mask = 0x02, .value = 0x02,
+            .steps = {0x12f83fc3, 0x29783fcf},
+          },
+      },
+    },
 
-    /* f1 padding2   */
-    { .default_steps = {0x3bf83fcf},},
+    /* f1 bner_imm   */
+    { .default_steps = {0x3af83fcf},
+      .f_alt = {
+          /* mask: --Z- value: ---- */
+          { .mask = 0x02, .value = 0x00,
+            .steps = {0x12f83fc3, 0x29783fcf},
+          },
+      },
+    },
 
-    /* f2 padding3   */
-    { .default_steps = {0x3bf83fcf},},
+    /* f2 bcsr_imm   */
+    { .default_steps = {0x3af83fcf},
+      .f_alt = {
+          /* mask: -C-- value: -C-- */
+          { .mask = 0x04, .value = 0x04,
+            .steps = {0x12f83fc3, 0x29783fcf},
+          },
+      },
+    },
 
-    /* f3 padding4   */
-    { .default_steps = {0x3bf83fcf},},
+    /* f3 bccr_imm   */
+    { .default_steps = {0x3af83fcf},
+      .f_alt = {
+          /* mask: -C-- value: ---- */
+          { .mask = 0x04, .value = 0x00,
+            .steps = {0x12f83fc3, 0x29783fcf},
+          },
+      },
+    },
 
-    /* f4 padding5   */
-    { .default_steps = {0x3bf83fcf},},
+    /* f4 bmir_imm   */
+    { .default_steps = {0x3af83fcf},
+      .f_alt = {
+          /* mask: ---N value: ---N */
+          { .mask = 0x01, .value = 0x01,
+            .steps = {0x12f83fc3, 0x29783fcf},
+          },
+      },
+    },
 
-    /* f5 padding6   */
-    { .default_steps = {0x3bf83fcf},},
+    /* f5 bplr_imm   */
+    { .default_steps = {0x3af83fcf},
+      .f_alt = {
+          /* mask: ---N value: ---- */
+          { .mask = 0x01, .value = 0x00,
+            .steps = {0x12f83fc3, 0x29783fcf},
+          },
+      },
+    },
 
-    /* f6 padding7   */
-    { .default_steps = {0x3bf83fcf},},
+    /* f6 rcall_imm  */
+    { .default_steps = {0x12f83fc3, 0x22f83fcf, 0x29783fcf},},
 
     /* f7 padding8   */
     { .default_steps = {0x3bf83fcf},},

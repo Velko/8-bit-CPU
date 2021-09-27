@@ -160,22 +160,22 @@ def ld(target: Register, addr: AddrBase) -> None:
 
 def bcs(label: Optional[AddrBase]=None) -> bool:
     if backend is None: raise UninitializedError
-    taken, _ = backend.execute_mnemonic("bcs_addr", label)
+    taken, _ = backend.execute_mnemonic("bcsl_addr", label)
     return taken
 
 def bcc(label: Optional[AddrBase]=None) -> bool:
     if backend is None: raise UninitializedError
-    taken, _ = backend.execute_mnemonic("bcc_addr", label)
+    taken, _ = backend.execute_mnemonic("bccl_addr", label)
     return taken
 
 def beq(label: Optional[AddrBase]=None) -> bool:
     if backend is None: raise UninitializedError
-    taken, _ = backend.execute_mnemonic("beq_addr", label)
+    taken, _ = backend.execute_mnemonic("beql_addr", label)
     return taken
 
 def bne(label: Optional[AddrBase]=None) -> bool:
     if backend is None: raise UninitializedError
-    taken, _ = backend.execute_mnemonic("bne_addr", label)
+    taken, _ = backend.execute_mnemonic("bnel_addr", label)
     return taken
 
 def jmp(label: AddrBase) -> bool:
@@ -221,7 +221,7 @@ def ret() -> None:
 
 def call(addr: AddrBase) -> None:
     if backend is None: raise UninitializedError
-    backend.execute_mnemonic("call_addr", addr)
+    backend.execute_mnemonic("callf_addr", addr)
 
 def ldr(target: Register, base: Register, offset: int) -> None:
     if backend is None: raise UninitializedError

@@ -12,4 +12,95 @@
     {
         asm { ljmp (target) }
     }
+
+    beq ({target}) =>
+    {
+        offset = target - $ - 1
+        assert (offset <= 127)
+        assert (offset >= -128)
+        asm { beqr (offset) }
+    }
+
+    beq ({target}) =>
+    {
+        asm { beql (target) }
+    }
+
+    bne ({target}) =>
+    {
+        offset = target - $ - 1
+        assert (offset <= 127)
+        assert (offset >= -128)
+        asm { bner (offset) }
+    }
+
+    bne ({target}) =>
+    {
+        asm { bnel (target) }
+    }
+
+    bcs ({target}) =>
+    {
+        offset = target - $ - 1
+        assert (offset <= 127)
+        assert (offset >= -128)
+        asm { bcsr (offset) }
+    }
+
+    bcs ({target}) =>
+    {
+        asm { bcsl (target) }
+    }
+
+    bcc ({target}) =>
+    {
+        offset = target - $ - 1
+        assert (offset <= 127)
+        assert (offset >= -128)
+        asm { bccr (offset) }
+    }
+
+    bcc ({target}) =>
+    {
+        asm { bccl (target) }
+    }
+
+    bmi ({target}) =>
+    {
+        offset = target - $ - 1
+        assert (offset <= 127)
+        assert (offset >= -128)
+        asm { bmir (offset) }
+    }
+
+    bmi ({target}) =>
+    {
+        asm { bmil (target) }
+    }
+
+    bpl ({target}) =>
+    {
+        offset = target - $ - 1
+        assert (offset <= 127)
+        assert (offset >= -128)
+        asm { bplr (offset) }
+    }
+
+    bpl ({target}) =>
+    {
+        asm { bpll (target) }
+    }
+
+    call ({target}) =>
+    {
+        offset = target - $ - 1
+        assert (offset <= 127)
+        assert (offset >= -128)
+        asm { rcall (offset) }
+    }
+
+    call ({target}) =>
+    {
+        asm { callf (target) }
+    }
 }

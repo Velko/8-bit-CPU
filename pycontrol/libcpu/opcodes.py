@@ -170,7 +170,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
         .add_step(PC.out, ProgMem.out, TH.load)\
         .add_step(TX.out, PC.load)
 
-    builder.add_instruction("beq", OpcodeArg.ADDR)\
+    builder.add_instruction("beql", OpcodeArg.ADDR)\
         .add_step(PC.out)\
         .add_step(PC.out)\
         .add_condition(mask=Flags.Z, value=Flags.Z)\
@@ -178,7 +178,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
             .add_step(PC.out, ProgMem.out, TH.load)\
             .add_step(TX.out, PC.load)
 
-    builder.add_instruction("bne", OpcodeArg.ADDR)\
+    builder.add_instruction("bnel", OpcodeArg.ADDR)\
         .add_step(PC.out)\
         .add_step(PC.out)\
         .add_condition(mask=Flags.Z, value=0)\
@@ -186,7 +186,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
             .add_step(PC.out, ProgMem.out, TH.load)\
             .add_step(TX.out, PC.load)
 
-    builder.add_instruction("bcs", OpcodeArg.ADDR)\
+    builder.add_instruction("bcsl", OpcodeArg.ADDR)\
         .add_step(PC.out)\
         .add_step(PC.out)\
         .add_condition(mask=Flags.C, value=Flags.C)\
@@ -194,7 +194,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
             .add_step(PC.out, ProgMem.out, TH.load)\
             .add_step(TX.out, PC.load)
 
-    builder.add_instruction("bcc", OpcodeArg.ADDR)\
+    builder.add_instruction("bccl", OpcodeArg.ADDR)\
         .add_step(PC.out)\
         .add_step(PC.out)\
         .add_condition(mask=Flags.C, value=0)\
@@ -202,7 +202,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
             .add_step(PC.out, ProgMem.out, TH.load)\
             .add_step(TX.out, PC.load)
 
-    builder.add_instruction("bmi", OpcodeArg.ADDR)\
+    builder.add_instruction("bmil", OpcodeArg.ADDR)\
         .add_step(PC.out)\
         .add_step(PC.out)\
         .add_condition(mask=Flags.N, value=Flags.N)\
@@ -210,7 +210,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
             .add_step(PC.out, ProgMem.out, TH.load)\
             .add_step(TX.out, PC.load)
 
-    builder.add_instruction("bpl", OpcodeArg.ADDR)\
+    builder.add_instruction("bpll", OpcodeArg.ADDR)\
         .add_step(PC.out)\
         .add_step(PC.out)\
         .add_condition(mask=Flags.N, value=0)\
@@ -244,7 +244,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
         .add_step(SP.out, Ram.out, TH.load, SP.inc)\
         .add_step(TX.out, LR.load)
 
-    builder.add_instruction("call", OpcodeArg.ADDR)\
+    builder.add_instruction("callf", OpcodeArg.ADDR)\
         .add_step(PC.out, ProgMem.out, TL.load)\
         .add_step(PC.out, ProgMem.out, TH.load)\
         .add_step(PC.out, LR.load)\
@@ -278,8 +278,49 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
         .add_step(PC.out, ProgMem.out, ACalc.load)\
         .add_step(ACalc.out, PC.load)
 
+    builder.add_instruction("beqr", OpcodeArg.BYTE)\
+        .add_step(PC.out)\
+        .add_condition(mask=Flags.Z, value=Flags.Z)\
+            .add_step(PC.out, ProgMem.out, ACalc.load)\
+            .add_step(ACalc.out, PC.load)
+
+    builder.add_instruction("bner", OpcodeArg.BYTE)\
+        .add_step(PC.out)\
+        .add_condition(mask=Flags.Z, value=0)\
+            .add_step(PC.out, ProgMem.out, ACalc.load)\
+            .add_step(ACalc.out, PC.load)
+
+    builder.add_instruction("bcsr", OpcodeArg.BYTE)\
+        .add_step(PC.out)\
+        .add_condition(mask=Flags.C, value=Flags.C)\
+            .add_step(PC.out, ProgMem.out, ACalc.load)\
+            .add_step(ACalc.out, PC.load)
+
+    builder.add_instruction("bccr", OpcodeArg.BYTE)\
+        .add_step(PC.out)\
+        .add_condition(mask=Flags.C, value=0)\
+            .add_step(PC.out, ProgMem.out, ACalc.load)\
+            .add_step(ACalc.out, PC.load)
+
+    builder.add_instruction("bmir", OpcodeArg.BYTE)\
+        .add_step(PC.out)\
+        .add_condition(mask=Flags.N, value=Flags.N)\
+            .add_step(PC.out, ProgMem.out, ACalc.load)\
+            .add_step(ACalc.out, PC.load)
+
+    builder.add_instruction("bplr", OpcodeArg.BYTE)\
+        .add_step(PC.out)\
+        .add_condition(mask=Flags.N, value=0)\
+            .add_step(PC.out, ProgMem.out, ACalc.load)\
+            .add_step(ACalc.out, PC.load)
+
+    builder.add_instruction("rcall", OpcodeArg.BYTE)\
+        .add_step(PC.out, ProgMem.out, ACalc.load)\
+        .add_step(PC.out, LR.load)\
+        .add_step(ACalc.out, PC.load)
+
     # create a bunch of NOPs to exceed 255 instructions
-    for n in range(1, 30):
+    for n in range(8, 30):
         builder.add_instruction(f"padding{n}")\
             .add_step()
 
