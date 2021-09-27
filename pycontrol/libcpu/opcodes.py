@@ -165,7 +165,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
             .add_step(i.out, TX.out, ACalc.load)\
             .add_step(ACalc.out, Ram.out, Flags.calc)
 
-    builder.add_instruction("jmp", OpcodeArg.ADDR)\
+    builder.add_instruction("ljmp", OpcodeArg.ADDR)\
         .add_step(PC.out, ProgMem.out, TL.load)\
         .add_step(PC.out, ProgMem.out, TH.load)\
         .add_step(TX.out, PC.load)

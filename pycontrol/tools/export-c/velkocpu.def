@@ -208,7 +208,7 @@
     tstx  ({address0}, B) => 0xcc @ address0[7:0] @ address0[15:8]
     tstx  ({address0}, C) => 0xcd @ address0[7:0] @ address0[15:8]
     tstx  ({address0}, D) => 0xce @ address0[7:0] @ address0[15:8]
-    jmp  ({address0}) => 0xcf @ address0[7:0] @ address0[15:8]
+    ljmp  ({address0}) => 0xcf @ address0[7:0] @ address0[15:8]
     beq  ({address0}) => 0xd0 @ address0[7:0] @ address0[15:8]
     bne  ({address0}) => 0xd1 @ address0[7:0] @ address0[15:8]
     bcs  ({address0}) => 0xd2 @ address0[7:0] @ address0[15:8]

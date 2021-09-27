@@ -877,7 +877,7 @@ const struct op_microcode microcode[] PROGMEM = {
     /* ce tstx_addr_D */
     { .default_steps = {0x3af83bc3, 0x3af835c3, 0x10783fc9, 0x39783f83},},
 
-    /* cf jmp_addr   */
+    /* cf ljmp_addr  */
     { .default_steps = {0x3af83bc3, 0x3af835c3, 0x28783fcf},},
 
     /* d0 beq_addr   */

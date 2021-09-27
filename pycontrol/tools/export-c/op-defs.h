@@ -209,7 +209,7 @@
 #define OP_TSTX_ADDR_B         0xcc
 #define OP_TSTX_ADDR_C         0xcd
 #define OP_TSTX_ADDR_D         0xce
-#define OP_JMP_ADDR            0xcf
+#define OP_LJMP_ADDR           0xcf
 #define OP_BEQ_ADDR            0xd0
 #define OP_BNE_ADDR            0xd1
 #define OP_BCS_ADDR            0xd2
