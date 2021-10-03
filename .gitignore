@@ -16,6 +16,8 @@
 *.hex
 *.osp
 *.o
+*.vcd
+*.out
 zz_*.ino
 /sample/
 /temp/
