@@ -3,12 +3,11 @@ module tb_161_chaining;
     reg clk;
     reg rst;
     reg cep;
+    reg [11:0] expected;
 
     counter_161 c0 ( .clk(clk), .mrn(rst), .cep(cep), .cet(1'b1));
     counter_161 c1 ( .clk(clk), .mrn(rst), .cep(cep), .cet(c0.tc));
     counter_161 c2 ( .clk(clk), .mrn(rst), .cep(cep), .cet(c1.tc));
-
-    always #5 clk = ~clk;
 
     initial begin
         $display("Chaining 161 counters...");
@@ -17,11 +16,20 @@ module tb_161_chaining;
         $dumpvars(0, tb_161_chaining);
         clk <= 0;
         cep <= 1;
+        expected <= 0;
 
         // pull reset down initially, release it soon
         rst <= 0;
-        #1 rst <= 1;
+        #1
+        rst <= 1;
 
-        #40960 $finish;
+        repeat (4096) begin
+            #5
+            `assert({c2.q, c1.q, c0.q}, expected);
+            clk <= 0;
+            #5
+            clk <= 1;
+            expected <= expected + 1;
+        end
     end
 endmodule
