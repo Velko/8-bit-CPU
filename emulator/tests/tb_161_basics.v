@@ -11,9 +11,12 @@ module tb_161_basics;
 
     always #5 clk = ~clk;
 
+    always @(posedge clk or negedge rst) begin
+        $strobe("%t, rst = %b, cep = %b, cet = %b, pen = %b, Q = %h, tc = %b", $time, rst, cep, cet, pen, c0.q, c0.tc);
+    end
+
     initial begin
         $display("Checking counter...");
-        $monitor("At %t, rst = %b, cep = %b, cet = %b, pen = %b, Q = %h, tc = %b", $time, rst, cep, cet, pen, c0.q, c0.tc);
         $dumpfile("161_basics.vcd");
         $dumpvars(0, tb_161_basics);
         clk <= 0;
@@ -24,20 +27,35 @@ module tb_161_basics;
         d <= 4'he;
 
         #1 rst <= 1;
+        $display ("Count");
 
-        #16 rst <= 0;
-        #10 rst <= 1;
+        #16 
+        rst <= 0;
+        $display ("Reset");
+        #10
+        $display ("Release reset");
+        rst <= 1;
 
-        #20 cep <= 0;
+        #20 
+        $display ("Disable CEP");
+        cep <= 0;
         #20 cep <= 1;
+        $display ("Enable CEP");
 
-        #20 cet <= 0;
+        #30
+        $display ("Parallel load");
+        pen <= 0;
+        #20
+        $display ("Disable loading");
+        pen <= 1;
+
+        #10
+        $display ("Disable CET");
+        cet <= 0;
         #20 cet <= 1;
 
+        $display ("Continue counting");
 
-        #30 pen <= 0;
-        #20 pen <= 1;
-
-        #200 $finish;
+        #170 $finish;
     end
 endmodule
