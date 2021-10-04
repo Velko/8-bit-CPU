@@ -17,6 +17,7 @@
 *.osp
 *.o
 *.vcd
+*.vvp
 *.out
 zz_*.ino
 /sample/
