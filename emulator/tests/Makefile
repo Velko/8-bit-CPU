@@ -1,4 +1,4 @@
-test: test-138 test-161-chaining test-245
+test: test-138 test-161-chaining test-245 test-173
 
 test-138: tb_138.vvp
 	vvp $<
@@ -7,6 +7,9 @@ test-161-chaining: tb_161_chaining.vvp
 	vvp $<
 
 test-245: tb_245.vvp
+	vvp $<
+
+test-173: tb_173.vvp
 	vvp $<
 
 
@@ -26,6 +29,12 @@ TB245SRC=../chips/buffer_245.v testhelpers.v tb_245.v
 
 tb_245.vvp: $(TB245SRC)
 	iverilog $(TB245SRC) -o $@
+
+TB173SRC=../chips/dff_173.v testhelpers.v tb_173.v
+
+tb_173.vvp: $(TB173SRC)
+	iverilog $(TB173SRC) -o $@
+
 
 
 clean:
