@@ -4,3 +4,8 @@
         $fatal; \
     end
 
+`define tick(signal, times ) \
+    repeat (times) begin \
+        signal <= ~signal; \
+        #5; \
+    end

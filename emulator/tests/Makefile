@@ -1,6 +1,9 @@
-test: test-138 test-161-chaining test-245 test-173 test-gp-register
+test: test-138 test-161-basics test-161-chaining test-245 test-173 test-gp-register
 
 test-138: tb_138.vvp
+	@vvp $<
+
+test-161-basics: tb_161_basics.vvp
 	@vvp $<
 
 test-161-chaining: tb_161_chaining.vvp
@@ -19,6 +22,12 @@ TB138SRC=../chips/demux_138.v testhelpers.v tb_138.v
 
 tb_138.vvp: $(TB138SRC)
 	iverilog $(TB138SRC) -o $@
+
+
+TB161BASICSRC=../chips/counter_161.v testhelpers.v tb_161_basics.v
+
+tb_161_basics.vvp: $(TB161BASICSRC)
+	iverilog $(TB161BASICSRC) -o $@
 
 
 TB161CHAINSRC=../chips/counter_161.v testhelpers.v tb_161_chaining.v

@@ -9,14 +9,12 @@ module tb_161_basics;
 
     counter_161 c0 ( .clk(clk), .mrn(rst), .cep(cep), .cet(cet), .d(d), .pen(pen));
 
-    always #5 clk = ~clk;
-
     always @(posedge clk or negedge rst) begin
-        $strobe("%t, rst = %b, cep = %b, cet = %b, pen = %b, Q = %h, tc = %b", $time, rst, cep, cet, pen, c0.q, c0.tc);
+        //$strobe("%t, rst = %b, cep = %b, cet = %b, pen = %b, Q = %h, tc = %b", $time, rst, cep, cet, pen, c0.q, c0.tc);
     end
 
     initial begin
-        $display("Checking counter...");
+        $display("Checking counter (basics)...");
         $dumpfile("161_basics.vcd");
         $dumpvars(0, tb_161_basics);
         clk <= 0;
@@ -26,36 +24,59 @@ module tb_161_basics;
         pen <= 1;
         d <= 4'he;
 
-        #1 rst <= 1;
-        $display ("Count");
+        // release reset, check if 0
+        #5 rst <= 1;
+        `assert(c0.q, 4'h0)
 
-        #16 
+        // count up to 2
+        `tick(clk, 4);
+        `assert(c0.q, 4'h2);
+
+        // count while holding reset
         rst <= 0;
-        $display ("Reset");
-        #10
-        $display ("Release reset");
+        `tick(clk, 4);
+        `assert(c0.q, 4'h0);
+
+        // release reset and keep counting
         rst <= 1;
+        `tick(clk, 18);
+        `assert(c0.q, 4'h9);
 
-        #20 
-        $display ("Disable CEP");
+        // turn off CEP and check if holds
         cep <= 0;
-        #20 cep <= 1;
-        $display ("Enable CEP");
+        `tick(clk, 6);
+        `assert(c0.q, 4'h9);
 
-        #30
-        $display ("Parallel load");
+        // re-enable CEP, parallel load
+        cep <= 1;
         pen <= 0;
-        #20
-        $display ("Disable loading");
+        `tick(clk, 2);
+        `assert(c0.q, 4'he);
+
+        // few more ticks, see if holds
+        `tick(clk, 6);
+        `assert(c0.q, 4'he);
+
+
+        // disable parallel load, count up to 15, check TC
         pen <= 1;
+        `tick(clk, 2);
+        `assert(c0.q, 4'hf);
+        `assert(c0.tc, 1'b1);
 
-        #10
-        $display ("Disable CET");
+        // disable CET
         cet <= 0;
-        #20 cet <= 1;
+        #5
+        `assert(c0.tc, 1'b0);
 
-        $display ("Continue counting");
+        // few more ticks, see if holds
+        `tick(clk, 6);
+        `assert(c0.q, 4'hf);
 
-        #170 $finish;
+        // re-enable counting, wrap-around
+        cet <= 1;
+        `tick(clk, 2);
+        `assert(c0.q, 4'h0);
+        `assert(c0.tc, 1'b0);
     end
 endmodule
