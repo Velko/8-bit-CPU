@@ -13,7 +13,9 @@
         "**/*.hex": true,
         "**/*.o": true,
         "**/.mypy_cache": true,
-        "**/.pytest_cache": true
+        "**/.pytest_cache": true,
+        "**/*.vvp": true,
+        "**/*.vcd": true
     },
     "python.analysis.extraPaths": ["pycontrol"]
 }
