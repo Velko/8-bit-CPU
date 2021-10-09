@@ -18,6 +18,7 @@ module tb_gp_register;
     gp_register r(.outn(outn), .loadn(loadn), .loutn(loutn), .routn(routn), .clk(clk), .iclk(iclk), .reset(reset), .bus(bus));
 
     initial begin
+        $display("Register module...");
         wbus <= 0;
         data <= 8'h3a;
 
@@ -31,46 +32,65 @@ module tb_gp_register;
 
         reset <= 0;
 
+        // initial bus - disconnected
         #1
-        $display(bus);
+        `assert(bus, 8'bZ);
 
+        // output register - uninitialized
         outn <= 0;
         #1
-        $display(bus);
+        `assert(bus, 8'bX);
 
+        // zero after reset
         reset <= 1;
         #1
-        $display(bus);
+        `assert(bus, 8'b0);
         reset <= 0;
 
+        // disable output
         outn <= 1;
         #1
-        $display(bus);
+        `assert(bus, 8'bZ);
 
-
+        // drive bus externally
         wbus <= 1;
         #1
+        `assert(bus, 8'h3a);
+
+        // load into register
         loadn <= 0;
-        clk <= 1;
-        #1
-        clk <= 0;
+        `tick(clk, 2);
+
+        // release bus
         wbus <= 0;
         loadn <= 1;
         #1
-        $display(bus);
+        `assert(bus, 8'bZ);
+
+        // output register
         outn <= 0;
         #1
-        $display("Bus: %h", bus);
+        `assert(bus, 8'h3a);
 
-        $display(r.alu_l);
+        // check ALU LHS output (disconnected initially)
+        `assert(r.alu_l, 8'bZ);
+
+        // enable it, holds value-after-reset
         loutn <= 0;
         #1
-        $display(r.alu_l);
-        iclk <= 1;
-        #1
-        $display(r.alu_l);
-        iclk <= 0;
+        `assert(r.alu_l, 8'h0);
 
+        // after iclk, should load from primary
+        `tick(iclk, 2);
+        `assert(r.alu_l, 8'h3a);
+
+        // check ALU RHS output (disconnected initially)
+        `assert(r.alu_r, 8'bZ);
+
+        // enable it - loaded value
+        routn <= 0;
+        #1
+        `assert(r.alu_r, 8'h3a);
 
     end
 
