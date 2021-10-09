@@ -1,19 +1,19 @@
 test: test-138 test-161-chaining test-245 test-173 test-gp-register
 
 test-138: tb_138.vvp
-	vvp $<
+	@vvp $<
 
 test-161-chaining: tb_161_chaining.vvp
-	vvp $<
+	@vvp $<
 
 test-245: tb_245.vvp
-	vvp $<
+	@vvp $<
 
 test-173: tb_173.vvp
-	vvp $<
+	@vvp $<
 
 test-gp-register: tb_gp_register.vvp
-	vvp $<
+	@vvp $<
 
 TB138SRC=../chips/demux_138.v testhelpers.v tb_138.v
 

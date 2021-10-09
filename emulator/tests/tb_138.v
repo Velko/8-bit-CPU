@@ -5,12 +5,12 @@ module tb_138;
     reg e2n;
     reg e3;
 
-    demux_138 dmx(.a(addr), .e1n(e1n), .e2n(e2n), .e3(e3)); 
+    demux_138 dmx(.a(addr), .e1n(e1n), .e2n(e2n), .e3(e3));
 
     initial begin
         $display("74xx138 demultiplexer");
-        $monitor("%b%b%b %x %b", e1n, e2n, e3, addr, dmx.y);
-        
+        //$monitor("%b%b%b %x %b", e1n, e2n, e3, addr, dmx.y);
+
         e1n <= 0;
         e2n <= 0;
         e3  <= 0;

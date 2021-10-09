@@ -11,7 +11,7 @@ module tb_161_chaining;
 
     initial begin
         $display("Chaining 161 counters...");
-        $monitor("Q = %h%h%h, tc = %b%b%b", c2.q, c1.q, c0.q, c2.tc, c1.tc, c0.tc);
+        // $monitor("Q = %h%h%h, tc = %b%b%b", c2.q, c1.q, c0.q, c2.tc, c1.tc, c0.tc);
         $dumpfile("161_chaining.vcd");
         $dumpvars(0, tb_161_chaining);
         clk <= 0;
