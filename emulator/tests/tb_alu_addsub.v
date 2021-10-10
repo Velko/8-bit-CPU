@@ -4,14 +4,16 @@ module tb_alu_addsub;
     reg [7:0] input_r;
     reg sub;
     reg outn;
+    reg cin;
 
-    alu_addsub alu(.arg_l(input_l), .arg_r(input_r), .sub(sub), .outn(outn));
+    alu_addsub alu(.arg_l(input_l), .arg_r(input_r), .cin(cin), .sub(sub), .outn(outn));
 
 
     initial begin
         input_l <= 0;
         input_r <= 1;
 
+        cin <= 0;
         outn <= 1;
         sub <= 0;
 
@@ -24,6 +26,12 @@ module tb_alu_addsub;
         #1
         `assert(alu.bus, 8'h01);
         `assert(alu.cout, 8'b0);
+
+        // enable carry-in (add one more)
+        cin <= 1;
+        #1
+        `assert(alu.bus, 8'h02);
+        cin <= 0;
 
         // go to 127 + 1
         input_l <= 127;
@@ -44,6 +52,12 @@ module tb_alu_addsub;
         #1
         `assert(alu.bus, 8'h01);
         `assert(alu.cout, 8'b0);
+
+        // enable borrow-in (subtract one more)
+        cin <= 1;
+        #1
+        `assert(alu.bus, 8'h00);
+        cin <= 0;
 
         // try 3 - 6
         input_r <= 6;
