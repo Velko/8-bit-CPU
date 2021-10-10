@@ -23,6 +23,7 @@ module tb_alu_addsub;
         outn <= 0;
         #1
         `assert(alu.bus, 8'h01);
+        `assert(alu.cout, 8'b0);
 
         // go to 127 + 1
         input_l <= 127;
@@ -34,7 +35,7 @@ module tb_alu_addsub;
         input_l <= 255;
         #1
         `assert(alu.bus, 8'h0);
-        //TODO: carry
+        `assert(alu.cout, 8'b1);
 
         // subtract 3 - 2
         sub <= 1;
@@ -42,13 +43,13 @@ module tb_alu_addsub;
         input_r <= 2;
         #1
         `assert(alu.bus, 8'h01);
-        //TODO: no borrow
+        `assert(alu.cout, 8'b0);
 
         // try 3 - 6
         input_r <= 6;
         #1
         `assert(alu.bus, 8'hfd);
-        //TODO: borrow
+        `assert(alu.cout, 8'b1);
 
 
         $display(alu.bus);
