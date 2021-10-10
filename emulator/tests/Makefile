@@ -1,4 +1,4 @@
-test: test-138 test-161-basics test-161-chaining test-245 test-173 test-gp-register test-283 test-86
+test: test-138 test-161-basics test-161-chaining test-245 test-173 test-gp-register test-283 test-86 test-alu-addsub
 
 test-138: tb_138.vvp
 	@vvp $<
@@ -23,6 +23,10 @@ test-86: tb_86.vvp
 
 test-gp-register: tb_gp_register.vvp
 	@vvp $<
+
+test-alu-addsub: tb_alu_addsub.vvp
+	@vvp $<
+
 
 TB138SRC=../chips/demux_138.v testhelpers.v tb_138.v
 
@@ -69,6 +73,10 @@ TBGPREGSRC=../chips/dff_173.v ../chips/buffer_245.v ../cpu-modules/gp_register.v
 tb_gp_register.vvp: $(TBGPREGSRC)
 	iverilog $(TBGPREGSRC) -o $@
 
+TBALUADDSUBSRC=../chips/buffer_245.v ../chips/adder_283.v ../chips/xor_86.v ../cpu-modules/alu_addsub.v testhelpers.v tb_alu_addsub.v
+
+tb_alu_addsub.vvp: $(TBALUADDSUBSRC)
+	iverilog $(TBALUADDSUBSRC) -o $@
 
 clean:
 	rm -f *.vvp
