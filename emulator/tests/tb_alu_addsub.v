@@ -10,6 +10,7 @@ module tb_alu_addsub;
 
 
     initial begin
+        $display("ALU Add/Sub...");
         input_l <= 0;
         input_r <= 1;
 
@@ -26,6 +27,7 @@ module tb_alu_addsub;
         #1
         `assert(alu.bus, 8'h01);
         `assert(alu.cout, 8'b0);
+        `assert(alu.vout, 8'b0);
 
         // enable carry-in (add one more)
         cin <= 1;
@@ -37,13 +39,14 @@ module tb_alu_addsub;
         input_l <= 127;
         #1
         `assert(alu.bus, 8'h80);
-        //TODO: signed overflow
+        `assert(alu.vout, 8'b1);
 
         // go to 255 + 1
         input_l <= 255;
         #1
         `assert(alu.bus, 8'h0);
         `assert(alu.cout, 8'b1);
+        `assert(alu.vout, 8'b0);
 
         // subtract 3 - 2
         sub <= 1;
@@ -66,7 +69,7 @@ module tb_alu_addsub;
         `assert(alu.cout, 8'b1);
 
 
-        $display(alu.bus);
+//        $display(alu.bus);
 
 
 
