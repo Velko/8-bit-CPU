@@ -222,6 +222,10 @@ Repository index
     * **serprog** - (abandoned experiment) attempting to implement SerProg ([FlashROM][flashrom]) for EEPROM programmer
     * **xmprog** - (very early stage) XMODEM-compatible EEPROM programmer
 * **doc** - some (mostly outdated) design thoughts, BOM, etc.
+* **emulator** - hardware emulator in Verilog
+    * **chips** - Verilog descriptions of (mostly 74xx) chips
+    * **cpu-modules** - "wired up" CPU modules
+    * **tests** - test benches for chips and modules
 * **hardware** - hardware schematics, boards, etc.
     * **breadboard** - Fritzig projects for some modules
     * **pcb** - KiCad schematics and boards
