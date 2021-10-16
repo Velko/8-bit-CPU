@@ -10,9 +10,12 @@ module tb_flags_reg;
     reg iclk;
     reg reset;
 
+    reg vin;
+    reg cin;
+
     integer i;
 
-    flags_reg flags(.calcn(calcn), .clk(clk), .iclk(iclk), .reset(reset), .bus(bus));
+    flags_reg flags(.calcn(calcn), .clk(clk), .iclk(iclk), .reset(reset), .bus(bus), .vin(vin), .cin(cin));
 
     initial begin
         $display("Flags register module...");
@@ -23,6 +26,8 @@ module tb_flags_reg;
         reset <= 0;
         clk <= 0;
         iclk <= 0;
+        vin <= 1'bz;
+        cin <= 1'bz;
 
         #1
         `assert(flags.fout, 4'bx);
@@ -62,6 +67,62 @@ module tb_flags_reg;
             `tick(iclk, 2);
             `assert(flags.fout[1], 1'b0);
         end
+
+        // check oVerflow input
+        vin <= 1;
+        #1
+        `tick(clk, 2);
+        `tick(iclk, 2);
+        `assert(flags.fout[3], 1'b1);
+
+        // release the pin, see if it holds
+        vin <= 1'bz;
+        #1
+        `tick(clk, 2);
+        `tick(iclk, 2);
+        `assert(flags.fout[3], 1'b1);
+
+        // drive low
+        vin <= 0;
+        #1
+        `tick(clk, 2);
+        `tick(iclk, 2);
+        `assert(flags.fout[3], 1'b0);
+
+        // release the pin, see if it holds
+        vin <= 1'bz;
+        #1
+        `tick(clk, 2);
+        `tick(iclk, 2);
+        `assert(flags.fout[3], 1'b0);
+
+        // same with Carry input
+        cin <= 1;
+        #1
+        `tick(clk, 2);
+        `tick(iclk, 2);
+        `assert(flags.fout[2], 1'b1);
+
+        // release the pin, see if it holds
+        cin <= 1'bz;
+        #1
+        `tick(clk, 2);
+        `tick(iclk, 2);
+        `assert(flags.fout[2], 1'b1);
+
+        // drive low
+        cin <= 0;
+        #1
+        `tick(clk, 2);
+        `tick(iclk, 2);
+        `assert(flags.fout[2], 1'b0);
+
+        // release the pin, see if it holds
+        cin <= 1'bz;
+        #1
+        `tick(clk, 2);
+        `tick(iclk, 2);
+        `assert(flags.fout[2], 1'b0);
 
     end
 
