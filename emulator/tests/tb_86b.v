@@ -5,7 +5,7 @@ module tb_86b;
 
     integer i;
 
-    xor_86b op_xor(.a(a), .b(b));
+    xor_86b logic_op(.a(a), .b(b));
 
     initial begin
         $display("74xx86 XOR (bus variant)...");
@@ -18,19 +18,19 @@ module tb_86b;
             b[i] <= 0;
 
             #1
-            `assert(op_xor.y[i], 1'b0);
+            `assert(logic_op.y, (4'bX & ~(1 << i)));
 
             a[i] <= 1;
             #1
-            `assert(op_xor.y[i], 1'b1);
+            `assert(logic_op.y, (4'bX | (1 << i)));
 
             b[i] <= 1;
             #1
-            `assert(op_xor.y[i], 1'b0);
+            `assert(logic_op.y, (4'bX & ~(1 << i)));
 
             a[i] <= 0;
             #1
-            `assert(op_xor.y[i], 1'b1);
+            `assert(logic_op.y, (4'bX | (1 << i)));
         end
 
     end
