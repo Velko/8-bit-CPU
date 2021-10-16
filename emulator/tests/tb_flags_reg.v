@@ -4,6 +4,8 @@ module tb_flags_reg;
     wire [7:0] bus;
     reg wbus;
 
+    reg boutn;
+    reg bloadn;
     reg calcn;
 
     reg clk;
@@ -15,13 +17,15 @@ module tb_flags_reg;
 
     integer i;
 
-    flags_reg flags(.calcn(calcn), .clk(clk), .iclk(iclk), .reset(reset), .bus(bus), .vin(vin), .cin(cin));
+    flags_reg flags(.boutn(boutn), .bloadn(bloadn), .calcn(calcn), .clk(clk), .iclk(iclk), .reset(reset), .bus(bus), .vin(vin), .cin(cin));
 
     initial begin
         $display("Flags register module...");
 
         wbus <= 1;
 
+        boutn <= 1;
+        bloadn <= 1;
         calcn <= 1;
         reset <= 0;
         clk <= 0;
@@ -123,6 +127,21 @@ module tb_flags_reg;
         `tick(clk, 2);
         `tick(iclk, 2);
         `assert(flags.fout[2], 1'b0);
+
+
+        // check loading from bus directly
+        calcn <= 1;
+        bloadn <= 0;
+
+        // bits loaded as set
+        for (i = 0; i < 4; i = i + 1) begin
+            data <= 1 << i;
+            #1
+            `tick(clk, 2);
+            `tick(iclk, 2);
+            `assert(flags.fout, 1 << i);
+        end
+
 
     end
 
