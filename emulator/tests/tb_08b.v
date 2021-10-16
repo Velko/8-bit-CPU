@@ -1,14 +1,14 @@
-module tb_08;
+module tb_08b;
 
     reg [3:0] a;
     reg [3:0] b;
 
     integer i;
 
-    and_08 logic_op(.a(a), .b(b));
+    and_08b logic_op(.a(a), .b(b));
 
     initial begin
-        $display("74xx08 AND...");
+        $display("74xx08 AND (bus variant)...");
 
         for (i = 0; i < 4; i = i + 1) begin
             a <= 4'bX;

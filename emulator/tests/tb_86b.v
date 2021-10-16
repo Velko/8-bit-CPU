@@ -1,14 +1,14 @@
-module tb_86;
+module tb_86b;
 
     reg [3:0] a;
     reg [3:0] b;
 
     integer i;
 
-    xor_86 op_xor(.a(a), .b(b));
+    xor_86b op_xor(.a(a), .b(b));
 
     initial begin
-        $display("74xx86 XOR...");
+        $display("74xx86 XOR (bus variant)...");
 
         for (i = 0; i < 4; i = i + 1) begin
             a <= 4'bX;

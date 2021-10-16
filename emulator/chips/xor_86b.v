@@ -1,8 +1,8 @@
-module and_08 (
+module xor_86b (
     input [3:0] a,
     input [3:0] b,
     output[3:0] y);
 
-    assign y = a & b;
+    assign y = a ^ b;
 
 endmodule
