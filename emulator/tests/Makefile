@@ -1,4 +1,4 @@
-test: test-138 test-161-basics test-161-chaining test-245 test-173 test-gp-register test-283 test-86b test-86p test-alu-addsub test-08b
+test: test-138 test-161-basics test-161-chaining test-245 test-173 test-gp-register test-283 test-86b test-86p test-alu-addsub test-08b test-08p
 
 test-138: tb_138.vvp
 	@vvp $<
@@ -25,6 +25,9 @@ test-86p: tb_86p.vvp
 	@vvp $<
 
 test-08b: tb_08b.vvp
+	@vvp $<
+
+test-08p: tb_08p.vvp
 	@vvp $<
 
 test-gp-register: tb_gp_register.vvp
@@ -82,6 +85,11 @@ TB08BSRC=../chips/and_08b.v testhelpers.v tb_08b.v
 
 tb_08b.vvp: $(TB08BSRC)
 	iverilog $(TB08BSRC) -o $@
+
+TB08PSRC=../chips/and_08p.v testhelpers.v tb_08p.v
+
+tb_08p.vvp: $(TB08PSRC)
+	iverilog $(TB08PSRC) -o $@
 
 
 TBGPREGSRC=../chips/dff_173.v ../chips/buffer_245.v ../cpu-modules/gp_register.v testhelpers.v tb_gp_register.v
