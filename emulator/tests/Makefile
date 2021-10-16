@@ -97,7 +97,7 @@ TBGPREGSRC=../chips/dff_173.v ../chips/buffer_245.v ../cpu-modules/gp_register.v
 tb_gp_register.vvp: $(TBGPREGSRC)
 	iverilog $(TBGPREGSRC) -o $@
 
-TBALUADDSUBSRC=../chips/buffer_245.v ../chips/adder_283.v ../chips/xor_86b.v ../chips/and_08b.v ../cpu-modules/alu_addsub.v testhelpers.v tb_alu_addsub.v
+TBALUADDSUBSRC=../chips/buffer_245.v ../chips/adder_283.v ../chips/xor_86b.v ../chips/xor_86p.v ../chips/and_08p.v ../cpu-modules/alu_addsub.v testhelpers.v tb_alu_addsub.v
 
 tb_alu_addsub.vvp: $(TBALUADDSUBSRC)
 	iverilog $(TBALUADDSUBSRC) -o $@
