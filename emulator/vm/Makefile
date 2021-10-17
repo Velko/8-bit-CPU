@@ -8,7 +8,7 @@ SRC=main.cpp
 
 
 engine: $(ALUBLOCKSRC) $(SRC)
-	verilator --cc --exe --build --top-module alu_block $^
+	verilator --cc --exe -Wall --build --top-module alu_block $^
 
 
 clean:
