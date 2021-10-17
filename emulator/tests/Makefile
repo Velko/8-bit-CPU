@@ -1,6 +1,6 @@
 test: test-138 test-161-basics test-161-chaining test-245 test-173 test-283 test-86b test-86p \
       test-08b test-08p test-02b test-02p test-157b test-125p \
-      test-gp-register test-alu-addsub test-flags-reg
+      test-gp-register test-alu-addsub test-flags-reg test-alu-block
 
 print:
 	echo $(addprefix tb_,$(addsuffix .vvp,$(subst -,_, $(BENCHES))))
@@ -101,6 +101,12 @@ TBFLGREGSRC=../chips/dff_173.v ../chips/nor_02b.v ../chips/and_08p.v ../chips/mu
 
 tb_flags-reg.vvp: $(TBFLGREGSRC)
 	iverilog -Wall $(TBFLGREGSRC) -o $@
+
+TBALUBLOCKSRC=../chips/dff_173.v ../chips/buffer_245.v ../chips/nor_02b.v ../chips/and_08p.v ../chips/mux_157b.v ../chips/buffer_125p.v ../chips/adder_283.v ../chips/xor_86b.v ../chips/xor_86p.v ../cpu-modules/gp_register.v  ../cpu-modules/alu_addsub.v ../cpu-modules/flags_reg.v ../cpu-modules/alu_block.v testhelpers.v tb_alu_block.v
+
+tb_alu-block.vvp: $(TBALUBLOCKSRC)
+	iverilog -Wall $(TBALUBLOCKSRC) -o $@
+
 
 clean:
 	rm -f *.vvp
