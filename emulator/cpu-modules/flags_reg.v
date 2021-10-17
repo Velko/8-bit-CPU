@@ -9,8 +9,8 @@ module flags_reg(
 
     inout [7:0] bus,
 
-    input vin,
-    input cin,
+    inout vin,
+    inout cin,
 
     output [3:0] fout);
 

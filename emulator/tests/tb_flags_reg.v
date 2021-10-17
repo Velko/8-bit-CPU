@@ -15,9 +15,12 @@ module tb_flags_reg;
     reg vin;
     reg cin;
 
+    wire vin_w;
+    wire cin_w;
+
     integer i;
 
-    flags_reg flags(.boutn(boutn), .bloadn(bloadn), .calcn(calcn), .clk(clk), .iclk(iclk), .reset(reset), .bus(bus), .vin(vin), .cin(cin));
+    flags_reg flags(.boutn(boutn), .bloadn(bloadn), .calcn(calcn), .clk(clk), .iclk(iclk), .reset(reset), .bus(bus), .vin(vin_w), .cin(cin_w));
 
     initial begin
         $display("Flags register module...");
@@ -161,5 +164,7 @@ module tb_flags_reg;
     end
 
     assign bus = wbus ? data : 8'bZ;
+    assign vin_w = vin;
+    assign cin_w = cin;
 
 endmodule
