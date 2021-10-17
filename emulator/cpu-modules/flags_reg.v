@@ -17,6 +17,7 @@ module flags_reg(
     wire cval;
     wire vval;
 
+    /* verilator lint_off PINMISSING */
     dff_173 reg_prim(.mr(reset), .cp(clk), .oe1n(1'b0), .oe2n(1'b0), .e1n(zc_and.y4), .e2n(zc_and.y4), .d(mx.y));
     dff_173 reg_sec(.mr(reset), .cp(iclk), .oe1n(1'b0), .oe2n(1'b0), .e1n(1'b0), .e2n(1'b0), .d(reg_prim.q), .q(fout));
 
