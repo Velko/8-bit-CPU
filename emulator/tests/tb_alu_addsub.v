@@ -21,6 +21,8 @@ module tb_alu_addsub;
         // output disabled initially
         #1
         `assert(alu.bus, 8'bZ);
+        `assert(alu.vout, 1'bz);
+        `assert(alu.cout, 1'bz);
 
         // enable output, check 0 + 1
         outn <= 0;
