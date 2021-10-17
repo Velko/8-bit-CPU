@@ -48,6 +48,7 @@ int main(int argc, char **argv)
 
     alu->eval();
     VL_PRINTF("%d\n", alu->main_bus);
+
     alu->main_bus = 24;
     alu->clk = 1;
     alu->eval();
@@ -58,6 +59,7 @@ int main(int argc, char **argv)
     alu->eval();
     VL_PRINTF("%d\n", alu->main_bus);
 
+    alu->a_outn = 1;
     alu->iclk = 1;
 
     alu->eval();
@@ -65,8 +67,9 @@ int main(int argc, char **argv)
     alu->iclk = 0;
     alu->a_loadn = 1;
     alu->b_loadn = 0;
-    alu->main_bus = 18;
     alu->eval();
+    alu->main_bus = 18;
+
     alu->clk = 1;
     alu->eval();
 
@@ -78,7 +81,7 @@ int main(int argc, char **argv)
     alu->iclk = 0;
     alu->b_loadn = 1;
 
-    alu->b_outn = 0;
+    alu->addsub_outn = 0;
     alu->eval();
 
     VL_PRINTF("%d\n", alu->main_bus);
