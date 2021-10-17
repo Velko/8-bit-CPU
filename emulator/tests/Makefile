@@ -1,54 +1,11 @@
-test: test-138 test-161-basics test-161-chaining test-245 test-173 test-gp-register test-283 test-86b test-86p test-alu-addsub test-08b test-08p test-02b test-02p test-flags-reg test-157b test-125p
+test: test-138 test-161-basics test-161-chaining test-245 test-173 test-283 test-86b test-86p \
+      test-08b test-08p test-02b test-02p test-157b test-125p \
+      test-gp-register test-alu-addsub test-flags-reg
 
-test-138: tb_138.vvp
-	@vvp $<
+print:
+	echo $(addprefix tb_,$(addsuffix .vvp,$(subst -,_, $(BENCHES))))
 
-test-161-basics: tb_161_basics.vvp
-	@vvp $<
-
-test-161-chaining: tb_161_chaining.vvp
-	@vvp $<
-
-test-245: tb_245.vvp
-	@vvp $<
-
-test-173: tb_173.vvp
-	@vvp $<
-
-test-283: tb_283.vvp
-	@vvp $<
-
-test-86b: tb_86b.vvp
-	@vvp $<
-
-test-86p: tb_86p.vvp
-	@vvp $<
-
-test-08b: tb_08b.vvp
-	@vvp $<
-
-test-08p: tb_08p.vvp
-	@vvp $<
-
-test-02b: tb_02b.vvp
-	@vvp $<
-
-test-02p: tb_02p.vvp
-	@vvp $<
-
-test-157b: tb_157b.vvp
-	@vvp $<
-
-test-125p: tb_125p.vvp
-	@vvp $<
-
-test-gp-register: tb_gp_register.vvp
-	@vvp $<
-
-test-alu-addsub: tb_alu_addsub.vvp
-	@vvp $<
-
-test-flags-reg: tb_flags_reg.vvp
+test-%: tb_%.vvp
 	@vvp $<
 
 
@@ -60,13 +17,13 @@ tb_138.vvp: $(TB138SRC)
 
 TB161BASICSRC=../chips/counter_161.v testhelpers.v tb_161_basics.v
 
-tb_161_basics.vvp: $(TB161BASICSRC)
+tb_161-basics.vvp: $(TB161BASICSRC)
 	iverilog $(TB161BASICSRC) -o $@
 
 
 TB161CHAINSRC=../chips/counter_161.v testhelpers.v tb_161_chaining.v
 
-tb_161_chaining.vvp: $(TB161CHAINSRC)
+tb_161-chaining.vvp: $(TB161CHAINSRC)
 	iverilog $(TB161CHAINSRC) -o $@
 
 
@@ -131,18 +88,18 @@ tb_125p.vvp: $(TB125PSRC)
 
 TBGPREGSRC=../chips/dff_173.v ../chips/buffer_245.v ../cpu-modules/gp_register.v testhelpers.v tb_gp_register.v
 
-tb_gp_register.vvp: $(TBGPREGSRC)
+tb_gp-register.vvp: $(TBGPREGSRC)
 	iverilog $(TBGPREGSRC) -o $@
 
 TBALUADDSUBSRC=../chips/buffer_245.v ../chips/adder_283.v ../chips/xor_86b.v ../chips/xor_86p.v ../chips/and_08p.v ../cpu-modules/alu_addsub.v testhelpers.v tb_alu_addsub.v
 
-tb_alu_addsub.vvp: $(TBALUADDSUBSRC)
+tb_alu-addsub.vvp: $(TBALUADDSUBSRC)
 	iverilog $(TBALUADDSUBSRC) -o $@
 
 
 TBFLGREGSRC=../chips/dff_173.v ../chips/nor_02b.v ../chips/and_08p.v ../chips/mux_157b.v ../chips/buffer_125p.v ../cpu-modules/flags_reg.v testhelpers.v tb_flags_reg.v
 
-tb_flags_reg.vvp: $(TBFLGREGSRC)
+tb_flags-reg.vvp: $(TBFLGREGSRC)
 	iverilog $(TBFLGREGSRC) -o $@
 
 clean:
