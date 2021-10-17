@@ -5,9 +5,9 @@ module tb_161_chaining;
     reg cep;
     reg [11:0] expected;
 
-    counter_161 c0 ( .clk(clk), .mrn(rst), .cep(cep), .cet(1'b1));
-    counter_161 c1 ( .clk(clk), .mrn(rst), .cep(cep), .cet(c0.tc));
-    counter_161 c2 ( .clk(clk), .mrn(rst), .cep(cep), .cet(c1.tc));
+    counter_161 c0 ( .clk(clk), .mrn(rst), .cep(cep), .cet(1'b1), .pen(1'b1), .d(4'h0));
+    counter_161 c1 ( .clk(clk), .mrn(rst), .cep(cep), .cet(c0.tc), .pen(1'b1), .d(4'h0));
+    counter_161 c2 ( .clk(clk), .mrn(rst), .cep(cep), .cet(c1.tc), .pen(1'b1), .d(4'h0));
 
     initial begin
         $display("74xx161 counter (chaining)...");

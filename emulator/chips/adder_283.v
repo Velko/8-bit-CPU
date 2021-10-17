@@ -5,6 +5,6 @@ module adder_283 (
     output [3:0] s,
     output cout);
 
-    assign {cout, s} = a + b + cin;
+    assign {cout, s} = a + b + {4'b0000, cin};
 
 endmodule
