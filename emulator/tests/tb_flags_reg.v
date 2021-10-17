@@ -142,6 +142,21 @@ module tb_flags_reg;
             `assert(flags.fout, 1 << i);
         end
 
+        // load bits and output back
+        for (i = 0; i < 4; i = i + 1) begin
+            data <= 1 << i;
+            wbus <= 1;
+            boutn <= 1;
+            #1
+            `tick(clk, 2);
+            `tick(iclk, 2);
+            wbus <= 0;
+            #1
+            `assert(bus, 8'bz);
+            boutn <= 0;
+            #1
+            `assert(bus, {4'bz, (4'b1 << i)});
+        end
 
     end
 

@@ -140,7 +140,7 @@ tb_alu_addsub.vvp: $(TBALUADDSUBSRC)
 	iverilog $(TBALUADDSUBSRC) -o $@
 
 
-TBFLGREGSRC=../chips/dff_173.v ../chips/nor_02b.v ../chips/and_08p.v ../chips/mux_157b.v ../cpu-modules/flags_reg.v testhelpers.v tb_flags_reg.v
+TBFLGREGSRC=../chips/dff_173.v ../chips/nor_02b.v ../chips/and_08p.v ../chips/mux_157b.v ../chips/buffer_125p.v ../cpu-modules/flags_reg.v testhelpers.v tb_flags_reg.v
 
 tb_flags_reg.vvp: $(TBFLGREGSRC)
 	iverilog $(TBFLGREGSRC) -o $@
