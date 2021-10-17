@@ -86,26 +86,26 @@ tb_125p.vvp: $(TB125PSRC)
 	iverilog -Wall $^ -o $@
 
 
-GPREGSRC=../chips/dff_173.v ../chips/buffer_245.v ../cpu-modules/gp_register.v
+GPREGSRC=../cpu-modules/gp_register.v ../chips/dff_173.v ../chips/buffer_245.v
 TBGPREGSRC=$(GPREGSRC) testhelpers.v tb_gp_register.v
 
 tb_gp-register.vvp: $(TBGPREGSRC)
 	iverilog -Wall $^ -o $@
 
-ALUADDSUBSRC=../chips/buffer_245.v ../chips/adder_283.v ../chips/xor_86b.v ../chips/xor_86p.v ../chips/and_08p.v ../chips/buffer_125p.v ../cpu-modules/alu_addsub.v
+ALUADDSUBSRC=../cpu-modules/alu_addsub.v ../chips/buffer_245.v ../chips/adder_283.v ../chips/xor_86b.v ../chips/xor_86p.v ../chips/and_08p.v ../chips/buffer_125p.v
 TBALUADDSUBSRC=$(ALUADDSUBSRC) testhelpers.v tb_alu_addsub.v
 
 tb_alu-addsub.vvp: $(TBALUADDSUBSRC)
 	iverilog -Wall $^ -o $@
 
 
-FLGREGSRC=../chips/dff_173.v ../chips/nor_02b.v ../chips/and_08p.v ../chips/mux_157b.v ../chips/buffer_125p.v ../cpu-modules/flags_reg.v
+FLGREGSRC=../cpu-modules/flags_reg.v ../chips/dff_173.v ../chips/nor_02b.v ../chips/and_08p.v ../chips/mux_157b.v ../chips/buffer_125p.v
 TBFLGREGSRC=$(FLGREGSRC) testhelpers.v tb_flags_reg.v
 
 tb_flags-reg.vvp: $(TBFLGREGSRC)
 	iverilog -Wall $^ -o $@
 
-ALUBLOCKSRC=$(GPREGSRC) $(ALUADDSUBSRC) $(FLGREGSRC) ../cpu-modules/alu_block.v
+ALUBLOCKSRC=../cpu-modules/alu_block.v $(GPREGSRC) $(ALUADDSUBSRC) $(FLGREGSRC)
 TBALUBLOCKSRC=$(ALUBLOCKSRC) testhelpers.v tb_alu_block.v
 
 tb_alu-block.vvp: $(TBALUBLOCKSRC)
