@@ -1,4 +1,4 @@
-module tb_138;
+module tb_283;
 
     reg [3:0] a;
     reg [3:0] b;
@@ -10,7 +10,7 @@ module tb_138;
     adder_283 adder(.a(a), .b(b), .cin(cin));
 
 initial begin
-    $display("Adder...");
+    $display("74xx283 adder...");
 
     // loop all combinations with and without carry
     for (k = 0; k < 2; k = k + 1) begin

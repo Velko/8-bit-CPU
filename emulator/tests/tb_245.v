@@ -11,6 +11,8 @@ module tb_245;
     assign win = data;
 
     initial begin
+        $display("74xx245 buffer...");
+
         data <= 8'ha5;
         oen <= 1;
         dir <= 1;

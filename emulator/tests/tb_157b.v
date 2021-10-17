@@ -9,11 +9,11 @@ module tb_157;
     mux_157b mux(.a(a), .b(b), .en(en), .sel(sel));
 
     initial begin
-        $display("74xx157 MUX...");
+        $display("74xx157 mux (bus variant)...");
 
         a <= 4'bx;
         b <= 4'bx;
-        sel <= 1'bx;        
+        sel <= 1'bx;
 
         en <= 1;
         #1
@@ -39,8 +39,8 @@ module tb_157;
         `assert(mux.y, 4'b1000);
 
         a <= 4'bx;
-        sel <= 1;        
-        
+        sel <= 1;
+
         b <= 4'b0001;
         #1
         `assert(mux.y, 4'b0001);
@@ -56,8 +56,6 @@ module tb_157;
         b <= 4'b1000;
         #1
         `assert(mux.y, 4'b1000);
-        
-        
 
     end
 

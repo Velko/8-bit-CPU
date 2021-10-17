@@ -11,6 +11,7 @@ module tb_173;
     dff_173 dff(.mr(mr), .cp(cp), .e1n(e1n), .e2n(e2n), .oe1n(oe1n), .oe2n(oe2n), .d(data));
 
     initial begin
+        $display("74xx173 D flip-flop...");
         cp <= 0;
         mr <= 0;
 

@@ -14,7 +14,7 @@ module tb_161_basics;
     end
 
     initial begin
-        $display("Checking counter (basics)...");
+        $display("74xx161 counter (basics)...");
         $dumpfile("161_basics.vcd");
         $dumpvars(0, tb_161_basics);
         clk <= 0;

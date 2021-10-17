@@ -10,7 +10,7 @@ module tb_161_chaining;
     counter_161 c2 ( .clk(clk), .mrn(rst), .cep(cep), .cet(c1.tc));
 
     initial begin
-        $display("Chaining 161 counters...");
+        $display("74xx161 counter (chaining)...");
         // $monitor("Q = %h%h%h, tc = %b%b%b", c2.q, c1.q, c0.q, c2.tc, c1.tc, c0.tc);
         $dumpfile("161_chaining.vcd");
         $dumpvars(0, tb_161_chaining);
