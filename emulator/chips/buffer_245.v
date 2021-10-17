@@ -4,7 +4,13 @@ module buffer_245 (
     inout [7:0] a,
     inout [7:0] b);
 
-    assign a = !dir && !oen ? b : 8'bZ;
-    assign b = dir && !oen ? a : 8'bZ;
+    reg [7:0] temp;
+
+    always @ (dir or a or b) begin
+        temp = dir ? a : b;
+    end
+
+    assign a = !dir && !oen ? temp : 8'bZ;
+    assign b = dir && !oen ? temp : 8'bZ;
 
 endmodule
