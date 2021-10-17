@@ -10,7 +10,7 @@ module dff_173(
 
     reg [3:0] data;
 
-    assign q = !oe1n && !oe2n ? data : 'bZ;
+    assign q = !oe1n && !oe2n ? data : 4'bZ;
 
     always @ (posedge cp or posedge mr) begin
         if (mr)
