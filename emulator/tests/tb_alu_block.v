@@ -15,7 +15,7 @@ module tb_alu_block;
     reg fdata;
     wire [7:0] main_bus;
 
-    alu_block ab(.main_bus(main_bus), .reset(reset), .a_outn(aoutn), .b_outn(boutn), .addsub_outn(soutn), .a_loadn(aloadn), .b_loadn(bloadn), .clk(clk), .iclk(iclk), .alt(alt), .calcfn(cfn));
+    alu_block ab(.main_bus(main_bus), .rst(reset), .a_outn(aoutn), .b_outn(boutn), .addsub_outn(soutn), .a_loadn(aloadn), .b_loadn(bloadn), .clk(clk), .iclk(iclk), .alt(alt), .calcfn(cfn));
 
     initial begin
         fdata <= 0;
@@ -45,6 +45,7 @@ module tb_alu_block;
         // load into B
         aloadn <= 1;
         bloadn <= 0;
+        cfn <= 0;
         data <= 8'd18;
         #1
         `tick(clk, 2);
@@ -64,7 +65,7 @@ module tb_alu_block;
         aloadn <= 1;
         aoutn <= 0;
         #1
-        $display("%d", main_bus);
+        $display("%d %h", main_bus, ab.fout);
 
     end
 
