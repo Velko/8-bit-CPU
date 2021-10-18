@@ -11,6 +11,7 @@ void CPU::off()
     iclk = 0;
     alt = 0;
     calcfn = 1;
+    cin = 0;
 
     eval();
 }

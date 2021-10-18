@@ -10,12 +10,13 @@ module tb_alu_block;
     reg iclk;
     reg alt;
     reg cfn;
+    reg cin;
 
     reg [7:0] data;
     reg fdata;
     wire [7:0] main_bus;
 
-    alu_block ab(.main_bus(main_bus), .rst(reset), .outctl(outctl), .loadctl(loadctl), .clk(clk), .iclk(iclk), .alt(alt), .calcfn(cfn), .arg_l(arg_l), .arg_r(arg_r));
+    alu_block ab(.main_bus(main_bus), .rst(reset), .outctl(outctl), .loadctl(loadctl), .clk(clk), .iclk(iclk), .alt(alt), .calcfn(cfn), .arg_l(arg_l), .arg_r(arg_r), .cin(cin));
 
     initial begin
         fdata <= 0;
@@ -28,6 +29,7 @@ module tb_alu_block;
         cfn <= 1;
         arg_l <= 0;
         arg_r <= 6;
+        cin <= 0;
 
         reset <= 1;
         #1
