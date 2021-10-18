@@ -4,7 +4,7 @@ VPATH=obj_dir/
 
 all: engine
 
-SRC=main.cpp
+SRC=main.cpp cpu.cpp
 
 
 engine: $(ALUBLOCKSRC) $(SRC)

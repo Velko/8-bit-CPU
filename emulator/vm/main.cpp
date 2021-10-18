@@ -1,5 +1,5 @@
 #include <cstdio>
-#include "Valu_block.h"
+#include "cpu.h"
 
 int main(int argc, char **argv)
 {
@@ -22,69 +22,73 @@ int main(int argc, char **argv)
     // Create logs/ directory in case we have traces to put under it
     Verilated::mkdir("logs");
 
-    Valu_block *alu = new Valu_block();
+    CPU *alu = new CPU();
 
-    alu->reset = 0;
-    alu->a_loadn = 1;
-    alu->b_loadn = 1;
-    //fout,
+    alu->off();
 
-    alu->a_outn = 1;
-    alu->b_outn = 1;
-    alu->addsub_outn = 1;
-
-    alu->clk = 0;
-    alu->iclk = 0;
-    alu->alt = 0;
-    alu->calcfn = 1;
-
-    alu->eval();
+    alu->reset();
 
     VL_PRINTF("%d\n", alu->main_bus);
 
-    alu->main_bus = 24;
-
+    // Load 24 into A
     alu->a_loadn = 0;
-
     alu->eval();
-    VL_PRINTF("%d\n", alu->main_bus);
-
     alu->main_bus = 24;
-    alu->clk = 1;
-    alu->eval();
-    alu->clk = 0;
-
+    alu->clock_tick();
     alu->a_loadn = 1;
+
+    // Output A on to the bus
     alu->a_outn = 0;
     alu->eval();
     VL_PRINTF("%d\n", alu->main_bus);
-
     alu->a_outn = 1;
-    alu->iclk = 1;
 
-    alu->eval();
-
-    alu->iclk = 0;
-    alu->a_loadn = 1;
+    // Load 18 into B
     alu->b_loadn = 0;
     alu->eval();
     alu->main_bus = 18;
-
-    alu->clk = 1;
-    alu->eval();
-
-    alu->clk = 0;
-    alu->iclk = 1;
-
-    alu->eval();
-
-    alu->iclk = 0;
+    alu->clock_tick();
     alu->b_loadn = 1;
 
+    // Add A to B, load result into A
     alu->addsub_outn = 0;
+    alu->a_loadn = 0;
+    alu->calcfn = 0;
     alu->eval();
+    alu->clock_tick();
+    alu->addsub_outn = 1;
+    alu->a_loadn = 1;
+    alu->calcfn = 1;
 
-    VL_PRINTF("%d\n", alu->main_bus);
+    // Output A on to the bus once more
+    alu->a_outn = 0;
+    alu->eval();
+    VL_PRINTF("%d %x\n", alu->main_bus, alu->fout);
+    alu->a_outn = 1;
+
+
+    // Load value into B, so that it wraps around to 0, should produce -CZ- flags
+    alu->b_loadn = 0;
+    alu->eval();
+    alu->main_bus = 256 - 42;
+    alu->clock_tick();
+    alu->b_loadn = 1;
+
+    // Add A to B, load result into A
+    alu->addsub_outn = 0;
+    alu->a_loadn = 0;
+    alu->calcfn = 0;
+    alu->eval();
+    alu->clock_tick();
+    alu->addsub_outn = 1;
+    alu->a_loadn = 1;
+    alu->calcfn = 1;
+
+    // Output A on to the bus once more
+    alu->a_outn = 0;
+    alu->eval();
+    VL_PRINTF("%d %x\n", alu->main_bus, alu->fout);
+    alu->a_outn = 1;
 
     // Final model cleanup
     alu->final();
