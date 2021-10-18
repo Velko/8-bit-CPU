@@ -51,12 +51,39 @@ module tb_alu_block;
         #1
         `tick(clk, 2);
         `tick(iclk, 2);
+        loadctl <= 15;
 
         // read A
         outctl <= 0;
         loadctl <= 15;
         #1
         $display("%d %h", main_bus, ab.fout);
+        `assert(main_bus, 8'd42);
+        `assert(ab.fout, 4'b000);
+
+        // load B for wrap-around
+        fdata <= 1;
+        outctl <= 15;
+        loadctl <= 1;
+        data <= 256 - 42;
+        #1
+        `tick(clk, 2);
+        `tick(iclk, 2);
+
+        // add and load into A
+        fdata <= 0;
+        outctl <= 2;
+        loadctl <= 0;
+        #1
+        `tick(clk, 2);
+        `tick(iclk, 2);
+        loadctl <= 15;
+
+        outctl <= 0;
+        #1
+        $display("%d %h", main_bus, ab.fout);
+        `assert(main_bus, 8'd0);
+        `assert(ab.fout, 4'b0110);
 
     end
 
