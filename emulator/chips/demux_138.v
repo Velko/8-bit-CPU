@@ -5,6 +5,6 @@ module demux_138 (
     input e3,
     output [7:0] y);
 
-    assign y = ~((!e1n && !e2n && e3) << a);
+    assign y = ~({7'h0, (!e1n && !e2n && e3)} << a);
 
 endmodule
