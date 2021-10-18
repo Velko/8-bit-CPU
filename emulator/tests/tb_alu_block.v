@@ -3,6 +3,9 @@ module tb_alu_block;
     reg reset;
     reg [3:0] outctl;
     reg [3:0] loadctl;
+    reg [1:0] arg_l;
+    reg [2:0] arg_r;
+
     reg clk;
     reg iclk;
     reg alt;
@@ -12,7 +15,7 @@ module tb_alu_block;
     reg fdata;
     wire [7:0] main_bus;
 
-    alu_block ab(.main_bus(main_bus), .rst(reset), .outctl(outctl), .loadctl(loadctl), .clk(clk), .iclk(iclk), .alt(alt), .calcfn(cfn));
+    alu_block ab(.main_bus(main_bus), .rst(reset), .outctl(outctl), .loadctl(loadctl), .clk(clk), .iclk(iclk), .alt(alt), .calcfn(cfn), .arg_l(arg_l), .arg_r(arg_r));
 
     initial begin
         fdata <= 0;
@@ -23,6 +26,8 @@ module tb_alu_block;
         iclk <= 0;
         alt <= 0;
         cfn <= 1;
+        arg_l <= 0;
+        arg_r <= 6;
 
         reset <= 1;
         #1
@@ -48,10 +53,12 @@ module tb_alu_block;
         fdata <= 0;
         outctl <= 2;
         loadctl <= 0;
+        arg_r <= 1;
         #1
         `tick(clk, 2);
         `tick(iclk, 2);
         loadctl <= 15;
+        arg_r <= 6;
 
         // read A
         outctl <= 0;
@@ -74,10 +81,12 @@ module tb_alu_block;
         fdata <= 0;
         outctl <= 2;
         loadctl <= 0;
+        arg_r <= 1;
         #1
         `tick(clk, 2);
         `tick(iclk, 2);
         loadctl <= 15;
+        arg_r <= 6;
 
         outctl <= 0;
         #1

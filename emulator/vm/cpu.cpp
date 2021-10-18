@@ -5,6 +5,8 @@ void CPU::off()
     rst = 0;
     outctl = 15;
     loadctl = 15;
+    arg_l = 0;
+    arg_r = 6;
     clk = 0;
     iclk = 0;
     alt = 0;

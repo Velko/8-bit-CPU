@@ -54,11 +54,13 @@ int main(int argc, char **argv)
     alu->outctl = 2;
     alu->loadctl = 0;
     alu->calcfn = 0;
+    alu->arg_r = 1;
     alu->eval();
     alu->clock_tick();
     alu->outctl = 15;
     alu->loadctl = 15;
     alu->calcfn = 1;
+    alu->arg_r = 6;
 
     // Output A on to the bus once more
     alu->outctl = 0;
@@ -78,11 +80,13 @@ int main(int argc, char **argv)
     alu->outctl = 2;
     alu->loadctl = 0;
     alu->calcfn = 0;
+    alu->arg_r = 1;
     alu->eval();
     alu->clock_tick();
     alu->outctl = 15;
     alu->loadctl = 15;
     alu->calcfn = 1;
+    alu->arg_r = 6;
 
     // Output A on to the bus once more
     alu->outctl = 0;
