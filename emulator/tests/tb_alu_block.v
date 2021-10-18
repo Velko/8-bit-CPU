@@ -1,8 +1,8 @@
 module tb_alu_block;
 
     reg reset;
-    reg [2:0] outctl;
-    reg [2:0] loadctl;
+    reg [3:0] outctl;
+    reg [3:0] loadctl;
     reg clk;
     reg iclk;
     reg alt;
@@ -17,8 +17,8 @@ module tb_alu_block;
     initial begin
         fdata <= 0;
 
-        outctl <= 7;
-        loadctl <= 7;
+        outctl <= 15;
+        loadctl <= 15;
         clk <= 0;
         iclk <= 0;
         alt <= 0;
@@ -54,7 +54,7 @@ module tb_alu_block;
 
         // read A
         outctl <= 0;
-        loadctl <= 7;
+        loadctl <= 15;
         #1
         $display("%d %h", main_bus, ab.fout);
 

@@ -3,8 +3,8 @@
 void CPU::off()
 {
     rst = 0;
-    outctl = 7;
-    loadctl = 7;
+    outctl = 15;
+    loadctl = 15;
     clk = 0;
     iclk = 0;
     alt = 0;
