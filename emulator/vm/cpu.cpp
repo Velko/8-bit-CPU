@@ -3,11 +3,8 @@
 void CPU::off()
 {
     rst = 0;
-    a_outn = 1;
-    b_outn = 1;
-    addsub_outn = 1;
-    a_loadn = 1;
-    b_loadn = 1;
+    outctl = 7;
+    loadctl = 7;
     clk = 0;
     iclk = 0;
     alt = 0;

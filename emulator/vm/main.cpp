@@ -31,64 +31,64 @@ int main(int argc, char **argv)
     VL_PRINTF("%d\n", alu->main_bus);
 
     // Load 24 into A
-    alu->a_loadn = 0;
+    alu->loadctl = 0;
     alu->eval();
     alu->main_bus = 24;
     alu->clock_tick();
-    alu->a_loadn = 1;
+    alu->loadctl = 7;
 
     // Output A on to the bus
-    alu->a_outn = 0;
+    alu->outctl = 0;
     alu->eval();
     VL_PRINTF("%d\n", alu->main_bus);
-    alu->a_outn = 1;
+    alu->outctl = 7;
 
     // Load 18 into B
-    alu->b_loadn = 0;
+    alu->loadctl = 1;
     alu->eval();
     alu->main_bus = 18;
     alu->clock_tick();
-    alu->b_loadn = 1;
+    alu->loadctl = 7;
 
     // Add A to B, load result into A
-    alu->addsub_outn = 0;
-    alu->a_loadn = 0;
+    alu->outctl = 2;
+    alu->loadctl = 0;
     alu->calcfn = 0;
     alu->eval();
     alu->clock_tick();
-    alu->addsub_outn = 1;
-    alu->a_loadn = 1;
+    alu->outctl = 7;
+    alu->loadctl = 7;
     alu->calcfn = 1;
 
     // Output A on to the bus once more
-    alu->a_outn = 0;
+    alu->outctl = 0;
     alu->eval();
     VL_PRINTF("%d %x\n", alu->main_bus, alu->fout);
-    alu->a_outn = 1;
+    alu->outctl = 7;
 
 
     // Load value into B, so that it wraps around to 0, should produce -CZ- flags
-    alu->b_loadn = 0;
+    alu->loadctl = 1;
     alu->eval();
     alu->main_bus = 256 - 42;
     alu->clock_tick();
-    alu->b_loadn = 1;
+    alu->loadctl = 7;
 
     // Add A to B, load result into A
-    alu->addsub_outn = 0;
-    alu->a_loadn = 0;
+    alu->outctl = 2;
+    alu->loadctl = 0;
     alu->calcfn = 0;
     alu->eval();
     alu->clock_tick();
-    alu->addsub_outn = 1;
-    alu->a_loadn = 1;
+    alu->outctl = 7;
+    alu->loadctl = 7;
     alu->calcfn = 1;
 
     // Output A on to the bus once more
-    alu->a_outn = 0;
+    alu->outctl = 0;
     alu->eval();
     VL_PRINTF("%d %x\n", alu->main_bus, alu->fout);
-    alu->a_outn = 1;
+    alu->outctl = 7;
 
     // Final model cleanup
     alu->final();
