@@ -1,5 +1,7 @@
 #include <cstdio>
 #include "cpu.h"
+#include "op-defs.h"
+#include "microcode.h"
 
 int main(int argc, char **argv)
 {
@@ -31,68 +33,64 @@ int main(int argc, char **argv)
     VL_PRINTF("%d\n", alu->main_bus);
 
     // Load 24 into A
-    alu->loadctl = 0;
+    APPLY_MUX(alu->control_word, MUX_LOAD_MASK, MPIN_A_LOAD_BITS);
     alu->eval();
     alu->main_bus = 24;
     alu->clock_tick();
-    alu->loadctl = 15;
+    alu->control_word = CTRL_DEFAULT;
 
     // Output A on to the bus
-    alu->outctl = 0;
+    APPLY_MUX(alu->control_word, MUX_OUT_MASK, MPIN_A_OUT_BITS);
     alu->eval();
     VL_PRINTF("%d\n", alu->main_bus);
-    alu->outctl = 15;
+    alu->control_word = CTRL_DEFAULT;
 
     // Load 18 into B
-    alu->loadctl = 1;
+    APPLY_MUX(alu->control_word, MUX_LOAD_MASK, MPIN_B_LOAD_BITS);
     alu->eval();
     alu->main_bus = 18;
     alu->clock_tick();
-    alu->loadctl = 15;
+    alu->control_word = CTRL_DEFAULT;
 
     // Add A to B, load result into A
-    alu->outctl = 2;
-    alu->loadctl = 0;
-    alu->calcfn = 0;
-    alu->arg_r = 1;
+    APPLY_MUX(alu->control_word, MUX_OUT_MASK, MPIN_ADDSUB_OUT_BITS);
+    APPLY_MUX(alu->control_word, MUX_LOAD_MASK, MPIN_A_LOAD_BITS);
+    APPLY_LPIN(alu->control_word, LPIN_F_CALC_BIT);
+    APPLY_MUX(alu->control_word, MUX_ALUARGL_MASK, MPIN_A_ALU_L_BITS);
+    APPLY_MUX(alu->control_word, MUX_ALUARGR_MASK, MPIN_B_ALU_R_BITS);
     alu->eval();
     alu->clock_tick();
-    alu->outctl = 15;
-    alu->loadctl = 15;
-    alu->calcfn = 1;
-    alu->arg_r = 6;
+    alu->control_word = CTRL_DEFAULT;
 
-    // Output A on to the bus once more
-    alu->outctl = 0;
+    // Output A on to the bus, show the result
+    APPLY_MUX(alu->control_word, MUX_OUT_MASK, MPIN_A_OUT_BITS);
     alu->eval();
-    VL_PRINTF("%d %x\n", alu->main_bus, alu->fout);
-    alu->outctl = 15;
-
+    VL_PRINTF("%d\n", alu->main_bus);
+    alu->control_word = CTRL_DEFAULT;
 
     // Load value into B, so that it wraps around to 0, should produce -CZ- flags
-    alu->loadctl = 1;
+    APPLY_MUX(alu->control_word, MUX_LOAD_MASK, MPIN_B_LOAD_BITS);
     alu->eval();
     alu->main_bus = 256 - 42;
     alu->clock_tick();
-    alu->loadctl = 15;
+    alu->control_word = CTRL_DEFAULT;
 
     // Add A to B, load result into A
-    alu->outctl = 2;
-    alu->loadctl = 0;
-    alu->calcfn = 0;
-    alu->arg_r = 1;
+    APPLY_MUX(alu->control_word, MUX_OUT_MASK, MPIN_ADDSUB_OUT_BITS);
+    APPLY_MUX(alu->control_word, MUX_LOAD_MASK, MPIN_A_LOAD_BITS);
+    APPLY_LPIN(alu->control_word, LPIN_F_CALC_BIT);
+    APPLY_MUX(alu->control_word, MUX_ALUARGL_MASK, MPIN_A_ALU_L_BITS);
+    APPLY_MUX(alu->control_word, MUX_ALUARGR_MASK, MPIN_B_ALU_R_BITS);
     alu->eval();
     alu->clock_tick();
-    alu->outctl = 15;
-    alu->loadctl = 15;
-    alu->calcfn = 1;
-    alu->arg_r = 6;
+    alu->control_word = CTRL_DEFAULT;
 
     // Output A on to the bus once more
-    alu->outctl = 0;
+    APPLY_MUX(alu->control_word, MUX_OUT_MASK, MPIN_A_OUT_BITS);
     alu->eval();
-    VL_PRINTF("%d %x\n", alu->main_bus, alu->fout);
-    alu->outctl = 15;
+    VL_PRINTF("%d\n", alu->main_bus);
+    //VL_PRINTF("%d %x\n", alu->main_bus, alu->fout);
+    alu->control_word = CTRL_DEFAULT;
 
     // Final model cleanup
     alu->final();

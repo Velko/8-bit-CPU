@@ -35,4 +35,10 @@ extern const cword_t op_fetch[];
 
 #define     MAKE_MUX_CWORD(MUX_MASK, MPIN_BITS)   ((CTRL_DEFAULT & (~MUX_MASK)) | MPIN_BITS)
 
+#define     APPLY_MUX(TARGET, MASK, MBITS)      TARGET = (TARGET & (~MASK)) | MBITS
+#define     APPLY_HPIN(TARGET, HBITS)      TARGET = TARGET | HBITS
+#define     APPLY_LPIN(TARGET, LBITS)      TARGET = TARGET & (~LBITS)
+
+
+
 #endif /* MICROCODE_H */

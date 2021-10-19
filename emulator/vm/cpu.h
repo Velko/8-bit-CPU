@@ -1,9 +1,9 @@
 #ifndef CPU_H
 #define CPU_H
 
-#include "Valu_block.h"
+#include "Vcpu.h"
 
-class CPU : public Valu_block
+class CPU : public Vcpu
 {
 public:
     void off();

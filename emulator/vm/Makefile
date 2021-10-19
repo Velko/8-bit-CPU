@@ -7,8 +7,8 @@ all: engine
 SRC=main.cpp cpu.cpp
 
 
-engine: $(ALUBLOCKSRC) $(SRC)
-	verilator --cc --exe -Wall --build --top-module alu_block $^
+engine: $(CPUSRC) $(SRC)
+	verilator --cc --exe -Wall --build --top-module cpu $^
 
 
 clean:

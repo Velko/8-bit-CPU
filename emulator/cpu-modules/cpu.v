@@ -4,9 +4,11 @@ module cpu(
         input clk,
         input iclk,
 
+        /* verilator lint_off UNUSED */
         input [31:0] control_word
     );
 
+    /* verilator lint_off PINMISSING */
     alu_block alu(.main_bus(main_bus), .rst(rst), .clk(clk), .iclk(iclk),
         .outctl(control_word[3:0]),
         .loadctl(control_word[11:8]),

@@ -1,17 +1,12 @@
 #include "cpu.h"
+#include "op-defs.h"
 
 void CPU::off()
 {
     rst = 0;
-    outctl = 15;
-    loadctl = 15;
-    arg_l = 0;
-    arg_r = 6;
     clk = 0;
     iclk = 0;
-    alt = 0;
-    calcfn = 1;
-    cin = 0;
+    control_word = CTRL_DEFAULT;
 
     eval();
 }
