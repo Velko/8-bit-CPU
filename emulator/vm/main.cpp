@@ -65,7 +65,7 @@ int main(int argc, char **argv)
     // Output A on to the bus, show the result
     APPLY_MUX(alu->control_word, MUX_OUT_MASK, MPIN_A_OUT_BITS);
     alu->eval();
-    VL_PRINTF("%d\n", alu->main_bus);
+    VL_PRINTF("%d %x\n", alu->main_bus, alu->fout);
     alu->control_word = CTRL_DEFAULT;
 
     // Load value into B, so that it wraps around to 0, should produce -CZ- flags
@@ -88,8 +88,7 @@ int main(int argc, char **argv)
     // Output A on to the bus once more
     APPLY_MUX(alu->control_word, MUX_OUT_MASK, MPIN_A_OUT_BITS);
     alu->eval();
-    VL_PRINTF("%d\n", alu->main_bus);
-    //VL_PRINTF("%d %x\n", alu->main_bus, alu->fout);
+    VL_PRINTF("%d %x\n", alu->main_bus, alu->fout);
     alu->control_word = CTRL_DEFAULT;
 
     // Final model cleanup
