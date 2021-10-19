@@ -1,6 +1,6 @@
 test: test-138 test-161-basics test-161-chaining test-245 test-173 test-283 test-86b test-86p \
       test-08b test-08p test-02b test-02p test-157b test-125p \
-      test-gp-register test-alu-addsub test-flags-reg test-alu-block
+      test-gp-register test-alu-addsub test-flags-reg test-alu-block test-cpu
 
 include ../cpu-modules/Modules.mk
 
@@ -105,6 +105,13 @@ TBALUBLOCKSRC=$(ALUBLOCKSRC) testhelpers.v tb_alu_block.v
 
 tb_alu-block.vvp: $(TBALUBLOCKSRC)
 	iverilog -Wall $^ -o $@
+
+TBCPUSRC=$(CPUSRC) testhelpers.v tb_cpu.v
+
+tb_cpu.vvp: $(TBCPUSRC)
+	iverilog -Wall $^ -o $@
+
+
 
 
 clean:
