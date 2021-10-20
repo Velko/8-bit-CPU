@@ -9,8 +9,12 @@ module flags_reg(
 
     inout [7:0] bus,
 
-    inout vin,
-    inout cin,
+    // _vin_en and _cin_en does not exist on real hardware, these are here
+    // only as a workaround for Verilator
+    input vin,
+    input _vin_en,
+    input cin,
+    input _cin_en,
 
     output [3:0] fout);
 
@@ -32,8 +36,12 @@ module flags_reg(
 
     // not all ALU modules produces V and C, use old value if input is Z
     // in real hardware this is implemented using a pulling resistor
-    assign cval = cin !== 1'bz ? cin : reg_prim.q[2];
-    assign vval = vin !== 1'bz ? vin : reg_prim.q[3];
+
+    // Unfortunately, Verilator does not support neither pull-strength in assignments, nor
+    // tri-state detection. Current work-around is to add extra inputs to determine
+    // if V and C flags should be updated
+    assign cval = _cin_en ? cin : reg_prim.q[2];
+    assign vval = _vin_en ? vin : reg_prim.q[3];
 
     initial begin
        // $monitor("prim: %b", reg_prim.q);

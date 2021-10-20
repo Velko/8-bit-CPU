@@ -31,7 +31,8 @@ module alu_block(
     gp_register b(.bus(main_bus), .alu_l(alu_arg_l), .alu_r(alu_arg_r), .reset(rst), .clk(clk), .iclk(iclk), .outn(out_mux_l.y[1]), .loadn(load_mux_l.y[1]), .loutn(arg_l_mux.y[1]), .routn(arg_r_mux.y[1]));
 
     alu_addsub addsub(.bus(main_bus), .arg_l(alu_arg_l), .arg_r(alu_arg_r), .outn(out_mux_l.y[2]), .sub(alt), .cin(cin), .vout(vfb), .cout(cfb));
-    flags_reg flags(.bus(main_bus), .reset(rst), .clk(clk), .iclk(iclk), .boutn(out_mux_l.y[4]), .bloadn(load_mux_l.y[7]), .vin(vfb), .cin(cfb), .calcn(calcfn), .fout(fout));
+    flags_reg flags(.bus(main_bus), .reset(rst), .clk(clk), .iclk(iclk), .boutn(out_mux_l.y[4]), .bloadn(load_mux_l.y[7]), .vin(vfb), .cin(cfb), .calcn(calcfn), .fout(fout),
+                    ._vin_en(!out_mux_l.y[2]), ._cin_en(!out_mux_l.y[2]));
 
     demux_138 out_mux_l(.e1n(outctl[3]), .e2n(1'b0), .e3(1'b1), .a(outctl[2:0]));
     demux_138 load_mux_l(.e1n(loadctl[3]), .e2n(1'b0), .e3(1'b1), .a(loadctl[2:0]));

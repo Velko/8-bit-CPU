@@ -20,7 +20,7 @@ module tb_flags_reg;
 
     integer i;
 
-    flags_reg flags(.boutn(boutn), .bloadn(bloadn), .calcn(calcn), .clk(clk), .iclk(iclk), .reset(reset), .bus(bus), .vin(vin_w), .cin(cin_w));
+    flags_reg flags(.boutn(boutn), .bloadn(bloadn), .calcn(calcn), .clk(clk), .iclk(iclk), .reset(reset), .bus(bus), .vin(vin_w), ._vin_en(vin_w !== 1'bz), .cin(cin_w), ._cin_en(cin_w !== 1'bz));
 
     initial begin
         $display("Flags register module...");
