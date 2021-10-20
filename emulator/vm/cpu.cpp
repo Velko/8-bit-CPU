@@ -7,6 +7,7 @@ void CPU::off()
     clk = 0;
     iclk = 0;
     control_word = CTRL_DEFAULT;
+    send_main_bus = false;
 
     eval();
 }
@@ -40,4 +41,28 @@ void CPU::clock_tick()
     iclk = 1;
     eval();
     iclk = 0;
+}
+
+void CPU::set_control_word(uint32_t word)
+{
+    // if nothing drives the bus, eval() resets it to 0
+    uint8_t smbus = main_bus;
+
+    control_word = word;
+    eval();
+
+    // but we may want like to keep what was there before
+    if (send_main_bus)
+        main_bus = smbus;
+}
+
+void CPU::main_bus_write(uint8_t data)
+{
+    send_main_bus = true;
+    main_bus =  data;
+}
+
+void CPU::main_bus_set_input()
+{
+    send_main_bus = false;
 }
