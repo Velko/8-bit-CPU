@@ -2,6 +2,7 @@ module tb_08p;
 
     reg [3:0] a;
     reg [3:0] b;
+    wire [3:0] y;
 
     integer i;
 
@@ -18,21 +19,23 @@ module tb_08p;
             b[i] <= 0;
 
             #1
-            `assert({logic_op.y4, logic_op.y3, logic_op.y2, logic_op.y1}, (4'bX & ~(1 << i)));
+            `assert(y, (4'bX & ~(1 << i)));
 
             a[i] <= 1;
             #1
-            `assert({logic_op.y4, logic_op.y3, logic_op.y2, logic_op.y1}, (4'bX & ~(1 << i)));
+            `assert(y, (4'bX & ~(1 << i)));
 
             b[i] <= 1;
             #1
-            `assert({logic_op.y4, logic_op.y3, logic_op.y2, logic_op.y1}, (4'bX | (1 << i)));
+            `assert(y, (4'bX | (1 << i)));
 
             a[i] <= 0;
             #1
-            `assert({logic_op.y4, logic_op.y3, logic_op.y2, logic_op.y1}, (4'bX & ~(1 << i)));
+            `assert(y, (4'bX & ~(1 << i)));
         end
 
     end
+
+    assign y = {logic_op.y4, logic_op.y3, logic_op.y2, logic_op.y1};
 
 endmodule
