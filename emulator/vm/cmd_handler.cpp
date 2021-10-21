@@ -92,10 +92,12 @@ void loop()
     case 'r':
         val = Serial.parseInt();
 //        Serial.println(Processor.current_opcode());
+        Serial.println(val);
         break;
 
     case 'R':
 //        run_program();
+        Serial.println("#BRK"); // return control immediately
         break;
 
     default:
