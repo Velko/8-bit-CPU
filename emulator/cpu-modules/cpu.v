@@ -11,13 +11,14 @@ module cpu(
     );
 
     /* verilator lint_off PINMISSING */
+    cword_splitter splitter(.control_word(control_word));
     alu_block alu(.main_bus(main_bus), .rst(rst), .clk(clk), .iclk(iclk), .fout(fout),
-        .outctl(control_word[3:0]),
-        .loadctl(control_word[11:8]),
-        .arg_l(control_word[17:16]),
-        .arg_r(control_word[20:18]),
-        .alt(control_word[4]),
-        .calcfn(control_word[6]),
-        .cin(control_word[14]));
+        .outctl(splitter.outctl),
+        .loadctl(splitter.loadctl),
+        .arg_l(splitter.alu_arg_l),
+        .arg_r(splitter.alu_arg_r),
+        .alt(splitter.alu_alt),
+        .calcfn(splitter.flags_calc),
+        .cin(splitter.carry));
 
 endmodule
