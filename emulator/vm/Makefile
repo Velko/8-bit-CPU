@@ -9,11 +9,13 @@ DEMOSRC=demo.cpp cpu.cpp
 
 
 cpu-server: $(CPUSRC) $(SRVSRC)
-	verilator --cc --exe -Wall --build --top-module cpu $^
+	verilator --cc --exe -Wall --top-module cpu $^
+	$(MAKE) -C obj_dir -f Vcpu.mk
 	cp obj_dir/Vcpu cpu-server
 
 demo: $(CPUSRC) $(DEMOSRC)
-	verilator --cc --exe -Wall --build --top-module cpu $^
+	verilator --cc --exe -Wall --top-module cpu $^
+	$(MAKE) -C obj_dir -f Vcpu.mk
 	cp obj_dir/Vcpu demo
 
 
