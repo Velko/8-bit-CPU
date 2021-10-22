@@ -19,23 +19,31 @@ module tb_02p;
             b[i] <= 0;
 
             #1
-            `assert(y, (4'bX | (1 << i)));
+            `assert(y, bit1(i));
 
             a[i] <= 1;
             #1
-            `assert(y, (4'bX & ~(1 << i)));
+            `assert(y, bit0(i));
 
             b[i] <= 1;
             #1
-            `assert(y, (4'bX & ~(1 << i)));
+            `assert(y, bit0(i));
 
             a[i] <= 0;
             #1
-            `assert(y, (4'bX & ~(1 << i)));
+            `assert(y, bit0(i));
         end
 
     end
 
     assign y = {logic_op.y4, logic_op.y3, logic_op.y2, logic_op.y1};
+
+    function [3:0] bit1 (input [1:0] idx);
+        bit1 = 4'bX | (1 << i);
+    endfunction
+
+    function [3:0] bit0 (input [1:0] idx);
+        bit0 = 4'bX & ~(1 << i);
+    endfunction
 
 endmodule

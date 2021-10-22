@@ -18,21 +18,29 @@ module tb_86b;
             b[i] <= 0;
 
             #1
-            `assert(logic_op.y, (4'bX & ~(1 << i)));
+            `assert(logic_op.y, bit0(i));
 
             a[i] <= 1;
             #1
-            `assert(logic_op.y, (4'bX | (1 << i)));
+            `assert(logic_op.y, bit1(i));
 
             b[i] <= 1;
             #1
-            `assert(logic_op.y, (4'bX & ~(1 << i)));
+            `assert(logic_op.y, bit0(i));
 
             a[i] <= 0;
             #1
-            `assert(logic_op.y, (4'bX | (1 << i)));
+            `assert(logic_op.y, bit1(i));
         end
 
     end
+
+    function [3:0] bit1 (input [1:0] idx);
+        bit1 = 4'bX | (1 << i);
+    endfunction
+
+    function [3:0] bit0 (input [1:0] idx);
+        bit0 = 4'bX & ~(1 << i);
+    endfunction
 
 endmodule
