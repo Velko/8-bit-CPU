@@ -33,8 +33,11 @@ module alu_block(
     gp_register d(.bus(main_bus), .alu_l(alu_arg_l), .alu_r(alu_arg_r), .reset(rst), .clk(clk), .iclk(iclk), .outn(out_mux_h.y[1]), .loadn(load_mux_h.y[1]), .loutn(arg_l_mux.y[3]), .routn(arg_r_mux.y[3]));
 
     alu_addsub addsub(.bus(main_bus), .arg_l(alu_arg_l), .arg_r(alu_arg_r), .outn(out_mux_l.y[2]), .sub(alt), .cin(cin), .vout(vfb), .cout(cfb));
+    alu_andor andor(.bus(main_bus), .arg_l(alu_arg_l), .arg_r(alu_arg_r), .outn(out_mux_l.y[6]), .fn_or(alt));
+    alu_xornot xornot(.bus(main_bus), .arg_l(alu_arg_l), .arg_r(alu_arg_r), .outn(out_mux_h.y[2]), .fn_not(alt));
+    alu_shiftswap shiftswap(.bus(main_bus), .arg_l(alu_arg_l), .outn(out_mux_l.y[7]), .fn_swap(alt), .cin(cin), .cout(cfb));
     flags_reg flags(.bus(main_bus), .reset(rst), .clk(clk), .iclk(iclk), .boutn(out_mux_l.y[4]), .bloadn(load_mux_l.y[7]), .vin(vfb), .cin(cfb), .calcn(calcfn), .fout(fout),
-                    ._vin_en(!out_mux_l.y[2]), ._cin_en(!out_mux_l.y[2]));
+                    ._vin_en(!out_mux_l.y[2]), ._cin_en(!out_mux_l.y[2] || !out_mux_l.y[7]));
 
     demux_138 out_mux_l(.e1n(outctl[3]), .e2n(1'b0), .e3(1'b1), .a(outctl[2:0]));
     demux_138 load_mux_l(.e1n(loadctl[3]), .e2n(1'b0), .e3(1'b1), .a(loadctl[2:0]));
