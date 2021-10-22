@@ -1,5 +1,5 @@
 test: test-138 test-161-basics test-161-chaining test-245 test-173 test-283 test-86b test-86p \
-      test-08b test-08p test-02b test-02p test-157b test-125p test-32b test-32p \
+      test-08b test-08p test-02b test-02p test-157b test-125p test-32b test-32p test-00b test-00p \
       test-gp-register test-alu-addsub test-flags-reg test-alu-block test-cpu
 
 include ../cpu-modules/Modules.mk
@@ -62,6 +62,15 @@ TB08PSRC=../chips/and_08p.v testhelpers.v tb_08p.v
 tb_08p.vvp: $(TB08PSRC)
 	iverilog -Wall $^ -o $@
 
+TB00BSRC=../chips/nand_00b.v testhelpers.v tb_00b.v
+
+tb_00b.vvp: $(TB00BSRC)
+	iverilog -Wall $^ -o $@
+
+TB00PSRC=../chips/nand_00p.v testhelpers.v tb_00p.v
+
+tb_00p.vvp: $(TB00PSRC)
+	iverilog -Wall $^ -o $@
 
 TB02BSRC=../chips/nor_02b.v testhelpers.v tb_02b.v
 
