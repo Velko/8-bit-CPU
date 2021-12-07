@@ -23,8 +23,6 @@ class CPUHelper:
 
 
     def read_reg16(self, reg: Register) -> int:
-        # fire inverted clock to latch PC value into secondary
-        self.backend.client.clock_inverted()
 
         self.backend.control.reset()
         reg.out.enable()
