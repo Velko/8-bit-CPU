@@ -1,5 +1,6 @@
 module cpu(
         inout [7:0] main_bus,
+        inout [15:0] addr_bus,
         input rst,
         input clk,
         input iclk,
@@ -20,5 +21,10 @@ module cpu(
         .alt(splitter.alu_alt),
         .calcfn(splitter.flags_calc),
         .cin(splitter.carry));
+
+    mem_block mem(.abus(addr_bus), .rst(rst), .rstn(!rst), .clk(clk), .iclk(iclk),
+        .addroutctl(splitter.addroutctl),
+        .addrloadctl(splitter.addrloadctl)
+        );
 
 endmodule

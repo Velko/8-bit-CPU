@@ -9,7 +9,9 @@ module cword_splitter(
         output [2:0] alu_arg_r,
         output alu_alt,
         output flags_calc,
-        output carry
+        output carry,
+        output [2:0] addroutctl,
+        output [2:0] addrloadctl
     );
 
     assign outctl = control_word[3:0];
@@ -19,5 +21,7 @@ module cword_splitter(
     assign alu_alt = control_word[4];
     assign flags_calc = control_word[6];
     assign carry = control_word[14];
+    assign addroutctl = control_word[25:23];
+    assign addrloadctl = control_word[29:27];
 
 endmodule
