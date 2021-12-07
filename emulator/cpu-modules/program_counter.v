@@ -10,7 +10,7 @@ module program_counter (
 
     inout [15:0] abus
 );
-
+    /* verilator lint_off PINMISSING */
     counter_161 cnt_0(.clk(clk), .mrn(resetn), .pen(loadn), .cep(count), .d(abus[3:0]), .cet(1'b1));
     counter_161 cnt_1(.clk(clk), .mrn(resetn), .pen(loadn), .cep(count), .d(abus[7:4]), .cet(cnt_0.tc));
     counter_161 cnt_2(.clk(clk), .mrn(resetn), .pen(loadn), .cep(count), .d(abus[11:8]), .cet(cnt_1.tc));

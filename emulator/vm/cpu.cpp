@@ -8,6 +8,7 @@ void CPU::off()
     iclk = 0;
     control_word = CTRL_DEFAULT;
     send_main_bus = false;
+    send_addr_bus = false;
 
     eval();
 }
@@ -47,6 +48,7 @@ void CPU::set_control_word(uint32_t word)
 {
     // if nothing drives the bus, eval() resets it to 0
     uint8_t smbus = main_bus;
+    uint16_t sabus = addr_bus;
 
     control_word = word;
     eval();
@@ -54,6 +56,9 @@ void CPU::set_control_word(uint32_t word)
     // but we may want like to keep what was there before
     if (send_main_bus)
         main_bus = smbus;
+
+    if (send_addr_bus)
+        addr_bus = sabus;
 }
 
 void CPU::main_bus_write(uint8_t data)
@@ -65,4 +70,15 @@ void CPU::main_bus_write(uint8_t data)
 void CPU::main_bus_set_input()
 {
     send_main_bus = false;
+}
+
+void CPU::addr_bus_write(uint16_t addr)
+{
+    send_addr_bus = true;
+    addr_bus =  addr;
+}
+
+void CPU::addr_bus_set_input()
+{
+    send_addr_bus = false;
 }

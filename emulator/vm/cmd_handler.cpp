@@ -44,12 +44,12 @@ void loop()
 
     case 'A':
         val = Serial.parseInt();
-//        dev.addressBus.write(val);
+        cpu->addr_bus_write(val);
         break;
 
     case 'a':
-//        dev.addressBus.set_input();
-//        val = dev.addressBus.read();
+        cpu->addr_bus_set_input();
+        val = cpu->addr_bus;
         Serial.println(val);
         break;
 
@@ -60,11 +60,13 @@ void loop()
 
     case 'f':
         cpu->main_bus_set_input();
+        cpu->addr_bus_set_input();
         break;
 
     case 'O':
         val = Serial.parseInt();
         cpu->main_bus_set_input();
+        cpu->addr_bus_set_input();
         cpu->set_control_word(val);
         break;
 
