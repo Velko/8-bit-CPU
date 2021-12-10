@@ -5,6 +5,7 @@ ALUXORNOTSRC=../cpu-modules/alu_xornot.v ../chips/buffer_245.v ../chips/xor_86b.
 ALUSHIFTSWAPSRC=../cpu-modules/alu_shiftswap.v ../chips/buffer_245.v ../chips/mux_157b.v ../chips/buffer_125p.v
 FLGREGSRC=../cpu-modules/flags_reg.v ../chips/dff_173.v ../chips/nor_02b.v ../chips/and_08p.v ../chips/mux_157b.v ../chips/buffer_125p.v
 PCSRC=../cpu-modules/program_counter.v ../chips/dff_173.v ../chips/counter_161.v
+MEMSRC=../cpu-modules/memory.v ../chips/ram_62256.v ../chips/nand_00p.v ../chips/buffer_245.v
 ALUBLOCKSRC=../cpu-modules/alu_block.v $(GPREGSRC) $(ALUADDSUBSRC) $(ALUANDORSRC) $(ALUXORNOTSRC) $(ALUSHIFTSWAPSRC) $(FLGREGSRC) ../chips/demux_138.v
 MEMBLOCKSRC=../cpu-modules/mem_block.v $(PCSRC) ../chips/demux_138.v
 CPUSRC=../cpu-modules/cpu.v ../cpu-modules/cword_splitter.v $(ALUBLOCKSRC) $(MEMBLOCKSRC)
