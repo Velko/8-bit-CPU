@@ -4,13 +4,18 @@ module tb_cpu;
     reg fdata;
     wire [7:0] main_bus;
 
+    reg [15:0] addr;
+    reg faddr;
+    wire [15:0] addr_bus;
+
+
     reg rst;
     reg clk;
     reg iclk;
 
     reg [31:0] control_word;
 
-    cpu processor(.main_bus(main_bus), .rst(rst), .clk(clk), .iclk(iclk), .control_word(control_word));
+    cpu processor(.main_bus(main_bus), .addr_bus(addr_bus), .rst(rst), .clk(clk), .iclk(iclk), .control_word(control_word));
 
     initial begin
         fdata <= 0;
@@ -51,8 +56,32 @@ module tb_cpu;
         `assert(main_bus, 8'd42);
         $display("%d", main_bus);
 
+        // Write something in RAM
+        fdata <= 1;
+        data <= 8'h54;
+        faddr <= 1;
+        addr <= 16'h1234;
+
+        control_word <=32'b00111011111110000011001111001111;
+        #1
+        `tick(clk, 2);
+        `tick(iclk, 2);
+
+        // Read from different addr
+        fdata <= 0;
+        addr <= 16'h1235;
+        control_word <=32'b00111011111110000011111111000011;
+        #1
+        `assert(main_bus, 8'bx);
+
+        // Read back from written addr
+        addr <= 16'h1234;
+        #1
+        `assert(main_bus, 8'h54);
+
     end
 
     assign main_bus = fdata ? data : 8'bz;
+    assign addr_bus = faddr ? addr : 16'bz;
 
 endmodule

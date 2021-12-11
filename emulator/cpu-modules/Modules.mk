@@ -7,5 +7,5 @@ FLGREGSRC=../cpu-modules/flags_reg.v ../chips/dff_173.v ../chips/nor_02b.v ../ch
 PCSRC=../cpu-modules/program_counter.v ../chips/dff_173.v ../chips/counter_161.v
 MEMSRC=../cpu-modules/memory.v ../chips/ram_62256.v ../chips/nand_00p.v ../chips/buffer_245.v
 ALUBLOCKSRC=../cpu-modules/alu_block.v $(GPREGSRC) $(ALUADDSUBSRC) $(ALUANDORSRC) $(ALUXORNOTSRC) $(ALUSHIFTSWAPSRC) $(FLGREGSRC) ../chips/demux_138.v
-MEMBLOCKSRC=../cpu-modules/mem_block.v $(PCSRC) ../chips/demux_138.v
+MEMBLOCKSRC=../cpu-modules/mem_block.v $(PCSRC) $(MEMSRC) ../chips/demux_138.v
 CPUSRC=../cpu-modules/cpu.v ../cpu-modules/cword_splitter.v $(ALUBLOCKSRC) $(MEMBLOCKSRC)

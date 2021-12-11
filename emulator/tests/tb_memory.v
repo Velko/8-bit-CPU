@@ -19,7 +19,7 @@ module tb_memory;
         wen <= 1;
         clk <= 0;
 
-        addr <= 0;
+        addr <= 3;
         #1
 
         // bus disconnected
@@ -50,8 +50,8 @@ module tb_memory;
         #1
         `assert(mbus, 8'bx);
 
-        // go back to addr 0
-        addr <= 0;
+        // go back to addr 3
+        addr <= 3;
         #1
         `assert(mbus, 8'ha5);
 

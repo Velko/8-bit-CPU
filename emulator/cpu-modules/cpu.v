@@ -22,9 +22,11 @@ module cpu(
         .calcfn(splitter.flags_calc),
         .cin(splitter.carry));
 
-    mem_block mem(.abus(addr_bus), .rst(rst), .rstn(!rst), .clk(clk), .iclk(iclk),
+    mem_block mem(.abus(addr_bus), .mbus(main_bus), .rst(rst), .rstn(!rst), .clk(clk), .iclk(iclk),
         .addroutctl(splitter.addroutctl),
-        .addrloadctl(splitter.addrloadctl)
+        .addrloadctl(splitter.addrloadctl),
+        .outctl(splitter.outctl),
+        .loadctl(splitter.loadctl)
         );
 
 endmodule
