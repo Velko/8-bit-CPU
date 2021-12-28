@@ -15,6 +15,9 @@ module memory(
 
     ram_62256 mem_l(.addr(abus[14:0]), .csn(abus[15]), .oen(_oe), .wen(_we), .data(outbuf.b));
 
+    //TODO: CS should use a chip (74xx04 ??), the design of module is not final, however.
+    ram_62256 mem_h(.addr(abus[14:0]), .csn(!abus[15]), .oen(_oe), .wen(_we), .data(outbuf.b));
+
     // OE = not(LOAD)
     // WE = CLOCK nand OE
     // BOE = not(OUT nand LOAD)
