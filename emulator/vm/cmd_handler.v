@@ -20,6 +20,8 @@ module cmd_handler;
 
     reg [7:0] cmd;
 
+    reg [31:0] _discard;
+
     initial begin
         clk <= 0;
         iclk <= 0;
@@ -40,48 +42,48 @@ module cmd_handler;
                 end
 
                 "A": begin
+                    // Write address
                     $serial_get_arg(addr);
                     faddr <= 1;
-                    $display("Write address %h", addr);
                 end
 
                 "a": begin
-                    $display("Read address");
+                    // Read address
                     $serial_send_int(addr_bus);
                 end
 
                 "B": begin
+                    // Write bus
                     $serial_get_arg(data);
                     fdata <= 1;
-                    $display("Write bus %h", data);
                 end
 
                 "b": begin
-                    $display("Read bus");
+                    // Read bus
                     $serial_send_int(main_bus);
                 end
 
                 "s": begin
-                    $display("Flags");
+                    // Flags
                     $serial_send_int(fout);
                 end
 
                 "f": begin
-                    $display("Release buses");
+                    // Release buses
                     faddr <= 0;
                     fdata <= 0;
                 end
 
                 "O": begin
+                    // Off
                     faddr <= 0;
                     fdata <= 0;
                     $serial_get_arg(control_word);
-                    $display("Off");
                 end
 
                 "M": begin
+                    // Set control word
                     $serial_get_arg(control_word);
-                    $display("Set control word");
                 end
 
                 "N", 8'hff: begin
@@ -89,21 +91,21 @@ module cmd_handler;
                 end
 
                 "c": begin
-                    $display("clk_pulse");
+                    // clk_pulse
                     clk <= 1;
                     #1
                     clk <= 0;
                 end
 
                 "C": begin
-                    $display("iclk_pulse");
+                    // iclk_pulse
                     iclk <= 1;
                     #1
                     iclk <= 0;
                 end
 
                 "T": begin
-                    $display("clock_tick");
+                    // clock_tick
                     clk <= 1;
                     #1
                     clk <= 0;
@@ -114,12 +116,13 @@ module cmd_handler;
                 end
 
                 "r": begin
-                    $display("read current_opcode");
+                    // read current_opcode
+                    $serial_get_arg(_discard); // client sends control word for IRFetch, discard it
                     $serial_send_int(0);
                 end
 
                 "R": begin
-                    $display("run_program");
+                    // run_program
                     $serial_send_str("#BRK"); // return control immediately
                 end
 
