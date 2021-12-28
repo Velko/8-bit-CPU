@@ -9,6 +9,7 @@ module cmd_handler;
     wire [15:0] addr_bus;
 
     wire [3:0] fout;
+    wire [7:0] iout;
 
     reg rst;
     reg clk;
@@ -16,7 +17,7 @@ module cmd_handler;
 
     reg [31:0] control_word;
 
-    cpu processor(.main_bus(main_bus), .addr_bus(addr_bus), .rst(rst), .clk(clk), .iclk(iclk), .control_word(control_word), .fout(fout));
+    cpu processor(.main_bus(main_bus), .addr_bus(addr_bus), .rst(rst), .clk(clk), .iclk(iclk), .control_word(control_word), .fout(fout), .iout(iout));
 
     reg [7:0] cmd;
 
@@ -118,7 +119,7 @@ module cmd_handler;
                 "r": begin
                     // read current_opcode
                     $serial_get_arg(_discard); // client sends control word for IRFetch, discard it
-                    $serial_send_int(0);
+                    $serial_send_int(iout);
                 end
 
                 "R": begin

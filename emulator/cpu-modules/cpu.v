@@ -6,6 +6,7 @@ module cpu(
         input iclk,
 
         output [3:0] fout,
+        output [7:0] iout,
 
         input [31:0] control_word
     );
@@ -24,7 +25,8 @@ module cpu(
         .addroutctl(splitter.addroutctl),
         .addrloadctl(splitter.addrloadctl),
         .outctl(splitter.outctl),
-        .loadctl(splitter.loadctl)
+        .loadctl(splitter.loadctl),
+        .iout(iout)
         );
 
 endmodule

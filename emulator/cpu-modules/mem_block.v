@@ -12,9 +12,13 @@ module mem_block(
         input rstn,
 
         input clk,
-        input iclk
+        input iclk,
+
+        output [7:0] iout
 );
     program_counter pc(.abus(abus), .reset(rst), .resetn(rstn), .clk(clk), .iclk(iclk), .outn(addr_out_mux.y[5]), .loadn(addr_load_mux.y[5]), .count(!addr_out_mux.y[5]));
+
+    i_register ir(.bus(mbus), .reset(rst), .clk(clk), .iclk(iclk), .loadn(load_mux_l.y[4]), .instr_out(iout));
 
     memory mem(.abus(abus), .mbus(mbus), .clk(clk), .outn(out_mux_l.y[3]), .writen(load_mux_l.y[3]));
 
