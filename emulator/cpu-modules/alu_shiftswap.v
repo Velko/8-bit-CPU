@@ -6,11 +6,8 @@ module alu_shiftswap (
     output [7:0] bus,
     output cout);
 
-    /* verilator lint_off UNUSED */
     wire [7:0] out_v;
-    /* verilator lint_on UNUSED */
 
-    /* verilator lint_off PINMISSING */
     mux_157b sel_l(.a(arg_l[4:1]), .b(arg_l[7:4]), .y(out_v[3:0]), .sel(fn_swap), .en(1'b0));
     mux_157b sel_h(.a({cin, arg_l[7:5]}), .b(arg_l[3:0]), .y(out_v[7:4]), .sel(fn_swap), .en(1'b0));
 

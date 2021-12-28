@@ -7,11 +7,9 @@ module cpu(
 
         output [3:0] fout,
 
-        /* verilator lint_off UNUSED */
         input [31:0] control_word
     );
 
-    /* verilator lint_off PINMISSING */
     cword_splitter splitter(.control_word(control_word));
     alu_block alu(.main_bus(main_bus), .rst(rst), .clk(clk), .iclk(iclk), .fout(fout),
         .outctl(splitter.outctl),

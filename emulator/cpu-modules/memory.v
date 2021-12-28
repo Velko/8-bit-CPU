@@ -13,7 +13,6 @@ module memory(
     wire _boe;
     wire _nand_y3;
 
-    /* verilator lint_off PINMISSING */
     ram_62256 mem_l(.addr(abus[14:0]), .csn(abus[15]), .oen(_oe), .wen(_we), .data(outbuf.b));
 
     // OE = not(LOAD)

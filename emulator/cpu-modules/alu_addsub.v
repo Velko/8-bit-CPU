@@ -8,12 +8,8 @@ module alu_addsub (
     output cout,
     output vout);
 
-    // for some crazy reason, Verilator thinks wire is unused
-    /* verilator lint_off UNUSED */
     wire [7:0] out_v;
-    /* verilator lint_on UNUSED */
 
-    /* verilator lint_off PINMISSING */
     xor_86p xor_flags(.a4(xor_h.y[3]), .a3(arg_l[7]), .a2(cin), .a1(add_h.cout), .b4(add_h.s[3]), .b3(add_h.s[3]), .b2(sub), .b1(sub));
     and_08p and_v(.a1(xor_flags.y3), .b1(xor_flags.y4),
         .a2(1'b0), .a3(1'b0), .a4(1'b0), .b2(1'b0), .b3(1'b0), .b4(1'b0));

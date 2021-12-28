@@ -14,7 +14,6 @@ module mem_block(
         input clk,
         input iclk
 );
-    /* verilator lint_off PINMISSING */
     program_counter pc(.abus(abus), .reset(rst), .resetn(rstn), .clk(clk), .iclk(iclk), .outn(addr_out_mux.y[5]), .loadn(addr_load_mux.y[5]), .count(!addr_out_mux.y[5]));
 
     memory mem(.abus(abus), .mbus(mbus), .clk(clk), .outn(out_mux_l.y[3]), .writen(load_mux_l.y[3]));

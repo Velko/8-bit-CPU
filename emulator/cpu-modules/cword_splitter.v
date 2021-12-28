@@ -1,7 +1,5 @@
 module cword_splitter(
-        /* verilator lint_off UNUSED */
         input [31:0] control_word,
-        /* verilator lint_on UNUSED */
 
         output [3:0] outctl,
         output [3:0] loadctl,
