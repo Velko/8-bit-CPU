@@ -1,23 +1,17 @@
+all: cmd_handler.vvp serial_cmd.vpi
+
 include ../cpu-modules/Modules.mk
 
-VPATH=obj_dir/
+run: cmd_handler.vvp serial_cmd.vpi
+	vvp -M. -mserial_cmd cmd_handler.vvp
 
-all: cpu-server
+serial_cmd.vpi: serial_cmd.cpp serial_host.cpp arduino_string.cpp
+	iverilog-vpi $^
 
-SRVSRC=main.cpp cpu.cpp cmd_handler.cpp serial_host.cpp arduino_string.cpp
-DEMOSRC=demo.cpp cpu.cpp
+CMDSRC=$(CPUSRC) cmd_handler.v
 
-
-cpu-server: $(CPUSRC) $(SRVSRC)
-	verilator --cc --exe -Wall --top-module cpu $^
-	$(MAKE) -C obj_dir -f Vcpu.mk
-	cp obj_dir/Vcpu cpu-server
-
-demo: $(CPUSRC) $(DEMOSRC)
-	verilator --cc --exe -Wall --top-module cpu $^
-	$(MAKE) -C obj_dir -f Vcpu.mk
-	cp obj_dir/Vcpu demo
-
+cmd_handler.vvp: $(CMDSRC)
+	iverilog -Wall $^ -o $@
 
 clean:
-	rm -rf obj_dir/ *.o demo cpu-server
+	rm -rf *.vpi *.o *.vvp

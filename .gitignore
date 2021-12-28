@@ -18,6 +18,7 @@
 *.o
 *.vcd
 *.vvp
+*.vpi
 *.out
 zz_*.ino
 /sample/
