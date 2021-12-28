@@ -47,4 +47,8 @@ module alu_block(
     demux_138 arg_l_mux(.e1n(1'b0), .e2n(1'b0), .e3(1'b1), .a({1'b0, arg_l}));
     demux_138 arg_r_mux(.e1n(1'b0), .e2n(1'b0), .e3(1'b1), .a(arg_r));
 
+    wire [7:0] z_source;
+    buffer_245 arg_r_fz(.oen(arg_r_mux.y[6]), .dir(1'b1), .a(z_source), .b(alu_arg_r));
+    assign z_source = 8'b0;
+
 endmodule
