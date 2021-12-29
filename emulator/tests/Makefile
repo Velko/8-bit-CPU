@@ -9,6 +9,10 @@ test-%: tb_%.vvp
 	@vvp $<
 
 
+xtest-%: tb_%.vvp
+	@vvp -M../vm -mvm_plugin $<
+
+
 TB138SRC=../chips/demux_138.v testhelpers.v tb_138.v
 
 tb_138.vvp: $(TB138SRC)
@@ -150,6 +154,10 @@ TBMEMSRC=$(MEMSRC) testhelpers.v tb_memory.v
 tb_memory.vvp: $(TBMEMSRC)
 	iverilog -Wall $^ -o $@
 
+TBCTRLSRC=$(CTRLSRC) testhelpers.v tb_control_logic.v
+
+tb_control-logic.vvp: $(TBCTRLSRC)
+	iverilog -Wall $^ -o $@
 
 TBCPUSRC=$(CPUSRC) testhelpers.v tb_cpu.v
 

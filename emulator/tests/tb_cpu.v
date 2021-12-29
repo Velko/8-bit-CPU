@@ -14,8 +14,9 @@ module tb_cpu;
     reg iclk;
 
     reg [31:0] control_word;
+    wire [31:0] wcontrol_word;
 
-    cpu processor(.main_bus(main_bus), .addr_bus(addr_bus), .rst(rst), .clk(clk), .iclk(iclk), .control_word(control_word));
+    cpu processor(.main_bus(main_bus), .addr_bus(addr_bus), .rst(rst), .clk(clk), .iclk(iclk), .control_word(wcontrol_word), .ctrlen(1'b1));
 
     initial begin
         fdata <= 0;
@@ -83,5 +84,6 @@ module tb_cpu;
 
     assign main_bus = fdata ? data : 8'bz;
     assign addr_bus = faddr ? addr : 16'bz;
+    assign wcontrol_word = control_word;
 
 endmodule

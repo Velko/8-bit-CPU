@@ -5,10 +5,14 @@ module cpu(
         input clk,
         input iclk,
 
+        input ctrlen,
+
         output [3:0] fout,
         output [7:0] iout,
 
-        input [31:0] control_word
+        output brk,
+
+        inout [31:0] control_word
     );
 
     cword_splitter splitter(.control_word(control_word));
@@ -28,5 +32,12 @@ module cpu(
         .loadctl(splitter.loadctl),
         .iout(iout)
         );
+
+    control_logic ctrl(.opcode(iout), .flags(fout), .rstn(!rst), .iclk(iclk), .control_word(control_word), .ctrlen(ctrlen),
+        .step_reset(splitter.step_reset),
+        .step_ext(splitter.step_ext)
+    );
+
+    assign brk = splitter.clk_brk;
 
 endmodule
