@@ -10,6 +10,7 @@ module cpu(
         output [3:0] fout,
         output [7:0] iout,
 
+        input crstn,
         output brk,
 
         inout [31:0] control_word
@@ -33,7 +34,7 @@ module cpu(
         .iout(iout)
         );
 
-    control_logic ctrl(.opcode(iout), .flags(fout), .rstn(!rst), .iclk(iclk), .control_word(control_word), .ctrlen(ctrlen),
+    control_logic ctrl(.opcode(iout), .flags(fout), .rstn(crstn), .iclk(iclk), .control_word(control_word), .ctrlen(ctrlen),
         .step_reset(splitter.step_reset),
         .step_ext(splitter.step_ext)
     );

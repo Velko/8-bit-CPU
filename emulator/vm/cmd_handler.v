@@ -20,8 +20,9 @@ module cmd_handler;
     reg ctrlen;
 
     wire brk;
+    reg crstn;
 
-    cpu processor(.main_bus(main_bus), .addr_bus(addr_bus), .rst(rst), .clk(clk), .iclk(iclk), .control_word(wctrl_word), .fout(fout), .iout(iout), .ctrlen(ctrlen), .brk(brk));
+    cpu processor(.main_bus(main_bus), .addr_bus(addr_bus), .rst(rst), .clk(clk), .iclk(iclk), .control_word(wctrl_word), .fout(fout), .iout(iout), .ctrlen(ctrlen), .brk(brk), .crstn(crstn));
 
     reg [7:0] cmd;
 
@@ -31,6 +32,7 @@ module cmd_handler;
         clk <= 0;
         iclk <= 0;
         rst <= 1;
+        crstn <= 1;
         ctrlen <= 1;
         $set_default_cw(control_word);
 
@@ -129,10 +131,13 @@ module cmd_handler;
 
                 "R": begin
                     // run_program
-                    rst <= 1;
+
+                    // reset control logic
+                    crstn <= 0;
                     #1
-                    rst <= 0;
+                    crstn <= 1;
                     ctrlen <= 0;
+
                     while (!brk) begin
                         #1
                         clk <= 1;
