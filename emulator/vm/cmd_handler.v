@@ -16,8 +16,10 @@ module cmd_handler;
     reg iclk;
 
     reg [31:0] control_word;
+    wire [31:0] wctrl_word;
+    reg ctrlen;
 
-    cpu processor(.main_bus(main_bus), .addr_bus(addr_bus), .rst(rst), .clk(clk), .iclk(iclk), .control_word(control_word), .fout(fout), .iout(iout));
+    cpu processor(.main_bus(main_bus), .addr_bus(addr_bus), .rst(rst), .clk(clk), .iclk(iclk), .control_word(wctrl_word), .fout(fout), .iout(iout), .ctrlen(ctrlen));
 
     reg [7:0] cmd;
 
@@ -27,6 +29,7 @@ module cmd_handler;
         clk <= 0;
         iclk <= 0;
         rst <= 1;
+        ctrlen <= 1;
         $set_default_cw(control_word);
 
         #1
@@ -139,5 +142,6 @@ module cmd_handler;
 
     assign main_bus = fdata ? data : 8'bz;
     assign addr_bus = faddr ? addr : 16'bz;
+    assign wctrl_word = ctrlen? control_word : 32'bz;
 
 endmodule

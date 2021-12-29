@@ -5,7 +5,7 @@ include ../cpu-modules/Modules.mk
 run: cmd_handler.vvp vm_plugin.vpi
 	vvp -M. -mvm_plugin cmd_handler.vvp
 
-vm_plugin.vpi: serial_cmd.cpp control_words.cpp registration.cpp serial_host.cpp arduino_string.cpp
+vm_plugin.vpi: serial_cmd.cpp control_words.cpp registration.cpp serial_host.cpp arduino_string.cpp microcode.c
 	iverilog-vpi --name=vm_plugin $^
 
 CMDSRC=$(CPUSRC) cmd_handler.v
