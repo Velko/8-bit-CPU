@@ -20,9 +20,10 @@ module cmd_handler;
     reg ctrlen;
 
     wire brk;
+    wire hlt;
     reg crstn;
 
-    cpu processor(.main_bus(main_bus), .addr_bus(addr_bus), .rst(rst), .clk(clk), .iclk(iclk), .control_word(wctrl_word), .fout(fout), .iout(iout), .ctrlen(ctrlen), .brk(brk), .crstn(crstn));
+    cpu processor(.main_bus(main_bus), .addr_bus(addr_bus), .rst(rst), .clk(clk), .iclk(iclk), .control_word(wctrl_word), .fout(fout), .iout(iout), .ctrlen(ctrlen), .brk(brk), .hlt(hlt), .crstn(crstn));
 
     reg [7:0] cmd;
 
@@ -138,7 +139,7 @@ module cmd_handler;
                     crstn <= 1;
                     ctrlen <= 0;
 
-                    while (!brk) begin
+                    while (!brk && hlt) begin
                         #1
                         clk <= 1;
                         #1
@@ -150,7 +151,9 @@ module cmd_handler;
                     end
 
                     ctrlen <= 1;
-                    $serial_send_str("#BRK"); // return control immediately
+
+                    if (brk) $serial_send_str("#BRK");
+                    if (!hlt) $serial_send_str("#HLT");
                 end
 
                 "Q":

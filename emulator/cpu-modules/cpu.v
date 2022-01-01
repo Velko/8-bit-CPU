@@ -12,6 +12,7 @@ module cpu(
 
         input crstn,
         output brk,
+        output hlt,
 
         inout [31:0] control_word
     );
@@ -42,5 +43,6 @@ module cpu(
     );
 
     assign brk = splitter.clk_brk;
+    assign hlt = splitter.clk_halt;
 
 endmodule
