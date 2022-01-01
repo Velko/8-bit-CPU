@@ -1,6 +1,6 @@
 test: test-138 test-161-basics test-161-chaining test-245 test-173 test-283 test-86b test-86p \
       test-08b test-08p test-02b test-02p test-157b test-125p test-32b test-32p test-00b test-00p \
-	  test-193-basics test-193-chaining\
+	  test-193-basics test-193-chaining test-04p\
       test-gp-register test-alu-addsub test-alu-andor test-alu-xornot test-alu-shiftswap \
       test-flags-reg test-alu-block test-pc test-memory test-cpu
 
@@ -96,6 +96,11 @@ tb_02b.vvp: $(TB02BSRC)
 TB02PSRC=../chips/nor_02p.v testhelpers.v tb_02p.v
 
 tb_02p.vvp: $(TB02PSRC)
+	iverilog -Wall $^ -o $@
+
+TB04PSRC=../chips/not_04p.v testhelpers.v tb_04p.v
+
+tb_04p.vvp: $(TB04PSRC)
 	iverilog -Wall $^ -o $@
 
 TB32BSRC=../chips/or_32b.v testhelpers.v tb_32b.v
