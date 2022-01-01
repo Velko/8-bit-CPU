@@ -30,6 +30,8 @@ module mem_block(
 
     stack_pointer stack(.abus(abus), .reset(rst), .clk(clk), .iclk(iclk), .outn(addr_out_mux.y[3]), .loadn(addr_load_mux.y[3]), .cupn(spinc), .cdownn(spdec));
 
+    address_calc acalc(.abus(abus), .mbus(mbus), .clk(clk), .reset(rst), .outn(addr_out_mux.y[2]), .loadn(addr_load_mux.y[2]));
+
     //TODO: do we need dedicated module or re-using PC is fine?
     program_counter lr(.abus(abus), .reset(rst), .resetn(rstn), .clk(clk), .iclk(iclk), .outn(addr_out_mux.y[4]), .loadn(addr_load_mux.y[4]), .count(1'b0));
 
