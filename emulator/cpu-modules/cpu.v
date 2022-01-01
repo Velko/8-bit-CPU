@@ -42,7 +42,20 @@ module cpu(
         .step_ext(splitter.step_ext)
     );
 
+    // unfortunately, Out and COut control lines are allocated so that 2 chips are required
+    demux_138 load_mux_l(.e1n(splitter.loadctl[3]), .e2n(1'b0), .e3(1'b1), .a(splitter.loadctl[2:0]));
+    demux_138 load_mux_h(.e1n(1'b0), .e2n(1'b0), .e3(splitter.loadctl[3]), .a(splitter.loadctl[2:0]));
+
     assign brk = splitter.clk_brk;
     assign hlt = splitter.clk_halt;
+
+    //TODO: move to dedicated output modules
+    always @(posedge clk) begin
+        if (load_mux_l.y[6] == 1'b0)
+            $display("%d", main_bus);
+
+        if (load_mux_h.y[2] == 1'b0)
+            $write("%c", main_bus);
+    end
 
 endmodule
