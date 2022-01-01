@@ -1,5 +1,6 @@
 test: test-138 test-161-basics test-161-chaining test-245 test-173 test-283 test-86b test-86p \
       test-08b test-08p test-02b test-02p test-157b test-125p test-32b test-32p test-00b test-00p \
+	  test-193-basics test-193-chaining\
       test-gp-register test-alu-addsub test-alu-andor test-alu-xornot test-alu-shiftswap \
       test-flags-reg test-alu-block test-pc test-memory test-cpu
 
@@ -19,6 +20,11 @@ tb_138.vvp: $(TB138SRC)
 	iverilog -Wall $^ -o $@
 
 
+TB193BASICSRC=../chips/udcounter_193.v testhelpers.v tb_193_basics.v
+
+tb_193-basics.vvp: $(TB193BASICSRC)
+	iverilog -Wall $^ -o $@
+
 TB161BASICSRC=../chips/counter_161.v testhelpers.v tb_161_basics.v
 
 tb_161-basics.vvp: $(TB161BASICSRC)
@@ -28,6 +34,11 @@ tb_161-basics.vvp: $(TB161BASICSRC)
 TB161CHAINSRC=../chips/counter_161.v testhelpers.v tb_161_chaining.v
 
 tb_161-chaining.vvp: $(TB161CHAINSRC)
+	iverilog -Wall $^ -o $@
+
+TB193CHAINSRC=../chips/udcounter_193.v testhelpers.v tb_193_chaining.v
+
+tb_193-chaining.vvp: $(TB193CHAINSRC)
 	iverilog -Wall $^ -o $@
 
 
