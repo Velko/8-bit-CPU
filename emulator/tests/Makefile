@@ -6,8 +6,8 @@ test: test-138 test-161-basics test-161-chaining test-245 test-173 test-283 test
 
 include ../cpu-modules/Modules.mk
 
-test-%: tb_%.vvp
-	@vvp $<
+test-%: tb_%.vvp control_rom.vpi
+	@vvp -M. -mcontrol_rom $<
 
 
 xtest-%: tb_%.vvp
@@ -180,8 +180,5 @@ TBCPUSRC=$(CPUSRC) testhelpers.v tb_cpu.v
 tb_cpu.vvp: $(TBCPUSRC)
 	iverilog -Wall $^ -o $@
 
-
-
-
 clean:
-	rm -f *.vvp
+	rm -f *.vvp *.o *.vpi

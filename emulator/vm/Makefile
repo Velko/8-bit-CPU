@@ -1,12 +1,12 @@
-all: cmd_handler.vvp vm_plugin.vpi
+all: cmd_handler.vvp serial_conn.vpi control_rom.vpi
 
 include ../cpu-modules/Modules.mk
 
-run: cmd_handler.vvp vm_plugin.vpi
-	vvp -M. -mvm_plugin cmd_handler.vvp
+run: cmd_handler.vvp serial_conn.vpi control_rom.vpi
+	vvp -M. -mserial_conn -mcontrol_rom cmd_handler.vvp
 
-vm_plugin.vpi: serial_cmd.cpp control_words.cpp registration.cpp serial_host.cpp arduino_string.cpp microcode.c
-	iverilog-vpi --name=vm_plugin $^
+serial_conn.vpi: serial_cmd.cpp registration.cpp serial_host.cpp arduino_string.cpp
+	iverilog-vpi --name=serial_conn $^
 
 CMDSRC=$(CPUSRC) cmd_handler.v
 
