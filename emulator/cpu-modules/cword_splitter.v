@@ -13,7 +13,9 @@ module cword_splitter(
         output step_reset,
         output step_ext,
         output clk_halt,
-        output clk_brk
+        output clk_brk,
+        output stack_inc,
+        output stack_dec
     );
 
     assign outctl = control_word[3:0];
@@ -29,5 +31,7 @@ module cword_splitter(
     assign step_ext = control_word[5];
     assign clk_halt = control_word[13];
     assign clk_brk = control_word[26];
+    assign stack_inc = control_word[21];
+    assign stack_dec = control_word[22];
 
 endmodule

@@ -31,7 +31,9 @@ module cpu(
         .addrloadctl(splitter.addrloadctl),
         .outctl(splitter.outctl),
         .loadctl(splitter.loadctl),
-        .iout(iout)
+        .iout(iout),
+        .spinc(splitter.stack_inc),
+        .spdec(splitter.stack_dec)
         );
 
     control_logic ctrl(.opcode(iout), .flags(fout), .rstn(crstn), .iclk(iclk), .control_word(control_word), .ctrlen(ctrlen),

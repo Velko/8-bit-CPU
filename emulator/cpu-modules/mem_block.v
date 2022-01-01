@@ -14,6 +14,9 @@ module mem_block(
         input clk,
         input iclk,
 
+        input spinc,
+        input spdec,
+
         output [7:0] iout
 );
     program_counter pc(.abus(abus), .reset(rst), .resetn(rstn), .clk(clk), .iclk(iclk), .outn(addr_out_mux.y[5]), .loadn(addr_load_mux.y[5]), .count(!addr_out_mux.y[5]));
@@ -24,6 +27,8 @@ module mem_block(
 
     tx_register txl(.abus(abus[7:0]), .mbus(mbus), .reset(rst), .clk(clk), .iclk(iclk), .aoutn(addr_out_mux.y[0]), .aloadn(addr_load_mux.y[0]), .moutn(out_mux_h.y[3]), .mloadn(load_mux_h.y[3]));
     tx_register txh(.abus(abus[15:8]), .mbus(mbus), .reset(rst), .clk(clk), .iclk(iclk), .aoutn(addr_out_mux.y[0]), .aloadn(addr_load_mux.y[0]), .moutn(out_mux_l.y[5]), .mloadn(load_mux_l.y[5]));
+
+    stack_pointer stack(.abus(abus), .reset(rst), .clk(clk), .iclk(iclk), .outn(addr_out_mux.y[3]), .loadn(addr_load_mux.y[3]), .cupn(spinc), .cdownn(spdec));
 
     demux_138 addr_out_mux(.e1n(1'b0), .e2n(1'b0), .e3(1'b1), .a(addroutctl));
     demux_138 addr_load_mux(.e1n(1'b0), .e2n(1'b0), .e3(1'b1), .a(addrloadctl));
