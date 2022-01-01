@@ -110,6 +110,11 @@ def find_port() -> str:
     if port is not None:
         return port
 
+    # if there's a virtual pty0 in current directory, it must be connected to emulator
+    if os.path.exists("pty0"):
+        return "pty0"
+
+    # look for Arduino
     ports = list(filter(lambda fn: fn.startswith("ttyACM") or fn.startswith("ttyUSB"),  os.listdir("/dev")))
 
     if len(ports) > 1:
