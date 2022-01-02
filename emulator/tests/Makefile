@@ -10,10 +10,6 @@ test-%: tb_%.vvp control_rom.vpi
 	@vvp -M. -mcontrol_rom $<
 
 
-xtest-%: tb_%.vvp
-	@vvp -M../vm -mvm_plugin $<
-
-
 TB138SRC=../chips/demux_138.v testhelpers.v tb_138.v
 
 tb_138.vvp: $(TB138SRC)
