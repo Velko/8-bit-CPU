@@ -1,8 +1,0 @@
-OBJS=serial_host.o main.o serprog.o opbuf.o
-CXXFLAGS=-g -O0
-
-serp: $(OBJS)
-	$(CXX) -g -o $@ $(OBJS)
-
-clean:
-	rm -rf $(OBJS) serp
