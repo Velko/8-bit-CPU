@@ -214,18 +214,16 @@ Repository index
 * **arduino** - Arduino sketches and C++ code, to help test and automate things
     * **bouncyy** - software button debouncer and "rebouncer"
     * **eeprom_burner** - sketch to write 7-seg, microcode and program ROM, onboard content generation
-    * **emulpins** - hardware emulator. Speaks same protocol as **pincontrol**. Can also be built for/ran on Linux
     * **flash_writer** - simple sketch to write SST39SF*** Flash chips.
     * **lib** - some common routines
-    * **modules_test** - (deprecated) module tester
     * **pincontrol** - substitute Control Logic. Controlled via serial link from **pycontrol**
-    * **serprog** - (abandoned experiment) attempting to implement SerProg ([FlashROM][flashrom]) for EEPROM programmer
     * **xmprog** - (very early stage) XMODEM-compatible EEPROM programmer
 * **doc** - some (mostly outdated) design thoughts, BOM, etc.
 * **emulator** - hardware emulator in Verilog
     * **chips** - Verilog descriptions of (mostly 74xx) chips
     * **cpu-modules** - "wired up" CPU modules
     * **tests** - test benches for chips and modules
+    * **vm** - a "virtual machine". Speaks same protocol as **pincontrol**
 * **hardware** - hardware schematics, boards, etc.
     * **breadboard** - Fritzig projects for some modules
     * **pcb** - KiCad schematics and boards
@@ -326,6 +324,10 @@ Progress
   will not have access to latest software improvements. (CustomAsm, MyPy, etc.), Instead I took the
   "latest and greatest" and removed all features that are not supported by hardware yet. Will gradually
   add those back as I assemble the CPU.
+* Replaced the hardware emulator with one developed in Verilog. Implemented 74-series chips as basic
+  building blocks. The rest of the machine is "wired up" from those blocks. It gives a runnable version
+  and represents how it can be built on breadboards or PCBs. Same as previous implementation, it can
+  be controlled via virtual serial connection.
 
 [eater-net-8bit]: https://eater.net/8bit
 [velkoraspi]: https://velkoraspi.blogspot.com/
@@ -333,6 +335,5 @@ Progress
 [pytest]: https://docs.pytest.org/en/stable/
 [first-announce]: https://www.reddit.com/r/beneater/comments/loy9kj/important_milestone_it_works/
 [customasm]: https://github.com/hlorenzi/customasm
-[flashrom]: https://flashrom.org/Flashrom
 [digital]: https://github.com/hneemann/Digital
 [logisim]: http://www.cburch.com/logisim/
