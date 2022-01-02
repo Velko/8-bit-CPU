@@ -165,6 +165,28 @@ While, in theory, there might be need to load same value into multiple modules s
 not yet encountered one, and I'm happy to live with that limitation.
 
 
+No MAR, separate Address Bus
+----------------------------
+
+While trying to adjust the architecture for 16-bit memory space, I found out that having a single
+Main Bus and Memory Address Register comes with performance penalty, as all address transfers takes
+more cycles.
+
+After some experimentation I found out that the most optimal solution is to remove the MAR entirely
+and have a separate 16-bit Address Bus, connected directly to the RAM chip(s).
+
+Now, for example, Progam Counter can put an address on this bus, and the data is available to be sent on the
+Main Bus.
+
+Additionally, I re-designed PC in a way, that it can output the "old" value on the Address Bus, and
+increment itself simultaneously. As a result, I can reduce the fetch stage of each instruction to just
+single cycle.
+
+There are some situations (like JMP instruction), when data should be exchanged between Address and
+Main buses. There's a pair of special Transfer Registers, that allows to transfer low or high bytes
+between the buses.
+
+
 Arduino + Python test module
 ----------------------------
 
