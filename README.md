@@ -3,7 +3,8 @@
 
 After watching [series of videos][eater-net-8bit] by Ben Eater building an 8-bit computer from scratch,
 I was hooked. Various thoughts for improvements and experiments was running through my mind. But first
-I have to build one. Improvements will come later.
+I have to build one. Improvements will come later. Whom am I kidding? I'll never be able to build an
+exact replica, I'll incorporate improvements as I go.
 
 In contrast to Ben, I'm not that crazy about building the whole thing on breadboards. PCBs are fine,
 I like them, but building the whole thing on single board takes away the flexibility. So the plan is
@@ -28,7 +29,8 @@ Key differences from Ben's version
 I felt that 16 bytes of total memory might be too tight, went for 8-bit addressing and 256 bytes
 of memory straight from the beginning. "Real" 32 KiB SRAM chip is used, with remaining higher address
 lines tied to ground. Expanding to 256 bytes does not introduce more complexity, I think that it even
-made things easier. I plan to expand further to full 64KiB of memory, eventually.
+made things easier. The emulated version has (and is able to use) 64KiB of memory, hardware version
+has not catched up with it yet.
 
 
 ROM and bootloader mode
@@ -76,15 +78,16 @@ felt a little pricey when I ordered parts and I was not completely sure if I'll 
 now I only have 28C64 chips, limiting number of opcodes to 64. It is still 4 times more than in Ben's
 version.
 
-I could probably lose one or both extra flags (not using N and V that much for now) and re-use address
-lines for opcodes, but I think I'll upgrade the EEPROMs or check out Flash chips instead.
+There are plans to support "extended" opcodes (up to 512, or even more, if required). Planning to switch
+to SST39SF010A chips for microcode ROMs. These have more capacity (and address lines) and are a bit
+cheaper as well.
 
 
 Modular ALU
 -----------
 
-While currently there is only single module for Add and Subtract (with or without carry/borrow),
-design allows additional modules for other operations - AND/OR, XOR/NOT, SHIFT.
+Currently there are 2 ALU modules: Add/Subtract (with or without carry/borrow),
+and AND/OR. 2 more modules are about to come - XOR/NOT, Shift/Nibble-swap.
 
 
 Flags register as an independent entity
@@ -183,17 +186,25 @@ Using the instruction-like functions and [pytest][pytest] framework wrote a quit
 It can check couple hundred scenarios in just few seconds and point out if something does not work as
 expected. It has already saved me several times, when I did some rewiring.
 
-With help of these instruction-like functions I also wrote some demo programs. Largest one is Sieve
-of Eratosthenes - it finds all 8-bit prime numbers. All variables/arrays required for algorithm are
-stored in the RAM. The control flow reads its input only from Flags register.
-
-With some "clever" manipulations, I add necessary labels and jumps to replace Python's while/if/
-continue/break control flow. The resulting code is ran using alternate "backend" that generates
-machine code, instead of sending it to hardware directly. Machine code that can be written into program
-ROM or loaded into RAM by different means.
-
 At the moment the test module is swapped out for "real" EEPROM-based Control Logic, but I'll definitely
 find a way to use both of them in parallel, as it is too useful to be retired.
+
+
+Programmed using CustomAsm
+--------------------------
+
+There was Python-based "assembler" at first, but in the end I adopted [CustomAsm][customasm] for
+machine code generation. There's an utility that takes my microcode definition and exports a file,
+describing them for [CustomAsm][customasm]. It takes it from there.
+
+
+Debugger
+--------
+As the Test module allows great deal of flexibility, I was able to also develop a simple debugger.
+It can examine registers, RAM contents, single step. Addition of BRK instruction and corresponding
+control line introduced ability to set breakpoints and run the program in full-speed. Unfortunately
+it only works with emulator, as current hardware doesn't support both "normal" Control Logic and
+Test modules connected simultaneously.
 
 
 Side-project: EEPROM writer
@@ -205,6 +216,33 @@ Ben's version, but wiring is different, because it uses Arduino's SPI module to 
 (it is much faster than shiftOut() method). Additional headers on the board gives access to "address" and
 "data bus" pins, so the board can be used for different purposes when no EEPROMs need to be programmed.
 I used it as the Test Module at first.
+
+
+Side-project #2: Flash writer
+-----------------------------
+
+As I plan to switch to Flash chips for control ROMs, there's need for a device that can write them.
+It is also implemented as an Arduino Uno shield. The writer's firmware currently is incomplete,
+it can read and write the flash as proof-of-concept, but does not write any meaningful content. The
+plans are that it should receive the contents from file via XMODEM protocol.
+
+
+Emulated in Verilog
+-------------------
+
+In order to be able to work with the software side of the project, when hardware was not available,
+I wrote an in-Arduino emulator, that speaks same protocol as Test module. With time that proved to
+be insufficient, as Arduino was still needed, so I ported the C++ code to run on PC. It worked fine,
+but was a hand-crafted approximation of the CPU, so I could not really test all "what if" scenarios
+I'd like to.
+
+So I decided to build another emulator, using proper hardware description language - [Verilog][verilog].
+The idea was that I first make "building blocks" - (hopefully accurate) implementations of 74-series
+logic chips, and then connect them together into CPU modules. This way I get a runnable representation
+of the thing, how it should be built with real chips.
+
+To provide connectivity with (virtualized) serial port, I built additional [VPI][vpi] module.
+
 
 Repository index
 ================
@@ -337,3 +375,5 @@ Progress
 [customasm]: https://github.com/hlorenzi/customasm
 [digital]: https://github.com/hneemann/Digital
 [logisim]: http://www.cburch.com/logisim/
+[verilog]: https://en.wikipedia.org/wiki/Verilog
+[vpi]: https://en.wikipedia.org/wiki/Verilog_Procedural_Interface
