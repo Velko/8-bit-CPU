@@ -1,106 +1,106 @@
 #ruledef
 {
-    jmp ({target}) =>
+    jmp {target} =>
     {
         offset = target - $ - 1
         assert (offset <= 127)
         assert (offset >= -128)
-        asm { rjmp (offset) }
+        asm { rjmp offset }
     }
 
-    jmp ({target}) =>
+    jmp {target} =>
     {
-        asm { ljmp (target) }
+        asm { ljmp target }
     }
 
-    beq ({target}) =>
-    {
-        offset = target - $ - 1
-        assert (offset <= 127)
-        assert (offset >= -128)
-        asm { beqr (offset) }
-    }
-
-    beq ({target}) =>
-    {
-        asm { beql (target) }
-    }
-
-    bne ({target}) =>
+    beq {target} =>
     {
         offset = target - $ - 1
         assert (offset <= 127)
         assert (offset >= -128)
-        asm { bner (offset) }
+        asm { beqr offset }
     }
 
-    bne ({target}) =>
+    beq {target} =>
     {
-        asm { bnel (target) }
+        asm { beql target }
     }
 
-    bcs ({target}) =>
-    {
-        offset = target - $ - 1
-        assert (offset <= 127)
-        assert (offset >= -128)
-        asm { bcsr (offset) }
-    }
-
-    bcs ({target}) =>
-    {
-        asm { bcsl (target) }
-    }
-
-    bcc ({target}) =>
+    bne {target} =>
     {
         offset = target - $ - 1
         assert (offset <= 127)
         assert (offset >= -128)
-        asm { bccr (offset) }
+        asm { bner offset }
     }
 
-    bcc ({target}) =>
+    bne {target} =>
     {
-        asm { bccl (target) }
+        asm { bnel target }
     }
 
-    bmi ({target}) =>
-    {
-        offset = target - $ - 1
-        assert (offset <= 127)
-        assert (offset >= -128)
-        asm { bmir (offset) }
-    }
-
-    bmi ({target}) =>
-    {
-        asm { bmil (target) }
-    }
-
-    bpl ({target}) =>
+    bcs {target} =>
     {
         offset = target - $ - 1
         assert (offset <= 127)
         assert (offset >= -128)
-        asm { bplr (offset) }
+        asm { bcsr offset }
     }
 
-    bpl ({target}) =>
+    bcs {target} =>
     {
-        asm { bpll (target) }
+        asm { bcsl target }
     }
 
-    call ({target}) =>
+    bcc {target} =>
     {
         offset = target - $ - 1
         assert (offset <= 127)
         assert (offset >= -128)
-        asm { rcall (offset) }
+        asm { bccr offset }
     }
 
-    call ({target}) =>
+    bcc {target} =>
     {
-        asm { callf (target) }
+        asm { bccl target }
+    }
+
+    bmi {target} =>
+    {
+        offset = target - $ - 1
+        assert (offset <= 127)
+        assert (offset >= -128)
+        asm { bmir offset }
+    }
+
+    bmi {target} =>
+    {
+        asm { bmil target }
+    }
+
+    bpl {target} =>
+    {
+        offset = target - $ - 1
+        assert (offset <= 127)
+        assert (offset >= -128)
+        asm { bplr offset }
+    }
+
+    bpl {target} =>
+    {
+        asm { bpll target }
+    }
+
+    call {target} =>
+    {
+        offset = target - $ - 1
+        assert (offset <= 127)
+        assert (offset >= -128)
+        asm { rcall offset }
+    }
+
+    call {target} =>
+    {
+        asm { callf target }
     }
 }

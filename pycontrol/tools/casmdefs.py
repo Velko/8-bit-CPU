@@ -54,7 +54,7 @@ def generate_casmdefs(rdfile: TextIO) -> None:
         iargs = ", ".join(in_args)
         gargs = " @ ".join(glue_args)
 
-        rdfile.write(f"    {microcode.name}  ({iargs}) => {gargs}\n")
+        rdfile.write(f"    {microcode.name}  {iargs} => {gargs}\n")
 
 
         #define OP_{:20}0x{:02x}\n".format(name, microcode.opcode))
