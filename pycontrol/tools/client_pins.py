@@ -6,11 +6,8 @@ from typing import Dict, Sequence
 from libcpu.util import unwrap
 from libcpu.pinclient import PinClient
 
-from libcpu.PyAsmExec import setup_live, control
-setup_live()
-from libcpu.PyAsmExec import pins
-
-client = unwrap(pins)
+from libcpu.PyAsmExec import setup_live
+backend = setup_live()
 
 from libcpu import DeviceSetup, devices
 from libcpu.pin import PinBase, Pin, MuxPin
@@ -30,49 +27,48 @@ class TesterClient(cmd.Cmd):
         return list(filter(lambda n: n.startswith(text) and isinstance(pin_map[n], Pin), pin_map.keys()))
 
     def do_EOF(self, arg: str) -> None:
-        if pins is not None:
-            pins.close()
+        backend.client.close()
         sys.exit(0)
 
     def do_identify(self, arg: str) -> None:
         'Identify device'
-        chr = client.identify()
+        chr = backend.client.identify()
         print (chr)
 
     def do_off(self, arg: str) -> None:
         'Turn everything off, release Bus'
-        control.reset()
-        client.off(control.default)
-        print(bin(control.c_word))
+        backend.control.reset()
+        backend.client.off(backend.control.default)
+        print(bin(backend.control.c_word))
 
     def do_send(self, arg: str) -> None:
         'Send value on to the Bus'
-        client.bus_set(arg)
+        backend.client.bus_set(arg)
 
     def do_bus(self, arg: str) -> None:
         'Read current value on the Bus'
-        chr = client.bus_get()
+        chr = backend.client.bus_get()
         print (chr)
 
     def do_release(self, arg: str) -> None:
         'Release bus'
-        client.bus_free()
+        backend.client.bus_free()
 
     def do_flags(self, arg: str) -> None:
         'Read flags'
-        print (client.flags_get())
+        print (backend.client.flags_get())
 
     def do_set(self, arg: str) -> None:
         'Set control pin ignoring active-high/low setting'
         if arg in pin_map:
             pin = pin_map[arg]
             if isinstance(pin, Pin):
-                control.set(pin.num)
+                backend.control.set(pin.num)
             else:
                 raise Unsupported
         else:
-            control.set(int(arg, 0))
-        print(bin(control.c_word))
+            backend.control.set(int(arg, 0))
+        print(bin(backend.control.c_word))
 
     complete_set = complete_pin_direct
 
@@ -81,70 +77,70 @@ class TesterClient(cmd.Cmd):
         if arg in pin_map:
             pin = pin_map[arg]
             if isinstance(pin, Pin):
-                control.clr(pin.num)
+                backend.control.clr(pin.num)
             else:
                 raise Unsupported
         else:
-            control.clr(int(arg))
-        print(bin(control.c_word))
+            backend.control.clr(int(arg))
+        print(bin(backend.control.c_word))
 
     complete_clr = complete_pin_direct
 
     def do_enable(self, arg: str) -> None:
         'Enable control pin according to active-high/low setting'
         pin_map[arg].enable()
-        print(bin(control.c_word))
+        print(bin(backend.control.c_word))
 
     complete_enable = complete_pin
 
     def do_disable(self, arg: str) -> None:
         'Disable control pin according to active-high/low setting'
         pin_map[arg].disable()
-        print(bin(control.c_word))
+        print(bin(backend.control.c_word))
 
     complete_disable = complete_pin
 
     def do_commit(self, arg: str) -> None:
         'Send the control word to Arduino'
-        client.ctrl_commit(control.c_word)
+        backend.client.ctrl_commit(backend.control.c_word)
 
     def do_pulse(self, arg: str) -> None:
         'Pulse normal clock'
-        client.clock_pulse()
+        backend.client.clock_pulse()
 
     def do_inverted(self, arg: str) -> None:
         'Pulse inverted clock'
-        client.clock_inverted()
+        backend.client.clock_inverted()
 
     def do_tick(self, arg: str) -> None:
         'Pulse both clocks'
-        client.clock_tick()
+        backend.client.clock_tick()
 
     def do_ir_get(self, arg: str) -> None:
-        control.reset()
+        backend.control.reset()
         pin_map['irfetch.load'].enable()
-        rv = client.ir_get(control.c_word)
+        rv = backend.client.ir_get(backend.control.c_word)
         print (rv)
 
 
     def do_add_sample(self, arg: str) -> None:
-        client.off(control.default)
-        client.bus_set(24)
-        control.clr(0)
-        client.ctrl_commit(control.c_word)
-        client.clock_tick()
-        control.set(0)
-        control.clr(2)
-        client.ctrl_commit(control.c_word)
-        client.bus_set(18)
-        client.clock_tick()
-        client.bus_free()
-        control.set(2)
-        control.clr(3)
-        client.ctrl_commit(control.c_word)
-        print(client.bus_get())
-        control.set(3)
-        client.ctrl_commit(control.c_word)
+        backend.client.off(backend.control.default)
+        backend.client.bus_set(24)
+        backend.control.clr(0)
+        backend.client.ctrl_commit(backend.control.c_word)
+        backend.client.clock_tick()
+        backend.control.set(0)
+        backend.control.clr(2)
+        backend.client.ctrl_commit(backend.control.c_word)
+        backend.client.bus_set(18)
+        backend.client.clock_tick()
+        backend.client.bus_free()
+        backend.control.set(2)
+        backend.control.clr(3)
+        backend.client.ctrl_commit(backend.control.c_word)
+        print(backend.client.bus_get())
+        backend.control.set(3)
+        backend.client.ctrl_commit(backend.control.c_word)
 
 def build_pinmap() -> None:
     for name, attr in all_pins():

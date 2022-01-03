@@ -13,9 +13,7 @@ from libcpu.cpu_exec import CPUBackendControl
 
 @pytest.fixture(scope="session")
 def cpu_backend_real() -> CPUBackendControl:
-    pins = PinClient()
-    control = CtrlWord()
-    backend = CPUBackendControl(pins, control)
+    backend = CPUBackendControl()
 
     install_cpu_backend(backend)
 

@@ -11,9 +11,9 @@ class InvalidOpcodeException(Exception):
     pass
 
 class CPUBackendControl:
-    def __init__(self, client: PinClient, control: CtrlWord):
-        self.client = client
-        self.control = control
+    def __init__(self) -> None:
+        self.client = PinClient()
+        self.control = CtrlWord()
         self.out_hooked_val: Optional[int] = None
         self.branch_taken = False
         self.flags_cache: Optional[int] = None
@@ -23,7 +23,7 @@ class CPUBackendControl:
         # prepare control word for IRFetch
         self.control.reset()
         IRFetch.load.enable()
-        self.irf_word = control.c_word
+        self.irf_word = self.control.c_word
 
         # RAM hooks
         Imm.connect(self.client)
