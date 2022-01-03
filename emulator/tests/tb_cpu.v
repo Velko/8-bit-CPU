@@ -19,6 +19,7 @@ module tb_cpu;
     cpu processor(.main_bus(main_bus), .addr_bus(addr_bus), .rst(rst), .clk(clk), .iclk(iclk), .control_word(wcontrol_word), .ctrlen(1'b1));
 
     initial begin
+        $display("Whole CPU...");
         fdata <= 0;
 
         // clear, reset

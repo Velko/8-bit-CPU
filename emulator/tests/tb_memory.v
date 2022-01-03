@@ -13,7 +13,7 @@ module tb_memory;
     memory m(.outn(outn), .writen(wen), .clk(clk), .abus(addr), .mbus(mbus));
 
     initial begin
-
+        $display("Memory...");
         wdata <= 0;
         outn <= 1;
         wen <= 1;

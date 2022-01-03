@@ -19,6 +19,7 @@ module tb_alu_block;
     alu_block ab(.main_bus(main_bus), .rst(reset), .outctl(outctl), .loadctl(loadctl), .clk(clk), .iclk(iclk), .alt(alt), .calcfn(cfn), .arg_l(arg_l), .arg_r(arg_r), .cin(cin));
 
     initial begin
+        $display("ALU block...");
         fdata <= 0;
 
         outctl <= 15;

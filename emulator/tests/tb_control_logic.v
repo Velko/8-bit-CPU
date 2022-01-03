@@ -18,6 +18,7 @@ module tb_control_logic;
     );
 
     initial begin
+        $display("Control logic...");
         iclk <= 0;
         ctrlen <= 0;
         rstn <= 0;
