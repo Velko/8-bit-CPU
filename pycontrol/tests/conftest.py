@@ -5,9 +5,7 @@ import localpath
 from libcpu.test_helpers import CPUHelper
 from typing import  Sequence
 
-from libcpu.pinclient import PinClient
 from libcpu.cpu import setup_live
-from libcpu.ctrl_word import CtrlWord
 from libcpu.cpu_exec import CPUBackendControl
 
 

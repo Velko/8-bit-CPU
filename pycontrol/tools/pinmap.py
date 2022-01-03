@@ -3,8 +3,7 @@
 import localpath
 
 from libcpu.discovery import simple_pins, mux_pins, all_muxes
-from libcpu.pin import Pin, MuxPin
-from typing import Dict, Sequence, Tuple
+from typing import Dict
 
 pinmap: Dict[int, str] = {}
 

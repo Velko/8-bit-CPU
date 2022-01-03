@@ -1,4 +1,4 @@
-from .pin import PinBase, Level
+from .pin import PinBase
 
 class Register:
     def __init__(self, name: str, out: PinBase, load: PinBase) -> None:

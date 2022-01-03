@@ -3,7 +3,7 @@
 import pytest
 
 from libcpu.discovery import simple_pins, all_muxes, mux_pins
-from libcpu.pin import Pin, MuxPin, Mux
+from libcpu.pin import Mux
 from typing import Iterator, Tuple
 
 def simple_pin_nums() -> Iterator[Tuple[str, int]]:

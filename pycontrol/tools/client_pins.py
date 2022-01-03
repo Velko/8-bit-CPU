@@ -3,16 +3,12 @@
 import sys, cmd
 import localpath
 from typing import Dict, Sequence
-from libcpu.util import unwrap
-from libcpu.pinclient import PinClient
 
 from libcpu.cpu import setup_live
 backend = setup_live()
 
-from libcpu import DeviceSetup, devices
-from libcpu.pin import PinBase, Pin, MuxPin
+from libcpu.pin import PinBase, Pin
 from libcpu.discovery import all_pins
-from libcpu.util import UninitializedError
 
 pin_map: Dict[str, PinBase] = dict()
 

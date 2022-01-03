@@ -2,7 +2,6 @@
 
 import pytest
 
-from libcpu.cpu_exec import CPUBackendControl
 from libcpu.opcodes import permute_gp_regs_all, permute_gp_regs_nsame, gp_regs
 from libcpu.devices import Register, Flags
 from typing import Iterator, Tuple

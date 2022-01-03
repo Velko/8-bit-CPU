@@ -1,4 +1,3 @@
-import sys
 from typing import Iterator, Tuple
 from .pin import PinBase, Pin, MuxPin, Mux
 from . import DeviceSetup
