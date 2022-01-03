@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-from libcpu.cpu import InvalidOpcodeException, opcode_of
+from libcpu.cpu import opcode_of
 from libcpu.devices import Register
-from libcpu.cpu_exec import CPUBackendControl
+from libcpu.cpu_exec import CPUBackendControl, InvalidOpcodeException
 from libcpu.DeviceSetup import Flags, PC, Ram
 from libcpu.pinclient import RunMessage
 

@@ -1,15 +1,16 @@
 from typing import Union, Tuple, Optional, Sequence
-from .opcode_builder import MicroCode
 from .markers import AddrBase
-from .pseudo_devices import Imm, EnableCallback
+from .pseudo_devices import Imm
 from .DeviceSetup import COutPort, IRFetch, OutPort, ProgMem, PC, Flags, StepCounter
 from .opcodes import opcodes, ops_by_code, fetch
-from .cpu import CPUBackend, InvalidOpcodeException, ret
 from .pinclient import PinClient
 from .ctrl_word import CtrlWord
 from .util import ControlSignal
 
-class CPUBackendControl(CPUBackend):
+class InvalidOpcodeException(Exception):
+    pass
+
+class CPUBackendControl:
     def __init__(self, client: PinClient, control: CtrlWord):
         self.client = client
         self.control = control

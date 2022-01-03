@@ -1,22 +1,14 @@
-from typing import Optional, Union, Tuple
-from abc import abstractmethod
+from typing import Optional, Union
 from .util import UninitializedError
 from .DeviceSetup import RegA, RegB, RegC, RegD, Flags as RegFlags
 from .devices import Register, Flags
 from .markers import AddrBase
 from .opcodes import opcodes
+from .cpu_exec import CPUBackendControl, InvalidOpcodeException
 
-class CPUBackend:
-    @abstractmethod
-    def execute_mnemonic(self, opcode: str, arg: Union[None, int, AddrBase]=None) -> Tuple[bool, Optional[int]]: pass
+backend: Optional[CPUBackendControl] = None
 
-class InvalidOpcodeException(Exception):
-    pass
-
-
-backend: Optional[CPUBackend] = None
-
-def install_cpu_backend(engine: CPUBackend) -> None:
+def install_cpu_backend(engine: CPUBackendControl) -> None:
     global backend
     backend = engine
 
