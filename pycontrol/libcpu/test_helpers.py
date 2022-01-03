@@ -4,7 +4,6 @@ from libcpu.cpu import InvalidOpcodeException, opcode_of
 from libcpu.devices import Register
 from libcpu.cpu_exec import CPUBackendControl
 from libcpu.DeviceSetup import Flags, PC, Ram
-from libcpu.markers import InitializedBuffer
 from libcpu.pinclient import RunMessage
 
 
@@ -59,10 +58,6 @@ class CPUHelper:
 
         self.backend.control.reset()
         self.backend.client.off(self.backend.control.default)
-
-    def write_data(self, data: InitializedBuffer) -> None:
-        for i in range(data.size):
-            self.write_ram(data.start + i, data.data[i]);
 
     def write_bytes(self, addr: int, data: bytes) -> None:
         for i, b in enumerate(data):
