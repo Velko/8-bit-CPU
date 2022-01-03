@@ -8,9 +8,11 @@ from .cpu_exec import CPUBackendControl, InvalidOpcodeException
 
 backend: Optional[CPUBackendControl] = None
 
-def install_cpu_backend(engine: CPUBackendControl) -> None:
+def setup_live() -> CPUBackendControl:
     global backend
-    backend = engine
+    backend = CPUBackendControl()
+
+    return backend
 
 A = RegA
 B = RegB

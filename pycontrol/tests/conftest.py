@@ -6,16 +6,14 @@ from libcpu.test_helpers import CPUHelper
 from typing import  Sequence
 
 from libcpu.pinclient import PinClient
-from libcpu.cpu import install_cpu_backend
+from libcpu.cpu import setup_live
 from libcpu.ctrl_word import CtrlWord
 from libcpu.cpu_exec import CPUBackendControl
 
 
 @pytest.fixture(scope="session")
 def cpu_backend_real() -> CPUBackendControl:
-    backend = CPUBackendControl()
-
-    install_cpu_backend(backend)
+    backend = setup_live()
 
     return backend
 

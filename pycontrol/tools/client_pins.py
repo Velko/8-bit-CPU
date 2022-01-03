@@ -6,7 +6,7 @@ from typing import Dict, Sequence
 from libcpu.util import unwrap
 from libcpu.pinclient import PinClient
 
-from libcpu.PyAsmExec import setup_live
+from libcpu.cpu import setup_live
 backend = setup_live()
 
 from libcpu import DeviceSetup, devices

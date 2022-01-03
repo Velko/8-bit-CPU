@@ -8,7 +8,7 @@ from libcpu.util import unwrap
 from libcpu.DeviceSetup import COutPort, IR, LR, OutPort, PC, Clock, SP
 from libcpu.pinclient import RunMessage
 from libcpu.opcodes import opcodes
-from libcpu.PyAsmExec import setup_live
+from libcpu.cpu import setup_live
 from libcpu.cpu import A, B, C, D
 
 from libcpu.test_helpers import CPUHelper
