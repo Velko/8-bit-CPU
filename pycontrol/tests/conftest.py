@@ -28,6 +28,7 @@ def random_bytes() -> Sequence[int]:
 
 @pytest.fixture
 def cpu_helper(cpu_backend_real: CPUBackendControl) -> CPUHelper:
+    cpu_backend_real.client.reset()
     cpu_backend_real.control.reset()
     cpu_backend_real.flags_cache = None
     cpu_backend_real.opcode_cache = None

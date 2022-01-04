@@ -21,23 +21,16 @@ def test_pc_load(cpu_helper: CPUHelper, expected: int) -> None:
 
 
 
-class PCNext8: pass
 
 # assuming that PC works at all (test_pc_load should prove that), there's no need
 # to count full range. Since it is built from two 161 counter chips, we will select
 # range that includes both of them. For example 8..40
-@pytest.fixture(scope="module")
-def set_pc_next8(cpu_backend_real: CPUBackendControl) -> PCNext8:
-    # set PC to value so that next becomes 8
-    # (easier to test this way)
-    helper = CPUHelper(cpu_backend_real)
-    helper.load_reg16(PC, 7)
-
-    return PCNext8()
-
-
 @pytest.mark.parametrize("expected", range(8, 40))
-def test_pc_count(cpu_helper: CPUHelper, set_pc_next8: PCNext8, expected: int) -> None:
+def test_pc_count(cpu_helper: CPUHelper, expected: int) -> None:
+    # CPU gets a Reset before each test, preload value to increment from
+    cpu_helper.load_reg16(PC, expected - 1)
+
+    cpu_helper.backend.control.reset()
     PC.out.enable()
     cpu_helper.backend.client.ctrl_commit(cpu_helper.backend.control.c_word)
     cpu_helper.backend.client.clock_tick()
