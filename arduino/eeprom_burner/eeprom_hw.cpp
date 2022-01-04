@@ -18,9 +18,9 @@
 #define CURRENT_CS  CS1
 
 
-CtrlPin write_pin(EE_WRITE, CtrlPin::ACTIVE_LOW);
-CtrlPin cs_pin(CURRENT_CS, CtrlPin::ACTIVE_LOW);
-CtrlPin oe_pin(OE, CtrlPin::ACTIVE_LOW);
+OutPinL write_pin(EE_WRITE);
+OutPinL cs_pin(CURRENT_CS);
+OutPinL oe_pin(OE);
 
 /* Pins for data IO. LSB first */
 IOBus8bit data_bus;

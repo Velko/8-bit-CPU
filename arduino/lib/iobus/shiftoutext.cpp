@@ -4,11 +4,11 @@
 #define LATCH_PIN  10
 
 ShiftOutExt::ShiftOutExt()
-    : ShiftOutExt(CtrlPin(LATCH_PIN, CtrlPin::ACTIVE_HIGH))
+    : ShiftOutExt(OutPinH(LATCH_PIN))
 {
 }
 
-ShiftOutExt::ShiftOutExt(CtrlPin&& _latch)
+ShiftOutExt::ShiftOutExt(OutPinH&& _latch)
     : latch{_latch}
 {
 }
