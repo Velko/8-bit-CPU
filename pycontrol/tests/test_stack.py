@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import pytest
+import pytest, itertools
 
 pytestmark = pytest.mark.hardware
 
@@ -27,8 +27,10 @@ def test_lea_sp(cpu_helper: CPUHelper) -> None:
 
     assert value == 0x1234
 
-def test_sp_inc(cpu_helper: CPUHelper) -> None:
-    cpu_helper.load_reg16(SP, 12)
+# check transitions between SP chips
+@pytest.mark.parametrize("expected", itertools.chain(range(0xC, 0x15), range(0xFC, 0x105), range(0xFFC, 0x1005)))
+def test_sp_inc(cpu_helper: CPUHelper, expected: int) -> None:
+    cpu_helper.load_reg16(SP, expected - 1)
 
     cpu_helper.backend.control.reset()
     SP.inc.enable()
@@ -39,10 +41,11 @@ def test_sp_inc(cpu_helper: CPUHelper) -> None:
 
 
     value = cpu_helper.read_reg16(SP)
-    assert value == 13
+    assert value == expected
 
-def test_sp_dec(cpu_helper: CPUHelper) -> None:
-    cpu_helper.load_reg16(SP, 12)
+@pytest.mark.parametrize("expected", itertools.chain(range(0xC, 0x15), range(0xFC, 0x105), range(0xFFC, 0x1005)))
+def test_sp_dec(cpu_helper: CPUHelper, expected: int) -> None:
+    cpu_helper.load_reg16(SP, expected + 1)
 
     cpu_helper.backend.control.reset()
     SP.dec.enable()
@@ -53,7 +56,7 @@ def test_sp_dec(cpu_helper: CPUHelper) -> None:
 
 
     value = cpu_helper.read_reg16(SP)
-    assert value == 11
+    assert value == expected
 
 
 def test_push_a(cpu_helper: CPUHelper) -> None:
