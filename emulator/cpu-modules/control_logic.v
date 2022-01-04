@@ -14,7 +14,8 @@ module control_logic(
 
     reg [31:0] cword_out;
 
-    counter_161 cnt(.clk(iclk), .mrn(rstn), .pen(step_reset), .cep(!step_ext), .d(4'b0), .cet(1'b1));
+    //TODO: need an inverter here?
+    counter_161 cnt(.clk(iclk), .mrn(rstn), .pen(step_reset), .cep(!step_ext), .d(4'b0), .cet(!ctrlen));
 
     //TODO: works, but step_ext signal "pulls the rug" from under itself
     counter_161 ext(.clk(iclk), .mrn(rstn), .pen(step_reset), .cep(step_ext), .d(4'b0), .cet(1'b1));

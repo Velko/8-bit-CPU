@@ -105,6 +105,9 @@ class PinClient:
                 c = chr(int(line[6:]))
                 yield RunMessage(RunMessage.Reason.OUT, c)
 
+    def reset(self) -> None:
+        self.send_cmd('Z')
+
 def find_port() -> str:
     port = os.environ.get("SER_PORT")
     if port is not None:

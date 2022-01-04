@@ -16,7 +16,7 @@ module tb_cpu;
     reg [31:0] control_word;
     wire [31:0] wcontrol_word;
 
-    cpu processor(.main_bus(main_bus), .addr_bus(addr_bus), .rst(rst), .clk(clk), .iclk(iclk), .control_word(wcontrol_word), .ctrlen(1'b1), .crstn(!rst));
+    cpu processor(.main_bus(main_bus), .addr_bus(addr_bus), .rst(rst), .clk(clk), .iclk(iclk), .control_word(wcontrol_word), .ctrlen(1'b1));
 
     initial begin
         $display("Whole CPU...");
