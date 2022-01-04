@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import pytest
+import pytest, itertools
 
 pytestmark = pytest.mark.hardware
 
@@ -23,9 +23,9 @@ def test_pc_load(cpu_helper: CPUHelper, expected: int) -> None:
 
 
 # assuming that PC works at all (test_pc_load should prove that), there's no need
-# to count full range. Since it is built from two 161 counter chips, we will select
-# range that includes both of them. For example 8..40
-@pytest.mark.parametrize("expected", range(8, 40))
+# to count full range. Since it is built from four 161 counter chips, we should check
+# ranges that include transitions between chips
+@pytest.mark.parametrize("expected", itertools.chain(range(0xC, 0x15), range(0xFC, 0x105), range(0xFFC, 0x1005)))
 def test_pc_count(cpu_helper: CPUHelper, expected: int) -> None:
     # CPU gets a Reset before each test, preload value to increment from
     cpu_helper.load_reg16(PC, expected - 1)
