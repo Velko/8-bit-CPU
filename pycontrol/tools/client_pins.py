@@ -37,14 +37,21 @@ class TesterClient(cmd.Cmd):
         backend.client.off(backend.control.default)
         print(bin(backend.control.c_word))
 
-    def do_send(self, arg: str) -> None:
-        'Send value on to the Bus'
-        backend.client.bus_set(arg)
+    def do_addr(self, arg: str) -> None:
+        'Read/Send current value on the Address Bus'
+        if arg:
+            backend.client.addr_set(arg)
+        else:
+            chr = backend.client.addr_get()
+            print (chr)
 
     def do_bus(self, arg: str) -> None:
-        'Read current value on the Bus'
-        chr = backend.client.bus_get()
-        print (chr)
+        'Read/Send current value on the Main Bus'
+        if arg:
+            backend.client.bus_set(arg)
+        else:
+            chr = backend.client.bus_get()
+            print (chr)
 
     def do_release(self, arg: str) -> None:
         'Release bus'
@@ -119,24 +126,9 @@ class TesterClient(cmd.Cmd):
         print (rv)
 
 
-    def do_add_sample(self, arg: str) -> None:
+    def do_reset(self, arg: str) -> None:
         backend.client.off(backend.control.default)
-        backend.client.bus_set(24)
-        backend.control.clr(0)
-        backend.client.ctrl_commit(backend.control.c_word)
-        backend.client.clock_tick()
-        backend.control.set(0)
-        backend.control.clr(2)
-        backend.client.ctrl_commit(backend.control.c_word)
-        backend.client.bus_set(18)
-        backend.client.clock_tick()
-        backend.client.bus_free()
-        backend.control.set(2)
-        backend.control.clr(3)
-        backend.client.ctrl_commit(backend.control.c_word)
-        print(backend.client.bus_get())
-        backend.control.set(3)
-        backend.client.ctrl_commit(backend.control.c_word)
+        backend.client.reset()
 
 def build_pinmap() -> None:
     for name, attr in all_pins():
