@@ -1,12 +1,12 @@
 #ifndef CLOCK_H
 #define CLOCK_H
 
-class Clock
+#include "outpin.h"
+
+class Clock : public OutPinH
 {
-        int pin;
     public:
         Clock(int pin);
-        void setup();
         void pulse();
 };
 
