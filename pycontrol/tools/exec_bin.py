@@ -28,7 +28,7 @@ def upload() -> None:
 def run() -> None:
 
     # Reset PC
-    cpu_helper.load_reg16(PC, 0)
+    cpu_helper.backend.client.reset()
 
     # Drumroll... now it should happen for real
     print ("# Running ...", flush=True, file=sys.stderr)

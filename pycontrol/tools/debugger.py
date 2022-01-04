@@ -168,8 +168,8 @@ class Debugger:
 
 
     def reset(self) -> None:
-        # Reset PC
-        cpu_helper.load_reg16(PC, 0)
+        # Reset CPU
+        cpu_helper.backend.client.reset()
 
         self.halted = False
 
