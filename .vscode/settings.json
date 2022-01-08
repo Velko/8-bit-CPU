@@ -16,7 +16,8 @@
         "**/.pytest_cache": true,
         "**/*.vvp": true,
         "**/*.vpi": true,
-        "**/*.vcd": true
+        "**/*.vcd": true,
+        "**/pty?": true
     },
     "python.analysis.extraPaths": ["pycontrol"]
 }
