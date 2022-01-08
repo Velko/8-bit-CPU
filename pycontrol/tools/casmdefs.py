@@ -65,5 +65,5 @@ def generate_casmdefs(rdfile: TextIO) -> None:
 
 
 if __name__ == "__main__":
-    with open("export-c/velkocpu.def", "wt") as rdfile:
+    with open("../../include/velkocpu.def", "wt") as rdfile:
         generate_casmdefs(rdfile)

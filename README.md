@@ -278,6 +278,7 @@ Repository index
     * **lib** - some common routines
     * **pincontrol** - substitute Control Logic. Controlled via serial link from **pycontrol**
     * **xmprog** - (very early stage) XMODEM-compatible EEPROM programmer
+* **demo** - demo programs
 * **doc** - some (mostly outdated) design thoughts, BOM, etc.
 * **emulator** - hardware emulator in Verilog
     * **chips** - Verilog descriptions of (mostly 74xx) chips
@@ -304,15 +305,14 @@ Repository index
         * **register** - GP register
         * **sunit** - Shift Unit (ALU module for shift and nibble swap)
         * **transfer** - transfer register (between Main Bus and Address Bus)
+* **include** - C and .def files for inclusion on other programs
 * **parts** - custom KiCad symbols and footprints for missing components
 * **pycontrol** - Python-based control logic, microcode, tests, demo programs, etc.
-    * **demo** - demo programs in PyASM or Assembly
     * **libcpu** - main implementation of control logic, microcode
     * **localpath** - helper lib, bring arbitary locations in package search path
     * **stubs** - MyPy type definitions for packages that lack those
     * **tests** - PyTest scripts, testing (real or emulated) hardware and PyControl itself
     * **tools** - various tools that generates microcode, customasm definitions, execute and debug binaries
-        * **export-c** - exported C and .def files
 * **simulation** - [Logisim][logisim] and [Digital][digital] simulations for tricky logic
 
 Progress

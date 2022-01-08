@@ -136,7 +136,7 @@ def generate_defines(hfile: TextIO) -> None:
 
 
 if __name__ == "__main__":
-    with open("export-c/microcode.c", "wt") as cfile:
+    with open("../../include/microcode.c", "wt") as cfile:
         generate_microcode(cfile)
-    with open("export-c/op-defs.h", "wt") as hfile:
+    with open("../../include/op-defs.h", "wt") as hfile:
         generate_defines(hfile)

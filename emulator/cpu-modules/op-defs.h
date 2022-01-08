@@ -1,1 +1,1 @@
-../../pycontrol/tools/export-c/op-defs.h
+../../include/op-defs.h
