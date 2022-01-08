@@ -1,8 +1,0 @@
-OBJS=serial_host.o main.o xmprog.o arduino_string.o
-CXXFLAGS=-g -O0
-
-xmprog: $(OBJS)
-	$(CXX) -g -o $@ $(OBJS)
-
-clean:
-	rm -rf $(OBJS) xmprog

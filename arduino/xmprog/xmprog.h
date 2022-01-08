@@ -3,21 +3,24 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <stdio.h>
 
 
 #ifdef __AVR__
-#include <Arduino.h>
 #else
 #include "serial_host.h"
+#include <unistd.h>
+#define delay(X) sleep(X/1000)
+
 #endif
 
 
 class XmProg
 {
     private:
-        HardwareSerial &s_port;
+        FILE *s_port;
     public:
-        XmProg(HardwareSerial &serial);
+        XmProg(FILE *serial);
         void StepMainLoop();
         void SendRomContents(const char *file_name);
         void ReceiveRomContents(const char *file_name);

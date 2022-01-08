@@ -1,5 +1,0 @@
-socat PTY,link=pty0,raw,echo=0 PTY,link=pty1,raw,echo=0 &
-
-cu -l /dev/ttyUSB0
-
-cu -l pty0

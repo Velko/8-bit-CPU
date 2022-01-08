@@ -1,36 +1,21 @@
-#include "wrap_arduino.h"
-
 #include "xmprog.h"
-
-
-XmProg Prog(Serial);
-
-#ifndef __AVR__
+#include "debug.h"
+#include "uart.h"
+#include <avr/pgmspace.h>
 
 int main()
 {
-    setup();
+    uart_init();
+    stdout = stdin = serial;
+
+    printf_P(PSTR("XMODEM writer 0.1\r\n"));
+
+    XmProg Prog(serial);
 
     for(;;)
     {
-        loop();
+        Prog.StepMainLoop();
     }
 
     return 0;
-}
-
-
-#endif /* __AVR__ */
-
-void setup()
-{
-    Serial.begin(115200);
-    Serial.setTimeout(0);
-    while (!Serial);
-    Serial.println("XMODEM writer 0.1");
-}
-
-void loop()
-{
-    Prog.StepMainLoop();
 }

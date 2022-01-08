@@ -1,6 +1,10 @@
+#define F_CPU 16000000UL
 #include "xmprog.h"
 #include "debug.h"
 #include <string.h>
+#include <stdio.h>
+#include <avr/pgmspace.h>
+#include <util/delay.h>
 
 #define SOH     0x01
 #define EOT     0x04
@@ -12,32 +16,41 @@
 
 int calcrc(char *ptr, int count);
 
-XmProg::XmProg(HardwareSerial &s)
-    : s_port{s}
+XmProg::XmProg(FILE *s)
 {
+    s_port =  s;
+}
+
+char cmdbuf[20];
+
+void trim_end(char *str)
+{
+    char *s = str;
+    for (; *s; ++s);
+
+    while (s > str && (*s == '\r' || *s == ' ')) --s;
+    *s = 0;
 }
 
 void XmProg::StepMainLoop()
 {
-    String cmd = s_port.readStringUntil('\n');
+    fgets(cmdbuf, 20, s_port);
 
-    cmd.trim();
+    trim_end(cmdbuf);
 
-    if (cmd.equals("")) return;
+    if (cmdbuf[0] == 0) return;
 
-    if (cmd.startsWith("sx "))
+    if (strncmp_P(cmdbuf, PSTR("sx "), 3) == 0)
     {
-        String file_name = cmd.substring(3);
-        SendRomContents(file_name.c_str());
+        SendRomContents(cmdbuf + 3);
     }
-    else if (cmd.startsWith("rx "))
+    if (strncmp_P(cmdbuf, PSTR("rx "), 3) == 0)
     {
-        String file_name = cmd.substring(3);
-        ReceiveRomContents(file_name.c_str());
+        ReceiveRomContents(cmdbuf + 3);
     }
     else
     {
-        s_port.println("What?");
+        fprintf_P(s_port, PSTR("What?\r\n"));
     }
 }
 
@@ -53,7 +66,7 @@ void XmProg::SendRomContents(const char *file_name)
     /* Wait for initial C before starting to send */
     for(;;)
     {
-        int init_c = s_port.read();
+        int init_c = fgetc(s_port);
         dprintf("C: %d\n", init_c);
         if (init_c == C) break;
     }
@@ -62,20 +75,20 @@ void XmProg::SendRomContents(const char *file_name)
     {
         bool repeat_package = true;
         while (repeat_package) {
-            s_port.write(SOH);
-            s_port.write(data & 0xFF);
-            s_port.write((0xFF - data) & 0xFF);
+            fputc(SOH, s_port);
+            fputc(data & 0xFF, s_port);
+            fputc((0xFF - data) & 0xFF, s_port);
 
-            s_port.write(chipmem, 128);
+            fwrite(chipmem, 1, 128, s_port);
 
             uint16_t crc = calcrc((char *)chipmem, 128);
 
-            s_port.write(crc >> 8);
-            s_port.write(crc & 0xFF);
+            fputc(crc >> 8, s_port);
+            fputc(crc & 0xFF, s_port);
 
             for (;;)
             {
-                int ack = s_port.read();
+                int ack = fgetc(s_port);
                 if (ack == ACK || ack == NAK)
                 {
                     repeat_package = ack == NAK;
@@ -89,10 +102,10 @@ void XmProg::SendRomContents(const char *file_name)
         }
     }
 
-    s_port.write(EOT);
+    fputc(EOT, s_port);
     for (;;)
     {
-        int ack = s_port.read();
+        int ack = fgetc(s_port);
         if (ack == ACK)
         {
             break;
@@ -103,27 +116,33 @@ void XmProg::SendRomContents(const char *file_name)
     dprintf("Here we go!\n");
 }
 
+
 void XmProg::ReceiveRomContents(const char *file_name)
 {
     dprintf("Waiting for file: '%s'\n", file_name);
 
-    for (;;)
+    int soh = 0;
+    for (unsigned i = 0; i < 3 && soh != SOH; ++i)
     {
         /* wait and send initial Cs until sender starts */
-        s_port.write(C);
+        _delay_ms(1000);
+        fputc(C, s_port);
 
-        int soh = s_port.read();
-        if (soh == SOH) break;
+        soh = fgetc(s_port);
+
     }
+
+    if (soh != SOH) return;
+
 
     for (;;) {
 
         uint16_t packed_id;
-        s_port.readBytes((uint8_t *)&packed_id, 2);
+        fread(&packed_id, 1, 2, s_port);
         uint8_t data[128];
-        s_port.readBytes(data, 128);
+        fread(data, 1, 128, s_port);
         uint16_t crc_recv;
-        s_port.readBytes((uint8_t *)&crc_recv, 2);
+        fread(&crc_recv, 1, 2, s_port);
 
         /* swap bytes */
         crc_recv = (crc_recv << 8) | (crc_recv >> 8);
@@ -133,24 +152,28 @@ void XmProg::ReceiveRomContents(const char *file_name)
         if (crc_calc == crc_recv)
         {
             dprintf("block %x received\n", packed_id);
-            s_port.write(ACK);
+            fputc(ACK, s_port);
         }
         else
         {
             dprintf("block %x failed %x != %x\n", packed_id, crc_recv, crc_calc);
-            s_port.write(NAK);
+            fputc(NAK, s_port);
         }
 
-        int soh = s_port.read();
+        int soh = -1;
+        while (soh == -1) {
+            soh = fgetc(s_port);
+        }
+
         if (soh == SOH) continue;
         if (soh == EOT)
         {
-            s_port.write(ACK);
-            break;
+           fputc(ACK, s_port);
+            return;
         }
 
         dprintf("WTF??? %x\n", soh);
-
+        return;
     }
 
     /*for (;;)
@@ -166,7 +189,6 @@ void XmProg::ReceiveRomContents(const char *file_name)
 
     dprintf("Omg Omg!\n");
 }
-
 
 int calcrc(char *ptr, int count)
 {
