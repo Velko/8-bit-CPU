@@ -19,6 +19,7 @@ class XmProg
 {
     private:
         FILE *s_port;
+        void ReceivePacket();
     public:
         XmProg(FILE *serial);
         void StepMainLoop();

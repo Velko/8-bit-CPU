@@ -6,7 +6,7 @@ TARGET=xmprog
 #
 # Object files
 #
-OBJS=main.o uart.o xmprog.o
+OBJS=main.o uart.o ctimer.o xmprog.o
 
 #
 # MCU name for GCC
