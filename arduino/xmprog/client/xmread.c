@@ -67,11 +67,12 @@ void reset_arduino(int port_fd)
 
 int main()
 {
-    //int port_fd = open_port("/dev/ttyACM0");
-    int port_fd = open_port("../pty0");
+    int port_fd = open_port("/dev/ttyACM0");
+    //int port_fd = open_port("/dev/pts/5");
+    //int port_fd = open_port("../pty0");
 
     set_speed(port_fd);
-//    reset_arduino(port_fd);
+    reset_arduino(port_fd);
 
 
     FILE *port = fdopen(port_fd, "wb+");
@@ -92,6 +93,8 @@ int main()
     while (strncmp(buffer, "XMODEM", 6) != 0);
     fprintf(stderr, "\n%s", buffer);
 
+    fprintf(stderr, "Issue remote send command");
+    fflush(stderr);
 
 
     fprintf(port, "sx desas.bin\r\n");

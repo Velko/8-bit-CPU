@@ -68,7 +68,7 @@ void reset_arduino(int port_fd)
 int main()
 {
     int port_fd = open_port("/dev/ttyACM0");
-//    int port_fd = open_port("../pty0");
+    //int port_fd = open_port("../pty0");
 
     set_speed(port_fd);
     reset_arduino(port_fd);
@@ -92,7 +92,12 @@ int main()
     while (strncmp(buffer, "XMODEM", 6) != 0);
     fprintf(stderr, "\n%s", buffer);
 
+    fprintf(stderr, "Issue remote receive command\n");
+    fflush(stderr);
 
+
+    fprintf(port, "rx desas.bin\r\n");
+    fflush(port);
 
     int pid = fork();
     if (pid < 0)
@@ -108,9 +113,6 @@ int main()
     }
     else
     {
-        fprintf(port, "rx desas.bin\r\n");
-        fflush(port);
-
         wait(NULL);
     }
 
