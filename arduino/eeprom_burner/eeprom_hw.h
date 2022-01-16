@@ -3,9 +3,17 @@
 
 #include <stdint.h>
 
-void eeprom_setup();
-uint8_t eeprom_read(uint16_t addr);
-void eeprom_set_address(uint16_t addr);
-void eeprom_peform_write(uint16_t addr, uint8_t value);
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+    void eeprom_setup();
+    uint8_t eeprom_read(uint16_t addr);
+    void eeprom_set_address(uint16_t addr);
+    void eeprom_peform_write(uint16_t addr, uint8_t value);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* EEPROM_HW_H */
