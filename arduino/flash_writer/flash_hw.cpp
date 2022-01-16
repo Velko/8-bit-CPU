@@ -3,6 +3,9 @@
 #include "data_port.h"
 #include "flash_hw.h"
 
+#include <outpin.h>
+
+
 /* Not used in code, just for the notes */
 #define SH_LATCH    10
 #define SPI_SCK     13

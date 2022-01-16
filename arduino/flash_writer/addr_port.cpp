@@ -1,31 +1,36 @@
 #include "addr_port.h"
-#include <SPI.h>
+#include <avr/io.h>
 
-#define LATCH_PIN  10
+#define DDR_SPI     DDRB
+#define PORT_SPI    PORTB
+#define DD_MOSI     PB3
+#define DD_MISO     PB4
+#define DD_SCK      PB5
+#define DD_SS       PB2
 
-AddrPort::AddrPort()
-    : latch(LATCH_PIN)
-{
-}
+#define LATCH_PIN  DD_SS
+
 
 void AddrPort::setup()
 {
-    SPI.begin();
-    SPI.setDataMode(SPI_MODE0);
-    SPI.setBitOrder(MSBFIRST);
-    SPI.setClockDivider(SPI_CLOCK_DIV2);
+    DDR_SPI = _BV(DD_MOSI) | _BV(DD_SCK) | _BV(LATCH_PIN);
+    SPCR = _BV(SPE) | _BV(MSTR);
+    SPSR = _BV(SPI2X);
 
-    // We're using SS pin for latch control. The CtrlPin initialization
-    // should be done after SPI.begin(), as it modifies the state of SS
-    // to a "known safe" state
-    latch.setup();
+    PORT_SPI &= ~_BV(LATCH_PIN);
 }
 
 void AddrPort::write24(uint32_t data)
 {
-    SPI.transfer((data >> 16) & 0xFF);
-    SPI.transfer((data >> 8) & 0xFF);
-    SPI.transfer(data & 0xFF);
-    latch.on();
-    latch.off();
+    SPDR = (data >> 16) & 0xFF;
+    loop_until_bit_is_set(SPSR, SPIF);
+
+    SPDR = (data >> 8) & 0xFF;
+    loop_until_bit_is_set(SPSR, SPIF);
+
+    SPDR = (data & 0xFF);
+    loop_until_bit_is_set(SPSR, SPIF);
+
+    PORT_SPI |= _BV(LATCH_PIN);
+    PORT_SPI &= ~_BV(LATCH_PIN);
 }
