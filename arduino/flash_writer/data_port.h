@@ -3,13 +3,16 @@
 
 #include <stdint.h>
 
-class DataPort
-{
-    public:
-        void set_input();
-        uint8_t read();
-        void write(uint8_t value);
-};
+#ifdef __cplusplus
+extern "C" {
+#endif
 
+    void data_port_set_input();
+    uint8_t data_port_read();
+    void data_port_write(uint8_t value);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

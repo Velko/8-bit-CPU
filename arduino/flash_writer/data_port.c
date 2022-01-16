@@ -19,19 +19,19 @@
    and shift left 2 places for PORTD
 */
 
-void DataPort::set_input()
+void data_port_set_input()
 {
     DDRB &= 0xfc;
     DDRD &= 0x03;
 }
 
-uint8_t DataPort::read()
+uint8_t data_port_read()
 {
     uint8_t value = (PIND >> 2) | (PINB << 6);
     return value;
 }
 
-void DataPort::write(uint8_t value)
+void data_port_write(uint8_t value)
 {
     /* no worries with PORTD - changing PD0 and PD1 won't affect UART */
     DDRD |= 0xfc;

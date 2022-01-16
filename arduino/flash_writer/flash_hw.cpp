@@ -23,16 +23,13 @@ OutPinL write_pin(EE_WRITE);
 OutPinL cs_pin(CURRENT_CS);
 OutPinL oe_pin(OE);
 
-/* Pins for data IO. LSB first */
-DataPort data_port;
-
 void flash_setup()
 {
     write_pin.setup();
     cs_pin.setup();
     oe_pin.setup();
 
-    data_port.set_input();
+    data_port_set_input();
 
     addr_port_setup();
 
@@ -42,7 +39,7 @@ void flash_setup()
 
 void flash_prepare_write()
 {
-    data_port.set_input(); /* To be sure, set as inputs */
+    data_port_set_input(); /* To be sure, set as inputs */
     oe_pin.off(); /* EEPROM as input */
 }
 
@@ -50,14 +47,14 @@ void flash_end_write()
 {
     /* Switch back to inputs as soon as possible:
        let EEPROM control data lines */
-    data_port.set_input();
+    data_port_set_input();
 }
 
 void flash_send_command(uint32_t addr, uint8_t value)
 {
     addr_port_write24(addr);
 
-    data_port.write(value);
+    data_port_write(value);
 
     /* Pulse the WE pin to start write */
     write_pin.on();
@@ -66,9 +63,9 @@ void flash_send_command(uint32_t addr, uint8_t value)
 
 uint8_t flash_read()
 {
-    data_port.set_input(); /* Set as inputs */
+    data_port_set_input(); /* Set as inputs */
     oe_pin.on();
-    uint8_t data = data_port.read();
+    uint8_t data = data_port_read();
     oe_pin.off();
 
     return data;
