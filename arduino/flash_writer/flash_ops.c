@@ -1,8 +1,12 @@
-#include <Arduino.h>
+#include <stdio.h>
+#include <avr/pgmspace.h>
+#include <util/delay.h>
 #include "flash_hw.h"
 #include "flash_ops.h"
 
 #define FLASH_SIZE   ( 128UL * 1024)   // SST39SF010
+
+static void flash_wait_dq7(uint8_t data);
 
 void flash_identify()
 {
@@ -12,15 +16,13 @@ void flash_identify()
     flash_send_command(0x5555, 0x90);
     flash_end_write();
 
-    delayMicroseconds(1);
+    _delay_us(1);
 
     // read the ID
     uint8_t manufacturer = flash_read_addr(0);
     uint8_t device = flash_read_addr(1);
 
-    char buff[8];
-    sprintf_P(buff, PSTR("%02X %02X"), manufacturer, device);
-    Serial.println(buff);
+    printf_P(PSTR("%02X %02X\r\n"), manufacturer, device);
 
     flash_prepare_write();
     flash_send_command(0x00, 0xF0);
@@ -42,10 +44,10 @@ void flash_erase_all()
 
     flash_wait_dq7(0xFF);
 
-    Serial.println(F("Erased"));
+    printf_P(PSTR("Erased\r\n"));
 }
 
-void flash_wait_dq7(uint8_t data)
+static void flash_wait_dq7(uint8_t data)
 {
     data &= 0x80; // interested only in bit 7
 
@@ -55,8 +57,6 @@ void flash_wait_dq7(uint8_t data)
 
 void flash_read_contents()
 {
-    char buff[8];
-
     for (uint32_t addr = 0; addr < FLASH_SIZE; ++addr)
     {
         uint8_t value = flash_read_addr(addr);
@@ -64,24 +64,22 @@ void flash_read_contents()
         /* Print address when starting with each 16-th byte */
         if ((addr & 0x0F) == 0)
         {
-            sprintf_P(buff, PSTR("%05lX  "), addr);
-            Serial.print(buff);
+            printf_P(PSTR("%05lX  "), addr);
         }
 
         /* Output the byte */
-        sprintf_P(buff, PSTR("%02X "), value);
-        Serial.print(buff);
+        printf_P(PSTR("%02X "), value);
 
         /* Newline after 16 bytes */
         if ((addr & 0x0F) == 0x0F)
         {
-            Serial.println();
+            printf_P(PSTR("\r\n"));
             continue;
         }
 
         /* Add extra space after first 8 bytes */
         if ((addr & 0x07) == 0x07)
-            Serial.print(F(" "));
+            printf_P(PSTR(" "));
     }
 }
 
@@ -110,5 +108,5 @@ void flash_write_test()
         flash_write(addr, msg[addr & 0x0F]);
     }
 
-    Serial.println(F("Done"));
+    printf_P(PSTR("Done\r\n"));
 }
