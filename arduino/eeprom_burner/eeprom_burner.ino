@@ -28,7 +28,7 @@ static int uart_putchar(char c, FILE *stream)
 
 void setup()
 {
-    Serial.begin(9600);
+    Serial.begin(115200);
     Serial.println(F("EEPROM burner utility"));
     fdev_setup_stream(&uart_str, uart_putchar, NULL, _FDEV_SETUP_WRITE);
     stdout = &uart_str;
@@ -38,6 +38,8 @@ void setup()
 void loop()
 {
     String command = Serial.readStringUntil('\n');
+
+    command.trim();
 
     if (command.length() == 0) return;
 
