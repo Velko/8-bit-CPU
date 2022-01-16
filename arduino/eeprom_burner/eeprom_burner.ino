@@ -13,8 +13,8 @@ void display_help();
 void burn7seg_digits();
 void verify7seg_digits();
 
-void burn_progmem_blob(unsigned char blob[], unsigned int len);
-void verify_progmem_blob(unsigned char blob[], unsigned int len);
+void burn_progmem_blob(const unsigned char blob[], unsigned int len);
+void verify_progmem_blob(const unsigned char blob[], unsigned int len);
 void write_microcode(int rom_idx);
 void verify_microcode(int rom_idx);
 
