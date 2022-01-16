@@ -22,9 +22,6 @@ OutPinL write_pin(EE_WRITE);
 OutPinL cs_pin(CURRENT_CS);
 OutPinL oe_pin(OE);
 
-/* Pins for data IO. LSB first */
-RevDataPort data_bus;
-
 ShiftOutExt addr_out;
 
 void eeprom_setup()
@@ -33,7 +30,7 @@ void eeprom_setup()
     cs_pin.setup();
     oe_pin.setup();
 
-    data_bus.set_input();
+    rev_data_port_set_input();
 
     addr_out.setup();
 
@@ -48,11 +45,11 @@ void eeprom_set_address(uint16_t addr)
 
 void eeprom_peform_write(uint16_t addr, uint8_t value)
 {
-    data_bus.set_input(); /* To be sure, set as inputs */
+    rev_data_port_set_input(); /* To be sure, set as inputs */
     oe_pin.off(); /* EEPROM as input */
     eeprom_set_address(addr);
 
-    data_bus.write(value);
+    rev_data_port_write(value);
 
     /* Pulse the WE pin to start write */
     write_pin.on();
@@ -61,12 +58,12 @@ void eeprom_peform_write(uint16_t addr, uint8_t value)
 
     /* Switch back to inputs as soon as possible:
        let EEPROM control data lines */
-    data_bus.set_input();
+    rev_data_port_set_input();
 }
 
 uint8_t eeprom_read(uint16_t addr)
 {
-    data_bus.set_input(); /* Set as inputs */
+    rev_data_port_set_input(); /* Set as inputs */
     oe_pin.on();
     eeprom_set_address(addr);
 
@@ -74,5 +71,5 @@ uint8_t eeprom_read(uint16_t addr)
        So 1 uS (1000 ns) should be enough */
     delayMicroseconds(1);
 
-    return data_bus.read();
+    return rev_data_port_read();
 }

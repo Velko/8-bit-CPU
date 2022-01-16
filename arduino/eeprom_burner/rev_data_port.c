@@ -37,19 +37,19 @@ static inline uint8_t bit_reverse(uint8_t x )
 }
 
 
-void RevDataPort::set_input()
+void rev_data_port_set_input()
 {
     DDRB &= 0xfc;
     DDRD &= 0x03;
 }
 
-uint8_t RevDataPort::read()
+uint8_t rev_data_port_read()
 {
     uint8_t value = (PIND >> 2) | (PINB << 6);
     return bit_reverse(value);
 }
 
-void RevDataPort::write(uint8_t value)
+void rev_data_port_write(uint8_t value)
 {
     value = bit_reverse(value);
 
