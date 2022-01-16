@@ -26,8 +26,6 @@ OutPinL oe_pin(OE);
 /* Pins for data IO. LSB first */
 DataPort data_port;
 
-AddrPort addr_out;
-
 void flash_setup()
 {
     write_pin.setup();
@@ -36,7 +34,7 @@ void flash_setup()
 
     data_port.set_input();
 
-    addr_out.setup();
+    addr_port_setup();
 
     // Turn on DIP EEPROM
     cs_pin.on();
@@ -57,7 +55,7 @@ void flash_end_write()
 
 void flash_send_command(uint32_t addr, uint8_t value)
 {
-    addr_out.write24(addr);
+    addr_port_write24(addr);
 
     data_port.write(value);
 
@@ -79,6 +77,6 @@ uint8_t flash_read()
 
 uint8_t flash_read_addr(uint32_t addr)
 {
-    addr_out.write24(addr);
+    addr_port_write24(addr);
     return flash_read();
 }

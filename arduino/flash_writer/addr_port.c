@@ -11,7 +11,7 @@
 #define LATCH_PIN  DD_SS
 
 
-void AddrPort::setup()
+void addr_port_setup(void)
 {
     DDR_SPI = _BV(DD_MOSI) | _BV(DD_SCK) | _BV(LATCH_PIN);
     SPCR = _BV(SPE) | _BV(MSTR);
@@ -20,7 +20,7 @@ void AddrPort::setup()
     PORT_SPI &= ~_BV(LATCH_PIN);
 }
 
-void AddrPort::write24(uint32_t data)
+void addr_port_write24(uint32_t data)
 {
     SPDR = (data >> 16) & 0xFF;
     loop_until_bit_is_set(SPSR, SPIF);

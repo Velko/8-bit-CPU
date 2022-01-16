@@ -3,12 +3,18 @@
 
 #include <stdint.h>
 
-class AddrPort
-{
-    public:
-        void setup();
-        void write24(uint32_t data);
-    private:
-};
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+    void addr_port_setup();
+    void addr_port_write24(uint32_t data);
+
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif /* ADDR_PORT_H */
