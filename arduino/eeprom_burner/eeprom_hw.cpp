@@ -1,5 +1,6 @@
 #include <Arduino.h>
-#include <shiftoutext.h>
+#include <outpin.h>
+#include "addr_port.h"
 #include "rev_data_port.h"
 #include "eeprom_hw.h"
 
@@ -22,8 +23,6 @@ OutPinL write_pin(EE_WRITE);
 OutPinL cs_pin(CURRENT_CS);
 OutPinL oe_pin(OE);
 
-ShiftOutExt addr_out;
-
 void eeprom_setup()
 {
     write_pin.setup();
@@ -32,22 +31,17 @@ void eeprom_setup()
 
     rev_data_port_set_input();
 
-    addr_out.setup();
+    addr_port_setup();
 
     // Turn on DIP EEPROM
     cs_pin.on();
-}
-
-void eeprom_set_address(uint16_t addr)
-{
-    addr_out.write16(addr);
 }
 
 void eeprom_peform_write(uint16_t addr, uint8_t value)
 {
     rev_data_port_set_input(); /* To be sure, set as inputs */
     oe_pin.off(); /* EEPROM as input */
-    eeprom_set_address(addr);
+    addr_port_write16(addr);
 
     rev_data_port_write(value);
 
@@ -65,7 +59,7 @@ uint8_t eeprom_read(uint16_t addr)
 {
     rev_data_port_set_input(); /* Set as inputs */
     oe_pin.on();
-    eeprom_set_address(addr);
+    addr_port_write16(addr);
 
     /* pause for EEPROM. Worst case scenario - it takes 250 ns to settle.
        So 1 uS (1000 ns) should be enough */

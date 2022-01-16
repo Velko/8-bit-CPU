@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "eeprom_hw.h"
+#include "addr_port.h"
 
 #define EEPROM_SIZE   ( 8 * 1024)   // AT28C64
 
@@ -99,7 +100,7 @@ void test_send_inc()
     for (int addr = 0; addr < 16; ++addr)
     {
         Serial.println(addr);
-        eeprom_set_address(addr);
+        addr_port_write16(addr);
         delay(500);
     }
 
@@ -107,10 +108,10 @@ void test_send_inc()
     for (int addr = 0; addr < 16; ++addr)
     {
         Serial.println(addr);
-        eeprom_set_address(addr);
+        addr_port_write16(addr);
         delay(500);
     }
 
     Serial.println(F("Done"));
-    eeprom_set_address(0);
+    addr_port_write16(0);
 }
