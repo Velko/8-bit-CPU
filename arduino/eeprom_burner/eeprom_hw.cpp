@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <shiftoutext.h>
-#include <iobus8bit.h>
+#include "rev_data_port.h"
 #include "eeprom_hw.h"
 
 /* Not used in code, just for the notes */
@@ -23,7 +23,7 @@ OutPinL cs_pin(CURRENT_CS);
 OutPinL oe_pin(OE);
 
 /* Pins for data IO. LSB first */
-IOBus8bit data_bus;
+RevDataPort data_bus;
 
 ShiftOutExt addr_out;
 
