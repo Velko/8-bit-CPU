@@ -8,10 +8,20 @@
 
 void display_help();
 
+FILE uart_str;
+
+static int uart_putchar(char c, FILE *stream)
+{
+    Serial.write(c);
+    return 0;
+}
+
 void setup()
 {
     Serial.begin(115200);
     Serial.println(F("Flash writer utility"));
+    fdev_setup_stream(&uart_str, uart_putchar, NULL, _FDEV_SETUP_WRITE);
+    stdout = &uart_str;
     flash_setup();
 }
 
