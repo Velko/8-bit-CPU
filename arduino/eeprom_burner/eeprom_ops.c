@@ -1,4 +1,7 @@
-#include <Arduino.h>
+#include <stdio.h>
+#include <avr/pgmspace.h>
+#include <util/delay.h>
+#include "eeprom_ops.h"
 #include "eeprom_hw.h"
 #include "addr_port.h"
 
@@ -15,27 +18,27 @@ void eeprom_write(uint16_t addr, uint8_t value)
 
         for (int retry = 0; retry < 5 ; ++retry)
         {
-            delay(2);
+            _delay_ms(2);
             uint8_t readback = eeprom_read(addr);
 
             if (readback == value)
             {
                 /* Success. */
-                Serial.print('+');
+                printf_P(PSTR("+"));
                 goto format_line;
             }
         }
         /* Failed */
-        Serial.print('!');
+        printf_P(PSTR("!"));
         goto format_line;
     }
     /* Same value */
-    Serial.print('.');
+    printf_P(PSTR("."));
 
 format_line:
     /* Add newline after writes */
     if ((addr & 0x0F) == 0x0F)
-        Serial.println();
+        printf_P(PSTR("\r\n"));
 }
 
 void eeprom_verify(uint16_t addr, uint8_t value)
@@ -43,13 +46,13 @@ void eeprom_verify(uint16_t addr, uint8_t value)
     uint8_t old_value = eeprom_read(addr);
 
     if (old_value != value)
-        Serial.print('+');
+        printf_P(PSTR("+"));
     else
-        Serial.print('.');
+        printf_P(PSTR("."));
 
     /* Add newline after writes */
     if ((addr & 0x0F) == 0x0F)
-        Serial.println();
+        printf_P(PSTR("\r\n"));
 }
 
 
@@ -63,8 +66,6 @@ void eeprom_erase_all()
 
 void eeprom_read_contents()
 {
-    char buff[8];
-
     for (uint16_t addr = 0; addr < EEPROM_SIZE; ++addr)
     {
         uint8_t value = eeprom_read(addr);
@@ -72,46 +73,44 @@ void eeprom_read_contents()
         /* Print address when starting with each 16-th byte */
         if ((addr & 0x0F) == 0)
         {
-            sprintf_P(buff, PSTR("%04X  "), addr);
-            Serial.print(buff);
+            printf_P(PSTR("%04X  "), addr);
         }
 
         /* Output the byte */
-        sprintf_P(buff, PSTR("%02X "), value);
-        Serial.print(buff);
+        printf_P(PSTR("%02X "), value);
 
         /* Newline after 16 bytes */
         if ((addr & 0x0F) == 0x0F)
         {
-            Serial.println();
+            printf_P(PSTR("\r\n"));
             continue;
         }
 
         /* Add extra space after first 8 bytes */
         if ((addr & 0x07) == 0x07)
-            Serial.print(F(" "));
+            printf_P(PSTR(" "));
     }
 }
 
 
 void test_send_inc()
 {
-    Serial.println(F("Sending addresses (write):"));
+    printf_P(PSTR("Sending addresses (write):"));
     for (int addr = 0; addr < 16; ++addr)
     {
-        Serial.println(addr);
+        printf_P(PSTR("%d\r\n"), addr);
         addr_port_write16(addr);
-        delay(500);
+        _delay_ms(500);
     }
 
-    Serial.println(F("Sending addresses (read):"));
+    printf_P(PSTR("Sending addresses (read):"));
     for (int addr = 0; addr < 16; ++addr)
     {
-        Serial.println(addr);
+        printf_P(PSTR("%d\r\n"), addr);
         addr_port_write16(addr);
-        delay(500);
+        _delay_ms(500);
     }
 
-    Serial.println(F("Done"));
+    printf_P(PSTR("Done"));
     addr_port_write16(0);
 }
