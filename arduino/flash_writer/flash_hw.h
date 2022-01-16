@@ -1,13 +1,21 @@
-#ifndef EEPROM_HW_H
-#define EEPROM_HW_H
+#ifndef FLASH_HW_H
+#define FLASH_HW_H
 
 #include <stdint.h>
 
-void flash_setup();
-uint8_t flash_read_addr(uint32_t addr);
-uint8_t flash_read();
-void flash_prepare_write();
-void flash_send_command(uint32_t addr, uint8_t value);
-void flash_end_write();
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#endif /* EEPROM_HW_H */
+    void flash_setup();
+    uint8_t flash_read_addr(uint32_t addr);
+    uint8_t flash_read();
+    void flash_prepare_write();
+    void flash_send_command(uint32_t addr, uint8_t value);
+    void flash_end_write();
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* FLASH_HW_H */
