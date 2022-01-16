@@ -18,10 +18,20 @@ void verify_progmem_blob(unsigned char blob[], unsigned int len);
 void write_microcode(int rom_idx);
 void verify_microcode(int rom_idx);
 
+FILE uart_str;
+
+static int uart_putchar(char c, FILE *stream)
+{
+    Serial.write(c);
+    return 0;
+}
+
 void setup()
 {
     Serial.begin(9600);
     Serial.println(F("EEPROM burner utility"));
+    fdev_setup_stream(&uart_str, uart_putchar, NULL, _FDEV_SETUP_WRITE);
+    stdout = &uart_str;
     eeprom_setup();
 }
 
