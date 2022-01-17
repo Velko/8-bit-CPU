@@ -14,16 +14,14 @@
 
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-class XmProg
-{
-    private:
-        void ReceivePacket();
-    public:
-        void StepMainLoop();
-        void SendRomContents(const char *file_name);
-        void ReceiveRomContents(const char *file_name);
-};
+    void xmprog_step_main();
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* XMPROG_H */

@@ -19,7 +19,12 @@
 #define C       0x43
 
 
-int calcrc(char *ptr, int count);
+static int calcrc(char *ptr, int count);
+static void trim_end(char *str);
+
+static void xmprog_send_rom_contents(const char *file_name);
+static void xmprog_receive_packet();
+static void xmprog_receive_rom_contents(const char *file_name);
 
 char cmdbuf[20];
 
@@ -32,7 +37,7 @@ void trim_end(char *str)
     *s = 0;
 }
 
-void XmProg::StepMainLoop()
+void xmprog_step_main()
 {
     fgets(cmdbuf, 20, serial);
 
@@ -42,11 +47,11 @@ void XmProg::StepMainLoop()
 
     if (strncmp_P(cmdbuf, PSTR("sx "), 3) == 0)
     {
-        SendRomContents(cmdbuf + 3);
+        xmprog_send_rom_contents(cmdbuf + 3);
     }
     if (strncmp_P(cmdbuf, PSTR("rx "), 3) == 0)
     {
-        ReceiveRomContents(cmdbuf + 3);
+        xmprog_receive_rom_contents(cmdbuf + 3);
     }
     else
     {
@@ -57,7 +62,7 @@ void XmProg::StepMainLoop()
 uint8_t chipmem[128];
 uint8_t gendata;
 
-void XmProg::SendRomContents(const char *file_name)
+static void xmprog_send_rom_contents(const char *file_name)
 {
     dprintf("Sending file: '%s'\n", file_name);
 
@@ -78,7 +83,7 @@ void XmProg::SendRomContents(const char *file_name)
             chipmem[i] = gendata++;
         gendata--;
 
-        bool repeat_package = true;
+        char repeat_package = 1;
         while (repeat_package) {
             fputc(SOH, serial);
             fputc(p_idx & 0xFF, serial);
@@ -121,7 +126,7 @@ void XmProg::SendRomContents(const char *file_name)
     dprintf("Here we go!\n");
 }
 
-void XmProg::ReceivePacket()
+static void xmprog_receive_packet()
 {
     uint16_t packed_id;
     fread(&packed_id, 1, 2, serial);
@@ -146,7 +151,7 @@ void XmProg::ReceivePacket()
     }
 }
 
-void XmProg::ReceiveRomContents(const char *file_name)
+static void xmprog_receive_rom_contents(const char *file_name)
 {
     dprintf("Waiting for file: '%s'\n", file_name);
 
@@ -172,7 +177,7 @@ void XmProg::ReceiveRomContents(const char *file_name)
         switch (soh)
         {
         case SOH:
-            ReceivePacket();
+            xmprog_receive_packet();
             break;
         case EOT:
             fputc(ACK, serial);
@@ -184,7 +189,7 @@ void XmProg::ReceiveRomContents(const char *file_name)
     }
 }
 
-int calcrc(char *ptr, int count)
+static int calcrc(char *ptr, int count)
 {
     int  crc;
     char i;

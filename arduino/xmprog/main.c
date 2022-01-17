@@ -5,8 +5,6 @@
 #include <avr/pgmspace.h>
 #include <avr/interrupt.h>
 
-extern "C" void ctimer_init();
-
 int main()
 {
     uart_init();
@@ -15,13 +13,11 @@ int main()
 
     printf_P(PSTR("XMODEM writer 0.1\r\n"));
 
-    XmProg Prog;
-
     sei();
 
     for(;;)
     {
-        Prog.StepMainLoop();
+        xmprog_step_main();
     }
 
     return 0;
