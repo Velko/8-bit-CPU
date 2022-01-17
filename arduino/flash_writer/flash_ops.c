@@ -4,10 +4,9 @@
 #include "flash_hw.h"
 #include "flash_ops.h"
 
-#define FLASH_SIZE   ( 128UL * 1024)   // SST39SF010
-
 FILE flash_stream;
 uint32_t flash_addr;
+uint32_t flash_size;
 
 static void flash_wait_dq7(uint8_t data);
 static void flash_write(uint32_t addr, uint8_t value);
@@ -64,7 +63,7 @@ static void flash_wait_dq7(uint8_t data)
 static int flash_getc(FILE *stream)
 {
     /* trying to read past end */
-    if (flash_addr >= FLASH_SIZE)
+    if (flash_addr >= flash_size)
         return _FDEV_EOF;
 
     return flash_read_addr(flash_addr++);
@@ -73,7 +72,7 @@ static int flash_getc(FILE *stream)
 static int flash_putc(char c, FILE *stream)
 {
     /* trying to write past end */
-    if (flash_addr >= FLASH_SIZE)
+    if (flash_addr >= flash_size)
         return _FDEV_ERR;
 
     flash_write(flash_addr++, c);
@@ -82,6 +81,23 @@ static int flash_putc(char c, FILE *stream)
 
 FILE *flash_open(void)
 {
+    uint16_t device = flash_identify();
+
+    switch (device)
+    {
+        case 0xBFB5: // SST39SF010A
+            flash_size = 128UL * 1024;
+            break;
+        case 0xBFB6: // SST39SF020A
+            flash_size = 256UL * 1024;
+            break;
+        case 0xBFB7: // SST39SF040
+            flash_size = 512UL * 1024;
+            break;
+        default:     // unidentified
+            return NULL;
+    }
+
     fdev_setup_stream(&flash_stream, flash_putc, flash_getc, _FDEV_SETUP_RW);
 
     flash_addr = 0;
