@@ -10,7 +10,6 @@ extern "C" {
 
     FILE *eeprom_open(void);
     void eeprom_verify(uint16_t addr, uint8_t value);
-    void eeprom_read_contents();
     void eeprom_erase_all();
 
 #ifdef __cplusplus

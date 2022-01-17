@@ -18,6 +18,8 @@ void verify_progmem_blob(const unsigned char blob[], unsigned int len);
 void write_microcode(int rom_idx);
 void verify_microcode(int rom_idx);
 
+void eeprom_read_contents();
+
 FILE uart_str;
 
 static int uart_putchar(char c, FILE *stream)
@@ -91,5 +93,45 @@ void loop()
     {
         Serial.println(F("Unknown command!"));
         Serial.println(F("help - list available commands"));
+    }
+}
+
+void eeprom_read_contents()
+{
+    FILE *fstream = eeprom_open();
+
+    unsigned char buff[16];
+    uint16_t addr = 0;
+
+    for (;;)
+    {
+        fread(buff, sizeof(buff), 1, fstream);
+
+        if (feof(fstream)) break;
+
+        /* Print address, each 16-th byte */
+        printf_P(PSTR("%04X  "), addr);
+        addr += sizeof(buff);
+
+        uint8_t i;
+
+        /* first 8 bytes */
+        for (i = 0; i < 8; ++i)
+        {
+            /* Output the byte */
+            printf_P(PSTR("%02X "), buff[i]);
+        }
+
+        /* Add extra space after first 8 bytes */
+        printf_P(PSTR(" "));
+
+        /* last 8 bytes */
+        for (; i < sizeof(buff); ++i)
+        {
+            printf_P(PSTR("%02X "), buff[i]);
+        }
+
+        /* Newline after 16 bytes */
+        printf_P(PSTR("\r\n"));
     }
 }
