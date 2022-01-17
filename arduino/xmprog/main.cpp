@@ -15,7 +15,7 @@ int main()
 
     printf_P(PSTR("XMODEM writer 0.1\r\n"));
 
-    XmProg Prog(serial);
+    XmProg Prog;
 
     sei();
 

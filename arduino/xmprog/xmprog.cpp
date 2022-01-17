@@ -7,6 +7,10 @@
 #include <avr/pgmspace.h>
 #include <util/delay.h>
 
+#ifdef __AVR__
+#include "uart.h"
+#endif
+
 #define SOH     0x01
 #define EOT     0x04
 #define ACK     0x06
@@ -16,11 +20,6 @@
 
 
 int calcrc(char *ptr, int count);
-
-XmProg::XmProg(FILE *s)
-{
-    s_port =  s;
-}
 
 char cmdbuf[20];
 
@@ -35,7 +34,7 @@ void trim_end(char *str)
 
 void XmProg::StepMainLoop()
 {
-    fgets(cmdbuf, 20, s_port);
+    fgets(cmdbuf, 20, serial);
 
     trim_end(cmdbuf);
 
@@ -51,7 +50,7 @@ void XmProg::StepMainLoop()
     }
     else
     {
-        fprintf_P(s_port, PSTR("What?\r\n"));
+        fprintf_P(serial, PSTR("What?\r\n"));
     }
 }
 
@@ -67,7 +66,7 @@ void XmProg::SendRomContents(const char *file_name)
     /* Wait for initial C before starting to send */
     for(;;)
     {
-        int init_c = fgetc(s_port);
+        int init_c = fgetc(serial);
         dprintf("C: %d\n", init_c);
         if (init_c == C) break;
     }
@@ -81,20 +80,20 @@ void XmProg::SendRomContents(const char *file_name)
 
         bool repeat_package = true;
         while (repeat_package) {
-            fputc(SOH, s_port);
-            fputc(p_idx & 0xFF, s_port);
-            fputc((0xFF - p_idx) & 0xFF, s_port);
+            fputc(SOH, serial);
+            fputc(p_idx & 0xFF, serial);
+            fputc((0xFF - p_idx) & 0xFF, serial);
 
-            fwrite(chipmem, 1, 128, s_port);
+            fwrite(chipmem, 1, 128, serial);
 
             uint16_t crc = calcrc((char *)chipmem, 128);
 
-            fputc(crc >> 8, s_port);
-            fputc(crc & 0xFF, s_port);
+            fputc(crc >> 8, serial);
+            fputc(crc & 0xFF, serial);
 
             for (;;)
             {
-                int ack = fgetc(s_port);
+                int ack = fgetc(serial);
                 if (ack == ACK || ack == NAK)
                 {
                     repeat_package = ack == NAK;
@@ -108,10 +107,10 @@ void XmProg::SendRomContents(const char *file_name)
         }
     }
 
-    fputc(EOT, s_port);
+    fputc(EOT, serial);
     for (;;)
     {
-        int ack = fgetc(s_port);
+        int ack = fgetc(serial);
         if (ack == ACK)
         {
             break;
@@ -125,10 +124,10 @@ void XmProg::SendRomContents(const char *file_name)
 void XmProg::ReceivePacket()
 {
     uint16_t packed_id;
-    fread(&packed_id, 1, 2, s_port);
-    fread(chipmem, 1, 128, s_port);
+    fread(&packed_id, 1, 2, serial);
+    fread(chipmem, 1, 128, serial);
     uint16_t crc_recv;
-    fread(&crc_recv, 1, 2, s_port);
+    fread(&crc_recv, 1, 2, serial);
 
     /* swap bytes */
     crc_recv = (crc_recv << 8) | (crc_recv >> 8);
@@ -138,12 +137,12 @@ void XmProg::ReceivePacket()
     if (crc_calc == crc_recv)
     {
         dprintf("block %x received\n", packed_id);
-        fputc(ACK, s_port);
+        fputc(ACK, serial);
     }
     else
     {
         dprintf("block %x failed %x != %x\n", packed_id, crc_recv, crc_calc);
-        fputc(NAK, s_port);
+        fputc(NAK, serial);
     }
 }
 
@@ -155,7 +154,7 @@ void XmProg::ReceiveRomContents(const char *file_name)
        that we're ready to receive using XMODEM-CRC protocol
      */
     _delay_ms(1000);
-    fputc(C, s_port);
+    fputc(C, serial);
 
     /* enable "ctimer" - keeps sending "C" in background, in case first one
        was missed by sender */
@@ -165,7 +164,7 @@ void XmProg::ReceiveRomContents(const char *file_name)
 
         /* wait for the beginning of the frame */
         int soh = -1;
-        while (soh == -1) soh = fgetc(s_port);
+        while (soh == -1) soh = fgetc(serial);
 
         /* got something from sender, stop the background timer */
         ctimer_stop();
@@ -176,7 +175,7 @@ void XmProg::ReceiveRomContents(const char *file_name)
             ReceivePacket();
             break;
         case EOT:
-            fputc(ACK, s_port);
+            fputc(ACK, serial);
             return;
         default:
             dprintf("WTF??? %x\n", soh);

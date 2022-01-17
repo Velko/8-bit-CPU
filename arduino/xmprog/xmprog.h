@@ -18,10 +18,8 @@
 class XmProg
 {
     private:
-        FILE *s_port;
         void ReceivePacket();
     public:
-        XmProg(FILE *serial);
         void StepMainLoop();
         void SendRomContents(const char *file_name);
         void ReceiveRomContents(const char *file_name);
