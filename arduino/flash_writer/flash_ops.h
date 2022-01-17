@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-    void flash_write(uint32_t addr, uint8_t value);
+    FILE *flash_open(void);
     void flash_read_contents();
     void flash_erase_all();
     void flash_identify();
