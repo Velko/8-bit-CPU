@@ -95,15 +95,14 @@ uint8_t encode_digit(char c)
 
 uint16_t output_address;
 
-void write_digit(int value, const char *format)
+void write_digit(FILE *eeprom, int value, const char *format)
 {
     char output[5]; // 4 digits + \n
     sprintf_P(output, format, value);
 
     for (int i = 3; i > -1; --i) // 4 digits backwards
     {
-        eeprom_write(output_address, encode_digit(output[i]));
-        ++output_address;
+        fputc(encode_digit(output[i]), eeprom);
     }
 }
 
@@ -124,30 +123,30 @@ void burn7seg_digits()
 {
     Serial.println(F("Burning the digits!"));
 
-    output_address = 0;
+    FILE *eeprom = eeprom_open();
 
     /* Decimal unsigned */
     for (int i = 0; i < 256; ++i)
-        write_digit(i, PSTR("%4d"));
+        write_digit(eeprom, i, PSTR("%4d"));
 
 
     /* Decimal signed - positive part */
     for (int i = 0; i < 128; ++i)
-        write_digit(i, PSTR("%4d"));
+        write_digit(eeprom, i, PSTR("%4d"));
 
     /* Decimal signed - negative part */
     for (int i = -128; i < 0; ++i)
-        write_digit(i, PSTR("%4d"));
+        write_digit(eeprom, i, PSTR("%4d"));
 
 
     /* Hex */
     for (int i = 0; i < 256; ++i)
-        write_digit(i, PSTR("h %02X"));
+        write_digit(eeprom, i, PSTR("h %02X"));
 
 
     /* Oct */
     for (int i = 0; i < 256; ++i)
-        write_digit(i, PSTR("o%3o"));
+        write_digit(eeprom, i, PSTR("o%3o"));
 
     Serial.println(F("Done"));
 }

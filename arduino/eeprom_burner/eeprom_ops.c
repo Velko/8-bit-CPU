@@ -11,7 +11,7 @@ uint32_t eeprom_addr;
 
 static void eeprom_wait_dq7(uint8_t data);
 
-void eeprom_write(uint16_t addr, uint8_t value)
+static void eeprom_write(uint16_t addr, uint8_t value)
 {
     uint8_t old_value = eeprom_read_addr(addr);
 
