@@ -83,10 +83,6 @@ void loop()
     {
         eeprom_erase_all();
     }
-    else if (command.equals("addr"))
-    {
-        test_send_inc();
-    }
     else if (command.equals("help"))
     {
         display_help();

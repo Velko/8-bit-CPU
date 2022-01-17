@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <avr/pgmspace.h>
-#include <util/delay.h>
 #include "eeprom_ops.h"
 #include "eeprom_hw.h"
 #include "addr_port.h"
@@ -89,27 +88,4 @@ void eeprom_read_contents()
         if ((addr & 0x07) == 0x07)
             printf_P(PSTR(" "));
     }
-}
-
-
-void test_send_inc()
-{
-    printf_P(PSTR("Sending addresses (write):"));
-    for (int addr = 0; addr < 16; ++addr)
-    {
-        printf_P(PSTR("%d\r\n"), addr);
-        addr_port_write16(addr);
-        _delay_ms(500);
-    }
-
-    printf_P(PSTR("Sending addresses (read):"));
-    for (int addr = 0; addr < 16; ++addr)
-    {
-        printf_P(PSTR("%d\r\n"), addr);
-        addr_port_write16(addr);
-        _delay_ms(500);
-    }
-
-    printf_P(PSTR("Done"));
-    addr_port_write16(0);
 }

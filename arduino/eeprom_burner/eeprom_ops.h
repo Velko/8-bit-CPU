@@ -11,7 +11,6 @@ extern "C" {
     void eeprom_verify(uint16_t addr, uint8_t value);
     void eeprom_read_contents();
     void eeprom_erase_all();
-    void test_send_inc();
 
 #ifdef __cplusplus
 }
