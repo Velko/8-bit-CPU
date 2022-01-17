@@ -6,7 +6,7 @@ void burn_progmem_blob(const unsigned char blob[], unsigned int len)
 {
     char buff[64];
 
-    FILE *eeprom = eeprom_open();
+    FILE *eeprom = eeprom_open(AT28C64P);
     for (uint16_t addr = 0; len > 0; )
     {
         uint8_t to_write = len < sizeof(buff) ? len : sizeof(buff);
@@ -27,7 +27,7 @@ void burn_progmem_blob(const unsigned char blob[], unsigned int len)
 
 void verify_progmem_blob(const unsigned char blob[], unsigned int len)
 {
-    FILE *eeprom = eeprom_open();
+    FILE *eeprom = eeprom_open(AT28C64P);
 
     for (uint8_t addr = 0; addr < len; ++addr)
     {

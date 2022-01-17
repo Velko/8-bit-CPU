@@ -23,9 +23,23 @@ void eeprom_setup()
     rev_data_port_set_input();
 
     addr_port_setup();
+}
 
-    // Turn on DIP EEPROM
-    CTRL_PORT &= ~_BV(CURRENT_CS);
+void eeprom_select(uint8_t idx)
+{
+    CTRL_PORT |= _BV(CS1) | _BV(CS2);
+
+    switch (idx)
+    {
+    case 0:
+        CTRL_PORT &= ~_BV(CS1);
+        break;
+    case 1:
+        CTRL_PORT &= ~_BV(CS2);
+        break;
+    default:
+        break;
+    }
 }
 
 void eeprom_peform_write(uint16_t addr, uint8_t value)

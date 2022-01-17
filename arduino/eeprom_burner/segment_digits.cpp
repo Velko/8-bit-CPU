@@ -124,7 +124,7 @@ void burn7seg_digits()
 {
     Serial.println(F("Burning the digits!"));
 
-    FILE *eeprom = eeprom_open();
+    FILE *eeprom = eeprom_open(AT28C64J);
 
     /* Decimal unsigned */
     for (int i = 0; i < 256; ++i)
@@ -156,7 +156,7 @@ void verify7seg_digits()
 {
     Serial.println(F("Verifying the digits!"));
 
-    FILE *eeprom = eeprom_open();
+    FILE *eeprom = eeprom_open(AT28C64J);
 
     /* Decimal unsigned */
     for (int i = 0; i < 256; ++i)

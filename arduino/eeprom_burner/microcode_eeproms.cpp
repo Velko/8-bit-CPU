@@ -32,7 +32,7 @@ void verify_cword(FILE *eeprom, uint16_t cword, int rom_idx)
 
 void write_microcode(int rom_idx)
 {
-    FILE *eeprom = eeprom_open();
+    FILE *eeprom = eeprom_open(AT28C64P);
 
     printf("op f  s cb\n");
     for (int opcode = 0; opcode < NUM_OPS; ++opcode)
@@ -89,7 +89,7 @@ void write_microcode(int rom_idx)
 
 void verify_microcode(int rom_idx)
 {
-    FILE *eeprom = eeprom_open();
+    FILE *eeprom = eeprom_open(AT28C64P);
 
     printf("op f  s cb\n");
     for (int opcode = 0; opcode < NUM_OPS; ++opcode)

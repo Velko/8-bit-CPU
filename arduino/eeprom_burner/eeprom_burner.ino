@@ -18,7 +18,7 @@ void verify_progmem_blob(const unsigned char blob[], unsigned int len);
 void write_microcode(int rom_idx);
 void verify_microcode(int rom_idx);
 
-void eeprom_read_contents();
+void eeprom_read_contents(enum eeprom_chip chip);
 
 FILE uart_str;
 
@@ -79,11 +79,19 @@ void loop()
     }
     else if (command.equals("read"))
     {
-        eeprom_read_contents();
+        eeprom_read_contents(AT28C64P);
+    }
+    else if (command.equals("read1"))
+    {
+        eeprom_read_contents(AT28C64J);
     }
     else if (command.equals("erase"))
     {
-        eeprom_erase_all();
+        eeprom_erase_all(AT28C64P);
+    }
+    else if (command.equals("erase1"))
+    {
+        eeprom_erase_all(AT28C64J);
     }
     else if (command.equals("help"))
     {
@@ -96,9 +104,9 @@ void loop()
     }
 }
 
-void eeprom_read_contents()
+void eeprom_read_contents(enum eeprom_chip chip)
 {
-    FILE *fstream = eeprom_open();
+    FILE *fstream = eeprom_open(chip);
 
     unsigned char buff[16];
     uint16_t addr = 0;
