@@ -6,6 +6,9 @@
 
 #define EEPROM_SIZE   ( 8 * 1024)   // AT28C64
 
+FILE eeprom_stream;
+uint32_t eeprom_addr;
+
 static void eeprom_wait_dq7(uint8_t data);
 
 void eeprom_write(uint16_t addr, uint8_t value)
@@ -62,30 +65,70 @@ void eeprom_erase_all()
     }
 }
 
+static int eeprom_getc(FILE *stream)
+{
+    /* trying to read past end */
+    if (eeprom_addr >= EEPROM_SIZE)
+        return _FDEV_EOF;
+
+    return eeprom_read_addr(eeprom_addr++);
+}
+
+static int eeprom_putc(char c, FILE *stream)
+{
+    /* trying to write past end */
+    if (eeprom_addr >= EEPROM_SIZE)
+        return _FDEV_ERR;
+
+    eeprom_write(eeprom_addr++, c);
+    return 0;
+}
+
+FILE *eeprom_open(void)
+{
+    fdev_setup_stream(&eeprom_stream, eeprom_putc, eeprom_getc, _FDEV_SETUP_RW);
+
+    eeprom_addr = 0;
+
+    return &eeprom_stream;
+}
+
 void eeprom_read_contents()
 {
-    for (uint16_t addr = 0; addr < EEPROM_SIZE; ++addr)
+    FILE *fstream = eeprom_open();
+
+    unsigned char buff[16];
+    uint16_t addr = 0;
+
+    for (;;)
     {
-        uint8_t value = eeprom_read_addr(addr);
+        fread(buff, sizeof(buff), 1, fstream);
 
-        /* Print address when starting with each 16-th byte */
-        if ((addr & 0x0F) == 0)
+        if (feof(fstream)) break;
+
+        /* Print address, each 16-th byte */
+        printf_P(PSTR("%04X  "), addr);
+        addr += sizeof(buff);
+
+        uint8_t i;
+
+        /* first 8 bytes */
+        for (i = 0; i < 8; ++i)
         {
-            printf_P(PSTR("%04X  "), addr);
-        }
-
-        /* Output the byte */
-        printf_P(PSTR("%02X "), value);
-
-        /* Newline after 16 bytes */
-        if ((addr & 0x0F) == 0x0F)
-        {
-            printf_P(PSTR("\r\n"));
-            continue;
+            /* Output the byte */
+            printf_P(PSTR("%02X "), buff[i]);
         }
 
         /* Add extra space after first 8 bytes */
-        if ((addr & 0x07) == 0x07)
-            printf_P(PSTR(" "));
+        printf_P(PSTR(" "));
+
+        /* last 8 bytes */
+        for (; i < sizeof(buff); ++i)
+        {
+            printf_P(PSTR("%02X "), buff[i]);
+        }
+
+        /* Newline after 16 bytes */
+        printf_P(PSTR("\r\n"));
     }
 }
