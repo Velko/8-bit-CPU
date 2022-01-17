@@ -7,35 +7,26 @@
 
 #define EEPROM_SIZE   ( 8 * 1024)   // AT28C64
 
+static void eeprom_wait_dq7(uint8_t data);
+
 void eeprom_write(uint16_t addr, uint8_t value)
 {
-    uint8_t old_value = eeprom_read(addr);
+    uint8_t old_value = eeprom_read_addr(addr);
 
     /* Only if new value differs */
     if (old_value != value)
     {
         eeprom_peform_write(addr, value);
 
-        for (int retry = 0; retry < 5 ; ++retry)
-        {
-            _delay_ms(2);
-            uint8_t readback = eeprom_read(addr);
+        eeprom_wait_dq7(value);
 
-            if (readback == value)
-            {
-                /* Success. */
-                printf_P(PSTR("+"));
-                goto format_line;
-            }
-        }
-        /* Failed */
-        printf_P(PSTR("!"));
-        goto format_line;
+        printf_P(PSTR("+"));
+
+    } else {
+        /* Same value */
+        printf_P(PSTR("."));
     }
-    /* Same value */
-    printf_P(PSTR("."));
 
-format_line:
     /* Add newline after writes */
     if ((addr & 0x0F) == 0x0F)
         printf_P(PSTR("\r\n"));
@@ -43,7 +34,7 @@ format_line:
 
 void eeprom_verify(uint16_t addr, uint8_t value)
 {
-    uint8_t old_value = eeprom_read(addr);
+    uint8_t old_value = eeprom_read_addr(addr);
 
     if (old_value != value)
         printf_P(PSTR("+"));
@@ -55,6 +46,14 @@ void eeprom_verify(uint16_t addr, uint8_t value)
         printf_P(PSTR("\r\n"));
 }
 
+
+static void eeprom_wait_dq7(uint8_t data)
+{
+    data &= 0x80; // interested only in bit 7
+
+    // read repeatedly until bit 7 returns "true data"
+    while (data != (eeprom_read() & 0x80));
+}
 
 void eeprom_erase_all()
 {
@@ -68,7 +67,7 @@ void eeprom_read_contents()
 {
     for (uint16_t addr = 0; addr < EEPROM_SIZE; ++addr)
     {
-        uint8_t value = eeprom_read(addr);
+        uint8_t value = eeprom_read_addr(addr);
 
         /* Print address when starting with each 16-th byte */
         if ((addr & 0x0F) == 0)

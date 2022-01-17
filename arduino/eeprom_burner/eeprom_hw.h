@@ -8,7 +8,8 @@ extern "C" {
 #endif
 
     void eeprom_setup();
-    uint8_t eeprom_read(uint16_t addr);
+    uint8_t eeprom_read_addr(uint16_t addr);
+    uint8_t eeprom_read(void);
     void eeprom_set_address(uint16_t addr);
     void eeprom_peform_write(uint16_t addr, uint8_t value);
 

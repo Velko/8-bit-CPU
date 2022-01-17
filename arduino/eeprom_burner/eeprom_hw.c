@@ -45,15 +45,23 @@ void eeprom_peform_write(uint16_t addr, uint8_t value)
     rev_data_port_set_input();
 }
 
-uint8_t eeprom_read(uint16_t addr)
+uint8_t eeprom_read_addr(uint16_t addr)
+{
+    addr_port_write16(addr);
+    return eeprom_read();
+}
+
+uint8_t eeprom_read(void)
 {
     rev_data_port_set_input(); /* Set as inputs */
-    addr_port_write16(addr);
 
-    CTRL_PORT &= ~_BV(OE); /* Flash as output */
+    CTRL_PORT &= ~_BV(OE); /* EEPROM as output */
     /* pause for EEPROM. Worst case scenario - it takes 250 ns to settle.
        So 1 uS (1000 ns) should be enough */
     _delay_us(1);
+    uint8_t data = rev_data_port_read();
 
-    return rev_data_port_read();
+    CTRL_PORT |= _BV(OE); /* EEPROM as input */
+
+    return data;
 }
