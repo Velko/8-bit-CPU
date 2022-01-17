@@ -38,7 +38,9 @@ void eeprom_peform_write(uint16_t addr, uint8_t value)
 
     /* Pulse the WE pin to start write */
     CTRL_PORT &= ~_BV(WE);
+    _delay_us(1);
     CTRL_PORT |= _BV(WE);
+    _delay_us(1);
 
     /* Switch back to inputs as soon as possible:
        let EEPROM control data lines */

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <avr/pgmspace.h>
+#include <util/delay.h>
 #include "eeprom_ops.h"
 #include "eeprom_hw.h"
 #include "addr_port.h"
@@ -9,7 +10,7 @@
 FILE eeprom_stream;
 uint32_t eeprom_addr;
 
-static void eeprom_wait_dq7(uint8_t data);
+static uint8_t eeprom_wait_dq7(uint8_t data);
 
 static void eeprom_write(uint16_t addr, uint8_t value)
 {
@@ -18,15 +19,18 @@ static void eeprom_write(uint16_t addr, uint8_t value)
     /* Only if new value differs */
     if (old_value != value)
     {
-        eeprom_peform_write(addr, value);
+        do {
+            eeprom_peform_write(addr, value);
 
-        eeprom_wait_dq7(value);
+            printf_P(PSTR("*"));
+        }
+        while (!eeprom_wait_dq7(value));
 
         printf_P(PSTR("+"));
 
     } else {
         /* Same value */
-        printf_P(PSTR("."));
+        printf_P(PSTR(".."));
     }
 
     /* Add newline after writes */
@@ -48,13 +52,18 @@ void eeprom_verify(uint16_t addr, uint8_t value)
         printf_P(PSTR("\r\n"));
 }
 
+#define MAX_POLL 0xFFFF
 
-static void eeprom_wait_dq7(uint8_t data)
+static uint8_t eeprom_wait_dq7(uint8_t data)
 {
     data &= 0x80; // interested only in bit 7
 
-    // read repeatedly until bit 7 returns "true data"
-    while (data != (eeprom_read() & 0x80));
+    uint16_t repeats;
+    // read repeatedly until bit 7 returns "true data" or too many attempts
+    for (repeats = 0; (data != (eeprom_read() & 0x80)) && repeats < MAX_POLL; ++repeats)
+        _delay_us(1);
+
+    return repeats < MAX_POLL;  // true if success
 }
 
 void eeprom_erase_all()
