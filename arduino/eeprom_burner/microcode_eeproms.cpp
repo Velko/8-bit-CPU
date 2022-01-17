@@ -12,19 +12,21 @@
 #include "microcode.h"
 #include "op-defs.h"
 
-uint16_t uc_output_address;
-
 void write_cword(FILE *eeprom, uint16_t cword, int rom_idx)
 {
     //printf("        %02x\n", cword >> (rom_idx << 3) & 0xFF);
-    printf("        %04x\n", cword);
+    printf_P(PSTR("        %04x\r\n"), cword);
     fputc(cword >> (rom_idx << 3) & 0xFF, eeprom);
 }
 
-void verify_cword(uint16_t cword, int rom_idx)
+void verify_cword(FILE *eeprom, uint16_t cword, int rom_idx)
 {
-    eeprom_verify(uc_output_address, cword >> (rom_idx << 3) & 0xFF);
-    ++uc_output_address;
+    uint8_t expected = cword >> (rom_idx << 3) & 0xFF;
+    uint8_t actual = fgetc(eeprom);
+    if (expected != actual)
+    {
+        printf_P(PSTR("Verification failed!\r\n"));
+    }
 }
 
 
@@ -32,7 +34,6 @@ void write_microcode(int rom_idx)
 {
     FILE *eeprom = eeprom_open();
 
-    uc_output_address = 0;
     printf("op f  s cb\n");
     for (int opcode = 0; opcode < NUM_OPS; ++opcode)
     {
@@ -88,7 +89,8 @@ void write_microcode(int rom_idx)
 
 void verify_microcode(int rom_idx)
 {
-    uc_output_address = 0;
+    FILE *eeprom = eeprom_open();
+
     printf("op f  s cb\n");
     for (int opcode = 0; opcode < NUM_OPS; ++opcode)
     {
@@ -100,7 +102,7 @@ void verify_microcode(int rom_idx)
             for (step = 0; step < NUM_FETCH_STEPS; ++step)
             {
                 printf ("      %d;\n", step);
-                verify_cword(op_fetch[step], rom_idx);
+                verify_cword(eeprom, op_fetch[step], rom_idx);
             }
 
             struct op_microcode instruction;
@@ -124,10 +126,10 @@ void verify_microcode(int rom_idx)
                 if (steps[step+1] == 0 || step + 1 == MAX_STEPS + NUM_FETCH_STEPS)
                 {
                     // add stepcounter reset
-                    verify_cword(steps[step] & (~LPIN_STEPS_RESET_BIT), rom_idx);
+                    verify_cword(eeprom, steps[step] & (~LPIN_STEPS_RESET_BIT), rom_idx);
                 } else {
                     // use as-is
-                    verify_cword(steps[step], rom_idx);
+                    verify_cword(eeprom, steps[step], rom_idx);
                 }
             }
 
@@ -135,10 +137,11 @@ void verify_microcode(int rom_idx)
             for (; step < (1 << NUM_STEP_BITS); ++step)
             {
                 printf ("      %d;\n", step);
-                verify_cword(CTRL_DEFAULT, rom_idx);
+                verify_cword(eeprom, CTRL_DEFAULT, rom_idx);
             }
         }
     }
+    printf_P(PSTR("Done\r\n"));
 }
 
 

@@ -38,20 +38,6 @@ static void eeprom_write(uint16_t addr, uint8_t value)
         printf_P(PSTR("\r\n"));
 }
 
-void eeprom_verify(uint16_t addr, uint8_t value)
-{
-    uint8_t old_value = eeprom_read_addr(addr);
-
-    if (old_value != value)
-        printf_P(PSTR("+"));
-    else
-        printf_P(PSTR("."));
-
-    /* Add newline after writes */
-    if ((addr & 0x0F) == 0x0F)
-        printf_P(PSTR("\r\n"));
-}
-
 #define MAX_POLL 0xFFFF
 
 static uint8_t eeprom_wait_dq7(uint8_t data)

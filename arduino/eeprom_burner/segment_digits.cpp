@@ -93,8 +93,6 @@ uint8_t encode_digit(char c)
 }
 
 
-uint16_t output_address;
-
 void write_digit(FILE *eeprom, int value, const char *format)
 {
     char output[5]; // 4 digits + \n
@@ -106,15 +104,18 @@ void write_digit(FILE *eeprom, int value, const char *format)
     }
 }
 
-void verify_digit(int value, const char *format)
+void verify_digit(FILE *eeprom, int value, const char *format)
 {
     char output[5]; // 4 digits + \n
     sprintf_P(output, format, value);
 
     for (int i = 3; i > -1; --i) // 4 digits backwards
     {
-        eeprom_verify(output_address, encode_digit(output[i]));
-        ++output_address;
+        uint8_t dig = fgetc(eeprom);
+        if (dig != encode_digit(output[i]))
+        {
+            Serial.println(F("Verification failed!"));
+        }
     }
 }
 
@@ -155,30 +156,30 @@ void verify7seg_digits()
 {
     Serial.println(F("Verifying the digits!"));
 
-    output_address = 0;
+    FILE *eeprom = eeprom_open();
 
     /* Decimal unsigned */
     for (int i = 0; i < 256; ++i)
-        verify_digit(i, PSTR("%4d"));
+        verify_digit(eeprom, i, PSTR("%4d"));
 
 
     /* Decimal signed - positive part */
     for (int i = 0; i < 128; ++i)
-        verify_digit(i, PSTR("%4d"));
+        verify_digit(eeprom, i, PSTR("%4d"));
 
     /* Decimal signed - negative part */
     for (int i = -128; i < 0; ++i)
-        verify_digit(i, PSTR("%4d"));
+        verify_digit(eeprom, i, PSTR("%4d"));
 
 
     /* Hex */
     for (int i = 0; i < 256; ++i)
-        verify_digit(i, PSTR("h %02X"));
+        verify_digit(eeprom, i, PSTR("h %02X"));
 
 
     /* Oct */
     for (int i = 0; i < 256; ++i)
-        verify_digit(i, PSTR("o%3o"));
+        verify_digit(eeprom, i, PSTR("o%3o"));
 
     Serial.println(F("Done"));
 }

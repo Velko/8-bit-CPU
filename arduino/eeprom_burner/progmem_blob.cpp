@@ -27,9 +27,18 @@ void burn_progmem_blob(const unsigned char blob[], unsigned int len)
 
 void verify_progmem_blob(const unsigned char blob[], unsigned int len)
 {
+    FILE *eeprom = eeprom_open();
+
     for (uint8_t addr = 0; addr < len; ++addr)
     {
-        uint8_t data = pgm_read_byte(&blob[addr]);
-        eeprom_verify(addr, data);
+        uint8_t expected = pgm_read_byte(&blob[addr]);
+        uint8_t actual = fgetc(eeprom);
+
+        if (expected != actual)
+        {
+            printf_P(PSTR("Verification failed\r\n"));
+            return;
+        }
     }
+    printf_P(PSTR("All OK\r\n"));
 }
