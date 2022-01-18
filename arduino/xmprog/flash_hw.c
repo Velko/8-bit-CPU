@@ -6,13 +6,6 @@
 #include "ctrl_pins.h"
 #include "flash_hw.h"
 
-void flash_setup()
-{
-    ctrl_pins_setup();
-    data_port_set_input();
-    addr_port_setup();
-}
-
 void flash_prepare_write()
 {
     data_port_set_input(); /* To be sure, set as inputs */

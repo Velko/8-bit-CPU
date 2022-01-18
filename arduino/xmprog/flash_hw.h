@@ -7,7 +7,6 @@
 extern "C" {
 #endif
 
-    void flash_setup();
     uint8_t flash_read_addr(uint32_t addr);
     uint8_t flash_read();
     void flash_prepare_write();
