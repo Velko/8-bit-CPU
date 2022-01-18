@@ -1,5 +1,5 @@
-#ifndef EEPROM_OPS_H
-#define EEPROM_OPS_H
+#ifndef FLASH_OPS_H
+#define FLASH_OPS_H
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -18,5 +18,5 @@ extern "C" {
 }
 #endif
 
-#endif /* EEPROM_OPS_H */
+#endif /* FLASH_OPS_H */
 
