@@ -61,7 +61,7 @@ static void verify_data(FILE* port, struct cmd_options *cmd)
         exit(1);
     }
 
-    fprintf(stderr, "Comparing...");
+    fprintf(stderr, "Comparing");
     fflush(stderr);
 
     char lf_buf[1024];
@@ -71,6 +71,9 @@ static void verify_data(FILE* port, struct cmd_options *cmd)
 
     for (;;)
     {
+        fprintf(stderr, ".");
+        fflush(stderr);
+
         size_t nloc = fread(lf_buf, 1, sizeof(lf_buf), local);
         size_t nrem = fread(rf_buf, 1, sizeof(rf_buf), remote);
 
