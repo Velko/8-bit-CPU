@@ -11,6 +11,7 @@
 
 #define WE          PC5
 #define CS1         PC0
+#define CS2         PC1
 #define OE          PC4
 
 #define CURRENT_CS  CS1
@@ -18,8 +19,8 @@
 
 void flash_setup()
 {
-    CTRL_PORT |= _BV(WE) | _BV(CS1) | _BV(OE);
-    CTRL_DDR  |= _BV(WE) | _BV(CS1) | _BV(OE);
+    CTRL_PORT |= _BV(WE) | _BV(CS1) | _BV(CS2) | _BV(OE);
+    CTRL_DDR  |= _BV(WE) | _BV(CS1) | _BV(CS2) | _BV(OE);
 
     data_port_set_input();
 

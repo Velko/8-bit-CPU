@@ -26,6 +26,15 @@ void addr_port_setup(void)
     PORT_SPI &= ~_BV(LATCH_PIN);
 }
 
+void addr_port_write16(uint16_t data)
+{
+    addr_port_write8((data >> 8) & 0xFF);
+    addr_port_write8(data & 0xFF);
+
+    PORT_SPI |= _BV(LATCH_PIN);
+    PORT_SPI &= ~_BV(LATCH_PIN);
+}
+
 void addr_port_write24(uint32_t data)
 {
     addr_port_write8((data >> 16) & 0xFF);

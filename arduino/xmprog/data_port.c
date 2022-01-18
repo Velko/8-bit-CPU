@@ -19,6 +19,15 @@
    and shift left 2 places for PORTD
 */
 
+static inline uint8_t bit_reverse(uint8_t x )
+{
+    x = ((x >> 1) & 0x55) | ((x << 1) & 0xaa);
+    x = ((x >> 2) & 0x33) | ((x << 2) & 0xcc);
+    x = ((x >> 4) & 0x0f) | ((x << 4) & 0xf0);
+
+    return x;
+}
+
 void data_port_set_input()
 {
     DDRB &= 0xfc;
@@ -40,4 +49,15 @@ void data_port_write(uint8_t value)
     /* careful with PORTB - PB2 controls shift register latch */
     DDRB |= 0x03;
     PORTB = (PORTB & 0xfc ) | (value >> 6);
+}
+
+
+uint8_t data_port_read_rev()
+{
+    return bit_reverse(data_port_read());
+}
+
+void data_port_write_rev(uint8_t value)
+{
+    data_port_write(bit_reverse(value));
 }

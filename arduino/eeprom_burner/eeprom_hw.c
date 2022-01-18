@@ -20,7 +20,7 @@ void eeprom_setup()
     CTRL_PORT |= _BV(WE) | _BV(CS1) | _BV(CS2) | _BV(OE);
     CTRL_DDR  |= _BV(WE) | _BV(CS1) | _BV(CS2) | _BV(OE);
 
-    rev_data_port_set_input();
+    data_port_set_input();
 
     addr_port_setup();
 }
@@ -44,11 +44,11 @@ void eeprom_select(uint8_t idx)
 
 void eeprom_peform_write(uint16_t addr, uint8_t value)
 {
-    rev_data_port_set_input(); /* To be sure, set as inputs */
+    data_port_set_input(); /* To be sure, set as inputs */
     CTRL_PORT |= _BV(OE); /* EEPROM as input */
     addr_port_write16(addr);
 
-    rev_data_port_write(value);
+    data_port_write_rev(value);
 
     /* Pulse the WE pin to start write */
     CTRL_PORT &= ~_BV(WE);
@@ -58,7 +58,7 @@ void eeprom_peform_write(uint16_t addr, uint8_t value)
 
     /* Switch back to inputs as soon as possible:
        let EEPROM control data lines */
-    rev_data_port_set_input();
+    data_port_set_input();
 }
 
 uint8_t eeprom_read_addr(uint16_t addr)
@@ -69,13 +69,13 @@ uint8_t eeprom_read_addr(uint16_t addr)
 
 uint8_t eeprom_read(void)
 {
-    rev_data_port_set_input(); /* Set as inputs */
+    data_port_set_input(); /* Set as inputs */
 
     CTRL_PORT &= ~_BV(OE); /* EEPROM as output */
     /* pause for EEPROM. Worst case scenario - it takes 250 ns to settle.
        So 1 uS (1000 ns) should be enough */
     _delay_us(1);
-    uint8_t data = rev_data_port_read();
+    uint8_t data = data_port_read_rev();
 
     CTRL_PORT |= _BV(OE); /* EEPROM as input */
 

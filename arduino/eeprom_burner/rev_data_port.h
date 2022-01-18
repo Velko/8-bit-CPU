@@ -7,9 +7,9 @@
 extern "C" {
 #endif
 
-    void rev_data_port_set_input();
-    uint8_t rev_data_port_read();
-    void rev_data_port_write(uint8_t value);
+    void data_port_set_input();
+    uint8_t data_port_read_rev();
+    void data_port_write_rev(uint8_t value);
 
 #ifdef __cplusplus
 }

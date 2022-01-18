@@ -10,6 +10,7 @@ extern "C" {
 
     void addr_port_setup();
     void addr_port_write8(uint8_t data);
+    void addr_port_write16(uint16_t data);
     void addr_port_write24(uint32_t data);
 
 
