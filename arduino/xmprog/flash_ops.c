@@ -1,3 +1,4 @@
+#define F_CPU 16000000UL
 #include <stdio.h>
 #include <avr/pgmspace.h>
 #include <util/delay.h>

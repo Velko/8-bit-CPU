@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <avr/pgmspace.h>
 #include <util/delay.h>
+#include "flash_ops.h"
+#include <stdbool.h>
 
 #ifdef __AVR__
 #include "uart.h"
@@ -23,8 +25,10 @@ static int calcrc(char *ptr, int count);
 static void trim_end(char *str);
 
 static void xmprog_send_rom_contents(const char *file_name);
-static void xmprog_receive_packet();
+static void xmprog_receive_packet(FILE *chip_stream);
 static void xmprog_receive_rom_contents(const char *file_name);
+static FILE *xmprog_open_stream(const char *file_name);
+static void xmprog_erase(const char *file_name, bool force);
 
 char cmdbuf[20];
 
@@ -32,9 +36,10 @@ void trim_end(char *str)
 {
     char *s = str;
     for (; *s; ++s);
+    --s;
 
-    while (s > str && (*s == '\r' || *s == ' ')) --s;
-    *s = 0;
+    while (s >= str && (*s == '\r' || *s == ' ' || *s == '\n')) --s;
+    *(++s) = 0;
 }
 
 void xmprog_step_main()
@@ -60,13 +65,17 @@ void xmprog_step_main()
 }
 
 uint8_t chipmem[128];
-uint8_t gendata;
 
 static void xmprog_send_rom_contents(const char *file_name)
 {
     dprintf("Sending file: '%s'\n", file_name);
 
-    gendata = 0;
+    FILE *chip_stream = xmprog_open_stream(file_name);
+
+    if (chip_stream == NULL)
+    {
+        return;
+    }
 
     /* Wait for initial C before starting to send */
     for(;;)
@@ -76,12 +85,12 @@ static void xmprog_send_rom_contents(const char *file_name)
         if (init_c == C) break;
     }
 
-    for (size_t p_idx = 1; p_idx <= 1024; ++p_idx)
+    for (size_t p_idx = 1;;  ++p_idx)
     {
-        /* Generate some data */
-        for (int i = 0; i < 128; ++i)
-            chipmem[i] = gendata++;
-        gendata--;
+        /* Read data from chip */
+        fread(chipmem, 1, sizeof(chipmem), chip_stream);
+
+        if (feof(chip_stream)) break;
 
         char repeat_package = 1;
         while (repeat_package) {
@@ -126,7 +135,7 @@ static void xmprog_send_rom_contents(const char *file_name)
     dprintf("Here we go!\n");
 }
 
-static void xmprog_receive_packet()
+static void xmprog_receive_packet(FILE *chip_stream)
 {
     uint16_t packed_id;
     fread(&packed_id, 1, 2, serial);
@@ -142,6 +151,16 @@ static void xmprog_receive_packet()
     if (crc_calc == crc_recv)
     {
         dprintf("block %x received\n", packed_id);
+
+        size_t written = fwrite(chipmem, 1, sizeof(chipmem), chip_stream);
+
+        if (written != sizeof(chipmem))
+        {
+            /* Most likely - writting past the end */
+            fputc(NAK, serial);
+            return;
+        }
+
         fputc(ACK, serial);
     }
     else
@@ -154,6 +173,15 @@ static void xmprog_receive_packet()
 static void xmprog_receive_rom_contents(const char *file_name)
 {
     dprintf("Waiting for file: '%s'\n", file_name);
+
+    FILE *chip_stream = xmprog_open_stream(file_name);
+
+    if (chip_stream == NULL)
+    {
+        return;
+    }
+
+    xmprog_erase(file_name, false);
 
     /* give some time for sender to start, then send initial "C" indicating
        that we're ready to receive using XMODEM-CRC protocol
@@ -177,7 +205,7 @@ static void xmprog_receive_rom_contents(const char *file_name)
         switch (soh)
         {
         case SOH:
-            xmprog_receive_packet();
+            xmprog_receive_packet(chip_stream);
             break;
         case EOT:
             fputc(ACK, serial);
@@ -208,4 +236,21 @@ static int calcrc(char *ptr, int count)
         } while(--i);
     }
     return (crc);
+}
+
+static FILE *xmprog_open_stream(const char *file_name)
+{
+    if (strcmp_P(file_name, PSTR("flash")) == 0) {
+        return flash_open();
+    }
+
+    printf_P(PSTR("Unknown chip: '%s'"), file_name);
+    return NULL;
+}
+
+static void xmprog_erase(const char *file_name, bool force)
+{
+    if (strcmp_P(file_name, PSTR("flash")) == 0) {
+        flash_erase_all();
+    }
 }
