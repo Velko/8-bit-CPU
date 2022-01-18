@@ -4,6 +4,7 @@
 #include <util/delay.h>
 #include "flash_hw.h"
 #include "flash_ops.h"
+#include "ctrl_pins.h"
 
 FILE flash_stream;
 uint32_t flash_addr;
@@ -37,6 +38,8 @@ uint16_t flash_identify()
 
 void flash_erase_all()
 {
+    ctrl_chip_select(0);
+
     flash_prepare_write();
 
     flash_send_command(0x5555, 0xaa);
@@ -82,6 +85,7 @@ static int flash_putc(char c, FILE *stream)
 
 FILE *flash_open(void)
 {
+    ctrl_chip_select(0);
     uint16_t device = flash_identify();
 
     switch (device)
