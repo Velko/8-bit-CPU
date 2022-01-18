@@ -7,10 +7,25 @@
 #include "serial.h"
 #include "pexec.h"
 
+static void check_remote_readyness(FILE* port)
+{
+    char buffer[80];
+    fgets(buffer, sizeof(buffer), port);
+
+    printf("%s", buffer);
+
+    if (strncmp(buffer, "Ready to rock!", 14) != 0)
+    {
+        exit(1);
+    }
+}
+
 static void read_remote(FILE* port, struct cmd_options *cmd)
 {
     fprintf(port, "sx %s\r\n", cmd->chip);
     fflush(port);
+
+    check_remote_readyness(port);
 
     char *const read_params[] = {"/usr/bin/rx", "-c", cmd->file, NULL};
 
@@ -21,6 +36,8 @@ static void write_remote(FILE* port, struct cmd_options *cmd)
 {
     fprintf(port, "rx %s\r\n", cmd->chip);
     fflush(port);
+
+    check_remote_readyness(port);
 
     char *const read_params[] = {"/usr/bin/sx", cmd->file, NULL};
 

@@ -66,14 +66,14 @@ uint8_t chipmem[128];
 
 static void xmprog_send_rom_contents(const char *file_name)
 {
-    dprintf("Sending file: '%s'\n", file_name);
-
     FILE *chip_stream = chip_open_stream(file_name);
 
     if (chip_stream == NULL)
     {
         return;
     }
+
+    fprintf_P(serial, PSTR("Ready to rock! Start your receiver.\r\n"));
 
     /* Wait for initial C before starting to send */
     for(;;)
@@ -170,14 +170,14 @@ static void xmprog_receive_packet(FILE *chip_stream)
 
 static void xmprog_receive_rom_contents(const char *file_name)
 {
-    dprintf("Waiting for file: '%s'\n", file_name);
-
     FILE *chip_stream = chip_open_stream(file_name);
 
     if (chip_stream == NULL)
     {
         return;
     }
+
+    fprintf_P(serial, PSTR("Ready to rock! Send, whenever you're ready.\r\n"));
 
     chip_erase(file_name, false);
 

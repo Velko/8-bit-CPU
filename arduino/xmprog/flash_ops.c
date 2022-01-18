@@ -90,7 +90,10 @@ FILE *flash_open(struct chip_def *chip)
     uint16_t device = flash_identify();
 
     if (device != chip->man_dev_id)
+    {
+        printf_P(PSTR("Wrong chip signature: %04X\r\n"), device);
         return NULL;
+    }
 
     flash_addr = 0;
     flash_size = chip->size;
