@@ -4,6 +4,7 @@
 #include "eeprom_ops.h"
 #include "eeprom_hw.h"
 #include "addr_port.h"
+#include "ctrl_pins.h"
 
 FILE eeprom_stream;
 uint32_t eeprom_addr;
@@ -43,19 +44,19 @@ static void eeprom_activate_chip(enum eeprom_chip chip)
     switch (chip)
     {
     case AT28C64P:
-        eeprom_select(0);  // DIP
+        ctrl_chip_select(0);  // DIP
         eeprom_size = 8 * 1024UL;
         break;
     case AT28C64J:
-        eeprom_select(1);  // PLCC
+        ctrl_chip_select(1);  // PLCC
         eeprom_size = 8 * 1024UL;
         break;
     case AT28C256P:
-        eeprom_select(0);  // DIP
+        ctrl_chip_select(0);  // DIP
         eeprom_size = 32 * 1024UL;
         break;
     case AT28C256J:
-        eeprom_select(1);  // PLCC
+        ctrl_chip_select(1);  // PLCC
         eeprom_size = 32 * 1024UL;
         break;
     }
