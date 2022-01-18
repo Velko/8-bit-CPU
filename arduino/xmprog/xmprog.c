@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <avr/pgmspace.h>
 #include <util/delay.h>
-#include "flash_ops.h"
+#include "chips.h"
 #include <stdbool.h>
 
 #ifdef __AVR__
@@ -27,8 +27,6 @@ static void trim_end(char *str);
 static void xmprog_send_rom_contents(const char *file_name);
 static void xmprog_receive_packet(FILE *chip_stream);
 static void xmprog_receive_rom_contents(const char *file_name);
-static FILE *xmprog_open_stream(const char *file_name);
-static void xmprog_erase(const char *file_name, bool force);
 
 char cmdbuf[20];
 
@@ -70,7 +68,7 @@ static void xmprog_send_rom_contents(const char *file_name)
 {
     dprintf("Sending file: '%s'\n", file_name);
 
-    FILE *chip_stream = xmprog_open_stream(file_name);
+    FILE *chip_stream = chip_open_stream(file_name);
 
     if (chip_stream == NULL)
     {
@@ -174,14 +172,14 @@ static void xmprog_receive_rom_contents(const char *file_name)
 {
     dprintf("Waiting for file: '%s'\n", file_name);
 
-    FILE *chip_stream = xmprog_open_stream(file_name);
+    FILE *chip_stream = chip_open_stream(file_name);
 
     if (chip_stream == NULL)
     {
         return;
     }
 
-    xmprog_erase(file_name, false);
+    chip_erase(file_name, false);
 
     /* give some time for sender to start, then send initial "C" indicating
        that we're ready to receive using XMODEM-CRC protocol
@@ -236,21 +234,4 @@ static int calcrc(char *ptr, int count)
         } while(--i);
     }
     return (crc);
-}
-
-static FILE *xmprog_open_stream(const char *file_name)
-{
-    if (strcmp_P(file_name, PSTR("flash")) == 0) {
-        return flash_open();
-    }
-
-    printf_P(PSTR("Unknown chip: '%s'"), file_name);
-    return NULL;
-}
-
-static void xmprog_erase(const char *file_name, bool force)
-{
-    if (strcmp_P(file_name, PSTR("flash")) == 0) {
-        flash_erase_all();
-    }
 }

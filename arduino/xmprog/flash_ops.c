@@ -36,9 +36,10 @@ uint16_t flash_identify()
     return (manufacturer << 8) | device;
 }
 
-void flash_erase_all()
+void flash_erase_all(struct chip_def *chip, bool force)
 {
-    ctrl_chip_select(0);
+    /* Flash chips should always be erased before writes, forced or not*/
+    ctrl_chip_select(chip->socket);
 
     flash_prepare_write();
 
@@ -83,29 +84,18 @@ static int flash_putc(char c, FILE *stream)
     return 0;
 }
 
-FILE *flash_open(void)
+FILE *flash_open(struct chip_def *chip)
 {
-    ctrl_chip_select(0);
+    ctrl_chip_select(chip->socket);
     uint16_t device = flash_identify();
 
-    switch (device)
-    {
-        case 0xBFB5: // SST39SF010A
-            flash_size = 128UL * 1024;
-            break;
-        case 0xBFB6: // SST39SF020A
-            flash_size = 256UL * 1024;
-            break;
-        case 0xBFB7: // SST39SF040
-            flash_size = 512UL * 1024;
-            break;
-        default:     // unidentified
-            return NULL;
-    }
-
-    fdev_setup_stream(&flash_stream, flash_putc, flash_getc, _FDEV_SETUP_RW);
+    if (device != chip->man_dev_id)
+        return NULL;
 
     flash_addr = 0;
+    flash_size = chip->size;
+
+    fdev_setup_stream(&flash_stream, flash_putc, flash_getc, _FDEV_SETUP_RW);
 
     return &flash_stream;
 }
