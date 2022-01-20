@@ -22,21 +22,9 @@ static void eeprom_write(uint16_t addr, uint8_t value)
     {
         do {
             eeprom_peform_write(addr, value);
-
-            printf_P(PSTR("*"));
         }
         while (!eeprom_wait_dq7(value));
-
-        printf_P(PSTR("+"));
-
-    } else {
-        /* Same value */
-        printf_P(PSTR(".."));
     }
-
-    /* Add newline after writes */
-    if ((addr & 0x0F) == 0x0F)
-        printf_P(PSTR("\r\n"));
 }
 
 #define MAX_POLL 0xFFFF
