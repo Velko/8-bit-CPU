@@ -94,7 +94,7 @@ static void verify_data(FILE* port, struct cmd_options *cmd)
         size_t nloc = fread(lf_buf, 1, sizeof(lf_buf), local);
         size_t nrem = fread(rf_buf, 1, sizeof(rf_buf), remote);
 
-        if (nloc != nrem)
+        if (nloc > nrem)
         {
             fprintf(stderr, "File sizes differ at block offset %d\n", position);
             exit(1);
