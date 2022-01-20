@@ -1,5 +1,6 @@
-#include <Arduino.h>
-#include "eeprom_ops.h"
+#include <stdio.h>
+#include <stdint.h>
+
 /*
     Encode each segment as a bit.
 
@@ -96,7 +97,7 @@ uint8_t encode_digit(char c)
 void write_digit(FILE *eeprom, int value, const char *format)
 {
     char output[5]; // 4 digits + \n
-    sprintf_P(output, format, value);
+    sprintf(output, format, value);
 
     for (int i = 3; i > -1; --i) // 4 digits backwards
     {
@@ -104,82 +105,41 @@ void write_digit(FILE *eeprom, int value, const char *format)
     }
 }
 
-void verify_digit(FILE *eeprom, int value, const char *format)
+void burn7seg_digits(FILE *eeprom)
 {
-    char output[5]; // 4 digits + \n
-    sprintf_P(output, format, value);
-
-    for (int i = 3; i > -1; --i) // 4 digits backwards
-    {
-        uint8_t dig = fgetc(eeprom);
-        if (dig != encode_digit(output[i]))
-        {
-            Serial.println(F("Verification failed!"));
-        }
-    }
-}
-
-
-void burn7seg_digits()
-{
-    Serial.println(F("Burning the digits!"));
-
-    FILE *eeprom = eeprom_open(AT28C64J);
+    printf("Burning the digits!\n");
 
     /* Decimal unsigned */
     for (int i = 0; i < 256; ++i)
-        write_digit(eeprom, i, PSTR("%4d"));
+        write_digit(eeprom, i, "%4d");
 
 
     /* Decimal signed - positive part */
     for (int i = 0; i < 128; ++i)
-        write_digit(eeprom, i, PSTR("%4d"));
+        write_digit(eeprom, i, "%4d");
 
     /* Decimal signed - negative part */
     for (int i = -128; i < 0; ++i)
-        write_digit(eeprom, i, PSTR("%4d"));
+        write_digit(eeprom, i, "%4d");
 
 
     /* Hex */
     for (int i = 0; i < 256; ++i)
-        write_digit(eeprom, i, PSTR("h %02X"));
+        write_digit(eeprom, i, "h %02X");
 
 
     /* Oct */
     for (int i = 0; i < 256; ++i)
-        write_digit(eeprom, i, PSTR("o%3o"));
+        write_digit(eeprom, i, "o%3o");
 
-    Serial.println(F("Done"));
+    printf("Done\n");
 }
 
-void verify7seg_digits()
+int main()
 {
-    Serial.println(F("Verifying the digits!"));
+    FILE *rom = fopen("digits.bin", "wb");
+    burn7seg_digits(rom);
+    fclose(rom);
 
-    FILE *eeprom = eeprom_open(AT28C64J);
-
-    /* Decimal unsigned */
-    for (int i = 0; i < 256; ++i)
-        verify_digit(eeprom, i, PSTR("%4d"));
-
-
-    /* Decimal signed - positive part */
-    for (int i = 0; i < 128; ++i)
-        verify_digit(eeprom, i, PSTR("%4d"));
-
-    /* Decimal signed - negative part */
-    for (int i = -128; i < 0; ++i)
-        verify_digit(eeprom, i, PSTR("%4d"));
-
-
-    /* Hex */
-    for (int i = 0; i < 256; ++i)
-        verify_digit(eeprom, i, PSTR("h %02X"));
-
-
-    /* Oct */
-    for (int i = 0; i < 256; ++i)
-        verify_digit(eeprom, i, PSTR("o%3o"));
-
-    Serial.println(F("Done"));
+    return 0;
 }
