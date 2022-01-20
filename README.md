@@ -229,24 +229,18 @@ it only works with emulator, as current hardware doesn't support both "normal" C
 Test modules connected simultaneously.
 
 
-Side-project: EEPROM writer
----------------------------
+Side-projects: EEPROM and Flash writers
+---------------------------------------
 
-As a side project I also built an EEPROM writer: PCB version - an Arduino Uno shield. It can program
-DIP-28 EEPROMs (AT28C64 and AT28C256) and PLCC-32 versions of same chips. Main principle is same as in
-Ben's version, but wiring is different, because it uses Arduino's SPI module to work with shift registers
-(it is much faster than shiftOut() method). Additional headers on the board gives access to "address" and
-"data bus" pins, so the board can be used for different purposes when no EEPROMs need to be programmed.
-I used it as the Test Module at first.
+As side projects, there are 2 boards (Arduino Uno shields), firmware and client utility for
+programming DIP-28 and PLCC-32 EEPROMs (AT28C64 and AT28C256), as well as PLCC-32 Multi-Purpose
+Flash (SST39SF*).
 
+EEPROM board has additional headers, giving access to address and data pins, allowing the board to
+act as a Test module, when connected to the Main Bus and control lines.
 
-Side-project #2: Flash writer
------------------------------
-
-As I plan to switch to Flash chips for control ROMs, there's need for a device that can write them.
-It is also implemented as an Arduino Uno shield. The writer's firmware currently is incomplete,
-it can read and write the flash as proof-of-concept, but does not write any meaningful content. The
-plans are that it should receive the contents from file via XMODEM protocol.
+File upload and download uses XMODEM protocol, can be used with any terminal emulator. There's also
+a (*nix-only) command-line client utility for convenience.
 
 
 Emulated in Verilog
@@ -273,11 +267,10 @@ Repository index
 * **.vscode** - configuration for Visual Studio Code
 * **arduino** - Arduino sketches and C++ code, to help test and automate things
     * **bouncyy** - software button debouncer and "rebouncer"
-    * **eeprom_burner** - sketch to write 7-seg, microcode and program ROM, onboard content generation
-    * **flash_writer** - simple sketch to write SST39SF*** Flash chips.
     * **lib** - some common routines
     * **pincontrol** - substitute Control Logic. Controlled via serial link from **pycontrol**
-    * **xmprog** - (very early stage) XMODEM-compatible EEPROM programmer
+    * **xmprog** - EEPROM/Flash programmer, file upload using XMODEM protocol
+        * **client** - PC-side utility for convenience
 * **demo** - demo programs
 * **doc** - some (mostly outdated) design thoughts, BOM, etc.
 * **emulator** - hardware emulator in Verilog
@@ -306,6 +299,9 @@ Repository index
         * **sunit** - Shift Unit (ALU module for shift and nibble swap)
         * **transfer** - transfer register (between Main Bus and Address Bus)
 * **include** - C and .def files for inclusion on other programs
+* **misc** - miscellaneous utilities
+    * **digits** - an utility to generate binary ROM image for 7-segment display
+    * **microcode** - an utility to generate binary ROM images for Control Logic
 * **parts** - custom KiCad symbols and footprints for missing components
 * **pycontrol** - Python-based control logic, microcode, tests, demo programs, etc.
     * **libcpu** - main implementation of control logic, microcode
