@@ -2,9 +2,6 @@
 #include <avr/io.h>
 #include "uart.h"
 
-/* CPU frequency */
-#define F_CPU 16000000UL
-
 /* Desired UART baud rate */
 #define BAUD 115200UL
 

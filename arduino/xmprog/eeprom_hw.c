@@ -1,4 +1,3 @@
-#define F_CPU 16000000UL
 #include <util/delay.h>
 #include "addr_port.h"
 #include "data_port.h"

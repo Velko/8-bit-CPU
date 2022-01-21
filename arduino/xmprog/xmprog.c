@@ -1,4 +1,3 @@
-#define F_CPU 16000000UL
 #include "xmprog.h"
 #include "debug.h"
 #include "ctimer.h"

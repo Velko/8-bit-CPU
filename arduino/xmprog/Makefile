@@ -29,7 +29,7 @@ PROG_PORT=/dev/ttyACM0
 CC=/usr/bin/avr-gcc
 CXX=/usr/bin/avr-g++
 LD=/usr/bin/avr-gcc
-CFLAGS=-g -Os -Wall -mcall-prologues -mmcu=$(MCU_GCC)
+CFLAGS=-g -Os -Wall -mcall-prologues -mmcu=$(MCU_GCC) -DF_CPU=16000000UL
 OBJ2HEX=/usr/bin/avr-objcopy
 
 
