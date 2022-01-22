@@ -270,7 +270,6 @@ Repository index
     * **lib** - some common routines
     * **pincontrol** - substitute Control Logic. Controlled via serial link from **pycontrol**
     * **xmprog** - EEPROM/Flash programmer, file upload using XMODEM protocol
-        * **client** - PC-side utility for convenience
 * **demo** - demo programs
 * **doc** - some (mostly outdated) design thoughts, BOM, etc.
 * **emulator** - hardware emulator in Verilog
@@ -302,6 +301,7 @@ Repository index
 * **misc** - miscellaneous utilities
     * **digits** - an utility to generate binary ROM image for 7-segment display
     * **microcode** - an utility to generate binary ROM images for Control Logic
+    * **xmclient** - PC-side client utility for **xmprog**
 * **parts** - custom KiCad symbols and footprints for missing components
 * **pycontrol** - Python-based control logic, microcode, tests, demo programs, etc.
     * **libcpu** - main implementation of control logic, microcode
