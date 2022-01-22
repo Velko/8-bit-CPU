@@ -244,7 +244,7 @@ Side projects
 * 1.8432MHz oscillator (try to build UART)
 * MC21605H6WK-FPTLW-V2 - LCD screen
 * Arduino Nano
-
+* 74HC40105 - FIFOs for UART (Farnell only lists NXP, not produced, there are TI elsewhere)
 
 PCB Order 1
 ===========
