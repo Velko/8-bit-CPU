@@ -384,6 +384,11 @@ Progress
   building blocks. The rest of the machine is "wired up" from those blocks. It gives a runnable version
   and represents how it can be built on breadboards or PCBs. Same as previous implementation, it can
   be controlled via virtual serial connection.
+* Merged EEPROM burner, Flash writer and XMProg firmwares into one. Now it can program EEPROMs and Flash
+  ROMs (should plug in the right Arduino shield) from binary file uploads over XMODEM protocol.
+  Interestingly, something in Arduino library was interfering with serial communication, so everything
+  was ported to C and depends on [AVR-Libc][avr-libc] only. The built-in functionality of content
+  generation for 7-segment display and microcode ROMs were ported to separate utilities.
 
 [eater-net-8bit]: https://eater.net/8bit
 [velkoraspi]: https://velkoraspi.blogspot.com/
@@ -395,3 +400,4 @@ Progress
 [logisim]: http://www.cburch.com/logisim/
 [verilog]: https://en.wikipedia.org/wiki/Verilog
 [vpi]: https://en.wikipedia.org/wiki/Verilog_Procedural_Interface
+[avr-libc]: https://www.nongnu.org/avr-libc/user-manual/index.html
