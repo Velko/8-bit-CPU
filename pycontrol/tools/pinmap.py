@@ -19,6 +19,9 @@ largest = max(pinmap.keys())
 totalpins = (largest + 8) & ~7
 
 for p in range(totalpins):
+    if p != 0 and (p & 7) == 0:
+        print ("-----------------------------")
+
     if p in pinmap:
         print (f"{p:2} {pinmap[p]}")
     else:
@@ -36,6 +39,8 @@ for name, mux in all_muxes():
     capacity = 2**len(mux.pins)
 
     for p in range(capacity):
+        if p != 0 and (p & 7) == 0:
+            print ("   --------------------------")
         if p in mpm:
             print (f"  {p:2} {mpm[p]}")
         else:
