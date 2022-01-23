@@ -3,7 +3,6 @@
  */
 
 #include <EEPROM.h>
-#include <shiftoutext.h>
 #include "device_interface.h"
 #include "op-defs.h"
 
@@ -105,7 +104,7 @@ void loop()
         {
             Serial.println(F("Wiring updated, re-upload sketch!"));
             break;
-        }       
+        }
         run_program();
         break;
 

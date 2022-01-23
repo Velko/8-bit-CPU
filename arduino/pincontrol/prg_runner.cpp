@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <shiftoutext.h>
+#include "shiftoutext.h"
 #include "device_interface.h"
 #include "microcode.h"
 #include "op-defs.h"

@@ -1,9 +1,9 @@
 #ifndef DEVICE_INTERFACE_H
 #define DEVICE_INTERFACE_H
 
-#include <iobus8bit.h>
-#include <iobus4bit.h>
-#include <shiftoutext.h>
+#include "iobus8bit.h"
+#include "iobus4bit.h"
+#include "shiftoutext.h"
 #include "clock.h"
 
 class DeviceInterface

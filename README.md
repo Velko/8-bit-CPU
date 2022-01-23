@@ -267,7 +267,6 @@ Repository index
 * **.vscode** - configuration for Visual Studio Code
 * **arduino** - Arduino sketches and C++ code, to help test and automate things
     * **bouncyy** - software button debouncer and "rebouncer"
-    * **lib** - some common routines
     * **pincontrol** - substitute Control Logic. Controlled via serial link from **pycontrol**
     * **xmprog** - EEPROM/Flash programmer, file upload using XMODEM protocol
 * **demo** - demo programs
