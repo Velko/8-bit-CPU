@@ -85,8 +85,12 @@ class StepCounter:
         self.extended = extended
 
 class ProgramCounter(Register):
-    def __init__(self, name: str, out: PinBase, load: PinBase) -> None:
+    def __init__(self, name: str, out: PinBase, load: PinBase, inc: PinBase) -> None:
         Register.__init__(self, name, out, load)
+        # To save on control lines, in current setup PC increment and output operations
+        # are merged, PC increments whenever it outputs and there's a clock tick.
+        # 2 aliased operations are defined to better describe intent in microcode.
+        self.inc = self.out
 
 class StackPointer(Register):
     def __init__(self, name: str, out: PinBase, load: PinBase, inc: PinBase, dec: PinBase) -> None:

@@ -114,18 +114,20 @@ def all_steps() -> Iterator[Tuple[str, str, int, Sequence[ControlSignal]]]:
         for steps in op._steps:
             yield name, "default", 0, steps
 
-@pytest.mark.parametrize("name,flags,vfal,steps", all_steps())
-def test_mux_enables(name: str, flags: str, vfal: int, steps: Sequence[ControlSignal]) -> None:
+@pytest.mark.parametrize("name,flags,vfal,step", all_steps())
+def test_mux_enables(name: str, flags: str, vfal: int, step: Sequence[ControlSignal]) -> None:
 #    instr = opcodes["ld_A_addr"]
 #    steps = instr._steps[3]
 
     muxes_found = []
+    sig_cache = []
 
-    for step in steps:
-        if isinstance(step, MuxPin):
-            assert step.mux not in muxes_found
-            muxes_found.append(step.mux)
-        if isinstance(step, EnableCallback):
-            if isinstance(step.original, MuxPin):
-                assert step.original.mux not in muxes_found
-                muxes_found.append(step.original.mux)
+    for signal in step:
+        if isinstance(signal, EnableCallback):
+            signal = signal.original
+
+        if isinstance(signal, MuxPin):
+            if signal not in sig_cache: # aliased pins (PC.out == PC.inc)
+                assert signal.mux not in muxes_found
+                muxes_found.append(signal.mux)
+                sig_cache.append(signal)
