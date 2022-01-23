@@ -21,7 +21,7 @@ void SerialHost::begin(unsigned long baud)
 
     struct termios newtio;
 
-    fd = open(MODEMDEVICE, O_RDWR | O_NOCTTY );
+    int fd = open(MODEMDEVICE, O_RDWR | O_NOCTTY );
     if (fd <0) {perror(MODEMDEVICE); exit(-1); }
 
     memset(&newtio, 0, sizeof(newtio));
@@ -41,85 +41,4 @@ void SerialHost::begin(unsigned long baud)
     serial = fdopen(fd, "ab+");
 }
 
-size_t SerialHost::write(uint8_t byte)
-{
-    return ::write(fd, &byte, 1);
-}
-
-size_t SerialHost::write(const uint8_t *buffer, size_t size)
-{
-    return ::write(fd, buffer, size);
-}
-
-size_t SerialHost::readBytes(uint8_t *buffer, size_t length)
-{
-    return ::read(fd, buffer, length);
-}
-
-int SerialHost::read()
-{
-    uint8_t val;
-    if (::read(fd, &val, 1) > 0)
-        return val;
-    else
-        return -1;
-}
-
-String SerialHost::readStringUntil(char terminator)
-{
-    std::string str;
-
-    char c;
-
-    while (::read(fd, &c, 1) > 0)
-    {
-        if (c == terminator) break;
-        str += c;
-    }
-
-    return String(std::move(str));
-}
-
-
-void SerialHost::print(const char *str)
-{
-    for (; *str; ++str)
-        write(*str);
-}
-
-void SerialHost::println(const char *str)
-{
-    print(str);
-    write('\r');
-    write('\n');
-}
-
-void SerialHost::println(const String &str)
-{
-    println(str.c_str());
-}
-
-void SerialHost::println(uint32_t val)
-{
-    std::string str = std::to_string(val);
-    println(str.c_str());
-}
-
-uint32_t SerialHost::parseInt()
-{
-    std::string str;
-
-    char c;
-
-    while (::read(fd, &c, 1) > 0)
-    {
-        if ((c < '0' || c > '9') && c != '-') break;
-        str += c;
-    }
-
-    return std::stoul(str);
-}
-
-
-SerialHost Serial;
 FILE *serial;

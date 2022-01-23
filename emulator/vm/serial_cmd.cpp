@@ -96,7 +96,7 @@ static int serial_send_str_handler(char *user_data)
 
 void open_serial()
 {
-    Serial.begin(115200);
+    SerialHost::begin(115200);
 }
 
 void register_serial_get_cmd(void)
