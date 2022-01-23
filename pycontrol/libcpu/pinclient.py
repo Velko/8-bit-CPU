@@ -108,6 +108,9 @@ class PinClient:
     def reset(self) -> None:
         self.send_cmd('Z')
 
+    def shutdown(self) -> None:
+        self.send_cmd('Q')
+
 def find_port() -> str:
     port = os.environ.get("SER_PORT")
     if port is not None:

@@ -130,6 +130,9 @@ class TesterClient(cmd.Cmd):
         backend.client.off(backend.control.default)
         backend.client.reset()
 
+    def do_shutdown(self, arg: str) -> None:
+        backend.client.shutdown()
+
 def build_pinmap() -> None:
     for name, attr in all_pins():
         pin_map[name.lower()] = attr

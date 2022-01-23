@@ -156,8 +156,10 @@ module cmd_handler;
                     rst <= 0;
                 end
 
-                "Q":
+                "Q": begin
+                    $display("Remote shutdown requested.");
                     $finish;
+                end
 
                 default:
                     $display("Unknown command %c", cmd);
