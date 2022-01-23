@@ -32,13 +32,13 @@ void SerialHost::begin(unsigned long baud)
     /* set input mode (non-canonical, no echo,...) */
     newtio.c_lflag = 0;
 
-    newtio.c_cc[VTIME]    = 50;   /* 5 sec timeout */
-    newtio.c_cc[VMIN]     = 0;   /* unused */
+    newtio.c_cc[VTIME]    = 0;   /* no timeout */
+    newtio.c_cc[VMIN]     = 1;   /* at least 1 byte received */
 
     tcflush(fd, TCIFLUSH);
     tcsetattr(fd,TCSANOW,&newtio);
 
-    serial = fdopen(fd, "w+");
+    serial = fdopen(fd, "ab+");
 }
 
 size_t SerialHost::write(uint8_t byte)

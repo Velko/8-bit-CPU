@@ -12,7 +12,12 @@ static int serial_get_cmd_handler(char *user_data)
 
     struct t_vpi_value cmd_val;
     cmd_val.format = vpiIntVal;
-    cmd_val.value.integer =  fgetc(serial);
+
+    int val = fgetc(serial);
+    if (val < 0)
+        perror("serial_get_cmd");
+
+    cmd_val.value.integer = val;
     vpi_put_value(cmd_arg, &cmd_val, NULL, vpiNoDelay);
 
     vpi_free_object(args_iter);
@@ -31,7 +36,11 @@ static int serial_get_arg_handler(char *user_data)
 
     struct t_vpi_value arg_val;
     arg_val.format = vpiIntVal;
-    fscanf(serial, "%d", &arg_val.value.integer);
+
+    int res = fscanf(serial, "%d", &arg_val.value.integer);
+     if (res < 0)
+        perror("serial_get_arg");
+
     vpi_put_value(arg_arg, &arg_val, NULL, vpiNoDelay);
 
     vpi_free_object(args_iter);
@@ -53,7 +62,9 @@ static int serial_send_int_handler(char *user_data)
 
     vpi_get_value(resp_arg, &resp_val);
 
-    Serial.println(resp_val.value.integer);
+    int res = fprintf(serial, "%d\r\n", resp_val.value.integer);
+    if (res < 0)
+        perror("serial_send_int");
 
     vpi_free_object(args_iter);
 
@@ -74,7 +85,9 @@ static int serial_send_str_handler(char *user_data)
 
     vpi_get_value(resp_arg, &resp_val);
 
-    Serial.println(resp_val.value.str);
+    int res = fprintf(serial, "%s\r\n", resp_val.value.str);
+    if (res < 0)
+        perror("serial_send_str");
 
     vpi_free_object(args_iter);
 
