@@ -11,6 +11,8 @@
         "**/build-uno": true,
         "**/build-nano-*": true,
         "**/*.hex": true,
+        "**/*.bin": true,
+        "**/*.bak": true,
         "**/*.o": true,
         "**/.mypy_cache": true,
         "**/.pytest_cache": true,
