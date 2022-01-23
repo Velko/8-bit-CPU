@@ -54,7 +54,7 @@ module tb_alu_block;
 
         // add and load into A
         fdata <= 0;
-        outctl <= 2;
+        outctl <= 5;
         loadctl <= 0;
         arg_r <= 1;
         #1
@@ -82,7 +82,7 @@ module tb_alu_block;
 
         // add and load into A
         fdata <= 0;
-        outctl <= 2;
+        outctl <= 5;
         loadctl <= 0;
         arg_r <= 1;
         #1

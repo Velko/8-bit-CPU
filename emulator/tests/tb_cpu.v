@@ -47,7 +47,7 @@ module tb_cpu;
 
         // Add A to B
         fdata <= 0;
-        control_word <= 32'b00111011111001000011000010000010;
+        control_word <= 32'b00111011111001000011000011000101;
         #1
         `tick(clk, 2);
         `tick(iclk, 2);
@@ -64,7 +64,7 @@ module tb_cpu;
         faddr <= 1;
         addr <= 16'h1234;
 
-        control_word <=32'b00111011111110000011001111001111;
+        control_word <=32'b00111011111110000011100111001111;
         #1
         `tick(clk, 2);
         `tick(iclk, 2);
@@ -72,7 +72,7 @@ module tb_cpu;
         // Read from different addr
         fdata <= 0;
         addr <= 16'h1235;
-        control_word <=32'b00111011111110000011111111000011;
+        control_word <=32'b00111011111110000011111111001001;
         #1
         `assert(main_bus, 8'bx);
 
