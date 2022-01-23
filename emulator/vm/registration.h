@@ -6,7 +6,6 @@
 
 PLI_INT32 read_intval(vpiHandle handle);
 
-void open_serial();
 void register_serial_get_cmd(void);
 void register_serial_get_arg(void);
 void register_serial_send_int(void);

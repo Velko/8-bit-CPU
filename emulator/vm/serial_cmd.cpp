@@ -94,11 +94,6 @@ static int serial_send_str_handler(char *user_data)
     return 0;
 }
 
-void open_serial()
-{
-    SerialHost::begin(115200);
-}
-
 void register_serial_get_cmd(void)
 {
       s_vpi_systf_data tf_data;

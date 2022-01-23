@@ -5,11 +5,7 @@
 #include <stddef.h>
 #include <stdio.h>
 
-class SerialHost
-{
-    public:
-        static void begin(unsigned long baud);
-};
+void open_serial();
 
 extern FILE *serial;
 

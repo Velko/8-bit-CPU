@@ -15,10 +15,8 @@
 #define MODEMDEVICE "pty1"
 
 
-void SerialHost::begin(unsigned long baud)
+void open_serial()
 {
-    (void)(baud); // suppress unused parameter warning
-
     struct termios newtio;
 
     int fd = open(MODEMDEVICE, O_RDWR | O_NOCTTY );

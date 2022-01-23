@@ -1,4 +1,5 @@
 #include "registration.h"
+#include "serial_host.h"
 
 void (*vlog_startup_routines[])(void) = {
     open_serial,
