@@ -2,7 +2,7 @@
 
 import localpath
 
-from typing import Iterator, Sequence
+from typing import BinaryIO, Iterator, Sequence
 from libcpu.opcode_builder import MicroCode
 from libcpu.util import ControlSignal
 from libcpu.opcodes import opcodes, fetch
@@ -29,20 +29,31 @@ def finalize_steps(microcode: MicroCode, flags: int) -> Iterator[Sequence[Contro
         else:
             yield step
 
-def generate_microcode() -> None:
+def generate_microcode(rom: BinaryIO, rom_idx: int) -> None:
     for mnemonic, microcode in opcodes.items():
         for flags in range(16):
-            process_steps(mnemonic, microcode, flags)
+            process_steps(rom, rom_idx, mnemonic, microcode, flags)
 
-def process_steps(key: str, microcode: MicroCode, flags: int) -> None:
+def process_steps(rom: BinaryIO, rom_idx: int, key: str, microcode: MicroCode, flags: int) -> None:
     for step, pins in enumerate(finalize_steps(microcode, flags)):
         control.reset()
         for pin in pins:
-            #if pin == StepCounter.reset: print ("Reset")
             pin.enable()
 
-        print ("{0:13} {4:02x}   {1:04b}  {2}  {3:016b}    {3:04x}".format(key, flags, step, control.c_word, microcode.opcode))
+        rom.write(bytes([control.c_word >> (rom_idx << 3) & 0xFF]))
+
+        #print ("{0:13} {4:02x}   {1:04b}  {2}  {3:016b}    {3:04x}".format(key, flags, step, control.c_word, microcode.opcode))
 
 
 if __name__ == "__main__":
-    generate_microcode()
+    with open("rom0.bin", "wb") as f:
+        generate_microcode(f, 0)
+
+    with open("rom1.bin", "wb") as f:
+        generate_microcode(f, 1)
+
+    with open("rom2.bin", "wb") as f:
+        generate_microcode(f, 2)
+
+    with open("rom3.bin", "wb") as f:
+        generate_microcode(f, 3)
