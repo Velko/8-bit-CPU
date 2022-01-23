@@ -16,5 +16,5 @@ MEMBLOCKSRC=../cpu-modules/mem_block.v $(PCSRC) $(MEMSRC) $(IREGSRC) $(TXREGSRC)
 CPUSRC=../cpu-modules/cpu.v ../cpu-modules/cword_splitter.v $(ALUBLOCKSRC) $(MEMBLOCKSRC) $(CTRLSRC)
 
 VPATH=../cpu-modules
-control_rom.vpi: control_words.cpp microcode.c
+control_rom.vpi: control_words.c microcode.c
 	iverilog-vpi --name=control_rom $^
