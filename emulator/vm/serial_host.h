@@ -1,11 +1,9 @@
 #ifndef SERIAL_HOST_H
 #define SERIAL_HOST_H
 
-#include <stdint.h>
-#include <stddef.h>
 #include <stdio.h>
 
-void open_serial();
+void open_serial(void);
 
 extern FILE *serial;
 

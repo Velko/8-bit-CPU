@@ -4,9 +4,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <cstring>
-#include <string>
-#include <iostream>
+#include <string.h>
 #include <unistd.h>
 
 
@@ -15,7 +13,7 @@
 #define MODEMDEVICE "pty1"
 
 
-void open_serial()
+void open_serial(void)
 {
     struct termios newtio;
 
