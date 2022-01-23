@@ -30,19 +30,17 @@ def finalize_steps(microcode: MicroCode, flags: int) -> Iterator[Sequence[Contro
             yield step
 
 def generate_microcode(rom: BinaryIO, rom_idx: int) -> None:
-    for mnemonic, microcode in opcodes.items():
+    for microcode in opcodes.values():
         for flags in range(16):
-            process_steps(rom, rom_idx, mnemonic, microcode, flags)
+            process_steps(rom, rom_idx, microcode, flags)
 
-def process_steps(rom: BinaryIO, rom_idx: int, key: str, microcode: MicroCode, flags: int) -> None:
-    for step, pins in enumerate(finalize_steps(microcode, flags)):
+def process_steps(rom: BinaryIO, rom_idx: int, microcode: MicroCode, flags: int) -> None:
+    for pins in finalize_steps(microcode, flags):
         control.reset()
         for pin in pins:
             pin.enable()
 
         rom.write(bytes([control.c_word >> (rom_idx << 3) & 0xFF]))
-
-        #print ("{0:13} {4:02x}   {1:04b}  {2}  {3:016b}    {3:04x}".format(key, flags, step, control.c_word, microcode.opcode))
 
 
 if __name__ == "__main__":
