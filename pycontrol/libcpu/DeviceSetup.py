@@ -24,19 +24,19 @@ RegB = dev.GPRegister("B",
     alu_r = MuxPin(AluArgR, 1))
 
 RegC = dev.GPRegister("C",
-    out = MuxPin(OutMux, 8),
-    load = MuxPin(LoadMux, 8),
+    out = MuxPin(OutMux, 2),
+    load = MuxPin(LoadMux, 2),
     alu_l = MuxPin(AluArgL, 2),
     alu_r = MuxPin(AluArgR, 2))
 
 RegD = dev.GPRegister("D",
-    out = MuxPin(OutMux, 9),
-    load = MuxPin(LoadMux, 9),
+    out = MuxPin(OutMux, 3),
+    load = MuxPin(LoadMux, 3),
     alu_l = MuxPin(AluArgL, 3),
     alu_r = MuxPin(AluArgR, 3))
 
 AddSub = dev.ALU("AddSub",
-    out = MuxPin(OutMux, 2),
+    out = MuxPin(OutMux, 5),
     alt = AluAltFn)
 
 AndOr = dev.ALU("AndOr",
@@ -58,15 +58,15 @@ Flags = dev.Flags("F",
     carry = Pin(14, Level.HIGH))
 
 Ram = dev.RAM("Ram",
-    out = MuxPin(OutMux, 3),
-    write = MuxPin(LoadMux, 3))
+    out = MuxPin(OutMux, 9),
+    write = MuxPin(LoadMux, 9))
 
 ProgMem = RamProxy("ProgMem",
     ram = Ram)
 
 IR = dev.Register("IR",
     out = NullPin(),
-    load = MuxPin(LoadMux, 4))
+    load = MuxPin(LoadMux, 8))
 
 Clock = dev.Clock("Clock",
     halt = Pin(13, Level.LOW),
@@ -112,8 +112,8 @@ TX = dev.TransferRegister("TX",
     load = MuxPin(AddrLoadMux, 0))
 
 TH = dev.TransferRegister("TH",
-    out = MuxPin(OutMux, 5),
-    load = MuxPin(LoadMux, 5))
+    out = MuxPin(OutMux, 12),
+    load = MuxPin(LoadMux, 12))
 
 TL = dev.TransferRegister("TL",
     out = MuxPin(OutMux, 11),
