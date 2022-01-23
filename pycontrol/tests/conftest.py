@@ -1,19 +1,23 @@
 import pytest
-import random
+import random, os
 import localpath
 
 from libcpu.test_helpers import CPUHelper
-from typing import  Sequence
+from typing import  Sequence, Iterator
 
 from libcpu.cpu import setup_live
 from libcpu.cpu_exec import CPUBackendControl
 
 
 @pytest.fixture(scope="session")
-def cpu_backend_real() -> CPUBackendControl:
+def cpu_backend_real() -> Iterator[CPUBackendControl]:
     backend = setup_live()
 
-    return backend
+    yield backend
+
+    shd = os.environ.get("EMU_SHUTDOWN")
+    if shd is not None:
+        backend.client.shutdown()
 
 @pytest.fixture(scope="module")
 def random_bytes() -> Sequence[int]:

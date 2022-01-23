@@ -46,6 +46,8 @@ jobs:
         python -m mypy --strict libcpu tests tools
     - name: Run tests
       working-directory: ./pycontrol
+      env:
+        EMU_SHUTDOWN: 1
       run: |
         socat PTY,link=pty0,raw,echo=0 PTY,link=../emulator/vm/pty1,raw,echo=0 &
         sleep 0.5
