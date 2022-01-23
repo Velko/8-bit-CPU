@@ -41,7 +41,7 @@ class MicroCode:
     def is_flag_dependent(self) -> bool:
         return any(self.f_alt)
 
-    def get_step(self, step_index: int, flags: int) -> Optional[Sequence[ControlSignal]]:
+    def get_step(self, step_index: int, flags: int) -> Tuple[Sequence[ControlSignal], bool]:
         matches = list(filter(lambda alt: flags & alt.mask == alt.value, self.f_alt))
 
         if len(matches) > 1:
@@ -53,9 +53,9 @@ class MicroCode:
             steps = self._steps
 
         if step_index < len(steps):
-            return steps[step_index]
+            return steps[step_index], step_index == len(steps) - 1
 
-        return None
+        return [], False
 
     def add_step(self, *args: ControlSignal) -> 'MicroCode':
         self._steps.append(args)

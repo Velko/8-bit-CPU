@@ -84,10 +84,12 @@ def test_opcode_flag_taken(fake_opcodes: OpcodeFixture) -> None:
     fake_opcodes.reset()
 
     for s_idx in range(8):
-        c = op.get_step(s_idx, Flags.C)
-        if c is None: break
+        c, is_last = op.get_step(s_idx, Flags.C)
+
         for e in c:
             e.enable()
+
+        if is_last: break
 
     assert fake_opcodes.alt_taken == True
     assert fake_opcodes.default_taken == False
@@ -99,10 +101,12 @@ def test_opcode_flag_default(fake_opcodes: OpcodeFixture) -> None:
     fake_opcodes.reset()
 
     for s_idx in range(8):
-        c = op.get_step(s_idx, 0)
-        if c is None: break
+        c, is_last = op.get_step(s_idx, 0)
+
         for e in c:
             e.enable()
+
+        if is_last: break
 
     assert fake_opcodes.alt_taken == False
     assert fake_opcodes.default_taken == True

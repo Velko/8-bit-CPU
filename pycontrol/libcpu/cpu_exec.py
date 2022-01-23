@@ -57,9 +57,9 @@ class CPUBackendControl:
         for s_idx in range(8-len(fetch)):
             # re-evaluate opcode, as it may change mid-instruction (when extended is loaded)
             microcode = ops_by_code[self.get_opcode_cached()]
-            microstep = microcode.get_step(s_idx - self.op_extension , self.get_flags_cached())
-            if microstep is None: break
+            microstep, is_last = microcode.get_step(s_idx - self.op_extension , self.get_flags_cached())
             self.execute_step(microstep)
+            if is_last: break
 
         return self.branch_taken, self.out_hooked_val
 
