@@ -4,7 +4,7 @@
 #include "microcode.h"
 #include "op-defs.h"
 
-void write_cword(FILE *eeprom, uint16_t cword, int rom_idx)
+void write_cword(FILE *eeprom, cword_t cword, int rom_idx)
 {
     fputc(cword >> (rom_idx << 3) & 0xFF, eeprom);
 }
@@ -23,7 +23,7 @@ void write_microcode(FILE *eeprom, int rom_idx)
 
             const struct op_microcode *instruction = microcode + opcode;
 
-            const uint16_t *steps = instruction->default_steps - NUM_FETCH_STEPS;
+            const cword_t *steps = instruction->default_steps - NUM_FETCH_STEPS;
 
             for (int alt = 0; alt < MAX_ALTS && instruction->f_alt[alt].mask; ++alt)
             {
@@ -64,6 +64,14 @@ int main()
     FILE *rom1 = fopen("control1.bin", "wb");
     write_microcode(rom1, 1);
     fclose(rom1);
+
+    FILE *rom2 = fopen("control2.bin", "wb");
+    write_microcode(rom2, 2);
+    fclose(rom2);
+
+    FILE *rom3 = fopen("control3.bin", "wb");
+    write_microcode(rom3, 3);
+    fclose(rom3);
 
     return 0;
 }
