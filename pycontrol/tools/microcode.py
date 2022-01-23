@@ -29,29 +29,31 @@ def finalize_steps(microcode: MicroCode, flags: int) -> Iterator[Sequence[Contro
         else:
             yield step
 
-def generate_microcode(rom: BinaryIO, rom_idx: int) -> None:
+def generate_microcode() -> Iterator[int]:
     for microcode in opcodes.values():
         for flags in range(16):
-            process_steps(rom, rom_idx, microcode, flags)
+            for c_word in process_steps(microcode, flags):
+                yield c_word
 
-def process_steps(rom: BinaryIO, rom_idx: int, microcode: MicroCode, flags: int) -> None:
+
+def process_steps(microcode: MicroCode, flags: int) -> Iterator[int]:
     for pins in finalize_steps(microcode, flags):
         control.reset()
         for pin in pins:
             pin.enable()
 
-        rom.write(bytes([control.c_word >> (rom_idx << 3) & 0xFF]))
+        yield control.c_word
+
+
+def write_rom_file(words: Sequence[int], rom_idx: int) -> None:
+    with open(f"../../include/control_rom{rom_idx}.bin", "wb") as rom:
+        for c_word in words:
+            rom.write(bytes([c_word >> (rom_idx << 3) & 0xFF]))
 
 
 if __name__ == "__main__":
-    with open("rom0.bin", "wb") as f:
-        generate_microcode(f, 0)
 
-    with open("rom1.bin", "wb") as f:
-        generate_microcode(f, 1)
+    ucode_words = list(generate_microcode())
 
-    with open("rom2.bin", "wb") as f:
-        generate_microcode(f, 2)
-
-    with open("rom3.bin", "wb") as f:
-        generate_microcode(f, 3)
+    for rom_idx in range(4):
+        write_rom_file(ucode_words, rom_idx);
