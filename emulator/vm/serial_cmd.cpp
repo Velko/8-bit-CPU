@@ -12,7 +12,7 @@ static int serial_get_cmd_handler(char *user_data)
 
     struct t_vpi_value cmd_val;
     cmd_val.format = vpiIntVal;
-    cmd_val.value.integer =  Serial.read();
+    cmd_val.value.integer =  fgetc(serial);
     vpi_put_value(cmd_arg, &cmd_val, NULL, vpiNoDelay);
 
     vpi_free_object(args_iter);
@@ -31,7 +31,7 @@ static int serial_get_arg_handler(char *user_data)
 
     struct t_vpi_value arg_val;
     arg_val.format = vpiIntVal;
-    arg_val.value.integer =  Serial.parseInt();
+    fscanf(serial, "%d", &arg_val.value.integer);
     vpi_put_value(arg_arg, &arg_val, NULL, vpiNoDelay);
 
     vpi_free_object(args_iter);

@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <stdio.h>
 
 #include "arduino_string.h"
 
@@ -28,6 +29,6 @@ class SerialHost
 typedef SerialHost HardwareSerial;
 
 extern SerialHost Serial;
-
+extern FILE *serial;
 
 #endif /* SERIAL_HOST_H */

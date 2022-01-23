@@ -37,6 +37,8 @@ void SerialHost::begin(unsigned long baud)
 
     tcflush(fd, TCIFLUSH);
     tcsetattr(fd,TCSANOW,&newtio);
+
+    serial = fdopen(fd, "w+");
 }
 
 size_t SerialHost::write(uint8_t byte)
@@ -120,3 +122,4 @@ uint32_t SerialHost::parseInt()
 
 
 SerialHost Serial;
+FILE *serial;
