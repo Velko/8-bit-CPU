@@ -1,31 +1,6 @@
 Random thoughts
 ===============
 
-* All registers are almost identical - can use same board
-* Ribbon cable seems to be a good candidate for bus
-* Need bus/breadboard connector
-* is there a need for PCBs to be "pluggable" into breadboard?
-* MAR can be either simple latch register or use same as for PC. It might be useful to have a simple
-  feature to advance to next address. Could be useful when loading initial memory contents.
-
-
-* What about going straight for full 8-bit addressing? And 2-byte instructions? Could get 64 or
-  so instructions + more memory
-* Can we make switchable RAM/ROM storage for programs???
-
-We can combine 2 138s to get 4-to-16 line decoder, using enable pins
-
-There are also 556 dual timer, that might be nice for the clock. And there are TLC551 and TLC556
-versions - single and dual.
-
-
-Consider writing a Python clients for Arduino-based tools, as full-featured onboard command
-interpreter appears to be a bit complicated to write.
-
-
-To brighten up the displays, MIC2981/2982 alonf with ULN2003 might be useful.
-
-
 Flags:
 ------
 * Carry - available immediately
@@ -63,47 +38,20 @@ https://www.dcode.fr/boolean-expressions-calculator
 
 
 Expanded arch:
-64 instructions - 6 bits
- 8 stages       - 3 bits
- 4 flags        - 4 bits
+256 instructions - 8 bits
+  8 stages       - 3 bits
+  4 flags        - 4 bits
 ---------------------------
-                 13 bits  = 28C64 EEPROM
+                 15 bits  = 28C256 EEPROM
                  no room for word select
 
-
-Clock:
-------
-What if I replace those AND gates with NAND? Still works for selection,
-but now those spare NANDs can be used to get the inverted clock...
-
-
-
-
-Registers
----------
-
-It might be a good idea to output register TAP connections via another
-D-latch, that holds on to old value and updates itself only on FALLING
-clock edge (essentially - uses inverted clock). There are several places
-that might suffer some race problems if TAP output changes with the main
-register load:
-
-Example:
-- Arguments are loaded into registers A and B
-- ALU calculates a sum
-- on rising clock edge sum is loaded into register A
-- TAP output of A changes immediately, causing ALU to re-calculate
-- there is no issue for register A, as it is not going to re-load value
-  until next clock edge
-- if something else is looking at the value on the bus (Flags register,
-  for example), there is no guarantee if it will use initial value or
-  one after re-calculation;
-
-
-Additinally, by adding another 74HC173 chips, we can also make TAP output
-tri-state, potentially allowing connectin multiple registers as ALU inputs.
-
-
+Expand further:
+512 instructions - 9 bits (IR + ext.bit)
+  8 stages       - 3 bits
+  4 flags        - 4 bits
+---------------------------
+                 16 bits  = SST39SF010A
+                 one extra address bit
 
 
 
@@ -121,18 +69,6 @@ Notes for blog
     * use compiler to prepare the digit bytes
     * sprintf formatting
 
-* EEPROM burner
-    * substitute shifter
-    * Barely fits - actually doesn't. Relocate to bigger breadboard.
-    * thoughts about address lines (crazy layout)
-    * Shift using SPI
-    * something's unstable. Decoupling
-    * converting to separate latch signal
-
-* Register
-    * Moving the LEDs
-    * Testing from Arduino - read back issues / pull-ups
-
 * Migrating to Python command interpreter
 * Trying KiCad
 * Issues with multiple sketches in VSCode extension - verify + upload
@@ -149,70 +85,10 @@ Notes for blog
     * https://en.wikipedia.org/wiki/List_of_7400-series_integrated_circuits
 
 
-
-* Wire up
-    * Clock, counter, display
-
 * Order 2
     * Ran out of breadboards
     * 556, NANDs, breadboards
     * do I needed to order JK flip-flops as well?
-
-* ALU
-    * Lots of wiring
-    * miswired b1 (same as carry in) for H adder chip
-    * put everything together, run with counter as reference
-
-* Simple counter
-    * Decided to build simple counter as well
-
-* 4-to-16 decoder using 2x 3-to-8 decoders + using enable lines carefully
-    * POC build
-
-* Testing using Arduino
-    * U/D counter unstable when Arduino switches CE and U/D
-    * rewired to use parallel clock and ripple carry
-
-* Rebuilding clock
-    * Using 556
-    * NAND gate
-    * timer's reset lines
-    * halt override
-    * using 2 buttons instead of switch
-    * ensuring startup state
-    * do I need "centralized" edge detector / lines?
-
-* ALU improvements
-    * adding zero-detect
-    * Overflow flag + idea from James Sharman
-    * Carry in, carry out
-    * Clock still bounces
-    * Clock mode jumper not staying in place, replace with 3x2 header
-    * thoughts about zero-detector on bus, flags register as separate device
-      in case we add bitwise operations
-    * 6502 / Z80 mode
-    * Cheats for Zero flag
-
-* Testing ALU
-    * initializer_list
-    * Lack of wires, not even for N flag
-    * SDA, SCL == A4, A5
-    * a shift register could help a little
-    * abstracting the pins
-    * add shift register outputs
-    * idea about combined eeprom burner / IO extender
-
-* Register updates
-    * James Sherman
-    * Additional latches for TAP connections
-    * Possible Race for flags
-
-* Documenting the builds
-    * Fritzig, adding ICs
-    * Version-control unfriendlyness
-    * Kicad vs Eagle
-
-
 
 * Keyboard
     * Rearrange the keys
@@ -224,31 +100,6 @@ Notes for blog
 
 Far future
 ==========
-
-These ideas should be addressed *after* the basic CPU is working. But I should keep writing them
-down as they appear.
-
-
-Multiplex Output bits
----------------------
-
-Only one device should be allowed to output data onto the bus. But microcode now reserves a bit for
-each. Since only one can be enabled, we can encode *which* one. This way, using just 3 bits we can
-encode up to 7 devices on the bus.
-
-
-8-bit addressing and larger RAM
--------------------------------
-There are no architectural restrictions on having 8-bit Memory Address Register. It is, however, not
-possible to put a value there using original instruction set.
-
-Additional LS/ST instructions using indirect address from register B may overcome that.
-
-It might be possible to use 8-bit PC and use PC-relative addressing. This also introduces relative
-jumps.
-
-Major re-design of MAR and PC is necessary - should be able to add to existing contents.
-
 
 Input device / bootloader
 -------------------------
@@ -274,19 +125,8 @@ Bens videos???).
 
 
 
-Variable-length instruction opcodes
------------------------------------
-There are only 16 possible opcodes. Some do not need arguments at all, others would greatly
-benefit from longer immediate values. It might be possible to vary which bits goes out to bus
-and which are used for microcode addressing. But I suspect that complexity increases greatly.
-
-It appears that simpler option would be just swich to 16-bit instructions. That will provide enough
-space for full 8-bit operands and allow up to 256 instructions. In combination with that, we might
-switch to 256 byte RAM.
-
-
 RAM signals
------------
+===========
 
 RAM:
 
