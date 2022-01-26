@@ -157,7 +157,7 @@ module cmd_handler;
                 end
 
                 "Q": begin
-                    $display("Remote shutdown requested.");
+                    $display("\nRemote shutdown requested.");
                     $finish;
                 end
 
