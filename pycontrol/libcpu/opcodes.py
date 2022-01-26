@@ -325,8 +325,12 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
         builder.add_instruction(f"padding{n}")\
             .add_step()
 
-    # dummy instruction - same as ldi (A, imm)
+    # dummy instruction - same as ldi A, imm
+    # ext bit should stick, even if it is not
+    # present in each step. Only steps_reset can clear it
     builder.add_instruction("dummyext", OpcodeArg.BYTE)\
+        .add_step()\
+        .add_step()\
         .add_step(PC.out, PC.inc, ProgMem.out, RegA.load)
 
     return builder.build()

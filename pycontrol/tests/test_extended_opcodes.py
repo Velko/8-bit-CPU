@@ -17,10 +17,13 @@ def test_dummy_local(cpu_helper: CPUHelper) -> None:
 
     assert val == 45
 
-
+# Dummyext is a copy of ldi A, imm with few additional internal nops
+# if it works fine, it will load opcode of HLT into A. The opcode index
+# is approx. 0x10D, if ext bit fails, it will execute a 1 byte ADD instruction
+# instead and then hit HLT as next instruction
 fetch_test_prog = bytes([opcode_of("xprefix"),
                          opcode_of("dummyext_imm") & 0xFF,
-                         123])
+                         opcode_of("hlt")])
 
 def test_dummy_fetch(cpu_helper: CPUHelper) -> None:
 
@@ -35,7 +38,7 @@ def test_dummy_fetch(cpu_helper: CPUHelper) -> None:
 
     # assert
     val = cpu_helper.read_reg8(A)
-    assert val == 123
+    assert val == opcode_of("hlt")
 
 #@pytest.mark.skip("Not supported by current emulator")
 def test_dummy_fetch_on_hw(cpu_helper: CPUHelper) -> None:
@@ -47,4 +50,4 @@ def test_dummy_fetch_on_hw(cpu_helper: CPUHelper) -> None:
 
     # assert
     val = cpu_helper.read_reg8(A)
-    assert val == 123
+    assert val == opcode_of("hlt")

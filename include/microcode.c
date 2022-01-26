@@ -1148,5 +1148,5 @@ const struct op_microcode microcode[] PROGMEM = {
     { .default_steps = {0x15ff58ff},},
 
     /* 10d dummyext_imm */
-    { .default_steps = {0x15fd5809},},
+    { .default_steps = {0x15ff58ff, 0x15ff58ff, 0x15fd5809},},
 };
