@@ -1,6 +1,6 @@
 test: test-138 test-161-basics test-161-chaining test-245 test-173 test-283 test-86b test-86p \
       test-08b test-08p test-02b test-02p test-157b test-125p test-32b test-32p test-00b test-00p \
-	  test-193-basics test-193-chaining test-04p\
+	  test-193-basics test-193-chaining test-04p test-74\
       test-gp-register test-alu-addsub test-alu-andor test-alu-xornot test-alu-shiftswap \
       test-flags-reg test-alu-block test-pc test-memory test-cpu
 
@@ -118,6 +118,12 @@ tb_157b.vvp: $(TB157BSRC)
 TB125PSRC=../chips/buffer_125p.v testhelpers.v tb_125p.v
 
 tb_125p.vvp: $(TB125PSRC)
+	iverilog -Wall $^ -o $@
+
+
+TB74SRC=../chips/dff_74.v testhelpers.v tb_74.v
+
+tb_74.vvp: $(TB74SRC)
 	iverilog -Wall $^ -o $@
 
 
