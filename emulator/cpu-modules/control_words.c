@@ -31,6 +31,34 @@ static int set_default_cw_handler(char *user_data)
     return 0;
 }
 
+static cword_t resolve_opcode_cw(PLI_INT32 step_no, PLI_INT32 opcode, PLI_INT32 flags)
+{
+    //TODO: should we implement INVALID_OPCODE ?
+    if (opcode >= NUM_OPS)
+        return CTRL_DEFAULT;
+
+    const struct op_microcode *ucode = &microcode[opcode];
+
+    const cword_t *steps = ucode->default_steps;
+
+    // and look up if there are flags-dependant steps
+    for (unsigned i = 0; i < MAX_ALTS; ++i)
+    {
+        if (ucode->f_alt[i].mask &&
+            (flags & ucode->f_alt[i].mask) == ucode->f_alt[i].value)
+        {
+            steps = ucode->f_alt[i].steps;
+            break;
+        }
+    }
+
+    // add steps reset bit
+    if (steps[step_no+1] == 0 || step_no + 1 == MAX_STEPS + NUM_FETCH_STEPS)
+        return steps[step_no] & (~LPIN_STEPS_RESET_BIT);
+    else
+        return steps[step_no];
+}
+
 static int read_control_rom_handler(char *user_data)
 {
     (void)user_data; // suppress [-Wunused-parameter]
@@ -59,28 +87,9 @@ static int read_control_rom_handler(char *user_data)
 
         // read instruction
         PLI_INT32 opcode = read_intval(opcode_arg);
-        const struct op_microcode *ucode = &microcode[opcode];
-
-        const cword_t *steps = ucode->default_steps;
-
-        // and look up if there are flags-dependant steps
         PLI_INT32 flags = read_intval(flags_arg);
 
-        for (unsigned i = 0; i < MAX_ALTS; ++i)
-        {
-            if (ucode->f_alt[i].mask &&
-                (flags & ucode->f_alt[i].mask) == ucode->f_alt[i].value)
-            {
-                steps = ucode->f_alt[i].steps;
-                break;
-            }
-        }
-
-        // add steps reset bit
-        if (steps[step_no+1] == 0 || step_no + 1 == MAX_STEPS + NUM_FETCH_STEPS)
-            cw_val.value.integer = steps[step_no] & (~LPIN_STEPS_RESET_BIT);
-        else
-            cw_val.value.integer = steps[step_no];
+        cw_val.value.integer = resolve_opcode_cw(step_no, opcode, flags);
     }
 
 
