@@ -10,6 +10,8 @@ module tb_193_chaining;
     udcounter_193 c1 (.d(4'h0), .mr(rst), .pl(pl), .cpu(c0.tcu), .cpd(c0.tcd));
     udcounter_193 c2 (.d(4'h0), .mr(rst), .pl(pl), .cpu(c1.tcu), .cpd(c1.tcd));
 
+    wire [11:0] count;
+
     initial begin
         $display("74xx193 counter (chaining)...");
 
@@ -25,7 +27,7 @@ module tb_193_chaining;
 
         repeat (4096) begin
             #5
-            `assert({c2.q, c1.q, c0.q}, expected);
+            `assert(count, expected);
             //$display("%h", expected);
             cpu <= 0;
             #5
@@ -35,7 +37,7 @@ module tb_193_chaining;
 
         repeat (4097) begin
             #5
-            `assert({c2.q, c1.q, c0.q}, expected);
+            `assert(count, expected);
             //$display("%h", expected);
             cpd <= 0;
             #5
@@ -43,4 +45,6 @@ module tb_193_chaining;
             expected <= expected - 1;
         end
     end
+
+    assign count = {c2.q, c1.q, c0.q};
 endmodule

@@ -9,6 +9,8 @@ module tb_161_chaining;
     counter_161 c1 ( .clk(clk), .mrn(rst), .cep(cep), .cet(c0.tc), .pen(1'b1), .d(4'h0));
     counter_161 c2 ( .clk(clk), .mrn(rst), .cep(cep), .cet(c1.tc), .pen(1'b1), .d(4'h0));
 
+    wire [11:0] count;
+
     initial begin
         $display("74xx161 counter (chaining)...");
         // $monitor("Q = %h%h%h, tc = %b%b%b", c2.q, c1.q, c0.q, c2.tc, c1.tc, c0.tc);
@@ -25,11 +27,13 @@ module tb_161_chaining;
 
         repeat (4096) begin
             #5
-            `assert({c2.q, c1.q, c0.q}, expected);
+            `assert(count, expected);
             clk <= 0;
             #5
             clk <= 1;
             expected <= expected + 1;
         end
     end
+
+    assign count = {c2.q, c1.q, c0.q};
 endmodule
