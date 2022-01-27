@@ -1,8 +1,8 @@
 module control_logic(
     input [7:0] opcode,
     input [3:0] flags,
-    input step_reset,
-    input step_ext,
+    input step_resetn,
+    input step_extn,
 
     input ctrlen,
 
@@ -15,9 +15,9 @@ module control_logic(
 
     reg [31:0] cword_out;
 
-    counter_161 cnt(.clk(iclk), .mrn(rstn), .pen(step_reset), .cep(!step_ext), .d(4'b0), .cet(!ctrlen));
+    counter_161 cnt(.clk(iclk), .mrn(rstn), .pen(step_resetn), .cep(step_extn), .d(4'b0), .cet(!ctrlen));
 
-    nand_00p na(.a1(!step_ext), .b1(ext.q1), .a2(step_reset), .b2(na.y1), .a3(1'b0), .b3(1'b0), .a4(1'b0), .b4(1'b0));
+    nand_00p na(.a1(step_extn), .b1(ext.q1), .a2(step_resetn), .b2(na.y1), .a3(1'b0), .b3(1'b0), .a4(1'b0), .b4(1'b0));
 
     dff_74 ext(.cp1(clk), .cp2(iclk), .d1(na.y2), .rd1n(1'b1), .d2(ext.q1n), .sd1n(rstn), .sd2n(1'b1), .rd2n(rstn));
 

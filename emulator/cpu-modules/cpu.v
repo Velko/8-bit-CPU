@@ -37,8 +37,8 @@ module cpu(
         );
 
     control_logic ctrl(.opcode(iout), .flags(fout), .rstn(!rst), .clk(clk), .iclk(iclk), .control_word(control_word), .ctrlen(ctrlen),
-        .step_reset(splitter.step_reset),
-        .step_ext(splitter.step_ext)
+        .step_resetn(splitter.step_resetn),
+        .step_extn(splitter.step_extn)
     );
 
     // unfortunately, Out and COut control lines are allocated so that 2 chips are required

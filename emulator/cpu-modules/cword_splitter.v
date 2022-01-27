@@ -10,8 +10,8 @@ module cword_splitter(
         output carry,
         output [2:0] addroutctl,
         output [2:0] addrloadctl,
-        output step_reset,
-        output step_ext,
+        output step_resetn,
+        output step_extn,
         output clk_halt,
         output clk_brk,
         output stack_inc,
@@ -36,8 +36,8 @@ module cword_splitter(
     assign stack_dec = control_word[23];
 
     // ROM3 - Misc.
-    assign step_reset = control_word[24];
-    assign step_ext = control_word[25];
+    assign step_resetn = control_word[24];
+    assign step_extn = control_word[25];
     assign clk_halt = control_word[26];
     assign clk_brk = control_word[27];
 

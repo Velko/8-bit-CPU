@@ -76,7 +76,7 @@ Clock = dev.Clock("Clock",
 
 StepCounter = dev.StepCounter("Steps",
     reset = Pin(24, Level.LOW),
-    extended = Pin(25, Level.HIGH))
+    extended = Pin(25, Level.LOW))
 
 IRFetch = dev.IRFetch("IRFetch",
     load = Pin(28, Level.LOW))
