@@ -15,9 +15,9 @@ module control_logic(
 
     reg [31:0] cword_out;
 
-    counter_161 cnt(.clk(iclk), .mrn(rstn), .pen(step_resetn), .cep(step_extn), .d(4'b0), .cet(!ctrlen));
+    counter_161 cnt(.clk(iclk), .mrn(rstn), .pen(step_resetn), .cep(step_extn), .d(4'b0), .cet(na.y3));
 
-    nand_00p na(.a1(step_extn), .b1(ext.q1), .a2(step_resetn), .b2(na.y1), .a3(1'b0), .b3(1'b0), .a4(1'b0), .b4(1'b0));
+    nand_00p na(.a1(step_extn), .b1(ext.q1), .a2(step_resetn), .b2(na.y1), .a3(ctrlen), .b3(ctrlen), .a4(1'b0), .b4(1'b0));
 
     dff_74 ext(.cp1(clk), .cp2(iclk), .d1(na.y2), .rd1n(1'b1), .d2(ext.q1n), .sd1n(rstn), .sd2n(1'b1), .rd2n(rstn));
 
@@ -34,6 +34,7 @@ module control_logic(
         $read_control_rom(cword_out, 0, 0, 0);
     end
 
+    // ctrlen should be connected to /OE (or /CE) of ROM chips
     assign control_word = ctrlen == 1'b0 ? cword_out : 32'bz;
 
 endmodule
