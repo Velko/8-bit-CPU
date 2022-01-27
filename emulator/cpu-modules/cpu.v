@@ -36,7 +36,7 @@ module cpu(
         .spdec(splitter.stack_dec)
         );
 
-    control_logic ctrl(.opcode(iout), .flags(fout), .rstn(!rst), .iclk(iclk), .control_word(control_word), .ctrlen(ctrlen),
+    control_logic ctrl(.opcode(iout), .flags(fout), .rstn(!rst), .clk(clk), .iclk(iclk), .control_word(control_word), .ctrlen(ctrlen),
         .step_reset(splitter.step_reset),
         .step_ext(splitter.step_ext)
     );

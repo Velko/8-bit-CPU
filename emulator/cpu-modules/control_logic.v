@@ -7,6 +7,7 @@ module control_logic(
     input ctrlen,
 
     input rstn,
+    input clk,
     input iclk,
 
     output [31:0] control_word
