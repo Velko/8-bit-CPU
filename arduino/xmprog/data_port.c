@@ -4,7 +4,14 @@
 /* Flash chip's data pins are connected to Arduino pins
     9, 8, 7, 6, 5, 4, 3, 2 (MSB - LSB)
 
-   According to UNO layout that is:
+   EEPROM data pins are connected to Arduino:
+    2, 3, 4, 5, 6, 7, 8, 9 (MSB - LSB)
+
+   To get same situation as for Flash, we need to reverse
+   the bits. Probably I should consider another, re-wired writer
+   PCB.
+
+   According to UNO layout, that maps to:
    PB1, PB0, PD7, PD6, PD5, PD4, PD3, PD2
     7    6    5    4    3    2    1    0
 
