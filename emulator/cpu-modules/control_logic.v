@@ -15,17 +15,20 @@ module control_logic(
 
     reg [31:0] cword_out;
 
-    //TODO: need an inverter here?
     counter_161 cnt(.clk(iclk), .mrn(rstn), .pen(step_reset), .cep(!step_ext), .d(4'b0), .cet(!ctrlen));
 
-    //TODO: works, but step_ext signal "pulls the rug" from under itself
-    counter_161 ext(.clk(iclk), .mrn(rstn), .pen(step_reset), .cep(step_ext), .d(4'b0), .cet(1'b1));
+    nand_00p na(.a1(!step_ext), .b1(ext.q1), .a2(step_reset), .b2(na.y1), .a3(1'b0), .b3(1'b0), .a4(1'b0), .b4(1'b0));
 
-    always @(opcode or flags or cnt.q or ext.q) begin
-        $read_control_rom(cword_out, cnt.q, flags, {ext.q[0], opcode});
-        //if (ctrlen == 1'b0)
-        //    $display("x %d %b %h", cnt.q, flags, opcode);
+    dff_74 ext(.cp1(clk), .cp2(iclk), .d1(na.y2), .rd1n(1'b1), .d2(ext.q1n), .sd1n(rstn), .sd2n(1'b1), .rd2n(rstn));
+
+    always @(opcode or flags or cnt.q or ext.q2) begin
+        $read_control_rom(cword_out, cnt.q, flags, {ext.q2, opcode});
     end
+
+    //always @(posedge iclk) begin
+    //    if (ctrlen == 1'b0)
+    //        $strobe("x %d %b %b%h", cnt.q, flags, ext.q2, opcode);
+    //end
 
     initial begin
         $read_control_rom(cword_out, 0, 0, 0);
