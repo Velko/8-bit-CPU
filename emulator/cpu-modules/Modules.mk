@@ -11,6 +11,7 @@ IREGSRC=../cpu-modules/i_register.v ../chips/dff_173.v
 TXREGSRC=../cpu-modules/tx_register.v ../chips/dff_173.v ../chips/mux_157b.v ../chips/buffer_245.v ../chips/and_08p.v
 ACALSRC=../cpu-modules/address_calc.v ../chips/dff_173.v ../chips/adder_283.v ../chips/buffer_245.v
 CTRLSRC=../cpu-modules/control_logic.v ../chips/counter_161.v ../chips/dff_74.v ../chips/nand_00p.v
+CLOCKSRC=../cpu-modules/clock.v ../chips/dff_74.v ../chips/nand_00p.v ../chips/nor_02p.v ../chips/xor_86p.v
 ALUBLOCKSRC=../cpu-modules/alu_block.v $(GPREGSRC) $(ALUADDSUBSRC) $(ALUANDORSRC) $(ALUXORNOTSRC) $(ALUSHIFTSWAPSRC) $(FLGREGSRC) ../chips/demux_138.v
 MEMBLOCKSRC=../cpu-modules/mem_block.v $(PCSRC) $(MEMSRC) $(IREGSRC) $(TXREGSRC) $(SPSRC) $(ACALSRC) ../chips/demux_138.v
 CPUSRC=../cpu-modules/cpu.v ../cpu-modules/cword_splitter.v $(ALUBLOCKSRC) $(MEMBLOCKSRC) $(CTRLSRC)
