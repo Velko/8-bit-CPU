@@ -228,3 +228,9 @@ Diagrams
 ========
 
 https://app.diagrams.net/
+
+
+Some links
+==========
+https://alternatezone.com/electronics/files/PCBDesignTutorialRevA.pdf
+https://designingelectronics.com/
