@@ -14,6 +14,10 @@
           <string>Label</string>
           <string>Scan</string>
         </entry>
+        <entry>
+          <string>Frequency</string>
+          <int>2</int>
+        </entry>
       </elementAttributes>
       <pos x="200" y="740"/>
     </visualElement>
@@ -21,16 +25,6 @@
       <elementName>D_FF</elementName>
       <elementAttributes/>
       <pos x="360" y="720"/>
-    </visualElement>
-    <visualElement>
-      <elementName>Button</elementName>
-      <elementAttributes>
-        <entry>
-          <string>Label</string>
-          <string>Manual</string>
-        </entry>
-      </elementAttributes>
-      <pos x="200" y="660"/>
     </visualElement>
     <visualElement>
       <elementName>D_FF</elementName>
@@ -52,10 +46,6 @@
         <entry>
           <string>Label</string>
           <string>Clock</string>
-        </entry>
-        <entry>
-          <string>Frequency</string>
-          <int>2</int>
         </entry>
       </elementAttributes>
       <pos x="200" y="300"/>
@@ -94,16 +84,6 @@
         </entry>
       </elementAttributes>
       <pos x="1380" y="520"/>
-    </visualElement>
-    <visualElement>
-      <elementName>Button</elementName>
-      <elementAttributes>
-        <entry>
-          <string>Label</string>
-          <string>Auto</string>
-        </entry>
-      </elementAttributes>
-      <pos x="200" y="400"/>
     </visualElement>
     <visualElement>
       <elementName>PullDown</elementName>
@@ -164,6 +144,55 @@
       </elementAttributes>
       <pos x="540" y="520"/>
     </visualElement>
+    <visualElement>
+      <elementName>In</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>Manual</string>
+        </entry>
+      </elementAttributes>
+      <pos x="200" y="660"/>
+    </visualElement>
+    <visualElement>
+      <elementName>In</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Label</string>
+          <string>Auto</string>
+        </entry>
+      </elementAttributes>
+      <pos x="200" y="400"/>
+    </visualElement>
+    <visualElement>
+      <elementName>LED</elementName>
+      <elementAttributes>
+        <entry>
+          <string>rotation</string>
+          <rotation rotation="2"/>
+        </entry>
+      </elementAttributes>
+      <pos x="240" y="620"/>
+    </visualElement>
+    <visualElement>
+      <elementName>LED</elementName>
+      <elementAttributes>
+        <entry>
+          <string>rotation</string>
+          <rotation rotation="2"/>
+        </entry>
+        <entry>
+          <string>Color</string>
+          <awt-color>
+            <red>0</red>
+            <green>255</green>
+            <blue>0</blue>
+            <alpha>255</alpha>
+          </awt-color>
+        </entry>
+      </elementAttributes>
+      <pos x="240" y="360"/>
+    </visualElement>
   </visualElements>
   <wires>
     <wire>
@@ -219,6 +248,10 @@
       <p2 x="600" y="680"/>
     </wire>
     <wire>
+      <p1 x="240" y="360"/>
+      <p2 x="660" y="360"/>
+    </wire>
+    <wire>
       <p1 x="1180" y="460"/>
       <p2 x="1200" y="460"/>
     </wire>
@@ -241,6 +274,10 @@
     <wire>
       <p1 x="480" y="300"/>
       <p2 x="760" y="300"/>
+    </wire>
+    <wire>
+      <p1 x="240" y="620"/>
+      <p2 x="780" y="620"/>
     </wire>
     <wire>
       <p1 x="1040" y="400"/>
@@ -387,12 +424,20 @@
       <p2 x="780" y="800"/>
     </wire>
     <wire>
+      <p1 x="780" y="440"/>
+      <p2 x="780" y="620"/>
+    </wire>
+    <wire>
       <p1 x="1200" y="460"/>
       <p2 x="1200" y="500"/>
     </wire>
     <wire>
       <p1 x="560" y="340"/>
       <p2 x="560" y="440"/>
+    </wire>
+    <wire>
+      <p1 x="660" y="360"/>
+      <p2 x="660" y="420"/>
     </wire>
     <wire>
       <p1 x="660" y="420"/>
