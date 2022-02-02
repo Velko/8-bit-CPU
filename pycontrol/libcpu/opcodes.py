@@ -41,10 +41,8 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
     builder.add_instruction("ldi_F", OpcodeArg.BYTE)\
         .add_step(PC.out, PC.inc, ProgMem.out, Flags.load)
 
-    builder.add_instruction("lea", SP, OpcodeArg.ADDR)\
-        .add_step(PC.out, PC.inc, ProgMem.out, TL.load)\
-        .add_step(PC.out, PC.inc, ProgMem.out, TH.load)\
-        .add_step(TX.out, SP.load)
+    builder.add_instruction("hlt")\
+        .add_step(Clock.halt)
 
     for l, r in permute_gp_regs_all():
         builder.add_instruction("add", l, r)\
@@ -256,8 +254,10 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
     builder.add_instruction("brk")\
         .add_step(Clock.brk)
 
-    builder.add_instruction("hlt")\
-        .add_step(Clock.halt)
+    builder.add_instruction("lea", SP, OpcodeArg.ADDR)\
+        .add_step(PC.out, PC.inc, ProgMem.out, TL.load)\
+        .add_step(PC.out, PC.inc, ProgMem.out, TH.load)\
+        .add_step(TX.out, SP.load)
 
     for r in gp_regs:
         builder.add_instruction("ldr", r, SP, OpcodeArg.BYTE)\

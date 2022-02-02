@@ -8,7 +8,7 @@
 #define OP_LDI_C_IMM           0x03
 #define OP_LDI_D_IMM           0x04
 #define OP_LDI_F_IMM           0x05
-#define OP_LEA_SP_ADDR         0x06
+#define OP_HLT                 0x06
 #define OP_ADD_A_A             0x07
 #define OP_ADD_A_B             0x08
 #define OP_ADD_A_C             0x09
@@ -231,7 +231,7 @@
 #define OP_CALLF_ADDR          0xe2
 #define OP_RET                 0xe3
 #define OP_BRK                 0xe4
-#define OP_HLT                 0xe5
+#define OP_LEA_SP_ADDR         0xe5
 #define OP_LDR_A_SP_IMM        0xe6
 #define OP_LDR_B_SP_IMM        0xe7
 #define OP_LDR_C_SP_IMM        0xe8

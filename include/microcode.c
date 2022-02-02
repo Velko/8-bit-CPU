@@ -22,8 +22,8 @@ const struct op_microcode microcode[] PROGMEM = {
     /* 05 ldi_F_imm  */
     { .default_steps = {0x17fd5879},},
 
-    /* 06 lea_SP_addr */
-    { .default_steps = {0x17fd58b9, 0x17fd58c9, 0x17d858ff},},
+    /* 06 hlt        */
+    { .default_steps = {0x13ff58ff},},
 
     /* 07 add_A_A    */
     { .default_steps = {0x17ff0005},},
@@ -985,8 +985,8 @@ const struct op_microcode microcode[] PROGMEM = {
     /* e4 brk        */
     { .default_steps = {0x1fff58ff},},
 
-    /* e5 hlt        */
-    { .default_steps = {0x13ff58ff},},
+    /* e5 lea_SP_addr */
+    { .default_steps = {0x17fd58b9, 0x17fd58c9, 0x17d858ff},},
 
     /* e6 ldr_A_SP_imm */
     { .default_steps = {0x17fd58b9, 0x17d358fb, 0x17fa1809},},

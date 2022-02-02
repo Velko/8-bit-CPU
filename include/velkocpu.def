@@ -7,7 +7,7 @@
     ldi  C, {value1} => 0x03 @ value1`8
     ldi  D, {value1} => 0x04 @ value1`8
     ldi_F  {value0} => 0x05 @ value0`8
-    lea  SP, {address1} => 0x06 @ address1[7:0] @ address1[15:8]
+    hlt   => 0x06
     add  A, A => 0x07
     add  A, B => 0x08
     add  A, C => 0x09
@@ -230,7 +230,7 @@
     callf  {address0} => 0xe2 @ address0[7:0] @ address0[15:8]
     ret   => 0xe3
     brk   => 0xe4
-    hlt   => 0xe5
+    lea  SP, {address1} => 0xe5 @ address1[7:0] @ address1[15:8]
     ldr  A, SP, {value2} => 0xe6 @ value2`8
     ldr  B, SP, {value2} => 0xe7 @ value2`8
     ldr  C, SP, {value2} => 0xe8 @ value2`8
