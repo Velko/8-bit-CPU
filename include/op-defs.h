@@ -264,7 +264,7 @@
 #define OP_PADDING20           0x103
 #define OP_PADDING21           0x104
 #define OP_PADDING22           0x105
-#define OP_PADDING23           0x106
+#define OP__HLTX               0x106
 #define OP_PADDING24           0x107
 #define OP_PADDING25           0x108
 #define OP_PADDING26           0x109

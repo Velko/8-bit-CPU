@@ -41,8 +41,16 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
     builder.add_instruction("ldi_F", OpcodeArg.BYTE)\
         .add_step(PC.out, PC.inc, ProgMem.out, Flags.load)
 
+    # enables Clock.halt signal, but since stopping the clock on that proves to
+    # be more difficult than expected, we can not really rely on it alone,
+    # enabling StepCounter.extended has a side effect of preventing Step Counter
+    # from incrementing. It also causes Ext. instruction bit to be loaded, so we
+    # need a similar instruction in extended range with ext. bit set. If this HLT
+    # is 0x06, there should be the same at 0x106
+    # We also need a next "nop" step, to prevent StepCounter.reset from enabling
     builder.add_instruction("hlt")\
-        .add_step(Clock.halt)
+        .add_step(Clock.halt, StepCounter.extended)\
+        .add_step()
 
     for l, r in permute_gp_regs_all():
         builder.add_instruction("add", l, r)\
@@ -321,7 +329,17 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
         .add_step(ACalc.out, PC.load)
 
     # create a bunch of NOPs to exceed 255 instructions
-    for n in range(8, 30):
+    for n in range(8, 23):
+        builder.add_instruction(f"padding{n}")\
+            .add_step()
+
+    # Ext. opcode version of HLT
+    builder.add_instruction("_hltx")\
+        .add_step(Clock.halt, StepCounter.extended)\
+        .add_step()
+
+    # create a bunch of NOPs to exceed 255 instructions
+    for n in range(24, 30):
         builder.add_instruction(f"padding{n}")\
             .add_step()
 
