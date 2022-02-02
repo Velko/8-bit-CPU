@@ -271,7 +271,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
             .add_step(SP.out, TL.out, ACalc.load)\
             .add_step(ACalc.out, r.out, Ram.write)
 
-    builder.add_instruction("xprefix")\
+    builder.add_instruction("_xprefix")\
         .add_step(PC.out, PC.inc, ProgMem.out, IR.load, StepCounter.extended)\
         .add_step() # extra NOP to prevent microcode ROM generator from inserting steps reset
 

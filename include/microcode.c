@@ -1012,7 +1012,7 @@ const struct op_microcode microcode[] PROGMEM = {
     /* ed str_SP_imm_D */
     { .default_steps = {0x17fd58b9, 0x17d358fb, 0x17fa5893},},
 
-    /* ee xprefix    */
+    /* ee _xprefix   */
     { .default_steps = {0x15fd5889, 0x17ff58ff},},
 
     /* ef rjmp_imm   */

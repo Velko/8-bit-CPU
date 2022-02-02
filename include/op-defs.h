@@ -240,7 +240,7 @@
 #define OP_STR_SP_IMM_B        0xeb
 #define OP_STR_SP_IMM_C        0xec
 #define OP_STR_SP_IMM_D        0xed
-#define OP_XPREFIX             0xee
+#define OP__XPREFIX            0xee
 #define OP_RJMP_IMM            0xef
 #define OP_BEQR_IMM            0xf0
 #define OP_BNER_IMM            0xf1

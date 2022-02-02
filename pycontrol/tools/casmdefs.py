@@ -15,12 +15,12 @@ def generate_casmdefs(rdfile: TextIO) -> None:
     rdfile.write("#ruledef\n")
     rdfile.write("{\n")
 
-    xprefix = opcodes["xprefix"]
+    xprefix = opcodes["_xprefix"]
 
     for microcode in opcodes.values():
 
-        # xprefix is not an instruction, skip it
-        if microcode == xprefix: continue
+        # skip "internal opcodes"
+        if microcode.name.startswith("_"): continue
 
         in_args = []
         glue_args = []
