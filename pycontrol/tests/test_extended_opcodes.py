@@ -21,7 +21,7 @@ def test_dummy_local(cpu_helper: CPUHelper) -> None:
 # if it works fine, it will load opcode of HLT into A. The opcode index
 # is approx. 0x10D, if ext bit fails, it will execute a 1 byte ADD instruction
 # instead and then hit HLT as next instruction
-fetch_test_prog = bytes([opcode_of("xprefix"),
+fetch_test_prog = bytes([opcode_of("_xprefix"),
                          opcode_of("dummyext_imm") & 0xFF,
                          opcode_of("hlt")])
 
