@@ -23,7 +23,7 @@ const struct op_microcode microcode[] PROGMEM = {
     { .default_steps = {0x17fd5879},},
 
     /* 06 hlt        */
-    { .default_steps = {0x11ff58ff, 0x17ff58ff},},
+    { .default_steps = {0x13ff58ff},},
 
     /* 07 add_A_A    */
     { .default_steps = {0x17ff0005},},
@@ -1126,8 +1126,8 @@ const struct op_microcode microcode[] PROGMEM = {
     /* 105 padding22  */
     { .default_steps = {0x17ff58ff},},
 
-    /* 106 _hltx      */
-    { .default_steps = {0x11ff58ff, 0x17ff58ff},},
+    /* 106 padding23  */
+    { .default_steps = {0x17ff58ff},},
 
     /* 107 padding24  */
     { .default_steps = {0x17ff58ff},},
