@@ -19,10 +19,12 @@ class AddrMap:
 
         fnnoxt = os.path.splitext(filename)[0]
 
-        self.by_addr: Dict[str, AddrMapItem] = dict()
-        self.all_files = [filename]
+        self.dir = os.path.dirname(filename)
 
-        with open(f"bin/{fnnoxt}.lst") as f:
+        self.by_addr: Dict[str, AddrMapItem] = dict()
+        self.all_files = [os.path.basename(filename)]
+
+        with open(f"{fnnoxt}.lst") as f:
             for line in f:
                 m = rx.match(line)
                 if m:
@@ -53,4 +55,4 @@ class AddrMap:
             return None
 
     def files(self) -> Sequence[str]:
-        return self.all_files
+        return map(lambda ad: os.path.join(self.dir, ad), self.all_files)

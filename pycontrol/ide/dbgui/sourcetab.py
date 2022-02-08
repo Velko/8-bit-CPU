@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import gi
+import os.path
 
 from .addrmap import AddrMap
 
@@ -11,9 +12,9 @@ from gi.repository import Gtk, GtkSource, Gdk, GdkPixbuf
 class SourceTab:
     def __init__(self, filename, addr_map: AddrMap):
         self.addr_map = addr_map
-        self.filename = filename
+        self.filename = os.path.basename(filename)
 
-        self.label = Gtk.Label(label=filename)
+        self.label = Gtk.Label(label=self.filename)
         self.scroll = Gtk.ScrolledWindow()
 
         self.src = GtkSource.View()

@@ -13,7 +13,7 @@ from dbgui.addrmap import AddrMap
 from libcpu.debug import Debugger
 
 
-am = AddrMap("add18.asm")
+am = AddrMap("../../demo/add18.asm")
 
 dbg = Debugger()
 
