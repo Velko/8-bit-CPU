@@ -1,0 +1,3 @@
+print:
+    cout A
+    ret
