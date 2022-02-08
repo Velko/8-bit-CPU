@@ -1,8 +1,11 @@
 #!/usr/bin/python3
 
-from ast import Add
 from typing import Sequence
 import gi
+
+from dbgui.addrmap import AddrMap
+from dbgui.mainui import MainUI
+from libcpu.debug import Debugger
 
 gi.require_version("Gtk", "3.0")
 gi.require_version("GtkSource", "4")
@@ -14,7 +17,7 @@ from .addrmap import AddrMap
 
 from libcpu.debug import Debugger
 
-class MainWindow(Gtk.Window):
+class MainWindow(Gtk.Window, MainUI):
     def __init__(self):
         super().__init__(title="VelkoCPU IDE")
 
@@ -37,9 +40,31 @@ class MainWindow(Gtk.Window):
     def on_button_clicked(self, widget):
         pass
 
-    def open_files(self, addr_map: AddrMap, dbg: Debugger) -> None:
-        for f in addr_map.files():
-            tab = SourceTab(f, addr_map)
+    def add_break(self, filename: str, lineno: int) -> bool:
+        item = self.addr_map.lookup_by_line(filename, lineno)
+
+        if item:
+            self.dbg.set_breakpoint(item.addr)
+            print (f"Brk at {item.addr:04x}")
+
+        return item is not None
+
+    def remove_break(self, filename: str, lineno: int) -> None:
+        item = self.addr_map.lookup_by_line(filename, lineno)
+
+        if item:
+            self.dbg.clear_breakpoint(item.addr)
+            print (f"Clr at {item.addr:04x}")
+
+
+    def open_project(self, main_file: str) -> None:
+
+        self.addr_map = AddrMap(main_file)
+        self.dbg = Debugger()
+
+        for f in self.addr_map.files():
+            tab = SourceTab(self)
+            tab.load_file(f)
             self.notebook.append_page(*tab.notepad_args())
 
 

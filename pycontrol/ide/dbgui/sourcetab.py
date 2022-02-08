@@ -4,15 +4,16 @@ import gi
 import os.path
 
 from .addrmap import AddrMap
+from .mainui import MainUI
 
 gi.require_version("Gtk", "3.0")
 gi.require_version("GtkSource", "4")
 from gi.repository import Gtk, GtkSource, Gdk, GdkPixbuf
 
 class SourceTab:
-    def __init__(self, filename, addr_map: AddrMap):
-        self.addr_map = addr_map
-        self.filename = os.path.basename(filename)
+    def __init__(self, owner: MainUI):
+        self.owner = owner
+        self.filename = "Untitled"
 
         self.label = Gtk.Label(label=self.filename)
         self.scroll = Gtk.ScrolledWindow()
@@ -33,12 +34,15 @@ class SourceTab:
 
         self.buffer = self.src.get_buffer()
 
-        if filename:
-            with open(filename) as f:
-                self.buffer.set_text(f.read())
-
-
         #att.set_background(Gdk.RGBA(1, 0, 0, 0.5))
+
+    def load_file(self, filename: str) -> None:
+
+        self.filename = os.path.basename(filename)
+        self.label.set_label(self.filename)
+
+        with open(filename) as f:
+            self.buffer.set_text(f.read())
 
 
     def notepad_args(self):
@@ -48,16 +52,12 @@ class SourceTab:
 
         marks = self.buffer.get_source_marks_at_iter(iter, "breakpoint")
 
-        ami = self.addr_map.lookup_by_line(self.filename, iter.get_line() + 1)
-
         if marks:
+            self.owner.remove_break(self.filename, iter.get_line() + 1)
             self.buffer.remove_source_marks(iter, iter, "breakpoint")
-            if ami is not None:
-                print (f"Clr at: {ami.addr:04x}")
         else:
-
-            if ami is not None:
+            added = self.owner.add_break(self.filename, iter.get_line() + 1)
+            if added:
                 self.buffer.create_source_mark(None, "breakpoint", iter)
-                print (f"Brk at: {ami.addr:04x}")
 
 

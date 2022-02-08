@@ -141,6 +141,12 @@ class Debugger:
         # replace it with brk()
         cpu_helper.write_ram(addr, opcodes["brk"].opcode)
 
+    def clear_breakpoint(self, addr: int) -> None:
+
+        if addr in self.breakpoints:
+            cpu_helper.write_ram(addr, self.breakpoints[addr].orig_op)
+            del self.breakpoints[addr]
+
     def break_hit(self) -> None:
         addr = cpu_helper.read_reg16(PC) - 1
 
