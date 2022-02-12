@@ -34,7 +34,9 @@ class SourceTab:
 
         self.buffer = self.src.get_buffer()
 
-        #att.set_background(Gdk.RGBA(1, 0, 0, 0.5))
+        runc_attr = GtkSource.MarkAttributes()
+        runc_attr.set_background(Gdk.RGBA(0, 0, 0.75, 0.5))
+        self.src.set_mark_attributes("run-cursor", runc_attr, 1)
 
     def load_file(self, filename: str) -> None:
 
@@ -60,4 +62,10 @@ class SourceTab:
             if added:
                 self.buffer.create_source_mark(None, "breakpoint", iter)
 
+    def clear_runcursor(self) -> None:
+        self.buffer.remove_source_marks(self.buffer.get_start_iter(), self.buffer.get_end_iter(), "run-cursor")
+
+    def set_runcursor(self, line: int) -> None:
+        iter = self.buffer.get_iter_at_line(line - 1)
+        self.buffer.create_source_mark(None, "run-cursor", iter)
 

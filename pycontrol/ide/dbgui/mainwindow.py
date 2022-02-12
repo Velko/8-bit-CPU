@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import os.path
 from typing import Sequence
 import gi
 
@@ -30,15 +31,34 @@ class MainWindow(Gtk.Window, MainUI):
         self.toolbar = Gtk.Toolbar()
         self.vpan.pack_start(self.toolbar, False, False, 0)
 
-        self.button = Gtk.ToolButton(label="Click Here")
-        self.button.connect("clicked", self.on_button_clicked)
-        self.toolbar.add(self.button)
+        self.upload_btn = Gtk.ToolButton(label="Upload")
+        self.upload_btn.connect("clicked", self.on_upload_btn_clicked)
+        self.toolbar.add(self.upload_btn)
+
+        self.run_btn = Gtk.ToolButton(label="Run")
+        self.run_btn.connect("clicked", self.on_run_btn_clicked)
+        self.toolbar.add(self.run_btn)
+
+        self.step_btn = Gtk.ToolButton(label="Step")
+        self.step_btn.connect("clicked", self.on_step_btn_clicked)
+        self.toolbar.add(self.step_btn)
+
 
         self.notebook = Gtk.Notebook()
         self.vpan.add(self.notebook)
 
-    def on_button_clicked(self, widget):
-        pass
+        self.tabs = dict()
+
+    def on_upload_btn_clicked(self, widget):
+        nnoxt = os.path.splitext(self.main_file)[0]
+        self.dbg.upload(f"{nnoxt}.bin")
+
+    def on_run_btn_clicked(self, widget):
+        self.dbg.run()
+
+    def on_step_btn_clicked(self, widget):
+        self.dbg.step()
+        self.dbg.report_current_addr()
 
     def add_break(self, filename: str, lineno: int) -> bool:
         item = self.addr_map.lookup_by_line(filename, lineno)
@@ -58,13 +78,27 @@ class MainWindow(Gtk.Window, MainUI):
 
 
     def open_project(self, main_file: str) -> None:
+        self.main_file = main_file
 
         self.addr_map = AddrMap(main_file)
         self.dbg = Debugger()
+
+        self.dbg.notify_break = self.on_break_addr
 
         for f in self.addr_map.files():
             tab = SourceTab(self)
             tab.load_file(f)
             self.notebook.append_page(*tab.notepad_args())
+            self.tabs[os.path.basename(f)] = tab
 
+
+    def on_break_addr(self, addr: int) -> None:
+
+        for tab in self.tabs.values():
+            tab.clear_runcursor()
+
+        item = self.addr_map.lookup_by_addr(addr)
+        if item is not None:
+            tab = self.tabs[item.filename]
+            tab.set_runcursor(item.lineno)
 

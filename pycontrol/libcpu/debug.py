@@ -28,6 +28,8 @@ class Debugger:
 
         self.current_break: Optional[Breakpoint] = None
 
+        self.notify_break = self.default_notify_break
+
     def disconnect(self) -> None:
         cpu_helper.backend.client.close()
 
@@ -153,9 +155,19 @@ class Debugger:
         if addr in self.breakpoints:
             self.current_break = self.breakpoints[addr]
             cpu_helper.load_reg8(IR, self.current_break.orig_op)
-            print (f"# Breakpoint @ {addr:04x}")
         else:
             print (f"# Hardcoded breakpoint @ {addr:04x}")
+
+        self.notify_break(addr)
+
+    def report_current_addr(self):
+        addr = cpu_helper.read_reg16(PC)
+        self.notify_break(addr)
+
+
+
+    def default_notify_break(self, addr: int) -> None:
+        print (f"# Breakpoint @ {addr:04x}")
 
     def get_registers(self) -> Mapping[str, Union[int, str]]:
         registers: Dict[str, Union[int, str]] = {
