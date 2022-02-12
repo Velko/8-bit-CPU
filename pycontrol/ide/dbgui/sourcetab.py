@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from distutils.sysconfig import customize_compiler
+from typing import Tuple
 import gi
 import os.path
 
@@ -48,10 +49,10 @@ class SourceTab:
             self.buffer.set_text(f.read())
 
 
-    def notepad_args(self):
+    def notepad_args(self) -> Tuple[Gtk.Widget, Gtk.Widget]:
         return self.scroll, self.label
 
-    def on_line_mark(self, view, iter, event):
+    def on_line_mark(self, view, iter, event) -> None:
 
         marks = self.buffer.get_source_marks_at_iter(iter, "breakpoint")
 

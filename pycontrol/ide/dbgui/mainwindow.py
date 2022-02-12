@@ -19,7 +19,7 @@ from .addrmap import AddrMap
 from libcpu.debug import Debugger
 
 class MainWindow(Gtk.Window, MainUI):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(title="VelkoCPU IDE")
 
         self.set_default_size(800, 600)

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import re, os.path
-from typing import Dict, List, Optional, Sequence
+from typing import Dict, Iterable, Optional
 
 class AddrMapItem:
     def __init__(self, addr: int, filename: str, lineno: int) -> None:
@@ -9,7 +9,7 @@ class AddrMapItem:
         self.filename = filename
         self.lineno = lineno
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f'0x{self.addr:04x} | {self.filename} | {self.lineno}'
 
 class AddrMap:
@@ -21,7 +21,7 @@ class AddrMap:
 
         self.dir = os.path.dirname(filename)
 
-        self.by_addr: Dict[str, AddrMapItem] = dict()
+        self.by_addr: Dict[int, AddrMapItem] = dict()
         self.all_files = [os.path.basename(filename)]
 
         with open(f"{fnnoxt}.lst") as f:
@@ -54,5 +54,5 @@ class AddrMap:
         else:
             return None
 
-    def files(self) -> Sequence[str]:
+    def files(self) -> Iterable[str]:
         return map(lambda ad: os.path.join(self.dir, ad), self.all_files)
