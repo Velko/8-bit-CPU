@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import os.path
-from typing import Sequence
+from typing import List
 import gi
 
 from dbgui.addrmap import AddrMap
@@ -35,6 +35,10 @@ class MainWindow(Gtk.Window, MainUI):
         self.upload_btn.connect("clicked", self.on_upload_btn_clicked)
         self.toolbar.add(self.upload_btn)
 
+        self.reset_btn = Gtk.ToolButton(label="Reset")
+        self.reset_btn.connect("clicked", self.on_reset_btn_clicked)
+        self.toolbar.add(self.reset_btn)
+
         self.run_btn = Gtk.ToolButton(label="Run")
         self.run_btn.connect("clicked", self.on_run_btn_clicked)
         self.toolbar.add(self.run_btn)
@@ -47,14 +51,17 @@ class MainWindow(Gtk.Window, MainUI):
         self.notebook = Gtk.Notebook()
         self.vpan.add(self.notebook)
 
-        self.tabs = dict()
+        self.tabs: List[SourceTab] = []
 
     def on_upload_btn_clicked(self, widget):
         nnoxt = os.path.splitext(self.main_file)[0]
         self.dbg.upload(f"{nnoxt}.bin")
 
+    def on_reset_btn_clicked(self, widget):
+        self.dbg.reset()
+
     def on_run_btn_clicked(self, widget):
-        self.dbg.run()
+        self.dbg.cont()
 
     def on_step_btn_clicked(self, widget):
         self.dbg.step()
@@ -88,15 +95,16 @@ class MainWindow(Gtk.Window, MainUI):
             tab = SourceTab(self)
             tab.load_file(f)
             self.notebook.append_page(*tab.notepad_args())
-            self.tabs[os.path.basename(f)] = tab
+            self.tabs.append(tab)
 
     def on_debugger_stop(self, reason: StopReason, addr: int) -> None:
 
-        for tab in self.tabs.values():
-            tab.clear_runcursor()
-
         item = self.addr_map.lookup_by_addr(addr)
-        if item is not None:
-            tab = self.tabs[item.filename]
-            tab.set_runcursor(item.lineno)
+
+        for i, tab in enumerate(self.tabs):
+            tab.clear_runcursor()
+            if item is not None and item.filename == tab.filename:
+                tab.set_runcursor(item.lineno)
+                self.notebook.set_current_page(i)
+
 

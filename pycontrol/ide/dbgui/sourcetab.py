@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from distutils.sysconfig import customize_compiler
 import gi
 import os.path
 
@@ -67,5 +68,8 @@ class SourceTab:
 
     def set_runcursor(self, line: int) -> None:
         iter = self.buffer.get_iter_at_line(line - 1)
-        self.buffer.create_source_mark(None, "run-cursor", iter)
+        cursor = self.buffer.create_source_mark(None, "run-cursor", iter)
+
+        self.src.scroll_to_mark(cursor, 0.25, False, 0, 0.5)
+
 
