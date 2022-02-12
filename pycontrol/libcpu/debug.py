@@ -2,6 +2,7 @@
 
 import sys
 from typing import Dict, List, Mapping, Optional, Union
+from enum import Enum
 
 from .test_helpers import CPUHelper
 from .cpu import ret, setup_live
@@ -18,6 +19,11 @@ class Breakpoint:
         self.addr = addr
         self.orig_op = orig_op
 
+class StopReason(Enum):
+    DEBUG_BRK = 1
+    CODE_BRK = 2
+    STEP = 3
+    HALT = 4
 
 class Debugger:
     def __init__(self) -> None:
@@ -28,7 +34,7 @@ class Debugger:
 
         self.current_break: Optional[Breakpoint] = None
 
-        self.notify_break = self.default_notify_break
+        self.on_stop = self.stop_event
 
     def disconnect(self) -> None:
         cpu_helper.backend.client.close()
@@ -58,7 +64,7 @@ class Debugger:
     def step(self) -> None:
 
         if self.halted:
-            print ("# Halted", flush=True, file=sys.stderr)
+            self.on_stop(StopReason.HALT, cpu_helper.read_reg16(PC))
             return
 
         if self.current_break is not None:
@@ -71,14 +77,15 @@ class Debugger:
 
         # are we done?
         if Clock.halt.is_enabled():
-            print ("# Halted", flush=True, file=sys.stderr)
             self.halted = True
             self.stopped = True
+            self.on_stop(StopReason.HALT, cpu_helper.read_reg16(PC))
 
         # breakpoint?
         if Clock.brk.is_enabled():
             self.stopped = True
             self.break_hit()
+            return
 
         # catch output value
         if OutPort.load.is_enabled():
@@ -86,10 +93,12 @@ class Debugger:
         if COutPort.load.is_enabled():
             print (chr(unwrap(outval)), end="", flush=True)
 
+        self.on_stop(StopReason.STEP, cpu_helper.read_reg16(PC))
+
     def cont(self) -> None:
 
         if self.halted:
-            print ("# Halted", flush=True, file=sys.stderr)
+            self.on_stop(StopReason.HALT, cpu_helper.read_reg16(PC))
             return
 
         self.stopped = False
@@ -104,9 +113,9 @@ class Debugger:
         for msg in out:
 
             if msg.reason == RunMessage.Reason.HALT:
-                print ("# Halted", flush=True, file=sys.stderr)
                 self.halted = True
                 self.stopped = True
+                self.on_stop(StopReason.HALT, cpu_helper.read_reg16(PC))
                 break
 
             elif msg.reason == RunMessage.Reason.BRK:
@@ -155,19 +164,18 @@ class Debugger:
         if addr in self.breakpoints:
             self.current_break = self.breakpoints[addr]
             cpu_helper.load_reg8(IR, self.current_break.orig_op)
+            self.on_stop(StopReason.DEBUG_BRK, addr)
         else:
+            self.on_stop(StopReason.CODE_BRK, addr)
+
+
+    def stop_event(self, reason: StopReason, addr: int) -> None:
+        if reason == StopReason.HALT:
+            print ("# Halted", flush=True, file=sys.stderr)
+        elif reason == StopReason.DEBUG_BRK:
+            print (f"# Breakpoint @ {addr:04x}")
+        elif reason == StopReason.CODE_BRK:
             print (f"# Hardcoded breakpoint @ {addr:04x}")
-
-        self.notify_break(addr)
-
-    def report_current_addr(self):
-        addr = cpu_helper.read_reg16(PC)
-        self.notify_break(addr)
-
-
-
-    def default_notify_break(self, addr: int) -> None:
-        print (f"# Breakpoint @ {addr:04x}")
 
     def get_registers(self) -> Mapping[str, Union[int, str]]:
         registers: Dict[str, Union[int, str]] = {

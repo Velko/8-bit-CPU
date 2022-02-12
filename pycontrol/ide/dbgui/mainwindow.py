@@ -6,7 +6,7 @@ import gi
 
 from dbgui.addrmap import AddrMap
 from dbgui.mainui import MainUI
-from libcpu.debug import Debugger
+from libcpu.debug import Debugger, StopReason
 
 gi.require_version("Gtk", "3.0")
 gi.require_version("GtkSource", "4")
@@ -58,7 +58,6 @@ class MainWindow(Gtk.Window, MainUI):
 
     def on_step_btn_clicked(self, widget):
         self.dbg.step()
-        self.dbg.report_current_addr()
 
     def add_break(self, filename: str, lineno: int) -> bool:
         item = self.addr_map.lookup_by_line(filename, lineno)
@@ -83,7 +82,7 @@ class MainWindow(Gtk.Window, MainUI):
         self.addr_map = AddrMap(main_file)
         self.dbg = Debugger()
 
-        self.dbg.notify_break = self.on_break_addr
+        self.dbg.on_stop = self.on_debugger_stop
 
         for f in self.addr_map.files():
             tab = SourceTab(self)
@@ -91,8 +90,7 @@ class MainWindow(Gtk.Window, MainUI):
             self.notebook.append_page(*tab.notepad_args())
             self.tabs[os.path.basename(f)] = tab
 
-
-    def on_break_addr(self, addr: int) -> None:
+    def on_debugger_stop(self, reason: StopReason, addr: int) -> None:
 
         for tab in self.tabs.values():
             tab.clear_runcursor()
