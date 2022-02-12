@@ -28,7 +28,7 @@ class SourceTab:
         self.src.connect("line-mark-activated", self.on_line_mark)
 
         brk_attr = GtkSource.MarkAttributes()
-        brk_icon = GdkPixbuf.Pixbuf.new_from_file("blemba.png")
+        brk_icon = GdkPixbuf.Pixbuf.new_from_file("assets/breakpoint-icon.png")
         brk_attr.set_pixbuf(brk_icon)
         self.src.set_mark_attributes("breakpoint", brk_attr, 0)
 
