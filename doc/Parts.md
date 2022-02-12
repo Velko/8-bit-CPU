@@ -387,3 +387,6 @@ Output module PCB+
 * 10nF capacitors 0805
 * SC39-11GWA displays
 
+RAM:
+===
+https://eu.mouser.com/c/?q=61C1024
