@@ -12,6 +12,8 @@ gi.require_version("Gtk", "3.0")
 gi.require_version("GtkSource", "4")
 from gi.repository import Gtk, GtkSource, Gdk, GdkPixbuf
 
+# Helpful reference
+# https://lazka.github.io/pgi-docs/Gtk-3.0/index.html
 
 from .sourcetab import SourceTab
 from .addrmap import AddrMap
