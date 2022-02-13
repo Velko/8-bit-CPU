@@ -4,6 +4,7 @@
         <property name="title">VelkoCPU IDE 0.1</property>
         <property name="default-width">800</property>
         <property name="default-height">600</property>
+        <signal name="destroy" handler="on_window_destroy"/>
         <child>
             <object class="GtkVBox">
                 <child>
@@ -12,21 +13,25 @@
                         <child>
                             <object class="GtkToolButton" id="upload_btn">
                                 <property name="label">Upload</property>
+                                <signal name="clicked" handler="on_upload_btn_clicked"/>
                             </object>
                         </child>
                         <child>
                             <object class="GtkToolButton" id="reset_btn">
                                 <property name="label">Reset</property>
+                                <signal name="clicked" handler="on_reset_btn_clicked"/>
                             </object>
                         </child>
                         <child>
                             <object class="GtkToolButton" id="run_btn">
                                 <property name="label">Run</property>
+                                <signal name="clicked" handler="on_run_btn_clicked"/>
                             </object>
                         </child>
                         <child>
                             <object class="GtkToolButton" id="step_btn">
                                 <property name="label">Step</property>
+                                <signal name="clicked" handler="on_step_btn_clicked"/>
                             </object>
                         </child>
                     </object>

@@ -24,25 +24,14 @@ class MainWindow(MainUI):
     def __init__(self) -> None:
 
         self.builder = Gtk.Builder.new_from_file("assets/mainwindow.ui")
+        self.builder.connect_signals(self)
+
         self.window = self.builder.get_object("main_window")
-
-        self.window.connect("destroy", Gtk.main_quit)
-
-        self.upload_btn = self.builder.get_object("upload_btn")
-        self.upload_btn.connect("clicked", self.on_upload_btn_clicked)
-
-        self.reset_btn = self.builder.get_object("reset_btn")
-        self.reset_btn.connect("clicked", self.on_reset_btn_clicked)
-
-        self.run_btn = self.builder.get_object("run_btn")
-        self.run_btn.connect("clicked", self.on_run_btn_clicked)
-
-        self.step_btn = self.builder.get_object("step_btn")
-        self.step_btn.connect("clicked", self.on_step_btn_clicked)
-
         self.notebook = self.builder.get_object("notebook")
 
         self.tabs: List[SourceTab] = []
+
+    on_window_destroy = Gtk.main_quit
 
     def on_upload_btn_clicked(self, widget: Gtk.Widget) -> None:
         nnoxt = os.path.splitext(self.main_file)[0]
