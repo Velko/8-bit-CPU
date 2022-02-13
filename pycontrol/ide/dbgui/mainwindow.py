@@ -55,17 +55,17 @@ class MainWindow(Gtk.Window, MainUI):
 
         self.tabs: List[SourceTab] = []
 
-    def on_upload_btn_clicked(self, widget):
+    def on_upload_btn_clicked(self, widget: Gtk.Widget) -> None:
         nnoxt = os.path.splitext(self.main_file)[0]
         self.dbg.upload(f"{nnoxt}.bin")
 
-    def on_reset_btn_clicked(self, widget):
+    def on_reset_btn_clicked(self, widget: Gtk.Widget) -> None:
         self.dbg.reset()
 
-    def on_run_btn_clicked(self, widget):
+    def on_run_btn_clicked(self, widget: Gtk.Widget) -> None:
         self.dbg.cont()
 
-    def on_step_btn_clicked(self, widget):
+    def on_step_btn_clicked(self, widget: Gtk.Widget) -> None:
         self.dbg.step()
 
     def add_break(self, filename: str, lineno: int) -> bool:

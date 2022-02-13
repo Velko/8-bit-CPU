@@ -52,7 +52,7 @@ class SourceTab:
     def notepad_args(self) -> Tuple[Gtk.Widget, Gtk.Widget]:
         return self.scroll, self.label
 
-    def on_line_mark(self, view, iter, event) -> None:
+    def on_line_mark(self, view: GtkSource.View, iter: Gtk.TextIter, event: Gdk.Event) -> None:
 
         marks = self.buffer.get_source_marks_at_iter(iter, "breakpoint")
 
