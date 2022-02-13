@@ -10,10 +10,9 @@ from gi.repository import Gtk
 from dbgui.mainwindow import MainWindow
 
 win = MainWindow()
-win.connect("destroy", Gtk.main_quit)
 
 win.open_project("../../demo/add18.asm")
 
-win.show_all()
+win.window.show_all()
 
 Gtk.main()

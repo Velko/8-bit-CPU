@@ -37,7 +37,7 @@ class SourceTab:
         self.buffer = self.src.get_buffer()
 
         runc_attr = GtkSource.MarkAttributes()
-        runc_attr.set_background(Gdk.RGBA(0, 0, 0.75, 0.5))
+        runc_attr.set_background(Gdk.RGBA(255/255.0, 241/255.0, 129/255.0, 1))
         self.src.set_mark_attributes("run-cursor", runc_attr, 1)
 
     def load_file(self, filename: str) -> None:

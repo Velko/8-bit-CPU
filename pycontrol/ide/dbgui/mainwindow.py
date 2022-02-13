@@ -20,38 +20,27 @@ from .addrmap import AddrMap
 
 from libcpu.debug import Debugger
 
-class MainWindow(Gtk.Window, MainUI):
+class MainWindow(MainUI):
     def __init__(self) -> None:
-        super().__init__(title="VelkoCPU IDE")
 
-        self.set_default_size(800, 600)
+        self.builder = Gtk.Builder.new_from_file("assets/mainwindow.ui")
+        self.window = self.builder.get_object("main_window")
 
-        self.vpan = Gtk.VBox()
+        self.window.connect("destroy", Gtk.main_quit)
 
-        self.add(self.vpan)
-
-        self.toolbar = Gtk.Toolbar()
-        self.vpan.pack_start(self.toolbar, False, False, 0)
-
-        self.upload_btn = Gtk.ToolButton(label="Upload")
+        self.upload_btn = self.builder.get_object("upload_btn")
         self.upload_btn.connect("clicked", self.on_upload_btn_clicked)
-        self.toolbar.add(self.upload_btn)
 
-        self.reset_btn = Gtk.ToolButton(label="Reset")
+        self.reset_btn = self.builder.get_object("reset_btn")
         self.reset_btn.connect("clicked", self.on_reset_btn_clicked)
-        self.toolbar.add(self.reset_btn)
 
-        self.run_btn = Gtk.ToolButton(label="Run")
+        self.run_btn = self.builder.get_object("run_btn")
         self.run_btn.connect("clicked", self.on_run_btn_clicked)
-        self.toolbar.add(self.run_btn)
 
-        self.step_btn = Gtk.ToolButton(label="Step")
+        self.step_btn = self.builder.get_object("step_btn")
         self.step_btn.connect("clicked", self.on_step_btn_clicked)
-        self.toolbar.add(self.step_btn)
 
-
-        self.notebook = Gtk.Notebook()
-        self.vpan.add(self.notebook)
+        self.notebook = self.builder.get_object("notebook")
 
         self.tabs: List[SourceTab] = []
 
