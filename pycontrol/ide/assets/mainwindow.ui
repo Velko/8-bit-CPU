@@ -1,12 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-    <object class="GtkWindow" id="main_window">
+    <object class="GtkUIManager" id="uiman">
+        <child>
+            <object class="GtkActionGroup" id="actiongroup">
+                <child>
+                    <object class="GtkAction" id="file">
+                        <property name="label">_File</property>
+                    </object>
+                </child>
+                <child>
+                    <object class="GtkAction" id="edit">
+                        <property name="label">_Edit</property>
+                    </object>
+                </child>
+                <child>
+                    <object class="GtkAction" id="debug">
+                        <property name="label">_Debug</property>
+                    </object>
+                </child>
+                <child>
+                    <object class="GtkAction" id="debug_step">
+                        <property name="label">_Step</property>
+                        <signal name="activate" handler="on_step_btn_clicked"/>
+                    </object>
+                </child>
+            </object>
+        </child>
+        <ui>
+            <menubar name="menubar1">
+                <menu action="file">
+                </menu>
+                <menu action="edit">
+                </menu>
+                <menu action="debug">
+                    <menuitem action="debug_step" />
+                </menu>
+            </menubar>
+        </ui>
+    </object>
+    <object class="GtkApplicationWindow" id="main_window">
         <property name="title">VelkoCPU IDE 0.1</property>
         <property name="default-width">800</property>
         <property name="default-height">600</property>
         <signal name="destroy" handler="on_window_destroy"/>
         <child>
             <object class="GtkVBox">
+                <child>
+                    <object class="GtkMenuBar" id="menubar1" constructor="uiman"/>
+                    <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="pack_type">GTK_PACK_START</property>
+                    </packing>
+                </child>
                 <child>
                     <object class="GtkToolbar" id="toolbar">
                         <property name="expand">false</property>
