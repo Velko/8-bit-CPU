@@ -44,7 +44,8 @@
         <property name="default-height">600</property>
         <signal name="destroy" handler="on_window_destroy"/>
         <child>
-            <object class="GtkVBox">
+            <object class="GtkBox">
+                <property name="orientation">vertical</property>
                 <child>
                     <object class="GtkMenuBar" id="menubar1" constructor="uiman"/>
                     <packing>
