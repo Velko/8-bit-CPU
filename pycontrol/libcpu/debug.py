@@ -35,6 +35,7 @@ class Debugger:
         self.current_break: Optional[Breakpoint] = None
 
         self.on_stop = self.stop_event
+        self.on_output = self.output_event
 
     def disconnect(self) -> None:
         cpu_helper.backend.client.close()
@@ -89,9 +90,9 @@ class Debugger:
 
         # catch output value
         if OutPort.load.is_enabled():
-            print (unwrap(outval), flush=True)
+            self.on_output(f"{unwrap(outval)}\n")
         if COutPort.load.is_enabled():
-            print (chr(unwrap(outval)), end="", flush=True)
+            self.on_output(chr(unwrap(outval)))
 
         self.on_stop(StopReason.STEP, cpu_helper.read_reg16(PC))
 
@@ -124,7 +125,7 @@ class Debugger:
                 break
 
             elif msg.reason == RunMessage.Reason.OUT:
-                print(msg.payload, end="", flush=True)
+                self.on_output(msg.payload)
 
 
     def reset(self) -> None:
@@ -176,6 +177,9 @@ class Debugger:
             print (f"# Breakpoint @ {addr:04x}")
         elif reason == StopReason.CODE_BRK:
             print (f"# Hardcoded breakpoint @ {addr:04x}")
+
+    def output_event(self, msg: str) -> None:
+        print(msg, end="", flush=True)
 
     def get_registers(self) -> Mapping[str, Union[int, str]]:
         registers: Dict[str, Union[int, str]] = {

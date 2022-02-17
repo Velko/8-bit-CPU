@@ -70,6 +70,7 @@ class MainWindow(MainUI):
         self.dbg = Debugger()
 
         self.dbg.on_stop = self.on_debugger_stop
+        self.dbg.on_output = self.on_debugger_out
 
         for f in self.addr_map.files():
             tab = SourceTab(self)
@@ -87,4 +88,6 @@ class MainWindow(MainUI):
                 tab.set_runcursor(item.lineno)
                 self.notebook.set_current_page(i)
 
+    def on_debugger_out(self, msg: str) -> None:
+        pass
 
