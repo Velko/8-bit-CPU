@@ -43,7 +43,7 @@ class MainWindow(MainUI):
     def on_run_btn_clicked(self, widget: Gtk.Widget) -> None:
         self.dbg.cont()
 
-    def on_step_btn_clicked(self, widget: Gtk.Widget) -> None:
+    def on_dbg_step_into_activated(self, widget: Gtk.Widget) -> None:
         self.dbg.step()
 
     def add_break(self, filename: str, lineno: int) -> bool:
