@@ -31,16 +31,22 @@ class MainWindow(MainUI):
 
         self.tabs: List[SourceTab] = []
 
+        self.started = False
+
     on_window_destroy = Gtk.main_quit
 
     def on_upload_btn_clicked(self, widget: Gtk.Widget) -> None:
-        nnoxt = os.path.splitext(self.main_file)[0]
-        self.dbg.upload(f"{nnoxt}.bin")
+        self.dbg.upload(self.bin_file)
 
     def on_reset_btn_clicked(self, widget: Gtk.Widget) -> None:
+        self.started = False
         self.dbg.reset()
 
     def on_dbg_run_cont_activated(self, widget: Gtk.Widget) -> None:
+        if not self.started:
+            self.started = True
+            self.dbg.reset()
+
         self.dbg.cont()
 
     def on_dbg_step_into_activated(self, widget: Gtk.Widget) -> None:
@@ -65,6 +71,7 @@ class MainWindow(MainUI):
 
     def open_project(self, main_file: str) -> None:
         self.main_file = main_file
+        self.bin_file = f'{os.path.splitext(self.main_file)[0]}.bin'
 
         self.addr_map = AddrMap(main_file)
         self.dbg = Debugger()
@@ -87,6 +94,9 @@ class MainWindow(MainUI):
             if item is not None and item.filename == tab.filename:
                 tab.set_runcursor(item.lineno)
                 self.notebook.set_current_page(i)
+
+        if reason == StopReason.HALT:
+            self.started = False
 
     def on_debugger_out(self, msg: str) -> None:
         pass
