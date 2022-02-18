@@ -95,6 +95,17 @@
               </packing>
             </child>
             <child>
+              <object class="GtkToolButton" id="compile_btn">
+                <property name="can-focus">False</property>
+                <property name="label">Compile</property>
+                <signal name="clicked" handler="on_compile_activated" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkToolButton" id="reset_btn">
                 <property name="can-focus">False</property>
                 <property name="label">Reset</property>

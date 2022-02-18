@@ -6,6 +6,7 @@ import gi
 
 from dbgui.addrmap import AddrMap
 from dbgui.mainui import MainUI
+from dbgui.asproject import AsProject
 from libcpu.debug import Debugger, StopReason
 
 gi.require_version("Gtk", "3.0")
@@ -37,7 +38,7 @@ class MainWindow(MainUI):
     on_window_destroy = Gtk.main_quit
 
     def on_upload_btn_clicked(self, widget: Gtk.Widget) -> None:
-        self.dbg.upload(self.bin_file)
+        self.dbg.upload(self.asproj.bin_file)
 
     def on_reset_btn_clicked(self, widget: Gtk.Widget) -> None:
         self.started = False
@@ -71,9 +72,8 @@ class MainWindow(MainUI):
 
 
     def open_project(self, main_file: str) -> None:
-        self.main_file = main_file
-        self.bin_file = f'{os.path.splitext(self.main_file)[0]}.bin'
 
+        self.asproj = AsProject(main_file)
         self.addr_map = AddrMap(main_file)
         self.dbg = Debugger()
 
@@ -85,6 +85,9 @@ class MainWindow(MainUI):
             tab.load_file(f)
             self.notebook.append_page(*tab.notepad_args())
             self.tabs.append(tab)
+
+    def on_compile_activated(self, widget: Gtk.Widget) -> None:
+        self.asproj.compile()
 
     def on_debugger_stop(self, reason: StopReason, addr: int) -> None:
 
