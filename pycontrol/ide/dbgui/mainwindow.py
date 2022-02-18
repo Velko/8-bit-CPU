@@ -40,7 +40,7 @@ class MainWindow(MainUI):
     def on_reset_btn_clicked(self, widget: Gtk.Widget) -> None:
         self.dbg.reset()
 
-    def on_run_btn_clicked(self, widget: Gtk.Widget) -> None:
+    def on_dbg_run_cont_activated(self, widget: Gtk.Widget) -> None:
         self.dbg.cont()
 
     def on_dbg_step_into_activated(self, widget: Gtk.Widget) -> None:

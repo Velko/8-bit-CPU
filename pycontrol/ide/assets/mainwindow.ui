@@ -6,6 +6,10 @@
     <property name="label" translatable="yes">_Step into</property>
     <signal name="activate" handler="on_dbg_step_into_activated" swapped="no"/>
   </object>
+  <object class="GtkAction" id="dbg_run_cont">
+    <property name="label" translatable="yes">_Run</property>
+    <signal name="activate" handler="on_dbg_run_cont_activated" swapped="no"/>
+  </object>
   <object class="GtkApplicationWindow" id="main_window">
     <property name="can-focus">False</property>
     <property name="title">VelkoCPU IDE 0.1</property>
@@ -45,6 +49,16 @@
                   <object class="GtkMenu">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <child>
+                      <object class="GtkMenuItem" id="dbg_run_cont_mnitem">
+                        <property name="use-action-appearance">True</property>
+                        <property name="related-action">dbg_run_cont</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="use-underline">True</property>
+                        <accelerator key="F5" signal="activate"/>
+                      </object>
+                    </child>
                     <child>
                       <object class="GtkMenuItem" id="dbg_step_into_mnitem">
                         <property name="use-action-appearance">True</property>
@@ -94,8 +108,8 @@
             <child>
               <object class="GtkToolButton" id="run_btn">
                 <property name="can-focus">False</property>
-                <property name="label">Run</property>
-                <signal name="clicked" handler="on_run_btn_clicked" swapped="no"/>
+                <property name="use-action-appearance">True</property>
+                <property name="related-action">dbg_run_cont</property>
               </object>
               <packing>
                 <property name="expand">False</property>
