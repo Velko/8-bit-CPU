@@ -1,4 +1,4 @@
-from typing import Union, Tuple, Optional, Sequence
+from typing import List, Union, Tuple, Optional, Sequence
 from .markers import AddrBase
 from .pseudo_devices import Imm
 from .DeviceSetup import COutPort, IRFetch, OutPort, ProgMem, PC, Flags, StepCounter
@@ -59,7 +59,9 @@ class CPUBackendControl:
             microcode = ops_by_code[self.get_opcode_cached()]
             microstep, is_last = microcode.get_step(s_idx - self.op_extension , self.get_flags_cached())
             if is_last:
-                self.execute_step(microstep + (StepCounter.reset,))
+                fin_steps: List[ControlSignal] = [StepCounter.reset]
+                fin_steps.extend(microstep)
+                self.execute_step(fin_steps)
                 break
             else:
                 self.execute_step(microstep)

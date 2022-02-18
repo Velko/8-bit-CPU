@@ -87,9 +87,13 @@ class Debugger:
         if Clock.brk.is_enabled():
             self.stopped = True
             tmp_break = self.break_hit()
-            # when single-stepping, should ignore breakpoints and execute original
-            # instruction immediately
-            _, outval = cpu_helper.backend.execute_opcode(tmp_break.orig_op)
+            if tmp_break is not None:
+                # when single-stepping, should ignore breakpoints and execute original
+                # instruction immediately
+                _, outval = cpu_helper.backend.execute_opcode(tmp_break.orig_op)
+            else:
+                # Must be BRK in code, execute NOP instead
+                cpu_helper.backend.execute_mnemonic("nop")
 
         # catch output value
         if OutPort.load.is_enabled():
@@ -132,7 +136,7 @@ class Debugger:
                 break
 
             elif msg.reason == RunMessage.Reason.OUT:
-                self.on_output(msg.payload)
+                self.on_output(unwrap(msg.payload))
 
 
     def reset(self) -> None:
