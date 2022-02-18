@@ -106,7 +106,10 @@ class Debugger:
 
         # if stopped on breakpoint, complete the instruction
         # before resuming hardware-side execution
+        # flush flags cache, because hardware updated while we were not
+        # observing
         if self.current_break is not None:
+            cpu_helper.backend.flags_cache = None
             self.step()
 
         out = cpu_helper.backend.client.run_program();
