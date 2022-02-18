@@ -41,6 +41,13 @@
                 "-k",
                 "${fileBasename}"
             ]
+        },
+        {
+            "name": "Python: CPU Ide",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/pycontrol/ide",
+            "program": "./cpuide.py",
         }
     ]
 }
