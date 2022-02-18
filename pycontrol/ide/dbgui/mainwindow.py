@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import os.path
-from typing import List
+from typing import List, cast
 import gi
 
 from dbgui.addrmap import AddrMap
@@ -10,7 +10,7 @@ from libcpu.debug import Debugger, StopReason
 
 gi.require_version("Gtk", "3.0")
 gi.require_version("GtkSource", "4")
-from gi.repository import Gtk, GtkSource, Gdk, GdkPixbuf
+from gi.repository import Gtk
 
 # Helpful reference
 # https://lazka.github.io/pgi-docs/Gtk-3.0/index.html
@@ -19,6 +19,7 @@ from .sourcetab import SourceTab
 from .addrmap import AddrMap
 
 from libcpu.debug import Debugger
+from libcpu.util import unwrap
 
 class MainWindow(MainUI):
     def __init__(self) -> None:
@@ -26,8 +27,8 @@ class MainWindow(MainUI):
         self.builder = Gtk.Builder.new_from_file("assets/mainwindow.ui")
         self.builder.connect_signals(self)
 
-        self.window = self.builder.get_object("main_window")
-        self.notebook = self.builder.get_object("notebook")
+        self.window = cast(Gtk.ApplicationWindow, unwrap(self.builder.get_object("main_window")))
+        self.notebook = cast(Gtk.Notebook, unwrap(self.builder.get_object("notebook")))
 
         self.tabs: List[SourceTab] = []
 
