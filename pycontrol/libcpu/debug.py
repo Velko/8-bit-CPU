@@ -81,12 +81,15 @@ class Debugger:
             self.halted = True
             self.stopped = True
             self.on_stop(StopReason.HALT, cpu_helper.read_reg16(PC))
+            return
 
         # breakpoint?
         if Clock.brk.is_enabled():
             self.stopped = True
-            self.break_hit()
-            return
+            tmp_break = self.break_hit()
+            # when single-stepping, should ignore breakpoints and execute original
+            # instruction immediately
+            _, outval = cpu_helper.backend.execute_opcode(tmp_break.orig_op)
 
         # catch output value
         if OutPort.load.is_enabled():
@@ -125,7 +128,7 @@ class Debugger:
 
             elif msg.reason == RunMessage.Reason.BRK:
                 self.stopped = True
-                self.break_hit()
+                self.current_break = self.break_hit()
                 break
 
             elif msg.reason == RunMessage.Reason.OUT:
@@ -163,15 +166,17 @@ class Debugger:
             cpu_helper.write_ram(addr, self.breakpoints[addr].orig_op)
             del self.breakpoints[addr]
 
-    def break_hit(self) -> None:
+    def break_hit(self) -> Optional[Breakpoint]:
         addr = cpu_helper.read_reg16(PC) - 1
 
         if addr in self.breakpoints:
-            self.current_break = self.breakpoints[addr]
-            cpu_helper.load_reg8(IR, self.current_break.orig_op)
+            tmp_break = self.breakpoints[addr]
+            cpu_helper.load_reg8(IR, tmp_break.orig_op)
             self.on_stop(StopReason.DEBUG_BRK, addr)
+            return tmp_break
         else:
             self.on_stop(StopReason.CODE_BRK, addr)
+            return None
 
 
     def stop_event(self, reason: StopReason, addr: int) -> None:
