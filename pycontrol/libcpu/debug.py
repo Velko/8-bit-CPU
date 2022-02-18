@@ -116,7 +116,8 @@ class Debugger:
             if msg.reason == RunMessage.Reason.HALT:
                 self.halted = True
                 self.stopped = True
-                self.on_stop(StopReason.HALT, cpu_helper.read_reg16(PC))
+                # report the addess of HLT, not one past
+                self.on_stop(StopReason.HALT, cpu_helper.read_reg16(PC) - 1)
                 break
 
             elif msg.reason == RunMessage.Reason.BRK:
