@@ -11,6 +11,11 @@ module cmd_handler;
     wire [3:0] fout;
     wire [7:0] iout;
 
+    wire [7:0] i_out;
+    wire [7:0] c_out;
+    reg [160:0] out_fmt;
+    reg out_rst;
+
     reg rst;
     reg clk;
     reg iclk;
@@ -22,7 +27,21 @@ module cmd_handler;
     wire brk;
     wire hlt;
 
-    cpu processor(.main_bus(main_bus), .addr_bus(addr_bus), .rst(rst), .clk(clk), .iclk(iclk), .control_word(wctrl_word), .fout(fout), .iout(iout), .ctrlen(ctrlen), .brk(brk), .hlt(hlt));
+    cpu processor(
+        .main_bus(main_bus),
+        .addr_bus(addr_bus),
+        .rst(rst),
+        .clk(clk),
+        .iclk(iclk),
+        .control_word(wctrl_word),
+        .fout(fout),
+        .iout(iout),
+        .ctrlen(ctrlen),
+        .brk(brk),
+        .hlt(hlt),
+        .i_out(i_out),
+        .c_out(c_out),
+        .out_rst(out_rst));
 
     reg [7:0] cmd;
 
@@ -33,6 +52,7 @@ module cmd_handler;
         iclk <= 0;
         rst <= 1;
         ctrlen <= 1;
+        out_rst <= 0;
         $set_default_cw(control_word);
 
         #1
@@ -138,10 +158,24 @@ module cmd_handler;
                         clk <= 1;
                         #1
                         clk <= 0;
+
+                        // Intercept and send Integer and Character Out messages
+                        if (i_out !== 8'bx) begin
+                            $sformat(out_fmt, "#IOUT#%d", i_out);
+                            $serial_send_str(out_fmt);
+                            out_rst <= 1;
+                        end
+                        if (c_out !== 8'bx) begin
+                            $sformat(out_fmt, "#COUT#%d", c_out);
+                            $serial_send_str(out_fmt);
+                            out_rst <= 1;
+                        end
+
                         #1
                         iclk <= 1;
                         #1
                         iclk <= 0;
+                        out_rst <= 0;
                     end
 
                     ctrlen <= 1;
