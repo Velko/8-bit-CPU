@@ -2,13 +2,13 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.4"/>
-  <object class="GtkAction" id="dbg_step_into">
-    <property name="label" translatable="yes">_Step into</property>
-    <signal name="activate" handler="on_dbg_step_into_activated" swapped="no"/>
-  </object>
   <object class="GtkAction" id="dbg_run_cont">
     <property name="label" translatable="yes">_Run</property>
     <signal name="activate" handler="on_dbg_run_cont_activated" swapped="no"/>
+  </object>
+  <object class="GtkAction" id="dbg_step_into">
+    <property name="label" translatable="yes">_Step into</property>
+    <signal name="activate" handler="on_dbg_step_into_activated" swapped="no"/>
   </object>
   <object class="GtkApplicationWindow" id="main_window">
     <property name="can-focus">False</property>
@@ -118,9 +118,9 @@
             </child>
             <child>
               <object class="GtkToolButton" id="run_btn">
-                <property name="can-focus">False</property>
                 <property name="use-action-appearance">True</property>
                 <property name="related-action">dbg_run_cont</property>
+                <property name="can-focus">False</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -147,16 +147,56 @@
         </child>
         <child>
           <object class="GtkBox">
-            <property name="orientation">horizontal</property>
+            <property name="can-focus">False</property>
             <child>
-                <object class="GtkNotebook" id="notebook">
-                    <property name="can-focus">False</property>
-                </object>
-                <packing>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkScrolledWindow">
+                    <property name="width-request">150</property>
+                    <property name="height-request">150</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="shadow-type">in</property>
+                    <child>
+                      <object class="GtkTextView" id="output_text">
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="editable">False</property>
+                        <property name="monospace">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
                     <property name="expand">True</property>
                     <property name="fill">True</property>
-                    <property name="position">2</property>
-                </packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkNotebook" id="notebook">
+                <property name="can-focus">False</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
             </child>
           </object>
           <packing>
