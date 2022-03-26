@@ -35,6 +35,17 @@ class MainWindow(MainUI):
         self.out_text = cast(Gtk.TextView, unwrap(self.builder.get_object("output_text")))
         self.out_end_mark = self.out_text.get_buffer().create_mark("out_end", self.out_text.get_buffer().get_end_iter(), False)
 
+        self.reg_a_val = cast(Gtk.Label, unwrap(self.builder.get_object("reg_a_val")))
+        self.reg_b_val = cast(Gtk.Label, unwrap(self.builder.get_object("reg_b_val")))
+        self.reg_c_val = cast(Gtk.Label, unwrap(self.builder.get_object("reg_c_val")))
+        self.reg_d_val = cast(Gtk.Label, unwrap(self.builder.get_object("reg_d_val")))
+
+        self.flags_val = cast(Gtk.Label, unwrap(self.builder.get_object("flags_val")))
+        self.pc_val = cast(Gtk.Label, unwrap(self.builder.get_object("pc_val")))
+        self.lr_val = cast(Gtk.Label, unwrap(self.builder.get_object("lr_val")))
+        self.sp_val = cast(Gtk.Label, unwrap(self.builder.get_object("sp_val")))
+
+
         self.tabs: List[SourceTab] = []
 
         self.started = False
@@ -112,6 +123,19 @@ class MainWindow(MainUI):
 
         if reason == StopReason.HALT:
             self.started = False
+
+        regs = self.dbg.get_registers()
+
+        self.reg_a_val.set_label(f"{regs['A']:02x}")
+        self.reg_b_val.set_label(f"{regs['B']:02x}")
+        self.reg_c_val.set_label(f"{regs['C']:02x}")
+        self.reg_d_val.set_label(f"{regs['D']:02x}")
+
+        self.flags_val.set_label(f"{regs['Flags']}")
+        self.pc_val.set_label(f"{regs['PC']:04x}")
+        self.lr_val.set_label(f"{regs['LR']:04x}")
+        self.sp_val.set_label(f"{regs['SP']:04x}")
+
 
     def on_debugger_out(self, msg: str) -> None:
         buffer = self.out_text.get_buffer()
