@@ -43,11 +43,21 @@
             ]
         },
         {
-            "name": "Python: CPU Ide",
+            "name": "Python: CPU Ide (with demo)",
             "type": "python",
             "request": "launch",
-            "cwd": "${workspaceFolder}/pycontrol/ide",
-            "program": "./cpuide.py",
+            "cwd": "${workspaceFolder}/demo",
+            "program": "${workspaceFolder}/pycontrol/ide/cpuide.py",
+            "args": ["add18.asm"]
+        },
+        {
+            "name": "Python: CPU Ide (remote X11)",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/demo",
+            "program": "${workspaceFolder}/pycontrol/ide/cpuide.py",
+            "env": {"DISPLAY": "localhost:11.0"},
+            "args": ["prime_sieve.asm"]
         }
     ]
 }
