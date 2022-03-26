@@ -41,6 +41,7 @@ class SourceTab:
         self.src.set_mark_attributes("breakpoint", brk_attr, 0)
 
         self.buffer = self.src.get_buffer()
+        self.buffer.connect("modified-changed", self.on_modified_changed)
 
         runc_attr = GtkSource.MarkAttributes()
         runc_attr.set_background(Gdk.RGBA(255/255.0, 241/255.0, 129/255.0, 1))
@@ -50,11 +51,25 @@ class SourceTab:
 
         self.filepath = filepath
         self.filename = os.path.basename(filepath)
-        self.label.set_label(self.filename)
 
         with open(filepath) as f:
             self.buffer.set_text(f.read())
 
+        self.buffer.set_modified(False)
+        self.update_label()
+
+    def update_label(self):
+        if self.buffer.get_modified():
+            self.label.set_markup(f"<b>{self.filename} *</b>")
+        else:
+            self.label.set_label(self.filename)
+
+    def save_file(self) -> None:
+        with open(self.filepath, "w") as f:
+            text = self.buffer.get_text(self.buffer.get_start_iter(), self.buffer.get_end_iter(), True);
+            f.write(text)
+        self.buffer.set_modified(False)
+        self.update_label()
 
     def notepad_args(self) -> Tuple[Gtk.Widget, Gtk.Widget]:
         return self.scroll, self.label
@@ -79,5 +94,8 @@ class SourceTab:
         cursor = self.buffer.create_source_mark(None, "run-cursor", iter)
 
         self.src.scroll_to_mark(cursor, 0.25, False, 0, 0.5)
+
+    def on_modified_changed(self, text_buffer: Gtk.TextBuffer) -> None:
+        self.update_label()
 
 

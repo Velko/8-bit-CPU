@@ -144,3 +144,6 @@ class MainWindow(MainUI):
 
         self.out_text.scroll_mark_onscreen(self.out_end_mark)
 
+    def on_file_save_activated(self, widget: Gtk.Widget) -> None:
+        for tab in self.tabs:
+            tab.save_file()

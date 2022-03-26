@@ -10,6 +10,10 @@
     <property name="label" translatable="yes">_Step into</property>
     <signal name="activate" handler="on_dbg_step_into_activated" swapped="no"/>
   </object>
+  <object class="GtkAction" id="file_save">
+    <property name="label" translatable="yes">_Save</property>
+    <signal name="activate" handler="on_file_save_activated" swapped="no"/>
+  </object>
   <object class="GtkApplicationWindow" id="main_window">
     <property name="can-focus">False</property>
     <property name="title">VelkoCPU IDE 0.1</property>
@@ -29,6 +33,22 @@
                 <property name="can-focus">False</property>
                 <property name="label" translatable="yes">_File</property>
                 <property name="use-underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <child>
+                      <object class="GtkMenuItem" id="file_save_mnitem">
+                        <property name="use-action-appearance">True</property>
+                        <property name="related-action">file_save</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="use-underline">True</property>
+                        <accelerator key="S" modifiers="GDK_CONTROL_MASK" signal="activate"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
