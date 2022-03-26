@@ -32,6 +32,7 @@ class MainWindow(MainUI):
         self.notebook = cast(Gtk.Notebook, unwrap(self.builder.get_object("notebook")))
 
         self.out_text = cast(Gtk.TextView, unwrap(self.builder.get_object("output_text")))
+        self.out_end_mark = self.out_text.get_buffer().create_mark("out_end", self.out_text.get_buffer().get_end_iter(), False)
 
         self.tabs: List[SourceTab] = []
 
@@ -109,7 +110,5 @@ class MainWindow(MainUI):
 
         buffer.insert(buffer.get_end_iter(), msg)
 
-        end_mark = buffer.create_mark("out_end", buffer.get_end_iter())
-
-        self.out_text.scroll_to_mark(end_mark, 0, False, 0, 0)
+        self.out_text.scroll_mark_onscreen(self.out_end_mark)
 

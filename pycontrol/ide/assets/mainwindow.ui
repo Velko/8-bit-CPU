@@ -150,27 +150,42 @@
             <property name="can-focus">False</property>
             <child>
               <object class="GtkBox">
+                <property name="width-request">250</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkScrolledWindow">
-                    <property name="width-request">250</property>
-                    <property name="height-request">150</property>
+                  <object class="GtkExpander">
                     <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="shadow-type">in</property>
+                    <property name="can-focus">False</property>
+                    <property name="expanded">True</property>
                     <child>
-                      <object class="GtkTextView" id="output_text">
+                      <object class="GtkScrolledWindow">
+                        <property name="width-request">250</property>
+                        <property name="height-request">150</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
-                        <property name="editable">False</property>
-                        <property name="monospace">True</property>
+                        <property name="shadow-type">in</property>
+                        <child>
+                          <object class="GtkTextView" id="output_text">
+                            <property name="visible">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="editable">False</property>
+                            <property name="monospace">True</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">Output</property>
                       </object>
                     </child>
                   </object>
                   <packing>
-                    <property name="expand">True</property>
+                    <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="position">0</property>
                   </packing>
