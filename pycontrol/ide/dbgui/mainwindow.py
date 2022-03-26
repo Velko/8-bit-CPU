@@ -7,6 +7,7 @@ import gi
 from dbgui.addrmap import AddrMap
 from dbgui.mainui import MainUI
 from dbgui.asproject import AsProject
+from dbgui import asset_file
 from libcpu.debug import Debugger, StopReason
 
 gi.require_version("Gtk", "3.0")
@@ -25,7 +26,7 @@ from libcpu.util import unwrap
 class MainWindow(MainUI):
     def __init__(self) -> None:
 
-        self.builder = Gtk.Builder.new_from_file("assets/mainwindow.ui")
+        self.builder = Gtk.Builder.new_from_file(asset_file("mainwindow.ui"))
         self.builder.connect_signals(self)
 
         self.window = cast(Gtk.ApplicationWindow, unwrap(self.builder.get_object("main_window")))

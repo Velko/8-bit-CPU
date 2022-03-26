@@ -13,7 +13,7 @@ class AsProject:
         self.lst_file = f'{no_ext}.lst'
 
     def compile(self):
-        path = os.path.dirname(self.main_file)
+        path = os.path.abspath(os.path.dirname(self.main_file))
         cpres = subprocess.run(['customasm', os.path.basename(self.main_file), '-f', 'binary', '-o', os.path.basename(self.bin_file)], cwd=path, capture_output=True)
 
         if cpres.returncode != 0:

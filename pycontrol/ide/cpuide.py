@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import localpath
+import sys
 
 import gi
 
@@ -11,7 +12,8 @@ from dbgui.mainwindow import MainWindow
 
 win = MainWindow()
 
-win.open_project("../../demo/add18.asm")
+if len(sys.argv) > 1:
+    win.open_project(sys.argv[1])
 
 win.window.show_all()
 
