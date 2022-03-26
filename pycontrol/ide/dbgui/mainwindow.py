@@ -83,7 +83,12 @@ class MainWindow(MainUI):
         self.dbg.on_stop = self.on_debugger_stop
         self.dbg.on_output = self.on_debugger_out
 
+        self.load_file_tabs()
+
+    def load_file_tabs(self) -> None:
         for f in self.addr_map.files():
+            if any(filter(lambda t: t.filepath == f, self.tabs)): continue
+
             tab = SourceTab(self)
             tab.load_file(f)
             self.notebook.append_page(*tab.notepad_args())
@@ -91,6 +96,8 @@ class MainWindow(MainUI):
 
     def on_compile_activated(self, widget: Gtk.Widget) -> None:
         self.asproj.compile()
+        self.addr_map.reload()
+        self.load_file_tabs()
 
     def on_debugger_stop(self, reason: StopReason, addr: int) -> None:
 

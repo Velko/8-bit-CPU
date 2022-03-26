@@ -16,11 +16,16 @@ class SourceTab:
     def __init__(self, owner: MainUI):
         self.owner = owner
         self.filename = "Untitled"
+        self.filepath = "temp"
 
         self.label = Gtk.Label(label=self.filename)
+        self.label.show()
+
         self.scroll = Gtk.ScrolledWindow()
+        self.scroll.show()
 
         self.src = GtkSource.View()
+        self.src.show()
         self.src.set_show_line_numbers(True)
         self.src.set_show_line_marks(True)
         self.src.set_highlight_current_line(True)
@@ -40,12 +45,13 @@ class SourceTab:
         runc_attr.set_background(Gdk.RGBA(255/255.0, 241/255.0, 129/255.0, 1))
         self.src.set_mark_attributes("run-cursor", runc_attr, 1)
 
-    def load_file(self, filename: str) -> None:
+    def load_file(self, filepath: str) -> None:
 
-        self.filename = os.path.basename(filename)
+        self.filepath = filepath
+        self.filename = os.path.basename(filepath)
         self.label.set_label(self.filename)
 
-        with open(filename) as f:
+        with open(filepath) as f:
             self.buffer.set_text(f.read())
 
 

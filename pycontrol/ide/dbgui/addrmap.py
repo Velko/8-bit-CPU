@@ -13,30 +13,38 @@ class AddrMapItem:
         return f'0x{self.addr:04x} | {self.filename} | {self.lineno}'
 
 class AddrMap:
+
+    LST_LINE_RX = re.compile("^.*?\|\s*([0-9A-Fa-f]+)\s*\|\s*(.*?):(\d+)")
+
     def __init__(self, filename: str) -> None:
 
-        rx = re.compile("^.*?\|\s*([0-9A-Fa-f]+)\s*\|\s*(.*?):(\d+)")
-
-        fnnoxt = os.path.splitext(filename)[0]
-
+        self.main_file = filename
         self.dir = os.path.dirname(filename)
 
+        self.reload()
+
+    def reload(self) -> None:
+
         self.by_addr: Dict[int, AddrMapItem] = dict()
-        self.all_files = [os.path.basename(filename)]
+        self.all_files = [os.path.basename(self.main_file)]
 
-        with open(f"{fnnoxt}.lst") as f:
-            for line in f:
-                m = rx.match(line)
-                if m:
-                    # in the customasm addrspan output mode, line numbers are 0-based, add 1
-                    item = AddrMapItem(int(m.group(1), base=16), m.group(2), int(m.group(3), base=10) + 1)
+        fnnoxt = os.path.splitext(self.main_file)[0]
+        lstfile = f"{fnnoxt}.lst"
 
-                    # we are generally interested in "latest" address for line, so replacing the
-                    # dictionary element works for us fine
-                    self.by_addr[item.addr] = item
+        if os.path.exists(lstfile):
+            with open(lstfile) as f:
+                for line in f:
+                    m = AddrMap.LST_LINE_RX.match(line)
+                    if m:
+                        # in the customasm addrspan output mode, line numbers are 0-based, add 1
+                        item = AddrMapItem(int(m.group(1), base=16), m.group(2), int(m.group(3), base=10) + 1)
 
-                    if item.filename not in self.all_files:
-                        self.all_files.append(item.filename)
+                        # we are generally interested in "latest" address for line, so replacing the
+                        # dictionary element works for us fine
+                        self.by_addr[item.addr] = item
+
+                        if item.filename not in self.all_files:
+                            self.all_files.append(item.filename)
 
         self.by_file_line = dict(map(lambda k: (f'{k.filename}:{k.lineno:06d}', k), self.by_addr.values()))
 
