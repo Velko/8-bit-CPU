@@ -30,6 +30,10 @@ class SourceTab:
         self.src.set_show_line_numbers(True)
         self.src.set_show_line_marks(True)
         self.src.set_highlight_current_line(True)
+        self.src.set_auto_indent(True)
+        self.src.set_tab_width(4)
+        self.src.set_insert_spaces_instead_of_tabs(True)
+
         self.scroll.add(self.src)
 
         self.src.set_property("monospace", True)
