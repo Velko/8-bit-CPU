@@ -15,39 +15,28 @@
 
 squares_start:
 
-    lea SP, stack
-
     clr D
 
 next_base:
-        push D
-
         mov B, D
         mov A, D
         swap B
+        shr B
 
         ldi C, 4
-        ldi D, 1
 next_bit:
-            lcmp A, D
-            beq skip_add
+            shr A
+            bcc skip_add
                 add A, B
 skip_add:
-            ror A; add A, B may wrap around, but we still have the extra bit in Carry
-
             dec C
             bne next_bit
 
         out A
 
-        pop D
         inc D
         ldi A, 16
         cmp D, A
         bcs next_base
 
     hlt
-
-stack_end:
-    #res 16
-stack:
