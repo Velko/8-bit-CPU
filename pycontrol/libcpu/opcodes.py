@@ -320,8 +320,12 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
         .add_step(PC.out, LR.load)\
         .add_step(ACalc.out, PC.load)
 
+    for l, r in permute_gp_regs_nsame():
+        builder.add_instruction("lcmp", l, r)\
+            .add_step(l.alu_l, r.alu_r, AndOr.out, Flags.calc)
+
     # create a bunch of NOPs to exceed 255 instructions
-    for n in range(8, 30):
+    for n in range(20, 30):
         builder.add_instruction(f"padding{n}")\
             .add_step()
 

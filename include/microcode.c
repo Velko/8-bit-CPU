@@ -1081,41 +1081,41 @@ const struct op_microcode microcode[] PROGMEM = {
     /* f6 rcall_imm  */
     { .default_steps = {0x17d558f9, 0x17e558ff, 0x17ea58ff},},
 
-    /* f7 padding8   */
-    { .default_steps = {0x17ff58ff},},
+    /* f7 lcmp_A_B   */
+    { .default_steps = {0x17ff04f6},},
 
-    /* f8 padding9   */
-    { .default_steps = {0x17ff58ff},},
+    /* f8 lcmp_A_C   */
+    { .default_steps = {0x17ff08f6},},
 
-    /* f9 padding10  */
-    { .default_steps = {0x17ff58ff},},
+    /* f9 lcmp_A_D   */
+    { .default_steps = {0x17ff0cf6},},
 
-    /* fa padding11  */
-    { .default_steps = {0x17ff58ff},},
+    /* fa lcmp_B_A   */
+    { .default_steps = {0x17ff01f6},},
 
-    /* fb padding12  */
-    { .default_steps = {0x17ff58ff},},
+    /* fb lcmp_B_C   */
+    { .default_steps = {0x17ff09f6},},
 
-    /* fc padding13  */
-    { .default_steps = {0x17ff58ff},},
+    /* fc lcmp_B_D   */
+    { .default_steps = {0x17ff0df6},},
 
-    /* fd padding14  */
-    { .default_steps = {0x17ff58ff},},
+    /* fd lcmp_C_A   */
+    { .default_steps = {0x17ff02f6},},
 
-    /* fe padding15  */
-    { .default_steps = {0x17ff58ff},},
+    /* fe lcmp_C_B   */
+    { .default_steps = {0x17ff06f6},},
 
-    /* ff padding16  */
-    { .default_steps = {0x17ff58ff},},
+    /* ff lcmp_C_D   */
+    { .default_steps = {0x17ff0ef6},},
 
-    /* 100 padding17  */
-    { .default_steps = {0x17ff58ff},},
+    /* 100 lcmp_D_A   */
+    { .default_steps = {0x17ff03f6},},
 
-    /* 101 padding18  */
-    { .default_steps = {0x17ff58ff},},
+    /* 101 lcmp_D_B   */
+    { .default_steps = {0x17ff07f6},},
 
-    /* 102 padding19  */
-    { .default_steps = {0x17ff58ff},},
+    /* 102 lcmp_D_C   */
+    { .default_steps = {0x17ff0bf6},},
 
     /* 103 padding20  */
     { .default_steps = {0x17ff58ff},},
