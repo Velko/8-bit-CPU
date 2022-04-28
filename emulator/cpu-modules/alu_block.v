@@ -23,16 +23,123 @@ module alu_block(
     wire cfb;
     wire vfb;
 
-    gp_register a(.bus(main_bus), .alu_l(alu_arg_l), .alu_r(alu_arg_r), .reset(rst), .clk(clk), .iclk(iclk), .outn(out_mux_l.y[0]), .loadn(load_mux_l.y[0]), .loutn(arg_l_mux.y[0]), .routn(arg_r_mux.y[0]));
-    gp_register b(.bus(main_bus), .alu_l(alu_arg_l), .alu_r(alu_arg_r), .reset(rst), .clk(clk), .iclk(iclk), .outn(out_mux_l.y[1]), .loadn(load_mux_l.y[1]), .loutn(arg_l_mux.y[1]), .routn(arg_r_mux.y[1]));
-    gp_register c(.bus(main_bus), .alu_l(alu_arg_l), .alu_r(alu_arg_r), .reset(rst), .clk(clk), .iclk(iclk), .outn(out_mux_l.y[2]), .loadn(load_mux_l.y[2]), .loutn(arg_l_mux.y[2]), .routn(arg_r_mux.y[2]));
-    gp_register d(.bus(main_bus), .alu_l(alu_arg_l), .alu_r(alu_arg_r), .reset(rst), .clk(clk), .iclk(iclk), .outn(out_mux_l.y[3]), .loadn(load_mux_l.y[3]), .loutn(arg_l_mux.y[3]), .routn(arg_r_mux.y[3]));
+    gp_register a(
+        .outn(out_mux_l.y[0]),
+        .loadn(load_mux_l.y[0]),
+        .loutn(arg_l_mux.y[0]),
+        .routn(arg_r_mux.y[0]),
 
-    alu_addsub addsub(.bus(main_bus), .arg_l(alu_arg_l), .arg_r(alu_arg_r), .outn(out_mux_l.y[5]), .sub(alt), .cin(cin), .vout(vfb), .cout(cfb));
-    alu_andor andor(.bus(main_bus), .arg_l(alu_arg_l), .arg_r(alu_arg_r), .outn(out_mux_l.y[6]), .fn_or(alt));
-    alu_xornot xornot(.bus(main_bus), .arg_l(alu_arg_l), .arg_r(alu_arg_r), .outn(out_mux_h.y[2]), .fn_not(alt));
-    alu_shiftswap shiftswap(.bus(main_bus), .arg_l(alu_arg_l), .outn(out_mux_l.y[7]), .fn_swap(alt), .cin(cin), .cout(cfb));
-    flags_reg flags(.bus(main_bus), .reset(rst), .clk(clk), .iclk(iclk), .boutn(out_mux_l.y[4]), .bloadn(load_mux_l.y[7]), .vin(vfb), .cin(cfb), .calcn(calcfn), .fout(fout));
+        .clk(clk),
+        .iclk(iclk),
+        .reset(rst),
+
+        .bus(main_bus),
+        .alu_l(alu_arg_l),
+        .alu_r(alu_arg_r)
+    );
+
+    gp_register b(
+        .outn(out_mux_l.y[1]),
+        .loadn(load_mux_l.y[1]),
+        .loutn(arg_l_mux.y[1]),
+        .routn(arg_r_mux.y[1]),
+
+        .clk(clk),
+        .iclk(iclk),
+        .reset(rst),
+
+        .bus(main_bus),
+        .alu_l(alu_arg_l),
+        .alu_r(alu_arg_r)
+    );
+
+    gp_register c(
+        .outn(out_mux_l.y[2]),
+        .loadn(load_mux_l.y[2]),
+        .loutn(arg_l_mux.y[2]),
+        .routn(arg_r_mux.y[2]),
+
+        .clk(clk),
+        .iclk(iclk),
+        .reset(rst),
+
+        .bus(main_bus),
+        .alu_l(alu_arg_l),
+        .alu_r(alu_arg_r)
+    );
+
+    gp_register d(
+        .outn(out_mux_l.y[3]),
+        .loadn(load_mux_l.y[3]),
+        .loutn(arg_l_mux.y[3]),
+        .routn(arg_r_mux.y[3]),
+
+        .clk(clk),
+        .iclk(iclk),
+        .reset(rst),
+
+        .bus(main_bus),
+        .alu_l(alu_arg_l),
+        .alu_r(alu_arg_r)
+    );
+
+    alu_addsub addsub(
+        .outn(out_mux_l.y[5]),
+        .sub(alt),
+
+        .bus(main_bus),
+        .arg_l(alu_arg_l),
+        .arg_r(alu_arg_r),
+
+        .cin(cin),
+        .vout(vfb),
+        .cout(cfb)
+    );
+
+    alu_andor andor(
+        .outn(out_mux_l.y[6]),
+        .fn_or(alt),
+
+        .bus(main_bus),
+        .arg_l(alu_arg_l),
+        .arg_r(alu_arg_r)
+    );
+
+    alu_xornot xornot(
+        .outn(out_mux_h.y[2]),
+        .fn_not(alt),
+
+        .bus(main_bus),
+        .arg_l(alu_arg_l),
+        .arg_r(alu_arg_r)
+    );
+
+    alu_shiftswap shiftswap(
+        .outn(out_mux_l.y[7]),
+        .fn_swap(alt),
+
+        .bus(main_bus),
+        .arg_l(alu_arg_l),
+
+        .cin(cin),
+        .cout(cfb)
+    );
+
+    flags_reg flags(
+        .boutn(out_mux_l.y[4]),
+        .bloadn(load_mux_l.y[7]),
+        .calcn(calcfn),
+
+        .clk(clk),
+        .iclk(iclk),
+        .reset(rst),
+
+        .bus(main_bus),
+        .fout(fout),
+
+        .vin(vfb),
+        .cin(cfb)
+    );
 
     demux_138 out_mux_l(.e1n(outctl[3]), .e2n(1'b0), .e3(1'b1), .a(outctl[2:0]));
     demux_138 load_mux_l(.e1n(loadctl[3]), .e2n(1'b0), .e3(1'b1), .a(loadctl[2:0]));
