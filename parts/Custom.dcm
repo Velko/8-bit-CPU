@@ -1,5 +1,17 @@
 EESchema-DOCLIB  Version 2.0
 #
+$CMP 74HC245
+D Octal BUS Transceivers, 3-State outputs
+K HCMOS BUS 3State
+F http://www.ti.com/lit/gpn/sn74HC245
+$ENDCMP
+#
+$CMP 74HC245-A2B
+D Octal BUS Transceivers, 3-State outputs
+K TTL BUS 3State
+F http://www.ti.com/lit/gpn/sn74LS245
+$ENDCMP
+#
 $CMP 74HC597
 D 8-bit parallel in Shift Register
 K HCMOS
