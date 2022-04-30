@@ -183,37 +183,37 @@ BUS6
 Text Label 3200 1500 1    50   ~ 0
 BUS7
 Text Label 4800 1500 1    50   ~ 0
-A0
+L0
 Text Label 4700 1500 1    50   ~ 0
-A1
+L1
 Text Label 4600 1500 1    50   ~ 0
-A2
+L2
 Text Label 4500 1500 1    50   ~ 0
-A3
+L3
 Text Label 4400 1500 1    50   ~ 0
-A4
+L4
 Text Label 4300 1500 1    50   ~ 0
-A5
+L5
 Text Label 4200 1500 1    50   ~ 0
-A6
+L6
 Text Label 4100 1500 1    50   ~ 0
-A7
+L7
 Text Label 4800 2650 1    50   ~ 0
-B0
+R0
 Text Label 4700 2650 1    50   ~ 0
-B1
+R1
 Text Label 4600 2650 1    50   ~ 0
-B2
+R2
 Text Label 4500 2650 1    50   ~ 0
-B3
+R3
 Text Label 4400 2650 1    50   ~ 0
-B4
+R4
 Text Label 4300 2650 1    50   ~ 0
-B5
+R5
 Text Label 4200 2650 1    50   ~ 0
-B6
+R6
 Text Label 4100 2650 1    50   ~ 0
-B7
+R7
 Wire Wire Line
 	4800 2550 4800 2650
 Wire Wire Line
@@ -398,37 +398,37 @@ BUS6
 Text Label 3200 3250 1    50   ~ 0
 BUS7
 Text Label 4800 3250 1    50   ~ 0
-A0
+L0
 Text Label 4700 3250 1    50   ~ 0
-A1
+L1
 Text Label 4600 3250 1    50   ~ 0
-A2
+L2
 Text Label 4500 3250 1    50   ~ 0
-A3
+L3
 Text Label 4400 3250 1    50   ~ 0
-A4
+L4
 Text Label 4300 3250 1    50   ~ 0
-A5
+L5
 Text Label 4200 3250 1    50   ~ 0
-A6
+L6
 Text Label 4100 3250 1    50   ~ 0
-A7
+L7
 Text Label 4800 4400 1    50   ~ 0
-B0
+R0
 Text Label 4700 4400 1    50   ~ 0
-B1
+R1
 Text Label 4600 4400 1    50   ~ 0
-B2
+R2
 Text Label 4500 4400 1    50   ~ 0
-B3
+R3
 Text Label 4400 4400 1    50   ~ 0
-B4
+R4
 Text Label 4300 4400 1    50   ~ 0
-B5
+R5
 Text Label 4200 4400 1    50   ~ 0
-B6
+R6
 Text Label 4100 4400 1    50   ~ 0
-B7
+R7
 Wire Wire Line
 	4800 4300 4800 4400
 Wire Wire Line
@@ -613,37 +613,37 @@ BUS6
 Text Label 3200 5000 1    50   ~ 0
 BUS7
 Text Label 4800 5000 1    50   ~ 0
-A0
+L0
 Text Label 4700 5000 1    50   ~ 0
-A1
+L1
 Text Label 4600 5000 1    50   ~ 0
-A2
+L2
 Text Label 4500 5000 1    50   ~ 0
-A3
+L3
 Text Label 4400 5000 1    50   ~ 0
-A4
+L4
 Text Label 4300 5000 1    50   ~ 0
-A5
+L5
 Text Label 4200 5000 1    50   ~ 0
-A6
+L6
 Text Label 4100 5000 1    50   ~ 0
-A7
+L7
 Text Label 4800 6150 1    50   ~ 0
-B0
+R0
 Text Label 4700 6150 1    50   ~ 0
-B1
+R1
 Text Label 4600 6150 1    50   ~ 0
-B2
+R2
 Text Label 4500 6150 1    50   ~ 0
-B3
+R3
 Text Label 4400 6150 1    50   ~ 0
-B4
+R4
 Text Label 4300 6150 1    50   ~ 0
-B5
+R5
 Text Label 4200 6150 1    50   ~ 0
-B6
+R6
 Text Label 4100 6150 1    50   ~ 0
-B7
+R7
 Wire Wire Line
 	4800 6050 4800 6150
 Wire Wire Line
@@ -828,37 +828,37 @@ BUS6
 Text Label 3200 6750 1    50   ~ 0
 BUS7
 Text Label 4800 6750 1    50   ~ 0
-A0
+L0
 Text Label 4700 6750 1    50   ~ 0
-A1
+L1
 Text Label 4600 6750 1    50   ~ 0
-A2
+L2
 Text Label 4500 6750 1    50   ~ 0
-A3
+L3
 Text Label 4400 6750 1    50   ~ 0
-A4
+L4
 Text Label 4300 6750 1    50   ~ 0
-A5
+L5
 Text Label 4200 6750 1    50   ~ 0
-A6
+L6
 Text Label 4100 6750 1    50   ~ 0
-A7
+L7
 Text Label 4800 7900 1    50   ~ 0
-B0
+R0
 Text Label 4700 7900 1    50   ~ 0
-B1
+R1
 Text Label 4600 7900 1    50   ~ 0
-B2
+R2
 Text Label 4500 7900 1    50   ~ 0
-B3
+R3
 Text Label 4400 7900 1    50   ~ 0
-B4
+R4
 Text Label 4300 7900 1    50   ~ 0
-B5
+R5
 Text Label 4200 7900 1    50   ~ 0
-B6
+R6
 Text Label 4100 7900 1    50   ~ 0
-B7
+R7
 Wire Wire Line
 	4800 7800 4800 7900
 Wire Wire Line
@@ -1091,21 +1091,21 @@ Connection ~ 5300 3050
 Wire Bus Line
 	5300 3050 5300 4500
 Text Label 8250 2650 1    50   ~ 0
-B0
+R0
 Text Label 8150 2650 1    50   ~ 0
-B1
+R1
 Text Label 8050 2650 1    50   ~ 0
-B2
+R2
 Text Label 7950 2650 1    50   ~ 0
-B3
+R3
 Text Label 7850 2650 1    50   ~ 0
-B4
+R4
 Text Label 7750 2650 1    50   ~ 0
-B5
+R5
 Text Label 7650 2650 1    50   ~ 0
-B6
+R6
 Text Label 7550 2650 1    50   ~ 0
-B7
+R7
 Entry Wire Line
 	7100 2700 7200 2800
 Entry Wire Line
@@ -1306,21 +1306,21 @@ Wire Wire Line
 Wire Wire Line
 	7550 4650 7550 4750
 Text Label 8250 4750 1    50   ~ 0
-B0
+R0
 Text Label 8150 4750 1    50   ~ 0
-B1
+R1
 Text Label 8050 4750 1    50   ~ 0
-B2
+R2
 Text Label 7950 4750 1    50   ~ 0
-B3
+R3
 Text Label 7850 4750 1    50   ~ 0
-B4
+R4
 Text Label 7750 4750 1    50   ~ 0
-B5
+R5
 Text Label 7650 4750 1    50   ~ 0
-B6
+R6
 Text Label 7550 4750 1    50   ~ 0
-B7
+R7
 Entry Wire Line
 	7100 4800 7200 4900
 Entry Wire Line
@@ -1521,21 +1521,21 @@ Wire Wire Line
 Wire Wire Line
 	7550 6700 7550 6800
 Text Label 8250 6800 1    50   ~ 0
-B0
+R0
 Text Label 8150 6800 1    50   ~ 0
-B1
+R1
 Text Label 8050 6800 1    50   ~ 0
-B2
+R2
 Text Label 7950 6800 1    50   ~ 0
-B3
+R3
 Text Label 7850 6800 1    50   ~ 0
-B4
+R4
 Text Label 7750 6800 1    50   ~ 0
-B5
+R5
 Text Label 7650 6800 1    50   ~ 0
-B6
+R6
 Text Label 7550 6800 1    50   ~ 0
-B7
+R7
 Entry Wire Line
 	7100 6850 7200 6950
 Entry Wire Line
@@ -1730,21 +1730,21 @@ Wire Wire Line
 Wire Wire Line
 	10600 2550 10600 2650
 Text Label 11300 2650 1    50   ~ 0
-B0
+R0
 Text Label 11200 2650 1    50   ~ 0
-B1
+R1
 Text Label 11100 2650 1    50   ~ 0
-B2
+R2
 Text Label 11000 2650 1    50   ~ 0
-B3
+R3
 Text Label 10900 2650 1    50   ~ 0
-B4
+R4
 Text Label 10800 2650 1    50   ~ 0
-B5
+R5
 Text Label 10700 2650 1    50   ~ 0
-B6
+R6
 Text Label 10600 2650 1    50   ~ 0
-B7
+R7
 Entry Wire Line
 	10150 2800 10050 2900
 Entry Wire Line
@@ -1819,69 +1819,69 @@ Connection ~ 8500 4900
 Wire Bus Line
 	8500 4900 8500 6950
 Text Label 8250 1500 1    50   ~ 0
-A0
+L0
 Text Label 8150 1500 1    50   ~ 0
-A1
+L1
 Text Label 8050 1500 1    50   ~ 0
-A2
+L2
 Text Label 7950 1500 1    50   ~ 0
-A3
+L3
 Text Label 7850 1500 1    50   ~ 0
-A4
+L4
 Text Label 7750 1500 1    50   ~ 0
-A5
+L5
 Text Label 7650 1500 1    50   ~ 0
-A6
+L6
 Text Label 7550 1500 1    50   ~ 0
-A7
+L7
 Text Label 11300 1500 1    50   ~ 0
-A0
+L0
 Text Label 11200 1500 1    50   ~ 0
-A1
+L1
 Text Label 11100 1500 1    50   ~ 0
-A2
+L2
 Text Label 11000 1500 1    50   ~ 0
-A3
+L3
 Text Label 10900 1500 1    50   ~ 0
-A4
+L4
 Text Label 10800 1500 1    50   ~ 0
-A5
+L5
 Text Label 10700 1500 1    50   ~ 0
-A6
+L6
 Text Label 10600 1500 1    50   ~ 0
-A7
+L7
 Text Label 8250 3600 1    50   ~ 0
-A0
+L0
 Text Label 8150 3600 1    50   ~ 0
-A1
+L1
 Text Label 8050 3600 1    50   ~ 0
-A2
+L2
 Text Label 7850 3600 1    50   ~ 0
-A4
+L4
 Text Label 7950 3600 1    50   ~ 0
-A3
+L3
 Text Label 7750 3600 1    50   ~ 0
-A5
+L5
 Text Label 7550 3600 1    50   ~ 0
-A7
+L7
 Text Label 7650 3600 1    50   ~ 0
-A6
+L6
 Text Label 8250 5650 1    50   ~ 0
-A0
+L0
 Text Label 8150 5650 1    50   ~ 0
-A1
+L1
 Text Label 8050 5650 1    50   ~ 0
-A2
+L2
 Text Label 7950 5650 1    50   ~ 0
-A3
+L3
 Text Label 7850 5650 1    50   ~ 0
-A4
+L4
 Text Label 7750 5650 1    50   ~ 0
-A5
+L5
 Text Label 7650 5650 1    50   ~ 0
-A6
+L6
 Text Label 7550 5650 1    50   ~ 0
-A7
+L7
 $Comp
 L CPU_Modules:Flags U9
 U 1 1 607C2303
@@ -2618,21 +2618,21 @@ Wire Wire Line
 	7250 8500 7250 8600
 Connection ~ 7250 8500
 Text Label 8250 8600 0    50   ~ 0
-B0
+R0
 Text Label 8250 8500 0    50   ~ 0
-B1
+R1
 Text Label 8250 8400 0    50   ~ 0
-B2
+R2
 Text Label 8250 8300 0    50   ~ 0
-B3
+R3
 Text Label 8250 8200 0    50   ~ 0
-B4
+R4
 Text Label 8250 8100 0    50   ~ 0
-B5
+R5
 Text Label 8250 8000 0    50   ~ 0
-B6
+R6
 Text Label 8250 7900 0    50   ~ 0
-B7
+R7
 Wire Wire Line
 	8250 7900 8400 7900
 Entry Wire Line
