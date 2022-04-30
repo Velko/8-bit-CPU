@@ -2099,23 +2099,12 @@ $Comp
 L Connector:Conn_01x08_Female J4
 U 1 1 60A3EB8D
 P 11750 3400
-F 0 "J4" H 11550 2850 50  0000 C CNN
-F 1 "OUT" H 11350 2850 50  0000 C CNN
+F 0 "J4" H 11700 3850 50  0000 C CNN
+F 1 "O/L_SEL" H 11450 3850 50  0000 C CNN
 F 2 "Connector_PinSocket_2.54mm:PinSocket_1x08_P2.54mm_Vertical" H 11750 3400 50  0001 C CNN
 F 3 "~" H 11750 3400 50  0001 C CNN
 	1    11750 3400
-	-1   0    0    1   
-$EndComp
-$Comp
-L Connector:Conn_01x04_Female J6
-U 1 1 60A41B94
-P 11750 2500
-F 0 "J6" H 11550 2200 50  0000 C CNN
-F 1 "LOAD" H 11350 2200 50  0000 C CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical" H 11750 2500 50  0001 C CNN
-F 3 "~" H 11750 2500 50  0001 C CNN
-	1    11750 2500
-	-1   0    0    1   
+	-1   0    0    -1  
 $EndComp
 $Comp
 L Connector:Conn_01x08_Female J7
@@ -2128,40 +2117,29 @@ F 3 "~" H 8850 6400 50  0001 C CNN
 	1    8850 6400
 	-1   0    0    1   
 $EndComp
-$Comp
-L Connector:Conn_01x04_Female J5
-U 1 1 60A67D60
-P 9400 4850
-F 0 "J5" V 9500 5000 50  0000 R CNN
-F 1 "FCTL" V 9500 4850 50  0000 R CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical" H 9400 4850 50  0001 C CNN
-F 3 "~" H 9400 4850 50  0001 C CNN
-	1    9400 4850
-	0    -1   1    0   
-$EndComp
-Text GLabel 11950 3700 2    50   Output ~ 0
+Text GLabel 13500 6050 2    50   Output ~ 0
 OUT_A
-Text GLabel 11950 3600 2    50   Output ~ 0
+Text GLabel 13500 6150 2    50   Output ~ 0
 OUT_B
-Text GLabel 11950 3500 2    50   Output ~ 0
+Text GLabel 13500 6250 2    50   Output ~ 0
 OUT_C
-Text GLabel 11950 3400 2    50   Output ~ 0
+Text GLabel 13500 6350 2    50   Output ~ 0
 OUT_D
-Text GLabel 11950 3300 2    50   Output ~ 0
+Text GLabel 13500 6550 2    50   Output ~ 0
 OUT_AS
-Text GLabel 11950 3200 2    50   Output ~ 0
+Text GLabel 13500 6650 2    50   Output ~ 0
 OUT_AO
-Text GLabel 11950 3100 2    50   Output ~ 0
+Text GLabel 13500 6750 2    50   Output ~ 0
 OUT_S
-Text GLabel 11950 3000 2    50   Output ~ 0
+Text GLabel 15350 6050 2    50   Output ~ 0
 OUT_XN
-Text GLabel 11950 2600 2    50   Output ~ 0
+Text GLabel 13500 7750 2    50   Output ~ 0
 LOAD_A
-Text GLabel 11950 2500 2    50   Output ~ 0
+Text GLabel 13500 7850 2    50   Output ~ 0
 LOAD_B
-Text GLabel 11950 2400 2    50   Output ~ 0
+Text GLabel 13500 7950 2    50   Output ~ 0
 LOAD_C
-Text GLabel 11950 2300 2    50   Output ~ 0
+Text GLabel 13500 8050 2    50   Output ~ 0
 LOAD_D
 Text GLabel 11350 6000 2    50   Input ~ 0
 ARG_AL
@@ -2377,8 +2355,6 @@ Text GLabel 9050 6400 2    50   Output ~ 0
 ARG_R2
 Text GLabel 9050 6500 2    50   Output ~ 0
 ALT
-NoConn ~ 9050 6600
-NoConn ~ 9050 6700
 Text GLabel 10350 6000 0    50   Input ~ 0
 ARG_L0
 Text GLabel 10350 6100 0    50   Input ~ 0
@@ -2848,6 +2824,305 @@ Connection ~ 5450 5050
 Wire Bus Line
 	5450 5050 5450 5350
 Wire Bus Line
+	5450 6450 5450 7050
+Connection ~ 5450 7050
+$Comp
+L 74xx:74LS138 U14
+U 1 1 63C43F29
+P 13000 6350
+F 0 "U14" H 12750 6800 50  0000 C CNN
+F 1 "74HC138" H 13200 6800 50  0000 C CNN
+F 2 "Package_SO:SOIC-16_3.9x9.9mm_P1.27mm" H 13000 6350 50  0001 C CNN
+F 3 "" H 13000 6350 50  0001 C CNN
+	1    13000 6350
+	1    0    0    -1  
+$EndComp
+$Comp
+L 74xx:74LS138 U15
+U 1 1 63C4A202
+P 13000 8050
+F 0 "U15" H 12750 8500 50  0000 C CNN
+F 1 "74HC138" H 13200 8500 50  0000 C CNN
+F 2 "Package_SO:SOIC-16_3.9x9.9mm_P1.27mm" H 13000 8050 50  0001 C CNN
+F 3 "" H 13000 8050 50  0001 C CNN
+	1    13000 8050
+	1    0    0    -1  
+$EndComp
+Text GLabel 9300 4650 3    50   Input ~ 0
+OUT_F
+Text GLabel 9400 4650 3    50   Input ~ 0
+LOAD_F
+Text GLabel 9500 4650 3    50   Input ~ 0
+F_CALC
+Text GLabel 9600 4650 3    50   Input ~ 0
+CARRY
+Text GLabel 13500 6450 2    50   Output ~ 0
+OUT_F
+Text GLabel 13500 8150 2    50   Output ~ 0
+LOAD_F
+$Comp
+L 74xx:74LS138 U16
+U 1 1 63CC5BFF
+P 14850 6350
+F 0 "U16" H 14600 6800 50  0000 C CNN
+F 1 "74HC138" H 15050 6800 50  0000 C CNN
+F 2 "Package_SO:SOIC-16_3.9x9.9mm_P1.27mm" H 14850 6350 50  0001 C CNN
+F 3 "" H 14850 6350 50  0001 C CNN
+	1    14850 6350
+	1    0    0    -1  
+$EndComp
+Text GLabel 12500 6050 0    50   Input ~ 0
+OUT_SEL0
+Text GLabel 12500 6150 0    50   Input ~ 0
+OUT_SEL1
+Text GLabel 12500 6250 0    50   Input ~ 0
+OUT_SEL2
+Text GLabel 12500 6750 0    50   Input ~ 0
+OUT_SEL3
+Text GLabel 14350 6050 0    50   Input ~ 0
+OUT_SEL0
+Text GLabel 14350 6150 0    50   Input ~ 0
+OUT_SEL1
+Text GLabel 14350 6250 0    50   Input ~ 0
+OUT_SEL2
+Text GLabel 14350 6550 0    50   Input ~ 0
+OUT_SEL3
+Text GLabel 12500 7750 0    50   Input ~ 0
+LOAD_SEL0
+Text GLabel 12500 7850 0    50   Input ~ 0
+LOAD_SEL1
+Text GLabel 12500 7950 0    50   Input ~ 0
+LOAD_SEL2
+Text GLabel 12500 8450 0    50   Input ~ 0
+LOAD_SEL3
+NoConn ~ 15350 6150
+NoConn ~ 15350 6250
+NoConn ~ 15350 6350
+NoConn ~ 15350 6450
+NoConn ~ 15350 6550
+NoConn ~ 15350 6650
+NoConn ~ 15350 6750
+$Comp
+L power:VCC #PWR044
+U 1 1 63EB74C0
+P 12450 6500
+F 0 "#PWR044" H 12450 6350 50  0001 C CNN
+F 1 "VCC" H 12550 6600 50  0000 C CNN
+F 2 "" H 12450 6500 50  0001 C CNN
+F 3 "" H 12450 6500 50  0001 C CNN
+	1    12450 6500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	12500 6550 12450 6550
+Wire Wire Line
+	12450 6550 12450 6500
+$Comp
+L power:GND #PWR042
+U 1 1 63EDE283
+P 11950 6700
+F 0 "#PWR042" H 11950 6450 50  0001 C CNN
+F 1 "GND" H 11850 6550 50  0000 C CNN
+F 2 "" H 11950 6700 50  0001 C CNN
+F 3 "" H 11950 6700 50  0001 C CNN
+	1    11950 6700
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	12500 6650 11950 6650
+Wire Wire Line
+	11950 6650 11950 6700
+$Comp
+L power:GND #PWR050
+U 1 1 63F06148
+P 14200 6800
+F 0 "#PWR050" H 14200 6550 50  0001 C CNN
+F 1 "GND" H 14100 6650 50  0000 C CNN
+F 2 "" H 14200 6800 50  0001 C CNN
+F 3 "" H 14200 6800 50  0001 C CNN
+	1    14200 6800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	14350 6650 14200 6650
+Wire Wire Line
+	14200 6650 14200 6750
+Wire Wire Line
+	14350 6750 14200 6750
+Connection ~ 14200 6750
+Wire Wire Line
+	14200 6750 14200 6800
+$Comp
+L power:VCC #PWR046
+U 1 1 63F54891
+P 13000 5750
+F 0 "#PWR046" H 13000 5600 50  0001 C CNN
+F 1 "VCC" H 13100 5850 50  0000 C CNN
+F 2 "" H 13000 5750 50  0001 C CNN
+F 3 "" H 13000 5750 50  0001 C CNN
+	1    13000 5750
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR051
+U 1 1 63F54CCF
+P 14850 5750
+F 0 "#PWR051" H 14850 5600 50  0001 C CNN
+F 1 "VCC" H 14950 5850 50  0000 C CNN
+F 2 "" H 14850 5750 50  0001 C CNN
+F 3 "" H 14850 5750 50  0001 C CNN
+	1    14850 5750
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR052
+U 1 1 63F5543B
+P 14850 7050
+F 0 "#PWR052" H 14850 6800 50  0001 C CNN
+F 1 "GND" H 14750 6900 50  0000 C CNN
+F 2 "" H 14850 7050 50  0001 C CNN
+F 3 "" H 14850 7050 50  0001 C CNN
+	1    14850 7050
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR047
+U 1 1 63F558A0
+P 13000 7050
+F 0 "#PWR047" H 13000 6800 50  0001 C CNN
+F 1 "GND" H 12900 6900 50  0000 C CNN
+F 2 "" H 13000 7050 50  0001 C CNN
+F 3 "" H 13000 7050 50  0001 C CNN
+	1    13000 7050
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR045
+U 1 1 63F7CD86
+P 12450 8200
+F 0 "#PWR045" H 12450 8050 50  0001 C CNN
+F 1 "VCC" H 12550 8300 50  0000 C CNN
+F 2 "" H 12450 8200 50  0001 C CNN
+F 3 "" H 12450 8200 50  0001 C CNN
+	1    12450 8200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:VCC #PWR048
+U 1 1 63F7D296
+P 13000 7450
+F 0 "#PWR048" H 13000 7300 50  0001 C CNN
+F 1 "VCC" H 13100 7550 50  0000 C CNN
+F 2 "" H 13000 7450 50  0001 C CNN
+F 3 "" H 13000 7450 50  0001 C CNN
+	1    13000 7450
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR049
+U 1 1 63F7D805
+P 13000 8750
+F 0 "#PWR049" H 13000 8500 50  0001 C CNN
+F 1 "GND" H 12900 8600 50  0000 C CNN
+F 2 "" H 13000 8750 50  0001 C CNN
+F 3 "" H 13000 8750 50  0001 C CNN
+	1    13000 8750
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR043
+U 1 1 63F7DCBD
+P 11950 8500
+F 0 "#PWR043" H 11950 8250 50  0001 C CNN
+F 1 "GND" H 11850 8350 50  0000 C CNN
+F 2 "" H 11950 8500 50  0001 C CNN
+F 3 "" H 11950 8500 50  0001 C CNN
+	1    11950 8500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	12500 8250 12450 8250
+Wire Wire Line
+	12450 8250 12450 8200
+Wire Wire Line
+	12500 8350 11950 8350
+Wire Wire Line
+	11950 8350 11950 8500
+$Comp
+L Device:C C6
+U 1 1 63FCDD8E
+P 14350 2300
+F 0 "C6" H 14400 2400 50  0000 L CNN
+F 1 "100nF" H 14400 2200 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" H 14388 2150 50  0001 C CNN
+F 3 "~" H 14350 2300 50  0001 C CNN
+	1    14350 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C7
+U 1 1 63FCE103
+P 14650 2300
+F 0 "C7" H 14700 2400 50  0000 L CNN
+F 1 "100nF" H 14700 2200 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" H 14688 2150 50  0001 C CNN
+F 3 "~" H 14650 2300 50  0001 C CNN
+	1    14650 2300
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C8
+U 1 1 63FCE416
+P 14950 2300
+F 0 "C8" H 15000 2400 50  0000 L CNN
+F 1 "100nF" H 15000 2200 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0805_2012Metric_Pad1.18x1.45mm_HandSolder" H 14988 2150 50  0001 C CNN
+F 3 "~" H 14950 2300 50  0001 C CNN
+	1    14950 2300
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	14050 2150 14350 2150
+Connection ~ 14050 2150
+Connection ~ 14350 2150
+Wire Wire Line
+	14350 2150 14650 2150
+Connection ~ 14650 2150
+Wire Wire Line
+	14650 2150 14950 2150
+Wire Wire Line
+	14950 2450 14650 2450
+Connection ~ 14050 2450
+Connection ~ 14350 2450
+Wire Wire Line
+	14350 2450 14050 2450
+Connection ~ 14650 2450
+Wire Wire Line
+	14650 2450 14350 2450
+NoConn ~ 13500 8250
+NoConn ~ 13500 8350
+NoConn ~ 13500 8450
+Text GLabel 11950 3100 2    50   Output ~ 0
+OUT_SEL0
+Text GLabel 11950 3200 2    50   Output ~ 0
+OUT_SEL1
+Text GLabel 11950 3300 2    50   Output ~ 0
+OUT_SEL2
+Text GLabel 11950 3400 2    50   Output ~ 0
+OUT_SEL3
+Text GLabel 11950 3500 2    50   Output ~ 0
+LOAD_SEL0
+Text GLabel 11950 3600 2    50   Output ~ 0
+LOAD_SEL1
+Text GLabel 11950 3700 2    50   Output ~ 0
+LOAD_SEL2
+Text GLabel 11950 3800 2    50   Output ~ 0
+LOAD_SEL3
+Text GLabel 9050 6600 2    50   Output ~ 0
+F_CALC
+Text GLabel 9050 6700 2    50   Output ~ 0
+CARRY
+Wire Bus Line
 	8500 7050 8500 8500
 Wire Bus Line
 	4200 8000 5350 8000
@@ -2858,7 +3133,7 @@ Wire Bus Line
 Wire Bus Line
 	4200 2750 5450 2750
 Wire Bus Line
-	5450 6450 5450 7050
+	5450 7050 5450 7900
 Wire Bus Line
 	5450 5050 8150 5050
 Wire Bus Line
@@ -2879,7 +3154,4 @@ Wire Bus Line
 	5450 2950 11200 2950
 Wire Bus Line
 	5450 3300 11200 3300
-Connection ~ 5450 7050
-Wire Bus Line
-	5450 7050 5450 7900
 $EndSCHEMATC
