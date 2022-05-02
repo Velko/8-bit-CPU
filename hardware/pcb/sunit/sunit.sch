@@ -565,13 +565,13 @@ F 3 "~" H 4600 5650 50  0001 C CNN
 $EndComp
 $Comp
 L 74xx:74LS125 U5
-U 3 1 5F962C3F
+U 4 1 5F962C3F
 P 2900 5950
 F 0 "U5" H 2850 5950 50  0000 C CNN
 F 1 "74HC125" H 3050 6100 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 2900 5950 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS126" H 2900 5950 50  0001 C CNN
-	3    2900 5950
+	4    2900 5950
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -1118,13 +1118,13 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS126" H 5550 1350 50  0001 C CNN
 $EndComp
 $Comp
 L 74xx:74LS125 U5
-U 4 1 60C2A1C3
+U 3 1 60C2A1C3
 P 9950 3100
 F 0 "U5" H 9900 3100 50  0000 C CNN
 F 1 "74HC125" H 10100 3250 50  0001 C CNN
 F 2 "Package_SO:SOIC-14_3.9x8.7mm_P1.27mm" H 9950 3100 50  0001 C CNN
 F 3 "http://www.ti.com/lit/gpn/sn74LS126" H 9950 3100 50  0001 C CNN
-	4    9950 3100
+	3    9950 3100
 	1    0    0    -1  
 $EndComp
 $Comp
