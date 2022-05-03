@@ -125,7 +125,7 @@ F 3 "http://www.ti.com/lit/gpn/sn74LS245" H 1450 5850 50  0001 C CNN
 $EndComp
 Text GLabel 10050 3300 0    50   BiDi ~ 0
 ABUS0
-Text GLabel 10400 3200 0    50   BiDi ~ 0
+Text GLabel 10050 3200 0    50   BiDi ~ 0
 ABUS1
 Text GLabel 10400 3100 0    50   BiDi ~ 0
 ABUS2
@@ -1321,11 +1321,11 @@ Wire Wire Line
 	2700 1900 2700 1800
 Connection ~ 2700 1900
 Text GLabel 900  4300 0    50   Input ~ 0
-MLOAD
+ALOAD
 Wire Wire Line
 	900  4300 950  4300
 Text GLabel 2650 4300 0    50   Input ~ 0
-MLOAD
+ALOAD
 Wire Wire Line
 	2650 4300 2700 4300
 $Comp
@@ -1697,8 +1697,8 @@ $Comp
 L Jumper:SolderJumper_2_Open JP1
 U 1 1 613AB4FF
 P 10250 3300
-F 0 "JP1" H 10150 3350 50  0000 C CNN
-F 1 "L" H 10250 3400 50  0001 C CNN
+F 0 "JP1" H 10150 3200 50  0000 C CNN
+F 1 "LOW" H 10250 3400 50  0001 C CNN
 F 2 "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm" H 10250 3300 50  0001 C CNN
 F 3 "~" H 10250 3300 50  0001 C CNN
 	1    10250 3300
@@ -1706,4 +1706,17 @@ F 3 "~" H 10250 3300 50  0001 C CNN
 $EndComp
 Wire Wire Line
 	10050 3300 10100 3300
+$Comp
+L Jumper:SolderJumper_2_Open JP2
+U 1 1 6275440A
+P 10250 3200
+F 0 "JP2" H 10450 3000 50  0000 C CNN
+F 1 "L" H 10250 3300 50  0001 C CNN
+F 2 "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm" H 10250 3200 50  0001 C CNN
+F 3 "~" H 10250 3200 50  0001 C CNN
+	1    10250 3200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	10050 3200 10100 3200
 $EndSCHEMATC
