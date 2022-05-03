@@ -44,7 +44,7 @@
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="use-underline">True</property>
-                        <accelerator key="S" modifiers="GDK_CONTROL_MASK" signal="activate"/>
+                        <accelerator key="S" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
                   </object>
@@ -180,196 +180,212 @@
                     <property name="can-focus">False</property>
                     <property name="expanded">True</property>
                     <child>
+                      <!-- n-columns=4 n-rows=4 -->
                       <object class="GtkGrid">
                         <property name="width-request">250</property>
-                        <property name="height-request">100</property>
-                        <property name="column-homogeneous">True</property>
-                        <property name="row-homogeneous">True</property>
+                        <property name="height-request">80</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
+                        <property name="column-homogeneous">True</property>
                         <child>
-                            <object class="GtkLabel">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="label">A</property>
-                            </object>
-                            <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">0</property>
-                            </packing>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label">A</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">0</property>
+                            <property name="top-attach">0</property>
+                          </packing>
                         </child>
                         <child>
-                            <object class="GtkLabel">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="label">B</property>
-                            </object>
-                            <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">1</property>
-                            </packing>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label">B</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">0</property>
+                            <property name="top-attach">1</property>
+                          </packing>
                         </child>
                         <child>
-                            <object class="GtkLabel">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="label">C</property>
-                            </object>
-                            <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">2</property>
-                            </packing>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label">C</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">0</property>
+                            <property name="top-attach">2</property>
+                          </packing>
                         </child>
                         <child>
-                            <object class="GtkLabel">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="label">D</property>
-                            </object>
-                            <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">3</property>
-                            </packing>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label">D</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">0</property>
+                            <property name="top-attach">3</property>
+                          </packing>
                         </child>
                         <child>
-                            <object class="GtkLabel">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="label">Flags</property>
-                            </object>
-                            <packing>
-                                <property name="left_attach">2</property>
-                                <property name="top_attach">0</property>
-                            </packing>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label">Flags</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">2</property>
+                            <property name="top-attach">0</property>
+                          </packing>
                         </child>
                         <child>
-                            <object class="GtkLabel">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="label">PC</property>
-                            </object>
-                            <packing>
-                                <property name="left_attach">2</property>
-                                <property name="top_attach">1</property>
-                            </packing>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label">PC</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">2</property>
+                            <property name="top-attach">1</property>
+                          </packing>
                         </child>
                         <child>
-                            <object class="GtkLabel">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="label">LR</property>
-                            </object>
-                            <packing>
-                                <property name="left_attach">2</property>
-                                <property name="top_attach">2</property>
-                            </packing>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label">LR</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">2</property>
+                            <property name="top-attach">2</property>
+                          </packing>
                         </child>
                         <child>
-                            <object class="GtkLabel">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="label">SP</property>
-                            </object>
-                            <packing>
-                                <property name="left_attach">2</property>
-                                <property name="top_attach">3</property>
-                            </packing>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label">SP</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">2</property>
+                            <property name="top-attach">3</property>
+                          </packing>
                         </child>
                         <child>
-                            <object class="GtkLabel" id="reg_a_val">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="use-markup">True</property>
-                                <property name="label">&lt;tt&gt;00&lt;/tt&gt;</property>
-                            </object>
-                            <packing>
-                                <property name="left_attach">1</property>
-                                <property name="top_attach">0</property>
-                            </packing>
+                          <object class="GtkLabel" id="reg_a_val">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label">00</property>
+                            <attributes>
+                              <attribute name="font-desc" value="DejaVu Sans Mono 10"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="left-attach">1</property>
+                            <property name="top-attach">0</property>
+                          </packing>
                         </child>
                         <child>
-                            <object class="GtkLabel" id="reg_b_val">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="use-markup">True</property>
-                                <property name="label">&lt;tt&gt;00&lt;/tt&gt;</property>
-                            </object>
-                            <packing>
-                                <property name="left_attach">1</property>
-                                <property name="top_attach">1</property>
-                            </packing>
+                          <object class="GtkLabel" id="reg_b_val">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label">00</property>
+                            <attributes>
+                              <attribute name="font-desc" value="DejaVu Sans Mono 10"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="left-attach">1</property>
+                            <property name="top-attach">1</property>
+                          </packing>
                         </child>
                         <child>
-                            <object class="GtkLabel" id="reg_c_val">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="use-markup">True</property>
-                                <property name="label">&lt;tt&gt;00&lt;/tt&gt;</property>
-                            </object>
-                            <packing>
-                                <property name="left_attach">1</property>
-                                <property name="top_attach">2</property>
-                            </packing>
+                          <object class="GtkLabel" id="reg_c_val">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label">00</property>
+                            <attributes>
+                              <attribute name="font-desc" value="DejaVu Sans Mono 10"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="left-attach">1</property>
+                            <property name="top-attach">2</property>
+                          </packing>
                         </child>
                         <child>
-                            <object class="GtkLabel" id="reg_d_val">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="use-markup">True</property>
-                                <property name="label">&lt;tt&gt;00&lt;/tt&gt;</property>
-                            </object>
-                            <packing>
-                                <property name="left_attach">1</property>
-                                <property name="top_attach">3</property>
-                            </packing>
+                          <object class="GtkLabel" id="reg_d_val">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label">00</property>
+                            <attributes>
+                              <attribute name="font-desc" value="DejaVu Sans Mono 10"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="left-attach">1</property>
+                            <property name="top-attach">3</property>
+                          </packing>
                         </child>
                         <child>
-                            <object class="GtkLabel" id="flags_val">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="use-markup">True</property>
-                                <property name="label">&lt;tt&gt;----&lt;/tt&gt;</property>
-                            </object>
-                            <packing>
-                                <property name="left_attach">3</property>
-                                <property name="top_attach">0</property>
-                            </packing>
+                          <object class="GtkLabel" id="flags_val">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label">----</property>
+                            <attributes>
+                              <attribute name="font-desc" value="DejaVu Sans Mono 10"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="left-attach">3</property>
+                            <property name="top-attach">0</property>
+                          </packing>
                         </child>
                         <child>
-                            <object class="GtkLabel" id="pc_val">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="use-markup">True</property>
-                                <property name="label">&lt;tt&gt;0000&lt;/tt&gt;</property>
-                            </object>
-                            <packing>
-                                <property name="left_attach">3</property>
-                                <property name="top_attach">1</property>
-                            </packing>
+                          <object class="GtkLabel" id="pc_val">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label">0000</property>
+                            <attributes>
+                              <attribute name="font-desc" value="DejaVu Sans Mono 10"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="left-attach">3</property>
+                            <property name="top-attach">1</property>
+                          </packing>
                         </child>
                         <child>
-                            <object class="GtkLabel" id="lr_val">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="use-markup">True</property>
-                                <property name="label">&lt;tt&gt;0000&lt;/tt&gt;</property>
-                            </object>
-                            <packing>
-                                <property name="left_attach">3</property>
-                                <property name="top_attach">2</property>
-                            </packing>
+                          <object class="GtkLabel" id="lr_val">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label">0000</property>
+                            <attributes>
+                              <attribute name="font-desc" value="DejaVu Sans Mono 10"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="left-attach">3</property>
+                            <property name="top-attach">2</property>
+                          </packing>
                         </child>
                         <child>
-                            <object class="GtkLabel" id="sp_val">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="use-markup">True</property>
-                                <property name="label">&lt;tt&gt;0000&lt;/tt&gt;</property>
-                            </object>
-                            <packing>
-                                <property name="left_attach">3</property>
-                                <property name="top_attach">3</property>
-                            </packing>
+                          <object class="GtkLabel" id="sp_val">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label">0000</property>
+                            <attributes>
+                              <attribute name="font-desc" value="DejaVu Sans Mono 10"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="left-attach">3</property>
+                            <property name="top-attach">3</property>
+                          </packing>
                         </child>
                       </object>
                     </child>
