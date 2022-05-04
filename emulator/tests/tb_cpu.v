@@ -16,11 +16,23 @@ module tb_cpu;
     reg [31:0] control_word;
     wire [31:0] wcontrol_word;
 
-    cpu processor(.main_bus(main_bus), .addr_bus(addr_bus), .rst(rst), .clk(clk), .iclk(iclk), .control_word(wcontrol_word), .ctrlen(1'b1));
+    reg out_rst;
+
+    cpu processor(
+        .main_bus(main_bus),
+        .addr_bus(addr_bus),
+        .rst(rst),
+        .clk(clk),
+        .iclk(iclk),
+        .control_word(wcontrol_word),
+        .ctrlen(1'b1),
+        .out_rst(out_rst)
+    );
 
     initial begin
         $display("Whole CPU...");
         fdata <= 0;
+        out_rst <= 0;
 
         // clear, reset
         rst <= 1;

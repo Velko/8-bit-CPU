@@ -234,3 +234,30 @@ Some links
 ==========
 https://alternatezone.com/electronics/files/PCBDesignTutorialRevA.pdf
 https://designingelectronics.com/
+
+PCB order batches
+=================
+
+v1.0
+----
+    * Register 1.0
+    * Add/Sub 1.0
+    * Flags 1.0
+    * EEPROM burner 1.0
+
+v1.1
+----
+    * Flags 2.1
+    * Add/Sub 1.2
+    * ALU backplane 1.0
+
+v1.2
+----
+    * And/Or 1.0
+    * Display Backend 1.0
+    * Display Frontend 1.0
+    * Transfer Register 1.0
+    * Program Counter 1.0
+    * Flash Writer 1.0
+
+
