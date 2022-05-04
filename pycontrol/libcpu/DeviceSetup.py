@@ -1,6 +1,6 @@
 from . import devices as dev
 from .pseudo_devices import RamProxy
-from .pin import Pin, NullPin, Level, Mux, MuxPin
+from .pin import Pin, NullPin, Level, Mux, MuxPin, AliasedPin
 
 OutMux = Mux("OutMux", [0, 1, 2, 3], 15) # bits 0-3 in Control Word, defaults to 15
 LoadMux = Mux("LoadMux", [4, 5, 6, 7], 15)
@@ -78,10 +78,12 @@ StepCounter = dev.StepCounter("Steps",
     reset = Pin(24, Level.LOW),
     extended = Pin(25, Level.LOW))
 
+pc_out_inc = MuxPin(AddrOutMux, 5)
+
 PC = dev.ProgramCounter("PC",
-    out = MuxPin(AddrOutMux, 5),
+    out = pc_out_inc,
     load = MuxPin(AddrLoadMux, 5),
-    inc = NullPin())
+    inc = AliasedPin(pc_out_inc))
 
 SP = dev.StackPointer("SP",
     out = MuxPin(AddrOutMux, 3),

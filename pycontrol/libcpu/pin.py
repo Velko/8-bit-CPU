@@ -76,6 +76,23 @@ class NullPin(PinBase):
     def is_enabled(self) -> bool:
         return self._is_enabled
 
+class AliasedPin(PinBase):
+    def __init__(self, target: PinBase) -> None:
+        PinBase.__init__(self)
+        self.target = target
+
+    def connect(self, control_word: CtrlBase) -> None:
+        pass
+
+    def enable(self) -> None:
+        self.target.enable()
+
+    def disable(self) -> None:
+        self.target.disable()
+
+    def is_enabled(self) -> bool:
+        return self.target.is_enabled()
+
 class Mux:
     def __init__(self, name: str, pins: Sequence[int], default: int) -> None:
         self.name = name
