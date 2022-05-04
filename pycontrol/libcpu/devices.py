@@ -112,8 +112,3 @@ class AddressCalculator(Register):
     def __init__(self, name: str, out: PinBase, load: PinBase) -> None:
         Register.__init__(self, name, out, load)
 
-# Helper device for debugger
-class IRFetch:
-    def __init__(self, name: str, load: PinBase) -> None:
-        self.name = name
-        self.load = load

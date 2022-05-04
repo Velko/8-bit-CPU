@@ -3,7 +3,7 @@
 import pytest
 
 from libcpu.cpu import *
-from libcpu.DeviceSetup import IR, IRFetch, TH,TL, TX
+from libcpu.DeviceSetup import IR, TH,TL, TX
 from libcpu.test_helpers import CPUHelper
 from libcpu.DeviceSetup import AddSub as alu
 from typing import Iterator
@@ -58,10 +58,7 @@ def test_ir_load(cpu_helper: CPUHelper, expected: int) -> None:
     backend.client.ctrl_commit(backend.control.c_word)
     backend.client.clock_tick()
 
-    backend.control.reset()
-    IRFetch.load.enable()
-
-    readback = backend.client.ir_get(backend.control.c_word)
+    readback = backend.client.ir_get()
 
     backend.control.reset()
     backend.client.off(backend.control.default)

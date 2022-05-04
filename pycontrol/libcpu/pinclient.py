@@ -82,8 +82,8 @@ class PinClient:
     def clock_tick(self) -> None:
         self.send_cmd('T')
 
-    def ir_get(self, c_word: int) -> int:
-        return int(self.query("r{}N".format(c_word)))
+    def ir_get(self) -> int:
+        return int(self.query("r0N"))
 
     def run_program(self) -> Iterator[RunMessage]:
         self.send_cmd('R')

@@ -1,7 +1,7 @@
 from typing import Union, Tuple, Optional, Sequence
 from .markers import AddrBase
 from .pseudo_devices import Imm
-from .DeviceSetup import COutPort, IRFetch, OutPort, ProgMem, PC, Flags, StepCounter
+from .DeviceSetup import COutPort, OutPort, ProgMem, PC, Flags, StepCounter
 from .opcodes import opcodes, ops_by_code, fetch
 from .pinclient import PinClient
 from .ctrl_word import CtrlWord
@@ -19,11 +19,6 @@ class CPUBackendControl:
         self.flags_cache: Optional[int] = None
         self.opcode_cache: Optional[int] = None
         self.op_extension = 0
-
-        # prepare control word for IRFetch
-        self.control.reset()
-        IRFetch.load.enable()
-        self.irf_word = self.control.c_word
 
         # RAM hooks
         Imm.connect(self.client)
@@ -111,7 +106,7 @@ class CPUBackendControl:
 
     def get_opcode_cached(self) -> int:
         if self.opcode_cache is None:
-            self.opcode_cache = self.client.ir_get(self.irf_word) + (self.op_extension * 0x100)
+            self.opcode_cache = self.client.ir_get() + (self.op_extension * 0x100)
 
         if self.opcode_cache >= len(ops_by_code):
             raise InvalidOpcodeException(self.opcode_cache)

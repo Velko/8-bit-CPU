@@ -120,9 +120,7 @@ class TesterClient(cmd.Cmd):
         backend.client.clock_tick()
 
     def do_ir_get(self, arg: str) -> None:
-        backend.control.reset()
-        pin_map['irfetch.load'].enable()
-        rv = backend.client.ir_get(backend.control.c_word)
+        rv = backend.client.ir_get()
         print (rv)
 
 

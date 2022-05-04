@@ -78,9 +78,6 @@ StepCounter = dev.StepCounter("Steps",
     reset = Pin(24, Level.LOW),
     extended = Pin(25, Level.LOW))
 
-IRFetch = dev.IRFetch("IRFetch",
-    load = Pin(28, Level.LOW))
-
 PC = dev.ProgramCounter("PC",
     out = MuxPin(AddrOutMux, 5),
     load = MuxPin(AddrLoadMux, 5),
