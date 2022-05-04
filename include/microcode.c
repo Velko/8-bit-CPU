@@ -1117,29 +1117,29 @@ const struct op_microcode microcode[] PROGMEM = {
     /* 102 lcmp_D_C   */
     { .default_steps = {0x07ff0bf6},},
 
-    /* 103 padding20  */
-    { .default_steps = {0x07ff58ff},},
+    /* 103 out_imm_A  */
+    { .default_steps = {0x07fd5849, 0x07ff5850},},
 
-    /* 104 padding21  */
-    { .default_steps = {0x07ff58ff},},
+    /* 104 out_imm_B  */
+    { .default_steps = {0x07fd5849, 0x07ff5851},},
 
-    /* 105 padding22  */
-    { .default_steps = {0x07ff58ff},},
+    /* 105 out_imm_C  */
+    { .default_steps = {0x07fd5849, 0x07ff5852},},
 
-    /* 106 padding23  */
-    { .default_steps = {0x07ff58ff},},
+    /* 106 out_imm_D  */
+    { .default_steps = {0x07fd5849, 0x07ff5853},},
 
-    /* 107 padding24  */
-    { .default_steps = {0x07ff58ff},},
+    /* 107 in_A_imm   */
+    { .default_steps = {0x07fd5849, 0x07ff5808},},
 
-    /* 108 padding25  */
-    { .default_steps = {0x07ff58ff},},
+    /* 108 in_B_imm   */
+    { .default_steps = {0x07fd5849, 0x07ff5818},},
 
-    /* 109 padding26  */
-    { .default_steps = {0x07ff58ff},},
+    /* 109 in_C_imm   */
+    { .default_steps = {0x07fd5849, 0x07ff5828},},
 
-    /* 10a padding27  */
-    { .default_steps = {0x07ff58ff},},
+    /* 10a in_D_imm   */
+    { .default_steps = {0x07fd5849, 0x07ff5838},},
 
     /* 10b padding28  */
     { .default_steps = {0x07ff58ff},},

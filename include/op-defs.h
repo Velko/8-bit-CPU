@@ -261,14 +261,14 @@
 #define OP_LCMP_D_A            0x100
 #define OP_LCMP_D_B            0x101
 #define OP_LCMP_D_C            0x102
-#define OP_PADDING20           0x103
-#define OP_PADDING21           0x104
-#define OP_PADDING22           0x105
-#define OP_PADDING23           0x106
-#define OP_PADDING24           0x107
-#define OP_PADDING25           0x108
-#define OP_PADDING26           0x109
-#define OP_PADDING27           0x10a
+#define OP_OUT_IMM_A           0x103
+#define OP_OUT_IMM_B           0x104
+#define OP_OUT_IMM_C           0x105
+#define OP_OUT_IMM_D           0x106
+#define OP_IN_A_IMM            0x107
+#define OP_IN_B_IMM            0x108
+#define OP_IN_C_IMM            0x109
+#define OP_IN_D_IMM            0x10a
 #define OP_PADDING28           0x10b
 #define OP_PADDING29           0x10c
 #define OP_DUMMYEXT_IMM        0x10d
@@ -293,6 +293,7 @@
 #define MPIN_RAM_OUT_BITS               0b00000000000000000000000000001001
 #define MPIN_TH_OUT_BITS                0b00000000000000000000000000001100
 #define MPIN_TL_OUT_BITS                0b00000000000000000000000000001011
+#define MPIN_IOCTL_FROM_DEV_BITS        0b00000000000000000000000000001000
 
 #define MUX_LOAD_MASK                   0b00000000000000000000000011110000
 #define MPIN_A_LOAD_BITS                0b00000000000000000000000000000000
@@ -306,6 +307,8 @@
 #define MPIN_COUT_LOAD_BITS             0b00000000000000000000000010100000
 #define MPIN_TH_LOAD_BITS               0b00000000000000000000000011000000
 #define MPIN_TL_LOAD_BITS               0b00000000000000000000000010110000
+#define MPIN_IOCTL_LADDR_BITS           0b00000000000000000000000001000000
+#define MPIN_IOCTL_TO_DEV_BITS          0b00000000000000000000000001010000
 
 #define MUX_ALUARGL_MASK                0b00000000000000000000001100000000
 #define MPIN_A_ALU_L_BITS               0b00000000000000000000000000000000
