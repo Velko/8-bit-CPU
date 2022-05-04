@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import os.path
+from socket import timeout
 from typing import List, cast
 import gi
 
@@ -12,7 +13,8 @@ from libcpu.debug import Debugger, StopReason
 
 gi.require_version("Gtk", "3.0")
 gi.require_version("GtkSource", "4")
-from gi.repository import Gtk
+gi.require_version("Vte", "2.91")
+from gi.repository import Gtk, Vte, GLib
 
 # Helpful reference
 # https://lazka.github.io/pgi-docs/Gtk-3.0/index.html
@@ -45,6 +47,36 @@ class MainWindow(MainUI):
         self.lr_val = cast(Gtk.Label, unwrap(self.builder.get_object("lr_val")))
         self.sp_val = cast(Gtk.Label, unwrap(self.builder.get_object("sp_val")))
 
+        self.term_scroll = cast(Gtk.ScrolledWindow, unwrap(self.builder.get_object("term_scroll")))
+        self.terminal = Vte.Terminal()
+        self.term_scroll.add(self.terminal)
+
+
+        #spawn_async(self,
+        # pty_flags:Vte.PtyFlags,
+        # working_directory:str=None,
+        # argv:list,
+        # envv:list=None,
+        # spawn_flags:GLib.SpawnFlags,
+
+        # child_setup:GLib.SpawnChildSetupFunc=None,
+        # timeout:int,
+        # cancellable:Gio.Cancellable=None,
+        # callback:Vte.TerminalSpawnAsyncCallback=None,
+        # user_data=None)
+
+        self.terminal.spawn_async(
+                Vte.PtyFlags.DEFAULT, #pty_flags
+                os.environ['HOME'], #working_directory
+                ["/bin/sh"], #argv
+                [], #envv
+                GLib.SpawnFlags.DO_NOT_REAP_CHILD | GLib.SpawnFlags.LEAVE_DESCRIPTORS_OPEN , #spawn_flags
+                None, #child_setup
+                None, #cancellable
+                -1, #timeout
+                None, #callback
+                None #user_data
+                )
 
         self.tabs: List[SourceTab] = []
 
