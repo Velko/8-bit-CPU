@@ -105,23 +105,6 @@ def cmp(target: Register, arg: Register) -> None:
     opcode = "cmp_{}_{}".format(target.name, arg.name)
     backend.execute_mnemonic(opcode)
 
-def out(source: Register) -> None:
-    if backend is None: raise UninitializedError
-    opcode = "out_{}".format(source.name)
-    _, out_val = backend.execute_mnemonic(opcode)
-
-    assert out_val is not None
-    print ("{}".format(out_val), flush=True)
-
-def cout(source: Register) -> None:
-    if backend is None: raise UninitializedError
-    opcode = "cout_{}".format(source.name)
-    _, out_val = backend.execute_mnemonic(opcode)
-
-    assert out_val is not None
-    print (chr(out_val), flush=True, end="")
-
-
 def mov(target: Register, source: Register) -> None:
     if backend is None: raise UninitializedError
     opcode = "mov_{}_{}".format(target.name, source.name)

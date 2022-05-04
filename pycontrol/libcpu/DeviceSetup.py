@@ -98,14 +98,6 @@ LR = dev.ProgramCounter("LR",
     load = MuxPin(AddrLoadMux, 4),
     inc = NullPin())
 
-OutPort = dev.Register("Out",
-    out = NullPin(),
-    load = MuxPin(LoadMux, 6))
-
-COutPort = dev.Register("Cout",
-    out = NullPin(),
-    load = MuxPin(LoadMux, 10))
-
 TX = dev.TransferRegister("TX",
     out = MuxPin(AddrOutMux, 0),
     load = MuxPin(AddrLoadMux, 0))

@@ -123,12 +123,14 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
             .add_step(al.load, ar.out)
 
     for r in gp_regs:
-        builder.add_instruction("iout", r)\
-            .add_step(r.out, OutPort.load)
+        builder.add_instruction("out", OpcodeArg.BYTE, r)\
+            .add_step(PC.out, PC.inc, ProgMem.out, IOCtl.laddr)\
+            .add_step(r.out, IOCtl.to_dev)
 
     for r in gp_regs:
-        builder.add_instruction("cout", r)\
-            .add_step(r.out, COutPort.load)
+        builder.add_instruction("in", r, OpcodeArg.BYTE)\
+            .add_step(PC.out, PC.inc, ProgMem.out, IOCtl.laddr)\
+            .add_step(r.load, IOCtl.from_dev)
 
     for v in gp_regs:
         builder.add_instruction("st", OpcodeArg.ADDR, v)\
@@ -324,18 +326,8 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
         builder.add_instruction("lcmp", l, r)\
             .add_step(l.alu_l, r.alu_r, AndOr.out, Flags.calc)
 
-    for r in gp_regs:
-        builder.add_instruction("out", OpcodeArg.BYTE, r)\
-            .add_step(PC.out, PC.inc, ProgMem.out, IOCtl.laddr)\
-            .add_step(r.out, IOCtl.to_dev)
-
-    for r in gp_regs:
-        builder.add_instruction("in", r, OpcodeArg.BYTE)\
-            .add_step(PC.out, PC.inc, ProgMem.out, IOCtl.laddr)\
-            .add_step(r.load, IOCtl.from_dev)
-
     # create a bunch of NOPs to exceed 255 instructions
-    for n in range(28, 30):
+    for n in range(20, 30):
         builder.add_instruction(f"padding{n}")\
             .add_step()
 

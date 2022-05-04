@@ -721,29 +721,29 @@ const struct op_microcode microcode[] PROGMEM = {
     /* 9a mov_D_C    */
     { .default_steps = {0x07ff5832},},
 
-    /* 9b iout_A     */
-    { .default_steps = {0x07ff5860},},
+    /* 9b out_imm_A  */
+    { .default_steps = {0x07fd5849, 0x07ff5850},},
 
-    /* 9c iout_B     */
-    { .default_steps = {0x07ff5861},},
+    /* 9c out_imm_B  */
+    { .default_steps = {0x07fd5849, 0x07ff5851},},
 
-    /* 9d iout_C     */
-    { .default_steps = {0x07ff5862},},
+    /* 9d out_imm_C  */
+    { .default_steps = {0x07fd5849, 0x07ff5852},},
 
-    /* 9e iout_D     */
-    { .default_steps = {0x07ff5863},},
+    /* 9e out_imm_D  */
+    { .default_steps = {0x07fd5849, 0x07ff5853},},
 
-    /* 9f cout_A     */
-    { .default_steps = {0x07ff58a0},},
+    /* 9f in_A_imm   */
+    { .default_steps = {0x07fd5849, 0x07ff5808},},
 
-    /* a0 cout_B     */
-    { .default_steps = {0x07ff58a1},},
+    /* a0 in_B_imm   */
+    { .default_steps = {0x07fd5849, 0x07ff5818},},
 
-    /* a1 cout_C     */
-    { .default_steps = {0x07ff58a2},},
+    /* a1 in_C_imm   */
+    { .default_steps = {0x07fd5849, 0x07ff5828},},
 
-    /* a2 cout_D     */
-    { .default_steps = {0x07ff58a3},},
+    /* a2 in_D_imm   */
+    { .default_steps = {0x07fd5849, 0x07ff5838},},
 
     /* a3 st_addr_A  */
     { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07f85890},},
@@ -1117,29 +1117,29 @@ const struct op_microcode microcode[] PROGMEM = {
     /* 102 lcmp_D_C   */
     { .default_steps = {0x07ff0bf6},},
 
-    /* 103 out_imm_A  */
-    { .default_steps = {0x07fd5849, 0x07ff5850},},
+    /* 103 padding20  */
+    { .default_steps = {0x07ff58ff},},
 
-    /* 104 out_imm_B  */
-    { .default_steps = {0x07fd5849, 0x07ff5851},},
+    /* 104 padding21  */
+    { .default_steps = {0x07ff58ff},},
 
-    /* 105 out_imm_C  */
-    { .default_steps = {0x07fd5849, 0x07ff5852},},
+    /* 105 padding22  */
+    { .default_steps = {0x07ff58ff},},
 
-    /* 106 out_imm_D  */
-    { .default_steps = {0x07fd5849, 0x07ff5853},},
+    /* 106 padding23  */
+    { .default_steps = {0x07ff58ff},},
 
-    /* 107 in_A_imm   */
-    { .default_steps = {0x07fd5849, 0x07ff5808},},
+    /* 107 padding24  */
+    { .default_steps = {0x07ff58ff},},
 
-    /* 108 in_B_imm   */
-    { .default_steps = {0x07fd5849, 0x07ff5818},},
+    /* 108 padding25  */
+    { .default_steps = {0x07ff58ff},},
 
-    /* 109 in_C_imm   */
-    { .default_steps = {0x07fd5849, 0x07ff5828},},
+    /* 109 padding26  */
+    { .default_steps = {0x07ff58ff},},
 
-    /* 10a in_D_imm   */
-    { .default_steps = {0x07fd5849, 0x07ff5838},},
+    /* 10a padding27  */
+    { .default_steps = {0x07ff58ff},},
 
     /* 10b padding28  */
     { .default_steps = {0x07ff58ff},},
