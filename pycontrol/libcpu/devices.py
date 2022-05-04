@@ -1,10 +1,8 @@
 from .pin import PinBase
 
-class Register:
-    def __init__(self, name: str, out: PinBase, load: PinBase) -> None:
+class DeviceBase:
+    def __init__(self, name: str) -> None:
         self.name = name
-        self.out = out
-        self.load = load
 
     def __str__(self) -> str:
         return self.name
@@ -12,6 +10,11 @@ class Register:
     def __repr__(self) -> str:
         return self.name
 
+class Register(DeviceBase):
+    def __init__(self, name: str, out: PinBase, load: PinBase) -> None:
+        DeviceBase.__init__(self, name)
+        self.out = out
+        self.load = load
 
 class GPRegister(Register):
     def __init__(self, name: str, out: PinBase, load: PinBase, alu_l: PinBase, alu_r: PinBase) -> None:
@@ -19,9 +22,9 @@ class GPRegister(Register):
         self.alu_l = alu_l
         self.alu_r = alu_r
 
-class ALU:
+class ALU(DeviceBase):
     def __init__(self, name: str, out: PinBase, alt: PinBase) -> None:
-        self.name = name
+        DeviceBase.__init__(self, name)
         self.out = out
         self.alt = alt
 
@@ -66,21 +69,21 @@ class Flags(Register):
 
         return f
 
-class RAM:
+class RAM(DeviceBase):
     def __init__(self, name: str, out: PinBase, write: PinBase) -> None:
-        self.name = name
+        DeviceBase.__init__(self, name)
         self.out = out
         self.write = write
 
-class Clock:
+class Clock(DeviceBase):
     def __init__(self, name: str, halt: PinBase, brk: PinBase) -> None:
-        self.name = name
+        DeviceBase.__init__(self, name)
         self.halt = halt
         self.brk  = brk
 
-class StepCounter:
+class StepCounter(DeviceBase):
     def __init__(self, name: str, reset: PinBase, extended: PinBase) -> None:
-        self.name = name
+        DeviceBase.__init__(self, name)
         self.reset = reset
         self.extended = extended
 
