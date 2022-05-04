@@ -12,6 +12,10 @@ from typing import TextIO, Iterable, Iterator
 
 from libcpu.ctrl_word import CtrlWord
 
+CWORD_WIDTH_BYTES = 4
+
+CWORD_WIDTH_BITS = CWORD_WIDTH_BYTES * 8
+
 control = CtrlWord()
 
 
@@ -54,7 +58,7 @@ def process_steps(steps: Iterable[Iterable[ControlSignal]]) -> Iterator[str]:
         for pin in pins:
             pin.enable()
 
-        yield "0x{:04x}".format(control.c_word)
+        yield "0x{word:0{digits}x}".format(word=control.c_word, digits=CWORD_WIDTH_BYTES * 2)
 
 def write_header(hfile: TextIO) -> None:
     hfile.write("#ifndef OP_DEFS_H\n")
@@ -77,7 +81,7 @@ def write_opcodes(hfile: TextIO) -> None:
 def write_default_cword(hfile: TextIO) -> None:
     control.reset()
 
-    hfile.write("#define CTRL_DEFAULT                    0b{:032b}\n\n".format(control.c_word))
+    hfile.write("#define CTRL_DEFAULT                    0b{word:0{bits}b}\n\n".format(word=control.c_word, bits=CWORD_WIDTH_BITS))
 
 
 def write_mux(hfile: TextIO, name: str, mux: Mux) -> None:
@@ -88,7 +92,7 @@ def write_mux(hfile: TextIO, name: str, mux: Mux) -> None:
 
     name = name.replace("Mux", "").upper()
     define = "#define MUX_{}_MASK".format(name)
-    hfile.write("{:40}0b{:032b}\n".format(define, mask))
+    hfile.write("{define:40}0b{mask:0{bits}b}\n".format(define=define, mask=mask, bits=CWORD_WIDTH_BITS))
 
     for pname, pin in all_pins():
         if isinstance(pin, MuxPin):
@@ -98,7 +102,7 @@ def write_mux(hfile: TextIO, name: str, mux: Mux) -> None:
                 pin.enable()
 
                 define = "#define MPIN_{}_BITS".format(pname)
-                hfile.write("{:40}0b{:032b}\n".format(define, control.c_word & mask))
+                hfile.write("{define:40}0b{word:0{bits}b}\n".format(define=define, word=control.c_word & mask, bits=CWORD_WIDTH_BITS))
     hfile.write("\n")
 
 
@@ -111,7 +115,7 @@ def write_simple_pins(hfile: TextIO) -> None:
             prefix = "L" if pin.level == Level.LOW else "H"
 
             define = "#define {}PIN_{}_BIT".format(prefix, name)
-            hfile.write("{:40}0b{:032b}\n".format(define, val))
+            hfile.write("{define:40}0b{val:0{bits}b}\n".format(define=define, val=val, bits=CWORD_WIDTH_BITS))
 
 
 
