@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "name": "(gdb) Launch Emulpins Tests",
             "type": "cppdbg",
@@ -41,6 +42,15 @@
                 "-k",
                 "${fileBasename}"
             ]
+        },
+        {
+            "name": "Python: Debug debugger (fibo)",
+            "type": "python",
+            "request": "launch",
+            "program": "../pycontrol/tools/debugger.py",
+            "args": ["fibo.bin"],
+            "cwd": "${workspaceFolder}/demo",
+            "console": "integratedTerminal"
         }
     ]
 }
