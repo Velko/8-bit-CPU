@@ -260,4 +260,10 @@ v1.2
     * Program Counter 1.0
     * Flash Writer 1.0
 
+v1.3  (upcoming)
+----------------
+    * Shift/Swap 1.0
+    * Transfer Register 1.1
+    * ALU backplane 1.1 (still in progress)
+
 
