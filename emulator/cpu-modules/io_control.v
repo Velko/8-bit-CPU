@@ -37,7 +37,7 @@ module io_control (
 
     demux_138 sel_mux_x (
         .a(port_addr[2:0]),
-        .e1n(1'b0),
+        .e1n(from_devn && to_devn),
         .e2n(1'b0),
         .e3(1'b1),
         .y(sel_x)
@@ -45,7 +45,7 @@ module io_control (
 
     demux_138 sel_mux_y (
         .a(port_addr[5:3]),
-        .e1n(1'b0),
+        .e1n(from_devn && to_devn),
         .e2n(1'b0),
         .e3(1'b1),
         .y(sel_y)

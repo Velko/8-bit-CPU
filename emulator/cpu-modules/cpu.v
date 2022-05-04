@@ -47,6 +47,7 @@ module cpu(
     io_block io(
         .main_bus(main_bus),
         .clk(clk),
+        .reset(rst),
         .out_rst(out_rst),
         .i_out(i_out),
         .c_out(c_out),

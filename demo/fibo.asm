@@ -4,17 +4,17 @@ start:
     ldi A, 0
     ldi B, 1
 
-    iout A
-    iout B
+    out 0, A
+    out 0, B
 
 next:
     add A, B
     bcs end
-    iout A
+    out 0, A
 
     add B, A
     bcs end
-    iout B
+    out 0, B
 
     jmp next
 

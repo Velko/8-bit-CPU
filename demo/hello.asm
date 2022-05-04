@@ -4,7 +4,7 @@
 print_loop:
     ldx A, message, B
     beq end
-    cout A
+    out 4, A
     inc B
     jmp print_loop
 end:
