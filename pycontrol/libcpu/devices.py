@@ -1,3 +1,4 @@
+from typing import Optional
 from .pin import PinBase
 
 class DeviceBase:
@@ -115,9 +116,17 @@ class AddressCalculator(Register):
     def __init__(self, name: str, out: PinBase, load: PinBase) -> None:
         Register.__init__(self, name, out, load)
 
-class IOController:
+class IOController(DeviceBase):
     def __init__(self, name: str, laddr: PinBase, from_dev: PinBase, to_dev: PinBase) -> None:
         DeviceBase.__init__(self, name)
         self.laddr = laddr
         self.from_dev = from_dev
         self.to_dev = to_dev
+
+        self.selected_port: Optional[int] = None
+
+    def select_port(self, port: int) -> None:
+        self.selected_port = port
+
+    def reset_port(self) -> None:
+        self.selected_port = None

@@ -1,7 +1,7 @@
 from typing import Union, Tuple, Optional, Sequence
 from .markers import AddrBase
 from .pseudo_devices import Imm
-from .DeviceSetup import COutPort, OutPort, ProgMem, PC, Flags, StepCounter
+from .DeviceSetup import IOCtl, ProgMem, PC, Flags, StepCounter
 from .opcodes import opcodes, ops_by_code, fetch
 from .pinclient import PinClient
 from .ctrl_word import CtrlWord
@@ -69,12 +69,16 @@ class CPUBackendControl:
             self.client.ctrl_commit(self.control.c_word)
 
 
+            if IOCtl.laddr.is_enabled():
+                IOCtl.select_port(self.client.bus_get())
+
+            #TODO: do we really need pulse/read/inverted? Value should be already on the bus "before" clock
             # special handling when reading the bus: it should
             # be done on "rising edge" - after primary clock
             # has rised, but inverted is not
             # in other cases it does not matter, using faster
             # version
-            if OutPort.load.is_enabled() or COutPort.load.is_enabled():
+            if IOCtl.to_dev.is_enabled():
                 self.client.clock_pulse()
                 self.out_hooked_val = self.client.bus_get()
                 self.client.clock_inverted()

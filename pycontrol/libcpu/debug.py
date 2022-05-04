@@ -5,7 +5,7 @@ from typing import Dict, List, Mapping, Optional, Union
 
 from .test_helpers import CPUHelper
 from .cpu import ret, setup_live
-from .DeviceSetup import COutPort, IR, LR, OutPort, PC, Clock, SP
+from .DeviceSetup import IOCtl, IR, LR, PC, Clock, SP
 from .pinclient import RunMessage
 from .util import unwrap
 from .opcodes import opcodes
@@ -78,11 +78,14 @@ class Debugger:
             self.stopped = True
             self.break_hit()
 
-        # catch output value
-        if OutPort.load.is_enabled():
-            print (unwrap(outval), flush=True)
-        if COutPort.load.is_enabled():
-            print (chr(unwrap(outval)), end="", flush=True)
+        # port output
+        if IOCtl.to_dev.is_enabled():
+            if IOCtl.selected_port == 0:
+                print (unwrap(outval), flush=True)
+            elif IOCtl.selected_port == 4:
+                print (chr(unwrap(outval)), end="", flush=True)
+
+            IOCtl.reset_port()
 
     def cont(self) -> None:
 
