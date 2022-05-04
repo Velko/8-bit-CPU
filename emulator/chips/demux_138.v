@@ -7,4 +7,13 @@ module demux_138 (
 
     assign y = ~({7'h0, (!e1n && !e2n && e3)} << a);
 
+    /* Instantiation:
+    demux_138 new_instance (
+        .a(),
+        .e1n(),
+        .e2n(),
+        .e3(),
+        .y()
+    );
+    */
 endmodule

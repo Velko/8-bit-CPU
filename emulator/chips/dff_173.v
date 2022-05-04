@@ -18,4 +18,17 @@ module dff_173(
         else if (!e1n && !e2n)
             data <= d;
     end
+
+    /* Instantiation:
+    dff_173 new_instance (
+        .mr(),
+        .cp(),
+        .e1n(),
+        .e2n(),
+        .oe1n(),
+        .oe2n(),
+        .d(),
+        .q()
+    );
+    */
 endmodule
