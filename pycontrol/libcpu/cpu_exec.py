@@ -14,7 +14,6 @@ class CPUBackendControl:
     def __init__(self) -> None:
         self.client = PinClient()
         self.control = CtrlWord()
-        self.out_hooked_val: Optional[int] = None
         self.branch_taken = False
         self.flags_cache: Optional[int] = None
         self.opcode_cache: Optional[int] = None
@@ -24,7 +23,7 @@ class CPUBackendControl:
         Imm.connect(self.client)
         ProgMem.hook_out(Imm)
 
-    def execute_mnemonic(self, mnemonic: str, arg: Union[None, int, AddrBase]=None) -> Tuple[bool, Optional[int]]:
+    def execute_mnemonic(self, mnemonic: str, arg: Union[None, int, AddrBase]=None) -> bool:
         if not mnemonic in opcodes:
             raise InvalidOpcodeException(mnemonic)
 
@@ -36,7 +35,7 @@ class CPUBackendControl:
 
         return exec_result
 
-    def execute_opcode(self, opcode: Optional[int]) -> Tuple[bool, Optional[int]]:
+    def execute_opcode(self, opcode: Optional[int]) -> bool:
 
         # reset op_extension when starting new instruction
         # the variable adds multiples of 256 to the opcode from IR and
@@ -56,7 +55,7 @@ class CPUBackendControl:
             self.execute_step(microstep)
             if is_last: break
 
-        return self.branch_taken, self.out_hooked_val
+        return self.branch_taken
 
     def execute_step(self, microstep: Sequence[ControlSignal]) -> None:
         self.control.reset()
@@ -72,18 +71,10 @@ class CPUBackendControl:
             if IOCtl.laddr.is_enabled():
                 IOCtl.select_port(self.client.bus_get())
 
-            #TODO: do we really need pulse/read/inverted? Value should be already on the bus "before" clock
-            # special handling when reading the bus: it should
-            # be done on "rising edge" - after primary clock
-            # has rised, but inverted is not
-            # in other cases it does not matter, using faster
-            # version
             if IOCtl.to_dev.is_enabled():
-                self.client.clock_pulse()
-                self.out_hooked_val = self.client.bus_get()
-                self.client.clock_inverted()
-            else:
-                self.client.clock_tick()
+                IOCtl.push_value(self.client.bus_get())
+
+            self.client.clock_tick()
 
             if PC.load.is_enabled():
                 self.branch_taken = True
@@ -119,12 +110,10 @@ class CPUBackendControl:
 
 
 
-    def fetch_and_execute(self) -> Optional[int]:
+    def fetch_and_execute(self) -> None:
         # fetch the instruction
         for microstep in fetch:
             self.execute_step(microstep)
 
         # and execute it (will retrieve opcode automatically)
-        _, outval = self.execute_opcode(None)
-
-        return outval
+        _ = self.execute_opcode(None)

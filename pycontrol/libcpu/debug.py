@@ -61,11 +61,11 @@ class Debugger:
 
         if self.current_break is not None:
             # special case: active breakpoint
-            _, outval = cpu_helper.backend.execute_opcode(self.current_break.orig_op)
+            _ = cpu_helper.backend.execute_opcode(self.current_break.orig_op)
             self.current_break = None
         else:
             # fetch and execute an instruction
-            outval = cpu_helper.backend.fetch_and_execute()
+            cpu_helper.backend.fetch_and_execute()
 
         # are we done?
         if Clock.halt.is_enabled():
@@ -81,9 +81,9 @@ class Debugger:
         # port output
         if IOCtl.to_dev.is_enabled():
             if IOCtl.selected_port == 0:
-                print (unwrap(outval), flush=True)
+                print (unwrap(IOCtl.saved_value), flush=True)
             elif IOCtl.selected_port == 4:
-                print (chr(unwrap(outval)), end="", flush=True)
+                print (chr(unwrap(IOCtl.saved_value)), end="", flush=True)
 
             IOCtl.reset_port()
 
