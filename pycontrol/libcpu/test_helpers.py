@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 
 from libcpu.cpu import opcode_of
+from libcpu.util import unwrap
 from libcpu.devices import Register
 from libcpu.cpu_exec import CPUBackendControl, InvalidOpcodeException
 from libcpu.DeviceSetup import Flags, PC, Ram
 from libcpu.pinclient import RunMessage
-
+from io import StringIO
 
 class CPUHelper:
     def __init__(self, backend: CPUBackendControl) -> None:
         self.backend = backend
+        self.captured_output = StringIO()
 
     def load_reg16(self, reg: Register, value: int) -> None:
         self.backend.control.reset()
@@ -113,3 +115,5 @@ class CPUHelper:
         for msg in self.backend.client.run_program():
             if msg.reason == RunMessage.Reason.BRK: break
             if msg.reason == RunMessage.Reason.HALT: raise InvalidOpcodeException("Unexpected exit")
+            if msg.reason == RunMessage.Reason.OUT:
+                self.captured_output.write(unwrap(msg.payload))

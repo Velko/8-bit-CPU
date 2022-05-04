@@ -34,7 +34,7 @@ module io_block (
         end
     end
 
-    always @(posedge out_rst) begin
+    always @(posedge out_rst or posedge reset) begin
         i_out <= 8'bx;
         c_out <= 8'bx;
     end
