@@ -1,6 +1,6 @@
 ; The .def file can be generated using casmdefs.py tool
 #include "velkocpu.def"
-
+#include "ports.def"
 
 ; Bootloader contains common code for ROM->RAM copy
 ; #include "bootloader.asm"
@@ -70,7 +70,7 @@ skip_add:
 
     bcc next_bit
 
-    iout A
+    out DISPLAY_NUM_DATA, A
 
     inc D
     ldi B, 16

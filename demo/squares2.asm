@@ -1,5 +1,6 @@
 ; The .def file can be generated using casmdefs.py tool
 #include "velkocpu.def"
+#include "ports.def"
 
 ;# from https://users.utcluj.ro/~baruch/book_ssce/SSCE-Shift-Mult.pdf
 ;    for D in range(16):
@@ -54,7 +55,7 @@ skip_add:
             dec C
             bne next_bit
 
-        iout A
+        out DISPLAY_NUM_DATA, A
 
         inc D
         ldi A, 16

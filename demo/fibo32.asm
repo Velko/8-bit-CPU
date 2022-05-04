@@ -1,4 +1,5 @@
 #include "velkocpu.def"
+#include "ports.def"
 
 start:
     lea SP, stack
@@ -210,13 +211,13 @@ find0_loop:
 found_non0:
     ldx A, digits, C
     beq print_end
-    cout A
+    out DISPLAY_CHR_DATA, A
     inc C
     jmp found_non0
 
 print_end:
     ldi A, 10 ; \n
-    cout A
+    out DISPLAY_CHR_DATA, A
 
     ret
 

@@ -1,10 +1,11 @@
 #include "velkocpu.def"
+#include "ports.def"
 
     ldi B, 0
 print_loop:
     ldx A, message, B
     beq end
-    out 4, A
+    out DISPLAY_CHR_DATA, A
     inc B
     jmp print_loop
 end:

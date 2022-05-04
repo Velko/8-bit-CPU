@@ -1,20 +1,21 @@
 #include "velkocpu.def"
+#include "ports.def"
 
 start:
     ldi A, 0
     ldi B, 1
 
-    out 0, A
-    out 0, B
+    out DISPLAY_NUM_DATA, A
+    out DISPLAY_NUM_DATA, B
 
 next:
     add A, B
     bcs end
-    out 0, A
+    out DISPLAY_NUM_DATA, A
 
     add B, A
     bcs end
-    out 0, B
+    out DISPLAY_NUM_DATA, B
 
     jmp next
 

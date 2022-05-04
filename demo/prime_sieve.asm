@@ -1,5 +1,6 @@
 ; The .def file can be generated using casmdefs.py tool
 #include "velkocpu.def"
+#include "ports.def"
 
 sieve_start:
 
@@ -42,7 +43,7 @@ sieve_start:
         beq seg0_next
 
             ; print out
-            iout B
+            out DISPLAY_NUM_DATA, B
 
             ; mark multiples, starting from next one
             mov A, B
@@ -167,7 +168,7 @@ sieve_start:
                 ld B, r_low
                 add B, A
 
-                iout B
+                out DISPLAY_NUM_DATA, B
 
             seg_n_print_skip:
 
