@@ -4,6 +4,8 @@ module io_control (
     input clk,
 
     input loadn,
+    input from_devn,
+    input to_devn,
 
     output [7:0] sel_x,
     output [7:0] sel_y
