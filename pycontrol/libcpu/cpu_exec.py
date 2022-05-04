@@ -80,7 +80,7 @@ class CPUBackendControl:
                 self.branch_taken = True
                 Imm.clear() # immediate becomes invalid
 
-            if PC.out.is_enabled():
+            if PC.inc.is_enabled():
                 Imm.consume() # next byte for imm value
 
             if Flags.calc.is_enabled() or Flags.load.is_enabled():

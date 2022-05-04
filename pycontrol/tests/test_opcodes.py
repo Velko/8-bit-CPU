@@ -41,6 +41,9 @@ def test_opcode_pc_len_equal_in_flags_alt(name: str, default_len: int, alt_len: 
         assert default_len == alt_len
 
 class DummySignal(ControlSignal):
+    def __init__(self) -> None:
+        ControlSignal.__init__(self)
+
     def enable(self) -> None:
         raise Exception("Should not reach")
 

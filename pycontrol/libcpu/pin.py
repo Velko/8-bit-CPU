@@ -9,6 +9,9 @@ class Level(Enum):
     HIGH = 1
 
 class PinBase(ControlSignal):
+    def __init__(self) -> None:
+        ControlSignal.__init__(self)
+
     @abstractmethod
     def connect(self, control_word: CtrlBase) -> None: pass
 
@@ -20,7 +23,8 @@ class PinBase(ControlSignal):
 
 
 class Pin(PinBase):
-    def __init__(self, num: int, level: Level):
+    def __init__(self, num: int, level: Level) -> None:
+        PinBase.__init__(self)
         self.control_word: Optional[CtrlBase] = None
         self.num = num
         self.level = level
@@ -56,22 +60,24 @@ class Pin(PinBase):
             return not self.control_word.is_set(self.num)
 
 class NullPin(PinBase):
+    def __init__(self) -> None:
+        PinBase.__init__(self)
+        self._is_enabled = False
 
     def connect(self, control_word: CtrlBase) -> None:
         pass
 
     def enable(self) -> None:
-        pass
+        self._is_enabled = True
 
     def disable(self) -> None:
-        pass
+        self._is_enabled = False
 
     def is_enabled(self) -> bool:
-        return False
-
+        return self._is_enabled
 
 class Mux:
-    def __init__(self, name: str, pins: Sequence[int], default: int):
+    def __init__(self, name: str, pins: Sequence[int], default: int) -> None:
         self.name = name
         self.control_word: Optional[CtrlBase]  = None
         self.pins = pins
@@ -106,7 +112,8 @@ class Mux:
         return result
 
 class MuxPin(PinBase):
-    def __init__(self, mux: Mux, num: int):
+    def __init__(self, mux: Mux, num: int) -> None:
+        PinBase.__init__(self)
         self.mux = mux
         self.num = num
 

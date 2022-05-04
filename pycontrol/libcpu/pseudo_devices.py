@@ -1,12 +1,13 @@
 from abc import abstractmethod
 from .markers import AddrBase
 from typing import Union, Callable, Optional, List
-from .devices import RAM
+from .devices import RAM, DeviceBase
 from .util import ControlSignal, UninitializedError
 from .pinclient import PinClient
 
 class EnableCallback(ControlSignal):
     def __init__(self, callback: Callable[[], None], original: ControlSignal) -> None:
+        ControlSignal.__init__(self)
         self.callback = callback
         self.original = original
 
@@ -63,12 +64,14 @@ class ImmediateValue(RamHook):
         return len(self.value) > 0
 
 
-class RamProxy:
+class RamProxy(DeviceBase):
     def __init__(self, name: str, ram: RAM) -> None:
+        DeviceBase.__init__(self, name)
         self.name = name
         self.ram = ram
         self.out = EnableCallback(self.enable_out, ram.out)
         self.write = EnableCallback(self.enable_write, ram.write)
+        self.assign_pin_names()
 
         self._out_hook: Optional[RamHook] = None
         self._write_hook: Optional[RamHook] = None
