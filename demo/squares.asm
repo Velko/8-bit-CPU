@@ -70,7 +70,7 @@ skip_add:
 
     bcc next_bit
 
-    out A
+    iout A
 
     inc D
     ldi B, 16

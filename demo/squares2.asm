@@ -54,7 +54,7 @@ skip_add:
             dec C
             bne next_bit
 
-        out A
+        iout A
 
         inc D
         ldi A, 16

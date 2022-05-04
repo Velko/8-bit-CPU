@@ -42,7 +42,7 @@ sieve_start:
         beq seg0_next
 
             ; print out
-            out B
+            iout B
 
             ; mark multiples, starting from next one
             mov A, B
@@ -167,7 +167,7 @@ sieve_start:
                 ld B, r_low
                 add B, A
 
-                out B
+                iout B
 
             seg_n_print_skip:
 

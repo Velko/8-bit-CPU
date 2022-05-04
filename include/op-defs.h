@@ -157,10 +157,10 @@
 #define OP_MOV_D_A             0x98
 #define OP_MOV_D_B             0x99
 #define OP_MOV_D_C             0x9a
-#define OP_OUT_A               0x9b
-#define OP_OUT_B               0x9c
-#define OP_OUT_C               0x9d
-#define OP_OUT_D               0x9e
+#define OP_IOUT_A              0x9b
+#define OP_IOUT_B              0x9c
+#define OP_IOUT_C              0x9d
+#define OP_IOUT_D              0x9e
 #define OP_COUT_A              0x9f
 #define OP_COUT_B              0xa0
 #define OP_COUT_C              0xa1

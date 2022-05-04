@@ -156,10 +156,10 @@
     mov  D, A => 0x98
     mov  D, B => 0x99
     mov  D, C => 0x9a
-    out  A => 0x9b
-    out  B => 0x9c
-    out  C => 0x9d
-    out  D => 0x9e
+    iout  A => 0x9b
+    iout  B => 0x9c
+    iout  C => 0x9d
+    iout  D => 0x9e
     cout  A => 0x9f
     cout  B => 0xa0
     cout  C => 0xa1

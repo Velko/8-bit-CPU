@@ -123,7 +123,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
             .add_step(al.load, ar.out)
 
     for r in gp_regs:
-        builder.add_instruction("out", r)\
+        builder.add_instruction("iout", r)\
             .add_step(r.out, OutPort.load)
 
     for r in gp_regs:

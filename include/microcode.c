@@ -721,16 +721,16 @@ const struct op_microcode microcode[] PROGMEM = {
     /* 9a mov_D_C    */
     { .default_steps = {0x07ff5832},},
 
-    /* 9b out_A      */
+    /* 9b iout_A     */
     { .default_steps = {0x07ff5860},},
 
-    /* 9c out_B      */
+    /* 9c iout_B     */
     { .default_steps = {0x07ff5861},},
 
-    /* 9d out_C      */
+    /* 9d iout_C     */
     { .default_steps = {0x07ff5862},},
 
-    /* 9e out_D      */
+    /* 9e iout_D     */
     { .default_steps = {0x07ff5863},},
 
     /* 9f cout_A     */
