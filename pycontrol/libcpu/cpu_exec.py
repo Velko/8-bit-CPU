@@ -27,11 +27,9 @@ class CPUBackendControl:
         if not mnemonic in opcodes:
             raise InvalidOpcodeException(mnemonic)
 
-        Imm.set(arg)
+        Imm.inject(arg)
 
         exec_result = self.execute_opcode(opcodes[mnemonic].opcode)
-
-        Imm.clear()
 
         return exec_result
 
@@ -78,7 +76,7 @@ class CPUBackendControl:
 
             if PC.load.is_enabled():
                 self.branch_taken = True
-                Imm.clear() # immediate becomes invalid
+                Imm.invalidate()
 
             if PC.inc.is_enabled():
                 Imm.consume() # next byte for imm value
@@ -91,7 +89,7 @@ class CPUBackendControl:
                 self.opcode_cache = None
                 self.op_extension += 1
 
-        Imm.disable()
+        Imm.release_bus()
 
     def get_flags_cached(self) -> int:
         if self.flags_cache is None:

@@ -31,7 +31,7 @@ class ImmediateValue(RamHook):
     def connect(self, client: PinClient) -> None:
         self.client = client
 
-    def set(self, value: Union[None, int, AddrBase]) -> None:
+    def inject(self, value: Union[None, int, AddrBase]) -> None:
         if value is None:
             self.value = []
         elif isinstance(value, int):
@@ -41,14 +41,14 @@ class ImmediateValue(RamHook):
         else:
             raise TypeError
 
-    def clear(self) -> None:
+    def invalidate(self) -> None:
         self.value = []
 
     def consume(self) -> None:
         if len(self.value) > 0:
             del self.value[0]
 
-    def disable(self) -> None:
+    def release_bus(self) -> None:
         if self.client is None: return
         if self.write_enabled:
             self.client.bus_free()
