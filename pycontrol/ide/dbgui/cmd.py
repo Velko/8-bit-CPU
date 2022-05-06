@@ -7,7 +7,7 @@ class CmdHandler(ProxiedCmd):
 
     def do_example(self, args):
         "Some example command"
-        print (f"example with '{args}'")
+        self.stdout.write(f"example with '{args}'\n")
 
     #def help_example(self):
     #    print ("Another way describing an example command")

@@ -60,10 +60,19 @@ class ProxiedCmd(cmd.Cmd):
     def rpc_help(self, arg: str) -> Optional[bool]:
         return self.do_help(arg)
 
+class StdOutRedir:
+    def __init__(self, term: Vte.Terminal):
+        self.term = term
+
+    def write(self, s: str) -> None:
+        s = s.replace('\n', '\r\n')
+        self.term.feed(bytes(s, 'utf-8'))
+
 
 def setup_cmd(terminal: Vte.Terminal, handler: ProxiedCmd):
 
     handler.replace_readline()
+    handler.stdout = StdOutRedir(terminal)
 
     worker_pipe, other_pipe = multiprocessing.Pipe()
 
