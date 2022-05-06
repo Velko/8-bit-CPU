@@ -48,9 +48,14 @@ class MainWindow(MainUI):
         self.lr_val = cast(Gtk.Label, unwrap(self.builder.get_object("lr_val")))
         self.sp_val = cast(Gtk.Label, unwrap(self.builder.get_object("sp_val")))
 
+        style_ctx = self.out_text.get_style_context()
+
         self.term_scroll = cast(Gtk.ScrolledWindow, unwrap(self.builder.get_object("term_scroll")))
         self.terminal = Vte.Terminal()
         self.term_scroll.add(self.terminal)
+        self.terminal.set_color_foreground(style_ctx.get_color(Gtk.StateFlags.NORMAL))
+        self.terminal.set_color_background(style_ctx.get_background_color(Gtk.StateFlags.NORMAL))
+        self.terminal.set_font(style_ctx.get_font(Gtk.StateFlags.NORMAL))
 
 
         #spawn_async(self,
@@ -95,6 +100,7 @@ class MainWindow(MainUI):
     def on_reset_btn_clicked(self, widget: Gtk.Widget) -> None:
         self.started = False
         self.dbg.reset()
+        self.terminal.feed(b"Reset\r\n")
 
     def on_dbg_run_cont_activated(self, widget: Gtk.Widget) -> None:
         if not self.started:
