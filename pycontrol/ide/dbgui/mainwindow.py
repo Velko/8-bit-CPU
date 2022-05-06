@@ -8,8 +8,9 @@ import gi
 from dbgui.addrmap import AddrMap
 from dbgui.mainui import MainUI
 from dbgui.asproject import AsProject
-from dbgui import asset_file, script_file
+from dbgui import asset_file
 from dbgui.term import setup_cmd
+from dbgui.cmd import CmdHandler
 from libcpu.debug import Debugger, StopReason
 
 gi.require_version("Gtk", "3.0")
@@ -57,36 +58,7 @@ class MainWindow(MainUI):
         self.terminal.set_color_background(style_ctx.get_background_color(Gtk.StateFlags.NORMAL))
         self.terminal.set_font(style_ctx.get_font(Gtk.StateFlags.NORMAL))
 
-
-        #spawn_async(self,
-        # pty_flags:Vte.PtyFlags,
-        # working_directory:str=None,
-        # argv:list,
-        # envv:list=None,
-        # spawn_flags:GLib.SpawnFlags,
-
-        # child_setup:GLib.SpawnChildSetupFunc=None,
-        # timeout:int,
-        # cancellable:Gio.Cancellable=None,
-        # callback:Vte.TerminalSpawnAsyncCallback=None,
-        # user_data=None)
-
-        cmd_fd = setup_cmd()
-
-        self.terminal.spawn_with_fds_async(
-                Vte.PtyFlags.DEFAULT, #pty_flags
-                None, #working_directory
-                [script_file("term_ui.py")], #argv
-                [], #envv
-                [cmd_fd], #fds
-                [3], #map_fds
-                0, #spawn_flags
-                None, #child_setup
-                None, #cancellable
-                -1, #timeout
-                None, #callback
-                None #user_data
-                )
+        setup_cmd(self.terminal, CmdHandler())
 
         self.tabs: List[SourceTab] = []
 

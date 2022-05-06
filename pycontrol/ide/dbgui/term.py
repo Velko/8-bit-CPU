@@ -4,7 +4,12 @@ import cmd, sys
 from typing import Optional
 import multiprocessing
 
-from gi.repository import GObject
+from . import script_file
+
+import gi
+
+gi.require_version("Vte", "2.91")
+from gi.repository import GObject, Vte
 
 class ProxiedCmd(cmd.Cmd):
 
@@ -56,32 +61,30 @@ class ProxiedCmd(cmd.Cmd):
         return self.do_help(arg)
 
 
-def setup_cmd():
+def setup_cmd(terminal: Vte.Terminal, handler: ProxiedCmd):
 
-    c = CmdHandler()
-
-    c.replace_readline()
+    handler.replace_readline()
 
     worker_pipe, other_pipe = multiprocessing.Pipe()
 
-    c.worker_pipe = worker_pipe
+    handler.worker_pipe = worker_pipe
 
-    GObject.io_add_watch(worker_pipe, GObject.IO_IN, c.io_watch_handler)
+    GObject.io_add_watch(worker_pipe, GObject.IO_IN, handler.io_watch_handler)
 
     other_fileno = other_pipe.fileno()
-    other_pipe._handle = None
-    return other_fileno
+    other_pipe._handle = None # disown the fd
 
-
-class CmdHandler(ProxiedCmd):
-
-    def do_example(self, args):
-        "Some example command"
-        print (f"example with '{args}'")
-
-    #def help_example(self):
-    #    print ("Another way describing an example command")
-
-    def complete_example(self, text: str, line: str, begidx: int, endidx: int) -> list[str]:
-        all_args = ['123', '456']
-        return list(filter(lambda n: n.startswith(text), all_args))
+    terminal.spawn_with_fds_async(
+            Vte.PtyFlags.DEFAULT, #pty_flags
+            None, #working_directory
+            [script_file("term_ui.py")], #argv
+            [], #envv
+            [other_fileno], #fds
+            [3], #map_fds
+            0, #spawn_flags
+            None, #child_setup
+            None, #cancellable
+            -1, #timeout
+            None, #callback
+            None #user_data
+            )
