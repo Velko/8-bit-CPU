@@ -8,7 +8,8 @@ import gi
 from dbgui.addrmap import AddrMap
 from dbgui.mainui import MainUI
 from dbgui.asproject import AsProject
-from dbgui import asset_file
+from dbgui import asset_file, script_file
+from dbgui.term import setup_cmd
 from libcpu.debug import Debugger, StopReason
 
 gi.require_version("Gtk", "3.0")
@@ -65,12 +66,16 @@ class MainWindow(MainUI):
         # callback:Vte.TerminalSpawnAsyncCallback=None,
         # user_data=None)
 
-        self.terminal.spawn_async(
+        cmd_fd = setup_cmd()
+
+        self.terminal.spawn_with_fds_async(
                 Vte.PtyFlags.DEFAULT, #pty_flags
-                os.environ['HOME'], #working_directory
-                ["/bin/sh"], #argv
+                None, #working_directory
+                [script_file("term_ui.py")], #argv
                 [], #envv
-                GLib.SpawnFlags.DO_NOT_REAP_CHILD | GLib.SpawnFlags.LEAVE_DESCRIPTORS_OPEN , #spawn_flags
+                [cmd_fd], #fds
+                [3], #map_fds
+                0, #spawn_flags
                 None, #child_setup
                 None, #cancellable
                 -1, #timeout
