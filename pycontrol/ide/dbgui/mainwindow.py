@@ -72,7 +72,6 @@ class MainWindow(MainUI):
     def on_reset_btn_clicked(self, widget: Gtk.Widget) -> None:
         self.started = False
         self.dbg.reset()
-        self.terminal.feed(b"Reset\r\n")
 
     def on_dbg_run_cont_activated(self, widget: Gtk.Widget) -> None:
         if not self.started:
