@@ -5,14 +5,12 @@ from typing import Dict, List, Mapping, Optional, Union
 from enum import Enum
 
 from .test_helpers import CPUHelper
-from .cpu import ret, setup_live
 from .DeviceSetup import COutPort, IR, LR, OutPort, PC, Clock, SP
 from .pinclient import RunMessage
 from .util import unwrap
 from .opcodes import opcodes
 from .cpu import A, B, C, D
-
-cpu_helper: CPUHelper = CPUHelper(setup_live())
+from .cpu_exec import CPUBackendControl
 
 class Breakpoint:
     def __init__(self, addr: int, orig_op: int):
@@ -27,6 +25,7 @@ class StopReason(Enum):
 
 class Debugger:
     def __init__(self) -> None:
+        self.cpu_helper = CPUHelper(CPUBackendControl())
         self.halted = False
         self.stopped = True
 
@@ -38,12 +37,12 @@ class Debugger:
         self.on_output = self.output_event
 
     def disconnect(self) -> None:
-        cpu_helper.backend.client.close()
+        self.cpu_helper.backend.client.close()
 
     def read_ram(self, addr: int, size: int) -> bytes:
         data: List[int] = list()
         for i in range(size):
-            data.append(cpu_helper.read_ram(addr + i))
+            data.append(self.cpu_helper.read_ram(addr + i))
 
         return bytes(data)
 
@@ -56,7 +55,7 @@ class Debugger:
         print ("# Uploading ", end="", flush=True, file=sys.stderr)
 
         for addr, byte in enumerate(binary):
-            cpu_helper.write_ram(addr, byte)
+            self.cpu_helper.write_ram(addr, byte)
 
             print (".", end="", flush=True, file=sys.stderr)
 
@@ -65,22 +64,22 @@ class Debugger:
     def step(self) -> None:
 
         if self.halted:
-            self.on_stop(StopReason.HALT, cpu_helper.read_reg16(PC))
+            self.on_stop(StopReason.HALT, self.cpu_helper.read_reg16(PC))
             return
 
         if self.current_break is not None:
             # special case: active breakpoint
-            _, outval = cpu_helper.backend.execute_opcode(self.current_break.orig_op)
+            _, outval = self.cpu_helper.backend.execute_opcode(self.current_break.orig_op)
             self.current_break = None
         else:
             # fetch and execute an instruction
-            outval = cpu_helper.backend.fetch_and_execute()
+            outval = self.cpu_helper.backend.fetch_and_execute()
 
         # are we done?
         if Clock.halt.is_enabled():
             self.halted = True
             self.stopped = True
-            self.on_stop(StopReason.HALT, cpu_helper.read_reg16(PC))
+            self.on_stop(StopReason.HALT, self.cpu_helper.read_reg16(PC))
             return
 
         # breakpoint?
@@ -90,10 +89,10 @@ class Debugger:
             if tmp_break is not None:
                 # when single-stepping, should ignore breakpoints and execute original
                 # instruction immediately
-                _, outval = cpu_helper.backend.execute_opcode(tmp_break.orig_op)
+                _, outval = self.cpu_helper.backend.execute_opcode(tmp_break.orig_op)
             else:
                 # Must be BRK in code, execute NOP instead
-                cpu_helper.backend.execute_mnemonic("nop")
+                self.cpu_helper.backend.execute_mnemonic("nop")
 
         # catch output value
         if OutPort.load.is_enabled():
@@ -101,12 +100,12 @@ class Debugger:
         if COutPort.load.is_enabled():
             self.on_output(chr(unwrap(outval)))
 
-        self.on_stop(StopReason.STEP, cpu_helper.read_reg16(PC))
+        self.on_stop(StopReason.STEP, self.cpu_helper.read_reg16(PC))
 
     def cont(self) -> None:
 
         if self.halted:
-            self.on_stop(StopReason.HALT, cpu_helper.read_reg16(PC))
+            self.on_stop(StopReason.HALT, self.cpu_helper.read_reg16(PC))
             return
 
         self.stopped = False
@@ -116,10 +115,10 @@ class Debugger:
         # flush flags cache, because hardware updated while we were not
         # observing
         if self.current_break is not None:
-            cpu_helper.backend.flags_cache = None
+            self.cpu_helper.backend.flags_cache = None
             self.step()
 
-        out = cpu_helper.backend.client.run_program();
+        out = self.cpu_helper.backend.client.run_program();
 
         for msg in out:
 
@@ -127,7 +126,7 @@ class Debugger:
                 self.halted = True
                 self.stopped = True
                 # report the addess of HLT, not one past
-                self.on_stop(StopReason.HALT, cpu_helper.read_reg16(PC) - 1)
+                self.on_stop(StopReason.HALT, self.cpu_helper.read_reg16(PC) - 1)
                 break
 
             elif msg.reason == RunMessage.Reason.BRK:
@@ -141,7 +140,7 @@ class Debugger:
 
     def reset(self) -> None:
         # Reset CPU
-        cpu_helper.backend.client.reset()
+        self.cpu_helper.backend.client.reset()
 
         self.halted = False
 
@@ -155,27 +154,27 @@ class Debugger:
 
     def set_breakpoint(self, addr: int) -> None:
 
-        pmem = cpu_helper.read_ram(addr)
+        pmem = self.cpu_helper.read_ram(addr)
 
         bkp = Breakpoint(addr, pmem)
 
         self.breakpoints[addr] = bkp
 
         # replace it with brk()
-        cpu_helper.write_ram(addr, opcodes["brk"].opcode)
+        self.cpu_helper.write_ram(addr, opcodes["brk"].opcode)
 
     def clear_breakpoint(self, addr: int) -> None:
 
         if addr in self.breakpoints:
-            cpu_helper.write_ram(addr, self.breakpoints[addr].orig_op)
+            self.cpu_helper.write_ram(addr, self.breakpoints[addr].orig_op)
             del self.breakpoints[addr]
 
     def break_hit(self) -> Optional[Breakpoint]:
-        addr = cpu_helper.read_reg16(PC) - 1
+        addr = self.cpu_helper.read_reg16(PC) - 1
 
         if addr in self.breakpoints:
             tmp_break = self.breakpoints[addr]
-            cpu_helper.load_reg8(IR, tmp_break.orig_op)
+            self.cpu_helper.load_reg8(IR, tmp_break.orig_op)
             self.on_stop(StopReason.DEBUG_BRK, addr)
             return tmp_break
         else:
@@ -196,13 +195,13 @@ class Debugger:
 
     def get_registers(self) -> Mapping[str, Union[int, str]]:
         registers: Dict[str, Union[int, str]] = {
-            "A": cpu_helper.read_reg8(A),
-            "B": cpu_helper.read_reg8(B),
-            "C": cpu_helper.read_reg8(C),
-            "D": cpu_helper.read_reg8(D),
-            "Flags": cpu_helper.get_flags_s(),
-            "LR": cpu_helper.read_reg16(LR),
-            "SP": cpu_helper.read_reg16(SP)
+            "A": self.cpu_helper.read_reg8(A),
+            "B": self.cpu_helper.read_reg8(B),
+            "C": self.cpu_helper.read_reg8(C),
+            "D": self.cpu_helper.read_reg8(D),
+            "Flags": self.cpu_helper.get_flags_s(),
+            "LR": self.cpu_helper.read_reg16(LR),
+            "SP": self.cpu_helper.read_reg16(SP)
         }
 
         # if breakpoint just hit, PC is not accurate
@@ -210,7 +209,7 @@ class Debugger:
         if self.current_break is not None:
             registers["PC"] = self.current_break.addr
         else:
-            registers["PC"] = cpu_helper.read_reg16(PC)
+            registers["PC"] = self.cpu_helper.read_reg16(PC)
 
         return registers
 
