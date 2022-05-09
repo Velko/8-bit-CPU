@@ -140,15 +140,15 @@ class MainWindow(MainUI):
 
         regs = self.dbg.get_registers()
 
-        self.reg_a_val.set_markup(f"{regs['A']:02x}")
-        self.reg_b_val.set_markup(f"{regs['B']:02x}")
-        self.reg_c_val.set_markup(f"{regs['C']:02x}")
-        self.reg_d_val.set_markup(f"{regs['D']:02x}")
+        self.reg_a_val.set_text(f"{regs['A']:02x}")
+        self.reg_b_val.set_text(f"{regs['B']:02x}")
+        self.reg_c_val.set_text(f"{regs['C']:02x}")
+        self.reg_d_val.set_text(f"{regs['D']:02x}")
 
-        self.flags_val.set_markup(f"{regs['Flags']}")
-        self.pc_val.set_markup(f"{regs['PC']:04x}")
-        self.lr_val.set_markup(f"{regs['LR']:04x}")
-        self.sp_val.set_markup(f"{regs['SP']:04x}")
+        self.flags_val.set_text(f"{regs['Flags']}")
+        self.pc_val.set_text(f"{regs['PC']:04x}")
+        self.lr_val.set_text(f"{regs['LR']:04x}")
+        self.sp_val.set_text(f"{regs['SP']:04x}")
 
 
     def on_debugger_out(self, msg: str) -> None:
