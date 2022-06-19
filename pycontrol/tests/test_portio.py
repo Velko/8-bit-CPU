@@ -23,10 +23,9 @@ def test_outb_int_hw(cpu_helper: CPUHelper) -> None:
     out_test_prog = bytes([opcode_of("out_imm_B"), 0])
 
     # run program on hardware
-    cpu_helper.run_snippet(14, out_test_prog)
+    val = cpu_helper.run_snippet(14, out_test_prog)
 
     # assert
-    val = cpu_helper.captured_output.getvalue()
     assert val == '110\n'
 
 @pytest.mark.hardware
@@ -39,8 +38,7 @@ def test_outc_char_hw(cpu_helper: CPUHelper) -> None:
     out_test_prog = bytes([opcode_of("out_imm_C"), 4])
 
     # run program on hardware
-    cpu_helper.run_snippet(33, out_test_prog)
+    val = cpu_helper.run_snippet(33, out_test_prog)
 
     # assert
-    val = cpu_helper.captured_output.getvalue()
     assert val == 'f'
