@@ -2,6 +2,12 @@
 #include "velkocpu.def"
 #include "ports.def"
 
+#bankdef program
+{
+    #addr 0
+    #outp 0
+}
+
 sieve_start:
 
     ; value of 16 is commonly used for comparisons, keep it
@@ -17,16 +23,13 @@ sieve_start:
     fill0_loop:
 
         ; store "something" in seg0[A] (any non-zero value will do)
-        ldi B, seg0
-        or B, A
-        stx 256, B, D ; 256 because current stx uses signed math and 0x90 is "negative"
+        stx seg0, A, D
 
         ; next index in A
         inc A
 
         ; are we done?
-        ldi B, 15
-        and B, A
+        cmp A, D
 
         ; jump back to start of the loop
         bne fill0_loop
@@ -86,7 +89,7 @@ sieve_start:
         st r_low, A
 
         ; Fill seg_n with non-zeros
-        mov A, C
+        clr A
         seg_n0_loop:
 
             ; store "something" in seg0[A] (any non-zero value will do)
@@ -156,7 +159,7 @@ sieve_start:
             bne seg_n_mark_loop
 
         ; segment done, print it out
-        mov A, C
+        clr A
         seg_n_print_loop:
 
             ; check byte at seg_n[A]
@@ -191,6 +194,11 @@ sieve_start:
 
     hlt
     jmp sieve_start ; if hlt did not work/was overridden, start from the beginning
+
+#bankdef bss
+{
+    #addr 0x80
+}
 
 
 ; the seg0 array serves dual purpose
