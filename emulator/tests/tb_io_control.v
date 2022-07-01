@@ -33,12 +33,15 @@ module tb_io_control;
         #1 rst <= 0;
 
         // load some addr
-        data <= 8'h34;
+        data <= 8'h64;
         wbus <= 1;
         loadn <= 0;
 
         #1
         `tick(clk, 2);
+
+        to_devn <= 0;
+        #1
 
         `assert(controller.sel_x, 8'b11101111);
         `assert(controller.sel_y, 8'b10111111);
