@@ -101,9 +101,6 @@ class PinClient:
             elif line.startswith("#FOUT#"):
                 yield RunMessage(RunMessage.Reason.OUT, line[6:].replace("\\n", "\n"))
 
-            elif line.startswith("#IOUT#"):
-                yield RunMessage(RunMessage.Reason.OUT, f"{line[6:]}\n")
-
             elif line.startswith("#COUT#"):
                 c = chr(int(line[6:]))
                 yield RunMessage(RunMessage.Reason.OUT, c)
