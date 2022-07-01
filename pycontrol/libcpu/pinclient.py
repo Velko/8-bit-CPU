@@ -88,7 +88,7 @@ class PinClient:
     def run_program(self) -> Iterator[RunMessage]:
         self.send_cmd('R')
         while True:
-            line = self.serial.readline().decode('ascii').strip()
+            line = self.serial.readline().decode('ascii').strip('\r\n')
 
             if line == "#HLT":
                 yield RunMessage(RunMessage.Reason.HALT)

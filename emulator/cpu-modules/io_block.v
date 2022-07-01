@@ -22,7 +22,7 @@ module io_block (
     );
 
     display_num ndisp(
-        .main_bus(main_bus),
+        .out_rst(out_rst),
         .clk(clk),
         .load_val(ctl.sel_x[0] == 1'b0 && ctl.sel_y[0] == 1'b0),
         .load_mode(ctl.sel_x[1] == 1'b0 && ctl.sel_y[0] == 1'b0),
@@ -30,7 +30,7 @@ module io_block (
     );
 
     display_char cdisp(
-        .main_bus(main_bus),
+        .out_rst(out_rst),
         .clk(clk),
         .load_val(ctl.sel_x[4] == 1'b0 && ctl.sel_y[0] == 1'b0)
     );

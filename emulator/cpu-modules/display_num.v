@@ -1,6 +1,7 @@
 module display_num(
     input [7:0] main_bus,
     output reg [159:0] out_fmt,
+    input out_rst,
     input clk,
     input load_val,
     input load_mode,
@@ -34,6 +35,10 @@ module display_num(
         if (reset == 1'b1) begin
             ifmt_mode <= 0;
         end
+    end
+
+    always @(posedge out_rst or posedge reset) begin
+        out_fmt <= 160'bx;
     end
 
     assign signed_bus = main_bus;
