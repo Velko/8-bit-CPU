@@ -32,3 +32,4 @@ fp-info-cache
 *.sch-bak
 *_gerbers/
 pty?
+/emulator/experimental
