@@ -1,4 +1,5 @@
 [tool.pytest.ini_options]
 markers = [
     "hardware: check real connected hardware",
+    "emulator: available only in emulator",
 ]
