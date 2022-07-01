@@ -13,7 +13,8 @@ module cmd_handler;
 
     wire [7:0] i_out;
     wire [7:0] c_out;
-    reg [160:0] out_fmt;
+    reg [160:0] out_fmt_buf;
+    wire [159:0] out_fmt;
     reg out_rst;
 
     reg rst;
@@ -41,6 +42,7 @@ module cmd_handler;
         .hlt(hlt),
         .i_out(i_out),
         .c_out(c_out),
+        .out_fmt(out_fmt),
         .out_rst(out_rst));
 
     reg [7:0] cmd;
@@ -161,12 +163,16 @@ module cmd_handler;
 
                         // Intercept and send Integer and Character Out messages
                         if (i_out !== 8'bx) begin
-                            $sformat(out_fmt, "#IOUT#%d", i_out);
-                            $serial_send_str(out_fmt);
+                            $sformat(out_fmt_buf, "#IOUT#%d", i_out);
+                            $serial_send_str(out_fmt_buf);
                             out_rst <= 1;
                         end
                         if (c_out !== 8'bx) begin
-                            $sformat(out_fmt, "#COUT#%d", c_out);
+                            $sformat(out_fmt_buf, "#COUT#%d", c_out);
+                            $serial_send_str(out_fmt_buf);
+                            out_rst <= 1;
+                        end
+                        if (out_fmt !== 160'bx) begin
                             $serial_send_str(out_fmt);
                             out_rst <= 1;
                         end

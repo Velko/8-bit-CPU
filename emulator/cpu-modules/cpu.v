@@ -14,6 +14,7 @@ module cpu(
         output hlt,
         output [7:0] i_out,
         output [7:0] c_out,
+        output [159:0] out_fmt,
         input out_rst,
 
         inout [31:0] control_word
@@ -51,6 +52,7 @@ module cpu(
         .out_rst(out_rst),
         .i_out(i_out),
         .c_out(c_out),
+        .out_fmt(out_fmt),
         .outctl(splitter.outctl),
         .loadctl(splitter.loadctl)
     );

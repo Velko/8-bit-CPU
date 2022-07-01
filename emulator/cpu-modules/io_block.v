@@ -6,6 +6,7 @@ module io_block (
 
     output reg [7:0] i_out,
     output reg [7:0] c_out,
+    output reg [159:0] out_fmt,
 
     input [3:0] outctl,
     input [3:0] loadctl
@@ -32,11 +33,17 @@ module io_block (
             //$write("%c", main_bus);
             c_out <= main_bus;
         end
+
+        if (ctl.sel_x[2] == 1'b0 && ctl.sel_y[0] == 1'b0) begin
+            $sformat(out_fmt, "#FOUT#F%d\\n", main_bus);
+        end
+
     end
 
     always @(posedge out_rst or posedge reset) begin
         i_out <= 8'bx;
         c_out <= 8'bx;
+        out_fmt <= 160'bx;
     end
 
 
