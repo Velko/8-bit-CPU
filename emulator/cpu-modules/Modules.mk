@@ -15,7 +15,7 @@ CTRLSRC=../cpu-modules/control_logic.v ../chips/counter_161.v ../chips/dff_74.v 
 CLOCKSRC=../cpu-modules/clock.v ../chips/dff_74.v ../chips/nand_00p.v ../chips/nor_02p.v ../chips/xor_86p.v
 ALUBLOCKSRC=../cpu-modules/alu_block.v $(GPREGSRC) $(ALUADDSUBSRC) $(ALUANDORSRC) $(ALUXORNOTSRC) $(ALUSHIFTSWAPSRC) $(FLGREGSRC) ../chips/demux_138.v
 MEMBLOCKSRC=../cpu-modules/mem_block.v $(PCSRC) $(MEMSRC) $(IREGSRC) $(TXREGSRC) $(SPSRC) $(ACALSRC) ../chips/demux_138.v
-IOBLOCKSRC=../cpu-modules/io_block.v $(IOCTLSRC) ../chips/demux_138.v
+IOBLOCKSRC=../cpu-modules/io_block.v $(IOCTLSRC) ../chips/demux_138.v ../cpu-modules/display_num.v ../cpu-modules/display_char.v
 CPUSRC=../cpu-modules/cpu.v ../cpu-modules/cword_splitter.v $(ALUBLOCKSRC) $(MEMBLOCKSRC) $(CTRLSRC) $(IOBLOCKSRC)
 
 VPATH=../cpu-modules
