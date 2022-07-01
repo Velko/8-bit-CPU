@@ -20,4 +20,23 @@ module and_08p (
     assign y3 = a3 & b3;
     assign y4 = a4 & b4;
 
+    /* Instantiation:
+    and_08p new_instance (
+        .a1(),
+        .b1(),
+        .y1(),
+
+        .a2(),
+        .b2(),
+        .y2(),
+
+        .a3(),
+        .b3(),
+        .y3(),
+
+        .a4(),
+        .b4(),
+        .y4()
+    );
+    */
 endmodule

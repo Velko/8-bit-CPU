@@ -19,4 +19,19 @@ module counter_161 (
     end
     assign tc = q == 4'b1111 && cet;
 
+    /* Instantiation:
+    counter_161 new_instance (
+        .clk(),
+        .mrn(),
+
+        .cep(),
+        .cet(),
+        .pen(),
+
+        .d(),
+        .q(),
+
+        .tc()
+    );
+    */
 endmodule

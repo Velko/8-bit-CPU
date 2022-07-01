@@ -5,4 +5,11 @@ module nand_00b (
 
     assign y = ~(a & b);
 
+    /* Instantiation:
+    nand_00b new_instance (
+        .a(),
+        .b(),
+        .y()
+    );
+    */
 endmodule

@@ -5,4 +5,11 @@ module nor_02b (
 
     assign y = ~(a | b);
 
+    /* Instantiation:
+    nor_02b new_instance (
+        .a(),
+        .b(),
+        .y()
+    );
+    */
 endmodule

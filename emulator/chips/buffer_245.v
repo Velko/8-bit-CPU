@@ -13,4 +13,13 @@ module buffer_245 (
     assign a = !dir && !oen ? temp : 8'bZ;
     assign b = dir && !oen ? temp : 8'bZ;
 
+    /* Instantiation:
+    buffer_245 new_instance (
+        .a(),
+        .b(),
+        .dir(),
+        .oen()
+    );
+    */
+
 endmodule

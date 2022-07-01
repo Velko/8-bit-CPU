@@ -5,4 +5,11 @@ module xor_86b (
 
     assign y = a ^ b;
 
+    /* Instantiation:
+    xor_86b new_instance (
+        .a(),
+        .b(),
+        .y()
+    );
+    */
 endmodule

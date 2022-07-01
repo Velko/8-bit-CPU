@@ -8,4 +8,13 @@ module mux_157b (
 
     assign y = en ? 4'h0 : ( sel ? b : a);
 
+    /* Instantiation:
+    mux_157b new_instance (
+        .a(),
+        .b(),
+        .y(),
+        .en(),
+        .sel()
+    );
+    */
 endmodule

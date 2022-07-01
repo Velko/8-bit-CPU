@@ -43,4 +43,16 @@ module udcounter_193 (
     assign tcu = q == 4'b1111 ? cpu : 1'b1;
     assign tcd = q == 4'b0000 ? cpd : 1'b1;
 
+    /* Instantiation:
+    udcounter_193 new_instance (
+        .cpd(),
+        .cpu(),
+        .pl(),
+        .mr(),
+        .d(),
+        .q(),
+        .tcu(),
+        .tcd()
+    );
+    */
 endmodule

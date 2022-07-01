@@ -26,4 +26,15 @@ module ram_62256 (
             mem_out = memory[addr];
         end
     end
+
+    /* Instantiation:
+    ram_62256 new_instance (
+        .addr(),
+        .data(),
+
+        .csn(),
+        .oen(),
+        .wen()
+    );
+    */
 endmodule

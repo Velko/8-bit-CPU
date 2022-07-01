@@ -5,4 +5,11 @@ module or_32b (
 
     assign y = a | b;
 
+    /* Instantiation:
+    or_32b new_instance (
+        .a(),
+        .b(),
+        .y()
+    );
+    */
 endmodule

@@ -5,4 +5,11 @@ module and_08b (
 
     assign y = a & b;
 
+    /* Instantiation:
+    and_08b new_instance (
+        .a(),
+        .b(),
+        .y()
+    );
+    */
 endmodule

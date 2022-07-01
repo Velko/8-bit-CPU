@@ -51,5 +51,21 @@ module dff_74(
     // H if SET==RESET==LOW, opposite of Q otherwise
     assign q2n = !rd2n && !sd2n ? 1'b1 : !q2;
 
+    /* Instantiation:
+    dff_74 new_instance (
+        .rd1n(),
+        .d1(),
+        .cp1(),
+        .sd1n(),
+        .q1(),
+        .q1n(),
 
+        .rd2n(),
+        .d2(),
+        .cp2(),
+        .sd2n(),
+        .q2(),
+        .q2n()
+    );
+    */
 endmodule

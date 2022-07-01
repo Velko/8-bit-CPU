@@ -7,4 +7,13 @@ module adder_283 (
 
     assign {cout, s} = a + b + {4'b0000, cin};
 
+    /* Instantiation:
+    adder_283 new_instance (
+        .a(),
+        .b(),
+        .cin(),
+        .s(),
+        .cout()
+    );
+    */
 endmodule
