@@ -3,7 +3,7 @@ test: test-138 test-161-basics test-161-chaining test-245 test-173 test-283 test
       test-193-basics test-193-chaining test-04p test-74\
       test-gp-register test-alu-addsub test-alu-andor test-alu-xornot test-alu-shiftswap \
       test-flags-reg test-io-control \
-      test-alu-block test-pc test-memory test-control-logic test-clock test-cpu
+      test-alu-block test-pc test-memory test-address-calc test-control-logic test-clock test-cpu
 
 include ../cpu-modules/Modules.mk
 
@@ -176,6 +176,12 @@ tb_pc.vvp: $(TBPCSRC)
 TBMEMSRC=$(MEMSRC) testhelpers.v tb_memory.v
 
 tb_memory.vvp: $(TBMEMSRC)
+	iverilog -Wall $^ -o $@
+
+
+TBACALCSRC=$(ACALCSRC) testhelpers.v tb_address_calc.v
+
+tb_address-calc.vvp: $(TBACALCSRC)
 	iverilog -Wall $^ -o $@
 
 TBCTRLSRC=$(CTRLSRC) testhelpers.v tb_control_logic.v
