@@ -11,7 +11,7 @@ module tb_io_control;
     reg to_devn;
 
     io_control controller(
-        .bus(bus),
+        .main_bus(bus),
         .rst(rst),
         .clk(clk),
         .loadn(loadn),

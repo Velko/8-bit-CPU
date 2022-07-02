@@ -1,5 +1,5 @@
 module io_control (
-    inout [7:0] bus,
+    inout [7:0] main_bus,
     input rst,
     input clk,
 
@@ -8,7 +8,8 @@ module io_control (
     input to_devn,
 
     output [7:0] sel_x,
-    output [7:0] sel_y
+    output [7:0] sel_y,
+    inout [7:0] io_bus
 );
 
     wire [7:0] port_addr;
@@ -20,7 +21,7 @@ module io_control (
         .e2n(loadn),
         .oe1n(1'b0),
         .oe2n(1'b0),
-        .d(bus[3:0]),
+        .d(main_bus[3:0]),
         .q(port_addr[3:0])
     );
 
@@ -31,7 +32,7 @@ module io_control (
         .e2n(loadn),
         .oe1n(1'b0),
         .oe2n(1'b0),
-        .d(bus[7:4]),
+        .d(main_bus[7:4]),
         .q(port_addr[7:4])
     );
 
@@ -51,6 +52,11 @@ module io_control (
         .y(sel_y)
     );
 
-
+    buffer_245 io_buffer (
+        .a(main_bus),
+        .b(io_bus),
+        .dir(from_devn),
+        .oen(from_devn && to_devn)
+    );
 
 endmodule
