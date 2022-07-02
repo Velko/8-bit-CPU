@@ -16,7 +16,13 @@ module tb_alu_block;
     reg fdata;
     wire [7:0] main_bus;
 
-    alu_block ab(.main_bus(main_bus), .rst(reset), .outctl(outctl), .loadctl(loadctl), .clk(clk), .iclk(iclk), .alt(alt), .calcfn(cfn), .arg_l(arg_l), .arg_r(arg_r), .cin(cin));
+    alu_block ab(
+        .main_bus(main_bus),
+        .rst(reset),
+        .mbus_ctrl({loadctl, outctl}),
+        .alu_ctrl({cin, cfn, alt, arg_r, arg_l}),
+        .clk(clk),
+        .iclk(iclk));
 
     initial begin
         $display("ALU block...");
