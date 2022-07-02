@@ -11,6 +11,7 @@ from typing import Iterator, Tuple
 
 def acalc_params() -> Iterator[Tuple[str, int, int, bool, int]]:
     yield "signed", 64737, 168, True, 64737 + 168 - 256
+    yield "unsigned", 64737, 168, False, 64737 + 168
 
 
 @pytest.mark.parametrize("name,addr,offset,signed,expected", acalc_params())
@@ -20,8 +21,8 @@ def test_acalc(cpu_helper: CPUHelper, name: str, addr: int, offset: int, signed:
     backend.client.bus_set(offset)
     backend.client.addr_set(addr)
 
-    #if signed:
-    #    ACalc.signed.enable()
+    if signed:
+        ACalc.signed.enable()
 
     ACalc.load.enable()
 

@@ -10,6 +10,7 @@ module tb_address_calc;
     reg reset;
     reg outn;
     reg loadn;
+    reg m_sign;
 
     address_calc acalc(
         .abus(abus),
@@ -19,7 +20,8 @@ module tb_address_calc;
         .reset(reset),
 
         .outn(outn),
-        .loadn(loadn)
+        .loadn(loadn),
+        .m_sign(m_sign)
     );
 
 initial begin
@@ -32,10 +34,12 @@ initial begin
     loadn <= 1;
     #1 reset <= 0;
 
+    /* 64737 + 168 signed */
     addr <= 16'd64737;
     mbus <= 8'd168;
     waddr <= 1;
     loadn <= 0;
+    m_sign <= 1;
 
     #1
     `tick(clk, 2);
@@ -46,6 +50,22 @@ initial begin
     #1
 
     `assert(abus, 16'd64649);
+    outn <= 1;
+
+    /* 64737 + 168 unsigned */
+    waddr <= 1;
+    loadn <= 0;
+    m_sign <= 0;
+
+    #1
+    `tick(clk, 2);
+
+    waddr <= 0;
+    outn <= 0;
+    loadn <= 1;
+    #1
+
+    `assert(abus, 16'd64905);
 end
 
     assign abus = waddr ? addr : 16'bz;

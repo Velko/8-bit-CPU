@@ -121,8 +121,9 @@ class TransferRegister(Register):
         Register.__init__(self, name, out, load)
 
 class AddressCalculator(Register):
-    def __init__(self, name: str, out: PinBase, load: PinBase) -> None:
+    def __init__(self, name: str, out: PinBase, load: PinBase, signed: PinBase) -> None:
         Register.__init__(self, name, out, load)
+        self.signed = signed
 
 class IOController(DeviceBase):
     def __init__(self, name: str, laddr: PinBase, from_dev: PinBase, to_dev: PinBase) -> None:

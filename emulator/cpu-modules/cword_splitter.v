@@ -15,7 +15,8 @@ module cword_splitter(
         output clk_halt,
         output clk_brk,
         output stack_inc,
-        output stack_dec
+        output stack_dec,
+        output acalc_signed
     );
 
     // ROM0 - Main Bus
@@ -40,5 +41,6 @@ module cword_splitter(
     assign step_extn = control_word[25];
     assign clk_halt = control_word[26];
     assign clk_brk = control_word[27];
+    assign acalc_signed = control_word[28];
 
 endmodule

@@ -1,6 +1,7 @@
 module address_calc (
     input outn,
     input loadn,
+    input m_sign,
 
     input clk,
     input reset,
@@ -25,6 +26,20 @@ module address_calc (
     buffer_245 out_0(.oen(outn), .dir(1'b1), .a(out_v[7:0]), .b(abus[7:0]));
     buffer_245 out_1(.oen(outn), .dir(1'b1), .a(out_v[15:8]), .b(abus[15:8]));
 
-    assign sign_ext = {mbus[7], mbus[7], mbus[7], mbus[7]};
+    and_08p sign_and (
+        .a1(mbus[7]),
+        .b1(m_sign),
+
+        .a2(1'b0),
+        .b2(1'b0),
+
+        .a3(1'b0),
+        .b3(1'b0),
+
+        .a4(1'b0),
+        .b4(1'b0)
+    );
+
+    assign sign_ext = {sign_and.y1, sign_and.y1, sign_and.y1, sign_and.y1};
 
 endmodule

@@ -112,9 +112,10 @@ TL = dev.TransferRegister("TL",
     out = MuxPin(OutMux, 11),
     load = MuxPin(LoadMux, 11))
 
-ACalc = dev.AddressCalculator("ACal",
+ACalc = dev.AddressCalculator("ACalc",
     out = MuxPin(AddrOutMux, 2),
-    load = MuxPin(AddrLoadMux, 2))
+    load = MuxPin(AddrLoadMux, 2),
+    signed = Pin(28, Level.HIGH))
 
 IOCtl = dev.IOController("IOCtl",
     laddr = MuxPin(LoadMux, 4),
