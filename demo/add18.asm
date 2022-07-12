@@ -1,4 +1,5 @@
 #include "velkocpu.def"
+#include "ports.def"
 
 #bankdef code ; program code
 {
@@ -11,12 +12,12 @@
     ldi B, 18
 loop:
     add A, B
-    out A
+    out DISPLAY_NUM_DATA, A
     bcc loop
 
     sub A, B
 subloop:
-    out A
+    out DISPLAY_NUM_DATA, A
     sub A, B
     bcc subloop
 

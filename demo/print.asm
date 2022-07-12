@@ -1,3 +1,3 @@
 print:
-    cout A
+    out DISPLAY_CHR_DATA, A
     ret
