@@ -20,6 +20,7 @@
 *.vvp
 *.vpi
 *.out
+*.log
 zz_*.ino
 /sample/
 /temp/
@@ -33,3 +34,4 @@ fp-info-cache
 *_gerbers/
 pty?
 /emulator/experimental
+*.lst
