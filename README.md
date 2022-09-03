@@ -387,6 +387,10 @@ Progress
   Interestingly, something in Arduino library was interfering with serial communication, so everything
   was ported to C and depends on [AVR-Libc][avr-libc] only. The built-in functionality of content
   generation for 7-segment display and microcode ROMs were ported to separate utilities.
+* Developed a simple IDE / GUI debugger. Probably I should've created a VSCode extension, but it I feel
+  more comfortable in creating a whole app in PyGTK.
+* Designing "universal" I/O controller, up to 64 (or 256) ports for external devices.
+
 
 [eater-net-8bit]: https://eater.net/8bit
 [velkoraspi]: https://velkoraspi.blogspot.com/
