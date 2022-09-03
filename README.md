@@ -220,13 +220,17 @@ machine code generation. There's an utility that takes my microcode definition a
 describing them for [CustomAsm][customasm]. It takes it from there.
 
 
-Debugger
---------
+Debugger & IDE
+--------------
 As the Test module allows great deal of flexibility, I was able to also develop a simple debugger.
 It can examine registers, RAM contents, single step. Addition of BRK instruction and corresponding
 control line introduced ability to set breakpoints and run the program in full-speed. Unfortunately
 it only works with emulator, as current hardware doesn't support both "normal" Control Logic and
 Test modules connected simultaneously.
+
+Later I went even further and developed a simple IDE, that allows basic code editing, integrates
+with [CustomAsm][customasm] for compilation and has basic debugging functionality. One can single-step,
+set breakpoints, examine registers. The IDE is far from polished experience, still it is useful.
 
 
 Side-projects: EEPROM and Flash writers
@@ -302,6 +306,7 @@ Repository index
     * **xmclient** - PC-side client utility for **xmprog**
 * **parts** - custom KiCad symbols and footprints for missing components
 * **pycontrol** - Python-based control logic, microcode, tests, demo programs, etc.
+    * **ide** - a simple PyGTK-based IDE with graphical debugger
     * **libcpu** - main implementation of control logic, microcode
     * **localpath** - helper lib, bring arbitary locations in package search path
     * **stubs** - MyPy type definitions for packages that lack those
