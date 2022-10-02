@@ -1,5 +1,6 @@
 test: test-138 test-161-basics test-161-chaining test-245 test-173 test-283 test-86b test-86p \
       test-08b test-08p test-02b test-02p test-157b test-125p test-32b test-32p test-00b test-00p \
+      test-rom_async \
       test-193-basics test-193-chaining test-04p test-74\
       test-gp-register test-alu-addsub test-alu-andor test-alu-xornot test-alu-shiftswap \
       test-flags-reg test-io-control \
@@ -126,6 +127,15 @@ TB74SRC=../chips/dff_74.v testhelpers.v tb_74.v
 
 tb_74.vvp: $(TB74SRC)
 	iverilog -Wall $^ -o $@
+
+
+testrom.hex: mkrom.py
+	./mkrom.py > testrom.hex
+
+TBROMASYNCSRC=../chips/rom_async.v testhelpers.v tb_rom_async.v
+tb_rom_async.vvp: $(TBROMASYNCSRC) testrom.hex
+	iverilog -Wall $(TBROMASYNCSRC) -o $@
+
 
 
 TBGPREGSRC=$(GPREGSRC) testhelpers.v tb_gp_register.v
