@@ -8,7 +8,7 @@ run: cmd_handler.vvp serial_conn.vpi control_rom.vpi
 serial_conn.vpi: serial_cmd.c registration.c serial_host.c
 	iverilog-vpi --name=serial_conn $^
 
-CMDSRC=$(CPUSRC) cmd_handler.v
+CMDSRC=$(CPUSRC) cmd_handler.v cword.vinc
 
 cmd_handler.vvp: $(CMDSRC)
 	iverilog -Wall $^ -o $@

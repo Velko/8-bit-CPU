@@ -1,3 +1,5 @@
+`include "cword.vinc"
+
 module cmd_handler;
 
     reg [7:0] data;
@@ -50,7 +52,7 @@ module cmd_handler;
         rst <= 1;
         ctrlen <= 1;
         out_rst <= 0;
-        $set_default_cw(control_word);
+        control_word <= `DEFAULT_CW;
 
         #1
         rst <= 0;
