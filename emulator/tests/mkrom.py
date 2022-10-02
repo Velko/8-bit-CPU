@@ -1,9 +1,12 @@
 #!/usr/bin/python3
 
-data = 3
-for i in range(128 * 1024):
-    data = (data + 7) & 0xFF
-    print (f"{data:02x} ", end="")
+def gen_data():
+    data = 3
+    while True:
+        data = (data + 7) & 0xFF
+        yield data
 
+for i, data in zip(range(128 * 1024), gen_data()):
+    print (f"{data:02x} ", end="")
     if i & 0xF == 0xF:
         print()
