@@ -2,7 +2,7 @@
 
 import localpath
 
-from typing import BinaryIO, Iterator, Sequence
+from typing import List, Iterator, Sequence, TypeVar
 from libcpu.opcode_builder import MicroCode
 from libcpu.util import ControlSignal
 from libcpu.opcodes import opcodes, fetch
@@ -49,22 +49,23 @@ def process_steps(microcode: MicroCode, flags: int) -> Iterator[int]:
 
         yield control.c_word
 
+T = TypeVar('T')
 
-def split_chunks(it, size):
-    it = iter(it)
+def split_chunks(seq: Sequence[T], size: int) -> Iterator[List[T]]:
+    it = iter(seq)
     return iter(lambda: list(islice(it, size)), [])
 
 def write_rom_file(words: Sequence[int], rom_idx: int) -> None:
-    with open(f"../../include/control_rom{rom_idx}.bin", "wb") as rom:
+    with open(f"../../include/control_rom{rom_idx}.bin", "wb") as bin_rom:
         for c_word in words:
-            rom.write(bytes([c_word >> (rom_idx << 3) & 0xFF]))
+            bin_rom.write(bytes([c_word >> (rom_idx << 3) & 0xFF]))
 
-    with open(f"../../include/control_rom{rom_idx}.hex", "wt") as rom:
+    with open(f"../../include/control_rom{rom_idx}.hex", "wt") as hex_rom:
         for chunk in split_chunks(words, 16):
             for c_word in chunk:
                 b = c_word >> (rom_idx << 3) & 0xFF
-                rom.write(f"{b:02x} ")
-            rom.write("\n")
+                hex_rom.write(f"{b:02x} ")
+            hex_rom.write("\n")
 
 
 if __name__ == "__main__":
