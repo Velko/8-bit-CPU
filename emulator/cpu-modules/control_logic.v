@@ -13,7 +13,7 @@ module control_logic(
     output [31:0] control_word
 );
 
-    reg [31:0] cword_out;
+    wire [31:0] cword_out;
 
     counter_161 cnt(.clk(iclk), .mrn(rstn), .pen(step_resetn), .cep(step_extn), .d(4'b0), .cet(na.y3));
 
@@ -21,9 +21,39 @@ module control_logic(
 
     dff_74 ext(.cp1(clk), .cp2(iclk), .d1(na.y2), .rd1n(1'b1), .d2(ext.q1n), .sd1n(rstn), .sd2n(1'b1), .rd2n(rstn));
 
-    always @(opcode or flags or cnt.q or ext.q2) begin
-        $read_control_rom(cword_out, cnt.q, flags, {ext.q2, opcode});
-    end
+    wire [15:0] rom_addr = {ext.q2, opcode, flags, cnt.q[2:0]};
+
+    rom_async #(.ROMFILE("control_rom0.hex"), .ADDR_BITS(16)) rom0 (
+        .cen(1'b0),
+        .oen(1'b0),
+
+        .addr(rom_addr),
+        .data(cword_out[7:0])
+    );
+
+    rom_async #(.ROMFILE("control_rom1.hex"), .ADDR_BITS(16)) rom1 (
+        .cen(1'b0),
+        .oen(1'b0),
+
+        .addr(rom_addr),
+        .data(cword_out[15:8])
+    );
+
+    rom_async #(.ROMFILE("control_rom2.hex"), .ADDR_BITS(16)) rom2 (
+        .cen(1'b0),
+        .oen(1'b0),
+
+        .addr(rom_addr),
+        .data(cword_out[23:16])
+    );
+
+    rom_async #(.ROMFILE("control_rom3.hex"), .ADDR_BITS(16)) rom3 (
+        .cen(1'b0),
+        .oen(1'b0),
+
+        .addr(rom_addr),
+        .data(cword_out[31:24])
+    );
 
     //always @(posedge iclk) begin
     //    if (ctrlen == 1'b0)
@@ -31,7 +61,6 @@ module control_logic(
     //end
 
     initial begin
-        $read_control_rom(cword_out, 0, 0, 0);
     end
 
     // ctrlen should be connected to /OE (or /CE) of ROM chips

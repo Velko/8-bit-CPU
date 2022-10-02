@@ -36,6 +36,10 @@ def generate_microcode() -> Iterator[int]:
             for c_word in process_steps(microcode, flags):
                 yield c_word
 
+    for _ in range(512 - len(opcodes)):
+        for c_word in [0xFFFFFFFF] * 16 * MAX_STEPS:
+            yield c_word
+
 
 def process_steps(microcode: MicroCode, flags: int) -> Iterator[int]:
     for pins in finalize_steps(microcode, flags):
