@@ -138,9 +138,15 @@ def generate_defines(hfile: TextIO) -> None:
 
     write_footer(hfile)
 
+def generate_cword(vfile: TextIO) -> None:
+    control.reset()
+
+    vfile.write("`define DEFAULT_CW {bits}'h{word:0{digits}x}\n".format(word=control.c_word, bits=CWORD_WIDTH_BYTES * 8, digits=CWORD_WIDTH_BYTES * 2))
 
 if __name__ == "__main__":
     with open("../../include/microcode.c", "wt") as cfile:
         generate_microcode(cfile)
     with open("../../include/op-defs.h", "wt") as hfile:
         generate_defines(hfile)
+    with open("../../include/cword.vinc", "wt") as vfile:
+        generate_cword(vfile)
