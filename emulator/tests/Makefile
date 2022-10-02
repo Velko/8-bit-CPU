@@ -8,8 +8,8 @@ test: test-138 test-161-basics test-161-chaining test-245 test-173 test-283 test
 
 include ../cpu-modules/Modules.mk
 
-test-%: tb_%.vvp control_rom.vpi
-	@vvp -M. -mcontrol_rom $<
+test-%: tb_%.vvp
+	@vvp -M. $<
 
 
 TB138SRC=../chips/demux_138.v testhelpers.v tb_138.v

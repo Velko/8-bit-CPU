@@ -1,9 +1,9 @@
-all: cmd_handler.vvp serial_conn.vpi control_rom.vpi
+all: cmd_handler.vvp serial_conn.vpi
 
 include ../cpu-modules/Modules.mk
 
-run: cmd_handler.vvp serial_conn.vpi control_rom.vpi
-	vvp -M. -mserial_conn -mcontrol_rom cmd_handler.vvp
+run: cmd_handler.vvp serial_conn.vpi
+	vvp -M. -mserial_conn cmd_handler.vvp
 
 serial_conn.vpi: serial_cmd.c registration.c serial_host.c
 	iverilog-vpi --name=serial_conn $^

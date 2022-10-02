@@ -17,7 +17,3 @@ ALUBLOCKSRC=../cpu-modules/alu_block.v $(GPREGSRC) $(ALUADDSUBSRC) $(ALUANDORSRC
 MEMBLOCKSRC=../cpu-modules/mem_block.v $(PCSRC) $(MEMSRC) $(IREGSRC) $(TXREGSRC) $(SPSRC) $(ACALCSRC) ../chips/demux_138.v
 IOBLOCKSRC=../cpu-modules/io_block.v $(IOCTLSRC) ../chips/demux_138.v ../cpu-modules/display_num.v ../cpu-modules/display_char.v ../cpu-modules/display_lcd.v
 CPUSRC=../cpu-modules/cpu.v ../cpu-modules/cword_splitter.v $(ALUBLOCKSRC) $(MEMBLOCKSRC) $(CTRLSRC) $(IOBLOCKSRC)
-
-VPATH=../cpu-modules
-control_rom.vpi: control_words.c microcode.c
-	iverilog-vpi --name=control_rom $^
