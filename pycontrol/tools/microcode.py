@@ -9,6 +9,7 @@ from libcpu.opcodes import opcodes, fetch
 from libcpu.DeviceSetup import StepCounter
 
 from libcpu.ctrl_word import CtrlWord
+from itertools import islice
 
 MAX_STEPS=8
 
@@ -45,10 +46,21 @@ def process_steps(microcode: MicroCode, flags: int) -> Iterator[int]:
         yield control.c_word
 
 
+def split_chunks(it, size):
+    it = iter(it)
+    return iter(lambda: list(islice(it, size)), [])
+
 def write_rom_file(words: Sequence[int], rom_idx: int) -> None:
     with open(f"../../include/control_rom{rom_idx}.bin", "wb") as rom:
         for c_word in words:
             rom.write(bytes([c_word >> (rom_idx << 3) & 0xFF]))
+
+    with open(f"../../include/control_rom{rom_idx}.hex", "wt") as rom:
+        for chunk in split_chunks(words, 16):
+            for c_word in chunk:
+                b = c_word >> (rom_idx << 3) & 0xFF
+                rom.write(f"{b:02x} ")
+            rom.write("\n")
 
 
 if __name__ == "__main__":
