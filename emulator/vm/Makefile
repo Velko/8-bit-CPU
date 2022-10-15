@@ -5,7 +5,7 @@ include ../cpu-modules/Modules.mk
 run: cmd_handler.vvp serial_conn.vpi control_rom*.hex
 	vvp -M. -mserial_conn cmd_handler.vvp
 
-control_rom0.hex:
+control_rom%.hex:
 	../../pycontrol/tools/microcode.py
 
 serial_conn.vpi: serial_cmd.c registration.c serial_host.c
