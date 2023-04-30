@@ -390,3 +390,14 @@ Output module PCB+
 RAM:
 ===
 https://eu.mouser.com/c/?q=61C1024
+
+
+
+Extras
+======
+
+47590-0001 Micro USB
+
+613020243121 - right angle receptacle
+
+61301021021 - right angle header
