@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 
 from typing import List
+from abc import abstractmethod
 
 class AddrBase:
+    @abstractmethod
     def a_bytes(self) -> List[int]: ...
 
     @staticmethod
