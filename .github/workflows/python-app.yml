@@ -62,7 +62,7 @@ jobs:
       run: |
         ln -s ../emulator/vm/pty0
         customasm hello.asm
-        ../pycontrol/tools/exec_bin.py hello.bin | grep "Hello, World!"
+        python ../pycontrol/tools/exec_bin.py hello.bin | grep "Hello, World!"
         customasm prime_sieve.asm
-        ../pycontrol/tools/exec_bin.py prime_sieve.bin | diff -u primes.txt -
+        python ../pycontrol/tools/exec_bin.py prime_sieve.bin | diff -u primes.txt -
 
