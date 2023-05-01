@@ -39,10 +39,13 @@ jobs:
       working-directory: ./emulator/tests
       run: |
         make test
-    - name: Build hardware emulator
+    - name: Build and start hardware emulator
       working-directory: ./emulator/vm
       run: |
         make
+        socat PTY,link=pty0,raw,echo=0 PTY,link=pty1,raw,echo=0 &
+        sleep 0.5
+        make run &
     - name: Check typing with MyPy
       working-directory: ./pycontrol
       env:
@@ -51,11 +54,6 @@ jobs:
         python -m mypy --strict libcpu tests tools
     - name: Run tests
       working-directory: ./pycontrol
-      env:
-        EMU_SHUTDOWN: 1
       run: |
-        socat PTY,link=pty0,raw,echo=0 PTY,link=../emulator/vm/pty1,raw,echo=0 &
-        sleep 0.5
-        make -C ../emulator/vm/ run &
-        sleep 0.5
+        ln -s ../emulator/vm/pty0
         python -m pytest
