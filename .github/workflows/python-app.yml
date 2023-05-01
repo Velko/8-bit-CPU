@@ -57,3 +57,12 @@ jobs:
       run: |
         ln -s ../emulator/vm/pty0
         python -m pytest
+    - name: Run demo programs
+      working-directory: ./demo
+      run: |
+        ln -s ../emulator/vm/pty0
+        customasm hello.asm
+        ../pycontrol/tools/exec_bin.py hello.bin | grep "Hello, World!"
+        customasm prime_sieve.asm
+        ../pycontrol/tools/exec_bin.py prime_sieve.bin | diff -u primes.txt -
+
