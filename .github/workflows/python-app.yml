@@ -12,13 +12,13 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.9
+    - name: Set up Python 3.10
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9
+        python-version: '3.10'
     - name: Install tools and libraries
       run: |
         sudo add-apt-repository -y ppa:velko/dev-tools
@@ -62,7 +62,6 @@ jobs:
       run: |
         ln -s ../emulator/vm/pty0
         customasm hello.asm
-        python ../pycontrol/tools/exec_bin.py hello.bin | grep "Hello, World!"
+        python ../pycontrol/tools/exec_bin.py hello.bin | grep -q "Hello, World!"
         customasm prime_sieve.asm
         python ../pycontrol/tools/exec_bin.py prime_sieve.bin | diff -u primes.txt -
-
