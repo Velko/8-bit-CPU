@@ -30,6 +30,10 @@ jobs:
       working-directory: ./pycontrol/localpath
       run: |
         python setup.py install
+    - name: Generate control ROMs
+      working-directory: ./pycontrol/tools
+      run: |
+        python microcode.py
     - name: Hardware emulator - Verilog testbenches
       working-directory: ./emulator/tests
       run: |
