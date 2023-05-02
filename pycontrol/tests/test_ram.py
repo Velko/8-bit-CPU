@@ -44,3 +44,20 @@ def test_store_load(cpu_helper: CPUHelper, random_bytes: Sequence[int], fill_ram
     actual = cpu_helper.read_reg8(A)
 
     assert random_bytes[addr] == actual
+
+def test_ldx_hw(cpu_helper: CPUHelper) -> None:
+
+    cpu_helper.write_ram(0x1203, 0x33)
+    cpu_helper.load_reg8(B, 3)
+
+    # prepare binary of:
+    #   ldx A, 0x1200, B
+    out_test_prog = bytes([
+        opcode_of("ldx_A_addr_B"), 0x00, 0x12,
+        ])
+
+    cpu_helper.run_snippet(0x0, out_test_prog)
+
+    val = cpu_helper.read_reg8(A)
+
+    assert val == 0x33
