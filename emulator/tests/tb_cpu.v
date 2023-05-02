@@ -93,6 +93,17 @@ module tb_cpu;
         #1
         `assert(main_bus, 8'h54);
 
+        // CLR A
+        control_word <= 32'b00000111111111110000000000001010;
+        #1
+        `tick(clk, 2);
+        `tick(iclk, 2);
+
+        // Put F on bus
+        control_word <= 32'b00000111111111110101100011110100;
+        #1
+        `assert(main_bus, 8'h02);
+
     end
 
     assign main_bus = fdata ? data : 8'bz;

@@ -58,4 +58,6 @@ module cpu(
     assign brk = splitter.clk_brk;
     assign hlt = splitter.clk_halt;
 
+    assign (pull0, pull1) main_bus = 8'b0;
+
 endmodule
