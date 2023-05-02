@@ -24,8 +24,8 @@ module alu_block(
     wire vfb;
 
     gp_register a(
-        .outn(out_mux_l.y[0]),
-        .loadn(load_mux_l.y[0]),
+        .outn(out_mux.y[0]),
+        .loadn(load_mux.y[0]),
         .loutn(arg_l_mux.y[0]),
         .routn(arg_r_mux.y[0]),
 
@@ -39,8 +39,8 @@ module alu_block(
     );
 
     gp_register b(
-        .outn(out_mux_l.y[1]),
-        .loadn(load_mux_l.y[1]),
+        .outn(out_mux.y[1]),
+        .loadn(load_mux.y[1]),
         .loutn(arg_l_mux.y[1]),
         .routn(arg_r_mux.y[1]),
 
@@ -54,8 +54,8 @@ module alu_block(
     );
 
     gp_register c(
-        .outn(out_mux_l.y[2]),
-        .loadn(load_mux_l.y[2]),
+        .outn(out_mux.y[2]),
+        .loadn(load_mux.y[2]),
         .loutn(arg_l_mux.y[2]),
         .routn(arg_r_mux.y[2]),
 
@@ -69,8 +69,8 @@ module alu_block(
     );
 
     gp_register d(
-        .outn(out_mux_l.y[3]),
-        .loadn(load_mux_l.y[3]),
+        .outn(out_mux.y[3]),
+        .loadn(load_mux.y[3]),
         .loutn(arg_l_mux.y[3]),
         .routn(arg_r_mux.y[3]),
 
@@ -84,7 +84,7 @@ module alu_block(
     );
 
     alu_addsub addsub(
-        .outn(out_mux_l.y[5]),
+        .outn(out_mux.y[5]),
         .sub(alt),
 
         .bus(main_bus),
@@ -97,7 +97,7 @@ module alu_block(
     );
 
     alu_andor andor(
-        .outn(out_mux_l.y[6]),
+        .outn(out_mux.y[6]),
         .fn_or(alt),
 
         .bus(main_bus),
@@ -106,7 +106,7 @@ module alu_block(
     );
 
     alu_xornot xornot(
-        .outn(out_mux_h.y[2]),
+        .outn(out_mux.y[10]),
         .fn_not(alt),
 
         .bus(main_bus),
@@ -115,7 +115,7 @@ module alu_block(
     );
 
     alu_shiftswap shiftswap(
-        .outn(out_mux_l.y[7]),
+        .outn(out_mux.y[7]),
         .fn_swap(alt),
 
         .bus(main_bus),
@@ -126,8 +126,8 @@ module alu_block(
     );
 
     flags_reg flags(
-        .boutn(out_mux_l.y[4]),
-        .bloadn(load_mux_l.y[7]),
+        .boutn(out_mux.y[4]),
+        .bloadn(load_mux.y[7]),
         .calcn(calcfn),
 
         .clk(clk),
@@ -141,9 +141,8 @@ module alu_block(
         .cin(cfb)
     );
 
-    demux_138 out_mux_l(.e1n(outctl[3]), .e2n(1'b0), .e3(1'b1), .a(outctl[2:0]));
-    demux_138 load_mux_l(.e1n(loadctl[3]), .e2n(1'b0), .e3(1'b1), .a(loadctl[2:0]));
-    demux_138 out_mux_h(.e1n(1'b0), .e2n(1'b0), .e3(outctl[3]), .a(outctl[2:0]));
+    demux_16 out_mux(.a(outctl));
+    demux_16 load_mux(.a(loadctl));
 
     demux_138 arg_l_mux(.e1n(1'b0), .e2n(1'b0), .e3(1'b1), .a({1'b0, arg_l}));
     demux_138 arg_r_mux(.e1n(1'b0), .e2n(1'b0), .e3(1'b1), .a(arg_r));
