@@ -65,3 +65,5 @@ jobs:
         python ../pycontrol/tools/exec_bin.py hello.bin | grep -q "Hello, World!"
         customasm prime_sieve.asm
         python ../pycontrol/tools/exec_bin.py prime_sieve.bin | diff -u primes.txt -
+        customasm double_dabble.asm
+        python ../pycontrol/tools/exec_bin.py double_dabble.bin | grep -q "36324058"
