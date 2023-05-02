@@ -22,7 +22,12 @@ module cpu(
     alu_block alu(.main_bus(main_bus), .rst(rst), .clk(clk), .iclk(iclk), .fout(fout),
         .outctl(splitter.outctl),
         .loadctl(splitter.loadctl),
-        .alu_ctrl(splitter.alu_ctrl));
+        .arg_l(splitter.alu_arg_l),
+        .arg_r(splitter.alu_arg_r),
+        .alt(splitter.alu_alt),
+        .calcfn(splitter.alu_calcfn),
+        .cin(splitter.alu_cin)
+        );
 
     mem_block mem(.abus(addr_bus), .mbus(main_bus), .rst(rst), .rstn(!rst), .clk(clk), .iclk(iclk),
         .addroutctl(splitter.addroutctl),

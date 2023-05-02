@@ -21,7 +21,11 @@ module tb_alu_block;
         .rst(reset),
         .outctl(outctl),
         .loadctl(loadctl),
-        .alu_ctrl({cin, cfn, alt, arg_r, arg_l}),
+        .arg_l(arg_l),
+        .arg_r(arg_r),
+        .alt(alt),
+        .calcfn(cfn),
+        .cin(cin),
         .clk(clk),
         .iclk(iclk));
 

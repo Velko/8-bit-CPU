@@ -3,7 +3,11 @@ module cword_splitter(
 
         output [3:0] outctl,
         output [3:0] loadctl,
-        output [7:0] alu_ctrl,
+        output [1:0] alu_arg_l,
+        output [2:0] alu_arg_r,
+        output alu_alt,
+        output alu_calcfn,
+        output alu_cin,
 
         output [2:0] addroutctl,
         output [2:0] addrloadctl,
@@ -21,7 +25,11 @@ module cword_splitter(
     assign loadctl = control_word[7:4];
 
     // ROM1 - ALU
-    assign alu_ctrl = control_word[15:8];
+    assign alu_arg_l = control_word[9:8];
+    assign alu_arg_r = control_word[12:10];
+    assign alu_alt = control_word[13];
+    assign alu_calcfn = control_word[14];
+    assign alu_cin = control_word[15];
 
     // ROM2 - Address Bus
     assign addroutctl = control_word[18:16];

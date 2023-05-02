@@ -6,18 +6,16 @@ module alu_block(
 
         input [3:0] outctl,
         input [3:0] loadctl,
-        input [7:0] alu_ctrl,
+        input [1:0] arg_l,
+        input [2:0] arg_r,
+        input alt,
+        input calcfn,
+        input cin,
 
         input clk,
         input iclk
     );
 
-    wire [1:0] arg_l = alu_ctrl[1:0];
-    wire [2:0] arg_r = alu_ctrl[4:2];
-
-    wire alt = alu_ctrl[5];
-    wire calcfn = alu_ctrl[6];
-    wire cin = alu_ctrl[7];
 
     wire [7:0] alu_arg_l;
     wire [7:0] alu_arg_r;
