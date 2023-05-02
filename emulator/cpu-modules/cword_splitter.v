@@ -3,7 +3,6 @@ module cword_splitter(
 
         output [3:0] outctl,
         output [3:0] loadctl,
-        output [7:0] mbus_ctrl,
         output [7:0] alu_ctrl,
 
         output [2:0] addroutctl,
@@ -20,7 +19,6 @@ module cword_splitter(
     // ROM0 - Main Bus
     assign outctl = control_word[3:0];
     assign loadctl = control_word[7:4];
-    assign mbus_ctrl = control_word[7:0];
 
     // ROM1 - ALU
     assign alu_ctrl = control_word[15:8];

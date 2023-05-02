@@ -5,7 +5,8 @@ module mem_block(
         input [2:0] addroutctl,
         input [2:0] addrloadctl,
 
-        input [7:0] mbus_ctrl,
+        input [3:0] outctl,
+        input [3:0] loadctl,
 
         input rst,
         input rstn,
@@ -19,9 +20,6 @@ module mem_block(
 
         output [7:0] iout
 );
-
-    wire [3:0] outctl = mbus_ctrl[3:0];
-    wire [3:0] loadctl = mbus_ctrl[7:4];
 
     program_counter pc(.abus(abus), .reset(rst), .resetn(rstn), .clk(clk), .iclk(iclk), .outn(addr_out_mux.y[5]), .loadn(addr_load_mux.y[5]), .count(!addr_out_mux.y[5]));
 

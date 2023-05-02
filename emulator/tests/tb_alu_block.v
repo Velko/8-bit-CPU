@@ -19,7 +19,8 @@ module tb_alu_block;
     alu_block ab(
         .main_bus(main_bus),
         .rst(reset),
-        .mbus_ctrl({loadctl, outctl}),
+        .outctl(outctl),
+        .loadctl(loadctl),
         .alu_ctrl({cin, cfn, alt, arg_r, arg_l}),
         .clk(clk),
         .iclk(iclk));

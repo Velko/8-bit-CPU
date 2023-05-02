@@ -20,13 +20,15 @@ module cpu(
 
     cword_splitter splitter(.control_word(control_word));
     alu_block alu(.main_bus(main_bus), .rst(rst), .clk(clk), .iclk(iclk), .fout(fout),
-        .mbus_ctrl(splitter.mbus_ctrl),
+        .outctl(splitter.outctl),
+        .loadctl(splitter.loadctl),
         .alu_ctrl(splitter.alu_ctrl));
 
     mem_block mem(.abus(addr_bus), .mbus(main_bus), .rst(rst), .rstn(!rst), .clk(clk), .iclk(iclk),
         .addroutctl(splitter.addroutctl),
         .addrloadctl(splitter.addrloadctl),
-        .mbus_ctrl(splitter.mbus_ctrl),
+        .outctl(splitter.outctl),
+        .loadctl(splitter.loadctl),
         .iout(iout),
         .spinc(splitter.stack_inc),
         .spdec(splitter.stack_dec),

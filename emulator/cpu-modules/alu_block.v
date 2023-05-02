@@ -4,15 +4,13 @@ module alu_block(
 
         input rst,
 
-        input [7:0] mbus_ctrl,
+        input [3:0] outctl,
+        input [3:0] loadctl,
         input [7:0] alu_ctrl,
 
         input clk,
         input iclk
     );
-
-    wire [3:0] outctl = mbus_ctrl[3:0];
-    wire [3:0] loadctl = mbus_ctrl[7:4];
 
     wire [1:0] arg_l = alu_ctrl[1:0];
     wire [2:0] arg_r = alu_ctrl[4:2];
