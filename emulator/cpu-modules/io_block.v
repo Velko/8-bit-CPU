@@ -14,17 +14,17 @@ module io_block (
     wire to_devn;
     wire from_devn;
 
-    assign to_devn = load_mux_l.y[5];
-    assign from_devn = out_mux_h.y[0];
+    assign to_devn = load_mux.y[5];
+    assign from_devn = out_mux.y[8];
 
-    demux_138 load_mux_l(.e1n(splitter.loadctl[3]), .e2n(1'b0), .e3(1'b1), .a(splitter.loadctl[2:0]));
-    demux_138 out_mux_h(.e1n(1'b0), .e2n(1'b0), .e3(outctl[3]), .a(outctl[2:0]));
+    demux_16 load_mux(.a(loadctl));
+    demux_16 out_mux(.a(outctl));
 
     io_control ctl(
         .main_bus(main_bus),
         .rst(reset),
         .clk(clk),
-        .loadn(load_mux_l.y[4]),
+        .loadn(load_mux.y[4]),
         .from_devn(from_devn),
         .to_devn(to_devn),
         .io_bus(io_bus)
