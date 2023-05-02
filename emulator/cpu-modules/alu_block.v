@@ -1,3 +1,30 @@
+`define A_OUT          0
+`define B_OUT          1
+`define C_OUT          2
+`define D_OUT          3
+`define F_OUT          4
+`define ADDSUB_OUT     5
+`define ANDOR_OUT      6
+`define XORNOT_OUT    10
+`define SHIFTSWAP_OUT  7
+
+
+`define A_LOAD       0
+`define B_LOAD       1
+`define C_LOAD       2
+`define D_LOAD       3
+`define F_LOAD       7
+
+`define A_ARG_L       0
+`define B_ARG_L       1
+`define C_ARG_L       2
+`define D_ARG_L       3
+
+`define A_ARG_R       0
+`define B_ARG_R       1
+`define C_ARG_R       2
+`define D_ARG_R       3
+
 module alu_block(
         inout [7:0] main_bus,
         output [3:0] fout,
@@ -24,10 +51,10 @@ module alu_block(
     wire vfb;
 
     gp_register a(
-        .outn(out_mux.y[0]),
-        .loadn(load_mux.y[0]),
-        .loutn(arg_l_mux.y[0]),
-        .routn(arg_r_mux.y[0]),
+        .outn(out_mux.y[`A_OUT]),
+        .loadn(load_mux.y[`A_LOAD]),
+        .loutn(arg_l_mux.y[`A_ARG_L]),
+        .routn(arg_r_mux.y[`A_ARG_R]),
 
         .clk(clk),
         .iclk(iclk),
@@ -39,10 +66,10 @@ module alu_block(
     );
 
     gp_register b(
-        .outn(out_mux.y[1]),
-        .loadn(load_mux.y[1]),
-        .loutn(arg_l_mux.y[1]),
-        .routn(arg_r_mux.y[1]),
+        .outn(out_mux.y[`B_OUT]),
+        .loadn(load_mux.y[`B_LOAD]),
+        .loutn(arg_l_mux.y[`B_ARG_L]),
+        .routn(arg_r_mux.y[`B_ARG_R]),
 
         .clk(clk),
         .iclk(iclk),
@@ -54,10 +81,10 @@ module alu_block(
     );
 
     gp_register c(
-        .outn(out_mux.y[2]),
-        .loadn(load_mux.y[2]),
-        .loutn(arg_l_mux.y[2]),
-        .routn(arg_r_mux.y[2]),
+        .outn(out_mux.y[`C_OUT]),
+        .loadn(load_mux.y[`C_LOAD]),
+        .loutn(arg_l_mux.y[`C_ARG_L]),
+        .routn(arg_r_mux.y[`C_ARG_R]),
 
         .clk(clk),
         .iclk(iclk),
@@ -69,10 +96,10 @@ module alu_block(
     );
 
     gp_register d(
-        .outn(out_mux.y[3]),
-        .loadn(load_mux.y[3]),
-        .loutn(arg_l_mux.y[3]),
-        .routn(arg_r_mux.y[3]),
+        .outn(out_mux.y[`D_OUT]),
+        .loadn(load_mux.y[`D_LOAD]),
+        .loutn(arg_l_mux.y[`D_ARG_L]),
+        .routn(arg_r_mux.y[`D_ARG_R]),
 
         .clk(clk),
         .iclk(iclk),
@@ -84,7 +111,7 @@ module alu_block(
     );
 
     alu_addsub addsub(
-        .outn(out_mux.y[5]),
+        .outn(out_mux.y[`ADDSUB_OUT]),
         .sub(alt),
 
         .bus(main_bus),
@@ -97,7 +124,7 @@ module alu_block(
     );
 
     alu_andor andor(
-        .outn(out_mux.y[6]),
+        .outn(out_mux.y[`ANDOR_OUT]),
         .fn_or(alt),
 
         .bus(main_bus),
@@ -106,7 +133,7 @@ module alu_block(
     );
 
     alu_xornot xornot(
-        .outn(out_mux.y[10]),
+        .outn(out_mux.y[`XORNOT_OUT]),
         .fn_not(alt),
 
         .bus(main_bus),
@@ -115,7 +142,7 @@ module alu_block(
     );
 
     alu_shiftswap shiftswap(
-        .outn(out_mux.y[7]),
+        .outn(out_mux.y[`SHIFTSWAP_OUT]),
         .fn_swap(alt),
 
         .bus(main_bus),
@@ -126,8 +153,8 @@ module alu_block(
     );
 
     flags_reg flags(
-        .boutn(out_mux.y[4]),
-        .bloadn(load_mux.y[7]),
+        .boutn(out_mux.y[`F_OUT]),
+        .bloadn(load_mux.y[`F_LOAD]),
         .calcn(calcfn),
 
         .clk(clk),
