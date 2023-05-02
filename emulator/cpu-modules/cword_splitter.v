@@ -1,3 +1,20 @@
+`define OUT_MUX          3:0
+`define LOAD_MUX         7:4
+`define ALU_ARG_L_MUX    9:8
+`define ALU_ARG_R_MUX   12:10
+`define ALU_ALT            13
+`define ALU_CALCF          14
+`define ALU_CIN            15
+`define ADDR_OUT_MUX    18:16
+`define ADDR_LOAD_MUX   21:19
+`define STACK_INC          22
+`define STACK_DEC          23
+`define STEP_RESET         24
+`define STEP_EXT           25
+`define CLK_HLT            26
+`define CLK_BRK            27
+`define ACALC_SIGNED       28
+
 module cword_splitter(
         input [31:0] control_word,
 
@@ -21,27 +38,27 @@ module cword_splitter(
     );
 
     // ROM0 - Main Bus
-    assign outctl = control_word[3:0];
-    assign loadctl = control_word[7:4];
+    assign outctl = control_word[`OUT_MUX];
+    assign loadctl = control_word[`LOAD_MUX];
 
     // ROM1 - ALU
-    assign alu_arg_l = control_word[9:8];
-    assign alu_arg_r = control_word[12:10];
-    assign alu_alt = control_word[13];
-    assign alu_calcfn = control_word[14];
-    assign alu_cin = control_word[15];
+    assign alu_arg_l = control_word[`ALU_ARG_L_MUX];
+    assign alu_arg_r = control_word[`ALU_ARG_R_MUX];
+    assign alu_alt = control_word[`ALU_ALT];
+    assign alu_calcfn = control_word[`ALU_CALCF];
+    assign alu_cin = control_word[`ALU_CIN];
 
     // ROM2 - Address Bus
-    assign addroutctl = control_word[18:16];
-    assign addrloadctl = control_word[21:19];
-    assign stack_inc = control_word[22];
-    assign stack_dec = control_word[23];
+    assign addroutctl = control_word[`ADDR_OUT_MUX];
+    assign addrloadctl = control_word[`ADDR_LOAD_MUX];
+    assign stack_inc = control_word[`STACK_INC];
+    assign stack_dec = control_word[`STACK_DEC];
 
     // ROM3 - Misc.
-    assign step_resetn = control_word[24];
-    assign step_extn = control_word[25];
-    assign clk_halt = control_word[26];
-    assign clk_brk = control_word[27];
-    assign acalc_signed = control_word[28];
+    assign step_resetn = control_word[`STEP_RESET];
+    assign step_extn = control_word[`STEP_EXT];
+    assign clk_halt = control_word[`CLK_HLT];
+    assign clk_brk = control_word[`CLK_BRK];
+    assign acalc_signed = control_word[`ACALC_SIGNED];
 
 endmodule
