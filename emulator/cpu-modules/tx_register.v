@@ -25,4 +25,12 @@ module tx_register (
     buffer_245 mbus_buf(.oen(moutn), .dir(1'b1), .a(out_v), .b(mbus));
     buffer_245 abus_buf(.oen(aoutn), .dir(1'b1), .a(out_v), .b(abus));
 
+    always @(posedge clk) begin
+        if (mloadn == 1'b0 && ^mbus === 1'bX)
+            $error("Attempting to load %b", mbus);
+
+        if (aloadn == 1'b0 && ^abus === 1'bX)
+            $error("Attempting to load %b", abus);
+    end
+
 endmodule

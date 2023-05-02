@@ -26,4 +26,9 @@ module gp_register (
     buffer_245 alu_l_buf(.oen(loutn), .dir(1'b1), .a(alu_v), .b(alu_l));
     buffer_245 alu_r_buf(.oen(routn), .dir(1'b1), .a(alu_v), .b(alu_r));
 
+    always @(posedge clk) begin
+        if (loadn == 1'b0 && ^bus === 1'bX)
+            $error("Attempting to load %b", bus);
+    end
+
 endmodule
