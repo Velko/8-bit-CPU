@@ -65,6 +65,11 @@ def xor(target: Register, arg: Register) -> None:
     opcode = "xor_{}_{}".format(target.name, arg.name)
     backend.execute_mnemonic(opcode)
 
+def clr(arg: Register) -> None:
+    if backend is None: raise UninitializedError
+    opcode = "clr_{}".format(arg.name)
+    backend.execute_mnemonic(opcode)
+
 def notb(target: Register) -> None:
     if backend is None: raise UninitializedError
     opcode = f"not_{target.name}"

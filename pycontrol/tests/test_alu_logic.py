@@ -214,6 +214,17 @@ def test_xor(cpu_helper: CPUHelper, lhs: Register, rhs: Register, desc: str, val
     assert value == result
     assert flags == xflags
 
+def test_xor_zero_same(cpu_helper: CPUHelper) -> None:
+    cpu_helper.load_reg8(A, 0x5A)
+
+    clr(A)
+
+    value = cpu_helper.read_reg8(A)
+    flags = Flags.decode(cpu_helper.get_flags() & (Flags.Z | Flags.N))
+
+    assert value == 0
+    assert flags == "--Z-"
+
 
 def not_args() -> Iterator[Tuple[str, int, int, str]]:
     yield "normal", 25, 230, "---N"
