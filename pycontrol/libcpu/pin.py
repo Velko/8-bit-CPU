@@ -1,7 +1,6 @@
 from typing import Optional, Sequence
 from enum import Enum
-from .ctrl_base import CtrlBase
-from .util import ControlSignal
+from .util import ControlSignal, CtrlBase
 from abc import abstractmethod
 
 class Level(Enum):

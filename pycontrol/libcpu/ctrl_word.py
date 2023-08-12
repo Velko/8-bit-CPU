@@ -3,8 +3,7 @@
 from typing import Iterable, Optional, Tuple, Any
 from .discovery import all_pins
 from .pin import PinBase
-from .ctrl_base import CtrlBase
-from .util import ControlSignal
+from .util import ControlSignal, CtrlBase
 
 class CtrlWord(CtrlBase):
     c_word: int

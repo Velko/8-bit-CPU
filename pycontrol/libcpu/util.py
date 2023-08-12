@@ -1,6 +1,5 @@
 from abc import abstractmethod
 from typing import TypeVar, Optional
-from .ctrl_base import CtrlBase
 
 class UninitializedError(Exception):
     pass
@@ -23,3 +22,7 @@ class ControlSignal:
         if self.name is None:
             return super.__repr__(self)
         return self.name
+
+class CtrlBase:
+    @abstractmethod
+    def enable(self, pin: ControlSignal) -> None: pass

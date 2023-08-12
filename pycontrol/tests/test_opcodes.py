@@ -9,7 +9,7 @@ from libcpu.devices import Flags
 from libcpu.opcode_builder import MicrocodeBuilder
 from libcpu.pin import MuxPin
 from libcpu.pseudo_devices import EnableCallback
-from libcpu.ctrl_base import CtrlBase
+from libcpu.util import CtrlBase
 
 from typing import Iterator, Sequence, Tuple
 
@@ -49,18 +49,6 @@ class DummySignal(ControlSignal):
         raise Exception("Should not reach")
 
 class DummyControlWord(CtrlBase):
-    def set(self, pin: int) -> None:
-        pass
-
-    def clr(self, pin: int) -> None:
-        pass
-
-    def is_set(self, pin: int) -> bool:
-        return False
-
-    def reset(self) -> None:
-        pass
-
     def enable(self, pin: ControlSignal) -> None:
         pass
 
