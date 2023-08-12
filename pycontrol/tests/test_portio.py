@@ -14,13 +14,16 @@ def test_outa_emu(cpu_helper: CPUHelper) -> None:
 
     assert IOMon.saved_value == 120
 
+def ansi_red(text: str) -> str:
+    return f"\x1b[1;31m{text}\x1b[0m\n"
+
 def outb_args() -> Iterator[Tuple[str, int, int, str]]:
-    yield "unsigned small", 0, 110, " 110\n"
-    yield "unsigned large", 0, 245, " 245\n"
-    yield "signed positive", 1, 40, "  40\n"
-    yield "signed negative", 1, 140, "-116\n"
-    yield "hex", 2, 233, "h e9\n"
-    yield "oct", 3, 89, "o131\n"
+    yield "unsigned small", 0, 110, ansi_red(" 110")
+    yield "unsigned large", 0, 245, ansi_red(" 245")
+    yield "signed positive", 1, 40, ansi_red("  40")
+    yield "signed negative", 1, 140, ansi_red("-116")
+    yield "hex", 2, 233, ansi_red("h e9")
+    yield "oct", 3, 89, ansi_red("o131")
 
 @pytest.mark.emulator
 @pytest.mark.parametrize("desc,mode,val,expected", outb_args())
