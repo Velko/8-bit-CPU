@@ -23,6 +23,9 @@ class DebugCmd(cmd.Cmd):
     def do_continue(self, arg: str) -> None:
         debugger.cont()
 
+    def do_steprun(self, arg: str) -> None:
+        debugger.steprun()
+
     def do_reset(self, arg: str) -> None:
         debugger.reset()
 

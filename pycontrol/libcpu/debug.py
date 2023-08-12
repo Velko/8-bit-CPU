@@ -142,6 +142,16 @@ class Debugger:
                 self.on_output(unwrap(msg.payload))
 
 
+    def steprun(self) -> None:
+        if self.halted:
+            self.on_stop(StopReason.HALT, self.cpu_helper.read_reg16(PC))
+            return
+
+        self.stopped = False
+
+        while not self.stopped:
+            self.step()
+
     def reset(self) -> None:
         # Reset CPU
         self.cpu_helper.backend.client.reset()
