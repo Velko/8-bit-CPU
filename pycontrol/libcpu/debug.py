@@ -70,39 +70,39 @@ class Debugger:
 
         if self.current_break is not None:
             # special case: active breakpoint
-            self.cpu_helper.backend.execute_opcode(self.current_break.orig_op)
+            message = self.cpu_helper.backend.execute_opcode(self.current_break.orig_op)
             self.current_break = None
         else:
             # fetch and execute an instruction
-             self.cpu_helper.backend.fetch_and_execute()
+             message = self.cpu_helper.backend.fetch_and_execute()
 
         # are we done?
-        if Clock.halt.is_enabled(self.cpu_helper.backend.control):
-            self.halted = True
-            self.stopped = True
-            self.on_stop(StopReason.HALT, self.cpu_helper.read_reg16(PC))
-            return
+        if message is not None:
+            if message.reason == RunMessage.Reason.HALT:
+                self.halted = True
+                self.stopped = True
+                self.on_stop(StopReason.HALT, self.cpu_helper.read_reg16(PC))
+                return
 
-        # breakpoint?
-        if Clock.brk.is_enabled(self.cpu_helper.backend.control):
-            self.stopped = True
-            tmp_break = self.break_hit()
-            if tmp_break is not None:
-                # when single-stepping, should ignore breakpoints and execute original
-                # instruction immediately
-                _ = self.cpu_helper.backend.execute_opcode(tmp_break.orig_op)
-            else:
-                # Must be BRK in code, execute NOP instead
-                self.cpu_helper.backend.execute_mnemonic("nop")
+            # breakpoint?
+            if message.reason == RunMessage.Reason.BRK:
+                self.stopped = True
+                tmp_break = self.break_hit()
+                if tmp_break is not None:
+                    # when single-stepping, should ignore breakpoints and execute original
+                    # instruction immediately
+                    _ = self.cpu_helper.backend.execute_opcode(tmp_break.orig_op)
+                else:
+                    # Must be BRK in code, execute NOP instead
+                    self.cpu_helper.backend.execute_mnemonic("nop")
 
-        # port output
-        if IOCtl.to_dev.is_enabled(self.cpu_helper.backend.control):
-            if IOCtl.selected_port == 0:
-                self.on_output(f"{unwrap(IOCtl.saved_value)}\n")
-            elif IOCtl.selected_port == 4:
-                self.on_output(chr(unwrap(IOCtl.saved_value)))
-
-            IOCtl.reset_port()
+            # port output
+            if message.reason == RunMessage.Reason.OUT:
+                if IOCtl.selected_port == 0:
+                    self.on_output(f"{unwrap(IOCtl.saved_value)}\n")
+                elif IOCtl.selected_port == 4:
+                    self.on_output(chr(unwrap(IOCtl.saved_value)))
+                IOCtl.reset_port()
 
         self.on_stop(StopReason.STEP, self.cpu_helper.read_reg16(PC))
 

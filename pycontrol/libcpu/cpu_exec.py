@@ -1,9 +1,9 @@
 from typing import List, Union, Tuple, Optional, Sequence
 from .markers import AddrBase
 from .pseudo_devices import Imm
-from .DeviceSetup import IOCtl, ProgMem, PC, Flags, StepCounter
+from .DeviceSetup import IOCtl, ProgMem, PC, Flags, StepCounter, Clock
 from .opcodes import opcodes, ops_by_code, fetch
-from .pinclient import PinClient
+from .pinclient import PinClient, RunMessage
 from .ctrl_word import CtrlWord, DEFAULT_CW
 from .util import ControlSignal
 
@@ -29,7 +29,7 @@ class CPUBackendControl:
 
         self.execute_opcode(opcodes[mnemonic].opcode)
 
-    def execute_opcode(self, opcode: Optional[int]) -> None:
+    def execute_opcode(self, opcode: Optional[int]) -> Optional[RunMessage]:
 
         # reset op_extension when starting new instruction
         # the variable adds multiples of 256 to the opcode from IR and
@@ -47,12 +47,14 @@ class CPUBackendControl:
             if is_last:
                 fin_steps: List[ControlSignal] = [StepCounter.reset]
                 fin_steps.extend(microstep)
-                self.execute_step(fin_steps)
-                break
+                return self.execute_step(fin_steps)
             else:
-                self.execute_step(microstep)
+                # only last step is expected to produce RunMessage
+                step_result = self.execute_step(microstep)
+                assert step_result is None
+        return None
 
-    def execute_step(self, microstep: Sequence[ControlSignal]) -> None:
+    def execute_step(self, microstep: Sequence[ControlSignal]) -> Optional[RunMessage]:
         control = CtrlWord()
 
         for pin in microstep:
@@ -68,6 +70,7 @@ class CPUBackendControl:
 
             if IOCtl.to_dev.is_enabled(control):
                 IOCtl.push_value(self.client.bus_get())
+                return RunMessage(RunMessage.Reason.OUT);
 
             self.client.clock_tick()
 
@@ -80,12 +83,20 @@ class CPUBackendControl:
             if Flags.calc.is_enabled(control) or Flags.load.is_enabled(control):
                 self.flags_cache = None
 
+            if Clock.halt.is_enabled(control):
+                return RunMessage(RunMessage.Reason.HALT)
+
+            if Clock.brk.is_enabled(control):
+                return RunMessage(RunMessage.Reason.BRK)
+
             # Drop current opcode since it was a prefix for extended one
             if StepCounter.extended.is_enabled(control):
                 self.opcode_cache = None
                 self.op_extension += 1
 
         Imm.release_bus()
+
+        return None
 
     def get_flags_cached(self) -> int:
         if self.flags_cache is None:
@@ -104,10 +115,10 @@ class CPUBackendControl:
 
 
 
-    def fetch_and_execute(self) -> None:
+    def fetch_and_execute(self) -> Optional[RunMessage]:
         # fetch the instruction
         for microstep in fetch:
             self.execute_step(microstep)
 
         # and execute it (will retrieve opcode automatically)
-        self.execute_opcode(None)
+        return self.execute_opcode(None)
