@@ -25,7 +25,7 @@ def ldi(target: Union[Register, Flags], value: int) -> None:
     opcode = "ldi_{}_imm".format(target.name)
     backend.execute_mnemonic(opcode, value)
 
-def lea(target: Union[Register], addr: AddrBase) -> None:
+def lea(target: Register, addr: AddrBase) -> None:
     if backend is None: raise UninitializedError
     opcode = "lea_{}_addr".format(target.name)
     backend.execute_mnemonic(opcode, addr)
