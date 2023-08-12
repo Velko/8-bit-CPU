@@ -103,7 +103,7 @@ class TesterClient(cmd.Cmd):
 
     def do_disable(self, arg: str) -> None:
         'Disable control pin according to active-high/low setting'
-        pin_map[arg].disable(self.control)
+        self.control.disable(pin_map[arg])
         print(bin(self.control.c_word))
 
     complete_disable = complete_pin
