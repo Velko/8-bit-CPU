@@ -6,18 +6,19 @@ from .pin import PinBase
 from .ctrl_base import CtrlBase
 
 class CtrlWord(CtrlBase):
-    def __init__(self, pins: Optional[Iterable[Tuple[Any, PinBase]]]=None):
+    c_word: int
+    default: int
+
+    def __init__(self, pins: Optional[Iterable[Tuple[str, PinBase]]]=None):
 
         if pins is None:
-            pins = all_pins()
-
-        self.c_word = 0
-
-        for name, pin in pins:
-            pin.disable(self)
+            self.c_word = DEFAULT_CW.c_word
+        else:
+            self.c_word = 0
+            for _, pin in pins:
+                pin.disable(self)
 
         self.default = self.c_word
-
 
     def set(self, pin: int) -> None:
         self.c_word |= 1 << pin
@@ -30,3 +31,5 @@ class CtrlWord(CtrlBase):
 
     def is_set(self, pin: int) -> bool:
         return (self.c_word & (1 << pin)) != 0
+
+DEFAULT_CW = CtrlWord(all_pins())

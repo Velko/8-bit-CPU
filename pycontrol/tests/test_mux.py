@@ -12,7 +12,7 @@ class MuxFixture:
     def __init__(self) -> None:
         self.mux = Mux("TestMux", [6, 9, 2], 5)
         self.pin = MuxPin(self.mux, 3)
-        self.control = CtrlWord([(None, self.pin)])
+        self.control = CtrlWord([("", self.pin)])
 
 @pytest.fixture
 def mux_fixture() -> MuxFixture:
