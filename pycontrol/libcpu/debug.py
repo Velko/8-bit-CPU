@@ -70,7 +70,7 @@ class Debugger:
 
         if self.current_break is not None:
             # special case: active breakpoint
-            _ =  self.cpu_helper.backend.execute_opcode(self.current_break.orig_op)
+            self.cpu_helper.backend.execute_opcode(self.current_break.orig_op)
             self.current_break = None
         else:
             # fetch and execute an instruction

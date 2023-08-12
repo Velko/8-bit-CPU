@@ -140,35 +140,29 @@ def ld(target: Register, addr: AddrBase) -> None:
     opcode = "ld_{}_addr".format(target.name)
     backend.execute_mnemonic(opcode, addr)
 
-def bcs(label: Optional[AddrBase]=None) -> bool:
+def bcs(label: Optional[AddrBase]=None) -> None:
     if backend is None: raise UninitializedError
-    taken = backend.execute_mnemonic("bcsl_addr", label)
-    return taken
+    backend.execute_mnemonic("bcsl_addr", label)
 
-def bcc(label: Optional[AddrBase]=None) -> bool:
+def bcc(label: Optional[AddrBase]=None) -> None:
     if backend is None: raise UninitializedError
-    taken = backend.execute_mnemonic("bccl_addr", label)
-    return taken
+    backend.execute_mnemonic("bccl_addr", label)
 
-def beq(label: Optional[AddrBase]=None) -> bool:
+def beq(label: Optional[AddrBase]=None) -> None:
     if backend is None: raise UninitializedError
-    taken = backend.execute_mnemonic("beql_addr", label)
-    return taken
+    backend.execute_mnemonic("beql_addr", label)
 
-def bne(label: Optional[AddrBase]=None) -> bool:
+def bne(label: Optional[AddrBase]=None) -> None:
     if backend is None: raise UninitializedError
-    taken = backend.execute_mnemonic("bnel_addr", label)
-    return taken
+    backend.execute_mnemonic("bnel_addr", label)
 
-def jmp(label: AddrBase) -> bool:
+def jmp(label: AddrBase) -> None:
     if backend is None: raise UninitializedError
-    taken = backend.execute_mnemonic("ljmp_addr", label)
-    return taken
+    backend.execute_mnemonic("ljmp_addr", label)
 
-def rjmp(offset: int) -> bool:
+def rjmp(offset: int) -> None:
     if backend is None: raise UninitializedError
-    taken = backend.execute_mnemonic("rjmp_imm", offset)
-    return taken
+    backend.execute_mnemonic("rjmp_imm", offset)
 
 def hlt() -> None:
     if backend is None: raise UninitializedError

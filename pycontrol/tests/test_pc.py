@@ -44,20 +44,18 @@ def test_beq_taken(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg8(F, Flags.Z)
     cpu_helper.load_reg16(PC, 0x1234)
 
-    taken = beq(Addr(0x4321))
+    beq(Addr(0x4321))
     pcaddr = cpu_helper.read_reg16(PC)
 
-    assert taken == True
     assert pcaddr == 0x4321
 
 def test_beq_fallthrough(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg8(F, 0)
     cpu_helper.load_reg16(PC, 0x1234)
 
-    taken = beq(Addr(0x4321))
+    beq(Addr(0x4321))
     pcaddr = cpu_helper.read_reg16(PC)
 
-    assert taken == False
     assert pcaddr == 0x1236
 
 
@@ -65,60 +63,54 @@ def test_bne_taken(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg8(F, 0)
     cpu_helper.load_reg16(PC, 0x1234)
 
-    taken = bne(Addr(0x4321))
+    bne(Addr(0x4321))
     pcaddr = cpu_helper.read_reg16(PC)
 
-    assert taken == True
     assert pcaddr == 0x4321
 
 def test_bne_fallthrough(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg8(F, Flags.Z)
     cpu_helper.load_reg16(PC, 0x1234)
 
-    taken = bne(Addr(0x4321))
+    bne(Addr(0x4321))
     pcaddr = cpu_helper.read_reg16(PC)
 
-    assert taken == False
     assert pcaddr == 0x1236
 
 def test_bcs_taken(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg8(F, Flags.C)
     cpu_helper.load_reg16(PC, 0x1234)
 
-    taken = bcs(Addr(0x4321))
+    bcs(Addr(0x4321))
     pcaddr = cpu_helper.read_reg16(PC)
 
-    assert taken == True
     assert pcaddr == 0x4321
 
 def test_bcs_fallthrough(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg8(F, 0)
     cpu_helper.load_reg16(PC, 0x1234)
 
-    taken = bcs(Addr(0x4321))
+    bcs(Addr(0x4321))
     pcaddr = cpu_helper.read_reg16(PC)
 
-    assert taken == False
     assert pcaddr == 0x1236
 
 def test_bcc_taken(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg8(F, 0)
     cpu_helper.load_reg16(PC, 0x1234)
 
-    taken = bcc(Addr(0x4321))
+    bcc(Addr(0x4321))
     pcaddr = cpu_helper.read_reg16(PC)
 
-    assert taken == True
     assert pcaddr == 0x4321
 
 def test_bcc_fallthrough(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg8(F, Flags.C)
     cpu_helper.load_reg16(PC, 0x1234)
 
-    taken = bcc(Addr(0x4321))
+    bcc(Addr(0x4321))
     pcaddr = cpu_helper.read_reg16(PC)
 
-    assert taken == False
     assert pcaddr == 0x1236
 
 def test_lr_pc_swap(cpu_helper: CPUHelper) -> None:

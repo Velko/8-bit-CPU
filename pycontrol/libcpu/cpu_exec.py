@@ -13,7 +13,6 @@ class InvalidOpcodeException(Exception):
 class CPUBackendControl:
     def __init__(self) -> None:
         self.client = PinClient()
-        self.branch_taken = False
         self.flags_cache: Optional[int] = None
         self.opcode_cache: Optional[int] = None
         self.op_extension = 0
@@ -22,17 +21,15 @@ class CPUBackendControl:
         Imm.connect(self.client)
         ProgMem.hook_out(Imm)
 
-    def execute_mnemonic(self, mnemonic: str, arg: Union[None, int, AddrBase]=None) -> bool:
+    def execute_mnemonic(self, mnemonic: str, arg: Union[None, int, AddrBase]=None) -> None:
         if not mnemonic in opcodes:
             raise InvalidOpcodeException(mnemonic)
 
         Imm.inject(arg)
 
-        exec_result = self.execute_opcode(opcodes[mnemonic].opcode)
+        self.execute_opcode(opcodes[mnemonic].opcode)
 
-        return exec_result
-
-    def execute_opcode(self, opcode: Optional[int]) -> bool:
+    def execute_opcode(self, opcode: Optional[int]) -> None:
 
         # reset op_extension when starting new instruction
         # the variable adds multiples of 256 to the opcode from IR and
@@ -42,8 +39,6 @@ class CPUBackendControl:
 
         # Reset/force current opcode
         self.opcode_cache = opcode
-
-        self.branch_taken = False
 
         for s_idx in range(8-len(fetch)):
             # re-evaluate opcode, as it may change mid-instruction (when extended is loaded)
@@ -56,8 +51,6 @@ class CPUBackendControl:
                 break
             else:
                 self.execute_step(microstep)
-
-        return self.branch_taken
 
     def execute_step(self, microstep: Sequence[ControlSignal]) -> None:
         control = CtrlWord()
@@ -79,7 +72,6 @@ class CPUBackendControl:
             self.client.clock_tick()
 
             if PC.load.is_enabled(control):
-                self.branch_taken = True
                 Imm.invalidate()
 
             if PC.inc.is_enabled(control):
@@ -118,4 +110,4 @@ class CPUBackendControl:
             self.execute_step(microstep)
 
         # and execute it (will retrieve opcode automatically)
-        _ = self.execute_opcode(None)
+        self.execute_opcode(None)
