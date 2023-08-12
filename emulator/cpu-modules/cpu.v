@@ -12,7 +12,7 @@ module cpu(
 
         output brk,
         output hlt,
-        output [159:0] out_fmt,
+        output [255:0] out_fmt,
         input out_rst,
 
         inout [31:0] control_word

@@ -1,6 +1,6 @@
 module display_num(
     input [7:0] main_bus,
-    output reg [159:0] out_fmt,
+    output reg [255:0] out_fmt,
     input out_rst,
     input clk,
     input load_val,
@@ -12,16 +12,16 @@ module display_num(
     reg [7:0] ifmt_mode;
 
     initial begin
-        out_fmt <= 160'bx;
+        out_fmt <= 256'bx;
     end
 
     always @(posedge clk) begin
         if (load_val) begin
             case (ifmt_mode)
-            0: $sformat(out_fmt, "#FOUT# %d\\n", main_bus);
-            1: $sformat(out_fmt, "#FOUT#%d\\n", signed_bus);
-            2: $sformat(out_fmt, "#FOUT#h %h\\n", main_bus);
-            3: $sformat(out_fmt, "#FOUT#o%o\\n", main_bus);
+            0: $sformat(out_fmt, "#FOUT#\033[1;31m %d\033[0m\\n", main_bus);
+            1: $sformat(out_fmt, "#FOUT#\033[1;31m%d\033[0m\\n", signed_bus);
+            2: $sformat(out_fmt, "#FOUT#\033[1;31mh %h\033[0m\\n", main_bus);
+            3: $sformat(out_fmt, "#FOUT#\033[1;31mo%o\033[0m\\n", main_bus);
             default: $swrite(out_fmt, "#FOUT#x\\n");
             endcase
         end
@@ -38,7 +38,7 @@ module display_num(
     end
 
     always @(posedge out_rst or posedge reset) begin
-        out_fmt <= 160'bx;
+        out_fmt <= 256'bx;
     end
 
     assign signed_bus = main_bus;

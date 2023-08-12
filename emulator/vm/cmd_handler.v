@@ -13,7 +13,7 @@ module cmd_handler;
     wire [3:0] fout;
     wire [7:0] iout;
 
-    wire [159:0] out_fmt;
+    wire [255:0] out_fmt;
     reg out_rst;
 
     reg rst;
@@ -159,7 +159,7 @@ module cmd_handler;
                         clk <= 0;
 
                         // Intercept and send Formatted Out messages
-                        if (out_fmt !== 160'bx) begin
+                        if (out_fmt !== 256'bx) begin
                             $serial_send_str(out_fmt);
                             out_rst <= 1;
                         end

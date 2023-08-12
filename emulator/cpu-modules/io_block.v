@@ -4,7 +4,7 @@ module io_block (
     input reset,
     input out_rst,
 
-    output reg [159:0] out_fmt,
+    output reg [255:0] out_fmt,
 
     input [3:0] outctl,
     input [3:0] loadctl
