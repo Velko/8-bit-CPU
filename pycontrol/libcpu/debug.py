@@ -77,14 +77,14 @@ class Debugger:
              self.cpu_helper.backend.fetch_and_execute()
 
         # are we done?
-        if Clock.halt.is_enabled():
+        if Clock.halt.is_enabled(self.cpu_helper.backend.control):
             self.halted = True
             self.stopped = True
             self.on_stop(StopReason.HALT, self.cpu_helper.read_reg16(PC))
             return
 
         # breakpoint?
-        if Clock.brk.is_enabled():
+        if Clock.brk.is_enabled(self.cpu_helper.backend.control):
             self.stopped = True
             tmp_break = self.break_hit()
             if tmp_break is not None:
@@ -96,7 +96,7 @@ class Debugger:
                 self.cpu_helper.backend.execute_mnemonic("nop")
 
         # port output
-        if IOCtl.to_dev.is_enabled():
+        if IOCtl.to_dev.is_enabled(self.cpu_helper.backend.control):
             if IOCtl.selected_port == 0:
                 self.on_output(f"{unwrap(IOCtl.saved_value)}\n")
             elif IOCtl.selected_port == 4:

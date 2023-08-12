@@ -56,7 +56,7 @@ def process_steps(steps: Iterable[Iterable[ControlSignal]]) -> Iterator[str]:
     for pins in steps:
         control.reset()
         for pin in pins:
-            pin.enable()
+            pin.enable(control)
 
         yield "0x{word:0{digits}x}".format(word=control.c_word, digits=CWORD_WIDTH_BYTES * 2)
 
@@ -99,7 +99,7 @@ def write_mux(hfile: TextIO, name: str, mux: Mux) -> None:
             if pin.mux == mux:
                 pname = pname.replace(".", "_").upper()
                 control.reset()
-                pin.enable()
+                pin.enable(control)
 
                 define = "#define MPIN_{}_BITS".format(pname)
                 hfile.write("{define:40}0b{word:0{bits}b}\n".format(define=define, word=control.c_word & mask, bits=CWORD_WIDTH_BITS))

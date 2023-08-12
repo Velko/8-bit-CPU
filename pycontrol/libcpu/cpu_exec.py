@@ -64,33 +64,33 @@ class CPUBackendControl:
         self.control.reset()
 
         for pin in microstep:
-            pin.enable()
+            pin.enable(self.control)
 
         if self.control.c_word != self.control.default:
 
             self.client.ctrl_commit(self.control.c_word)
 
 
-            if IOCtl.laddr.is_enabled():
+            if IOCtl.laddr.is_enabled(self.control):
                 IOCtl.select_port(self.client.bus_get())
 
-            if IOCtl.to_dev.is_enabled():
+            if IOCtl.to_dev.is_enabled(self.control):
                 IOCtl.push_value(self.client.bus_get())
 
             self.client.clock_tick()
 
-            if PC.load.is_enabled():
+            if PC.load.is_enabled(self.control):
                 self.branch_taken = True
                 Imm.invalidate()
 
-            if PC.inc.is_enabled():
+            if PC.inc.is_enabled(self.control):
                 Imm.consume() # next byte for imm value
 
-            if Flags.calc.is_enabled() or Flags.load.is_enabled():
+            if Flags.calc.is_enabled(self.control) or Flags.load.is_enabled(self.control):
                 self.flags_cache = None
 
             # Drop current opcode since it was a prefix for extended one
-            if StepCounter.extended.is_enabled():
+            if StepCounter.extended.is_enabled(self.control):
                 self.opcode_cache = None
                 self.op_extension += 1
 

@@ -14,8 +14,7 @@ class CtrlWord(CtrlBase):
         self.c_word = 0
 
         for name, pin in pins:
-            pin.connect(self)
-            pin.disable()
+            pin.disable(self)
 
         self.default = self.c_word
 

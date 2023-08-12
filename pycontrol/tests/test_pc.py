@@ -31,7 +31,7 @@ def test_pc_count(cpu_helper: CPUHelper, expected: int) -> None:
     cpu_helper.load_reg16(PC, expected - 1)
 
     cpu_helper.backend.control.reset()
-    PC.out.enable()
+    PC.out.enable(cpu_helper.backend.control)
     cpu_helper.backend.client.ctrl_commit(cpu_helper.backend.control.c_word)
     cpu_helper.backend.client.clock_tick()
 

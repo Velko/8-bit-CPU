@@ -91,14 +91,14 @@ class TesterClient(cmd.Cmd):
 
     def do_enable(self, arg: str) -> None:
         'Enable control pin according to active-high/low setting'
-        pin_map[arg].enable()
+        pin_map[arg].enable(backend.control)
         print(bin(backend.control.c_word))
 
     complete_enable = complete_pin
 
     def do_disable(self, arg: str) -> None:
         'Disable control pin according to active-high/low setting'
-        pin_map[arg].disable()
+        pin_map[arg].disable(backend.control)
         print(bin(backend.control.c_word))
 
     complete_disable = complete_pin

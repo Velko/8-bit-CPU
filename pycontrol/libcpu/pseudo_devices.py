@@ -4,15 +4,16 @@ from typing import Union, Callable, Optional, List
 from .devices import RAM, DeviceBase
 from .util import ControlSignal, UninitializedError
 from .pinclient import PinClient
+from .ctrl_base import CtrlBase
 
 class EnableCallback(ControlSignal):
-    def __init__(self, callback: Callable[[], None], original: ControlSignal) -> None:
+    def __init__(self, callback: Callable[[CtrlBase], None], original: ControlSignal) -> None:
         ControlSignal.__init__(self)
         self.callback = callback
         self.original = original
 
-    def enable(self) -> None:
-        self.callback()
+    def enable(self, control_word: CtrlBase) -> None:
+        self.callback(control_word)
 
 
 class RamHook:
@@ -84,17 +85,17 @@ class RamProxy(DeviceBase):
     def hook_write(self, hook: RamHook) -> None:
         self._write_hook = hook
 
-    def enable_out(self) -> None:
+    def enable_out(self, control_word: CtrlBase) -> None:
         if self._out_hook is not None and self._out_hook.is_active():
             self._out_hook.invoke()
         else:
-            self.ram.out.enable()
+            self.ram.out.enable(control_word)
 
-    def enable_write(self) -> None:
+    def enable_write(self, control_word: CtrlBase) -> None:
         if self._write_hook is not None and self._write_hook.is_active():
             self._write_hook.invoke()
         else:
-            self.ram.write.enable()
+            self.ram.write.enable(control_word)
 
 
 Imm = ImmediateValue()

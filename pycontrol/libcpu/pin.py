@@ -13,67 +13,48 @@ class PinBase(ControlSignal):
         ControlSignal.__init__(self)
 
     @abstractmethod
-    def connect(self, control_word: CtrlBase) -> None: pass
+    def disable(self, control_word: CtrlBase) -> None: pass
 
     @abstractmethod
-    def disable(self) -> None: pass
-
-    @abstractmethod
-    def is_enabled(self) -> bool: pass
+    def is_enabled(self, control_word: CtrlBase) -> bool: pass
 
 
 class Pin(PinBase):
     def __init__(self, num: int, level: Level) -> None:
         PinBase.__init__(self)
-        self.control_word: Optional[CtrlBase] = None
         self.num = num
         self.level = level
 
-    def connect(self, control_word: CtrlBase) -> None:
-        self.control_word = control_word
-
-    def enable(self) -> None:
-        if self.control_word is None:
-            raise UninitializedError
-
+    def enable(self, control_word: CtrlBase) -> None:
         if self.level == Level.HIGH:
-            self.control_word.set(self.num)
+            control_word.set(self.num)
         else:
-            self.control_word.clr(self.num)
+            control_word.clr(self.num)
 
-    def disable(self) -> None:
-        if self.control_word is None:
-            raise UninitializedError
-
+    def disable(self, control_word: CtrlBase) -> None:
         if self.level == Level.HIGH:
-            self.control_word.clr(self.num)
+            control_word.clr(self.num)
         else:
-            self.control_word.set(self.num)
+            control_word.set(self.num)
 
-    def is_enabled(self) -> bool:
-        if self.control_word is None:
-            raise UninitializedError
-
+    def is_enabled(self, control_word: CtrlBase) -> bool:
         if self.level == Level.HIGH:
-            return self.control_word.is_set(self.num)
+            return control_word.is_set(self.num)
         else:
-            return not self.control_word.is_set(self.num)
+            return not control_word.is_set(self.num)
 
 class NullPin(PinBase):
     def __init__(self) -> None:
         PinBase.__init__(self)
         self._is_enabled = False
 
-    def connect(self, control_word: CtrlBase) -> None:
-        pass
-
-    def enable(self) -> None:
+    def enable(self, control_word: CtrlBase) -> None:
         self._is_enabled = True
 
-    def disable(self) -> None:
+    def disable(self, control_word: CtrlBase) -> None:
         self._is_enabled = False
 
-    def is_enabled(self) -> bool:
+    def is_enabled(self, control_word: CtrlBase) -> bool:
         return self._is_enabled
 
 class AliasedPin(PinBase):
@@ -81,17 +62,14 @@ class AliasedPin(PinBase):
         PinBase.__init__(self)
         self.target = target
 
-    def connect(self, control_word: CtrlBase) -> None:
-        pass
+    def enable(self, control_word: CtrlBase) -> None:
+        self.target.enable(control_word)
 
-    def enable(self) -> None:
-        self.target.enable()
+    def disable(self, control_word: CtrlBase) -> None:
+        self.target.disable(control_word)
 
-    def disable(self) -> None:
-        self.target.disable()
-
-    def is_enabled(self) -> bool:
-        return self.target.is_enabled()
+    def is_enabled(self, control_word: CtrlBase) -> bool:
+        return self.target.is_enabled(control_word)
 
 class Mux:
     def __init__(self, name: str, pins: Sequence[int], default: int) -> None:
@@ -100,30 +78,20 @@ class Mux:
         self.pins = pins
         self.default = default
 
-    def connect(self, control_word: CtrlBase) -> None:
-        self.control_word = control_word
-
-    def enable(self, num: int) -> None:
-        if self.control_word is None:
-            raise UninitializedError
-
+    def enable(self, control_word: CtrlBase, num: int) -> None:
         for bit_idx, pin in enumerate(self.pins):
             if (num & (1 << bit_idx)) != 0:
-                self.control_word.set(pin)
+                control_word.set(pin)
             else:
-                self.control_word.clr(pin)
+                control_word.clr(pin)
 
-    def disable(self) -> None:
-        self.enable(self.default)
+    def disable(self, control_word: CtrlBase) -> None:
+        self.enable(control_word, self.default)
 
-    @property
-    def current(self) -> int:
-        if self.control_word is None:
-            raise UninitializedError
-
+    def current(self, control_word: CtrlBase) -> int:
         result = 0
         for bit_idx, pin in enumerate(self.pins):
-            if self.control_word.is_set(pin):
+            if control_word.is_set(pin):
                 result |= (1 << bit_idx)
 
         return result
@@ -140,14 +108,11 @@ class MuxPin(PinBase):
     # for example: Mux.connect() is called for by each MuxPin's
     # connect(), while calling it only once per Mux should be
     # enough. But it does not make any noticable impact on peformance
-    def connect(self, control_word: CtrlBase) -> None:
-        self.mux.connect(control_word)
+    def enable(self, control_word: CtrlBase) -> None:
+        self.mux.enable(control_word, self.num)
 
-    def enable(self) -> None:
-        self.mux.enable(self.num)
+    def disable(self, control_word: CtrlBase) -> None:
+        self.mux.disable(control_word)
 
-    def disable(self) -> None:
-        self.mux.disable()
-
-    def is_enabled(self) -> bool:
-        return self.mux.current == self.num
+    def is_enabled(self, control_word: CtrlBase) -> bool:
+        return self.mux.current(control_word) == self.num

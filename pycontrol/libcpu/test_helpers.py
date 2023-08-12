@@ -14,7 +14,7 @@ class CPUHelper:
 
     def load_reg16(self, reg: Register, value: int) -> None:
         self.backend.control.reset()
-        reg.load.enable()
+        reg.load.enable(self.backend.control)
         self.backend.client.addr_set(value)
         self.backend.client.ctrl_commit(self.backend.control.c_word)
         self.backend.client.clock_tick()
@@ -25,7 +25,7 @@ class CPUHelper:
     def read_reg16(self, reg: Register) -> int:
 
         self.backend.control.reset()
-        reg.out.enable()
+        reg.out.enable(self.backend.control)
         self.backend.client.ctrl_commit(self.backend.control.c_word)
         value = self.backend.client.addr_get()
 
@@ -37,7 +37,7 @@ class CPUHelper:
     def read_ram(self, addr: int) -> int:
         self.backend.client.addr_set(addr)
         self.backend.control.reset()
-        Ram.out.enable()
+        Ram.out.enable(self.backend.control)
         self.backend.client.ctrl_commit(self.backend.control.c_word)
 
         value = self.backend.client.bus_get()
@@ -49,7 +49,7 @@ class CPUHelper:
 
     def write_ram(self, addr: int, value: int) -> None:
         self.backend.control.reset()
-        Ram.write.enable()
+        Ram.write.enable(self.backend.control)
         self.backend.client.ctrl_commit(self.backend.control.c_word)
 
         self.backend.client.addr_set(addr)
@@ -72,7 +72,7 @@ class CPUHelper:
 
     def read_reg8(self, reg: Register) -> int:
         self.backend.control.reset()
-        reg.out.enable()
+        reg.out.enable(self.backend.control)
         self.backend.client.ctrl_commit(self.backend.control.c_word)
         value = self.backend.client.bus_get()
 
@@ -82,7 +82,7 @@ class CPUHelper:
 
     def load_reg8(self, reg: Register, value: int) -> None:
         self.backend.control.reset()
-        reg.load.enable()
+        reg.load.enable(self.backend.control)
         self.backend.client.bus_set(value)
         self.backend.client.ctrl_commit(self.backend.control.c_word)
         self.backend.client.clock_tick()

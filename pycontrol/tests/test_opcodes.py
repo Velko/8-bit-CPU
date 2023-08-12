@@ -9,6 +9,7 @@ from libcpu.devices import Flags
 from libcpu.opcode_builder import MicrocodeBuilder
 from libcpu.pin import MuxPin
 from libcpu.pseudo_devices import EnableCallback
+from libcpu.ctrl_base import CtrlBase
 
 from typing import Iterator, Sequence, Tuple
 
@@ -44,8 +45,21 @@ class DummySignal(ControlSignal):
     def __init__(self) -> None:
         ControlSignal.__init__(self)
 
-    def enable(self) -> None:
+    def enable(self, control_word: CtrlBase) -> None:
         raise Exception("Should not reach")
+
+class DummyControlWord(CtrlBase):
+    def set(self, pin: int) -> None:
+        pass
+
+    def clr(self, pin: int) -> None:
+        pass
+
+    def is_set(self, pin: int) -> bool:
+        return False
+
+    def reset(self) -> None:
+        pass
 
 class OpcodeFixture:
     def __init__(self) -> None:
@@ -53,6 +67,7 @@ class OpcodeFixture:
 
         self.orig_default = DummySignal()
         self.orig_alt = DummySignal()
+        self.control = DummyControlWord()
 
         builder.add_instruction("dummy")\
             .add_step(EnableCallback(self.log_default, self.orig_default))\
@@ -63,10 +78,10 @@ class OpcodeFixture:
 
         self.reset()
 
-    def log_default(self) -> None:
+    def log_default(self, control_word: CtrlBase) -> None:
         self.default_taken = True
 
-    def log_alt(self) -> None:
+    def log_alt(self, control_word: CtrlBase) -> None:
         self.alt_taken = True
 
     def reset(self) -> None:
@@ -90,7 +105,7 @@ def test_opcode_flag_taken(fake_opcodes: OpcodeFixture) -> None:
         c, is_last = op.get_step(s_idx, Flags.C)
 
         for e in c:
-            e.enable()
+            e.enable(fake_opcodes.control)
 
         if is_last: break
 
@@ -107,7 +122,7 @@ def test_opcode_flag_default(fake_opcodes: OpcodeFixture) -> None:
         c, is_last = op.get_step(s_idx, 0)
 
         for e in c:
-            e.enable()
+            e.enable(fake_opcodes.control)
 
         if is_last: break
 

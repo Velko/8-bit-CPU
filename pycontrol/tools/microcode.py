@@ -45,7 +45,7 @@ def process_steps(microcode: MicroCode, flags: int) -> Iterator[int]:
     for pins in finalize_steps(microcode, flags):
         control.reset()
         for pin in pins:
-            pin.enable()
+            pin.enable(control)
 
         yield control.c_word
 

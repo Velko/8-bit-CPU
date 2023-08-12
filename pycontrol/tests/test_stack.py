@@ -33,7 +33,7 @@ def test_sp_inc(cpu_helper: CPUHelper, expected: int) -> None:
     cpu_helper.load_reg16(SP, expected - 1)
 
     cpu_helper.backend.control.reset()
-    SP.inc.enable()
+    SP.inc.enable(cpu_helper.backend.control)
     cpu_helper.backend.client.ctrl_commit(cpu_helper.backend.control.c_word)
     cpu_helper.backend.client.clock_tick()
     cpu_helper.backend.control.reset()
@@ -48,7 +48,7 @@ def test_sp_dec(cpu_helper: CPUHelper, expected: int) -> None:
     cpu_helper.load_reg16(SP, expected + 1)
 
     cpu_helper.backend.control.reset()
-    SP.dec.enable()
+    SP.dec.enable(cpu_helper.backend.control)
     cpu_helper.backend.client.ctrl_commit(cpu_helper.backend.control.c_word)
     cpu_helper.backend.client.clock_tick()
     cpu_helper.backend.control.reset()
