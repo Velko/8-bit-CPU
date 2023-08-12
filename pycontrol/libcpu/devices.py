@@ -124,6 +124,7 @@ class AddressCalculator(Register):
     def __init__(self, name: str, out: PinBase, load: PinBase, signed: PinBase) -> None:
         Register.__init__(self, name, out, load)
         self.signed = signed
+        self.assign_pin_names()
 
 class IOController(DeviceBase):
     def __init__(self, name: str, laddr: PinBase, from_dev: PinBase, to_dev: PinBase) -> None:
