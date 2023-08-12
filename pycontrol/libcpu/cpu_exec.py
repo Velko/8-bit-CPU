@@ -58,7 +58,7 @@ class CPUBackendControl:
         control = CtrlWord()
 
         for pin in microstep:
-            pin.enable(control)
+            control.enable(pin)
 
         if control.c_word != DEFAULT_CW.c_word:
 

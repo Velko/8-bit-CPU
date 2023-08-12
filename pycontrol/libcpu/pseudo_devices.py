@@ -12,7 +12,7 @@ class EnableCallback(ControlSignal):
         self.callback = callback
         self.original = original
 
-    def enable(self, control_word: CtrlBase) -> None:
+    def do_enable(self, control_word: CtrlBase) -> None:
         self.callback(control_word)
 
 
@@ -89,13 +89,13 @@ class RamProxy(DeviceBase):
         if self._out_hook is not None and self._out_hook.is_active():
             self._out_hook.invoke()
         else:
-            self.ram.out.enable(control_word)
+            self.ram.out.do_enable(control_word)
 
     def enable_write(self, control_word: CtrlBase) -> None:
         if self._write_hook is not None and self._write_hook.is_active():
             self._write_hook.invoke()
         else:
-            self.ram.write.enable(control_word)
+            self.ram.write.do_enable(control_word)
 
 
 Imm = ImmediateValue()

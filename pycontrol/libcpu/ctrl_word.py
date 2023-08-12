@@ -4,6 +4,7 @@ from typing import Iterable, Optional, Tuple, Any
 from .discovery import all_pins
 from .pin import PinBase
 from .ctrl_base import CtrlBase
+from .util import ControlSignal
 
 class CtrlWord(CtrlBase):
     c_word: int
@@ -25,5 +26,8 @@ class CtrlWord(CtrlBase):
 
     def is_set(self, pin: int) -> bool:
         return (self.c_word & (1 << pin)) != 0
+
+    def enable(self, pin: ControlSignal) -> None:
+        pin.do_enable(self)
 
 DEFAULT_CW = CtrlWord(all_pins())

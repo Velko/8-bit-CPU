@@ -25,7 +25,7 @@ class Pin(PinBase):
         self.num = num
         self.level = level
 
-    def enable(self, control_word: CtrlBase) -> None:
+    def do_enable(self, control_word: CtrlBase) -> None:
         if self.level == Level.HIGH:
             control_word.set(self.num)
         else:
@@ -48,7 +48,7 @@ class NullPin(PinBase):
         PinBase.__init__(self)
         self._is_enabled = False
 
-    def enable(self, control_word: CtrlBase) -> None:
+    def do_enable(self, control_word: CtrlBase) -> None:
         self._is_enabled = True
 
     def disable(self, control_word: CtrlBase) -> None:
@@ -62,8 +62,8 @@ class AliasedPin(PinBase):
         PinBase.__init__(self)
         self.target = target
 
-    def enable(self, control_word: CtrlBase) -> None:
-        self.target.enable(control_word)
+    def do_enable(self, control_word: CtrlBase) -> None:
+        self.target.do_enable(control_word)
 
     def disable(self, control_word: CtrlBase) -> None:
         self.target.disable(control_word)
@@ -108,7 +108,7 @@ class MuxPin(PinBase):
     # for example: Mux.connect() is called for by each MuxPin's
     # connect(), while calling it only once per Mux should be
     # enough. But it does not make any noticable impact on peformance
-    def enable(self, control_word: CtrlBase) -> None:
+    def do_enable(self, control_word: CtrlBase) -> None:
         self.mux.enable(control_word, self.num)
 
     def disable(self, control_word: CtrlBase) -> None:

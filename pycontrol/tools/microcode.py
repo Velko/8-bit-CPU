@@ -43,7 +43,7 @@ def process_steps(microcode: MicroCode, flags: int) -> Iterator[int]:
     for pins in finalize_steps(microcode, flags):
         control = CtrlWord()
         for pin in pins:
-            pin.enable(control)
+            control.enable(pin)
 
         yield control.c_word
 

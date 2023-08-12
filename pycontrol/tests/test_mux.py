@@ -25,13 +25,13 @@ def test_mux_manual(mux_fixture: MuxFixture) -> None:
 
 def test_mux_pin_set_bits(mux_fixture: MuxFixture) -> None:
 
-    mux_fixture.pin.enable(mux_fixture.control)
+    mux_fixture.control.enable(mux_fixture.pin)
 
     assert mux_fixture.control.c_word == 0b1001000000
 
 def test_mux_pin_current(mux_fixture: MuxFixture) -> None:
 
-    mux_fixture.pin.enable(mux_fixture.control)
+    mux_fixture.control.enable(mux_fixture.pin)
 
     assert mux_fixture.mux.current(mux_fixture.control) == mux_fixture.pin.num
 

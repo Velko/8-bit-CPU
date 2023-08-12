@@ -15,7 +15,7 @@ class CPUHelper:
 
     def load_reg16(self, reg: Register, value: int) -> None:
         control = CtrlWord()
-        reg.load.enable(control)
+        control.enable(reg.load)
         self.backend.client.addr_set(value)
         self.backend.client.ctrl_commit(control.c_word)
         self.backend.client.clock_tick()
@@ -25,7 +25,7 @@ class CPUHelper:
 
     def read_reg16(self, reg: Register) -> int:
         control = CtrlWord()
-        reg.out.enable(control)
+        control.enable(reg.out)
         self.backend.client.ctrl_commit(control.c_word)
         value = self.backend.client.addr_get()
 
@@ -37,7 +37,7 @@ class CPUHelper:
     def read_ram(self, addr: int) -> int:
         self.backend.client.addr_set(addr)
         control = CtrlWord()
-        Ram.out.enable(control)
+        control.enable(Ram.out)
         self.backend.client.ctrl_commit(control.c_word)
 
         value = self.backend.client.bus_get()
@@ -48,7 +48,7 @@ class CPUHelper:
 
     def write_ram(self, addr: int, value: int) -> None:
         control = CtrlWord()
-        Ram.write.enable(control)
+        control.enable(Ram.write)
         self.backend.client.ctrl_commit(control.c_word)
 
         self.backend.client.addr_set(addr)
@@ -70,7 +70,7 @@ class CPUHelper:
 
     def read_reg8(self, reg: Register) -> int:
         control = CtrlWord()
-        reg.out.enable(control)
+        control.enable(reg.out)
         self.backend.client.ctrl_commit(control.c_word)
         value = self.backend.client.bus_get()
 
@@ -80,7 +80,7 @@ class CPUHelper:
 
     def load_reg8(self, reg: Register, value: int) -> None:
         control = CtrlWord()
-        reg.load.enable(control)
+        control.enable(reg.load)
         self.backend.client.bus_set(value)
         self.backend.client.ctrl_commit(control.c_word)
         self.backend.client.clock_tick()

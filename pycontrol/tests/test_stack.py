@@ -34,7 +34,7 @@ def test_sp_inc(cpu_helper: CPUHelper, expected: int) -> None:
     cpu_helper.load_reg16(SP, expected - 1)
 
     control = CtrlWord()
-    SP.inc.enable(control)
+    control.enable(SP.inc)
     cpu_helper.backend.client.ctrl_commit(control.c_word)
     cpu_helper.backend.client.clock_tick()
     cpu_helper.backend.client.off(DEFAULT_CW.c_word)
@@ -48,7 +48,7 @@ def test_sp_dec(cpu_helper: CPUHelper, expected: int) -> None:
     cpu_helper.load_reg16(SP, expected + 1)
 
     control = CtrlWord()
-    SP.dec.enable(control)
+    control.enable(SP.dec)
     cpu_helper.backend.client.ctrl_commit(control.c_word)
     cpu_helper.backend.client.clock_tick()
     cpu_helper.backend.client.off(DEFAULT_CW.c_word)

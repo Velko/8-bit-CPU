@@ -45,7 +45,7 @@ class DummySignal(ControlSignal):
     def __init__(self) -> None:
         ControlSignal.__init__(self)
 
-    def enable(self, control_word: CtrlBase) -> None:
+    def do_enable(self, control_word: CtrlBase) -> None:
         raise Exception("Should not reach")
 
 class DummyControlWord(CtrlBase):
@@ -59,6 +59,9 @@ class DummyControlWord(CtrlBase):
         return False
 
     def reset(self) -> None:
+        pass
+
+    def enable(self, pin: ControlSignal) -> None:
         pass
 
 class OpcodeFixture:
@@ -105,7 +108,7 @@ def test_opcode_flag_taken(fake_opcodes: OpcodeFixture) -> None:
         c, is_last = op.get_step(s_idx, Flags.C)
 
         for e in c:
-            e.enable(fake_opcodes.control)
+            fake_opcodes.control.enable(e)
 
         if is_last: break
 
@@ -122,7 +125,7 @@ def test_opcode_flag_default(fake_opcodes: OpcodeFixture) -> None:
         c, is_last = op.get_step(s_idx, 0)
 
         for e in c:
-            e.enable(fake_opcodes.control)
+            fake_opcodes.control.enable(e)
 
         if is_last: break
 

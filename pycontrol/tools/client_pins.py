@@ -96,7 +96,7 @@ class TesterClient(cmd.Cmd):
 
     def do_enable(self, arg: str) -> None:
         'Enable control pin according to active-high/low setting'
-        pin_map[arg].enable(self.control)
+        self.control.enable(pin_map[arg])
         print(bin(self.control.c_word))
 
     complete_enable = complete_pin

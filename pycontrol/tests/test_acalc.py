@@ -25,9 +25,9 @@ def test_acalc(cpu_helper: CPUHelper, name: str, addr: int, offset: int, signed:
     control = CtrlWord()
 
     if signed:
-        ACalc.signed.enable(control)
+        control.enable(ACalc.signed)
 
-    ACalc.load.enable(control)
+    control.enable(ACalc.load)
 
     backend.client.ctrl_commit(control.c_word)
     backend.client.clock_tick()
