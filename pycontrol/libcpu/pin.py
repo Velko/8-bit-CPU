@@ -1,19 +1,25 @@
 from typing import Optional, Sequence
 from enum import Enum
 from .ctrl_base import CtrlBase
-from .util import UninitializedError, ControlSignal
+from .util import ControlSignal
 from abc import abstractmethod
 
 class Level(Enum):
     LOW = 0
     HIGH = 1
 
+def set_bit(c_word: int, pin: int) -> int:
+    return c_word | (1 << pin)
+
+def clr_bit(c_word: int, pin: int) -> int:
+    return c_word & ~(1 << pin)
+
 class PinBase(ControlSignal):
     def __init__(self) -> None:
         ControlSignal.__init__(self)
 
     @abstractmethod
-    def do_disable(self, control_word: CtrlBase) -> None: pass
+    def apply_disable(self, c_word: int) -> int: pass
 
     @abstractmethod
     def check_enabled(self, control_word: CtrlBase) -> bool: pass
@@ -25,17 +31,17 @@ class Pin(PinBase):
         self.num = num
         self.level = level
 
-    def do_enable(self, control_word: CtrlBase) -> None:
+    def apply_enable(self, c_word: int) -> int:
         if self.level == Level.HIGH:
-            control_word.set(self.num)
+            return set_bit(c_word, self.num)
         else:
-            control_word.clr(self.num)
+            return clr_bit(c_word, self.num)
 
-    def do_disable(self, control_word: CtrlBase) -> None:
+    def apply_disable(self, c_word: int) -> int:
         if self.level == Level.HIGH:
-            control_word.clr(self.num)
+            return clr_bit(c_word, self.num)
         else:
-            control_word.set(self.num)
+            return set_bit(c_word, self.num)
 
     def check_enabled(self, control_word: CtrlBase) -> bool:
         if self.level == Level.HIGH:
@@ -48,11 +54,13 @@ class NullPin(PinBase):
         PinBase.__init__(self)
         self._is_enabled = False
 
-    def do_enable(self, control_word: CtrlBase) -> None:
+    def apply_enable(self, c_word: int) -> int:
         self._is_enabled = True
+        return c_word
 
-    def do_disable(self, control_word: CtrlBase) -> None:
+    def apply_disable(self, c_word: int) -> int:
         self._is_enabled = False
+        return c_word
 
     def check_enabled(self, control_word: CtrlBase) -> bool:
         return self._is_enabled
@@ -62,11 +70,11 @@ class AliasedPin(PinBase):
         PinBase.__init__(self)
         self.target = target
 
-    def do_enable(self, control_word: CtrlBase) -> None:
-        self.target.do_enable(control_word)
+    def apply_enable(self, c_word: int) -> int:
+        return self.target.apply_enable(c_word)
 
-    def do_disable(self, control_word: CtrlBase) -> None:
-        self.target.do_disable(control_word)
+    def apply_disable(self, c_word: int) -> int:
+        return self.target.apply_disable(c_word)
 
     def check_enabled(self, control_word: CtrlBase) -> bool:
         return self.target.check_enabled(control_word)
@@ -78,15 +86,17 @@ class Mux:
         self.pins = pins
         self.default = default
 
-    def enable(self, control_word: CtrlBase, num: int) -> None:
+    def apply_enable(self, c_word: int, num: int) -> int:
         for bit_idx, pin in enumerate(self.pins):
             if (num & (1 << bit_idx)) != 0:
-                control_word.set(pin)
+                c_word = set_bit(c_word, pin)
             else:
-                control_word.clr(pin)
+                c_word = clr_bit(c_word, pin)
 
-    def disable(self, control_word: CtrlBase) -> None:
-        self.enable(control_word, self.default)
+        return c_word
+
+    def apply_disable(self, c_word: int, num: int) -> int:
+        return self.apply_enable(c_word, self.default)
 
     def current(self, control_word: CtrlBase) -> int:
         result = 0
@@ -108,11 +118,11 @@ class MuxPin(PinBase):
     # for example: Mux.connect() is called for by each MuxPin's
     # connect(), while calling it only once per Mux should be
     # enough. But it does not make any noticable impact on peformance
-    def do_enable(self, control_word: CtrlBase) -> None:
-        self.mux.enable(control_word, self.num)
+    def apply_enable(self, c_word: int) -> int:
+        return self.mux.apply_enable(c_word, self.num)
 
-    def do_disable(self, control_word: CtrlBase) -> None:
-        self.mux.disable(control_word)
+    def apply_disable(self, c_word: int) -> int:
+        return self.mux.apply_disable(c_word, self.num)
 
     def check_enabled(self, control_word: CtrlBase) -> bool:
         return self.mux.current(control_word) == self.num

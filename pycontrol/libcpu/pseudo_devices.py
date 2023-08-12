@@ -7,13 +7,13 @@ from .pinclient import PinClient
 from .ctrl_base import CtrlBase
 
 class EnableCallback(ControlSignal):
-    def __init__(self, callback: Callable[[CtrlBase], None], original: ControlSignal) -> None:
+    def __init__(self, callback: Callable[[int], int], original: ControlSignal) -> None:
         ControlSignal.__init__(self)
         self.callback = callback
         self.original = original
 
-    def do_enable(self, control_word: CtrlBase) -> None:
-        self.callback(control_word)
+    def apply_enable(self, c_word: int) -> int:
+        return self.callback(c_word)
 
 
 class RamHook:
@@ -85,17 +85,19 @@ class RamProxy(DeviceBase):
     def hook_write(self, hook: RamHook) -> None:
         self._write_hook = hook
 
-    def enable_out(self, control_word: CtrlBase) -> None:
+    def enable_out(self, c_word: int) -> int:
         if self._out_hook is not None and self._out_hook.is_active():
             self._out_hook.invoke()
+            return c_word
         else:
-            self.ram.out.do_enable(control_word)
+            return self.ram.out.apply_enable(c_word)
 
-    def enable_write(self, control_word: CtrlBase) -> None:
+    def enable_write(self, c_word: int) -> int:
         if self._write_hook is not None and self._write_hook.is_active():
             self._write_hook.invoke()
+            return c_word
         else:
-            self.ram.write.do_enable(control_word)
+            return self.ram.write.apply_enable(c_word)
 
 
 Imm = ImmediateValue()

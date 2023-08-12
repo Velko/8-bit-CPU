@@ -5,12 +5,6 @@ from .util import ControlSignal
 
 class CtrlBase:
     @abstractmethod
-    def set(self, pin: int) -> None: pass
-
-    @abstractmethod
-    def clr(self, pin: int) -> None: pass
-
-    @abstractmethod
     def is_set(self, pin: int) -> bool: pass
 
     @abstractmethod

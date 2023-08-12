@@ -17,7 +17,7 @@ class ControlSignal:
         self.name: Optional[str] = None
 
     @abstractmethod
-    def do_enable(self, control_word: CtrlBase) -> None: pass
+    def apply_enable(self, c_word: int) -> int: pass
 
     def __repr__(self) -> str:
         if self.name is None:

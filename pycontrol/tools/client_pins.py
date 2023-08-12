@@ -7,7 +7,7 @@ from typing import Dict, Sequence
 from libcpu.cpu import setup_live
 backend = setup_live()
 
-from libcpu.pin import PinBase, Pin
+from libcpu.pin import PinBase, Pin, Level
 from libcpu.discovery import all_pins
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
@@ -71,11 +71,15 @@ class TesterClient(cmd.Cmd):
         if arg in pin_map:
             pin = pin_map[arg]
             if isinstance(pin, Pin):
-                self.control.set(pin.num)
+                # in order to always set, make an active-high copy of the pin
+                high_pin = Pin(pin.num, Level.HIGH)
+                self.control.enable(high_pin)
             else:
                 raise Unsupported
         else:
-            self.control.set(int(arg, 0))
+            # create an artificial pin for numeric
+            high_pin = Pin(int(arg, 0), Level.HIGH)
+            self.control.enable(high_pin)
         print(bin(self.control.c_word))
 
     complete_set = complete_pin_direct
@@ -85,11 +89,15 @@ class TesterClient(cmd.Cmd):
         if arg in pin_map:
             pin = pin_map[arg]
             if isinstance(pin, Pin):
-                self.control.clr(pin.num)
+                # in order to always set, make an active-high copy of the pin
+                high_pin = Pin(pin.num, Level.HIGH)
+                self.control.disable(high_pin)
             else:
                 raise Unsupported
         else:
-            self.control.clr(int(arg))
+            # create an artificial pin for numeric
+            high_pin = Pin(int(arg, 0), Level.HIGH)
+            self.control.disable(high_pin)
         print(bin(self.control.c_word))
 
     complete_clr = complete_pin_direct

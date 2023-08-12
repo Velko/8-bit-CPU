@@ -45,7 +45,7 @@ class DummySignal(ControlSignal):
     def __init__(self) -> None:
         ControlSignal.__init__(self)
 
-    def do_enable(self, control_word: CtrlBase) -> None:
+    def apply_enable(self, c_word: int) -> int:
         raise Exception("Should not reach")
 
 class DummyControlWord(CtrlBase):
@@ -81,11 +81,13 @@ class OpcodeFixture:
 
         self.reset()
 
-    def log_default(self, control_word: CtrlBase) -> None:
+    def log_default(self, c_word: int) -> int:
         self.default_taken = True
+        return c_word
 
-    def log_alt(self, control_word: CtrlBase) -> None:
+    def log_alt(self, c_word: int) -> int:
         self.alt_taken = True
+        return c_word
 
     def reset(self) -> None:
         self.default_taken = False
