@@ -4,7 +4,6 @@ from typing import Union, Callable, Optional, List
 from .devices import RAM, DeviceBase
 from .util import ControlSignal, UninitializedError
 from .pinclient import PinClient
-from .util import CtrlBase
 
 class EnableCallback(ControlSignal):
     def __init__(self, callback: Callable[[int], int], original: ControlSignal) -> None:

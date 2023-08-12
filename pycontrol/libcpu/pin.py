@@ -1,6 +1,6 @@
-from typing import Optional, Sequence
+from typing import Sequence
 from enum import Enum
-from .util import ControlSignal, CtrlBase
+from .util import ControlSignal
 from abc import abstractmethod
 
 class Level(Enum):
@@ -84,7 +84,6 @@ class AliasedPin(PinBase):
 class Mux:
     def __init__(self, name: str, pins: Sequence[int], default: int) -> None:
         self.name = name
-        self.control_word: Optional[CtrlBase]  = None
         self.pins = pins
         self.default = default
 

@@ -3,9 +3,9 @@
 from typing import Iterable, Optional, Tuple, Any
 from .discovery import all_pins
 from .pin import PinBase
-from .util import ControlSignal, CtrlBase
+from .util import ControlSignal
 
-class CtrlWord(CtrlBase):
+class CtrlWord:
     c_word: int
 
     def __init__(self, pins: Optional[Iterable[Tuple[str, PinBase]]]=None):
