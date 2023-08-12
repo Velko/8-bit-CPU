@@ -21,13 +21,13 @@ class CPUBackendControl:
         Imm.connect(self.client)
         ProgMem.hook_out(Imm)
 
-    def execute_mnemonic(self, mnemonic: str, arg: Union[None, int, AddrBase]=None) -> None:
+    def execute_mnemonic(self, mnemonic: str, arg: Union[None, int, AddrBase]=None) -> Optional[RunMessage]:
         if not mnemonic in opcodes:
             raise InvalidOpcodeException(mnemonic)
 
         Imm.inject(arg)
 
-        self.execute_opcode(opcodes[mnemonic].opcode)
+        return self.execute_opcode(opcodes[mnemonic].opcode)
 
     def execute_opcode(self, opcode: Optional[int]) -> Optional[RunMessage]:
 
@@ -69,8 +69,8 @@ class CPUBackendControl:
                 IOMon.select_port(self.client.bus_get())
 
             if control.is_enabled(IOCtl.to_dev):
-                IOMon.push_value(self.client.bus_get())
-                return RunMessage(RunMessage.Reason.OUT);
+                formatted = IOMon.format_value(self.client.bus_get())
+                return RunMessage(RunMessage.Reason.OUT, formatted);
 
             if control.is_enabled(PC.load):
                 Imm.invalidate()

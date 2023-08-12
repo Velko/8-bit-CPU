@@ -2,17 +2,18 @@ import pytest
 
 from libcpu.cpu import *
 from libcpu.test_helpers import CPUHelper
-from libcpu.pseudo_devices import IOMon
+from libcpu.pinclient import RunMessage
 
 from typing import Iterator, Tuple
 
 def test_outa_emu(cpu_helper: CPUHelper) -> None:
-    IOMon.reset_port()
     cpu_helper.load_reg8(A, 120)
 
-    out(4, A)
+    message = out(4, A)
 
-    assert IOMon.saved_value == 120
+    assert message is not None
+    assert message.reason == RunMessage.Reason.OUT
+    assert message.payload == 'x'
 
 def ansi_red(text: str) -> str:
     return f"\x1b[1;31m{text}\x1b[0m\n"

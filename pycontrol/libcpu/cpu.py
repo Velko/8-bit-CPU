@@ -5,6 +5,7 @@ from .devices import Register, Flags
 from .markers import AddrBase
 from .opcodes import opcodes
 from .cpu_exec import CPUBackendControl, InvalidOpcodeException
+from .pinclient import RunMessage
 
 backend: Optional[CPUBackendControl] = None
 
@@ -209,10 +210,10 @@ def strel(base: Register, offset: int, source: Register) -> None:
     opcode = f"str_{base.name}_imm_{source.name}"
     backend.execute_mnemonic(opcode, offset)
 
-def out(port: int, source: Register) -> None:
+def out(port: int, source: Register) -> Optional[RunMessage]:
     if backend is None: raise UninitializedError
     opcode = f"out_imm_{source.name}"
-    backend.execute_mnemonic(opcode, port)
+    return backend.execute_mnemonic(opcode, port)
 
 def dummy_ext(value: int) -> None:
     if backend is None: raise UninitializedError

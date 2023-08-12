@@ -101,20 +101,20 @@ class RamProxy(DeviceBase):
 class IOMonitor:
     def __init__(self) -> None:
         self.selected_port: Optional[int] = None
-        self.saved_value: Optional[int] = None
 
     def select_port(self, port: int) -> None:
         self.selected_port = port
 
-    def push_value(self, value: int) -> None:
+    def format_value(self, value: int) -> Optional[str]:
         if self.selected_port is None:
             raise Exception("Port not selected")
-        self.saved_value = value
 
-    def reset_port(self) -> None:
-        self.selected_port = None
-        self.saved_value = None
+        if self.selected_port == 0:
+            return f"\033[1;31m{value:>4}\033[0m\n"
+        elif IOMon.selected_port == 4:
+            return chr(value)
 
+        return None
 
 
 Imm = ImmediateValue()
