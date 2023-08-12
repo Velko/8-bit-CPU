@@ -16,7 +16,7 @@ class PinBase(ControlSignal):
     def do_disable(self, control_word: CtrlBase) -> None: pass
 
     @abstractmethod
-    def is_enabled(self, control_word: CtrlBase) -> bool: pass
+    def check_enabled(self, control_word: CtrlBase) -> bool: pass
 
 
 class Pin(PinBase):
@@ -37,7 +37,7 @@ class Pin(PinBase):
         else:
             control_word.set(self.num)
 
-    def is_enabled(self, control_word: CtrlBase) -> bool:
+    def check_enabled(self, control_word: CtrlBase) -> bool:
         if self.level == Level.HIGH:
             return control_word.is_set(self.num)
         else:
@@ -54,7 +54,7 @@ class NullPin(PinBase):
     def do_disable(self, control_word: CtrlBase) -> None:
         self._is_enabled = False
 
-    def is_enabled(self, control_word: CtrlBase) -> bool:
+    def check_enabled(self, control_word: CtrlBase) -> bool:
         return self._is_enabled
 
 class AliasedPin(PinBase):
@@ -68,8 +68,8 @@ class AliasedPin(PinBase):
     def do_disable(self, control_word: CtrlBase) -> None:
         self.target.do_disable(control_word)
 
-    def is_enabled(self, control_word: CtrlBase) -> bool:
-        return self.target.is_enabled(control_word)
+    def check_enabled(self, control_word: CtrlBase) -> bool:
+        return self.target.check_enabled(control_word)
 
 class Mux:
     def __init__(self, name: str, pins: Sequence[int], default: int) -> None:
@@ -114,5 +114,5 @@ class MuxPin(PinBase):
     def do_disable(self, control_word: CtrlBase) -> None:
         self.mux.disable(control_word)
 
-    def is_enabled(self, control_word: CtrlBase) -> bool:
+    def check_enabled(self, control_word: CtrlBase) -> bool:
         return self.mux.current(control_word) == self.num

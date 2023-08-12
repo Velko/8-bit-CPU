@@ -33,5 +33,8 @@ class CtrlWord(CtrlBase):
     def disable(self, pin: PinBase) -> None:
         pin.do_disable(self)
 
+    def is_enabled(self, pin: PinBase) -> bool:
+        return pin.check_enabled(self)
+
 
 DEFAULT_CW = CtrlWord(all_pins())

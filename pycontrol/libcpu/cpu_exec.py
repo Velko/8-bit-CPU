@@ -65,32 +65,32 @@ class CPUBackendControl:
             self.client.ctrl_commit(control.c_word)
 
 
-            if IOCtl.laddr.is_enabled(control):
+            if control.is_enabled(IOCtl.laddr):
                 IOCtl.select_port(self.client.bus_get())
 
-            if IOCtl.to_dev.is_enabled(control):
+            if control.is_enabled(IOCtl.to_dev):
                 IOCtl.push_value(self.client.bus_get())
                 return RunMessage(RunMessage.Reason.OUT);
 
             self.client.clock_tick()
 
-            if PC.load.is_enabled(control):
+            if control.is_enabled(PC.load):
                 Imm.invalidate()
 
-            if PC.inc.is_enabled(control):
+            if control.is_enabled(PC.inc):
                 Imm.consume() # next byte for imm value
 
-            if Flags.calc.is_enabled(control) or Flags.load.is_enabled(control):
+            if control.is_enabled(Flags.calc) or control.is_enabled(Flags.load):
                 self.flags_cache = None
 
-            if Clock.halt.is_enabled(control):
+            if control.is_enabled(Clock.halt):
                 return RunMessage(RunMessage.Reason.HALT)
 
-            if Clock.brk.is_enabled(control):
+            if control.is_enabled(Clock.brk):
                 return RunMessage(RunMessage.Reason.BRK)
 
             # Drop current opcode since it was a prefix for extended one
-            if StepCounter.extended.is_enabled(control):
+            if control.is_enabled(StepCounter.extended):
                 self.opcode_cache = None
                 self.op_extension += 1
 
