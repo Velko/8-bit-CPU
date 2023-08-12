@@ -63,7 +63,7 @@ class CPUBackendControl:
         if control.c_word != DEFAULT_CW.c_word:
 
             self.client.ctrl_commit(control.c_word)
-
+            self.client.clock_tick()
 
             if control.is_enabled(IOCtl.laddr):
                 IOCtl.select_port(self.client.bus_get())
@@ -71,8 +71,6 @@ class CPUBackendControl:
             if control.is_enabled(IOCtl.to_dev):
                 IOCtl.push_value(self.client.bus_get())
                 return RunMessage(RunMessage.Reason.OUT);
-
-            self.client.clock_tick()
 
             if control.is_enabled(PC.load):
                 Imm.invalidate()
