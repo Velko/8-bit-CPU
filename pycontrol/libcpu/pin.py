@@ -14,6 +14,9 @@ def set_bit(c_word: int, pin: int) -> int:
 def clr_bit(c_word: int, pin: int) -> int:
     return c_word & ~(1 << pin)
 
+def check_bit(c_word: int, pin: int) -> bool:
+    return (c_word & (1 << pin)) != 0
+
 class PinBase(ControlSignal):
     def __init__(self) -> None:
         ControlSignal.__init__(self)
@@ -22,7 +25,7 @@ class PinBase(ControlSignal):
     def apply_disable(self, c_word: int) -> int: pass
 
     @abstractmethod
-    def check_enabled(self, control_word: CtrlBase) -> bool: pass
+    def check_enabled(self, c_word: int) -> bool: pass
 
 
 class Pin(PinBase):
@@ -43,11 +46,11 @@ class Pin(PinBase):
         else:
             return set_bit(c_word, self.num)
 
-    def check_enabled(self, control_word: CtrlBase) -> bool:
+    def check_enabled(self, c_word: int) -> bool:
         if self.level == Level.HIGH:
-            return control_word.is_set(self.num)
+            return check_bit(c_word, self.num)
         else:
-            return not control_word.is_set(self.num)
+            return not check_bit(c_word, self.num)
 
 class NullPin(PinBase):
     def __init__(self) -> None:
@@ -62,7 +65,7 @@ class NullPin(PinBase):
         self._is_enabled = False
         return c_word
 
-    def check_enabled(self, control_word: CtrlBase) -> bool:
+    def check_enabled(self, c_word: int) -> bool:
         return self._is_enabled
 
 class AliasedPin(PinBase):
@@ -76,8 +79,8 @@ class AliasedPin(PinBase):
     def apply_disable(self, c_word: int) -> int:
         return self.target.apply_disable(c_word)
 
-    def check_enabled(self, control_word: CtrlBase) -> bool:
-        return self.target.check_enabled(control_word)
+    def check_enabled(self, c_word: int) -> bool:
+        return self.target.check_enabled(c_word)
 
 class Mux:
     def __init__(self, name: str, pins: Sequence[int], default: int) -> None:
@@ -98,10 +101,10 @@ class Mux:
     def apply_disable(self, c_word: int, num: int) -> int:
         return self.apply_enable(c_word, self.default)
 
-    def current(self, control_word: CtrlBase) -> int:
+    def current(self, c_word: int) -> int:
         result = 0
         for bit_idx, pin in enumerate(self.pins):
-            if control_word.is_set(pin):
+            if check_bit(c_word, pin):
                 result |= (1 << bit_idx)
 
         return result
@@ -124,5 +127,5 @@ class MuxPin(PinBase):
     def apply_disable(self, c_word: int) -> int:
         return self.mux.apply_disable(c_word, self.num)
 
-    def check_enabled(self, control_word: CtrlBase) -> bool:
-        return self.mux.current(control_word) == self.num
+    def check_enabled(self, c_word: int) -> bool:
+        return self.mux.current(c_word) == self.num

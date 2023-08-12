@@ -33,5 +33,5 @@ def test_mux_pin_current(mux_fixture: MuxFixture) -> None:
 
     mux_fixture.control.enable(mux_fixture.pin)
 
-    assert mux_fixture.mux.current(mux_fixture.control) == mux_fixture.pin.num
+    assert mux_fixture.mux.current(mux_fixture.control.c_word) == mux_fixture.pin.num
 

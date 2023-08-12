@@ -18,9 +18,6 @@ class CtrlWord(CtrlBase):
             for _, pin in pins:
                 self.disable(pin)
 
-    def is_set(self, pin: int) -> bool:
-        return (self.c_word & (1 << pin)) != 0
-
     def enable(self, pin: ControlSignal) -> None:
         self.c_word = pin.apply_enable(self.c_word)
 
@@ -28,7 +25,7 @@ class CtrlWord(CtrlBase):
         self.c_word = pin.apply_disable(self.c_word)
 
     def is_enabled(self, pin: PinBase) -> bool:
-        return pin.check_enabled(self)
+        return pin.check_enabled(self.c_word)
 
 
 DEFAULT_CW = CtrlWord(all_pins())
