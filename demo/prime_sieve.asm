@@ -2,11 +2,7 @@
 #include "velkocpu.def"
 #include "ports.def"
 
-#bankdef program
-{
-    #addr 0
-    #outp 0
-}
+#bank program
 
 sieve_start:
 
