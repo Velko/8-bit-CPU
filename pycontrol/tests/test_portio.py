@@ -2,17 +2,17 @@ import pytest
 
 from libcpu.cpu import *
 from libcpu.test_helpers import CPUHelper
-from libcpu.DeviceSetup import IOCtl
+from libcpu.pseudo_devices import IOMon
 
 from typing import Iterator, Tuple
 
 def test_outa_emu(cpu_helper: CPUHelper) -> None:
-    IOCtl.reset_port()
+    IOMon.reset_port()
     cpu_helper.load_reg8(A, 120)
 
     out(4, A)
 
-    assert IOCtl.saved_value == 120
+    assert IOMon.saved_value == 120
 
 def outb_args() -> Iterator[Tuple[str, int, int, str]]:
     yield "unsigned small", 0, 110, " 110\n"

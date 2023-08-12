@@ -134,17 +134,3 @@ class IOController(DeviceBase):
         self.to_dev = to_dev
         self.assign_pin_names()
 
-        self.selected_port: Optional[int] = None
-        self.saved_value: Optional[int] = None
-
-    def select_port(self, port: int) -> None:
-        self.selected_port = port
-
-    def push_value(self, value: int) -> None:
-        if self.selected_port is None:
-            raise Exception("Port not selected")
-        self.saved_value = value
-
-    def reset_port(self) -> None:
-        self.selected_port = None
-        self.saved_value = None

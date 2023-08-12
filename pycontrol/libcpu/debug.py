@@ -5,13 +5,13 @@ from typing import Dict, List, Mapping, Optional, Union
 from enum import Enum
 
 from .test_helpers import CPUHelper
-from .cpu import ret, setup_live
-from .DeviceSetup import IOCtl, IR, LR, PC, Clock, SP
+from .DeviceSetup import IOCtl, IR, LR, PC, SP
 from .pinclient import RunMessage
 from .util import unwrap
 from .opcodes import opcodes
 from .cpu import A, B, C, D
 from .cpu_exec import CPUBackendControl
+from .pseudo_devices import IOMon
 
 class Breakpoint:
     def __init__(self, addr: int, orig_op: int):
@@ -98,11 +98,11 @@ class Debugger:
 
             # port output
             if message.reason == RunMessage.Reason.OUT:
-                if IOCtl.selected_port == 0:
-                    self.on_output(f"\033[1;31m{unwrap(IOCtl.saved_value):>4}\033[0m\n")
-                elif IOCtl.selected_port == 4:
-                    self.on_output(chr(unwrap(IOCtl.saved_value)))
-                IOCtl.reset_port()
+                if IOMon.selected_port == 0:
+                    self.on_output(f"\033[1;31m{unwrap(IOMon.saved_value):>4}\033[0m\n")
+                elif IOMon.selected_port == 4:
+                    self.on_output(chr(unwrap(IOMon.saved_value)))
+                IOMon.reset_port()
 
         self.on_stop(StopReason.STEP, self.cpu_helper.read_reg16(PC))
 

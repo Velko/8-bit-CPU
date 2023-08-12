@@ -1,6 +1,6 @@
 from typing import List, Union, Tuple, Optional, Sequence
 from .markers import AddrBase
-from .pseudo_devices import Imm
+from .pseudo_devices import Imm, IOMon
 from .DeviceSetup import IOCtl, ProgMem, PC, Flags, StepCounter, Clock
 from .opcodes import opcodes, ops_by_code, fetch
 from .pinclient import PinClient, RunMessage
@@ -66,10 +66,10 @@ class CPUBackendControl:
             self.client.clock_tick()
 
             if control.is_enabled(IOCtl.laddr):
-                IOCtl.select_port(self.client.bus_get())
+                IOMon.select_port(self.client.bus_get())
 
             if control.is_enabled(IOCtl.to_dev):
-                IOCtl.push_value(self.client.bus_get())
+                IOMon.push_value(self.client.bus_get())
                 return RunMessage(RunMessage.Reason.OUT);
 
             if control.is_enabled(PC.load):
