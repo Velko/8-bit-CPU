@@ -5,12 +5,12 @@
         offset = target - $ - 1
         assert (offset <= 127)
         assert (offset >= -128)
-        asm { rjmp offset }
+        asm { rjmp {offset} }
     }
 
     jmp {target} =>
     {
-        asm { ljmp target }
+        asm { ljmp {target} }
     }
 
     beq {target} =>
@@ -18,12 +18,12 @@
         offset = target - $ - 1
         assert (offset <= 127)
         assert (offset >= -128)
-        asm { beqr offset }
+        asm { beqr {offset} }
     }
 
     beq {target} =>
     {
-        asm { beql target }
+        asm { beql {target} }
     }
 
     bne {target} =>
@@ -31,12 +31,12 @@
         offset = target - $ - 1
         assert (offset <= 127)
         assert (offset >= -128)
-        asm { bner offset }
+        asm { bner {offset} }
     }
 
     bne {target} =>
     {
-        asm { bnel target }
+        asm { bnel {target} }
     }
 
     bcs {target} =>
@@ -44,12 +44,12 @@
         offset = target - $ - 1
         assert (offset <= 127)
         assert (offset >= -128)
-        asm { bcsr offset }
+        asm { bcsr {offset} }
     }
 
     bcs {target} =>
     {
-        asm { bcsl target }
+        asm { bcsl {target} }
     }
 
     bcc {target} =>
@@ -57,12 +57,12 @@
         offset = target - $ - 1
         assert (offset <= 127)
         assert (offset >= -128)
-        asm { bccr offset }
+        asm { bccr {offset} }
     }
 
     bcc {target} =>
     {
-        asm { bccl target }
+        asm { bccl {target} }
     }
 
     bmi {target} =>
@@ -70,12 +70,12 @@
         offset = target - $ - 1
         assert (offset <= 127)
         assert (offset >= -128)
-        asm { bmir offset }
+        asm { bmir {offset} }
     }
 
     bmi {target} =>
     {
-        asm { bmil target }
+        asm { bmil {target} }
     }
 
     bpl {target} =>
@@ -83,12 +83,12 @@
         offset = target - $ - 1
         assert (offset <= 127)
         assert (offset >= -128)
-        asm { bplr offset }
+        asm { bplr {offset} }
     }
 
     bpl {target} =>
     {
-        asm { bpll target }
+        asm { bpll {target} }
     }
 
     call {target} =>
@@ -96,11 +96,11 @@
         offset = target - $ - 1
         assert (offset <= 127)
         assert (offset >= -128)
-        asm { rcall offset }
+        asm { rcall {offset} }
     }
 
     call {target} =>
     {
-        asm { callf target }
+        asm { callf {target} }
     }
 }

@@ -1,5 +1,6 @@
 #include "velkocpu.def"
 #include "ports.def"
+#bank program
 
 start:
     lea SP, stack
