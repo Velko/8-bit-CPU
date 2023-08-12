@@ -9,7 +9,7 @@ from libcpu.devices import Flags
 from libcpu.opcode_builder import MicrocodeBuilder
 from libcpu.pin import MuxPin
 from libcpu.pseudo_devices import EnableCallback
-from libcpu.util import CtrlBase
+from libcpu.ctrl_word import CtrlWord
 
 from typing import Iterator, Sequence, Tuple
 
@@ -48,17 +48,13 @@ class DummySignal(ControlSignal):
     def apply_enable(self, c_word: int) -> int:
         raise Exception("Should not reach")
 
-class DummyControlWord(CtrlBase):
-    def enable(self, pin: ControlSignal) -> None:
-        pass
-
 class OpcodeFixture:
     def __init__(self) -> None:
         builder = MicrocodeBuilder()
 
         self.orig_default = DummySignal()
         self.orig_alt = DummySignal()
-        self.control = DummyControlWord()
+        self.control = CtrlWord()
 
         builder.add_instruction("dummy")\
             .add_step(EnableCallback(self.log_default, self.orig_default))\
