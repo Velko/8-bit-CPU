@@ -99,7 +99,7 @@ class Debugger:
             # port output
             if message.reason == RunMessage.Reason.OUT:
                 if IOCtl.selected_port == 0:
-                    self.on_output(f"{unwrap(IOCtl.saved_value)}\n")
+                    self.on_output(f"\033[1;31m{unwrap(IOCtl.saved_value):>4}\033[0m\n")
                 elif IOCtl.selected_port == 4:
                     self.on_output(chr(unwrap(IOCtl.saved_value)))
                 IOCtl.reset_port()
