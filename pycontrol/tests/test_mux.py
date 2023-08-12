@@ -23,11 +23,6 @@ def test_mux_manual(mux_fixture: MuxFixture) -> None:
     assert mux_fixture.control.c_word == 0b1000100
 
 
-def test_mux_init_default(mux_fixture: MuxFixture) -> None:
-
-    assert mux_fixture.control.c_word == mux_fixture.control.default
-
-
 def test_mux_pin_set_bits(mux_fixture: MuxFixture) -> None:
 
     mux_fixture.pin.enable(mux_fixture.control)

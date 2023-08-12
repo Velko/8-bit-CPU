@@ -8,6 +8,7 @@ from libcpu.DeviceSetup import SP, LR
 from libcpu.test_helpers import CPUHelper
 from libcpu.cpu import *
 from libcpu.markers import Addr
+from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
 
 @pytest.mark.parametrize("expected", [255, 1, 2, 4, 8, 16, 32, 64, 128, 0])
@@ -32,12 +33,11 @@ def test_lea_sp(cpu_helper: CPUHelper) -> None:
 def test_sp_inc(cpu_helper: CPUHelper, expected: int) -> None:
     cpu_helper.load_reg16(SP, expected - 1)
 
-    cpu_helper.backend.control.reset()
-    SP.inc.enable(cpu_helper.backend.control)
-    cpu_helper.backend.client.ctrl_commit(cpu_helper.backend.control.c_word)
+    control = CtrlWord()
+    SP.inc.enable(control)
+    cpu_helper.backend.client.ctrl_commit(control.c_word)
     cpu_helper.backend.client.clock_tick()
-    cpu_helper.backend.control.reset()
-    cpu_helper.backend.client.off(cpu_helper.backend.control.default)
+    cpu_helper.backend.client.off(DEFAULT_CW.c_word)
 
 
     value = cpu_helper.read_reg16(SP)
@@ -47,12 +47,11 @@ def test_sp_inc(cpu_helper: CPUHelper, expected: int) -> None:
 def test_sp_dec(cpu_helper: CPUHelper, expected: int) -> None:
     cpu_helper.load_reg16(SP, expected + 1)
 
-    cpu_helper.backend.control.reset()
-    SP.dec.enable(cpu_helper.backend.control)
-    cpu_helper.backend.client.ctrl_commit(cpu_helper.backend.control.c_word)
+    control = CtrlWord()
+    SP.dec.enable(control)
+    cpu_helper.backend.client.ctrl_commit(control.c_word)
     cpu_helper.backend.client.clock_tick()
-    cpu_helper.backend.control.reset()
-    cpu_helper.backend.client.off(cpu_helper.backend.control.default)
+    cpu_helper.backend.client.off(DEFAULT_CW.c_word)
 
 
     value = cpu_helper.read_reg16(SP)

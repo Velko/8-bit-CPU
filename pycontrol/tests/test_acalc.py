@@ -5,6 +5,7 @@ import pytest
 from libcpu.cpu import *
 from libcpu.test_helpers import CPUHelper
 from libcpu.DeviceSetup import ACalc
+from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
 from typing import Iterator, Tuple
 
@@ -21,20 +22,18 @@ def test_acalc(cpu_helper: CPUHelper, name: str, addr: int, offset: int, signed:
     backend.client.bus_set(offset)
     backend.client.addr_set(addr)
 
+    control = CtrlWord()
+
     if signed:
-        ACalc.signed.enable(cpu_helper.backend.control)
+        ACalc.signed.enable(control)
 
-    ACalc.load.enable(cpu_helper.backend.control)
+    ACalc.load.enable(control)
 
-    backend.client.ctrl_commit(backend.control.c_word)
+    backend.client.ctrl_commit(control.c_word)
     backend.client.clock_tick()
 
-    backend.control.reset()
-    backend.client.off(backend.control.default)
+    backend.client.off(DEFAULT_CW.c_word)
 
     readback = cpu_helper.read_reg16(ACalc)
-
-    backend.control.reset()
-    backend.client.off(backend.control.default)
 
     assert  expected == readback

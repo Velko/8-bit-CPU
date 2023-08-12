@@ -11,6 +11,3 @@ class CtrlBase:
 
     @abstractmethod
     def is_set(self, pin: int) -> bool: pass
-
-    @abstractmethod
-    def reset(self) -> None: pass

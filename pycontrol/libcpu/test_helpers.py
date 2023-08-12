@@ -6,6 +6,7 @@ from libcpu.devices import Register
 from libcpu.cpu_exec import CPUBackendControl, InvalidOpcodeException
 from libcpu.DeviceSetup import Flags, PC, Ram
 from libcpu.pinclient import RunMessage
+from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 from io import StringIO
 
 class CPUHelper:
@@ -13,52 +14,49 @@ class CPUHelper:
         self.backend = backend
 
     def load_reg16(self, reg: Register, value: int) -> None:
-        self.backend.control.reset()
-        reg.load.enable(self.backend.control)
+        control = CtrlWord()
+        reg.load.enable(control)
         self.backend.client.addr_set(value)
-        self.backend.client.ctrl_commit(self.backend.control.c_word)
+        self.backend.client.ctrl_commit(control.c_word)
         self.backend.client.clock_tick()
 
-        self.backend.client.off(self.backend.control.default)
+        self.backend.client.off(DEFAULT_CW.c_word)
 
 
     def read_reg16(self, reg: Register) -> int:
-
-        self.backend.control.reset()
-        reg.out.enable(self.backend.control)
-        self.backend.client.ctrl_commit(self.backend.control.c_word)
+        control = CtrlWord()
+        reg.out.enable(control)
+        self.backend.client.ctrl_commit(control.c_word)
         value = self.backend.client.addr_get()
 
-        self.backend.client.off(self.backend.control.default)
+        self.backend.client.off(DEFAULT_CW.c_word)
 
         return value
 
 
     def read_ram(self, addr: int) -> int:
         self.backend.client.addr_set(addr)
-        self.backend.control.reset()
-        Ram.out.enable(self.backend.control)
-        self.backend.client.ctrl_commit(self.backend.control.c_word)
+        control = CtrlWord()
+        Ram.out.enable(control)
+        self.backend.client.ctrl_commit(control.c_word)
 
         value = self.backend.client.bus_get()
 
-        self.backend.control.reset()
-        self.backend.client.off(self.backend.control.default)
+        self.backend.client.off(DEFAULT_CW.c_word)
 
         return value
 
     def write_ram(self, addr: int, value: int) -> None:
-        self.backend.control.reset()
-        Ram.write.enable(self.backend.control)
-        self.backend.client.ctrl_commit(self.backend.control.c_word)
+        control = CtrlWord()
+        Ram.write.enable(control)
+        self.backend.client.ctrl_commit(control.c_word)
 
         self.backend.client.addr_set(addr)
         self.backend.client.bus_set(value)
 
         self.backend.client.clock_tick()
 
-        self.backend.control.reset()
-        self.backend.client.off(self.backend.control.default)
+        self.backend.client.off(DEFAULT_CW.c_word)
 
     def write_bytes(self, addr: int, data: bytes) -> None:
         for i, b in enumerate(data):
@@ -71,23 +69,22 @@ class CPUHelper:
         return Flags.decode(self.get_flags())
 
     def read_reg8(self, reg: Register) -> int:
-        self.backend.control.reset()
-        reg.out.enable(self.backend.control)
-        self.backend.client.ctrl_commit(self.backend.control.c_word)
+        control = CtrlWord()
+        reg.out.enable(control)
+        self.backend.client.ctrl_commit(control.c_word)
         value = self.backend.client.bus_get()
 
-        self.backend.client.off(self.backend.control.default)
+        self.backend.client.off(DEFAULT_CW.c_word)
 
         return value
 
     def load_reg8(self, reg: Register, value: int) -> None:
-        self.backend.control.reset()
-        reg.load.enable(self.backend.control)
+        control = CtrlWord()
+        reg.load.enable(control)
         self.backend.client.bus_set(value)
-        self.backend.client.ctrl_commit(self.backend.control.c_word)
+        self.backend.client.ctrl_commit(control.c_word)
         self.backend.client.clock_tick()
-        self.backend.control.reset()
-        self.backend.client.off(self.backend.control.default)
+        self.backend.client.off(DEFAULT_CW.c_word)
 
     def load_snippet(self, addr: int, code: bytes) -> None:
         self.write_bytes(addr, code)

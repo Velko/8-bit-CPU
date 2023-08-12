@@ -7,6 +7,7 @@ from libcpu.util import ControlSignal
 from libcpu.devices import Flags
 from libcpu.pin import Pin, MuxPin, Level, Mux
 from libcpu.discovery import all_pins, all_muxes
+from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
 from typing import TextIO, Iterable, Iterator
 
@@ -15,9 +16,6 @@ from libcpu.ctrl_word import CtrlWord
 CWORD_WIDTH_BYTES = 4
 
 CWORD_WIDTH_BITS = CWORD_WIDTH_BYTES * 8
-
-control = CtrlWord()
-
 
 def generate_microcode(cfile: TextIO) -> None:
     cfile.write ("#include \"microcode.h\"\n\n")
@@ -54,7 +52,7 @@ def generate_microcode(cfile: TextIO) -> None:
 
 def process_steps(steps: Iterable[Iterable[ControlSignal]]) -> Iterator[str]:
     for pins in steps:
-        control.reset()
+        control = CtrlWord()
         for pin in pins:
             pin.enable(control)
 
@@ -79,9 +77,7 @@ def write_opcodes(hfile: TextIO) -> None:
     hfile.write("\n")
 
 def write_default_cword(hfile: TextIO) -> None:
-    control.reset()
-
-    hfile.write("#define CTRL_DEFAULT                    0b{word:0{bits}b}\n\n".format(word=control.c_word, bits=CWORD_WIDTH_BITS))
+    hfile.write("#define CTRL_DEFAULT                    0b{word:0{bits}b}\n\n".format(word=DEFAULT_CW.c_word, bits=CWORD_WIDTH_BITS))
 
 
 def write_mux(hfile: TextIO, name: str, mux: Mux) -> None:
@@ -98,7 +94,7 @@ def write_mux(hfile: TextIO, name: str, mux: Mux) -> None:
         if isinstance(pin, MuxPin):
             if pin.mux == mux:
                 pname = pname.replace(".", "_").upper()
-                control.reset()
+                control = CtrlWord()
                 pin.enable(control)
 
                 define = "#define MPIN_{}_BITS".format(pname)
@@ -139,9 +135,7 @@ def generate_defines(hfile: TextIO) -> None:
     write_footer(hfile)
 
 def generate_cword(vfile: TextIO) -> None:
-    control.reset()
-
-    vfile.write("`define DEFAULT_CW {bits}'h{word:0{digits}x}\n".format(word=control.c_word, bits=CWORD_WIDTH_BYTES * 8, digits=CWORD_WIDTH_BYTES * 2))
+    vfile.write("`define DEFAULT_CW {bits}'h{word:0{digits}x}\n".format(word=DEFAULT_CW.c_word, bits=CWORD_WIDTH_BYTES * 8, digits=CWORD_WIDTH_BYTES * 2))
 
 if __name__ == "__main__":
     with open("../../include/microcode.c", "wt") as cfile:

@@ -4,7 +4,7 @@ from .pseudo_devices import Imm
 from .DeviceSetup import IOCtl, ProgMem, PC, Flags, StepCounter
 from .opcodes import opcodes, ops_by_code, fetch
 from .pinclient import PinClient
-from .ctrl_word import CtrlWord
+from .ctrl_word import CtrlWord, DEFAULT_CW
 from .util import ControlSignal
 
 class InvalidOpcodeException(Exception):
@@ -13,7 +13,6 @@ class InvalidOpcodeException(Exception):
 class CPUBackendControl:
     def __init__(self) -> None:
         self.client = PinClient()
-        self.control = CtrlWord()
         self.branch_taken = False
         self.flags_cache: Optional[int] = None
         self.opcode_cache: Optional[int] = None
@@ -61,36 +60,36 @@ class CPUBackendControl:
         return self.branch_taken
 
     def execute_step(self, microstep: Sequence[ControlSignal]) -> None:
-        self.control.reset()
+        control = CtrlWord()
 
         for pin in microstep:
-            pin.enable(self.control)
+            pin.enable(control)
 
-        if self.control.c_word != self.control.default:
+        if control.c_word != DEFAULT_CW.c_word:
 
-            self.client.ctrl_commit(self.control.c_word)
+            self.client.ctrl_commit(control.c_word)
 
 
-            if IOCtl.laddr.is_enabled(self.control):
+            if IOCtl.laddr.is_enabled(control):
                 IOCtl.select_port(self.client.bus_get())
 
-            if IOCtl.to_dev.is_enabled(self.control):
+            if IOCtl.to_dev.is_enabled(control):
                 IOCtl.push_value(self.client.bus_get())
 
             self.client.clock_tick()
 
-            if PC.load.is_enabled(self.control):
+            if PC.load.is_enabled(control):
                 self.branch_taken = True
                 Imm.invalidate()
 
-            if PC.inc.is_enabled(self.control):
+            if PC.inc.is_enabled(control):
                 Imm.consume() # next byte for imm value
 
-            if Flags.calc.is_enabled(self.control) or Flags.load.is_enabled(self.control):
+            if Flags.calc.is_enabled(control) or Flags.load.is_enabled(control):
                 self.flags_cache = None
 
             # Drop current opcode since it was a prefix for extended one
-            if StepCounter.extended.is_enabled(self.control):
+            if StepCounter.extended.is_enabled(control):
                 self.opcode_cache = None
                 self.op_extension += 1
 

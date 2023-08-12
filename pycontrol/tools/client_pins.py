@@ -9,12 +9,17 @@ backend = setup_live()
 
 from libcpu.pin import PinBase, Pin
 from libcpu.discovery import all_pins
+from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
 pin_map: Dict[str, PinBase] = dict()
 
 class Unsupported(Exception): pass
 
 class TesterClient(cmd.Cmd):
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.control = CtrlWord()
 
     def complete_pin(self, text: str, line: str, begidx: int, endidx: int) -> Sequence[str]:
         return list(filter(lambda n: n.startswith(text), pin_map.keys()))
@@ -33,9 +38,9 @@ class TesterClient(cmd.Cmd):
 
     def do_off(self, arg: str) -> None:
         'Turn everything off, release Bus'
-        backend.control.reset()
-        backend.client.off(backend.control.default)
-        print(bin(backend.control.c_word))
+        self.control = CtrlWord()
+        backend.client.off(DEFAULT_CW.c_word)
+        print(bin(self.control.c_word))
 
     def do_addr(self, arg: str) -> None:
         'Read/Send current value on the Address Bus'
@@ -66,12 +71,12 @@ class TesterClient(cmd.Cmd):
         if arg in pin_map:
             pin = pin_map[arg]
             if isinstance(pin, Pin):
-                backend.control.set(pin.num)
+                self.control.set(pin.num)
             else:
                 raise Unsupported
         else:
-            backend.control.set(int(arg, 0))
-        print(bin(backend.control.c_word))
+            self.control.set(int(arg, 0))
+        print(bin(self.control.c_word))
 
     complete_set = complete_pin_direct
 
@@ -80,32 +85,32 @@ class TesterClient(cmd.Cmd):
         if arg in pin_map:
             pin = pin_map[arg]
             if isinstance(pin, Pin):
-                backend.control.clr(pin.num)
+                self.control.clr(pin.num)
             else:
                 raise Unsupported
         else:
-            backend.control.clr(int(arg))
-        print(bin(backend.control.c_word))
+            self.control.clr(int(arg))
+        print(bin(self.control.c_word))
 
     complete_clr = complete_pin_direct
 
     def do_enable(self, arg: str) -> None:
         'Enable control pin according to active-high/low setting'
-        pin_map[arg].enable(backend.control)
-        print(bin(backend.control.c_word))
+        pin_map[arg].enable(self.control)
+        print(bin(self.control.c_word))
 
     complete_enable = complete_pin
 
     def do_disable(self, arg: str) -> None:
         'Disable control pin according to active-high/low setting'
-        pin_map[arg].disable(backend.control)
-        print(bin(backend.control.c_word))
+        pin_map[arg].disable(self.control)
+        print(bin(self.control.c_word))
 
     complete_disable = complete_pin
 
     def do_commit(self, arg: str) -> None:
         'Send the control word to Arduino'
-        backend.client.ctrl_commit(backend.control.c_word)
+        backend.client.ctrl_commit(self.control.c_word)
 
     def do_pulse(self, arg: str) -> None:
         'Pulse normal clock'
@@ -125,7 +130,8 @@ class TesterClient(cmd.Cmd):
 
 
     def do_reset(self, arg: str) -> None:
-        backend.client.off(backend.control.default)
+        self.control = CtrlWord()
+        backend.client.off(DEFAULT_CW.c_word)
         backend.client.reset()
 
     def do_shutdown(self, arg: str) -> None:

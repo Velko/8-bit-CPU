@@ -7,6 +7,7 @@ from libcpu.DeviceSetup import IR, TH,TL, TX
 from libcpu.test_helpers import CPUHelper
 from libcpu.DeviceSetup import AddSub as alu
 from typing import Iterator
+from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
 pytestmark = pytest.mark.hardware
 
@@ -19,25 +20,25 @@ def test_reg_a_latch(cpu_helper: CPUHelper) -> None:
         # Load another value into A, but "forget" to pulse the
         # inverted clock
         backend.client.bus_set(40)
-        A.load.enable(cpu_helper.backend.control)
-        backend.client.ctrl_commit(backend.control.c_word)
+        control = CtrlWord()
+        A.load.enable(control)
+        backend.client.ctrl_commit(control.c_word)
 
         backend.client.clock_pulse()
         #backend.client.clock_inverted()
 
-        backend.control.reset()
-        backend.client.off(backend.control.default)
+        backend.client.off(DEFAULT_CW.c_word)
 
         # Not try to sense what it sends to ALU by enabling it and
         # reading value on the bus
-        alu.out.enable(cpu_helper.backend.control)
-        A.alu_l.enable(cpu_helper.backend.control)
-        B.alu_r.enable(cpu_helper.backend.control)
-        backend.client.ctrl_commit(backend.control.c_word)
+        control = CtrlWord()
+        alu.out.enable(control)
+        A.alu_l.enable(control)
+        B.alu_r.enable(control)
+        backend.client.ctrl_commit(control.c_word)
         value = backend.client.bus_get()
 
-        backend.control.reset()
-        backend.client.off(backend.control.default)
+        backend.client.off(DEFAULT_CW.c_word)
 
         # should have kept the old value
         assert value == 54
@@ -54,14 +55,14 @@ def test_ir_load(cpu_helper: CPUHelper, expected: int) -> None:
     backend = cpu_helper.backend
 
     backend.client.bus_set(expected)
-    IR.load.enable(cpu_helper.backend.control)
-    backend.client.ctrl_commit(backend.control.c_word)
+    control = CtrlWord()
+    IR.load.enable(control)
+    backend.client.ctrl_commit(control.c_word)
     backend.client.clock_tick()
 
     readback = backend.client.ir_get()
 
-    backend.control.reset()
-    backend.client.off(backend.control.default)
+    backend.client.off(DEFAULT_CW.c_word)
 
     assert readback == expected
 

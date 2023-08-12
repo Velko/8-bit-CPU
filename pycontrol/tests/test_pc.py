@@ -9,6 +9,7 @@ from libcpu.cpu import *
 from libcpu.markers import Addr
 from libcpu.test_helpers import CPUHelper
 from libcpu.devices import Flags
+from libcpu.ctrl_word import CtrlWord
 
 @pytest.mark.parametrize("expected", [65535, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 0])
 def test_pc_load(cpu_helper: CPUHelper, expected: int) -> None:
@@ -30,9 +31,9 @@ def test_pc_count(cpu_helper: CPUHelper, expected: int) -> None:
     # CPU gets a Reset before each test, preload value to increment from
     cpu_helper.load_reg16(PC, expected - 1)
 
-    cpu_helper.backend.control.reset()
-    PC.out.enable(cpu_helper.backend.control)
-    cpu_helper.backend.client.ctrl_commit(cpu_helper.backend.control.c_word)
+    control = CtrlWord()
+    PC.out.enable(control)
+    cpu_helper.backend.client.ctrl_commit(control.c_word)
     cpu_helper.backend.client.clock_tick()
 
     value = cpu_helper.read_reg16(PC)

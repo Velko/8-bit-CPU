@@ -13,8 +13,6 @@ from itertools import islice
 
 MAX_STEPS=8
 
-control = CtrlWord()
-
 def finalize_steps(microcode: MicroCode, flags: int) -> Iterator[Sequence[ControlSignal]]:
 
     # fetch stage
@@ -43,7 +41,7 @@ def generate_microcode() -> Iterator[int]:
 
 def process_steps(microcode: MicroCode, flags: int) -> Iterator[int]:
     for pins in finalize_steps(microcode, flags):
-        control.reset()
+        control = CtrlWord()
         for pin in pins:
             pin.enable(control)
 
