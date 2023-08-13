@@ -98,9 +98,15 @@ class RamProxy(DeviceBase):
         else:
             return self.ram.write.apply_enable(c_word)
 
+def sign_extend(b: int) -> int:
+    if b > 127:
+        return b - 256
+    return b
+
 class IOMonitor:
     def __init__(self) -> None:
         self.selected_port: Optional[int] = None
+        self.numeric_mode = 0
 
     def select_port(self, port: int) -> None:
         self.selected_port = port
@@ -109,8 +115,19 @@ class IOMonitor:
         if self.selected_port is None:
             raise Exception("Port not selected")
 
+        if self.selected_port == 1:
+            self.numeric_mode = value
+            return None
+
         if self.selected_port == 0:
-            return f"\033[1;31m{value:>4}\033[0m\n"
+            if self.numeric_mode == 0:
+                return f"\033[1;31m{value:>4}\033[0m\n"
+            elif self.numeric_mode == 1:
+                return f"\033[1;31m{sign_extend(value):>4}\033[0m\n"
+            elif self.numeric_mode == 2:
+                return f"\033[1;31mh {value:02x}\033[0m\n"
+            elif self.numeric_mode == 3:
+                return f"\033[1;31mo{value:>o}\033[0m\n"
         elif IOMon.selected_port == 4:
             return chr(value)
 

@@ -6,7 +6,7 @@ from libcpu.pinclient import RunMessage
 
 from typing import Iterator, Tuple
 
-def test_outa_emu(cpu_helper: CPUHelper) -> None:
+def test_outa_emu_char(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg8(A, 120)
 
     message = out(4, A)
@@ -25,6 +25,18 @@ def outb_args() -> Iterator[Tuple[str, int, int, str]]:
     yield "signed negative", 1, 140, ansi_red("-116")
     yield "hex", 2, 233, ansi_red("h e9")
     yield "oct", 3, 89, ansi_red("o131")
+
+@pytest.mark.parametrize("desc,mode,val,expected", outb_args())
+def test_outa_emu_num(cpu_helper: CPUHelper, desc: str, mode: int, val: int, expected: str) -> None:
+    cpu_helper.load_reg8(B, mode)
+    out(1, B)
+
+    cpu_helper.load_reg8(A, val)
+    message = out(0, A)
+
+    assert message is not None
+    assert message.reason == RunMessage.Reason.OUT
+    assert message.payload == expected
 
 @pytest.mark.emulator
 @pytest.mark.parametrize("desc,mode,val,expected", outb_args())
