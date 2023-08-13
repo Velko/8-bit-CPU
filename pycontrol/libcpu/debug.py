@@ -6,8 +6,7 @@ from enum import Enum
 
 from .test_helpers import CPUHelper
 from .DeviceSetup import IR, LR, PC, SP
-from .pinclient import RunMessage
-from .util import unwrap
+from .util import unwrap, RunMessage
 from .opcodes import opcodes
 from .cpu import A, B, C, D
 from .cpu_exec import CPUBackendControl

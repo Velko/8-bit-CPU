@@ -1,11 +1,10 @@
 from typing import Optional, Union
-from .util import UninitializedError
+from .util import UninitializedError, RunMessage
 from .DeviceSetup import RegA, RegB, RegC, RegD, Flags as RegFlags
 from .devices import Register, Flags
 from .markers import AddrBase
 from .opcodes import opcodes
 from .cpu_exec import CPUBackendControl, InvalidOpcodeException
-from .pinclient import RunMessage
 
 backend: Optional[CPUBackendControl] = None
 

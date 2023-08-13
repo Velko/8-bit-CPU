@@ -1,17 +1,7 @@
 import serial
 import os
 from typing import Union, Iterator, Optional
-from enum import Enum
-
-class RunMessage:
-    class Reason(Enum):
-        OUT  = 0
-        HALT = 1
-        BRK  = 2
-
-    def __init__(self, reason: Reason, payload: Optional[str]=None):
-        self.reason = reason
-        self.payload = payload
+from .util import RunMessage
 
 
 class PinClient:

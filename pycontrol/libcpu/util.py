@@ -1,5 +1,6 @@
 from abc import abstractmethod
 from typing import TypeVar, Optional
+from enum import Enum
 
 class UninitializedError(Exception):
     pass
@@ -22,3 +23,14 @@ class ControlSignal:
         if self.name is None:
             return super.__repr__(self)
         return self.name
+
+
+class RunMessage:
+    class Reason(Enum):
+        OUT  = 0
+        HALT = 1
+        BRK  = 2
+
+    def __init__(self, reason: Reason, payload: Optional[str]=None):
+        self.reason = reason
+        self.payload = payload

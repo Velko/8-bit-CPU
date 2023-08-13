@@ -2,9 +2,8 @@
 
 
 import sys, localpath
-from libcpu.pinclient import RunMessage
+from libcpu.util import RunMessage
 from libcpu.cpu import setup_live
-from libcpu.DeviceSetup import PC
 from libcpu.test_helpers import CPUHelper
 
 cpu_helper: CPUHelper = CPUHelper(setup_live())

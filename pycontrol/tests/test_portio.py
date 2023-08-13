@@ -2,7 +2,7 @@ import pytest
 
 from libcpu.cpu import *
 from libcpu.test_helpers import CPUHelper
-from libcpu.pinclient import RunMessage
+from libcpu.util import RunMessage
 
 from typing import Iterator, Tuple
 

@@ -3,9 +3,9 @@ from .markers import AddrBase
 from .pseudo_devices import Imm, IOMon
 from .DeviceSetup import IOCtl, ProgMem, PC, Flags, StepCounter, Clock
 from .opcodes import opcodes, ops_by_code, fetch
-from .pinclient import PinClient, RunMessage
+from .pinclient import PinClient
 from .ctrl_word import CtrlWord, DEFAULT_CW
-from .util import ControlSignal
+from .util import ControlSignal, RunMessage
 
 class InvalidOpcodeException(Exception):
     pass
