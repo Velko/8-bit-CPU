@@ -5,8 +5,8 @@ import localpath
 from libcpu.opcodes import opcodes, fetch
 from libcpu.util import ControlSignal
 from libcpu.devices import Flags
-from libcpu.pin import Pin, MuxPin, Level, Mux
-from libcpu.discovery import all_pins, all_muxes
+from libcpu.pin import Level, Mux
+from libcpu.discovery import all_muxes, simple_pins, mux_pins
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
 from typing import TextIO, Iterable, Iterator
@@ -90,28 +90,25 @@ def write_mux(hfile: TextIO, name: str, mux: Mux) -> None:
     define = "#define MUX_{}_MASK".format(name)
     hfile.write("{define:40}0b{mask:0{bits}b}\n".format(define=define, mask=mask, bits=CWORD_WIDTH_BITS))
 
-    for pname, pin in all_pins():
-        if isinstance(pin, MuxPin):
-            if pin.mux == mux:
-                pname = pname.replace(".", "_").upper()
-                control = CtrlWord()
-                control.enable(pin)
+    for pname, pin in mux_pins(mux):
+        pname = pname.replace(".", "_").upper()
+        control = CtrlWord()
+        control.enable(pin)
 
-                define = "#define MPIN_{}_BITS".format(pname)
-                hfile.write("{define:40}0b{word:0{bits}b}\n".format(define=define, word=control.c_word & mask, bits=CWORD_WIDTH_BITS))
+        define = "#define MPIN_{}_BITS".format(pname)
+        hfile.write("{define:40}0b{word:0{bits}b}\n".format(define=define, word=control.c_word & mask, bits=CWORD_WIDTH_BITS))
     hfile.write("\n")
 
 
 def write_simple_pins(hfile: TextIO) -> None:
-    for name, pin in all_pins():
-        if isinstance(pin, Pin):
-            name = name.replace(".", "_").upper()
-            val = 1 << pin.num
+    for name, pin in simple_pins():
+        name = name.replace(".", "_").upper()
+        val = 1 << pin.num
 
-            prefix = "L" if pin.level == Level.LOW else "H"
+        prefix = "L" if pin.level == Level.LOW else "H"
 
-            define = "#define {}PIN_{}_BIT".format(prefix, name)
-            hfile.write("{define:40}0b{val:0{bits}b}\n".format(define=define, val=val, bits=CWORD_WIDTH_BITS))
+        define = "#define {}PIN_{}_BIT".format(prefix, name)
+        hfile.write("{define:40}0b{val:0{bits}b}\n".format(define=define, val=val, bits=CWORD_WIDTH_BITS))
 
 
 
