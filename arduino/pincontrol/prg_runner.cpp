@@ -11,7 +11,7 @@ char txt_buf[80];
 void reset_pc()
 {
     /* write 0 into PC */
-    dev.control.write16(MAKE_MUX_CWORD(MUX_LOAD_MASK, MPIN_PC_LOAD_BITS));
+    dev.control.write16(APPLY_MUX(CTRL_DEFAULT, MUX_LOAD_MASK, MPIN_PC_LOAD_BITS));
     dev.mainBus.write(0);
     dev.clock.pulse();
     dev.inv_clock.pulse();
