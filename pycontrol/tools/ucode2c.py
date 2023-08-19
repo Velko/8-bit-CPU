@@ -92,8 +92,8 @@ def write_mux(hfile: TextIO, name: str, mux: Mux) -> None:
 
     for pname, pin in mux_pins(mux):
         pname = pname.replace(".", "_").upper()
-        control = CtrlWord()
-        control.enable(pin)
+        control = CtrlWord()\
+            .enable(pin)
 
         define = "#define MPIN_{}_BITS".format(pname)
         hfile.write("{define:40}0b{word:0{bits}b}\n".format(define=define, word=control.c_word & mask, bits=CWORD_WIDTH_BITS))

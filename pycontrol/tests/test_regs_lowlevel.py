@@ -20,8 +20,8 @@ def test_reg_a_latch(cpu_helper: CPUHelper) -> None:
         # Load another value into A, but "forget" to pulse the
         # inverted clock
         backend.client.bus_set(40)
-        control = CtrlWord()
-        control.enable(A.load)
+        control = CtrlWord()\
+            .enable(A.load)
         backend.client.ctrl_commit(control.c_word)
 
         backend.client.clock_pulse()
@@ -31,10 +31,10 @@ def test_reg_a_latch(cpu_helper: CPUHelper) -> None:
 
         # Not try to sense what it sends to ALU by enabling it and
         # reading value on the bus
-        control = CtrlWord()
-        control.enable(alu.out)
-        control.enable(A.alu_l)
-        control.enable(B.alu_r)
+        control = CtrlWord()\
+            .enable(alu.out)\
+            .enable(A.alu_l)\
+            .enable(B.alu_r)
         backend.client.ctrl_commit(control.c_word)
         value = backend.client.bus_get()
 
@@ -55,8 +55,8 @@ def test_ir_load(cpu_helper: CPUHelper, expected: int) -> None:
     backend = cpu_helper.backend
 
     backend.client.bus_set(expected)
-    control = CtrlWord()
-    control.enable(IR.load)
+    control = CtrlWord()\
+        .enable(IR.load)
     backend.client.ctrl_commit(control.c_word)
     backend.client.clock_tick()
 

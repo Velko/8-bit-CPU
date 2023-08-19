@@ -22,12 +22,11 @@ def test_acalc(cpu_helper: CPUHelper, name: str, addr: int, offset: int, signed:
     backend.client.bus_set(offset)
     backend.client.addr_set(addr)
 
-    control = CtrlWord()
+    control = CtrlWord()\
+        .enable(ACalc.load)
 
     if signed:
         control.enable(ACalc.signed)
-
-    control.enable(ACalc.load)
 
     backend.client.ctrl_commit(control.c_word)
     backend.client.clock_tick()
