@@ -6,14 +6,11 @@ from .pin import PinBase
 from .util import ControlSignal
 
 class CtrlWord:
-    c_word: int
-
     def __init__(self, pins: Optional[Iterable[Tuple[str, PinBase]]]=None):
-
+        self.c_word = 0
         if pins is None:
             self.c_word = DEFAULT_CW.c_word
         else:
-            self.c_word = 0
             for _, pin in pins:
                 self.disable(pin)
 
