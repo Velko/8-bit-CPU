@@ -56,9 +56,6 @@ def generate_casmdefs(rdfile: TextIO) -> None:
         rdfile.write(f"    {microcode.name}  {iargs} => {gargs}\n")
 
 
-        #define OP_{:20}0x{:02x}\n".format(name, microcode.opcode))
-
-
     rdfile.write("}\n")
     rdfile.write("#include \"aliases.def\"\n")
 

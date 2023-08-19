@@ -13,7 +13,7 @@ def simple_pin_nums() -> Iterator[Tuple[str, int]]:
 def mux_addr_lines() -> Iterator[Tuple[str, int]]:
     for name, mux in all_muxes():
         for num, pin in enumerate(mux.pins):
-            yield "{}.A{}".format(name, num), pin
+            yield f"{name}.A{num}", pin
 
 def each_simple_pin_and_addr_with_others() -> Iterator[Tuple[str, int, str, int]]:
 
@@ -45,7 +45,7 @@ def each_pin_with_others_in_mux() -> Iterator[Tuple[str, int, str, int]]:
 
         for a_id, (a_name, a_num) in enumerate(mpins):
             for b_name, b_num in mpins[a_id+1:]:
-                yield "{}.{}".format(mux_name, a_name), a_num, "{}.{}".format(mux_name, b_name), b_num
+                yield f"{mux_name}.{a_name}", a_num, f"{mux_name}.{b_name}", b_num
 
 @pytest.mark.parametrize("name_a,pin_a,name_b,pin_b", each_pin_with_others_in_mux())
 def test_mux_pin_overlap(name_a: str, pin_a: int, name_b: str, pin_b: int) -> None:

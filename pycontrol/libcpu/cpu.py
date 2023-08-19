@@ -22,52 +22,52 @@ F = RegFlags
 
 def ldi(target: Union[Register, Flags], value: int) -> None:
     if backend is None: raise UninitializedError
-    opcode = "ldi_{}_imm".format(target.name)
+    opcode = f"ldi_{target.name}_imm"
     backend.execute_mnemonic(opcode, value)
 
 def lea(target: Register, addr: AddrBase) -> None:
     if backend is None: raise UninitializedError
-    opcode = "lea_{}_addr".format(target.name)
+    opcode = f"lea_{target.name}_addr"
     backend.execute_mnemonic(opcode, addr)
 
 def add(target: Register, arg: Register) -> None:
     if backend is None: raise UninitializedError
-    opcode = "add_{}_{}".format(target.name, arg.name)
+    opcode = f"add_{target.name}_{arg.name}"
     backend.execute_mnemonic(opcode)
 
 def adc(target: Register, arg: Register) -> None:
     if backend is None: raise UninitializedError
-    opcode = "adc_{}_{}".format(target.name, arg.name)
+    opcode = f"adc_{target.name}_{arg.name}"
     backend.execute_mnemonic(opcode)
 
 def sub(target: Register, arg: Register) -> None:
     if backend is None: raise UninitializedError
-    opcode = "sub_{}_{}".format(target.name, arg.name)
+    opcode = f"sub_{target.name}_{arg.name}"
     backend.execute_mnemonic(opcode)
 
 def sbb(target: Register, arg: Register) -> None:
     if backend is None: raise UninitializedError
-    opcode = "sbb_{}_{}".format(target.name, arg.name)
+    opcode = f"sbb_{target.name}_{arg.name}"
     backend.execute_mnemonic(opcode)
 
 def andb(target: Register, arg: Register) -> None:
     if backend is None: raise UninitializedError
-    opcode = "and_{}_{}".format(target.name, arg.name)
+    opcode = f"and_{target.name}_{arg.name}"
     backend.execute_mnemonic(opcode)
 
 def orb(target: Register, arg: Register) -> None:
     if backend is None: raise UninitializedError
-    opcode = "or_{}_{}".format(target.name, arg.name)
+    opcode = f"or_{target.name}_{arg.name}"
     backend.execute_mnemonic(opcode)
 
 def xor(target: Register, arg: Register) -> None:
     if backend is None: raise UninitializedError
-    opcode = "xor_{}_{}".format(target.name, arg.name)
+    opcode = f"xor_{target.name}_{arg.name}"
     backend.execute_mnemonic(opcode)
 
 def clr(arg: Register) -> None:
     if backend is None: raise UninitializedError
-    opcode = "clr_{}".format(arg.name)
+    opcode = f"clr_{arg.name}"
     backend.execute_mnemonic(opcode)
 
 def notb(target: Register) -> None:
@@ -107,37 +107,37 @@ def dec(target: Register) -> None:
 
 def cmp(target: Register, arg: Register) -> None:
     if backend is None: raise UninitializedError
-    opcode = "cmp_{}_{}".format(target.name, arg.name)
+    opcode = f"cmp_{target.name}_{arg.name}"
     backend.execute_mnemonic(opcode)
 
 def mov(target: Register, source: Register) -> None:
     if backend is None: raise UninitializedError
-    opcode = "mov_{}_{}".format(target.name, source.name)
+    opcode = f"mov_{target.name}_{source.name}"
     backend.execute_mnemonic(opcode)
 
 def st(addr: AddrBase, source: Register) -> None:
     if backend is None: raise UninitializedError
-    opcode = "st_addr_{}".format(source.name)
+    opcode = f"st_addr_{source.name}"
     backend.execute_mnemonic(opcode, addr)
 
 def stx(base: AddrBase, idx_reg: Register, source: Register) -> None:
     if backend is None: raise UninitializedError
-    opcode = "stx_addr_{}_{}".format(idx_reg.name, source.name)
+    opcode = f"stx_addr_{idx_reg.name}_{source.name}"
     backend.execute_mnemonic(opcode, base)
 
 def ldx(target: Register, base: AddrBase, idx_reg: Register) -> None:
     if backend is None: raise UninitializedError
-    opcode = "ldx_{}_addr_{}".format(target.name, idx_reg.name)
+    opcode = f"ldx_{target.name}_addr_{idx_reg.name}"
     backend.execute_mnemonic(opcode, base)
 
 def tstx(base: AddrBase, idx_reg: Register) -> None:
     if backend is None: raise UninitializedError
-    opcode = "tstx_addr_{}".format(idx_reg.name)
+    opcode = f"tstx_addr_{idx_reg.name}"
     backend.execute_mnemonic(opcode, base)
 
 def ld(target: Register, addr: AddrBase) -> None:
     if backend is None: raise UninitializedError
-    opcode = "ld_{}_addr".format(target.name)
+    opcode = f"ld_{target.name}_addr"
     backend.execute_mnemonic(opcode, addr)
 
 def bcs(label: Optional[AddrBase]=None) -> None:
