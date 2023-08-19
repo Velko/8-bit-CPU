@@ -11,7 +11,6 @@ from typing import TextIO
 
 
 def generate_casmdefs(rdfile: TextIO) -> None:
-    rdfile.write("#bits 8\n")
     rdfile.write("#ruledef\n")
     rdfile.write("{\n")
 
