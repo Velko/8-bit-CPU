@@ -2,11 +2,11 @@
 
 from typing import Iterable, Optional, Tuple, Self
 from .discovery import all_pins
-from .pin import PinBase
+from .pin import Pin
 from .util import ControlSignal
 
 class CtrlWord:
-    def __init__(self, pins: Optional[Iterable[Tuple[str, PinBase]]]=None):
+    def __init__(self, pins: Optional[Iterable[Tuple[str, Pin]]]=None):
         self.c_word = 0
         if pins is None:
             self.c_word = DEFAULT_CW.c_word
@@ -18,11 +18,11 @@ class CtrlWord:
         self.c_word = pin.apply_enable(self.c_word)
         return self
 
-    def disable(self, pin: PinBase) -> Self:
+    def disable(self, pin: Pin) -> Self:
         self.c_word = pin.apply_disable(self.c_word)
         return self
 
-    def is_enabled(self, pin: PinBase) -> bool:
+    def is_enabled(self, pin: Pin) -> bool:
         return pin.check_enabled(self.c_word)
 
 

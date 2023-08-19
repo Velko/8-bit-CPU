@@ -1,6 +1,6 @@
 from . import devices as dev
 from .pseudo_devices import RamProxy
-from .pin import Pin, NullPin, Level, Mux, MuxPin, AliasedPin
+from .pin import SimplePin, NullPin, Level, Mux, MuxPin, AliasedPin
 
 OutMux = Mux("OutMux", [0, 1, 2, 3], 15) # bits 0-3 in Control Word, defaults to 15
 LoadMux = Mux("LoadMux", [4, 5, 6, 7], 15)
@@ -11,7 +11,7 @@ AluArgR = Mux("AluArgR", [10, 11, 12], 6)
 AddrOutMux = Mux("AddrOutMux", [16, 17, 18], 7)
 AddrLoadMux = Mux("AddrLoadMux", [19, 20, 21], 7)
 
-AluAltFn = Pin(13, Level.HIGH)
+AluAltFn = SimplePin(13, Level.HIGH)
 
 RegA = dev.GPRegister("A",
     out = MuxPin(OutMux, 0),
@@ -56,8 +56,8 @@ ShiftSwap = dev.ALU("ShiftSwap",
 Flags = dev.Flags("F",
     out = MuxPin(OutMux, 4),
     load = MuxPin(LoadMux, 7),
-    calc = Pin(14, Level.LOW),
-    carry = Pin(15, Level.HIGH))
+    calc = SimplePin(14, Level.LOW),
+    carry = SimplePin(15, Level.HIGH))
 
 Ram = dev.RAM("Ram",
     out = MuxPin(OutMux, 9),
@@ -71,12 +71,12 @@ IR = dev.Register("IR",
     load = MuxPin(LoadMux, 8))
 
 Clock = dev.Clock("Clock",
-    halt = Pin(26, Level.LOW),
-    brk = Pin(27, Level.HIGH))
+    halt = SimplePin(26, Level.LOW),
+    brk = SimplePin(27, Level.HIGH))
 
 StepCounter = dev.StepCounter("Steps",
-    reset = Pin(24, Level.LOW),
-    extended = Pin(25, Level.LOW))
+    reset = SimplePin(24, Level.LOW),
+    extended = SimplePin(25, Level.LOW))
 
 pc_out_inc = MuxPin(AddrOutMux, 5)
 
@@ -88,8 +88,8 @@ PC = dev.ProgramCounter("PC",
 SP = dev.StackPointer("SP",
     out = MuxPin(AddrOutMux, 3),
     load = MuxPin(AddrLoadMux, 3),
-    inc = Pin(22, Level.LOW),
-    dec = Pin(23, Level.LOW))
+    inc = SimplePin(22, Level.LOW),
+    dec = SimplePin(23, Level.LOW))
 
 #DP = dev.Register("DP",
 #    out = MuxPin(OutMux, 14),
@@ -115,7 +115,7 @@ TL = dev.TransferRegister("TL",
 ACalc = dev.AddressCalculator("ACalc",
     out = MuxPin(AddrOutMux, 2),
     load = MuxPin(AddrLoadMux, 2),
-    signed = Pin(28, Level.HIGH))
+    signed = SimplePin(28, Level.HIGH))
 
 IOCtl = dev.IOController("IOCtl",
     laddr = MuxPin(LoadMux, 4),

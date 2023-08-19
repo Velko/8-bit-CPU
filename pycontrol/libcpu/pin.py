@@ -16,7 +16,7 @@ def clr_bit(c_word: int, pin: int) -> int:
 def check_bit(c_word: int, pin: int) -> bool:
     return (c_word & (1 << pin)) != 0
 
-class PinBase(ControlSignal):
+class Pin(ControlSignal):
     def __init__(self) -> None:
         ControlSignal.__init__(self)
 
@@ -27,9 +27,9 @@ class PinBase(ControlSignal):
     def check_enabled(self, c_word: int) -> bool: pass
 
 
-class Pin(PinBase):
+class SimplePin(Pin):
     def __init__(self, num: int, level: Level) -> None:
-        PinBase.__init__(self)
+        Pin.__init__(self)
         self.num = num
         self.level = level
 
@@ -51,9 +51,9 @@ class Pin(PinBase):
         else:
             return not check_bit(c_word, self.num)
 
-class NullPin(PinBase):
+class NullPin(Pin):
     def __init__(self) -> None:
-        PinBase.__init__(self)
+        Pin.__init__(self)
         self._is_enabled = False
 
     def apply_enable(self, c_word: int) -> int:
@@ -67,9 +67,9 @@ class NullPin(PinBase):
     def check_enabled(self, c_word: int) -> bool:
         return self._is_enabled
 
-class AliasedPin(PinBase):
-    def __init__(self, target: PinBase) -> None:
-        PinBase.__init__(self)
+class AliasedPin(Pin):
+    def __init__(self, target: Pin) -> None:
+        Pin.__init__(self)
         self.target = target
 
     def apply_enable(self, c_word: int) -> int:
@@ -107,9 +107,9 @@ class Mux:
 
         return result
 
-class MuxPin(PinBase):
+class MuxPin(Pin):
     def __init__(self, mux: Mux, num: int) -> None:
-        PinBase.__init__(self)
+        Pin.__init__(self)
         self.mux = mux
         self.num = num
 

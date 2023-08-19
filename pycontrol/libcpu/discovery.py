@@ -1,19 +1,19 @@
 from typing import Iterator, Tuple
-from .pin import PinBase, Pin, MuxPin, Mux
+from .pin import Pin, SimplePin, MuxPin, Mux
 from . import DeviceSetup
 
-def all_pins() -> Iterator[Tuple[str, PinBase]]:
+def all_pins() -> Iterator[Tuple[str, Pin]]:
     dupe_filter = set()
     for var in vars(DeviceSetup).values():
         if not hasattr(var, "__dict__"): continue
         for a_name, attr in vars(var).items():
-            if (not a_name.startswith("_")) and (isinstance(attr, Pin) or isinstance(attr, MuxPin)) and attr not in dupe_filter:
+            if (not a_name.startswith("_")) and (isinstance(attr, SimplePin) or isinstance(attr, MuxPin)) and attr not in dupe_filter:
                 dupe_filter.add(attr)
                 yield "{}.{}".format(var.name, a_name), attr
 
-def simple_pins() -> Iterator[Tuple[str, Pin]]:
+def simple_pins() -> Iterator[Tuple[str, SimplePin]]:
     for name, pin in all_pins():
-        if isinstance(pin, Pin):
+        if isinstance(pin, SimplePin):
             yield name, pin
 
 def all_muxes() -> Iterator[Tuple[str, Mux]]:

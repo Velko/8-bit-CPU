@@ -1,5 +1,5 @@
 from typing import Optional
-from .pin import PinBase
+from .pin import Pin
 from .util import ControlSignal
 class DeviceBase:
     def __init__(self, name: str) -> None:
@@ -17,21 +17,21 @@ class DeviceBase:
         return self.name
 
 class Register(DeviceBase):
-    def __init__(self, name: str, out: PinBase, load: PinBase) -> None:
+    def __init__(self, name: str, out: Pin, load: Pin) -> None:
         DeviceBase.__init__(self, name)
         self.out = out
         self.load = load
         self.assign_pin_names()
 
 class GPRegister(Register):
-    def __init__(self, name: str, out: PinBase, load: PinBase, alu_l: PinBase, alu_r: PinBase) -> None:
+    def __init__(self, name: str, out: Pin, load: Pin, alu_l: Pin, alu_r: Pin) -> None:
         Register.__init__(self, name, out, load)
         self.alu_l = alu_l
         self.alu_r = alu_r
         self.assign_pin_names()
 
 class ALU(DeviceBase):
-    def __init__(self, name: str, out: PinBase, alt: PinBase) -> None:
+    def __init__(self, name: str, out: Pin, alt: Pin) -> None:
         DeviceBase.__init__(self, name)
         self.out = out
         self.alt = alt
@@ -39,7 +39,7 @@ class ALU(DeviceBase):
 
 
 class Flags(Register):
-    def __init__(self, name: str, out: PinBase, load: PinBase, calc: PinBase, carry: PinBase) -> None:
+    def __init__(self, name: str, out: Pin, load: Pin, calc: Pin, carry: Pin) -> None:
         Register.__init__(self, name, out, load)
         self.calc = calc
         self.carry = carry
@@ -80,28 +80,28 @@ class Flags(Register):
         return f
 
 class RAM(DeviceBase):
-    def __init__(self, name: str, out: PinBase, write: PinBase) -> None:
+    def __init__(self, name: str, out: Pin, write: Pin) -> None:
         DeviceBase.__init__(self, name)
         self.out = out
         self.write = write
         self.assign_pin_names()
 
 class Clock(DeviceBase):
-    def __init__(self, name: str, halt: PinBase, brk: PinBase) -> None:
+    def __init__(self, name: str, halt: Pin, brk: Pin) -> None:
         DeviceBase.__init__(self, name)
         self.halt = halt
         self.brk  = brk
         self.assign_pin_names()
 
 class StepCounter(DeviceBase):
-    def __init__(self, name: str, reset: PinBase, extended: PinBase) -> None:
+    def __init__(self, name: str, reset: Pin, extended: Pin) -> None:
         DeviceBase.__init__(self, name)
         self.reset = reset
         self.extended = extended
         self.assign_pin_names()
 
 class ProgramCounter(Register):
-    def __init__(self, name: str, out: PinBase, load: PinBase, inc: PinBase) -> None:
+    def __init__(self, name: str, out: Pin, load: Pin, inc: Pin) -> None:
         Register.__init__(self, name, out, load)
         # To save on control lines, in current setup PC increment and output operations
         # are merged, PC increments whenever it outputs and there's a clock tick.
@@ -110,24 +110,24 @@ class ProgramCounter(Register):
         self.assign_pin_names()
 
 class StackPointer(Register):
-    def __init__(self, name: str, out: PinBase, load: PinBase, inc: PinBase, dec: PinBase) -> None:
+    def __init__(self, name: str, out: Pin, load: Pin, inc: Pin, dec: Pin) -> None:
         Register.__init__(self, name, out, load)
         self.inc = inc
         self.dec = dec
         self.assign_pin_names()
 
 class TransferRegister(Register):
-    def __init__(self, name: str, out: PinBase, load: PinBase) -> None:
+    def __init__(self, name: str, out: Pin, load: Pin) -> None:
         Register.__init__(self, name, out, load)
 
 class AddressCalculator(Register):
-    def __init__(self, name: str, out: PinBase, load: PinBase, signed: PinBase) -> None:
+    def __init__(self, name: str, out: Pin, load: Pin, signed: Pin) -> None:
         Register.__init__(self, name, out, load)
         self.signed = signed
         self.assign_pin_names()
 
 class IOController(DeviceBase):
-    def __init__(self, name: str, laddr: PinBase, from_dev: PinBase, to_dev: PinBase) -> None:
+    def __init__(self, name: str, laddr: Pin, from_dev: Pin, to_dev: Pin) -> None:
         DeviceBase.__init__(self, name)
         self.laddr = laddr
         self.from_dev = from_dev
