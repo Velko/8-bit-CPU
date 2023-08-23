@@ -30,6 +30,12 @@ class GPRegister(Register):
         self.alu_r = alu_r
         self.assign_pin_names()
 
+class WORegister(DeviceBase):
+    def __init__(self, name: str, load: Pin) -> None:
+        DeviceBase.__init__(self, name)
+        self.load = load
+        self.assign_pin_names()
+
 class ALU(DeviceBase):
     def __init__(self, name: str, out: Pin, alt: Pin) -> None:
         DeviceBase.__init__(self, name)
@@ -100,18 +106,22 @@ class StepCounter(DeviceBase):
         self.extended = extended
         self.assign_pin_names()
 
-class ProgramCounter(Register):
-    def __init__(self, name: str, out: Pin, load: Pin, inc: Pin) -> None:
+class AddressRegister(Register):
+    def __init__(self, name: str, out: Pin, load: Pin) -> None:
         Register.__init__(self, name, out, load)
+
+class ProgramCounter(AddressRegister):
+    def __init__(self, name: str, out: Pin, load: Pin, inc: Pin) -> None:
+        AddressRegister.__init__(self, name, out, load)
         # To save on control lines, in current setup PC increment and output operations
         # are merged, PC increments whenever it outputs and there's a clock tick.
         # 2 aliased operations are defined to better describe intent in microcode.
         self.inc = inc
         self.assign_pin_names()
 
-class StackPointer(Register):
+class StackPointer(AddressRegister):
     def __init__(self, name: str, out: Pin, load: Pin, inc: Pin, dec: Pin) -> None:
-        Register.__init__(self, name, out, load)
+        AddressRegister.__init__(self, name, out, load)
         self.inc = inc
         self.dec = dec
         self.assign_pin_names()

@@ -66,11 +66,10 @@ Ram = dev.RAM("Ram",
 ProgMem = RamProxy("ProgMem",
     ram = Ram)
 
-IR = dev.Register("IR",
-    out = NullPin(),
+IR = dev.WORegister("IR",
     load = MuxPin(LoadMux, 8))
 
-Clock = dev.Clock("Clock",
+Clock = dev.Clock("Clk",
     halt = SimplePin(26, Level.LOW),
     brk = SimplePin(27, Level.HIGH))
 
@@ -95,10 +94,9 @@ SP = dev.StackPointer("SP",
 #    out = MuxPin(OutMux, 14),
 #    load = MuxPin(LoadMux, 14))
 
-LR = dev.ProgramCounter("LR",
+LR = dev.AddressRegister("LR",
     out = MuxPin(AddrOutMux, 4),
-    load = MuxPin(AddrLoadMux, 4),
-    inc = NullPin())
+    load = MuxPin(AddrLoadMux, 4))
 
 TX = dev.TransferRegister("TX",
     out = MuxPin(AddrOutMux, 0),

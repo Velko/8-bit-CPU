@@ -2,7 +2,7 @@
 
 from libcpu.cpu import opcode_of
 from libcpu.util import unwrap, RunMessage
-from libcpu.devices import Register
+from libcpu.devices import Register, WORegister
 from libcpu.cpu_exec import CPUBackendControl, InvalidOpcodeException
 from libcpu.DeviceSetup import Flags, PC, Ram
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
@@ -77,7 +77,7 @@ class CPUHelper:
 
         return value
 
-    def load_reg8(self, reg: Register, value: int) -> None:
+    def load_reg8(self, reg: Register | WORegister , value: int) -> None:
         control = CtrlWord()\
             .enable(reg.load)
         self.backend.client.bus_set(value)
