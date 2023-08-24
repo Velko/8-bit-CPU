@@ -8,7 +8,7 @@ from libcpu.cpu_helper import CPUHelper
 from libcpu.cpu_exec import CPUBackendControl
 from libcpu.cpu import *
 
-def test_dummy_local(cpu_helper: CPUHelper) -> None:
+def test_dummy_local(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
 
     cpu_helper.load_reg8(A, 0)
 

@@ -11,8 +11,8 @@ class InvalidOpcodeException(Exception):
     pass
 
 class CPUBackendControl:
-    def __init__(self) -> None:
-        self.client = PinClient()
+    def __init__(self, client: PinClient) -> None:
+        self.client = client
         self.flags_cache: Optional[int] = None
         self.opcode_cache: Optional[int] = None
         self.op_extension = 0

@@ -5,7 +5,7 @@ import pytest
 pytestmark = pytest.mark.hardware
 
 from libcpu.cpu_helper import CPUHelper
-from libcpu.cpu_exec import CPUBackendControl
+from libcpu.pinclient import PinClient
 from typing import Iterator, Sequence
 
 def singlebit_addresses() -> Iterator[int]:
@@ -16,8 +16,9 @@ def singlebit_addresses() -> Iterator[int]:
 class FillRam: pass
 
 @pytest.fixture(scope="module")
-def fill_ram(random_bytes: Sequence[int], cpu_backend_real: CPUBackendControl) -> FillRam:
-    cpu_helper = CPUHelper(cpu_backend_real.client)
+def fill_ram(random_bytes: Sequence[int], pins_client_real: PinClient) -> FillRam:
+    cpu_helper = CPUHelper(pins_client_real)
+
     for addr in singlebit_addresses():
         cpu_helper.write_ram(addr, random_bytes[addr])
 

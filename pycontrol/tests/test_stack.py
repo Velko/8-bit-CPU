@@ -6,13 +6,14 @@ pytestmark = pytest.mark.hardware
 
 from libcpu.DeviceSetup import SP, LR
 from libcpu.cpu_helper import CPUHelper
+from libcpu.cpu_exec import CPUBackendControl
 from libcpu.cpu import *
 from libcpu.markers import Addr
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
 
 @pytest.mark.parametrize("expected", [255, 1, 2, 4, 8, 16, 32, 64, 128, 0])
-def test_sp_load(cpu_helper: CPUHelper, expected: int) -> None:
+def test_sp_load(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl, expected: int) -> None:
 
     cpu_helper.load_reg16(SP, expected)
 
@@ -20,7 +21,7 @@ def test_sp_load(cpu_helper: CPUHelper, expected: int) -> None:
 
     assert value == expected
 
-def test_lea_sp(cpu_helper: CPUHelper) -> None:
+def test_lea_sp(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
 
     lea (SP, Addr(0x1234))
 
@@ -30,7 +31,7 @@ def test_lea_sp(cpu_helper: CPUHelper) -> None:
 
 # check transitions between SP chips
 @pytest.mark.parametrize("expected", itertools.chain(range(0xC, 0x15), range(0xFC, 0x105), range(0xFFC, 0x1005)))
-def test_sp_inc(cpu_helper: CPUHelper, expected: int) -> None:
+def test_sp_inc(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl, expected: int) -> None:
     cpu_helper.load_reg16(SP, expected - 1)
 
     control = CtrlWord()\
@@ -44,7 +45,7 @@ def test_sp_inc(cpu_helper: CPUHelper, expected: int) -> None:
     assert value == expected
 
 @pytest.mark.parametrize("expected", itertools.chain(range(0xC, 0x15), range(0xFC, 0x105), range(0xFFC, 0x1005)))
-def test_sp_dec(cpu_helper: CPUHelper, expected: int) -> None:
+def test_sp_dec(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl, expected: int) -> None:
     cpu_helper.load_reg16(SP, expected + 1)
 
     control = CtrlWord()\
@@ -58,7 +59,7 @@ def test_sp_dec(cpu_helper: CPUHelper, expected: int) -> None:
     assert value == expected
 
 
-def test_push_a(cpu_helper: CPUHelper) -> None:
+def test_push_a(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
 
     # preparation - clear value at address 17
     cpu_helper.write_ram(17, 0)
@@ -78,7 +79,7 @@ def test_push_a(cpu_helper: CPUHelper) -> None:
     assert memval == 72
 
 
-def test_pop_a(cpu_helper: CPUHelper) -> None:
+def test_pop_a(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
 
     # preparation - set value at address 54
     cpu_helper.write_ram(54, 23)
@@ -99,7 +100,7 @@ def test_pop_a(cpu_helper: CPUHelper) -> None:
     assert spval == 55
     assert regval == 23
 
-def test_push_pop(cpu_helper: CPUHelper) -> None:
+def test_push_pop(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
 
     cpu_helper.load_reg16(SP, 44)
     cpu_helper.load_reg8(C, 45)
@@ -111,7 +112,7 @@ def test_push_pop(cpu_helper: CPUHelper) -> None:
     val = cpu_helper.read_reg8(C)
     assert val == 45
 
-def test_push_popf(cpu_helper: CPUHelper) -> None:
+def test_push_popf(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
 
     cpu_helper.load_reg16(SP, 88)
     ldi (F, 0b1101)
@@ -123,7 +124,7 @@ def test_push_popf(cpu_helper: CPUHelper) -> None:
     val = cpu_helper.client.flags_get()
     assert val == 0b1101
 
-def test_push_lr(cpu_helper: CPUHelper) -> None:
+def test_push_lr(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
     cpu_helper.load_reg16(SP, 0x88)
 
     cpu_helper.load_reg16(LR, 0x1234)
@@ -136,7 +137,7 @@ def test_push_lr(cpu_helper: CPUHelper) -> None:
     assert h == 0x12
     assert l == 0x34
 
-def test_pop_lr(cpu_helper: CPUHelper) -> None:
+def test_pop_lr(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
     cpu_helper.load_reg16(SP, 0x21)
     cpu_helper.load_reg16(LR, 0)
 
@@ -149,7 +150,7 @@ def test_pop_lr(cpu_helper: CPUHelper) -> None:
 
     assert val == 0x8354
 
-def test_push_pop_lr(cpu_helper: CPUHelper) -> None:
+def test_push_pop_lr(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
     cpu_helper.load_reg16(SP, 0x40)
 
     cpu_helper.load_reg16(LR, 0x5314)
@@ -161,7 +162,7 @@ def test_push_pop_lr(cpu_helper: CPUHelper) -> None:
     val = cpu_helper.read_reg16(LR)
     assert val == 0x5314
 
-def test_ldr_sp_plus(cpu_helper: CPUHelper) -> None:
+def test_ldr_sp_plus(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
     cpu_helper.load_reg16(SP, 0x30)
     cpu_helper.write_ram(0x33, 0x88)
     cpu_helper.load_reg8(A, 0)
@@ -172,7 +173,7 @@ def test_ldr_sp_plus(cpu_helper: CPUHelper) -> None:
 
     assert val == 0x88
 
-def test_ldr_sp_minus(cpu_helper: CPUHelper) -> None:
+def test_ldr_sp_minus(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
     cpu_helper.load_reg16(SP, 0x30)
     cpu_helper.write_ram(0x20, 0x44)
     cpu_helper.load_reg8(A, 0)
@@ -184,7 +185,7 @@ def test_ldr_sp_minus(cpu_helper: CPUHelper) -> None:
     assert val == 0x44
 
 
-def test_str_sp_plus(cpu_helper: CPUHelper) -> None:
+def test_str_sp_plus(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
     cpu_helper.load_reg16(SP, 0x30)
     cpu_helper.write_ram(0x33, 0)
     cpu_helper.load_reg8(A, 0x56)

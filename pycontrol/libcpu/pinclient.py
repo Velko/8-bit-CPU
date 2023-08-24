@@ -119,3 +119,14 @@ def find_port() -> str:
 
 def open_port() -> serial.Serial:
     return serial.Serial(find_port(), 115200, timeout=3)
+
+
+single_inst: Optional[PinClient] = None
+
+def get_client_instance() -> PinClient:
+    global single_inst
+
+    if single_inst is None:
+        single_inst = PinClient()
+
+    return single_inst

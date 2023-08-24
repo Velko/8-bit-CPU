@@ -4,8 +4,8 @@ import sys, cmd
 import localpath
 from typing import Dict, Sequence
 
-from libcpu.cpu import setup_live
-backend = setup_live()
+from libcpu.pinclient import get_client_instance
+client = get_client_instance()
 
 from libcpu.pin import Pin, SimplePin, Level
 from libcpu.discovery import all_pins
@@ -28,43 +28,43 @@ class TesterClient(cmd.Cmd):
         return list(filter(lambda n: n.startswith(text) and isinstance(pin_map[n], SimplePin), pin_map.keys()))
 
     def do_EOF(self, arg: str) -> None:
-        backend.client.close()
+        client.close()
         sys.exit(0)
 
     def do_identify(self, arg: str) -> None:
         'Identify device'
-        chr = backend.client.identify()
+        chr = client.identify()
         print (chr)
 
     def do_off(self, arg: str) -> None:
         'Turn everything off, release Bus'
         self.control = CtrlWord()
-        backend.client.off(DEFAULT_CW.c_word)
+        client.off(DEFAULT_CW.c_word)
         print(bin(self.control.c_word))
 
     def do_addr(self, arg: str) -> None:
         'Read/Send current value on the Address Bus'
         if arg:
-            backend.client.addr_set(arg)
+            client.addr_set(arg)
         else:
-            chr = backend.client.addr_get()
+            chr = client.addr_get()
             print (chr)
 
     def do_bus(self, arg: str) -> None:
         'Read/Send current value on the Main Bus'
         if arg:
-            backend.client.bus_set(arg)
+            client.bus_set(arg)
         else:
-            chr = backend.client.bus_get()
+            chr = client.bus_get()
             print (chr)
 
     def do_release(self, arg: str) -> None:
         'Release bus'
-        backend.client.bus_free()
+        client.bus_free()
 
     def do_flags(self, arg: str) -> None:
         'Read flags'
-        print (backend.client.flags_get())
+        print (client.flags_get())
 
     def do_set(self, arg: str) -> None:
         'Set control pin ignoring active-high/low setting'
@@ -118,32 +118,32 @@ class TesterClient(cmd.Cmd):
 
     def do_commit(self, arg: str) -> None:
         'Send the control word to Arduino'
-        backend.client.ctrl_commit(self.control.c_word)
+        client.ctrl_commit(self.control.c_word)
 
     def do_pulse(self, arg: str) -> None:
         'Pulse normal clock'
-        backend.client.clock_pulse()
+        client.clock_pulse()
 
     def do_inverted(self, arg: str) -> None:
         'Pulse inverted clock'
-        backend.client.clock_inverted()
+        client.clock_inverted()
 
     def do_tick(self, arg: str) -> None:
         'Pulse both clocks'
-        backend.client.clock_tick()
+        client.clock_tick()
 
     def do_ir_get(self, arg: str) -> None:
-        rv = backend.client.ir_get()
+        rv = client.ir_get()
         print (rv)
 
 
     def do_reset(self, arg: str) -> None:
         self.control = CtrlWord()
-        backend.client.off(DEFAULT_CW.c_word)
-        backend.client.reset()
+        client.off(DEFAULT_CW.c_word)
+        client.reset()
 
     def do_shutdown(self, arg: str) -> None:
-        backend.client.shutdown()
+        client.shutdown()
 
 def build_pinmap() -> None:
     for name, attr in all_pins():

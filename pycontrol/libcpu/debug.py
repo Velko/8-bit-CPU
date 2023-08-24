@@ -5,6 +5,7 @@ from typing import Dict, List, Mapping, Optional, Union
 from enum import Enum
 
 from .cpu_helper import CPUHelper
+from .pinclient import PinClient
 from .DeviceSetup import IR, LR, PC, SP
 from .util import unwrap, RunMessage
 from .opcodes import opcodes
@@ -24,8 +25,9 @@ class StopReason(Enum):
 
 class Debugger:
     def __init__(self) -> None:
-        self.backend = CPUBackendControl()
-        self.cpu_helper = CPUHelper(self.backend.client)
+        self.client = PinClient()
+        self.backend = CPUBackendControl(self.client)
+        self.cpu_helper = CPUHelper(self.client)
         self.halted = False
         self.stopped = True
 

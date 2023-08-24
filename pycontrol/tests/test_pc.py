@@ -8,6 +8,7 @@ from libcpu.DeviceSetup import PC, LR
 from libcpu.cpu import *
 from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
+from libcpu.cpu_exec import CPUBackendControl
 from libcpu.devices import Flags
 from libcpu.ctrl_word import CtrlWord
 
@@ -40,7 +41,7 @@ def test_pc_count(cpu_helper: CPUHelper, expected: int) -> None:
 
     assert value == expected
 
-def test_beq_taken(cpu_helper: CPUHelper) -> None:
+def test_beq_taken(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
     cpu_helper.load_reg8(F, Flags.Z)
     cpu_helper.load_reg16(PC, 0x1234)
 
@@ -49,7 +50,7 @@ def test_beq_taken(cpu_helper: CPUHelper) -> None:
 
     assert pcaddr == 0x4321
 
-def test_beq_fallthrough(cpu_helper: CPUHelper) -> None:
+def test_beq_fallthrough(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
     cpu_helper.load_reg8(F, 0)
     cpu_helper.load_reg16(PC, 0x1234)
 
@@ -59,7 +60,7 @@ def test_beq_fallthrough(cpu_helper: CPUHelper) -> None:
     assert pcaddr == 0x1236
 
 
-def test_bne_taken(cpu_helper: CPUHelper) -> None:
+def test_bne_taken(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
     cpu_helper.load_reg8(F, 0)
     cpu_helper.load_reg16(PC, 0x1234)
 
@@ -68,7 +69,7 @@ def test_bne_taken(cpu_helper: CPUHelper) -> None:
 
     assert pcaddr == 0x4321
 
-def test_bne_fallthrough(cpu_helper: CPUHelper) -> None:
+def test_bne_fallthrough(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
     cpu_helper.load_reg8(F, Flags.Z)
     cpu_helper.load_reg16(PC, 0x1234)
 
@@ -77,7 +78,7 @@ def test_bne_fallthrough(cpu_helper: CPUHelper) -> None:
 
     assert pcaddr == 0x1236
 
-def test_bcs_taken(cpu_helper: CPUHelper) -> None:
+def test_bcs_taken(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
     cpu_helper.load_reg8(F, Flags.C)
     cpu_helper.load_reg16(PC, 0x1234)
 
@@ -86,7 +87,7 @@ def test_bcs_taken(cpu_helper: CPUHelper) -> None:
 
     assert pcaddr == 0x4321
 
-def test_bcs_fallthrough(cpu_helper: CPUHelper) -> None:
+def test_bcs_fallthrough(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
     cpu_helper.load_reg8(F, 0)
     cpu_helper.load_reg16(PC, 0x1234)
 
@@ -95,7 +96,7 @@ def test_bcs_fallthrough(cpu_helper: CPUHelper) -> None:
 
     assert pcaddr == 0x1236
 
-def test_bcc_taken(cpu_helper: CPUHelper) -> None:
+def test_bcc_taken(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
     cpu_helper.load_reg8(F, 0)
     cpu_helper.load_reg16(PC, 0x1234)
 
@@ -104,7 +105,7 @@ def test_bcc_taken(cpu_helper: CPUHelper) -> None:
 
     assert pcaddr == 0x4321
 
-def test_bcc_fallthrough(cpu_helper: CPUHelper) -> None:
+def test_bcc_fallthrough(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
     cpu_helper.load_reg8(F, Flags.C)
     cpu_helper.load_reg16(PC, 0x1234)
 
@@ -113,7 +114,7 @@ def test_bcc_fallthrough(cpu_helper: CPUHelper) -> None:
 
     assert pcaddr == 0x1236
 
-def test_lr_pc_swap(cpu_helper: CPUHelper) -> None:
+def test_lr_pc_swap(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
     cpu_helper.load_reg16(PC, 0xaa)
     cpu_helper.load_reg16(LR, 43)
 
@@ -123,7 +124,7 @@ def test_lr_pc_swap(cpu_helper: CPUHelper) -> None:
 
     assert value == 43
 
-def test_call_addr(cpu_helper: CPUHelper) -> None:
+def test_call_addr(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
     cpu_helper.load_reg16(PC, 0x12bb)
 
     call (Addr(452))
@@ -135,7 +136,7 @@ def test_call_addr(cpu_helper: CPUHelper) -> None:
     assert value == 452
     assert retaddr == 0x12bd
 
-def test_jmp_addr(cpu_helper: CPUHelper) -> None:
+def test_jmp_addr(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
     cpu_helper.load_reg16(PC, 0)
 
     jmp(Addr(0x1084))
@@ -143,7 +144,7 @@ def test_jmp_addr(cpu_helper: CPUHelper) -> None:
     value = cpu_helper.read_reg16(PC)
     assert value == 0x1084
 
-def test_rjmp_offset(cpu_helper: CPUHelper) -> None:
+def test_rjmp_offset(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
     cpu_helper.load_reg16(PC, 32)
 
     rjmp(14)

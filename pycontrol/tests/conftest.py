@@ -5,19 +5,29 @@ import localpath
 from libcpu.cpu_helper import CPUHelper
 from typing import  Sequence, Iterator
 
-from libcpu.cpu import setup_live
+from libcpu.cpu import install_backend, clear_backend
 from libcpu.cpu_exec import CPUBackendControl
-
+from libcpu.pinclient import PinClient, get_client_instance
 
 @pytest.fixture(scope="session")
-def cpu_backend_real() -> Iterator[CPUBackendControl]:
-    backend = setup_live()
+def pins_client_real() -> Iterator[PinClient]:
 
-    yield backend
+    client = get_client_instance()
+
+    yield client
 
     shd = os.environ.get("EMU_SHUTDOWN")
     if shd is not None:
-        backend.client.shutdown()
+        client.shutdown()
+
+
+@pytest.fixture
+def cpu_backend_real(pins_client_real: PinClient) -> Iterator[CPUBackendControl]:
+    backend = CPUBackendControl(pins_client_real)
+    install_backend(backend)
+    yield backend
+    clear_backend()
+
 
 @pytest.fixture(scope="module")
 def random_bytes() -> Sequence[int]:
@@ -31,8 +41,6 @@ def random_bytes() -> Sequence[int]:
 
 
 @pytest.fixture
-def cpu_helper(cpu_backend_real: CPUBackendControl) -> CPUHelper:
-    cpu_backend_real.client.reset()
-    cpu_backend_real.flags_cache = None
-    cpu_backend_real.opcode_cache = None
-    return CPUHelper(cpu_backend_real.client)
+def cpu_helper(pins_client_real: PinClient) -> CPUHelper:
+    pins_client_real.reset()
+    return CPUHelper(pins_client_real)

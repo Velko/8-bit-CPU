@@ -3,10 +3,10 @@
 
 import sys, localpath
 from libcpu.util import RunMessage
-from libcpu.cpu import setup_live
+from libcpu.pinclient import get_client_instance
 from libcpu.cpu_helper import CPUHelper
 
-cpu_helper: CPUHelper = CPUHelper(setup_live().client)
+cpu_helper: CPUHelper = CPUHelper(get_client_instance())
 
 def upload() -> None:
 
