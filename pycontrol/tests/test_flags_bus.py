@@ -14,9 +14,8 @@ def test_flags_out_n(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg8(B, 5)
     add(A, B)
 
-    f = cpu_helper.get_flags()
+    flags = cpu_helper.get_flags_s()
 
-    flags = Flags.decode(f)
     assert flags == "---N"
 
 def test_flags_out_z(cpu_helper: CPUHelper) -> None:
@@ -24,9 +23,8 @@ def test_flags_out_z(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg8(B, 5)
     sub(A, B)
 
-    f = cpu_helper.get_flags()
+    flags = cpu_helper.get_flags_s()
 
-    flags = Flags.decode(f)
     assert flags == "--Z-"
 
 def test_flags_out_c(cpu_helper: CPUHelper) -> None:
@@ -34,9 +32,8 @@ def test_flags_out_c(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg8(B, 40)
     add(A, B)
 
-    f = cpu_helper.get_flags()
+    flags = cpu_helper.get_flags_s()
 
-    flags = Flags.decode(f)
     assert flags == "-C--"
 
 def test_flags_out_v(cpu_helper: CPUHelper) -> None:
@@ -44,9 +41,8 @@ def test_flags_out_v(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg8(B, 20)
     sub(A, B)
 
-    f = cpu_helper.get_flags()
+    flags = cpu_helper.get_flags_s()
 
-    flags = Flags.decode(f)
     assert flags == "V---"
 
 @pytest.mark.parametrize("flags", range(16))

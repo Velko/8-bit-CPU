@@ -69,7 +69,7 @@ def test_shr(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: bool, va
     shr(reg)
 
     value = cpu_helper.read_reg8(reg)
-    flags = Flags.decode(cpu_helper.get_flags())
+    flags = cpu_helper.get_flags_s()
     assert value == result
     assert flags == xflags
 
@@ -90,7 +90,7 @@ def test_shr_real(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: boo
     cpu_helper.run_snippet(66, shr_test_prog)
 
     value = cpu_helper.read_reg8(reg)
-    flags = Flags.decode(cpu_helper.get_flags())
+    flags = cpu_helper.get_flags_s()
     assert value == result
     assert flags == xflags
 
@@ -119,7 +119,7 @@ def test_ror(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: bool, va
     ror(reg)
 
     value = cpu_helper.read_reg8(reg)
-    flags = Flags.decode(cpu_helper.get_flags())
+    flags = cpu_helper.get_flags_s()
     assert value == result
     assert flags == xflags
 
@@ -144,7 +144,7 @@ def test_asr(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: bool, va
     asr(reg)
 
     value = cpu_helper.read_reg8(reg)
-    flags = Flags.decode(cpu_helper.get_flags())
+    flags = cpu_helper.get_flags_s()
     assert value == result
     assert flags == xflags
 
@@ -165,7 +165,7 @@ def test_asr_real(cpu_helper: CPUHelper, reg: Register, desc: str, carry_in: boo
     cpu_helper.run_snippet(23, asr_test_prog)
 
     value = cpu_helper.read_reg8(reg)
-    flags = Flags.decode(cpu_helper.get_flags())
+    flags = cpu_helper.get_flags_s()
     assert value == result
     assert flags == xflags
 

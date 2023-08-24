@@ -31,7 +31,7 @@ def test_add_ab(cpu_helper: CPUHelper, lhs: Register, rhs: Register, desc: str, 
     add(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = Flags.decode(cpu_helper.get_flags())
+    flags = cpu_helper.get_flags_s()
     assert value == result
     assert flags == xflags
 
@@ -43,7 +43,7 @@ def test_add_aa(cpu_helper: CPUHelper, reg: Register, desc: str, val: int, resul
     add(reg, reg)
 
     value = cpu_helper.read_reg8(reg)
-    flags = Flags.decode(cpu_helper.get_flags())
+    flags = cpu_helper.get_flags_s()
     assert value == result
     assert flags == xflags
 
@@ -65,7 +65,7 @@ def test_sub(cpu_helper: CPUHelper, lhs: Register, rhs: Register, desc: str, val
     sub(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = Flags.decode(cpu_helper.get_flags())
+    flags = cpu_helper.get_flags_s()
     assert value == result
     assert flags == xflags
 
@@ -87,7 +87,7 @@ def test_adc_ab_c_set(cpu_helper: CPUHelper, lhs: Register, rhs: Register, desc:
     adc(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = Flags.decode(cpu_helper.get_flags())
+    flags = cpu_helper.get_flags_s()
     assert value == result
     assert flags == xflags
 
@@ -101,7 +101,7 @@ def test_adc_ab_c_clear(cpu_helper: CPUHelper, lhs: Register, rhs: Register, des
     adc(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = Flags.decode(cpu_helper.get_flags())
+    flags = cpu_helper.get_flags_s()
     assert value == result
     assert flags == xflags
 
@@ -123,7 +123,7 @@ def test_sbb_c_set(cpu_helper: CPUHelper, lhs: Register, rhs: Register, desc: st
     sbb(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = Flags.decode(cpu_helper.get_flags())
+    flags = cpu_helper.get_flags_s()
     assert value == result
     assert flags == xflags
 
@@ -137,6 +137,6 @@ def test_sbb_c_clear(cpu_helper: CPUHelper, lhs: Register, rhs: Register, desc: 
     sbb(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = Flags.decode(cpu_helper.get_flags())
+    flags = cpu_helper.get_flags_s()
     assert value == result
     assert flags == xflags

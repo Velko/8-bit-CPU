@@ -60,7 +60,7 @@ def test_inc_flags_cz(cpu_helper: CPUHelper) -> None:
 
     inc(A)
 
-    flags = Flags.decode(cpu_helper.get_flags())
+    flags = cpu_helper.get_flags_s()
     assert flags == "-CZ-"
 
 def test_inc_flags_v(cpu_helper: CPUHelper) -> None:
@@ -68,7 +68,7 @@ def test_inc_flags_v(cpu_helper: CPUHelper) -> None:
 
     inc(A)
 
-    flags = Flags.decode(cpu_helper.get_flags())
+    flags = cpu_helper.get_flags_s()
     assert flags == "V--N"
 
 
@@ -77,7 +77,7 @@ def test_dec_flags_z(cpu_helper: CPUHelper) -> None:
 
     dec(A)
 
-    flags = Flags.decode(cpu_helper.get_flags())
+    flags = cpu_helper.get_flags_s()
     assert flags == "--Z-"
 
 def test_dec_flags_cn(cpu_helper: CPUHelper) -> None:
@@ -85,7 +85,7 @@ def test_dec_flags_cn(cpu_helper: CPUHelper) -> None:
 
     dec(A)
 
-    flags = Flags.decode(cpu_helper.get_flags())
+    flags = cpu_helper.get_flags_s()
     assert flags == "-C-N"
 
 def test_dec_flags_v(cpu_helper: CPUHelper) -> None:
@@ -93,5 +93,5 @@ def test_dec_flags_v(cpu_helper: CPUHelper) -> None:
 
     dec(A)
 
-    flags = Flags.decode(cpu_helper.get_flags())
+    flags = cpu_helper.get_flags_s()
     assert flags == "V---"
