@@ -35,4 +35,4 @@ def cpu_helper(cpu_backend_real: CPUBackendControl) -> CPUHelper:
     cpu_backend_real.client.reset()
     cpu_backend_real.flags_cache = None
     cpu_backend_real.opcode_cache = None
-    return CPUHelper(cpu_backend_real)
+    return CPUHelper(cpu_backend_real.client)

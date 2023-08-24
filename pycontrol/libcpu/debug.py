@@ -24,7 +24,8 @@ class StopReason(Enum):
 
 class Debugger:
     def __init__(self) -> None:
-        self.cpu_helper = CPUHelper(CPUBackendControl())
+        self.backend = CPUBackendControl()
+        self.cpu_helper = CPUHelper(self.backend.client)
         self.halted = False
         self.stopped = True
 
@@ -36,7 +37,7 @@ class Debugger:
         self.on_output = self.output_event
 
     def disconnect(self) -> None:
-        self.cpu_helper.backend.client.close()
+        self.cpu_helper.client.close()
 
     def read_ram(self, addr: int, size: int) -> bytes:
         data: List[int] = list()
@@ -68,11 +69,11 @@ class Debugger:
 
         if self.current_break is not None:
             # special case: active breakpoint
-            message = self.cpu_helper.backend.execute_opcode(self.current_break.orig_op)
+            message = self.backend.execute_opcode(self.current_break.orig_op)
             self.current_break = None
         else:
             # fetch and execute an instruction
-             message = self.cpu_helper.backend.fetch_and_execute()
+             message = self.backend.fetch_and_execute()
 
         # are we done?
         if message is not None:
@@ -89,10 +90,10 @@ class Debugger:
                 if tmp_break is not None:
                     # when single-stepping, should ignore breakpoints and execute original
                     # instruction immediately
-                    _ = self.cpu_helper.backend.execute_opcode(tmp_break.orig_op)
+                    _ = self.backend.execute_opcode(tmp_break.orig_op)
                 else:
                     # Must be BRK in code, execute NOP instead
-                    self.cpu_helper.backend.execute_mnemonic("nop")
+                    self.backend.execute_mnemonic("nop")
 
             # port output
             if message.reason == RunMessage.Reason.OUT:
@@ -113,10 +114,10 @@ class Debugger:
         # flush flags cache, because hardware updated while we were not
         # observing
         if self.current_break is not None:
-            self.cpu_helper.backend.flags_cache = None
+            self.backend.flags_cache = None
             self.step()
 
-        out = self.cpu_helper.backend.client.run_program();
+        out = self.backend.client.run_program();
 
         for msg in out:
 
@@ -148,7 +149,7 @@ class Debugger:
 
     def reset(self) -> None:
         # Reset CPU
-        self.cpu_helper.backend.client.reset()
+        self.backend.client.reset()
 
         self.halted = False
 

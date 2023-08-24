@@ -35,9 +35,9 @@ def test_sp_inc(cpu_helper: CPUHelper, expected: int) -> None:
 
     control = CtrlWord()\
         .enable(SP.inc)
-    cpu_helper.backend.client.ctrl_commit(control.c_word)
-    cpu_helper.backend.client.clock_tick()
-    cpu_helper.backend.client.off(DEFAULT_CW.c_word)
+    cpu_helper.client.ctrl_commit(control.c_word)
+    cpu_helper.client.clock_tick()
+    cpu_helper.client.off(DEFAULT_CW.c_word)
 
 
     value = cpu_helper.read_reg16(SP)
@@ -49,9 +49,9 @@ def test_sp_dec(cpu_helper: CPUHelper, expected: int) -> None:
 
     control = CtrlWord()\
         .enable(SP.dec)
-    cpu_helper.backend.client.ctrl_commit(control.c_word)
-    cpu_helper.backend.client.clock_tick()
-    cpu_helper.backend.client.off(DEFAULT_CW.c_word)
+    cpu_helper.client.ctrl_commit(control.c_word)
+    cpu_helper.client.clock_tick()
+    cpu_helper.client.off(DEFAULT_CW.c_word)
 
 
     value = cpu_helper.read_reg16(SP)
@@ -120,7 +120,7 @@ def test_push_popf(cpu_helper: CPUHelper) -> None:
     ldi (F, 0)
     popf ()
 
-    val = cpu_helper.backend.client.flags_get()
+    val = cpu_helper.client.flags_get()
     assert val == 0b1101
 
 def test_push_lr(cpu_helper: CPUHelper) -> None:

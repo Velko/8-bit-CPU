@@ -6,7 +6,7 @@ from libcpu.util import RunMessage
 from libcpu.cpu import setup_live
 from libcpu.cpu_helper import CPUHelper
 
-cpu_helper: CPUHelper = CPUHelper(setup_live())
+cpu_helper: CPUHelper = CPUHelper(setup_live().client)
 
 def upload() -> None:
 
@@ -27,12 +27,12 @@ def upload() -> None:
 def run() -> None:
 
     # Reset PC
-    cpu_helper.backend.client.reset()
+    cpu_helper.client.reset()
 
     # Drumroll... now it should happen for real
     print ("# Running ...", flush=True, file=sys.stderr)
 
-    out = cpu_helper.backend.client.run_program();
+    out = cpu_helper.client.run_program();
 
     for msg in out:
 
