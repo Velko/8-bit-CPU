@@ -1,7 +1,7 @@
 import pytest
 
 from libcpu.cpu import *
-from libcpu.test_helpers import CPUHelper
+from libcpu.cpu_helper import CPUHelper
 from libcpu.util import RunMessage
 
 from typing import Iterator, Tuple

@@ -3,7 +3,7 @@
 import pytest
 
 from libcpu.cpu import *
-from libcpu.test_helpers import CPUHelper
+from libcpu.cpu_helper import CPUHelper
 from libcpu.devices import Flags
 
 pytestmark = pytest.mark.hardware

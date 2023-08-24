@@ -6,7 +6,7 @@ import random
 from libcpu.cpu import *
 from libcpu.cpu_exec import CPUBackendControl
 from libcpu.markers import Addr
-from libcpu.test_helpers import CPUHelper
+from libcpu.cpu_helper import CPUHelper
 from typing import Sequence
 
 pytestmark = pytest.mark.hardware

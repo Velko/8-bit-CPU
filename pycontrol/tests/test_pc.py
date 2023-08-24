@@ -7,7 +7,7 @@ pytestmark = pytest.mark.hardware
 from libcpu.DeviceSetup import PC, LR
 from libcpu.cpu import *
 from libcpu.markers import Addr
-from libcpu.test_helpers import CPUHelper
+from libcpu.cpu_helper import CPUHelper
 from libcpu.devices import Flags
 from libcpu.ctrl_word import CtrlWord
 

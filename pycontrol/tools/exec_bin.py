@@ -4,7 +4,7 @@
 import sys, localpath
 from libcpu.util import RunMessage
 from libcpu.cpu import setup_live
-from libcpu.test_helpers import CPUHelper
+from libcpu.cpu_helper import CPUHelper
 
 cpu_helper: CPUHelper = CPUHelper(setup_live())
 

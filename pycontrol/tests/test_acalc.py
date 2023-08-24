@@ -3,7 +3,7 @@
 import pytest
 
 from libcpu.cpu import *
-from libcpu.test_helpers import CPUHelper
+from libcpu.cpu_helper import CPUHelper
 from libcpu.DeviceSetup import ACalc
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 

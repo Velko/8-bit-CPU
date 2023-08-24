@@ -5,7 +5,7 @@ from libcpu.DeviceSetup import PC
 
 pytestmark = pytest.mark.hardware
 
-from libcpu.test_helpers import CPUHelper
+from libcpu.cpu_helper import CPUHelper
 from libcpu.cpu import *
 
 @pytest.mark.hardware

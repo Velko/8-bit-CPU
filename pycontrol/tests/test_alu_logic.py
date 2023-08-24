@@ -2,7 +2,7 @@
 
 import pytest
 
-from libcpu.test_helpers import CPUHelper
+from libcpu.cpu_helper import CPUHelper
 from libcpu.opcodes import permute_gp_regs_nsame, gp_regs
 from libcpu.devices import Register, Flags
 from typing import Iterator, Tuple

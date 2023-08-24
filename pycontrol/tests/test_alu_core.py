@@ -6,7 +6,7 @@ from libcpu.opcodes import permute_gp_regs_all, permute_gp_regs_nsame, gp_regs
 from libcpu.devices import Register, Flags
 from typing import Iterator, Tuple
 
-from libcpu.test_helpers import CPUHelper
+from libcpu.cpu_helper import CPUHelper
 
 pytestmark = pytest.mark.hardware
 

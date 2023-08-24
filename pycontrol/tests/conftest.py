@@ -2,7 +2,7 @@ import pytest
 import random, os
 import localpath
 
-from libcpu.test_helpers import CPUHelper
+from libcpu.cpu_helper import CPUHelper
 from typing import  Sequence, Iterator
 
 from libcpu.cpu import setup_live

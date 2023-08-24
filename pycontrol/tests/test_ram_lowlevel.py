@@ -4,7 +4,7 @@ import pytest
 
 pytestmark = pytest.mark.hardware
 
-from libcpu.test_helpers import CPUHelper
+from libcpu.cpu_helper import CPUHelper
 from libcpu.cpu_exec import CPUBackendControl
 from typing import Iterator, Sequence
 

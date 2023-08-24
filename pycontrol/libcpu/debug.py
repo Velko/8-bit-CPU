@@ -4,7 +4,7 @@ import sys
 from typing import Dict, List, Mapping, Optional, Union
 from enum import Enum
 
-from .test_helpers import CPUHelper
+from .cpu_helper import CPUHelper
 from .DeviceSetup import IR, LR, PC, SP
 from .util import unwrap, RunMessage
 from .opcodes import opcodes

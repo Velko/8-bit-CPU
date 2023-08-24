@@ -7,7 +7,7 @@ from libcpu.cpu import *
 from libcpu.devices import Register
 from libcpu.DeviceSetup import SP
 from libcpu.markers import Addr
-from libcpu.test_helpers import CPUHelper
+from libcpu.cpu_helper import CPUHelper
 from typing import Iterator, Tuple
 from libcpu.opcodes import permute_gp_regs_nsame, gp_regs
 
