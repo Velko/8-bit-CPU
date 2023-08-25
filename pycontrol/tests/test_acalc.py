@@ -15,8 +15,8 @@ def acalc_params() -> Iterator[Tuple[str, int, int, bool, int]]:
     yield "unsigned", 64737, 168, False, 64737 + 168
 
 
-@pytest.mark.parametrize("name,addr,offset,signed,expected", acalc_params())
-def test_acalc(pins_client_real: PinClient, name: str, addr: int, offset: int, signed: bool, expected: int) -> None:
+@pytest.mark.parametrize("_name,addr,offset,signed,expected", acalc_params())
+def test_acalc(pins_client_real: PinClient, _name: str, addr: int, offset: int, signed: bool, expected: int) -> None:
     cpu_helper = CPUHelper(pins_client_real)
 
     pins_client_real.bus_set(offset)

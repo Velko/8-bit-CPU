@@ -16,7 +16,7 @@ def singlebit_addresses() -> Iterator[int]:
 class FillRam: pass
 
 @pytest.fixture(scope="module")
-def fill_ram(random_bytes: Sequence[int], pins_client_real: PinClient) -> FillRam:
+def _fill_ram(random_bytes: Sequence[int], pins_client_real: PinClient) -> FillRam:
     cpu_helper = CPUHelper(pins_client_real)
 
     for addr in singlebit_addresses():
@@ -26,7 +26,7 @@ def fill_ram(random_bytes: Sequence[int], pins_client_real: PinClient) -> FillRa
 
 
 @pytest.mark.parametrize("addr", singlebit_addresses())
-def test_load_singlebit_addr(cpu_helper: CPUHelper, random_bytes: Sequence[int], fill_ram: FillRam, addr: int) -> None:
+def test_load_singlebit_addr(cpu_helper: CPUHelper, random_bytes: Sequence[int], _fill_ram: FillRam, addr: int) -> None:
 
     actual = cpu_helper.read_ram(addr)
 

@@ -48,7 +48,7 @@ def test_mov_a_b(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: R
     value = cpu_helper.read_reg8(lhs)
     assert value == val
 
-def test_lea(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
+def test_lea(cpu_helper: CPUHelper) -> None:
 
     cpu_helper.load_reg16(SP, 0x4314)
 

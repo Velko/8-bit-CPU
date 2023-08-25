@@ -24,8 +24,8 @@ def each_simple_pin_and_addr_with_others() -> Iterator[Tuple[str, int, str, int]
             yield a_name, a_num, b_name, b_num
 
 
-@pytest.mark.parametrize("name_a,pin_a,name_b,pin_b", each_simple_pin_and_addr_with_others())
-def test_simple_pin_and_mux_addr_overlap(name_a: str, pin_a: int, name_b: str, pin_b: int) -> None:
+@pytest.mark.parametrize("_name_a,pin_a,_name_b,pin_b", each_simple_pin_and_addr_with_others())
+def test_simple_pin_and_mux_addr_overlap(_name_a: str, pin_a: int, _name_b: str, pin_b: int) -> None:
 
     assert pin_a != pin_b
 
@@ -47,8 +47,8 @@ def each_pin_with_others_in_mux() -> Iterator[Tuple[str, int, str, int]]:
             for b_name, b_num in mpins[a_id+1:]:
                 yield f"{mux_name}.{a_name}", a_num, f"{mux_name}.{b_name}", b_num
 
-@pytest.mark.parametrize("name_a,pin_a,name_b,pin_b", each_pin_with_others_in_mux())
-def test_mux_pin_overlap(name_a: str, pin_a: int, name_b: str, pin_b: int) -> None:
+@pytest.mark.parametrize("_name_a,pin_a,_name_b,pin_b", each_pin_with_others_in_mux())
+def test_mux_pin_overlap(_name_a: str, pin_a: int, _name_b: str, pin_b: int) -> None:
 
     assert pin_a != pin_b
 
@@ -61,7 +61,7 @@ def each_pin_with_capacity_in_mux() -> Iterator[Tuple[str, int, int]]:
             yield f"{mux_name}.{p_name}", p_num, capacity
 
 
-@pytest.mark.parametrize("name,pin,capacity", each_pin_with_capacity_in_mux())
-def test_mux_capacity(name: str, pin: int, capacity: int) -> None:
+@pytest.mark.parametrize("_name,pin,capacity", each_pin_with_capacity_in_mux())
+def test_mux_capacity(_name: str, pin: int, capacity: int) -> None:
 
         assert pin < capacity

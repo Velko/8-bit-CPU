@@ -15,8 +15,8 @@ def and_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
     yield "zero", 0xa5, 0x5a, 0, "--Z-"
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
-@pytest.mark.parametrize("desc,val_a,val_b,result,xflags", and_test_args())
-def test_and(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+@pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", and_test_args())
+def test_and(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Register, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
     cpu_helper.load_reg8(lhs, val_a)
     cpu_helper.load_reg8(rhs, val_b)
 
@@ -33,8 +33,8 @@ def or_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
     yield "full", 0xa5, 0x5a, 0xff, "---N"
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
-@pytest.mark.parametrize("desc,val_a,val_b,result,xflags", or_test_args())
-def test_or(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+@pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", or_test_args())
+def test_or(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Register, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
     cpu_helper.load_reg8(lhs, val_a)
     cpu_helper.load_reg8(rhs, val_b)
 
@@ -54,9 +54,9 @@ def shr_args() -> Iterator[Tuple[str, int, int, str]]:
     yield "zero", 1, 0, "-CZ-"
 
 @pytest.mark.parametrize("reg", gp_regs)
-@pytest.mark.parametrize("desc,val,result,xflags", shr_args())
+@pytest.mark.parametrize("_desc,val,result,xflags", shr_args())
 @pytest.mark.parametrize("carry_in", [False, True])
-def test_shr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
+def test_shr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     if carry_in:
         cpu_helper.load_reg8(F, Flags.C)
@@ -73,9 +73,9 @@ def test_shr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, desc: str,
     assert flags == xflags
 
 @pytest.mark.parametrize("reg", gp_regs)
-@pytest.mark.parametrize("desc,val,result,xflags", shr_args())
+@pytest.mark.parametrize("_desc,val,result,xflags", shr_args())
 @pytest.mark.parametrize("carry_in", [False, True])
-def test_shr_real(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
+def test_shr_real(cpu_helper: CPUHelper, reg: Register, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     shr_test_prog = bytes([opcode_of(f"shr_{reg.name}")])
 
@@ -105,8 +105,8 @@ def ror_args() -> Iterator[Tuple[str, bool, int, int, str]]:
     yield "cin_zero", True, 0, 128, "---N"
 
 @pytest.mark.parametrize("reg", gp_regs)
-@pytest.mark.parametrize("desc,carry_in,val,result,xflags", ror_args())
-def test_ror(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
+@pytest.mark.parametrize("_desc,carry_in,val,result,xflags", ror_args())
+def test_ror(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     if carry_in:
         cpu_helper.load_reg8(F, Flags.C)
@@ -129,9 +129,9 @@ def asr_args() -> Iterator[Tuple[str, int, int, str]]:
     yield "zero", 1, 0, "-CZ-"
 
 @pytest.mark.parametrize("reg", gp_regs)
-@pytest.mark.parametrize("desc,val,result,xflags", asr_args())
+@pytest.mark.parametrize("_desc,val,result,xflags", asr_args())
 @pytest.mark.parametrize("carry_in", [False, True])
-def test_asr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
+def test_asr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     if carry_in:
         cpu_helper.load_reg8(F, Flags.C)
@@ -148,9 +148,9 @@ def test_asr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, desc: str,
     assert flags == xflags
 
 @pytest.mark.parametrize("reg", gp_regs)
-@pytest.mark.parametrize("desc,val,result,xflags", asr_args())
+@pytest.mark.parametrize("_desc,val,result,xflags", asr_args())
 @pytest.mark.parametrize("carry_in", [False, True])
-def test_asr_real(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
+def test_asr_real(cpu_helper: CPUHelper, reg: Register, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     asr_test_prog = bytes([opcode_of(f"asr_{reg.name}")])
 
@@ -176,9 +176,9 @@ def swap_args() -> Iterator[Tuple[str, int, int, str]]:
 
 
 @pytest.mark.parametrize("reg", gp_regs)
-@pytest.mark.parametrize("desc,val,result,xflags", swap_args())
+@pytest.mark.parametrize("_desc,val,result,xflags", swap_args())
 @pytest.mark.parametrize("carry_in", [False, True])
-def test_swap(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
+def test_swap(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     if carry_in:
         cpu_helper.load_reg8(F, Flags.C)
@@ -201,8 +201,8 @@ def xor_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
     yield "zero", 0x142, 0x142, 0, "--Z-"
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
-@pytest.mark.parametrize("desc,val_a,val_b,result,xflags", xor_test_args())
-def test_xor(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+@pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", xor_test_args())
+def test_xor(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Register, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
     cpu_helper.load_reg8(lhs, val_a)
     cpu_helper.load_reg8(rhs, val_b)
 
@@ -230,8 +230,8 @@ def not_args() -> Iterator[Tuple[str, int, int, str]]:
     yield "zero", 0xFF, 0, "--Z-"
 
 @pytest.mark.parametrize("reg", gp_regs)
-@pytest.mark.parametrize("desc,val,result,xflags", not_args())
-def test_not(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, desc: str, val: int, result: int, xflags: str) -> None:
+@pytest.mark.parametrize("_desc,val,result,xflags", not_args())
+def test_not(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, _desc: str, val: int, result: int, xflags: str) -> None:
 
     cpu_helper.load_reg8(reg, val)
 

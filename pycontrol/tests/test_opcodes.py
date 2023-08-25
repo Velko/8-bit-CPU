@@ -35,8 +35,8 @@ def calc_flags_alt_PC_counts() -> Iterator[Tuple[str, int, int, str, str]]:
             yield name, default_len, alt_len, Flags.decode(f_alt.mask), Flags.decode(f_alt.value)
 
 
-@pytest.mark.parametrize("name,default_len,alt_len,mask,val",  calc_flags_alt_PC_counts())
-def test_opcode_pc_len_equal_in_flags_alt(name: str, default_len: int, alt_len: int, mask: str, val: str) -> None:
+@pytest.mark.parametrize("_name,default_len,alt_len,_mask,_val",  calc_flags_alt_PC_counts())
+def test_opcode_pc_len_equal_in_flags_alt(_name: str, default_len: int, alt_len: int, _mask: str, _val: str) -> None:
 
 
         assert default_len == alt_len
@@ -125,8 +125,8 @@ def all_steps() -> Iterator[Tuple[str, str, int, Sequence[ControlSignal]]]:
         for steps in op._steps:
             yield name, "default", 0, steps
 
-@pytest.mark.parametrize("name,flags,vfal,step", all_steps())
-def test_mux_enables(name: str, flags: str, vfal: int, step: Sequence[ControlSignal]) -> None:
+@pytest.mark.parametrize("_name,_flags,_vfal,step", all_steps())
+def test_mux_enables(_name: str, _flags: str, _vfal: int, step: Sequence[ControlSignal]) -> None:
 #    instr = opcodes["ld_A_addr"]
 #    steps = instr._steps[3]
 

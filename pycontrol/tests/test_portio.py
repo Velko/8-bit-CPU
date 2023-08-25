@@ -27,8 +27,8 @@ def outb_args() -> Iterator[Tuple[str, int, int, str]]:
     yield "hex", 2, 233, ansi_red("h e9")
     yield "oct", 3, 89, ansi_red("o131")
 
-@pytest.mark.parametrize("desc,mode,val,expected", outb_args())
-def test_outa_emu_num(cpu_helper: CPUHelper, acpu: AssistedCPU, desc: str, mode: int, val: int, expected: str) -> None:
+@pytest.mark.parametrize("_desc,mode,val,expected", outb_args())
+def test_outa_emu_num(cpu_helper: CPUHelper, acpu: AssistedCPU, _desc: str, mode: int, val: int, expected: str) -> None:
     cpu_helper.load_reg8(B, mode)
     acpu.out(1, B)
 
@@ -40,8 +40,8 @@ def test_outa_emu_num(cpu_helper: CPUHelper, acpu: AssistedCPU, desc: str, mode:
     assert message.payload == expected
 
 @pytest.mark.emulator
-@pytest.mark.parametrize("desc,mode,val,expected", outb_args())
-def test_outb_int_hw(cpu_helper: CPUHelper, desc: str, mode: int, val: int, expected: str) -> None:
+@pytest.mark.parametrize("_desc,mode,val,expected", outb_args())
+def test_outb_int_hw(cpu_helper: CPUHelper, _desc: str, mode: int, val: int, expected: str) -> None:
 
     cpu_helper.load_reg8(D, mode);
 

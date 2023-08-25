@@ -12,7 +12,7 @@ from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
 
 @pytest.mark.parametrize("expected", [255, 1, 2, 4, 8, 16, 32, 64, 128, 0])
-def test_sp_load(cpu_helper: CPUHelper, acpu: AssistedCPU, expected: int) -> None:
+def test_sp_load(cpu_helper: CPUHelper, expected: int) -> None:
 
     cpu_helper.load_reg16(SP, expected)
 
@@ -30,7 +30,7 @@ def test_lea_sp(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
 # check transitions between SP chips
 @pytest.mark.parametrize("expected", itertools.chain(range(0xC, 0x15), range(0xFC, 0x105), range(0xFFC, 0x1005)))
-def test_sp_inc(cpu_helper: CPUHelper, acpu: AssistedCPU, expected: int) -> None:
+def test_sp_inc(cpu_helper: CPUHelper, expected: int) -> None:
     cpu_helper.load_reg16(SP, expected - 1)
 
     control = CtrlWord()\
@@ -44,7 +44,7 @@ def test_sp_inc(cpu_helper: CPUHelper, acpu: AssistedCPU, expected: int) -> None
     assert value == expected
 
 @pytest.mark.parametrize("expected", itertools.chain(range(0xC, 0x15), range(0xFC, 0x105), range(0xFFC, 0x1005)))
-def test_sp_dec(cpu_helper: CPUHelper, acpu: AssistedCPU, expected: int) -> None:
+def test_sp_dec(cpu_helper: CPUHelper, expected: int) -> None:
     cpu_helper.load_reg16(SP, expected + 1)
 
     control = CtrlWord()\

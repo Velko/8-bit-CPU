@@ -29,7 +29,7 @@ def acpu(pins_client_real: PinClient) -> AssistedCPU:
 def random_bytes() -> Sequence[int]:
     data = []
 
-    for addr in range(0x10000):
+    for _ in range(0x10000):
         value = random.randrange(256)
         data.append(value)
 
