@@ -3,7 +3,7 @@
 import pytest
 import random
 
-from libcpu.cpu import *
+from libcpu.assisted_cpu import A, B, F
 from libcpu.devices import Register
 from libcpu.DeviceSetup import SP
 from libcpu.markers import Addr
@@ -25,14 +25,14 @@ def all_regs_and_bits() -> Iterator[Tuple[Register, int]]:
 
 @pytest.mark.parametrize("register,value", all_regs_and_bits())
 def test_load_store_reg(cpu_helper: CPUHelper, acpu: AssistedCPU, register: Register, value: int) -> None:
-    ldi (register, value)
+    acpu.ldi (register, value)
     received = cpu_helper.read_reg8(register)
 
     assert value == received
 
 @pytest.mark.parametrize("value", [0xF, 1, 2, 4, 8, 0])
 def test_load_store_flags(cpu_helper: CPUHelper, acpu: AssistedCPU, value: int) -> None:
-    ldi (F, value)
+    acpu.ldi (F, value)
     received = cpu_helper.get_flags()
 
     assert value == received
@@ -43,7 +43,7 @@ def test_mov_a_b(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: R
     val = random.randrange(256)
     cpu_helper.load_reg8(rhs, val)
 
-    mov(lhs, rhs)
+    acpu.mov(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
     assert value == val
@@ -63,7 +63,7 @@ def test_mar_idx(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.write_ram(45, 0xB5)
     cpu_helper.load_reg8(B, 3)
 
-    ldx (A, Addr(42), B);
+    acpu.ldx (A, Addr(42), B);
 
     val = cpu_helper.read_reg8(A)
 

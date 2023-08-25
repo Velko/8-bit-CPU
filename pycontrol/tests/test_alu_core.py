@@ -7,11 +7,9 @@ from libcpu.devices import Register, Flags
 from typing import Iterator, Tuple
 
 from libcpu.cpu_helper import CPUHelper
-from libcpu.assisted_cpu import AssistedCPU
+from libcpu.assisted_cpu import AssistedCPU, F
 
 pytestmark = pytest.mark.hardware
-
-from libcpu.cpu import *
 
 def add_ab_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
     yield "small", 24, 18, 42, "----"
@@ -29,7 +27,7 @@ def test_add_ab(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Re
     cpu_helper.load_reg8(lhs, val_a)
     cpu_helper.load_reg8(rhs, val_b)
 
-    add(lhs, rhs)
+    acpu.add(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
     flags = cpu_helper.get_flags_s()
@@ -41,7 +39,7 @@ def test_add_ab(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Re
 def test_add_aa(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, desc: str, val: int, result: int, xflags: str) -> None:
     cpu_helper.load_reg8(reg, val)
 
-    add(reg, reg)
+    acpu.add(reg, reg)
 
     value = cpu_helper.read_reg8(reg)
     flags = cpu_helper.get_flags_s()
@@ -63,7 +61,7 @@ def test_sub(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Regis
     cpu_helper.load_reg8(lhs, val_a)
     cpu_helper.load_reg8(rhs, val_b)
 
-    sub(lhs, rhs)
+    acpu.sub(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
     flags = cpu_helper.get_flags_s()
@@ -85,7 +83,7 @@ def test_adc_ab_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, r
     cpu_helper.load_reg8(lhs, val_a)
     cpu_helper.load_reg8(rhs, val_b)
 
-    adc(lhs, rhs)
+    acpu.adc(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
     flags = cpu_helper.get_flags_s()
@@ -95,11 +93,11 @@ def test_adc_ab_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, r
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
 @pytest.mark.parametrize("desc,val_a,val_b,result,xflags", add_ab_test_args())
 def test_adc_ab_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
-    ldi (F, 0)
+    acpu.ldi (F, 0)
     cpu_helper.load_reg8(lhs, val_a)
     cpu_helper.load_reg8(rhs, val_b)
 
-    adc(lhs, rhs)
+    acpu.adc(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
     flags = cpu_helper.get_flags_s()
@@ -121,7 +119,7 @@ def test_sbb_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs:
     cpu_helper.load_reg8(lhs, val_a)
     cpu_helper.load_reg8(rhs, val_b)
 
-    sbb(lhs, rhs)
+    acpu.sbb(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
     flags = cpu_helper.get_flags_s()
@@ -131,11 +129,11 @@ def test_sbb_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs:
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
 @pytest.mark.parametrize("desc,val_a,val_b,result,xflags", sub_test_args())
 def test_sbb_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
-    ldi (F, 0)
+    acpu.ldi (F, 0)
     cpu_helper.load_reg8(lhs, val_a)
     cpu_helper.load_reg8(rhs, val_b)
 
-    sbb(lhs, rhs)
+    acpu.sbb(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
     flags = cpu_helper.get_flags_s()

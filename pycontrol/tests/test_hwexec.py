@@ -6,7 +6,8 @@ from libcpu.DeviceSetup import PC
 pytestmark = pytest.mark.hardware
 
 from libcpu.cpu_helper import CPUHelper
-from libcpu.cpu import *
+from libcpu.assisted_cpu import A
+from libcpu.opcodes import opcode_of
 
 @pytest.mark.hardware
 def test_ldi_on_hw(cpu_helper: CPUHelper) -> None:

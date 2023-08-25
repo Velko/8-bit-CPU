@@ -3,14 +3,12 @@
 import pytest
 
 from libcpu.cpu_helper import CPUHelper
-from libcpu.assisted_cpu import AssistedCPU
-from libcpu.opcodes import permute_gp_regs_nsame, gp_regs
+from libcpu.assisted_cpu import AssistedCPU, A, F
+from libcpu.opcodes import permute_gp_regs_nsame, gp_regs, opcode_of
 from libcpu.devices import Register, Flags
 from typing import Iterator, Tuple
 
 pytestmark = pytest.mark.hardware
-
-from libcpu.cpu import *
 
 def and_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
     yield "small", 230, 92, 68, "----"
@@ -22,7 +20,7 @@ def test_and(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Regis
     cpu_helper.load_reg8(lhs, val_a)
     cpu_helper.load_reg8(rhs, val_b)
 
-    andb(lhs, rhs)
+    acpu.andb(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
     flags = Flags.decode(cpu_helper.get_flags() & (Flags.Z | Flags.N)) # we are only interested in Z and N flags
@@ -40,7 +38,7 @@ def test_or(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Regist
     cpu_helper.load_reg8(lhs, val_a)
     cpu_helper.load_reg8(rhs, val_b)
 
-    orb(lhs, rhs)
+    acpu.orb(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
     flags = Flags.decode(cpu_helper.get_flags() & (Flags.Z | Flags.N))
@@ -67,7 +65,7 @@ def test_shr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, desc: str,
 
     cpu_helper.load_reg8(reg, val)
 
-    shr(reg)
+    acpu.shr(reg)
 
     value = cpu_helper.read_reg8(reg)
     flags = cpu_helper.get_flags_s()
@@ -117,7 +115,7 @@ def test_ror(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, desc: str,
 
     cpu_helper.load_reg8(reg, val)
 
-    ror(reg)
+    acpu.ror(reg)
 
     value = cpu_helper.read_reg8(reg)
     flags = cpu_helper.get_flags_s()
@@ -142,7 +140,7 @@ def test_asr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, desc: str,
 
     cpu_helper.load_reg8(reg, val)
 
-    asr(reg)
+    acpu.asr(reg)
 
     value = cpu_helper.read_reg8(reg)
     flags = cpu_helper.get_flags_s()
@@ -189,7 +187,7 @@ def test_swap(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, desc: str
 
     cpu_helper.load_reg8(reg, val)
 
-    swap(reg)
+    acpu.swap(reg)
 
     value = cpu_helper.read_reg8(reg)
     flags = Flags.decode(cpu_helper.get_flags() & (Flags.Z | Flags.N))
@@ -208,7 +206,7 @@ def test_xor(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Regis
     cpu_helper.load_reg8(lhs, val_a)
     cpu_helper.load_reg8(rhs, val_b)
 
-    xor(lhs, rhs)
+    acpu.xor(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
     flags = Flags.decode(cpu_helper.get_flags() & (Flags.Z | Flags.N)) # we are only interested in Z and N flags
@@ -218,7 +216,7 @@ def test_xor(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Regis
 def test_xor_zero_same(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.load_reg8(A, 0x5A)
 
-    clr(A)
+    acpu.clr(A)
 
     value = cpu_helper.read_reg8(A)
     flags = Flags.decode(cpu_helper.get_flags() & (Flags.Z | Flags.N))
@@ -237,7 +235,7 @@ def test_not(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, desc: str,
 
     cpu_helper.load_reg8(reg, val)
 
-    notb(reg)
+    acpu.notb(reg)
 
     value = cpu_helper.read_reg8(reg)
     flags = Flags.decode(cpu_helper.get_flags() & (Flags.Z | Flags.N))

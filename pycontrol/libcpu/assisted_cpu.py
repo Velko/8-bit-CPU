@@ -1,122 +1,170 @@
-from typing import List, Union, Tuple, Optional, Sequence
+from typing import Optional, Union
+from .util import RunMessage
+from .DeviceSetup import RegA, RegB, RegC, RegD, Flags as RegFlags
+from .devices import Register, Flags
 from .markers import AddrBase
-from .pseudo_devices import Imm, IOMon
-from .DeviceSetup import IOCtl, ProgMem, PC, Flags, StepCounter, Clock
-from .opcodes import opcodes, ops_by_code, fetch
 from .pinclient import PinClient
-from .ctrl_word import CtrlWord, DEFAULT_CW
-from .util import ControlSignal, RunMessage
+from .assisted_cpu_engine import AssistedCPUEngine
 
-class InvalidOpcodeException(Exception):
-    pass
+A = RegA
+B = RegB
+C = RegC
+D = RegD
+F = RegFlags
 
-class AssistedCPU:
+class AssistedCPU(AssistedCPUEngine):
     def __init__(self, client: PinClient) -> None:
-        self.client = client
-        self.flags_cache: Optional[int] = None
-        self.opcode_cache: Optional[int] = None
-        self.op_extension = 0
+        AssistedCPUEngine.__init__(self, client)
 
-        # RAM hooks
-        Imm.connect(self.client)
-        ProgMem.hook_out(Imm)
+    def ldi(self, target: Union[Register, Flags], value: int) -> None:
+        opcode = f"ldi_{target.name}_imm"
+        self.execute_mnemonic(opcode, value)
 
-    def execute_mnemonic(self, mnemonic: str, arg: Union[None, int, AddrBase]=None) -> Optional[RunMessage]:
-        if not mnemonic in opcodes:
-            raise InvalidOpcodeException(mnemonic)
+    def lea(self, target: Register, addr: AddrBase) -> None:
+        opcode = f"lea_{target.name}_addr"
+        self.execute_mnemonic(opcode, addr)
 
-        Imm.inject(arg)
+    def add(self, target: Register, arg: Register) -> None:
+        opcode = f"add_{target.name}_{arg.name}"
+        self.execute_mnemonic(opcode)
 
-        return self.execute_opcode(opcodes[mnemonic].opcode)
+    def adc(self, target: Register, arg: Register) -> None:
+        opcode = f"adc_{target.name}_{arg.name}"
+        self.execute_mnemonic(opcode)
 
-    def execute_opcode(self, opcode: Optional[int]) -> Optional[RunMessage]:
+    def sub(self, target: Register, arg: Register) -> None:
+        opcode = f"sub_{target.name}_{arg.name}"
+        self.execute_mnemonic(opcode)
 
-        # reset op_extension when starting new instruction
-        # the variable adds multiples of 256 to the opcode from IR and
-        # also simulates skipping microstep counter increment
-        # see get_opcode_cached() and parameter for get_step()
-        self.op_extension = 0
+    def sbb(self, target: Register, arg: Register) -> None:
+        opcode = f"sbb_{target.name}_{arg.name}"
+        self.execute_mnemonic(opcode)
 
-        # Reset/force current opcode
-        self.opcode_cache = opcode
+    def andb(self, target: Register, arg: Register) -> None:
+        opcode = f"and_{target.name}_{arg.name}"
+        self.execute_mnemonic(opcode)
 
-        for s_idx in range(8-len(fetch)):
-            # re-evaluate opcode, as it may change mid-instruction (when extended is loaded)
-            microcode = ops_by_code[self.get_opcode_cached()]
-            microstep, is_last = microcode.get_step(s_idx - self.op_extension , self.get_flags_cached())
-            if is_last:
-                fin_steps: List[ControlSignal] = [StepCounter.reset]
-                fin_steps.extend(microstep)
-                return self.execute_step(fin_steps)
-            else:
-                # only last step is expected to produce RunMessage
-                step_result = self.execute_step(microstep)
-                assert step_result is None
-        return None
+    def orb(self, target: Register, arg: Register) -> None:
+        opcode = f"or_{target.name}_{arg.name}"
+        self.execute_mnemonic(opcode)
 
-    def execute_step(self, microstep: Sequence[ControlSignal]) -> Optional[RunMessage]:
-        control = CtrlWord()
+    def xor(self, target: Register, arg: Register) -> None:
+        opcode = f"xor_{target.name}_{arg.name}"
+        self.execute_mnemonic(opcode)
 
-        for pin in microstep:
-            control.enable(pin)
+    def clr(self, arg: Register) -> None:
+        opcode = f"clr_{arg.name}"
+        self.execute_mnemonic(opcode)
 
-        if control.c_word != DEFAULT_CW.c_word:
+    def notb(self, target: Register) -> None:
+        opcode = f"not_{target.name}"
+        self.execute_mnemonic(opcode)
 
-            self.client.ctrl_commit(control.c_word)
-            self.client.clock_tick()
+    def shr(self, target: Register) -> None:
+        opcode = f"shr_{target.name}"
+        self.execute_mnemonic(opcode)
 
-            if control.is_enabled(IOCtl.laddr):
-                IOMon.select_port(self.client.bus_get())
+    def ror(self, target: Register) -> None:
+        opcode = f"ror_{target.name}"
+        self.execute_mnemonic(opcode)
 
-            if control.is_enabled(IOCtl.to_dev):
-                formatted = IOMon.format_value(self.client.bus_get())
-                return RunMessage(RunMessage.Reason.OUT, formatted);
+    def asr(self, target: Register) -> None:
+        opcode = f"asr_{target.name}"
+        self.execute_mnemonic(opcode)
 
-            if control.is_enabled(PC.load):
-                Imm.invalidate()
+    def swap(self, target: Register) -> None:
+        opcode = f"swap_{target.name}"
+        self.execute_mnemonic(opcode)
 
-            if control.is_enabled(PC.inc):
-                Imm.consume() # next byte for imm value
+    def inc(self, target: Register) -> None:
+        opcode = f"inc_{target.name}"
+        self.execute_mnemonic(opcode)
 
-            if control.is_enabled(Flags.calc) or control.is_enabled(Flags.load):
-                self.flags_cache = None
+    def dec(self, target: Register) -> None:
+        opcode = f"dec_{target.name}"
+        self.execute_mnemonic(opcode)
 
-            if control.is_enabled(Clock.halt):
-                return RunMessage(RunMessage.Reason.HALT)
+    def cmp(self, target: Register, arg: Register) -> None:
+        opcode = f"cmp_{target.name}_{arg.name}"
+        self.execute_mnemonic(opcode)
 
-            if control.is_enabled(Clock.brk):
-                return RunMessage(RunMessage.Reason.BRK)
+    def mov(self, target: Register, source: Register) -> None:
+        opcode = f"mov_{target.name}_{source.name}"
+        self.execute_mnemonic(opcode)
 
-            # Drop current opcode since it was a prefix for extended one
-            if control.is_enabled(StepCounter.extended):
-                self.opcode_cache = None
-                self.op_extension += 1
+    def st(self, addr: AddrBase, source: Register) -> None:
+        opcode = f"st_addr_{source.name}"
+        self.execute_mnemonic(opcode, addr)
 
-        Imm.release_bus()
+    def stx(self, base: AddrBase, idx_reg: Register, source: Register) -> None:
+        opcode = f"stx_addr_{idx_reg.name}_{source.name}"
+        self.execute_mnemonic(opcode, base)
 
-        return None
+    def ldx(self, target: Register, base: AddrBase, idx_reg: Register) -> None:
+        opcode = f"ldx_{target.name}_addr_{idx_reg.name}"
+        self.execute_mnemonic(opcode, base)
 
-    def get_flags_cached(self) -> int:
-        if self.flags_cache is None:
-            self.flags_cache = self.client.flags_get()
+    def tstx(self, base: AddrBase, idx_reg: Register) -> None:
+        opcode = f"tstx_addr_{idx_reg.name}"
+        self.execute_mnemonic(opcode, base)
 
-        return self.flags_cache
+    def ld(self, target: Register, addr: AddrBase) -> None:
+        opcode = f"ld_{target.name}_addr"
+        self.execute_mnemonic(opcode, addr)
 
-    def get_opcode_cached(self) -> int:
-        if self.opcode_cache is None:
-            self.opcode_cache = self.client.ir_get() + (self.op_extension * 0x100)
+    def bcs(self, label: Optional[AddrBase]=None) -> None:
+        self.execute_mnemonic("bcsl_addr", label)
 
-        if self.opcode_cache >= len(ops_by_code):
-            raise InvalidOpcodeException(self.opcode_cache)
+    def bcc(self, label: Optional[AddrBase]=None) -> None:
+        self.execute_mnemonic("bccl_addr", label)
 
-        return self.opcode_cache
+    def beq(self, label: Optional[AddrBase]=None) -> None:
+        self.execute_mnemonic("beql_addr", label)
 
+    def bne(self, label: Optional[AddrBase]=None) -> None:
+        self.execute_mnemonic("bnel_addr", label)
 
+    def jmp(self, label: AddrBase) -> None:
+        self.execute_mnemonic("ljmp_addr", label)
 
-    def fetch_and_execute(self) -> Optional[RunMessage]:
-        # fetch the instruction
-        for microstep in fetch:
-            self.execute_step(microstep)
+    def rjmp(self, offset: int) -> None:
+        self.execute_mnemonic("rjmp_imm", offset)
 
-        # and execute it (will retrieve opcode automatically)
-        return self.execute_opcode(None)
+    def hlt(self) -> None:
+        self.execute_mnemonic("hlt")
+
+    def push(self, source: Register) -> None:
+        opcode = f"push_{source.name}"
+        self.execute_mnemonic(opcode)
+
+    def pop(self, target: Register) -> None:
+        opcode = f"pop_{target.name}"
+        self.execute_mnemonic(opcode)
+
+    def pushf(self) -> None:
+        self.execute_mnemonic("pushf")
+
+    def popf(self) -> None:
+        self.execute_mnemonic("popf")
+
+    def ret(self) -> None:
+        self.execute_mnemonic("ret")
+
+    def call(self, addr: AddrBase) -> None:
+        self.execute_mnemonic("callf_addr", addr)
+
+    def ldr(self, target: Register, base: Register, offset: int) -> None:
+        opcode = f"ldr_{target.name}_{base.name}_imm"
+        self.execute_mnemonic(opcode, offset)
+
+    def strel(self, base: Register, offset: int, source: Register) -> None:
+        opcode = f"str_{base.name}_imm_{source.name}"
+        self.execute_mnemonic(opcode, offset)
+
+    def out(self, port: int, source: Register) -> Optional[RunMessage]:
+        opcode = f"out_imm_{source.name}"
+        return self.execute_mnemonic(opcode, port)
+
+    def dummy_ext(self, value: int) -> None:
+        opcode = "dummyext_imm"
+        self.execute_mnemonic(opcode, value)

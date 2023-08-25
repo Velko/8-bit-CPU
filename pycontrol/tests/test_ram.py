@@ -3,9 +3,9 @@
 import pytest
 import random
 
-from libcpu.cpu import *
+from libcpu.opcodes import opcode_of
 from libcpu.pinclient import PinClient
-from libcpu.assisted_cpu import AssistedCPU
+from libcpu.assisted_cpu import AssistedCPU, A, B
 from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
 from typing import Sequence
@@ -41,7 +41,7 @@ def fill_ram(random_bytes: Sequence[int], pins_client_real: PinClient) -> FillRa
 @pytest.mark.parametrize("addr", random_addr)
 def test_store_load(cpu_helper: CPUHelper, acpu: AssistedCPU, random_bytes: Sequence[int], fill_ram: FillRam, addr: int) -> None:
 
-    ld (A, Addr(addr))
+    acpu.ld (A, Addr(addr))
     actual = cpu_helper.read_reg8(A)
 
     assert random_bytes[addr] == actual

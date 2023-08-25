@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-from libcpu.cpu import opcode_of
+from libcpu.opcodes import InvalidOpcodeException, opcode_of
 from libcpu.util import unwrap, RunMessage
 from libcpu.devices import Register, WORegister
-from libcpu.assisted_cpu import AssistedCPU, InvalidOpcodeException
+from libcpu.assisted_cpu import AssistedCPU
 from libcpu.DeviceSetup import Flags, PC, Ram
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 from io import StringIO

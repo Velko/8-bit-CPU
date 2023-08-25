@@ -2,9 +2,8 @@
 
 import pytest
 
-from libcpu.cpu import *
 from libcpu.cpu_helper import CPUHelper
-from libcpu.assisted_cpu import AssistedCPU
+from libcpu.pinclient import PinClient
 from libcpu.DeviceSetup import ACalc
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
@@ -17,11 +16,11 @@ def acalc_params() -> Iterator[Tuple[str, int, int, bool, int]]:
 
 
 @pytest.mark.parametrize("name,addr,offset,signed,expected", acalc_params())
-def test_acalc(acpu: AssistedCPU, name: str, addr: int, offset: int, signed: bool, expected: int) -> None:
-    cpu_helper = CPUHelper(acpu.client)
+def test_acalc(pins_client_real: PinClient, name: str, addr: int, offset: int, signed: bool, expected: int) -> None:
+    cpu_helper = CPUHelper(pins_client_real)
 
-    acpu.client.bus_set(offset)
-    acpu.client.addr_set(addr)
+    pins_client_real.bus_set(offset)
+    pins_client_real.addr_set(addr)
 
     control = CtrlWord()\
         .enable(ACalc.load)
@@ -29,10 +28,10 @@ def test_acalc(acpu: AssistedCPU, name: str, addr: int, offset: int, signed: boo
     if signed:
         control.enable(ACalc.signed)
 
-    acpu.client.ctrl_commit(control.c_word)
-    acpu.client.clock_tick()
+    pins_client_real.ctrl_commit(control.c_word)
+    pins_client_real.clock_tick()
 
-    acpu.client.off(DEFAULT_CW.c_word)
+    pins_client_real.off(DEFAULT_CW.c_word)
 
     readback = cpu_helper.read_reg16(ACalc)
 

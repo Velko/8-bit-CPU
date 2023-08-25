@@ -2,7 +2,7 @@
 
 import pytest
 
-from libcpu.cpu import *
+from libcpu.assisted_cpu import A, B
 from libcpu.DeviceSetup import IR, TH,TL, TX
 from libcpu.cpu_helper import CPUHelper
 from libcpu.DeviceSetup import AddSub as alu

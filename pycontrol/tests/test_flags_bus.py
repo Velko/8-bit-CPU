@@ -4,16 +4,13 @@ import pytest
 
 pytestmark = pytest.mark.hardware
 
-from libcpu.cpu import *
 from libcpu.cpu_helper import CPUHelper
-from libcpu.assisted_cpu import AssistedCPU
-
-from libcpu.devices import Flags
+from libcpu.assisted_cpu import AssistedCPU, A, B, F
 
 def test_flags_out_n(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.load_reg8(A, 230)
     cpu_helper.load_reg8(B, 5)
-    add(A, B)
+    acpu.add(A, B)
 
     flags = cpu_helper.get_flags_s()
 
@@ -22,7 +19,7 @@ def test_flags_out_n(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 def test_flags_out_z(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.load_reg8(A, 5)
     cpu_helper.load_reg8(B, 5)
-    sub(A, B)
+    acpu.sub(A, B)
 
     flags = cpu_helper.get_flags_s()
 
@@ -31,7 +28,7 @@ def test_flags_out_z(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 def test_flags_out_c(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.load_reg8(A, 230)
     cpu_helper.load_reg8(B, 40)
-    add(A, B)
+    acpu.add(A, B)
 
     flags = cpu_helper.get_flags_s()
 
@@ -40,7 +37,7 @@ def test_flags_out_c(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 def test_flags_out_v(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.load_reg8(A, 140)
     cpu_helper.load_reg8(B, 20)
-    sub(A, B)
+    acpu.sub(A, B)
 
     flags = cpu_helper.get_flags_s()
 

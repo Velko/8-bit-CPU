@@ -5,7 +5,6 @@ import localpath
 from libcpu.cpu_helper import CPUHelper
 from typing import  Sequence, Iterator
 
-from libcpu.cpu import install_backend, clear_backend
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.pinclient import PinClient, get_client_instance
 
@@ -22,11 +21,8 @@ def pins_client_real() -> Iterator[PinClient]:
 
 
 @pytest.fixture
-def acpu(pins_client_real: PinClient) -> Iterator[AssistedCPU]:
-    backend = AssistedCPU(pins_client_real)
-    install_backend(backend)
-    yield backend
-    clear_backend()
+def acpu(pins_client_real: PinClient) -> AssistedCPU:
+    return AssistedCPU(pins_client_real)
 
 
 @pytest.fixture(scope="module")

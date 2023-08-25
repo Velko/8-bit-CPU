@@ -1,8 +1,8 @@
 import pytest
 
-from libcpu.cpu import *
 from libcpu.cpu_helper import CPUHelper
-from libcpu.assisted_cpu import AssistedCPU
+from libcpu.assisted_cpu import AssistedCPU, A, B, C, D
+from libcpu.opcodes import opcode_of
 from libcpu.util import RunMessage
 
 from typing import Iterator, Tuple
@@ -10,7 +10,7 @@ from typing import Iterator, Tuple
 def test_outa_emu_char(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.load_reg8(A, 120)
 
-    message = out(4, A)
+    message = acpu.out(4, A)
 
     assert message is not None
     assert message.reason == RunMessage.Reason.OUT
@@ -30,10 +30,10 @@ def outb_args() -> Iterator[Tuple[str, int, int, str]]:
 @pytest.mark.parametrize("desc,mode,val,expected", outb_args())
 def test_outa_emu_num(cpu_helper: CPUHelper, acpu: AssistedCPU, desc: str, mode: int, val: int, expected: str) -> None:
     cpu_helper.load_reg8(B, mode)
-    out(1, B)
+    acpu.out(1, B)
 
     cpu_helper.load_reg8(A, val)
-    message = out(0, A)
+    message = acpu.out(0, A)
 
     assert message is not None
     assert message.reason == RunMessage.Reason.OUT

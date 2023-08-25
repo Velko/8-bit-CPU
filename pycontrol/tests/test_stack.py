@@ -6,8 +6,7 @@ pytestmark = pytest.mark.hardware
 
 from libcpu.DeviceSetup import SP, LR
 from libcpu.cpu_helper import CPUHelper
-from libcpu.assisted_cpu import AssistedCPU
-from libcpu.cpu import *
+from libcpu.assisted_cpu import AssistedCPU, A, C, F
 from libcpu.markers import Addr
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
@@ -23,7 +22,7 @@ def test_sp_load(cpu_helper: CPUHelper, acpu: AssistedCPU, expected: int) -> Non
 
 def test_lea_sp(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
-    lea (SP, Addr(0x1234))
+    acpu.lea (SP, Addr(0x1234))
 
     value = cpu_helper.read_reg16(SP)
 
@@ -69,7 +68,7 @@ def test_push_a(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     # push 72 onto stack
     cpu_helper.load_reg8(A, 72)
-    push (A)
+    acpu.push (A)
 
     # read back sp and value at address 17
     spval = cpu_helper.read_reg16(SP)
@@ -91,7 +90,7 @@ def test_pop_a(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.load_reg16(SP, 54)
 
     # load in from stack
-    pop (A)
+    acpu.pop (A)
 
     # read back sp and value in register
     spval = cpu_helper.read_reg16(SP)
@@ -105,9 +104,9 @@ def test_push_pop(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.load_reg16(SP, 44)
     cpu_helper.load_reg8(C, 45)
 
-    push (C)
+    acpu.push (C)
     cpu_helper.load_reg8(C, 20)
-    pop (C)
+    acpu.pop (C)
 
     val = cpu_helper.read_reg8(C)
     assert val == 45
@@ -115,11 +114,11 @@ def test_push_pop(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 def test_push_popf(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     cpu_helper.load_reg16(SP, 88)
-    ldi (F, 0b1101)
+    acpu.ldi (F, 0b1101)
 
-    pushf ()
-    ldi (F, 0)
-    popf ()
+    acpu.pushf ()
+    acpu.ldi (F, 0)
+    acpu.popf ()
 
     val = cpu_helper.client.flags_get()
     assert val == 0b1101
@@ -129,7 +128,7 @@ def test_push_lr(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     cpu_helper.load_reg16(LR, 0x1234)
 
-    push (LR)
+    acpu.push (LR)
 
     h = cpu_helper.read_ram(0x87)
     l = cpu_helper.read_ram(0x86)
@@ -144,7 +143,7 @@ def test_pop_lr(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.write_ram(0x21, 0x54)
     cpu_helper.write_ram(0x22, 0x83)
 
-    pop (LR)
+    acpu.pop (LR)
 
     val = cpu_helper.read_reg16(LR)
 
@@ -154,10 +153,10 @@ def test_push_pop_lr(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.load_reg16(SP, 0x40)
 
     cpu_helper.load_reg16(LR, 0x5314)
-    push (LR)
+    acpu.push (LR)
     cpu_helper.load_reg16(LR, 0)
 
-    pop (LR)
+    acpu.pop (LR)
 
     val = cpu_helper.read_reg16(LR)
     assert val == 0x5314
@@ -167,7 +166,7 @@ def test_ldr_sp_plus(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.write_ram(0x33, 0x88)
     cpu_helper.load_reg8(A, 0)
 
-    ldr (A, SP, 3)
+    acpu.ldr (A, SP, 3)
 
     val = cpu_helper.read_reg8(A)
 
@@ -178,7 +177,7 @@ def test_ldr_sp_minus(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.write_ram(0x20, 0x44)
     cpu_helper.load_reg8(A, 0)
 
-    ldr (A, SP, -16)
+    acpu.ldr (A, SP, -16)
 
     val = cpu_helper.read_reg8(A)
 
@@ -190,7 +189,7 @@ def test_str_sp_plus(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.write_ram(0x33, 0)
     cpu_helper.load_reg8(A, 0x56)
 
-    strel (SP, 3, A)
+    acpu.strel (SP, 3, A)
 
     val = cpu_helper.read_ram(0x33)
 

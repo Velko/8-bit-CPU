@@ -9,8 +9,7 @@ from .pinclient import PinClient
 from .DeviceSetup import IR, LR, PC, SP
 from .util import unwrap, RunMessage
 from .opcodes import opcodes
-from .cpu import A, B, C, D
-from .assisted_cpu import AssistedCPU
+from .assisted_cpu import AssistedCPU, A, B, C, D
 
 class Breakpoint:
     def __init__(self, addr: int, orig_op: int):

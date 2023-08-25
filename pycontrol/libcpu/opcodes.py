@@ -8,6 +8,9 @@ gp_regs: Sequence[GPRegister] = [RegA, RegB, RegC, RegD]
 
 fetch: List[Sequence[ControlSignal]] = [[PC.out, PC.inc, ProgMem.out, IR.load]]
 
+class InvalidOpcodeException(Exception):
+    pass
+
 def permute_gp_regs_all() -> Iterator[Tuple[GPRegister, GPRegister]]:
     for l in gp_regs:
         for r in gp_regs:
@@ -24,6 +27,12 @@ def permute_regs_lr(lregs: Sequence[Register], rregs: Sequence[Register]) -> Ite
     for l in lregs:
         for r in rregs:
             yield l, r
+
+def opcode_of(instr: str) -> int:
+    if not instr in opcodes:
+        raise InvalidOpcodeException(instr)
+    return opcodes[instr].opcode
+
 
 def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
 
