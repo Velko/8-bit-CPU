@@ -22,7 +22,7 @@ def pins_client_real() -> Iterator[PinClient]:
 
 
 @pytest.fixture
-def cpu_backend_real(pins_client_real: PinClient) -> Iterator[AssistedCPU]:
+def acpu(pins_client_real: PinClient) -> Iterator[AssistedCPU]:
     backend = AssistedCPU(pins_client_real)
     install_backend(backend)
     yield backend

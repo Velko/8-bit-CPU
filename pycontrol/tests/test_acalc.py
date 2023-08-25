@@ -17,11 +17,11 @@ def acalc_params() -> Iterator[Tuple[str, int, int, bool, int]]:
 
 
 @pytest.mark.parametrize("name,addr,offset,signed,expected", acalc_params())
-def test_acalc(cpu_backend_real: AssistedCPU, name: str, addr: int, offset: int, signed: bool, expected: int) -> None:
-    cpu_helper = CPUHelper(cpu_backend_real.client)
+def test_acalc(acpu: AssistedCPU, name: str, addr: int, offset: int, signed: bool, expected: int) -> None:
+    cpu_helper = CPUHelper(acpu.client)
 
-    cpu_backend_real.client.bus_set(offset)
-    cpu_backend_real.client.addr_set(addr)
+    acpu.client.bus_set(offset)
+    acpu.client.addr_set(addr)
 
     control = CtrlWord()\
         .enable(ACalc.load)
@@ -29,10 +29,10 @@ def test_acalc(cpu_backend_real: AssistedCPU, name: str, addr: int, offset: int,
     if signed:
         control.enable(ACalc.signed)
 
-    cpu_backend_real.client.ctrl_commit(control.c_word)
-    cpu_backend_real.client.clock_tick()
+    acpu.client.ctrl_commit(control.c_word)
+    acpu.client.clock_tick()
 
-    cpu_backend_real.client.off(DEFAULT_CW.c_word)
+    acpu.client.off(DEFAULT_CW.c_word)
 
     readback = cpu_helper.read_reg16(ACalc)
 

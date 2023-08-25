@@ -7,7 +7,7 @@ from libcpu.util import RunMessage
 
 from typing import Iterator, Tuple
 
-def test_outa_emu_char(cpu_helper: CPUHelper, cpu_backend_real: AssistedCPU) -> None:
+def test_outa_emu_char(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.load_reg8(A, 120)
 
     message = out(4, A)
@@ -28,7 +28,7 @@ def outb_args() -> Iterator[Tuple[str, int, int, str]]:
     yield "oct", 3, 89, ansi_red("o131")
 
 @pytest.mark.parametrize("desc,mode,val,expected", outb_args())
-def test_outa_emu_num(cpu_helper: CPUHelper, cpu_backend_real: AssistedCPU, desc: str, mode: int, val: int, expected: str) -> None:
+def test_outa_emu_num(cpu_helper: CPUHelper, acpu: AssistedCPU, desc: str, mode: int, val: int, expected: str) -> None:
     cpu_helper.load_reg8(B, mode)
     out(1, B)
 

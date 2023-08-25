@@ -25,7 +25,7 @@ def add_aa_test_args() -> Iterator[Tuple[str, int, int, str]]:
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
 @pytest.mark.parametrize("desc,val_a,val_b,result,xflags", add_ab_test_args())
-def test_add_ab(cpu_helper: CPUHelper, cpu_backend_real: AssistedCPU, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+def test_add_ab(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
     cpu_helper.load_reg8(lhs, val_a)
     cpu_helper.load_reg8(rhs, val_b)
 
@@ -38,7 +38,7 @@ def test_add_ab(cpu_helper: CPUHelper, cpu_backend_real: AssistedCPU, lhs: Regis
 
 @pytest.mark.parametrize("reg", gp_regs)
 @pytest.mark.parametrize("desc,val,result,xflags", add_aa_test_args())
-def test_add_aa(cpu_helper: CPUHelper, cpu_backend_real: AssistedCPU, reg: Register, desc: str, val: int, result: int, xflags: str) -> None:
+def test_add_aa(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, desc: str, val: int, result: int, xflags: str) -> None:
     cpu_helper.load_reg8(reg, val)
 
     add(reg, reg)
@@ -59,7 +59,7 @@ def sub_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
 @pytest.mark.parametrize("desc,val_a,val_b,result,xflags", sub_test_args())
-def test_sub(cpu_helper: CPUHelper, cpu_backend_real: AssistedCPU, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+def test_sub(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
     cpu_helper.load_reg8(lhs, val_a)
     cpu_helper.load_reg8(rhs, val_b)
 
@@ -80,7 +80,7 @@ def adc_ab_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
 @pytest.mark.parametrize("desc,val_a,val_b,result,xflags", adc_ab_test_args())
-def test_adc_ab_c_set(cpu_helper: CPUHelper, cpu_backend_real: AssistedCPU, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+def test_adc_ab_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
     cpu_helper.load_reg8(F, Flags.C)
     cpu_helper.load_reg8(lhs, val_a)
     cpu_helper.load_reg8(rhs, val_b)
@@ -94,7 +94,7 @@ def test_adc_ab_c_set(cpu_helper: CPUHelper, cpu_backend_real: AssistedCPU, lhs:
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
 @pytest.mark.parametrize("desc,val_a,val_b,result,xflags", add_ab_test_args())
-def test_adc_ab_c_clear(cpu_helper: CPUHelper, cpu_backend_real: AssistedCPU, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+def test_adc_ab_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
     ldi (F, 0)
     cpu_helper.load_reg8(lhs, val_a)
     cpu_helper.load_reg8(rhs, val_b)
@@ -116,7 +116,7 @@ def sbb_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
 @pytest.mark.parametrize("desc,val_a,val_b,result,xflags", sbb_test_args())
-def test_sbb_c_set(cpu_helper: CPUHelper, cpu_backend_real: AssistedCPU, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+def test_sbb_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
     cpu_helper.load_reg8(F, Flags.C)
     cpu_helper.load_reg8(lhs, val_a)
     cpu_helper.load_reg8(rhs, val_b)
@@ -130,7 +130,7 @@ def test_sbb_c_set(cpu_helper: CPUHelper, cpu_backend_real: AssistedCPU, lhs: Re
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
 @pytest.mark.parametrize("desc,val_a,val_b,result,xflags", sub_test_args())
-def test_sbb_c_clear(cpu_helper: CPUHelper, cpu_backend_real: AssistedCPU, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+def test_sbb_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Register, desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
     ldi (F, 0)
     cpu_helper.load_reg8(lhs, val_a)
     cpu_helper.load_reg8(rhs, val_b)

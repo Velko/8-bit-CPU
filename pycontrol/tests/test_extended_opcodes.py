@@ -8,7 +8,7 @@ from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.cpu import *
 
-def test_dummy_local(cpu_helper: CPUHelper, cpu_backend_real: AssistedCPU) -> None:
+def test_dummy_local(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     cpu_helper.load_reg8(A, 0)
 
@@ -26,8 +26,8 @@ fetch_test_prog = bytes([opcode_of("_xprefix"),
                          opcode_of("dummyext_imm") & 0xFF,
                          opcode_of("hlt")])
 
-def test_dummy_fetch(cpu_backend_real: AssistedCPU) -> None:
-    cpu_helper = CPUHelper(cpu_backend_real.client)
+def test_dummy_fetch(acpu: AssistedCPU) -> None:
+    cpu_helper = CPUHelper(acpu.client)
 
     # load program into ram
     cpu_helper.load_snippet(32, fetch_test_prog)
@@ -36,7 +36,7 @@ def test_dummy_fetch(cpu_backend_real: AssistedCPU) -> None:
     cpu_helper.load_reg8(A, 0)
 
     # act
-    cpu_backend_real.fetch_and_execute()
+    acpu.fetch_and_execute()
 
     # assert
     val = cpu_helper.read_reg8(A)

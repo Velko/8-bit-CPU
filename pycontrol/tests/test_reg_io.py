@@ -24,21 +24,21 @@ def all_regs_and_bits() -> Iterator[Tuple[Register, int]]:
         yield r, 0
 
 @pytest.mark.parametrize("register,value", all_regs_and_bits())
-def test_load_store_reg(cpu_helper: CPUHelper, cpu_backend_real: AssistedCPU, register: Register, value: int) -> None:
+def test_load_store_reg(cpu_helper: CPUHelper, acpu: AssistedCPU, register: Register, value: int) -> None:
     ldi (register, value)
     received = cpu_helper.read_reg8(register)
 
     assert value == received
 
 @pytest.mark.parametrize("value", [0xF, 1, 2, 4, 8, 0])
-def test_load_store_flags(cpu_helper: CPUHelper, cpu_backend_real: AssistedCPU, value: int) -> None:
+def test_load_store_flags(cpu_helper: CPUHelper, acpu: AssistedCPU, value: int) -> None:
     ldi (F, value)
     received = cpu_helper.get_flags()
 
     assert value == received
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
-def test_mov_a_b(cpu_helper: CPUHelper, cpu_backend_real: AssistedCPU, lhs: Register, rhs: Register) -> None:
+def test_mov_a_b(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Register) -> None:
     cpu_helper.load_reg8(lhs, 0)
     val = random.randrange(256)
     cpu_helper.load_reg8(rhs, val)
@@ -48,7 +48,7 @@ def test_mov_a_b(cpu_helper: CPUHelper, cpu_backend_real: AssistedCPU, lhs: Regi
     value = cpu_helper.read_reg8(lhs)
     assert value == val
 
-def test_lea(cpu_helper: CPUHelper, cpu_backend_real: AssistedCPU) -> None:
+def test_lea(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     cpu_helper.load_reg16(SP, 0x4314)
 
@@ -58,7 +58,7 @@ def test_lea(cpu_helper: CPUHelper, cpu_backend_real: AssistedCPU) -> None:
 
     assert val == 0x4314
 
-def test_mar_idx(cpu_helper: CPUHelper, cpu_backend_real: AssistedCPU) -> None:
+def test_mar_idx(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     cpu_helper.write_ram(45, 0xB5)
     cpu_helper.load_reg8(B, 3)
