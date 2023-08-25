@@ -3,13 +3,13 @@
 from libcpu.cpu import opcode_of
 from libcpu.util import unwrap, RunMessage
 from libcpu.devices import Register, WORegister
-from libcpu.cpu_exec import CPUBackendControl, InvalidOpcodeException
+from libcpu.assisted_cpu import AssistedCPU, InvalidOpcodeException
 from libcpu.DeviceSetup import Flags, PC, Ram
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 from io import StringIO
 
 class CPUHelper:
-    def __init__(self, backend: CPUBackendControl) -> None:
+    def __init__(self, backend: AssistedCPU) -> None:
         self.backend = backend
 
     def load_reg16(self, reg: Register, value: int) -> None:

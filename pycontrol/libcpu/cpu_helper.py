@@ -3,7 +3,7 @@
 from libcpu.cpu import opcode_of
 from libcpu.util import unwrap, RunMessage
 from libcpu.devices import Register, WORegister
-from libcpu.cpu_exec import InvalidOpcodeException
+from libcpu.assisted_cpu import InvalidOpcodeException
 from libcpu.pinclient import PinClient
 from libcpu.DeviceSetup import Flags, PC, Ram
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW

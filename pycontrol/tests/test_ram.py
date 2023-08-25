@@ -5,7 +5,7 @@ import random
 
 from libcpu.cpu import *
 from libcpu.pinclient import PinClient
-from libcpu.cpu_exec import CPUBackendControl
+from libcpu.assisted_cpu import AssistedCPU
 from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
 from typing import Sequence
@@ -39,7 +39,7 @@ def fill_ram(random_bytes: Sequence[int], pins_client_real: PinClient) -> FillRa
 
 
 @pytest.mark.parametrize("addr", random_addr)
-def test_store_load(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl, random_bytes: Sequence[int], fill_ram: FillRam, addr: int) -> None:
+def test_store_load(cpu_helper: CPUHelper, cpu_backend_real: AssistedCPU, random_bytes: Sequence[int], fill_ram: FillRam, addr: int) -> None:
 
     ld (A, Addr(addr))
     actual = cpu_helper.read_reg8(A)

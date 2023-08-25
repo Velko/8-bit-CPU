@@ -10,7 +10,7 @@ from .util import ControlSignal, RunMessage
 class InvalidOpcodeException(Exception):
     pass
 
-class CPUBackendControl:
+class AssistedCPU:
     def __init__(self, client: PinClient) -> None:
         self.client = client
         self.flags_cache: Optional[int] = None

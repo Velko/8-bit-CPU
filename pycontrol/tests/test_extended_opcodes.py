@@ -5,10 +5,10 @@ import pytest
 pytestmark = pytest.mark.hardware
 
 from libcpu.cpu_helper import CPUHelper
-from libcpu.cpu_exec import CPUBackendControl
+from libcpu.assisted_cpu import AssistedCPU
 from libcpu.cpu import *
 
-def test_dummy_local(cpu_helper: CPUHelper, cpu_backend_real: CPUBackendControl) -> None:
+def test_dummy_local(cpu_helper: CPUHelper, cpu_backend_real: AssistedCPU) -> None:
 
     cpu_helper.load_reg8(A, 0)
 
@@ -26,7 +26,7 @@ fetch_test_prog = bytes([opcode_of("_xprefix"),
                          opcode_of("dummyext_imm") & 0xFF,
                          opcode_of("hlt")])
 
-def test_dummy_fetch(cpu_backend_real: CPUBackendControl) -> None:
+def test_dummy_fetch(cpu_backend_real: AssistedCPU) -> None:
     cpu_helper = CPUHelper(cpu_backend_real.client)
 
     # load program into ram

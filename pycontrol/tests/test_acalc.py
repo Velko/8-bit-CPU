@@ -4,7 +4,7 @@ import pytest
 
 from libcpu.cpu import *
 from libcpu.cpu_helper import CPUHelper
-from libcpu.cpu_exec import CPUBackendControl
+from libcpu.assisted_cpu import AssistedCPU
 from libcpu.DeviceSetup import ACalc
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
@@ -17,7 +17,7 @@ def acalc_params() -> Iterator[Tuple[str, int, int, bool, int]]:
 
 
 @pytest.mark.parametrize("name,addr,offset,signed,expected", acalc_params())
-def test_acalc(cpu_backend_real: CPUBackendControl, name: str, addr: int, offset: int, signed: bool, expected: int) -> None:
+def test_acalc(cpu_backend_real: AssistedCPU, name: str, addr: int, offset: int, signed: bool, expected: int) -> None:
     cpu_helper = CPUHelper(cpu_backend_real.client)
 
     cpu_backend_real.client.bus_set(offset)

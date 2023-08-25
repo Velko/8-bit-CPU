@@ -4,11 +4,11 @@ from .DeviceSetup import RegA, RegB, RegC, RegD, Flags as RegFlags
 from .devices import Register, Flags
 from .markers import AddrBase
 from .opcodes import opcodes
-from .cpu_exec import CPUBackendControl, InvalidOpcodeException
+from .assisted_cpu import AssistedCPU, InvalidOpcodeException
 
-backend: Optional[CPUBackendControl] = None
+backend: Optional[AssistedCPU] = None
 
-def install_backend(inst: CPUBackendControl) -> None:
+def install_backend(inst: AssistedCPU) -> None:
     global backend
     backend = inst
 

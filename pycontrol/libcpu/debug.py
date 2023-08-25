@@ -10,7 +10,7 @@ from .DeviceSetup import IR, LR, PC, SP
 from .util import unwrap, RunMessage
 from .opcodes import opcodes
 from .cpu import A, B, C, D
-from .cpu_exec import CPUBackendControl
+from .assisted_cpu import AssistedCPU
 
 class Breakpoint:
     def __init__(self, addr: int, orig_op: int):
@@ -26,7 +26,7 @@ class StopReason(Enum):
 class Debugger:
     def __init__(self) -> None:
         self.client = PinClient()
-        self.backend = CPUBackendControl(self.client)
+        self.backend = AssistedCPU(self.client)
         self.cpu_helper = CPUHelper(self.client)
         self.halted = False
         self.stopped = True
