@@ -1,6 +1,6 @@
 from . import devices as dev
 from .pseudo_devices import RamProxy
-from .pin import SimplePin, NullPin, Level, Mux, MuxPin, AliasedPin
+from .pin import SimplePin, Level, Mux, MuxPin, AliasedPin
 
 OutMux = Mux("OutMux", [0, 1, 2, 3], 15) # bits 0-3 in Control Word, defaults to 15
 LoadMux = Mux("LoadMux", [4, 5, 6, 7], 15)

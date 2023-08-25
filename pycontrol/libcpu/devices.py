@@ -1,4 +1,3 @@
-from typing import Optional
 from .pin import Pin
 from .util import ControlSignal
 class DeviceBase:

@@ -1,6 +1,6 @@
-import serial
 import os
 from typing import Union, Iterator, Optional
+import serial
 from .util import RunMessage
 
 
@@ -84,11 +84,11 @@ class PinClient:
                 yield RunMessage(RunMessage.Reason.HALT)
                 break
 
-            elif line == "#BRK":
+            if line == "#BRK":
                 yield RunMessage(RunMessage.Reason.BRK)
                 break
 
-            elif line.startswith("#FOUT#"):
+            if line.startswith("#FOUT#"):
                 yield RunMessage(RunMessage.Reason.OUT, line[6:].replace("\\n", "\n"))
 
     def reset(self) -> None:

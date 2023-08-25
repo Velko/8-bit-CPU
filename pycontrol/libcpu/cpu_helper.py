@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from libcpu.assisted_cpu_engine import AssistedCPUEngine
 from libcpu.util import unwrap, RunMessage
 from libcpu.devices import Register, WORegister
 from libcpu.opcodes import InvalidOpcodeException, opcode_of
@@ -60,7 +59,7 @@ class CPUHelper:
 
     def write_bytes(self, addr: int, data: bytes) -> None:
         for i, b in enumerate(data):
-            self.write_ram(addr + i, data[i])
+            self.write_ram(addr + i, b)
 
     def get_flags(self) -> int:
         return self.client.flags_get()

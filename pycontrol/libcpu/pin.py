@@ -96,7 +96,7 @@ class Mux:
 
         return c_word
 
-    def apply_disable(self, c_word: int, num: int) -> int:
+    def apply_disable(self, c_word: int) -> int:
         return self.apply_enable(c_word, self.default)
 
     def current(self, c_word: int) -> int:
@@ -123,7 +123,7 @@ class MuxPin(Pin):
         return self.mux.apply_enable(c_word, self.num)
 
     def apply_disable(self, c_word: int) -> int:
-        return self.mux.apply_disable(c_word, self.num)
+        return self.mux.apply_disable(c_word)
 
     def check_enabled(self, c_word: int) -> bool:
         return self.mux.current(c_word) == self.num

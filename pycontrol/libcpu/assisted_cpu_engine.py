@@ -1,4 +1,4 @@
-from typing import List, Union, Tuple, Optional, Sequence
+from typing import List, Union, Optional, Sequence
 from .markers import AddrBase
 from .pseudo_devices import Imm, IOMon
 from .DeviceSetup import IOCtl, ProgMem, PC, Flags, StepCounter, Clock
@@ -45,10 +45,9 @@ class AssistedCPUEngine:
                 fin_steps: List[ControlSignal] = [StepCounter.reset]
                 fin_steps.extend(microstep)
                 return self.execute_step(fin_steps)
-            else:
-                # only last step is expected to produce RunMessage
-                step_result = self.execute_step(microstep)
-                assert step_result is None
+            # only last step is expected to produce RunMessage
+            step_result = self.execute_step(microstep)
+            assert step_result is None
         return None
 
     def execute_step(self, microstep: Sequence[ControlSignal]) -> Optional[RunMessage]:
@@ -67,7 +66,7 @@ class AssistedCPUEngine:
 
             if control.is_enabled(IOCtl.to_dev):
                 formatted = IOMon.format_value(self.client.bus_get())
-                return RunMessage(RunMessage.Reason.OUT, formatted);
+                return RunMessage(RunMessage.Reason.OUT, formatted)
 
             if control.is_enabled(PC.load):
                 Imm.invalidate()

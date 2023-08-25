@@ -5,9 +5,10 @@ from . import DeviceSetup
 def all_pins() -> Iterator[Tuple[str, Pin]]:
     dupe_filter = set()
     for var in vars(DeviceSetup).values():
-        if not hasattr(var, "__dict__"): continue
+        if not hasattr(var, "__dict__"):
+            continue
         for a_name, attr in vars(var).items():
-            if (not a_name.startswith("_")) and (isinstance(attr, SimplePin) or isinstance(attr, MuxPin)) and attr not in dupe_filter:
+            if (not a_name.startswith("_")) and isinstance(attr, (SimplePin, MuxPin)) and attr not in dupe_filter:
                 dupe_filter.add(attr)
                 yield f"{var.name}.{a_name}", attr
 

@@ -1,7 +1,7 @@
 from enum import Enum
 from .util import ControlSignal
 from .devices import Register
-from typing import List, Optional, Tuple, Mapping, Sequence, Callable, Iterator, Union
+from typing import List, Tuple, Mapping, Sequence, Union
 
 class FlagsAlt:
     def __init__(self, owner: 'MicroCode', mask: int, value: int):

@@ -17,11 +17,12 @@ class ControlSignal:
         self.name: Optional[str] = None
 
     @abstractmethod
-    def apply_enable(self, c_word: int) -> int: pass
+    def apply_enable(self, c_word: int) -> int:
+        pass
 
     def __repr__(self) -> str:
         if self.name is None:
-            return super.__repr__(self)
+            return super().__repr__()
         return self.name
 
 
