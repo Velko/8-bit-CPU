@@ -27,24 +27,27 @@ def make_random_addr() -> Sequence[int]:
 random_addr = make_random_addr()
 
 
-class FillRam: pass
+class FillRam:
+    def __init__(self, addresses: Sequence[int], contents: Sequence[int]) -> None:
+        self.addresses = addresses
+        self.contents = contents
 
 @pytest.fixture(scope="module")
-def _fill_ram(random_bytes: Sequence[int], pins_client_real: PinClient) -> FillRam:
+def fill_ram(random_bytes: Sequence[int], pins_client_real: PinClient) -> FillRam:
     cpu_helper = CPUHelper(pins_client_real)
     for addr in random_addr:
         cpu_helper.write_ram(addr, random_bytes[addr])
 
-    return FillRam()
+    return FillRam(random_addr, random_bytes)
 
 
 @pytest.mark.parametrize("addr", random_addr)
-def test_store_load(cpu_helper: CPUHelper, acpu: AssistedCPU, random_bytes: Sequence[int], _fill_ram: FillRam, addr: int) -> None:
+def test_store_load(cpu_helper: CPUHelper, acpu: AssistedCPU, fill_ram: FillRam, addr: int) -> None:
 
     acpu.ld (A, Addr(addr))
     actual = cpu_helper.read_reg8(A)
 
-    assert random_bytes[addr] == actual
+    assert fill_ram.contents[addr] == actual
 
 def test_ldx_hw(cpu_helper: CPUHelper) -> None:
 
