@@ -3,6 +3,7 @@
 import sys
 from typing import Dict, List, Mapping, Optional, Union
 from enum import Enum
+from dataclasses import dataclass
 
 from .cpu_helper import CPUHelper
 from .pinclient import PinClient
@@ -11,10 +12,10 @@ from .util import unwrap, RunMessage
 from .opcodes import opcodes
 from .assisted_cpu import AssistedCPU, A, B, C, D
 
+@dataclass
 class Breakpoint:
-    def __init__(self, addr: int, orig_op: int):
-        self.addr = addr
-        self.orig_op = orig_op
+    addr: int
+    orig_op: int
 
 class StopReason(Enum):
     DEBUG_BRK = 1
