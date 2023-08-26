@@ -114,9 +114,6 @@ class IOMonitor:
         self.selected_port = port
 
     def format_value(self, value: int) -> Optional[str]:
-        if self.selected_port is None:
-            raise Exception("Port not selected")
-
         if self.selected_port == 1:
             self.numeric_mode = value
             return None

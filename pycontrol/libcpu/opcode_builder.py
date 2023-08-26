@@ -3,6 +3,9 @@ from typing import List, Tuple, Mapping, Sequence, Union
 from .util import ControlSignal
 from .devices import Register
 
+class InvalidInstructionDefinition(Exception):
+    pass
+
 class FlagsAlt:
     def __init__(self, owner: 'MicroCode', mask: int, value: int):
         self.owner = owner
@@ -47,7 +50,7 @@ class MicroCode:
         matches = list(filter(lambda alt: flags & alt.mask == alt.value, self.f_alt))
 
         if len(matches) > 1:
-            raise Exception("Multiple options found")
+            raise InvalidInstructionDefinition("Multiple options found")
 
         if len(matches) == 1:
             steps = matches[0].steps

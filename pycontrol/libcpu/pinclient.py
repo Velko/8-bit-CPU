@@ -3,6 +3,8 @@ from typing import Union, Iterator, Optional
 import serial
 from .util import RunMessage
 
+class ConnectionException(Exception):
+    pass
 
 class PinClient:
 
@@ -110,10 +112,10 @@ def find_port() -> str:
     ports = list(filter(lambda fn: fn.startswith("ttyACM") or fn.startswith("ttyUSB"),  os.listdir("/dev")))
 
     if len(ports) > 1:
-        raise Exception("Multiple USB serial devices found")
+        raise ConnectionException("Multiple USB serial devices found")
 
     if len(ports) == 0:
-        raise Exception("No USB serial devices found")
+        raise ConnectionException("No USB serial devices found")
 
     return os.path.join("/dev", ports[0])
 
