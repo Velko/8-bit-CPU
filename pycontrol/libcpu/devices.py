@@ -142,4 +142,3 @@ class IOController(DeviceBase):
         self.from_dev = from_dev
         self.to_dev = to_dev
         self.assign_pin_names()
-

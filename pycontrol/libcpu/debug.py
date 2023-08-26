@@ -41,7 +41,7 @@ class Debugger:
         self.cpu_helper.client.close()
 
     def read_ram(self, addr: int, size: int) -> bytes:
-        data: List[int] = list()
+        data: List[int] = []
         for i in range(size):
             data.append(self.cpu_helper.read_ram(addr + i))
 
@@ -74,7 +74,7 @@ class Debugger:
             self.current_break = None
         else:
             # fetch and execute an instruction
-             message = self.backend.fetch_and_execute()
+            message = self.backend.fetch_and_execute()
 
         # are we done?
         if message is not None:
@@ -118,7 +118,7 @@ class Debugger:
             self.backend.flags_cache = None
             self.step()
 
-        out = self.backend.client.run_program();
+        out = self.backend.client.run_program()
 
         for msg in out:
 
@@ -129,12 +129,12 @@ class Debugger:
                 self.on_stop(StopReason.HALT, self.cpu_helper.read_reg16(PC) - 1)
                 break
 
-            elif msg.reason == RunMessage.Reason.BRK:
+            if msg.reason == RunMessage.Reason.BRK:
                 self.stopped = True
                 self.current_break = self.break_hit()
                 break
 
-            elif msg.reason == RunMessage.Reason.OUT:
+            if msg.reason == RunMessage.Reason.OUT:
                 self.on_output(unwrap(msg.payload))
 
 
@@ -187,9 +187,9 @@ class Debugger:
             self.cpu_helper.load_reg8(IR, tmp_break.orig_op)
             self.on_stop(StopReason.DEBUG_BRK, addr)
             return tmp_break
-        else:
-            self.on_stop(StopReason.CODE_BRK, addr)
-            return None
+
+        self.on_stop(StopReason.CODE_BRK, addr)
+        return None
 
 
     def stop_event(self, reason: StopReason, addr: int) -> None:
@@ -222,4 +222,3 @@ class Debugger:
             registers["PC"] = self.cpu_helper.read_reg16(PC)
 
         return registers
-

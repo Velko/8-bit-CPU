@@ -1,8 +1,8 @@
+from typing import List, Sequence, Iterator, Tuple, Mapping
 from libcpu.util import ControlSignal
 from .DeviceSetup import *
 from .opcode_builder import MicrocodeBuilder, MicroCode, OpcodeArg
 from .devices import Register, GPRegister
-from typing import List, Sequence, Iterator, Tuple, Mapping
 
 gp_regs: Sequence[GPRegister] = [RegA, RegB, RegC, RegD]
 

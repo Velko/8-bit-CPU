@@ -1,6 +1,6 @@
 from abc import abstractmethod
-from .markers import AddrBase
 from typing import Union, Callable, Optional, List
+from .markers import AddrBase
 from .devices import RAM, DeviceBase
 from .util import ControlSignal, UninitializedError
 from .pinclient import PinClient
@@ -49,13 +49,15 @@ class ImmediateValue(RamHook):
             del self.value[0]
 
     def release_bus(self) -> None:
-        if self.client is None: return
+        if self.client is None:
+            return
         if self.write_enabled:
             self.client.bus_free()
             self.write_enabled = False
 
     def invoke(self) -> None:
-        if self.client is None: raise UninitializedError
+        if self.client is None:
+            raise UninitializedError
         if len(self.value) > 0:
             self.client.bus_set(self.value[0])
             self.write_enabled = True
@@ -88,15 +90,15 @@ class RamProxy(DeviceBase):
         if self._out_hook is not None and self._out_hook.is_active():
             self._out_hook.invoke()
             return c_word
-        else:
-            return self.ram.out.apply_enable(c_word)
+
+        return self.ram.out.apply_enable(c_word)
 
     def enable_write(self, c_word: int) -> int:
         if self._write_hook is not None and self._write_hook.is_active():
             self._write_hook.invoke()
             return c_word
-        else:
-            return self.ram.write.apply_enable(c_word)
+
+        return self.ram.write.apply_enable(c_word)
 
 def sign_extend(b: int) -> int:
     if b > 127:
@@ -122,11 +124,11 @@ class IOMonitor:
         if self.selected_port == 0:
             if self.numeric_mode == 0:
                 return f"\033[1;31m{value:>4}\033[0m\n"
-            elif self.numeric_mode == 1:
+            if self.numeric_mode == 1:
                 return f"\033[1;31m{sign_extend(value):>4}\033[0m\n"
-            elif self.numeric_mode == 2:
+            if self.numeric_mode == 2:
                 return f"\033[1;31mh {value:02x}\033[0m\n"
-            elif self.numeric_mode == 3:
+            if self.numeric_mode == 3:
                 return f"\033[1;31mo{value:>o}\033[0m\n"
         elif IOMon.selected_port == 4:
             return chr(value)

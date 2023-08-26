@@ -1,7 +1,7 @@
 from enum import Enum
+from typing import List, Tuple, Mapping, Sequence, Union
 from .util import ControlSignal
 from .devices import Register
-from typing import List, Tuple, Mapping, Sequence, Union
 
 class FlagsAlt:
     def __init__(self, owner: 'MicroCode', mask: int, value: int):
@@ -24,8 +24,10 @@ class OpcodeArg(Enum):
     ADDR = 2
 
     def __str__(self) -> str:
-        if (self == OpcodeArg.BYTE): return "imm"
-        if (self == OpcodeArg.ADDR): return "addr"
+        if self == OpcodeArg.BYTE:
+            return "imm"
+        if self == OpcodeArg.ADDR:
+            return "addr"
 
         raise TypeError # suppress warning, something's really wrong
 
@@ -73,7 +75,7 @@ class MicrocodeBuilder:
         self.opcodes: List[Tuple[str, MicroCode]] = []
 
     def add_instruction(self, name: str, *args: Union[Register, OpcodeArg]) -> MicroCode:
-        opcode = "_".join([name] + list(map(lambda a: str(a), args)))
+        opcode = "_".join([name] + list(map(str, args)))
         ucode = MicroCode(len(self.opcodes), name, args)
 
         self.opcodes.append((opcode, ucode))

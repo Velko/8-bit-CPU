@@ -1,7 +1,7 @@
 from typing import Sequence
 from enum import Enum
-from .util import ControlSignal
 from abc import abstractmethod
+from .util import ControlSignal
 
 class Level(Enum):
     LOW = 0
@@ -21,10 +21,12 @@ class Pin(ControlSignal):
         ControlSignal.__init__(self)
 
     @abstractmethod
-    def apply_disable(self, c_word: int) -> int: pass
+    def apply_disable(self, c_word: int) -> int:
+        pass
 
     @abstractmethod
-    def check_enabled(self, c_word: int) -> bool: pass
+    def check_enabled(self, c_word: int) -> bool:
+        pass
 
 
 class SimplePin(Pin):
@@ -36,20 +38,17 @@ class SimplePin(Pin):
     def apply_enable(self, c_word: int) -> int:
         if self.level == Level.HIGH:
             return set_bit(c_word, self.num)
-        else:
-            return clr_bit(c_word, self.num)
+        return clr_bit(c_word, self.num)
 
     def apply_disable(self, c_word: int) -> int:
         if self.level == Level.HIGH:
             return clr_bit(c_word, self.num)
-        else:
-            return set_bit(c_word, self.num)
+        return set_bit(c_word, self.num)
 
     def check_enabled(self, c_word: int) -> bool:
         if self.level == Level.HIGH:
             return check_bit(c_word, self.num)
-        else:
-            return not check_bit(c_word, self.num)
+        return not check_bit(c_word, self.num)
 
 class NullPin(Pin):
     def __init__(self) -> None:
