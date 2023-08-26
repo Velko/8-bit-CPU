@@ -39,7 +39,7 @@ class Debugger:
         self.on_output = self.output_event
 
     def disconnect(self) -> None:
-        self.cpu_helper.client.close()
+        self.client.close()
 
     def read_ram(self, addr: int, size: int) -> bytes:
         data: List[int] = []
@@ -119,7 +119,7 @@ class Debugger:
             self.backend.flags_cache = None
             self.step()
 
-        out = self.backend.client.run_program()
+        out = self.client.run_program()
 
         for msg in out:
 
@@ -151,7 +151,7 @@ class Debugger:
 
     def reset(self) -> None:
         # Reset CPU
-        self.backend.client.reset()
+        self.client.reset()
 
         self.halted = False
 
