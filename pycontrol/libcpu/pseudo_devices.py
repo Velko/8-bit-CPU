@@ -73,7 +73,6 @@ class RamProxy(DeviceBase):
         self.ram = ram
         self.out = EnableCallback(self.enable_out, ram.out)
         self.write = EnableCallback(self.enable_write, ram.write)
-        self.assign_pin_names()
 
         self._out_hook: Optional[RamHook] = None
         self._write_hook: Optional[RamHook] = None

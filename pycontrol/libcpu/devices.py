@@ -1,13 +1,14 @@
+from typing import Any
 from .pin import Pin
 from .util import ControlSignal
 class DeviceBase:
     def __init__(self, name: str) -> None:
         self.name = name
 
-    def assign_pin_names(self) -> None:
-        for  a_name, attr in self.__dict__.items():
-            if isinstance(attr, ControlSignal):
-                attr.name = f"{self.name}.{a_name}"
+    def __setattr__(self, name: str, value: Any) -> None:
+        if isinstance(value, ControlSignal):
+            value.name = f"{self.name}.{name}"
+        super().__setattr__(name, value)
 
     def __str__(self) -> str:
         return self.name
@@ -20,27 +21,23 @@ class Register(DeviceBase):
         DeviceBase.__init__(self, name)
         self.out = out
         self.load = load
-        self.assign_pin_names()
 
 class GPRegister(Register):
     def __init__(self, name: str, out: Pin, load: Pin, alu_l: Pin, alu_r: Pin) -> None:
         Register.__init__(self, name, out, load)
         self.alu_l = alu_l
         self.alu_r = alu_r
-        self.assign_pin_names()
 
 class WORegister(DeviceBase):
     def __init__(self, name: str, load: Pin) -> None:
         DeviceBase.__init__(self, name)
         self.load = load
-        self.assign_pin_names()
 
 class ALU(DeviceBase):
     def __init__(self, name: str, out: Pin, alt: Pin) -> None:
         DeviceBase.__init__(self, name)
         self.out = out
         self.alt = alt
-        self.assign_pin_names()
 
 
 class Flags(Register):
@@ -48,7 +45,6 @@ class Flags(Register):
         Register.__init__(self, name, out, load)
         self.calc = calc
         self.carry = carry
-        self.assign_pin_names()
 
     V = 0b1000
     C = 0b0100
@@ -89,21 +85,18 @@ class RAM(DeviceBase):
         DeviceBase.__init__(self, name)
         self.out = out
         self.write = write
-        self.assign_pin_names()
 
 class Clock(DeviceBase):
     def __init__(self, name: str, halt: Pin, brk: Pin) -> None:
         DeviceBase.__init__(self, name)
         self.halt = halt
         self.brk  = brk
-        self.assign_pin_names()
 
 class StepCounter(DeviceBase):
     def __init__(self, name: str, reset: Pin, extended: Pin) -> None:
         DeviceBase.__init__(self, name)
         self.reset = reset
         self.extended = extended
-        self.assign_pin_names()
 
 class AddressRegister(Register):
     def __init__(self, name: str, out: Pin, load: Pin) -> None:
@@ -116,14 +109,12 @@ class ProgramCounter(AddressRegister):
         # are merged, PC increments whenever it outputs and there's a clock tick.
         # 2 aliased operations are defined to better describe intent in microcode.
         self.inc = inc
-        self.assign_pin_names()
 
 class StackPointer(AddressRegister):
     def __init__(self, name: str, out: Pin, load: Pin, inc: Pin, dec: Pin) -> None:
         AddressRegister.__init__(self, name, out, load)
         self.inc = inc
         self.dec = dec
-        self.assign_pin_names()
 
 class TransferRegister(Register):
     def __init__(self, name: str, out: Pin, load: Pin) -> None:
@@ -133,7 +124,6 @@ class AddressCalculator(Register):
     def __init__(self, name: str, out: Pin, load: Pin, signed: Pin) -> None:
         Register.__init__(self, name, out, load)
         self.signed = signed
-        self.assign_pin_names()
 
 class IOController(DeviceBase):
     def __init__(self, name: str, laddr: Pin, from_dev: Pin, to_dev: Pin) -> None:
@@ -141,4 +131,3 @@ class IOController(DeviceBase):
         self.laddr = laddr
         self.from_dev = from_dev
         self.to_dev = to_dev
-        self.assign_pin_names()
