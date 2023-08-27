@@ -2,8 +2,7 @@
 
 import pytest
 
-from libcpu.assisted_cpu import A, B
-from libcpu.DeviceSetup import IR, TH,TL, TX
+from libcpu.DeviceSetup import IR, TH,TL, TX,  A, B
 from libcpu.cpu_helper import CPUHelper
 from libcpu.DeviceSetup import AddSub as alu
 from typing import Iterator

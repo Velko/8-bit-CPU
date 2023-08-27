@@ -5,7 +5,8 @@ import random
 
 from libcpu.opcodes import opcode_of
 from libcpu.pinclient import PinClient
-from libcpu.assisted_cpu import AssistedCPU, A, B
+from libcpu.assisted_cpu import AssistedCPU
+from libcpu.DeviceSetup import A, B
 from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
 from typing import Sequence

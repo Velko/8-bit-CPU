@@ -7,10 +7,10 @@ from dataclasses import dataclass
 
 from .cpu_helper import CPUHelper
 from .pinclient import PinClient
-from .DeviceSetup import IR, LR, PC, SP
+from .DeviceSetup import IR, LR, PC, SP, A, B, C, D
 from .util import unwrap, RunMessage
 from .opcodes import opcodes
-from .assisted_cpu import AssistedCPU, A, B, C, D
+from .assisted_cpu import AssistedCPU
 
 @dataclass
 class Breakpoint:

@@ -5,7 +5,8 @@ import pytest
 pytestmark = pytest.mark.hardware
 
 from libcpu.cpu_helper import CPUHelper
-from libcpu.assisted_cpu import AssistedCPU, A, B, F
+from libcpu.assisted_cpu import AssistedCPU
+from libcpu.DeviceSetup import A, B, F
 
 def test_flags_out_n(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.load_reg8(A, 230)

@@ -1,16 +1,9 @@
 from typing import Optional, Union
 from .util import RunMessage
-from .DeviceSetup import RegA, RegB, RegC, RegD, Flags as RegFlags
 from .devices import Register, Flags
 from .markers import AddrBase
 from .pinclient import PinClient
 from .assisted_cpu_engine import AssistedCPUEngine
-
-A = RegA
-B = RegB
-C = RegC
-D = RegD
-F = RegFlags
 
 class AssistedCPU(AssistedCPUEngine):
     def __init__(self, client: PinClient) -> None:

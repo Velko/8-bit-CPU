@@ -3,9 +3,8 @@
 import pytest
 import random
 
-from libcpu.assisted_cpu import A, B, F
 from libcpu.devices import Register
-from libcpu.DeviceSetup import SP
+from libcpu.DeviceSetup import SP, A, B, F
 from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU

@@ -13,25 +13,25 @@ AddrLoadMux = Mux("AddrLoadMux", [19, 20, 21], 7)
 
 AluAltFn = SimplePin(13, Level.HIGH)
 
-RegA = dev.GPRegister("A",
+A = dev.GPRegister("A",
     out = MuxPin(OutMux, 0),
     load = MuxPin(LoadMux, 0),
     alu_l = MuxPin(AluArgL, 0),
     alu_r = MuxPin(AluArgR, 0))
 
-RegB = dev.GPRegister("B",
+B = dev.GPRegister("B",
     out = MuxPin(OutMux, 1),
     load = MuxPin(LoadMux, 1),
     alu_l = MuxPin(AluArgL, 1),
     alu_r = MuxPin(AluArgR, 1))
 
-RegC = dev.GPRegister("C",
+C = dev.GPRegister("C",
     out = MuxPin(OutMux, 2),
     load = MuxPin(LoadMux, 2),
     alu_l = MuxPin(AluArgL, 2),
     alu_r = MuxPin(AluArgR, 2))
 
-RegD = dev.GPRegister("D",
+D = dev.GPRegister("D",
     out = MuxPin(OutMux, 3),
     load = MuxPin(LoadMux, 3),
     alu_l = MuxPin(AluArgL, 3),
@@ -53,7 +53,7 @@ ShiftSwap = dev.ALU("ShiftSwap",
     out = MuxPin(OutMux, 7),
     alt = AluAltFn)
 
-Flags = dev.Flags("F",
+F = dev.Flags("F",
     out = MuxPin(OutMux, 4),
     load = MuxPin(LoadMux, 7),
     calc = SimplePin(14, Level.LOW),

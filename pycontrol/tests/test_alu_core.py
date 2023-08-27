@@ -7,7 +7,8 @@ from libcpu.devices import Register, Flags
 from typing import Iterator, Tuple
 
 from libcpu.cpu_helper import CPUHelper
-from libcpu.assisted_cpu import AssistedCPU, F
+from libcpu.assisted_cpu import AssistedCPU
+from libcpu.DeviceSetup import F
 
 pytestmark = pytest.mark.hardware
 

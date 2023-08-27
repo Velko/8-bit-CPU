@@ -3,7 +3,8 @@
 import pytest
 
 from libcpu.cpu_helper import CPUHelper
-from libcpu.assisted_cpu import AssistedCPU, A, F
+from libcpu.assisted_cpu import AssistedCPU
+from libcpu.DeviceSetup import A, F
 from libcpu.opcodes import permute_gp_regs_nsame, gp_regs, opcode_of
 from libcpu.devices import Register, Flags
 from typing import Iterator, Tuple

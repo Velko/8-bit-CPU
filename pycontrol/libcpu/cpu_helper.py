@@ -5,7 +5,8 @@ from libcpu.util import unwrap, RunMessage
 from libcpu.devices import Register, WORegister
 from libcpu.opcodes import InvalidOpcodeException, opcode_of
 from libcpu.pinclient import PinClient
-from libcpu.DeviceSetup import Flags, PC, Ram
+from libcpu.devices import Flags
+from libcpu.DeviceSetup import PC, Ram
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
 class CPUHelper:

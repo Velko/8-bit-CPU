@@ -1,12 +1,11 @@
 #!/usr/bin/python3
 
 import pytest
-from libcpu.DeviceSetup import PC
+from libcpu.DeviceSetup import PC, A
 
 pytestmark = pytest.mark.hardware
 
 from libcpu.cpu_helper import CPUHelper
-from libcpu.assisted_cpu import A
 from libcpu.opcodes import opcode_of
 
 @pytest.mark.hardware

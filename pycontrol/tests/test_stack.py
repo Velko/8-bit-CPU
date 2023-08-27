@@ -4,9 +4,9 @@ import pytest, itertools
 
 pytestmark = pytest.mark.hardware
 
-from libcpu.DeviceSetup import SP, LR
+from libcpu.DeviceSetup import SP, LR, A, C, F
 from libcpu.cpu_helper import CPUHelper
-from libcpu.assisted_cpu import AssistedCPU, A, C, F
+from libcpu.assisted_cpu import AssistedCPU
 from libcpu.markers import Addr
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 

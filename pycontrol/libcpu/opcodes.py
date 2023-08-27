@@ -2,9 +2,9 @@ from typing import List, Sequence, Iterator, Tuple, Mapping
 from libcpu.util import ControlSignal
 from .DeviceSetup import *
 from .opcode_builder import MicrocodeBuilder, MicroCode, OpcodeArg
-from .devices import Register, GPRegister
+from .devices import Register, GPRegister, Flags
 
-gp_regs: Sequence[GPRegister] = [RegA, RegB, RegC, RegD]
+gp_regs: Sequence[GPRegister] = [A, B, C, D]
 
 fetch: List[Sequence[ControlSignal]] = [[PC.out, PC.inc, ProgMem.out, IR.load]]
 
@@ -48,84 +48,84 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
             .add_step(PC.out, PC.inc, ProgMem.out, r.load)
 
     builder.add_instruction("ldi_F", OpcodeArg.BYTE)\
-        .add_step(PC.out, PC.inc, ProgMem.out, Flags.load)
+        .add_step(PC.out, PC.inc, ProgMem.out, F.load)
 
     builder.add_instruction("hlt")\
         .add_step(Clock.halt)
 
     for l, r in permute_gp_regs_all():
         builder.add_instruction("add", l, r)\
-            .add_step(l.load, l.alu_l, r.alu_r, AddSub.out, Flags.calc)
+            .add_step(l.load, l.alu_l, r.alu_r, AddSub.out, F.calc)
 
     for l, r in permute_gp_regs_all():
         builder.add_instruction("adc", l, r)\
-            .add_step(l.load, l.alu_l, r.alu_r, AddSub.out, Flags.calc)\
+            .add_step(l.load, l.alu_l, r.alu_r, AddSub.out, F.calc)\
             .add_condition(mask=Flags.C, value=Flags.C)\
-                .add_step(l.load, l.alu_l, r.alu_r, AddSub.out, Flags.calc, Flags.carry)
+                .add_step(l.load, l.alu_l, r.alu_r, AddSub.out, F.calc, F.carry)
 
     for l, r in permute_gp_regs_nsame():
         builder.add_instruction("sub", l, r)\
-            .add_step(l.load, l.alu_l, r.alu_r, AddSub.out, AddSub.alt, Flags.calc)
+            .add_step(l.load, l.alu_l, r.alu_r, AddSub.out, AddSub.alt, F.calc)
 
     for l, r in permute_gp_regs_nsame():
         builder.add_instruction("sbb", l, r)\
-            .add_step(l.load, l.alu_l, r.alu_r, AddSub.out, AddSub.alt, Flags.calc)\
+            .add_step(l.load, l.alu_l, r.alu_r, AddSub.out, AddSub.alt, F.calc)\
             .add_condition(mask=Flags.C, value=Flags.C)\
-                .add_step(l.load, l.alu_l, r.alu_r, AddSub.out, AddSub.alt, Flags.calc, Flags.carry)
+                .add_step(l.load, l.alu_l, r.alu_r, AddSub.out, AddSub.alt, F.calc, F.carry)
 
     for l, r in permute_gp_regs_nsame():
         builder.add_instruction("and", l, r)\
-            .add_step(l.load, l.alu_l, r.alu_r, AndOr.out, Flags.calc)
+            .add_step(l.load, l.alu_l, r.alu_r, AndOr.out, F.calc)
 
     for l, r in permute_gp_regs_nsame():
         builder.add_instruction("or", l, r)\
-            .add_step(l.load, l.alu_l, r.alu_r, AndOr.out, AndOr.alt, Flags.calc)
+            .add_step(l.load, l.alu_l, r.alu_r, AndOr.out, AndOr.alt, F.calc)
 
     for l, r in permute_gp_regs_nsame():
         builder.add_instruction("xor", l, r)\
-            .add_step(l.load, l.alu_l, r.alu_r, XorNot.out, Flags.calc)
+            .add_step(l.load, l.alu_l, r.alu_r, XorNot.out, F.calc)
 
     for r in gp_regs:
         builder.add_instruction("not", r)\
-            .add_step(r.load, r.alu_l, XorNot.out, XorNot.alt, Flags.calc)
+            .add_step(r.load, r.alu_l, XorNot.out, XorNot.alt, F.calc)
 
     for r in gp_regs:
         builder.add_instruction("clr", r)\
-            .add_step(r.load, r.alu_l, r.alu_r, XorNot.out, Flags.calc)
+            .add_step(r.load, r.alu_l, r.alu_r, XorNot.out, F.calc)
 
     for r in gp_regs:
         builder.add_instruction("inc", r)\
-            .add_step(r.load, r.alu_l, AddSub.out, Flags.calc, Flags.carry)
+            .add_step(r.load, r.alu_l, AddSub.out, F.calc, F.carry)
 
     for r in gp_regs:
         builder.add_instruction("dec", r)\
-            .add_step(r.load, r.alu_l, AddSub.out, AddSub.alt, Flags.calc, Flags.carry)
+            .add_step(r.load, r.alu_l, AddSub.out, AddSub.alt, F.calc, F.carry)
 
     for r in gp_regs:
         builder.add_instruction("shr", r)\
-            .add_step(r.load, r.alu_l, ShiftSwap.out, Flags.calc)
+            .add_step(r.load, r.alu_l, ShiftSwap.out, F.calc)
 
     for r in gp_regs:
         builder.add_instruction("ror", r)\
-            .add_step(r.load, r.alu_l, ShiftSwap.out, Flags.calc)\
+            .add_step(r.load, r.alu_l, ShiftSwap.out, F.calc)\
             .add_condition(mask=Flags.C, value=Flags.C)\
-                .add_step(r.load, r.alu_l, ShiftSwap.out, Flags.calc, Flags.carry)
+                .add_step(r.load, r.alu_l, ShiftSwap.out, F.calc, F.carry)
 
     for r in gp_regs:
         builder.add_instruction("asr", r)\
-            .add_step(r.out, Flags.calc)\
-            .add_step(r.load, r.alu_l, ShiftSwap.out, Flags.calc)\
+            .add_step(r.out, F.calc)\
+            .add_step(r.load, r.alu_l, ShiftSwap.out, F.calc)\
             .add_condition(mask=Flags.N, value=Flags.N)\
-                .add_step(r.out, Flags.calc)\
-                .add_step(r.load, r.alu_l, ShiftSwap.out, Flags.calc, Flags.carry)
+                .add_step(r.out, F.calc)\
+                .add_step(r.load, r.alu_l, ShiftSwap.out, F.calc, F.carry)
 
     for r in gp_regs:
         builder.add_instruction("swap", r)\
-            .add_step(r.load, r.alu_l, ShiftSwap.out, ShiftSwap.alt, Flags.calc)
+            .add_step(r.load, r.alu_l, ShiftSwap.out, ShiftSwap.alt, F.calc)
 
     for l, r in permute_gp_regs_nsame():
         builder.add_instruction("cmp", l, r)\
-            .add_step(l.alu_l, r.alu_r, AddSub.out, AddSub.alt, Flags.calc)
+            .add_step(l.alu_l, r.alu_r, AddSub.out, AddSub.alt, F.calc)
 
     for al, ar in permute_gp_regs_nsame():
         builder.add_instruction("mov", al, ar)\
@@ -158,21 +158,21 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
         builder.add_instruction("ld", r, OpcodeArg.ADDR)\
             .add_step(PC.out, PC.inc, ProgMem.out, TL.load)\
             .add_step(PC.out, PC.inc, ProgMem.out, TH.load)\
-            .add_step(TX.out, Ram.out, r.load, Flags.calc)
+            .add_step(TX.out, Ram.out, r.load, F.calc)
 
     for t, i in permute_gp_regs_all():
         builder.add_instruction("ldx", t, OpcodeArg.ADDR, i)\
             .add_step(PC.out, PC.inc, ProgMem.out, TL.load)\
             .add_step(PC.out, PC.inc, ProgMem.out, TH.load)\
             .add_step(i.out, TX.out, ACalc.load)\
-            .add_step(ACalc.out, t.load, Ram.out, Flags.calc)
+            .add_step(ACalc.out, t.load, Ram.out, F.calc)
 
     for i in gp_regs:
         builder.add_instruction("tstx", OpcodeArg.ADDR, i)\
             .add_step(PC.out, PC.inc, ProgMem.out, TL.load)\
             .add_step(PC.out, PC.inc, ProgMem.out, TH.load)\
             .add_step(i.out, TX.out, ACalc.load)\
-            .add_step(ACalc.out, Ram.out, Flags.calc)
+            .add_step(ACalc.out, Ram.out, F.calc)
 
     builder.add_instruction("ljmp", OpcodeArg.ADDR)\
         .add_step(PC.out, PC.inc, ProgMem.out, TL.load)\
@@ -234,7 +234,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
 
     builder.add_instruction("pushf")\
             .add_step(SP.dec)\
-            .add_step(SP.out, Flags.out, Ram.write)
+            .add_step(SP.out, F.out, Ram.write)
 
     builder.add_instruction("push", LR)\
             .add_step(SP.dec, LR.out, TX.load)\
@@ -246,7 +246,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
             .add_step(SP.out, Ram.out, r.load, SP.inc)
 
     builder.add_instruction("popf")\
-        .add_step(SP.out, Ram.out, Flags.load, SP.inc)
+        .add_step(SP.out, Ram.out, F.load, SP.inc)
 
     builder.add_instruction("pop", LR)\
         .add_step(SP.out, Ram.out, TL.load, SP.inc)\
@@ -274,7 +274,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
         builder.add_instruction("ldr", r, SP, OpcodeArg.BYTE)\
             .add_step(PC.out, PC.inc, ProgMem.out, TL.load)\
             .add_step(SP.out, TL.out, ACalc.load, ACalc.signed)\
-            .add_step(ACalc.out, Ram.out, r.load, Flags.calc)
+            .add_step(ACalc.out, Ram.out, r.load, F.calc)
 
     for r in gp_regs:
         builder.add_instruction("str", SP, OpcodeArg.BYTE, r)\
@@ -333,7 +333,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
 
     for l, r in permute_gp_regs_nsame():
         builder.add_instruction("lcmp", l, r)\
-            .add_step(l.alu_l, r.alu_r, AndOr.out, Flags.calc)
+            .add_step(l.alu_l, r.alu_r, AndOr.out, F.calc)
 
     # create a bunch of NOPs to exceed 255 instructions
     for n in range(20, 30):
@@ -346,7 +346,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
     builder.add_instruction("dummyext", OpcodeArg.BYTE)\
         .add_step()\
         .add_step()\
-        .add_step(PC.out, PC.inc, ProgMem.out, RegA.load)
+        .add_step(PC.out, PC.inc, ProgMem.out, A.load)
 
     return builder.build()
 

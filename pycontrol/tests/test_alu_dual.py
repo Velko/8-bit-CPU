@@ -3,7 +3,8 @@
 import pytest
 
 from libcpu.cpu_helper import CPUHelper
-from libcpu.assisted_cpu import AssistedCPU, A, B
+from libcpu.assisted_cpu import AssistedCPU
+from libcpu.DeviceSetup import A, B
 
 pytestmark = pytest.mark.hardware
 
