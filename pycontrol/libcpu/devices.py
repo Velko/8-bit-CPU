@@ -45,34 +45,22 @@ class Flags(Register):
     Z = 0b0010
     N = 0b0001
 
+
     @staticmethod
     def decode(val: int) -> str:
-        #VCZF
+
+        def fls(condition: int, c: str) -> str:
+            if condition:
+                return c
+            return '-'
+
         val = int(val)
 
-        f = ""
-
-        if val & Flags.V:
-            f += 'V'
-        else:
-            f += '-'
-
-        if val & Flags.C:
-            f += 'C'
-        else:
-            f += '-'
-
-        if val & Flags.Z:
-            f += 'Z'
-        else:
-            f += '-'
-
-        if val & Flags.N:
-            f += 'N'
-        else:
-            f += '-'
-
-        return f
+        #VCZN
+        return f"{fls( val & Flags.V, 'V')}"\
+               f"{fls( val & Flags.C, 'C')}"\
+               f"{fls( val & Flags.Z, 'Z')}"\
+               f"{fls( val & Flags.N, 'N')}"
 
 @dataclass
 class RAM(DeviceBase):
