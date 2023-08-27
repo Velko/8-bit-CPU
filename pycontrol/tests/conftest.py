@@ -25,18 +25,23 @@ def acpu(pins_client_real: PinClient) -> AssistedCPU:
     return AssistedCPU(pins_client_real)
 
 
-@pytest.fixture(scope="module")
-def random_bytes() -> Sequence[int]:
-    data = []
-
-    for _ in range(0x10000):
-        value = random.randrange(256)
-        data.append(value)
-
-    return data
-
-
 @pytest.fixture
 def cpu_helper(pins_client_real: PinClient) -> CPUHelper:
     pins_client_real.reset()
     return CPUHelper(pins_client_real)
+
+
+class FillRam:
+    def __init__(self, addresses: Sequence[int]) -> None:
+        self.addresses = addresses
+        self.contents = []
+
+        for _ in range(0x10000):
+            value = random.randrange(256)
+            self.contents.append(value)
+
+    def write_ram(self, client: PinClient) -> None:
+        cpu_helper = CPUHelper(client)
+
+        for addr in self.addresses:
+            cpu_helper.write_ram(addr, self.contents[addr])

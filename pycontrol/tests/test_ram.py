@@ -11,6 +11,8 @@ from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
 from typing import Sequence
 
+from conftest import FillRam
+
 pytestmark = pytest.mark.hardware
 
 # can not make as a fixture, because it can not be
@@ -28,18 +30,12 @@ def make_random_addr() -> Sequence[int]:
 random_addr = make_random_addr()
 
 
-class FillRam:
-    def __init__(self, addresses: Sequence[int], contents: Sequence[int]) -> None:
-        self.addresses = addresses
-        self.contents = contents
-
 @pytest.fixture(scope="module")
-def fill_ram(random_bytes: Sequence[int], pins_client_real: PinClient) -> FillRam:
-    cpu_helper = CPUHelper(pins_client_real)
-    for addr in random_addr:
-        cpu_helper.write_ram(addr, random_bytes[addr])
+def fill_ram(pins_client_real: PinClient) -> FillRam:
+    ram = FillRam(random_addr)
+    ram.write_ram(pins_client_real)
 
-    return FillRam(random_addr, random_bytes)
+    return ram
 
 
 @pytest.mark.parametrize("addr", random_addr)

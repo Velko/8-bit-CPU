@@ -2,6 +2,8 @@
 
 import pytest
 
+from conftest import FillRam
+
 pytestmark = pytest.mark.hardware
 
 from libcpu.cpu_helper import CPUHelper
@@ -13,21 +15,12 @@ def singlebit_addresses() -> Iterator[int]:
     for b in range(16):
         yield 1 << b
 
-class FillRam:
-    def __init__(self, addresses: Sequence[int], contents: Sequence[int]) -> None:
-        self.addresses = addresses
-        self.contents = contents
-
 @pytest.fixture(scope="module")
-def fill_ram(random_bytes: Sequence[int], pins_client_real: PinClient) -> FillRam:
-    cpu_helper = CPUHelper(pins_client_real)
+def fill_ram(pins_client_real: PinClient) -> FillRam:
+    ram = FillRam(list(singlebit_addresses()))
+    ram.write_ram(pins_client_real)
 
-    addresses = list(singlebit_addresses())
-
-    for addr in addresses:
-        cpu_helper.write_ram(addr, random_bytes[addr])
-
-    return FillRam(addresses, random_bytes)
+    return ram
 
 
 @pytest.mark.parametrize("addr", singlebit_addresses())
