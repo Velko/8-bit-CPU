@@ -53,22 +53,6 @@ class SimplePin(Pin):
     def __repr__(self) -> str:
         return f"{super().__repr__()[:-1]}, {self.num}, {self.level.name})"
 
-class NullPin(Pin):
-    def __init__(self) -> None:
-        Pin.__init__(self)
-        self._is_enabled = False
-
-    def apply_enable(self, c_word: int) -> int:
-        self._is_enabled = True
-        return c_word
-
-    def apply_disable(self, c_word: int) -> int:
-        self._is_enabled = False
-        return c_word
-
-    def check_enabled(self, c_word: int) -> bool:
-        return self._is_enabled
-
 class AliasedPin(Pin):
     def __init__(self, target: Pin) -> None:
         Pin.__init__(self)
