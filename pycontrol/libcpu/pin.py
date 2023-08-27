@@ -50,6 +50,9 @@ class SimplePin(Pin):
             return check_bit(c_word, self.num)
         return not check_bit(c_word, self.num)
 
+    def __repr__(self) -> str:
+        return f"{super().__repr__()[:-1]}, {self.num}, {self.level.name})"
+
 class NullPin(Pin):
     def __init__(self) -> None:
         Pin.__init__(self)
@@ -126,3 +129,6 @@ class MuxPin(Pin):
 
     def check_enabled(self, c_word: int) -> bool:
         return self.mux.current(c_word) == self.num
+
+    def __repr__(self) -> str:
+        return f"{super().__repr__()[:-1]}, {self.mux.name}, {self.num})"

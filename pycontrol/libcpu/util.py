@@ -24,7 +24,7 @@ class ControlSignal:
     def __repr__(self) -> str:
         if self.name is None:
             return super().__repr__()
-        return self.name
+        return f"{self.__class__.__name__}({self.name})"
 
 
 @dataclass
