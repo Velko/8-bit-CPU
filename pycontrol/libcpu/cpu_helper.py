@@ -117,11 +117,12 @@ class CPUHelper:
         captured_output = StringIO()
 
         for msg in self.client.run_program():
-            if msg.reason == RunMessage.Reason.BRK:
-                break
-            if msg.reason == RunMessage.Reason.HALT:
-                raise InvalidOpcodeException("Unexpected exit")
-            if msg.reason == RunMessage.Reason.OUT:
-                captured_output.write(unwrap(msg.payload))
+            match msg.reason:
+                case RunMessage.Reason.BRK:
+                    break
+                case RunMessage.Reason.HALT:
+                    raise InvalidOpcodeException("Unexpected exit")
+                case RunMessage.Reason.OUT:
+                    captured_output.write(unwrap(msg.payload))
 
         return captured_output.getvalue()

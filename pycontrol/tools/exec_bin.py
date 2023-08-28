@@ -37,17 +37,17 @@ def run() -> None:
     out = cpu_helper.client.run_program()
 
     for msg in out:
+        match msg.reason:
+            case RunMessage.Reason.HALT:
+                print ("# Halted", flush=True, file=sys.stderr)
+                break
 
-        if msg.reason == RunMessage.Reason.HALT:
-            print ("# Halted", flush=True, file=sys.stderr)
-            break
+            case RunMessage.Reason.BRK:
+                print ("# Break", flush=True, file=sys.stderr)
+                break
 
-        if msg.reason == RunMessage.Reason.BRK:
-            print ("# Break", flush=True, file=sys.stderr)
-            break
-
-        if msg.reason == RunMessage.Reason.OUT:
-            print(msg.payload, end="", flush=True)
+            case RunMessage.Reason.OUT:
+                print(msg.payload, end="", flush=True)
 
 
 if __name__ == "__main__":

@@ -79,27 +79,28 @@ class Debugger:
 
         # are we done?
         if message is not None:
-            if message.reason == RunMessage.Reason.HALT:
-                self.halted = True
-                self.stopped = True
-                self.on_stop(StopReason.HALT, self.cpu_helper.read_reg16(PC))
-                return
+            match message.reason:
+                case RunMessage.Reason.HALT:
+                    self.halted = True
+                    self.stopped = True
+                    self.on_stop(StopReason.HALT, self.cpu_helper.read_reg16(PC))
+                    return
 
-            # breakpoint?
-            if message.reason == RunMessage.Reason.BRK:
-                self.stopped = True
-                tmp_break = self.break_hit()
-                if tmp_break is not None:
-                    # when single-stepping, should ignore breakpoints and execute original
-                    # instruction immediately
-                    _ = self.backend.execute_opcode(tmp_break.orig_op)
-                else:
-                    # Must be BRK in code, execute NOP instead
-                    self.backend.execute_mnemonic("nop")
+                # breakpoint?
+                case RunMessage.Reason.BRK:
+                    self.stopped = True
+                    tmp_break = self.break_hit()
+                    if tmp_break is not None:
+                        # when single-stepping, should ignore breakpoints and execute original
+                        # instruction immediately
+                        _ = self.backend.execute_opcode(tmp_break.orig_op)
+                    else:
+                        # Must be BRK in code, execute NOP instead
+                        self.backend.execute_mnemonic("nop")
 
-            # port output
-            if message.reason == RunMessage.Reason.OUT:
-                self.on_output(unwrap(message.payload))
+                # port output
+                case RunMessage.Reason.OUT:
+                    self.on_output(unwrap(message.payload))
 
         self.on_stop(StopReason.STEP, self.cpu_helper.read_reg16(PC))
 
@@ -122,21 +123,21 @@ class Debugger:
         out = self.client.run_program()
 
         for msg in out:
+            match msg.reason:
+                case RunMessage.Reason.HALT:
+                    self.halted = True
+                    self.stopped = True
+                    # report the addess of HLT, not one past
+                    self.on_stop(StopReason.HALT, self.cpu_helper.read_reg16(PC) - 1)
+                    break
 
-            if msg.reason == RunMessage.Reason.HALT:
-                self.halted = True
-                self.stopped = True
-                # report the addess of HLT, not one past
-                self.on_stop(StopReason.HALT, self.cpu_helper.read_reg16(PC) - 1)
-                break
+                case RunMessage.Reason.BRK:
+                    self.stopped = True
+                    self.current_break = self.break_hit()
+                    break
 
-            if msg.reason == RunMessage.Reason.BRK:
-                self.stopped = True
-                self.current_break = self.break_hit()
-                break
-
-            if msg.reason == RunMessage.Reason.OUT:
-                self.on_output(unwrap(msg.payload))
+                case RunMessage.Reason.OUT:
+                    self.on_output(unwrap(msg.payload))
 
 
     def steprun(self) -> None:
@@ -194,12 +195,13 @@ class Debugger:
 
 
     def stop_event(self, reason: StopReason, addr: int) -> None:
-        if reason == StopReason.HALT:
-            print ("# Halted", flush=True, file=sys.stderr)
-        elif reason == StopReason.DEBUG_BRK:
-            print (f"# Breakpoint @ {addr:04x}")
-        elif reason == StopReason.CODE_BRK:
-            print (f"# Hardcoded breakpoint @ {addr:04x}")
+        match reason:
+            case StopReason.HALT:
+                print ("# Halted", flush=True, file=sys.stderr)
+            case StopReason.DEBUG_BRK:
+                print (f"# Breakpoint @ {addr:04x}")
+            case StopReason.CODE_BRK:
+                print (f"# Hardcoded breakpoint @ {addr:04x}")
 
     def output_event(self, msg: str) -> None:
         print(msg, end="", flush=True)

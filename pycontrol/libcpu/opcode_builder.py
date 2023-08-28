@@ -27,10 +27,11 @@ class OpcodeArg(Enum):
     ADDR = 2
 
     def __str__(self) -> str:
-        if self == OpcodeArg.BYTE:
-            return "imm"
-        if self == OpcodeArg.ADDR:
-            return "addr"
+        match self:
+            case OpcodeArg.BYTE:
+                return "imm"
+            case OpcodeArg.ADDR:
+                return "addr"
 
         raise TypeError # suppress warning, something's really wrong
 
