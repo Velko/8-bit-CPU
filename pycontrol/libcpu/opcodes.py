@@ -190,7 +190,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
     builder.add_instruction("bnel", OpcodeArg.ADDR)\
         .add_step(PC.inc)\
         .add_step(PC.inc)\
-        .add_condition(mask=Flags.Z, value=0)\
+        .add_condition(mask=Flags.Z, value=Flags.Empty)\
             .add_step(PC.out, PC.inc, ProgMem.out, TL.load)\
             .add_step(PC.out, PC.inc, ProgMem.out, TH.load)\
             .add_step(TX.out, PC.load)
@@ -206,7 +206,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
     builder.add_instruction("bccl", OpcodeArg.ADDR)\
         .add_step(PC.inc)\
         .add_step(PC.inc)\
-        .add_condition(mask=Flags.C, value=0)\
+        .add_condition(mask=Flags.C, value=Flags.Empty)\
             .add_step(PC.out, PC.inc, ProgMem.out, TL.load)\
             .add_step(PC.out, PC.inc, ProgMem.out, TH.load)\
             .add_step(TX.out, PC.load)
@@ -222,7 +222,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
     builder.add_instruction("bpll", OpcodeArg.ADDR)\
         .add_step(PC.inc)\
         .add_step(PC.inc)\
-        .add_condition(mask=Flags.N, value=0)\
+        .add_condition(mask=Flags.N, value=Flags.Empty)\
             .add_step(PC.out, PC.inc, ProgMem.out, TL.load)\
             .add_step(PC.out, PC.inc, ProgMem.out, TH.load)\
             .add_step(TX.out, PC.load)
@@ -298,7 +298,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
 
     builder.add_instruction("bner", OpcodeArg.BYTE)\
         .add_step(PC.inc)\
-        .add_condition(mask=Flags.Z, value=0)\
+        .add_condition(mask=Flags.Z, value=Flags.Empty)\
             .add_step(PC.out, PC.inc, ProgMem.out, ACalc.load, ACalc.signed)\
             .add_step(ACalc.out, PC.load)
 
@@ -310,7 +310,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
 
     builder.add_instruction("bccr", OpcodeArg.BYTE)\
         .add_step(PC.inc)\
-        .add_condition(mask=Flags.C, value=0)\
+        .add_condition(mask=Flags.C, value=Flags.Empty)\
             .add_step(PC.out, PC.inc, ProgMem.out, ACalc.load, ACalc.signed)\
             .add_step(ACalc.out, PC.load)
 
@@ -322,7 +322,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
 
     builder.add_instruction("bplr", OpcodeArg.BYTE)\
         .add_step(PC.inc)\
-        .add_condition(mask=Flags.N, value=0)\
+        .add_condition(mask=Flags.N, value=Flags.Empty)\
             .add_step(PC.out, PC.inc, ProgMem.out, ACalc.load, ACalc.signed)\
             .add_step(ACalc.out, PC.load)
 

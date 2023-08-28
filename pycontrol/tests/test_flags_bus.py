@@ -6,7 +6,8 @@ pytestmark = pytest.mark.hardware
 
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
-from libcpu.DeviceSetup import A, B, F
+from libcpu.devices import Flags
+from libcpu.DeviceSetup import A, B
 
 def test_flags_out_n(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.load_reg8(A, 230)
@@ -44,9 +45,10 @@ def test_flags_out_v(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     assert flags == "V---"
 
-@pytest.mark.parametrize("flags", range(16))
-def test_flags_preload(cpu_helper: CPUHelper, flags: int) -> None:
-    cpu_helper.load_reg8(F, flags)
+@pytest.mark.parametrize("f_int", range(16))
+def test_flags_preload(cpu_helper: CPUHelper, f_int: int) -> None:
+    flags = Flags(f_int)
+    cpu_helper.load_flags(flags)
 
     f = cpu_helper.get_flags()
     assert f == flags

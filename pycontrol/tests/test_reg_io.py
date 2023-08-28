@@ -3,7 +3,7 @@
 import pytest
 import random
 
-from libcpu.devices import Register
+from libcpu.devices import Register, Flags
 from libcpu.DeviceSetup import SP, A, B, F
 from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
@@ -29,8 +29,8 @@ def test_load_store_reg(cpu_helper: CPUHelper, acpu: AssistedCPU, register: Regi
 
     assert value == received
 
-@pytest.mark.parametrize("value", [0xF, 1, 2, 4, 8, 0])
-def test_load_store_flags(cpu_helper: CPUHelper, acpu: AssistedCPU, value: int) -> None:
+@pytest.mark.parametrize("value", [~Flags.Empty, Flags.N, Flags.Z, Flags.C, Flags.V, Flags.Empty])
+def test_load_store_flags(cpu_helper: CPUHelper, acpu: AssistedCPU, value: Flags) -> None:
     acpu.ldi (F, value)
     received = cpu_helper.get_flags()
 

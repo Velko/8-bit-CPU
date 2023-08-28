@@ -108,7 +108,7 @@ def test_opcode_flag_default(fake_opcodes: OpcodeFixture) -> None:
     fake_opcodes.reset()
 
     for s_idx in range(8):
-        c, is_last = op.get_step(s_idx, 0)
+        c, is_last = op.get_step(s_idx, Flags.Empty)
 
         for e in c:
             fake_opcodes.control.enable(e)

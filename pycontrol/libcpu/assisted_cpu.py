@@ -1,6 +1,6 @@
 from typing import Optional, Union
 from .util import RunMessage
-from .devices import Register, Flags
+from .devices import Register, Flags, FlagsRegister
 from .markers import AddrBase
 from .pinclient import PinClient
 from .assisted_cpu_engine import AssistedCPUEngine
@@ -9,8 +9,10 @@ class AssistedCPU(AssistedCPUEngine):
     def __init__(self, client: PinClient) -> None:
         AssistedCPUEngine.__init__(self, client)
 
-    def ldi(self, target: Union[Register, Flags], value: int) -> None:
+    def ldi(self, target: Union[Register, FlagsRegister], value: int | Flags ) -> None:
         opcode = f"ldi_{target.name}_imm"
+        if isinstance(value, Flags):
+            value = value.value
         self.execute_mnemonic(opcode, value)
 
     def lea(self, target: Register, addr: AddrBase) -> None:

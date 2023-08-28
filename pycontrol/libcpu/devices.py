@@ -1,4 +1,5 @@
-from typing import Any
+from typing import Any, Self
+import enum
 from dataclasses import dataclass
 from .pin import Pin
 from .util import ControlSignal
@@ -35,32 +36,31 @@ class ALU(DeviceBase):
     alt: Pin
 
 
-@dataclass
-class Flags(Register):
-    calc: Pin
-    carry: Pin
-
+class Flags(enum.Flag):
+    Empty = 0
     V = 0b1000
     C = 0b0100
     Z = 0b0010
     N = 0b0001
 
+    def decode(self) -> str:
 
-    @staticmethod
-    def decode(val: int) -> str:
-
-        def fls(condition: int, c: str) -> str:
+        def fls(condition: bool, c: str) -> str:
             if condition:
                 return c
             return '-'
 
-        val = int(val)
-
         #VCZN
-        return f"{fls( val & Flags.V, 'V')}"\
-               f"{fls( val & Flags.C, 'C')}"\
-               f"{fls( val & Flags.Z, 'Z')}"\
-               f"{fls( val & Flags.N, 'N')}"
+        return f"{fls( Flags.V in self, 'V')}"\
+               f"{fls( Flags.C in self, 'C')}"\
+               f"{fls( Flags.Z in self, 'Z')}"\
+               f"{fls( Flags.N in self, 'N')}"
+
+
+@dataclass
+class FlagsRegister(Register):
+    calc: Pin
+    carry: Pin
 
 @dataclass
 class RAM(DeviceBase):

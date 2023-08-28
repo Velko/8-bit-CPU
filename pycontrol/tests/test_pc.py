@@ -42,7 +42,7 @@ def test_pc_count(cpu_helper: CPUHelper, expected: int) -> None:
     assert value == expected
 
 def test_beq_taken(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(F, Flags.Z)
+    cpu_helper.load_flags(Flags.Z)
     cpu_helper.load_reg16(PC, 0x1234)
 
     acpu.beq(Addr(0x4321))
@@ -51,7 +51,7 @@ def test_beq_taken(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     assert pcaddr == 0x4321
 
 def test_beq_fallthrough(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(F, 0)
+    cpu_helper.load_flags(Flags.Empty)
     cpu_helper.load_reg16(PC, 0x1234)
 
     acpu.beq(Addr(0x4321))
@@ -61,7 +61,7 @@ def test_beq_fallthrough(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
 
 def test_bne_taken(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(F, 0)
+    cpu_helper.load_flags(Flags.Empty)
     cpu_helper.load_reg16(PC, 0x1234)
 
     acpu.bne(Addr(0x4321))
@@ -70,7 +70,7 @@ def test_bne_taken(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     assert pcaddr == 0x4321
 
 def test_bne_fallthrough(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(F, Flags.Z)
+    cpu_helper.load_flags(Flags.Z)
     cpu_helper.load_reg16(PC, 0x1234)
 
     acpu.bne(Addr(0x4321))
@@ -79,7 +79,7 @@ def test_bne_fallthrough(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     assert pcaddr == 0x1236
 
 def test_bcs_taken(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(F, Flags.C)
+    cpu_helper.load_flags(Flags.C)
     cpu_helper.load_reg16(PC, 0x1234)
 
     acpu.bcs(Addr(0x4321))
@@ -88,7 +88,7 @@ def test_bcs_taken(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     assert pcaddr == 0x4321
 
 def test_bcs_fallthrough(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(F, 0)
+    cpu_helper.load_flags(Flags.Empty)
     cpu_helper.load_reg16(PC, 0x1234)
 
     acpu.bcs(Addr(0x4321))
@@ -97,7 +97,7 @@ def test_bcs_fallthrough(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     assert pcaddr == 0x1236
 
 def test_bcc_taken(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(F, 0)
+    cpu_helper.load_flags(Flags.Empty)
     cpu_helper.load_reg16(PC, 0x1234)
 
     acpu.bcc(Addr(0x4321))
@@ -106,7 +106,7 @@ def test_bcc_taken(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     assert pcaddr == 0x4321
 
 def test_bcc_fallthrough(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(F, Flags.C)
+    cpu_helper.load_flags(Flags.C)
     cpu_helper.load_reg16(PC, 0x1234)
 
     acpu.bcc(Addr(0x4321))

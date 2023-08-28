@@ -53,7 +53,7 @@ ShiftSwap = dev.ALU("ShiftSwap",
     out = MuxPin(OutMux, 7),
     alt = AluAltFn)
 
-F = dev.Flags("F",
+F = dev.FlagsRegister("F",
     out = MuxPin(OutMux, 4),
     load = MuxPin(LoadMux, 7),
     calc = SimplePin(14, Level.LOW),

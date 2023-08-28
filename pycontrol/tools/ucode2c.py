@@ -40,7 +40,7 @@ def generate_microcode(cfile: TextIO) -> None:
         for alt in microcode.f_alt:
             words = process_steps(alt.steps)
             cfile.write ("          /* mask: {} value: {} */\n".format(Flags.decode(alt.mask), Flags.decode(alt.value)))
-            cfile.write ("          {{ .mask = 0x{:02x}, .value = 0x{:02x},\n".format(alt.mask, alt.value))
+            cfile.write ("          {{ .mask = 0x{:02x}, .value = 0x{:02x},\n".format(alt.mask.value, alt.value.value))
             cfile.write ("            .steps = {{{}}},\n".format(", ".join(words)))
             cfile.write ("          },\n")
 

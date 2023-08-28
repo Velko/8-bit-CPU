@@ -4,7 +4,7 @@ import pytest
 
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
-from libcpu.DeviceSetup import A, F
+from libcpu.DeviceSetup import A
 from libcpu.opcodes import permute_gp_regs_nsame, gp_regs, opcode_of
 from libcpu.devices import Register, Flags
 from typing import Iterator, Tuple
@@ -60,9 +60,9 @@ def shr_args() -> Iterator[Tuple[str, int, int, str]]:
 def test_shr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     if carry_in:
-        cpu_helper.load_reg8(F, Flags.C)
+        cpu_helper.load_flags(Flags.C)
     else:
-        cpu_helper.load_reg8(F, 0)
+        cpu_helper.load_flags(Flags.Empty)
 
     cpu_helper.load_reg8(reg, val)
 
@@ -81,9 +81,9 @@ def test_shr_real(cpu_helper: CPUHelper, reg: Register, _desc: str, carry_in: bo
     shr_test_prog = bytes([opcode_of(f"shr_{reg.name}")])
 
     if carry_in:
-        cpu_helper.load_reg8(F, Flags.C)
+        cpu_helper.load_flags(Flags.C)
     else:
-        cpu_helper.load_reg8(F, 0)
+        cpu_helper.load_flags(Flags.Empty)
 
     cpu_helper.load_reg8(reg, val)
 
@@ -110,9 +110,9 @@ def ror_args() -> Iterator[Tuple[str, bool, int, int, str]]:
 def test_ror(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     if carry_in:
-        cpu_helper.load_reg8(F, Flags.C)
+        cpu_helper.load_flags(Flags.C)
     else:
-        cpu_helper.load_reg8(F, 0)
+        cpu_helper.load_flags(Flags.Empty)
 
     cpu_helper.load_reg8(reg, val)
 
@@ -135,9 +135,9 @@ def asr_args() -> Iterator[Tuple[str, int, int, str]]:
 def test_asr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     if carry_in:
-        cpu_helper.load_reg8(F, Flags.C)
+        cpu_helper.load_flags(Flags.C)
     else:
-        cpu_helper.load_reg8(F, 0)
+        cpu_helper.load_flags(Flags.Empty)
 
     cpu_helper.load_reg8(reg, val)
 
@@ -156,9 +156,9 @@ def test_asr_real(cpu_helper: CPUHelper, reg: Register, _desc: str, carry_in: bo
     asr_test_prog = bytes([opcode_of(f"asr_{reg.name}")])
 
     if carry_in:
-        cpu_helper.load_reg8(F, Flags.C)
+        cpu_helper.load_flags(Flags.C)
     else:
-        cpu_helper.load_reg8(F, 0)
+        cpu_helper.load_flags(Flags.Empty)
 
     cpu_helper.load_reg8(reg, val)
 
@@ -182,9 +182,9 @@ def swap_args() -> Iterator[Tuple[str, int, int, str]]:
 def test_swap(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     if carry_in:
-        cpu_helper.load_reg8(F, Flags.C)
+        cpu_helper.load_flags(Flags.C)
     else:
-        cpu_helper.load_reg8(F, 0)
+        cpu_helper.load_flags(Flags.Empty)
 
     cpu_helper.load_reg8(reg, val)
 

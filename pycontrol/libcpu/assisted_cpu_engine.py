@@ -1,5 +1,6 @@
 from typing import List, Union, Optional, Sequence
 from .markers import AddrBase
+from .devices import Flags
 from .pseudo_devices import Imm, IOMon
 from .DeviceSetup import IOCtl, ProgMem, PC, F, StepCounter, Clock
 from .opcodes import opcodes, ops_by_code, fetch, InvalidOpcodeException
@@ -10,7 +11,7 @@ from .util import ControlSignal, RunMessage
 class AssistedCPUEngine:
     def __init__(self, client: PinClient) -> None:
         self.client = client
-        self.flags_cache: Optional[int] = None
+        self.flags_cache: Optional[Flags] = None
         self.opcode_cache: Optional[int] = None
         self.op_extension = 0
 
@@ -92,9 +93,9 @@ class AssistedCPUEngine:
 
         return None
 
-    def get_flags_cached(self) -> int:
+    def get_flags_cached(self) -> Flags:
         if self.flags_cache is None:
-            self.flags_cache = self.client.flags_get()
+            self.flags_cache = Flags(self.client.flags_get())
 
         return self.flags_cache
 

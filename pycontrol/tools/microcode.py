@@ -7,6 +7,7 @@ from typing import List, Iterator, Sequence, TypeVar
 from libcpu.opcode_builder import MicroCode
 from libcpu.util import ControlSignal
 from libcpu.opcodes import opcodes, fetch
+from libcpu.devices import Flags
 from libcpu.DeviceSetup import StepCounter
 
 from libcpu.ctrl_word import CtrlWord
@@ -14,7 +15,7 @@ from itertools import islice
 
 MAX_STEPS=8
 
-def finalize_steps(microcode: MicroCode, flags: int) -> Iterator[Sequence[ControlSignal]]:
+def finalize_steps(microcode: MicroCode, flags: Flags) -> Iterator[Sequence[ControlSignal]]:
 
     # fetch stage
     for f_step in fetch:
@@ -32,7 +33,7 @@ def finalize_steps(microcode: MicroCode, flags: int) -> Iterator[Sequence[Contro
 def generate_microcode() -> Iterator[int]:
     for microcode in opcodes.values():
         for flags in range(16):
-            for c_word in process_steps(microcode, flags):
+            for c_word in process_steps(microcode, Flags(flags)):
                 yield c_word
 
     for _ in range(512 - len(opcodes)):
@@ -40,7 +41,7 @@ def generate_microcode() -> Iterator[int]:
             yield c_word
 
 
-def process_steps(microcode: MicroCode, flags: int) -> Iterator[int]:
+def process_steps(microcode: MicroCode, flags: Flags) -> Iterator[int]:
     for pins in finalize_steps(microcode, flags):
         control = CtrlWord()
         for pin in pins:

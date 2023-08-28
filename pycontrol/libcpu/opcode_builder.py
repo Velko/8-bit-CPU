@@ -1,13 +1,13 @@
 from enum import Enum
 from typing import List, Tuple, Mapping, Sequence, Union
 from .util import ControlSignal
-from .devices import Register
+from .devices import Register, Flags
 
 class InvalidInstructionDefinition(Exception):
     pass
 
 class FlagsAlt:
-    def __init__(self, owner: 'MicroCode', mask: int, value: int):
+    def __init__(self, owner: 'MicroCode', mask: Flags, value: Flags):
         self.owner = owner
         self.mask = mask
         self.value = value
@@ -18,7 +18,7 @@ class FlagsAlt:
 
         return self
 
-    def add_condition(self, mask: int, value: int) -> 'FlagsAlt':
+    def add_condition(self, mask: Flags, value: Flags) -> 'FlagsAlt':
         return self.owner.add_condition(mask, value)
 
 
@@ -46,7 +46,7 @@ class MicroCode:
     def is_flag_dependent(self) -> bool:
         return any(self.f_alt)
 
-    def get_step(self, step_index: int, flags: int) -> Tuple[Sequence[ControlSignal], bool]:
+    def get_step(self, step_index: int, flags: Flags) -> Tuple[Sequence[ControlSignal], bool]:
         matches = list(filter(lambda alt: flags & alt.mask == alt.value, self.f_alt))
 
         if len(matches) > 1:
@@ -67,7 +67,7 @@ class MicroCode:
 
         return self
 
-    def add_condition(self, mask: int, value: int) -> FlagsAlt:
+    def add_condition(self, mask: Flags, value: Flags) -> FlagsAlt:
         alt = FlagsAlt(self, mask, value)
         self.f_alt.append(alt)
 

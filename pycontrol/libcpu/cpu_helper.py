@@ -6,7 +6,7 @@ from libcpu.devices import Register, WORegister
 from libcpu.opcodes import InvalidOpcodeException, opcode_of
 from libcpu.pinclient import PinClient
 from libcpu.devices import Flags
-from libcpu.DeviceSetup import PC, Ram
+from libcpu.DeviceSetup import PC, Ram, F
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
 class CPUHelper:
@@ -62,8 +62,8 @@ class CPUHelper:
         for i, b in enumerate(data):
             self.write_ram(addr + i, b)
 
-    def get_flags(self) -> int:
-        return self.client.flags_get()
+    def get_flags(self) -> Flags:
+        return Flags(self.client.flags_get())
 
     def get_flags_s(self) -> str:
         return Flags.decode(self.get_flags())
@@ -78,13 +78,16 @@ class CPUHelper:
 
         return value
 
-    def load_reg8(self, reg: Register | WORegister , value: int) -> None:
+    def load_reg8(self, reg: Register | WORegister, value: int) -> None:
         control = CtrlWord()\
             .enable(reg.load)
         self.client.bus_set(value)
         self.client.ctrl_commit(control.c_word)
         self.client.clock_tick()
         self.client.off(DEFAULT_CW.c_word)
+
+    def load_flags(self, value: Flags) -> None:
+        self.load_reg8(F, value.value)
 
     def load_snippet(self, addr: int, code: bytes) -> None:
         self.write_bytes(addr, code)
