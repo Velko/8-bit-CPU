@@ -6,7 +6,7 @@ from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.DeviceSetup import A
 from libcpu.opcodes import permute_gp_regs_nsame, gp_regs, opcode_of
-from libcpu.devices import Register, Flags
+from libcpu.devices import GPRegister, Flags
 from typing import Iterator, Tuple
 
 pytestmark = pytest.mark.hardware
@@ -17,7 +17,7 @@ def and_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
 @pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", and_test_args())
-def test_and(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Register, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+def test_and(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
     cpu_helper.load_reg8(lhs, val_a)
     cpu_helper.load_reg8(rhs, val_b)
 
@@ -35,7 +35,7 @@ def or_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
 @pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", or_test_args())
-def test_or(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Register, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+def test_or(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
     cpu_helper.load_reg8(lhs, val_a)
     cpu_helper.load_reg8(rhs, val_b)
 
@@ -57,7 +57,7 @@ def shr_args() -> Iterator[Tuple[str, int, int, str]]:
 @pytest.mark.parametrize("reg", gp_regs)
 @pytest.mark.parametrize("_desc,val,result,xflags", shr_args())
 @pytest.mark.parametrize("carry_in", [False, True])
-def test_shr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
+def test_shr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     if carry_in:
         cpu_helper.load_flags(Flags.C)
@@ -76,7 +76,7 @@ def test_shr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, _desc: str
 @pytest.mark.parametrize("reg", gp_regs)
 @pytest.mark.parametrize("_desc,val,result,xflags", shr_args())
 @pytest.mark.parametrize("carry_in", [False, True])
-def test_shr_real(cpu_helper: CPUHelper, reg: Register, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
+def test_shr_real(cpu_helper: CPUHelper, reg: GPRegister, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     shr_test_prog = bytes([opcode_of(f"shr_{reg.name}")])
 
@@ -107,7 +107,7 @@ def ror_args() -> Iterator[Tuple[str, bool, int, int, str]]:
 
 @pytest.mark.parametrize("reg", gp_regs)
 @pytest.mark.parametrize("_desc,carry_in,val,result,xflags", ror_args())
-def test_ror(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
+def test_ror(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     if carry_in:
         cpu_helper.load_flags(Flags.C)
@@ -132,7 +132,7 @@ def asr_args() -> Iterator[Tuple[str, int, int, str]]:
 @pytest.mark.parametrize("reg", gp_regs)
 @pytest.mark.parametrize("_desc,val,result,xflags", asr_args())
 @pytest.mark.parametrize("carry_in", [False, True])
-def test_asr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
+def test_asr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     if carry_in:
         cpu_helper.load_flags(Flags.C)
@@ -151,7 +151,7 @@ def test_asr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, _desc: str
 @pytest.mark.parametrize("reg", gp_regs)
 @pytest.mark.parametrize("_desc,val,result,xflags", asr_args())
 @pytest.mark.parametrize("carry_in", [False, True])
-def test_asr_real(cpu_helper: CPUHelper, reg: Register, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
+def test_asr_real(cpu_helper: CPUHelper, reg: GPRegister, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     asr_test_prog = bytes([opcode_of(f"asr_{reg.name}")])
 
@@ -179,7 +179,7 @@ def swap_args() -> Iterator[Tuple[str, int, int, str]]:
 @pytest.mark.parametrize("reg", gp_regs)
 @pytest.mark.parametrize("_desc,val,result,xflags", swap_args())
 @pytest.mark.parametrize("carry_in", [False, True])
-def test_swap(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
+def test_swap(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
     if carry_in:
         cpu_helper.load_flags(Flags.C)
@@ -203,7 +203,7 @@ def xor_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
 @pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", xor_test_args())
-def test_xor(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Register, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+def test_xor(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
     cpu_helper.load_reg8(lhs, val_a)
     cpu_helper.load_reg8(rhs, val_b)
 
@@ -232,7 +232,7 @@ def not_args() -> Iterator[Tuple[str, int, int, str]]:
 
 @pytest.mark.parametrize("reg", gp_regs)
 @pytest.mark.parametrize("_desc,val,result,xflags", not_args())
-def test_not(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, _desc: str, val: int, result: int, xflags: str) -> None:
+def test_not(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, val: int, result: int, xflags: str) -> None:
 
     cpu_helper.load_reg8(reg, val)
 

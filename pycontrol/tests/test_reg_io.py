@@ -3,7 +3,7 @@
 import pytest
 import random
 
-from libcpu.devices import Register, Flags
+from libcpu.devices import GPRegister, Flags
 from libcpu.DeviceSetup import SP, A, B, F
 from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
@@ -13,7 +13,7 @@ from libcpu.opcodes import permute_gp_regs_nsame, gp_regs
 
 pytestmark = pytest.mark.hardware
 
-def all_regs_and_bits() -> Iterator[Tuple[Register, int]]:
+def all_regs_and_bits() -> Iterator[Tuple[GPRegister, int]]:
     bits = range(8)
 
     for r in gp_regs:
@@ -23,7 +23,7 @@ def all_regs_and_bits() -> Iterator[Tuple[Register, int]]:
         yield r, 0
 
 @pytest.mark.parametrize("register,value", all_regs_and_bits())
-def test_load_store_reg(cpu_helper: CPUHelper, acpu: AssistedCPU, register: Register, value: int) -> None:
+def test_load_store_reg(cpu_helper: CPUHelper, acpu: AssistedCPU, register: GPRegister, value: int) -> None:
     acpu.ldi (register, value)
     received = cpu_helper.read_reg8(register)
 
@@ -37,7 +37,7 @@ def test_load_store_flags(cpu_helper: CPUHelper, acpu: AssistedCPU, value: Flags
     assert value == received
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
-def test_mov_a_b(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: Register, rhs: Register) -> None:
+def test_mov_a_b(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister) -> None:
     cpu_helper.load_reg8(lhs, 0)
     val = random.randrange(256)
     cpu_helper.load_reg8(rhs, val)

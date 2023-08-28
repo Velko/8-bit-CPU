@@ -6,6 +6,7 @@ import itertools
 pytestmark = pytest.mark.hardware
 
 from libcpu.DeviceSetup import SP, LR, A, C, F
+from libcpu.devices import Flags
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.markers import Addr
@@ -114,15 +115,17 @@ def test_push_pop(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
 def test_push_popf(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
+    flags_val = Flags(0b1101)
+
     cpu_helper.load_reg16(SP, 88)
-    acpu.ldi (F, 0b1101)
+    acpu.ldi (F, flags_val)
 
     acpu.pushf ()
-    acpu.ldi (F, 0)
+    acpu.ldi (F, Flags.Empty)
     acpu.popf ()
 
-    val = cpu_helper.client.flags_get()
-    assert val == 0b1101
+    val = cpu_helper.get_flags()
+    assert val == flags_val
 
 def test_push_lr(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.load_reg16(SP, 0x88)

@@ -1,6 +1,6 @@
-from typing import Optional, Union
+from typing import Optional, Union, overload
 from .util import RunMessage
-from .devices import Register, Flags, FlagsRegister
+from .devices import GPRegister, Flags, FlagsRegister, AddressRegister
 from .markers import AddrBase
 from .pinclient import PinClient
 from .assisted_cpu_engine import AssistedCPUEngine
@@ -9,101 +9,109 @@ class AssistedCPU(AssistedCPUEngine):
     def __init__(self, client: PinClient) -> None:
         AssistedCPUEngine.__init__(self, client)
 
-    def ldi(self, target: Union[Register, FlagsRegister], value: int | Flags ) -> None:
+    @overload
+    def ldi(self, target: GPRegister, value: int) -> None:
+        ...
+
+    @overload
+    def ldi(self, target: FlagsRegister, value: Flags) -> None:
+        ...
+
+    def ldi(self, target: Union[GPRegister, FlagsRegister], value: int | Flags ) -> None:
         opcode = f"ldi_{target.name}_imm"
         if isinstance(value, Flags):
             value = value.value
         self.execute_mnemonic(opcode, value)
 
-    def lea(self, target: Register, addr: AddrBase) -> None:
+    def lea(self, target: AddressRegister, addr: AddrBase) -> None:
         opcode = f"lea_{target.name}_addr"
         self.execute_mnemonic(opcode, addr)
 
-    def add(self, target: Register, arg: Register) -> None:
+    def add(self, target: GPRegister, arg: GPRegister) -> None:
         opcode = f"add_{target.name}_{arg.name}"
         self.execute_mnemonic(opcode)
 
-    def adc(self, target: Register, arg: Register) -> None:
+    def adc(self, target: GPRegister, arg: GPRegister) -> None:
         opcode = f"adc_{target.name}_{arg.name}"
         self.execute_mnemonic(opcode)
 
-    def sub(self, target: Register, arg: Register) -> None:
+    def sub(self, target: GPRegister, arg: GPRegister) -> None:
         opcode = f"sub_{target.name}_{arg.name}"
         self.execute_mnemonic(opcode)
 
-    def sbb(self, target: Register, arg: Register) -> None:
+    def sbb(self, target: GPRegister, arg: GPRegister) -> None:
         opcode = f"sbb_{target.name}_{arg.name}"
         self.execute_mnemonic(opcode)
 
-    def andb(self, target: Register, arg: Register) -> None:
+    def andb(self, target: GPRegister, arg: GPRegister) -> None:
         opcode = f"and_{target.name}_{arg.name}"
         self.execute_mnemonic(opcode)
 
-    def orb(self, target: Register, arg: Register) -> None:
+    def orb(self, target: GPRegister, arg: GPRegister) -> None:
         opcode = f"or_{target.name}_{arg.name}"
         self.execute_mnemonic(opcode)
 
-    def xor(self, target: Register, arg: Register) -> None:
+    def xor(self, target: GPRegister, arg: GPRegister) -> None:
         opcode = f"xor_{target.name}_{arg.name}"
         self.execute_mnemonic(opcode)
 
-    def clr(self, arg: Register) -> None:
+    def clr(self, arg: GPRegister) -> None:
         opcode = f"clr_{arg.name}"
         self.execute_mnemonic(opcode)
 
-    def notb(self, target: Register) -> None:
+    def notb(self, target: GPRegister) -> None:
         opcode = f"not_{target.name}"
         self.execute_mnemonic(opcode)
 
-    def shr(self, target: Register) -> None:
+    def shr(self, target: GPRegister) -> None:
         opcode = f"shr_{target.name}"
         self.execute_mnemonic(opcode)
 
-    def ror(self, target: Register) -> None:
+    def ror(self, target: GPRegister) -> None:
         opcode = f"ror_{target.name}"
         self.execute_mnemonic(opcode)
 
-    def asr(self, target: Register) -> None:
+    def asr(self, target: GPRegister) -> None:
         opcode = f"asr_{target.name}"
         self.execute_mnemonic(opcode)
 
-    def swap(self, target: Register) -> None:
+    def swap(self, target: GPRegister) -> None:
         opcode = f"swap_{target.name}"
         self.execute_mnemonic(opcode)
 
-    def inc(self, target: Register) -> None:
+    def inc(self, target: GPRegister) -> None:
         opcode = f"inc_{target.name}"
         self.execute_mnemonic(opcode)
 
-    def dec(self, target: Register) -> None:
+    def dec(self, target: GPRegister) -> None:
         opcode = f"dec_{target.name}"
         self.execute_mnemonic(opcode)
 
-    def cmp(self, target: Register, arg: Register) -> None:
+    def cmp(self, target: GPRegister, arg: GPRegister) -> None:
         opcode = f"cmp_{target.name}_{arg.name}"
         self.execute_mnemonic(opcode)
 
-    def mov(self, target: Register, source: Register) -> None:
+    def mov(self, target: GPRegister, source: GPRegister) -> None:
         opcode = f"mov_{target.name}_{source.name}"
         self.execute_mnemonic(opcode)
 
-    def st(self, addr: AddrBase, source: Register) -> None:
+    def st(self, addr: AddrBase, source: GPRegister) -> None:
         opcode = f"st_addr_{source.name}"
         self.execute_mnemonic(opcode, addr)
 
-    def stx(self, base: AddrBase, idx_reg: Register, source: Register) -> None:
+    def stx(self, base: AddrBase, idx_reg: GPRegister, source: GPRegister) -> None:
         opcode = f"stx_addr_{idx_reg.name}_{source.name}"
         self.execute_mnemonic(opcode, base)
 
-    def ldx(self, target: Register, base: AddrBase, idx_reg: Register) -> None:
+    def ldx(self, target: GPRegister, base: AddrBase, idx_reg: GPRegister) -> None:
         opcode = f"ldx_{target.name}_addr_{idx_reg.name}"
         self.execute_mnemonic(opcode, base)
 
-    def tstx(self, base: AddrBase, idx_reg: Register) -> None:
+    def tstx(self, base: AddrBase, idx_reg: GPRegister) -> None:
         opcode = f"tstx_addr_{idx_reg.name}"
         self.execute_mnemonic(opcode, base)
 
-    def ld(self, target: Register, addr: AddrBase) -> None:
+    def ld(self, target: GPRegister, addr: AddrBase) -> None:
         opcode = f"ld_{target.name}_addr"
         self.execute_mnemonic(opcode, addr)
 
@@ -128,11 +136,11 @@ class AssistedCPU(AssistedCPUEngine):
     def hlt(self) -> None:
         self.execute_mnemonic("hlt")
 
-    def push(self, source: Register) -> None:
+    def push(self, source: GPRegister | AddressRegister) -> None:
         opcode = f"push_{source.name}"
         self.execute_mnemonic(opcode)
 
-    def pop(self, target: Register) -> None:
+    def pop(self, target: GPRegister | AddressRegister) -> None:
         opcode = f"pop_{target.name}"
         self.execute_mnemonic(opcode)
 
@@ -148,15 +156,15 @@ class AssistedCPU(AssistedCPUEngine):
     def call(self, addr: AddrBase) -> None:
         self.execute_mnemonic("callf_addr", addr)
 
-    def ldr(self, target: Register, base: Register, offset: int) -> None:
+    def ldr(self, target: GPRegister, base: AddressRegister, offset: int) -> None:
         opcode = f"ldr_{target.name}_{base.name}_imm"
         self.execute_mnemonic(opcode, offset)
 
-    def strel(self, base: Register, offset: int, source: Register) -> None:
+    def strel(self, base: AddressRegister, offset: int, source: GPRegister) -> None:
         opcode = f"str_{base.name}_imm_{source.name}"
         self.execute_mnemonic(opcode, offset)
 
-    def out(self, port: int, source: Register) -> Optional[RunMessage]:
+    def out(self, port: int, source: GPRegister) -> Optional[RunMessage]:
         opcode = f"out_imm_{source.name}"
         return self.execute_mnemonic(opcode, port)
 
