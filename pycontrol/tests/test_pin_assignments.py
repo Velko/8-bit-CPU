@@ -17,10 +17,10 @@ def mux_addr_lines() -> Iterator[Tuple[str, int]]:
 
 def each_simple_pin_and_addr_with_others() -> Iterator[Tuple[str, int, str, int]]:
 
-    all = list(mux_addr_lines()) + list(simple_pin_nums())
+    all_pins = list(mux_addr_lines()) + list(simple_pin_nums())
 
-    for a_id, (a_name, a_num) in enumerate(all):
-        for b_name, b_num in all[a_id+1:]:
+    for a_id, (a_name, a_num) in enumerate(all_pins):
+        for b_name, b_num in all_pins[a_id+1:]:
             yield a_name, a_num, b_name, b_num
 
 
@@ -40,7 +40,7 @@ def pins_in_mux(mux: Mux, include_default: bool) -> Iterator[Tuple[str, int]]:
 
 def each_pin_with_others_in_mux() -> Iterator[Tuple[str, int, str, int]]:
 
-   for mux_name, mux in all_muxes():
+    for mux_name, mux in all_muxes():
         mpins = list(pins_in_mux(mux, True))
 
         for a_id, (a_name, a_num) in enumerate(mpins):
@@ -64,4 +64,4 @@ def each_pin_with_capacity_in_mux() -> Iterator[Tuple[str, int, int]]:
 @pytest.mark.parametrize("_name,pin,capacity", each_pin_with_capacity_in_mux())
 def test_mux_capacity(_name: str, pin: int, capacity: int) -> None:
 
-        assert pin < capacity
+    assert pin < capacity

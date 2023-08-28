@@ -27,7 +27,8 @@ def calc_flags_alt_PC_counts() -> Iterator[Tuple[str, int, int, str, str]]:
         for f_alt in microcode.f_alt:
 
             # skip those where PC is loaded with new value
-            if PC.load in f_alt.steps[-1]: continue
+            if PC.load in f_alt.steps[-1]:
+                continue
 
             # count PC increments in flags-alt steps
             alt_len = sum(1 for s in f_alt.steps if PC.out in s)
@@ -37,9 +38,7 @@ def calc_flags_alt_PC_counts() -> Iterator[Tuple[str, int, int, str, str]]:
 
 @pytest.mark.parametrize("_name,default_len,alt_len,_mask,_val",  calc_flags_alt_PC_counts())
 def test_opcode_pc_len_equal_in_flags_alt(_name: str, default_len: int, alt_len: int, _mask: str, _val: str) -> None:
-
-
-        assert default_len == alt_len
+    assert default_len == alt_len
 
 class DummySignal(ControlSignal):
     def __init__(self) -> None:
@@ -55,6 +54,8 @@ class OpcodeFixture:
         self.orig_default = DummySignal()
         self.orig_alt = DummySignal()
         self.control = CtrlWord()
+        self.default_taken = False
+        self.alt_taken = False
 
         builder.add_instruction("dummy")\
             .add_step(EnableCallback(self.log_default, self.orig_default))\
@@ -62,8 +63,6 @@ class OpcodeFixture:
                 .add_step(EnableCallback(self.log_alt, self.orig_alt))
 
         self.opcodes, self.ops_by_code = builder.build()
-
-        self.reset()
 
     def log_default(self, c_word: int) -> int:
         self.default_taken = True
@@ -96,7 +95,8 @@ def test_opcode_flag_taken(fake_opcodes: OpcodeFixture) -> None:
         for e in c:
             fake_opcodes.control.enable(e)
 
-        if is_last: break
+        if is_last:
+            break
 
     assert fake_opcodes.alt_taken == True
     assert fake_opcodes.default_taken == False
@@ -113,7 +113,8 @@ def test_opcode_flag_default(fake_opcodes: OpcodeFixture) -> None:
         for e in c:
             fake_opcodes.control.enable(e)
 
-        if is_last: break
+        if is_last:
+            break
 
     assert fake_opcodes.alt_taken == False
     assert fake_opcodes.default_taken == True

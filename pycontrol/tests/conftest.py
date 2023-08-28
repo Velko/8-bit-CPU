@@ -1,5 +1,6 @@
 import pytest
-import random, os
+import random
+import os
 import localpath
 localpath.install()
 

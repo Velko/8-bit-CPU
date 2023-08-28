@@ -44,7 +44,7 @@ def test_outa_emu_num(cpu_helper: CPUHelper, acpu: AssistedCPU, _desc: str, mode
 @pytest.mark.parametrize("_desc,mode,val,expected", outb_args())
 def test_outb_int_hw(cpu_helper: CPUHelper, _desc: str, mode: int, val: int, expected: str) -> None:
 
-    cpu_helper.load_reg8(D, mode);
+    cpu_helper.load_reg8(D, mode)
 
     cpu_helper.load_reg8(B, val)
 

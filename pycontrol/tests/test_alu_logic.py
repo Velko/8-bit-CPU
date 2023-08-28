@@ -242,4 +242,3 @@ def test_not(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: Register, _desc: str
     flags = Flags.decode(cpu_helper.get_flags() & (Flags.Z | Flags.N))
     assert value == result
     assert flags == xflags
-

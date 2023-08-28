@@ -11,34 +11,34 @@ from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 pytestmark = pytest.mark.hardware
 
 def test_reg_a_latch(cpu_helper: CPUHelper) -> None:
-        cpu_helper.load_reg8(A, 54)
-        cpu_helper.load_reg8(B, 0)
+    cpu_helper.load_reg8(A, 54)
+    cpu_helper.load_reg8(B, 0)
 
-        # Load another value into A, but "forget" to pulse the
-        # inverted clock
-        cpu_helper.client.bus_set(40)
-        control = CtrlWord()\
-            .enable(A.load)
-        cpu_helper.client.ctrl_commit(control.c_word)
+    # Load another value into A, but "forget" to pulse the
+    # inverted clock
+    cpu_helper.client.bus_set(40)
+    control = CtrlWord()\
+        .enable(A.load)
+    cpu_helper.client.ctrl_commit(control.c_word)
 
-        cpu_helper.client.clock_pulse()
-        #backend.client.clock_inverted()
+    cpu_helper.client.clock_pulse()
+    #backend.client.clock_inverted()
 
-        cpu_helper.client.off(DEFAULT_CW.c_word)
+    cpu_helper.client.off(DEFAULT_CW.c_word)
 
-        # Not try to sense what it sends to ALU by enabling it and
-        # reading value on the bus
-        control = CtrlWord()\
-            .enable(alu.out)\
-            .enable(A.alu_l)\
-            .enable(B.alu_r)
-        cpu_helper.client.ctrl_commit(control.c_word)
-        value = cpu_helper.client.bus_get()
+    # Not try to sense what it sends to ALU by enabling it and
+    # reading value on the bus
+    control = CtrlWord()\
+        .enable(alu.out)\
+        .enable(A.alu_l)\
+        .enable(B.alu_r)
+    cpu_helper.client.ctrl_commit(control.c_word)
+    value = cpu_helper.client.bus_get()
 
-        cpu_helper.client.off(DEFAULT_CW.c_word)
+    cpu_helper.client.off(DEFAULT_CW.c_word)
 
-        # should have kept the old value
-        assert value == 54
+    # should have kept the old value
+    assert value == 54
 
 
 def singlebit_vals() -> Iterator[int]:

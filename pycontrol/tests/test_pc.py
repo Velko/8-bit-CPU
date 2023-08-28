@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
-import pytest, itertools
+import pytest
+import itertools
 
 pytestmark = pytest.mark.hardware
 

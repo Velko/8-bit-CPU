@@ -8,7 +8,7 @@ pytestmark = pytest.mark.hardware
 
 from libcpu.cpu_helper import CPUHelper
 from libcpu.pinclient import PinClient
-from typing import Iterator, Sequence
+from typing import Iterator
 
 def singlebit_addresses() -> Iterator[int]:
     yield 0
@@ -29,4 +29,3 @@ def test_load_singlebit_addr(cpu_helper: CPUHelper, fill_ram: FillRam, addr: int
     actual = cpu_helper.read_ram(addr)
 
     assert fill_ram.contents[addr] == actual
-
