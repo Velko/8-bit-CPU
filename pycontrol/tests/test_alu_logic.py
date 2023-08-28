@@ -24,9 +24,9 @@ def test_and(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPR
     acpu.andb(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = Flags.decode(cpu_helper.get_flags() & (Flags.Z | Flags.N)) # we are only interested in Z and N flags
+    flags = cpu_helper.get_flags(Flags.Z | Flags.N) # we are only interested in Z and N flags
     assert value == result
-    assert flags == xflags
+    assert str(flags) == xflags
 
 
 def or_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
@@ -42,9 +42,9 @@ def test_or(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRe
     acpu.orb(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = Flags.decode(cpu_helper.get_flags() & (Flags.Z | Flags.N))
+    flags = cpu_helper.get_flags(Flags.Z | Flags.N)
     assert value == result
-    assert flags == xflags
+    assert str(flags) == xflags
 
 
 
@@ -191,9 +191,9 @@ def test_swap(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: 
     acpu.swap(reg)
 
     value = cpu_helper.read_reg8(reg)
-    flags = Flags.decode(cpu_helper.get_flags() & (Flags.Z | Flags.N))
+    flags = cpu_helper.get_flags(Flags.Z | Flags.N)
     assert value == result
-    assert flags == xflags
+    assert str(flags) == xflags
 
 
 def xor_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
@@ -210,9 +210,9 @@ def test_xor(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPR
     acpu.xor(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = Flags.decode(cpu_helper.get_flags() & (Flags.Z | Flags.N)) # we are only interested in Z and N flags
+    flags = cpu_helper.get_flags(Flags.Z | Flags.N) # we are only interested in Z and N flags
     assert value == result
-    assert flags == xflags
+    assert str(flags) == xflags
 
 def test_xor_zero_same(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.load_reg8(A, 0x5A)
@@ -220,10 +220,10 @@ def test_xor_zero_same(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     acpu.clr(A)
 
     value = cpu_helper.read_reg8(A)
-    flags = Flags.decode(cpu_helper.get_flags() & (Flags.Z | Flags.N))
+    flags = cpu_helper.get_flags(Flags.Z | Flags.N)
 
     assert value == 0
-    assert flags == "--Z-"
+    assert str(flags) == "--Z-"
 
 
 def not_args() -> Iterator[Tuple[str, int, int, str]]:
@@ -239,6 +239,6 @@ def test_not(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: s
     acpu.notb(reg)
 
     value = cpu_helper.read_reg8(reg)
-    flags = Flags.decode(cpu_helper.get_flags() & (Flags.Z | Flags.N))
+    flags = cpu_helper.get_flags(Flags.Z | Flags.N)
     assert value == result
-    assert flags == xflags
+    assert str(flags) == xflags

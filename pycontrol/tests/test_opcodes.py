@@ -33,7 +33,7 @@ def calc_flags_alt_PC_counts() -> Iterator[Tuple[str, int, int, str, str]]:
             # count PC increments in flags-alt steps
             alt_len = sum(1 for s in f_alt.steps if PC.out in s)
 
-            yield name, default_len, alt_len, Flags.decode(f_alt.mask), Flags.decode(f_alt.value)
+            yield name, default_len, alt_len, str(f_alt.mask), str(f_alt.value)
 
 
 @pytest.mark.parametrize("_name,default_len,alt_len,_mask,_val",  calc_flags_alt_PC_counts())

@@ -43,7 +43,7 @@ class Flags(enum.Flag):
     Z = 0b0010
     N = 0b0001
 
-    def decode(self) -> str:
+    def __str__(self) -> str:
 
         def fls(condition: bool, c: str) -> str:
             if condition:
