@@ -4,6 +4,8 @@
 # Useful if control bits are re-arranged.
 
 import localpath
+localpath.install()
+
 from libcpu.ctrl_word import CtrlWord
 from libcpu.DeviceSetup import RegA, RegB, AddSub, Ram, XorNot, Flags
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import localpath
+localpath.install()
 
 from libcpu.opcodes import opcodes, fetch
 from libcpu.util import ControlSignal

@@ -8,9 +8,9 @@ import sys, os.path
 # To use, install this package somewhere in existing
 # Python path
 
+def install(cfg: str = "localpath.conf") -> None:
+    conf_file = os.path.join(sys.path[0], cfg)
 
-conf_file = os.path.join(sys.path[0], "localpath.conf")
-
-if os.path.exists(conf_file):
-    for line in open(conf_file, "r"):
-        sys.path.append(os.path.join(sys.path[0], line.strip()))
+    if os.path.exists(conf_file):
+        for line in open(conf_file, "r"):
+            sys.path.append(os.path.join(sys.path[0], line.strip()))

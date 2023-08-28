@@ -2,6 +2,7 @@
 
 import sys, cmd
 import localpath
+localpath.install()
 
 from libcpu.debug import Debugger
 

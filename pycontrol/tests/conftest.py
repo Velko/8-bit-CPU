@@ -1,6 +1,7 @@
 import pytest
 import random, os
 import localpath
+localpath.install()
 
 from libcpu.cpu_helper import CPUHelper
 from typing import  Sequence, Iterator

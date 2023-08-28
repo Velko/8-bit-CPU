@@ -2,6 +2,7 @@
 
 
 import sys, localpath
+localpath.install()
 from libcpu.util import RunMessage
 from libcpu.pinclient import get_client_instance
 from libcpu.cpu_helper import CPUHelper

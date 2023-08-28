@@ -2,6 +2,7 @@
 
 import sys, cmd
 import localpath
+localpath.install()
 from typing import Dict, Sequence
 
 from libcpu.pinclient import get_client_instance

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import localpath
+localpath.install()
 
 from libcpu.devices import Register
 from libcpu.opcode_builder import OpcodeArg
