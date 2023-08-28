@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
-import sys, cmd
+import sys
+import cmd
 import localpath
 localpath.install()
 from typing import Dict, Sequence
@@ -12,9 +13,10 @@ from libcpu.pin import Pin, SimplePin, Level
 from libcpu.discovery import all_pins
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
-pin_map: Dict[str, Pin] = dict()
+pin_map: Dict[str, Pin] = {}
 
-class Unsupported(Exception): pass
+class Unsupported(Exception):
+    pass
 
 class TesterClient(cmd.Cmd):
 
@@ -22,22 +24,22 @@ class TesterClient(cmd.Cmd):
         super().__init__()
         self.control = CtrlWord()
 
-    def complete_pin(self, text: str, line: str, begidx: int, endidx: int) -> Sequence[str]:
+    def complete_pin(self, text: str, _line: str, _begidx: int, _endidx: int) -> Sequence[str]:
         return list(filter(lambda n: n.startswith(text), pin_map.keys()))
 
-    def complete_pin_direct(self, text: str, line: str, begidx: int, endidx: int) -> Sequence[str]:
+    def complete_pin_direct(self, text: str, _line: str, _begidx: int, _endidx: int) -> Sequence[str]:
         return list(filter(lambda n: n.startswith(text) and isinstance(pin_map[n], SimplePin), pin_map.keys()))
 
-    def do_EOF(self, arg: str) -> None:
+    def do_EOF(self, _arg: str) -> None:
         client.close()
         sys.exit(0)
 
-    def do_identify(self, arg: str) -> None:
+    def do_identify(self, _arg: str) -> None:
         'Identify device'
-        chr = client.identify()
-        print (chr)
+        idstr = client.identify()
+        print (idstr)
 
-    def do_off(self, arg: str) -> None:
+    def do_off(self, _arg: str) -> None:
         'Turn everything off, release Bus'
         self.control = CtrlWord()
         client.off(DEFAULT_CW.c_word)
@@ -48,22 +50,22 @@ class TesterClient(cmd.Cmd):
         if arg:
             client.addr_set(arg)
         else:
-            chr = client.addr_get()
-            print (chr)
+            addr = client.addr_get()
+            print (addr)
 
     def do_bus(self, arg: str) -> None:
         'Read/Send current value on the Main Bus'
         if arg:
             client.bus_set(arg)
         else:
-            chr = client.bus_get()
-            print (chr)
+            value = client.bus_get()
+            print (value)
 
-    def do_release(self, arg: str) -> None:
+    def do_release(self, _arg: str) -> None:
         'Release bus'
         client.bus_free()
 
-    def do_flags(self, arg: str) -> None:
+    def do_flags(self, _arg: str) -> None:
         'Read flags'
         print (client.flags_get())
 
@@ -117,33 +119,33 @@ class TesterClient(cmd.Cmd):
 
     complete_disable = complete_pin
 
-    def do_commit(self, arg: str) -> None:
+    def do_commit(self, _arg: str) -> None:
         'Send the control word to Arduino'
         client.ctrl_commit(self.control.c_word)
 
-    def do_pulse(self, arg: str) -> None:
+    def do_pulse(self, _arg: str) -> None:
         'Pulse normal clock'
         client.clock_pulse()
 
-    def do_inverted(self, arg: str) -> None:
+    def do_inverted(self, _arg: str) -> None:
         'Pulse inverted clock'
         client.clock_inverted()
 
-    def do_tick(self, arg: str) -> None:
+    def do_tick(self, _arg: str) -> None:
         'Pulse both clocks'
         client.clock_tick()
 
-    def do_ir_get(self, arg: str) -> None:
+    def do_ir_get(self, _arg: str) -> None:
         rv = client.ir_get()
         print (rv)
 
 
-    def do_reset(self, arg: str) -> None:
+    def do_reset(self, _arg: str) -> None:
         self.control = CtrlWord()
         client.off(DEFAULT_CW.c_word)
         client.reset()
 
-    def do_shutdown(self, arg: str) -> None:
+    def do_shutdown(self, _arg: str) -> None:
         client.shutdown()
 
 def build_pinmap() -> None:

@@ -20,7 +20,8 @@ def generate_casmdefs(rdfile: TextIO) -> None:
     for microcode in opcodes.values():
 
         # skip "internal opcodes"
-        if microcode.name.startswith("_"): continue
+        if microcode.name.startswith("_"):
+            continue
 
         in_args = []
         glue_args = []
@@ -62,5 +63,5 @@ def generate_casmdefs(rdfile: TextIO) -> None:
 
 
 if __name__ == "__main__":
-    with open("../../include/velkocpu.def", "wt") as rdfile:
+    with open("../../include/velkocpu.def", "wt", encoding="utf-8") as rdfile:
         generate_casmdefs(rdfile)

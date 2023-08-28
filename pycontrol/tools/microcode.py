@@ -59,7 +59,7 @@ def write_rom_file(words: Sequence[int], rom_idx: int) -> None:
         for c_word in words:
             bin_rom.write(bytes([c_word >> (rom_idx << 3) & 0xFF]))
 
-    with open(f"../../include/control_rom{rom_idx}.hex", "wt") as hex_rom:
+    with open(f"../../include/control_rom{rom_idx}.hex", "wt", encoding="utf-8") as hex_rom:
         for chunk in split_chunks(words, 16):
             for c_word in chunk:
                 b = c_word >> (rom_idx << 3) & 0xFF
@@ -72,4 +72,4 @@ if __name__ == "__main__":
     ucode_words = list(generate_microcode())
 
     for rom_idx in range(4):
-        write_rom_file(ucode_words, rom_idx);
+        write_rom_file(ucode_words, rom_idx)

@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
-import sys, cmd
+import sys
+import cmd
 import localpath
 localpath.install()
 
@@ -8,26 +9,26 @@ from libcpu.debug import Debugger
 
 class DebugCmd(cmd.Cmd):
     prompt="(dbg) "
-    def do_EOF(self, arg: str) -> None:
+    def do_EOF(self, _arg: str) -> None:
         debugger.disconnect()
         sys.exit(0)
 
     def do_upload(self, arg: str) -> None:
         debugger.upload(arg)
 
-    def do_run(self, arg: str) -> None:
+    def do_run(self, _arg: str) -> None:
         debugger.run()
 
-    def do_step(self, arg: str) -> None:
+    def do_step(self, _arg: str) -> None:
         debugger.step()
 
-    def do_continue(self, arg: str) -> None:
+    def do_continue(self, _arg: str) -> None:
         debugger.cont()
 
-    def do_steprun(self, arg: str) -> None:
+    def do_steprun(self, _arg: str) -> None:
         debugger.steprun()
 
-    def do_reset(self, arg: str) -> None:
+    def do_reset(self, _arg: str) -> None:
         debugger.reset()
 
     def do_mem(self, arg: str) -> None:
@@ -49,7 +50,7 @@ class DebugCmd(cmd.Cmd):
             print (f"{d:02x} ", end="")
         print()
 
-    def do_regs(self, arg: str) -> None:
+    def do_regs(self, _arg: str) -> None:
         regs = debugger.get_registers()
 
         print (f"A = {regs['A']:02x}")

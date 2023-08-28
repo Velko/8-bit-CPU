@@ -12,8 +12,6 @@ from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
 from typing import TextIO, Iterable, Iterator
 
-from libcpu.ctrl_word import CtrlWord
-
 CWORD_WIDTH_BYTES = 4
 
 CWORD_WIDTH_BITS = CWORD_WIDTH_BYTES * 8
@@ -136,9 +134,9 @@ def generate_cword(vfile: TextIO) -> None:
     vfile.write("`define DEFAULT_CW {bits}'h{word:0{digits}x}\n".format(word=DEFAULT_CW.c_word, bits=CWORD_WIDTH_BYTES * 8, digits=CWORD_WIDTH_BYTES * 2))
 
 if __name__ == "__main__":
-    with open("../../include/microcode.c", "wt") as cfile:
+    with open("../../include/microcode.c", "wt", encoding="utf-8") as cfile:
         generate_microcode(cfile)
-    with open("../../include/op-defs.h", "wt") as hfile:
+    with open("../../include/op-defs.h", "wt", encoding="utf-8") as hfile:
         generate_defines(hfile)
-    with open("../../include/cword.vinc", "wt") as vfile:
+    with open("../../include/cword.vinc", "wt", encoding="utf-8") as vfile:
         generate_cword(vfile)

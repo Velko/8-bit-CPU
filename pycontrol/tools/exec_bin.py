@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 
 
-import sys, localpath
+import sys
+import localpath
 localpath.install()
 from libcpu.util import RunMessage
 from libcpu.pinclient import get_client_instance
@@ -33,7 +34,7 @@ def run() -> None:
     # Drumroll... now it should happen for real
     print ("# Running ...", flush=True, file=sys.stderr)
 
-    out = cpu_helper.client.run_program();
+    out = cpu_helper.client.run_program()
 
     for msg in out:
 
@@ -41,11 +42,11 @@ def run() -> None:
             print ("# Halted", flush=True, file=sys.stderr)
             break
 
-        elif msg.reason == RunMessage.Reason.BRK:
+        if msg.reason == RunMessage.Reason.BRK:
             print ("# Break", flush=True, file=sys.stderr)
             break
 
-        elif msg.reason == RunMessage.Reason.OUT:
+        if msg.reason == RunMessage.Reason.OUT:
             print(msg.payload, end="", flush=True)
 
 
