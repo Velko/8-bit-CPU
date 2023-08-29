@@ -6,7 +6,7 @@ from .DeviceSetup import IOCtl, ProgMem, PC, F, StepCounter, Clock
 from .opcodes import opcodes, ops_by_code, fetch, InvalidOpcodeException
 from .pinclient import PinClient
 from .ctrl_word import CtrlWord, DEFAULT_CW
-from .util import ControlSignal, RunMessage
+from .util import ControlSignal, RunMessage, OutMessage, HaltMessage, BrkMessage
 
 class AssistedCPUEngine:
     def __init__(self, client: PinClient) -> None:
@@ -67,7 +67,8 @@ class AssistedCPUEngine:
 
             if control.is_enabled(IOCtl.to_dev):
                 formatted = IOMon.format_value(self.client.bus_get())
-                return RunMessage(RunMessage.Reason.OUT, formatted)
+                if formatted is not None:
+                    return OutMessage(formatted)
 
             if control.is_enabled(PC.load):
                 Imm.invalidate()
@@ -79,10 +80,10 @@ class AssistedCPUEngine:
                 self.flags_cache = None
 
             if control.is_enabled(Clock.halt):
-                return RunMessage(RunMessage.Reason.HALT)
+                return HaltMessage()
 
             if control.is_enabled(Clock.brk):
-                return RunMessage(RunMessage.Reason.BRK)
+                return BrkMessage()
 
             # Drop current opcode since it was a prefix for extended one
             if control.is_enabled(StepCounter.extended):

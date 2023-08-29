@@ -26,13 +26,17 @@ class ControlSignal:
             return super().__repr__()
         return f"{self.__class__.__name__}({self.name})"
 
+@dataclass
+class OutMessage:
+    payload: str
 
 @dataclass
-class RunMessage:
-    class Reason(Enum):
-        OUT  = 0
-        HALT = 1
-        BRK  = 2
+class HaltMessage:
+    ...
 
-    reason: Reason
-    payload: Optional[str]=None
+@dataclass
+class BrkMessage:
+    ...
+
+RunMessage = OutMessage | HaltMessage | BrkMessage
+

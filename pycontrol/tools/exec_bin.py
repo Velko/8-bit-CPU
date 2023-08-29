@@ -4,7 +4,7 @@
 import sys
 import localpath
 localpath.install()
-from libcpu.util import RunMessage
+from libcpu.util import OutMessage, HaltMessage, BrkMessage
 from libcpu.pinclient import get_client_instance
 from libcpu.cpu_helper import CPUHelper
 
@@ -37,17 +37,17 @@ def run() -> None:
     out = cpu_helper.client.run_program()
 
     for msg in out:
-        match msg.reason:
-            case RunMessage.Reason.HALT:
+        match msg:
+            case HaltMessage():
                 print ("# Halted", flush=True, file=sys.stderr)
                 break
 
-            case RunMessage.Reason.BRK:
+            case BrkMessage():
                 print ("# Break", flush=True, file=sys.stderr)
                 break
 
-            case RunMessage.Reason.OUT:
-                print(msg.payload, end="", flush=True)
+            case OutMessage(payload):
+                print(payload, end="", flush=True)
 
 
 if __name__ == "__main__":

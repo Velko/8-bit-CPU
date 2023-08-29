@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from .cpu_helper import CPUHelper
 from .pinclient import PinClient
 from .DeviceSetup import IR, LR, PC, SP, A, B, C, D
-from .util import unwrap, RunMessage
+from .util import OutMessage, HaltMessage, BrkMessage
 from .opcodes import opcodes
 from .assisted_cpu import AssistedCPU
 
@@ -77,30 +77,32 @@ class Debugger:
             # fetch and execute an instruction
             message = self.backend.fetch_and_execute()
 
-        # are we done?
         if message is not None:
-            match message.reason:
-                case RunMessage.Reason.HALT:
-                    self.halted = True
-                    self.stopped = True
-                    self.on_stop(StopReason.HALT, self.cpu_helper.read_reg16(PC))
-                    return
+            print (repr(message))
 
-                # breakpoint?
-                case RunMessage.Reason.BRK:
-                    self.stopped = True
-                    tmp_break = self.break_hit()
-                    if tmp_break is not None:
-                        # when single-stepping, should ignore breakpoints and execute original
-                        # instruction immediately
-                        _ = self.backend.execute_opcode(tmp_break.orig_op)
-                    else:
-                        # Must be BRK in code, execute NOP instead
-                        self.backend.execute_mnemonic("nop")
+        # are we done?
+        match message:
+            case HaltMessage():
+                self.halted = True
+                self.stopped = True
+                self.on_stop(StopReason.HALT, self.cpu_helper.read_reg16(PC))
+                return
 
-                # port output
-                case RunMessage.Reason.OUT:
-                    self.on_output(unwrap(message.payload))
+            # breakpoint?
+            case BrkMessage():
+                self.stopped = True
+                tmp_break = self.break_hit()
+                if tmp_break is not None:
+                    # when single-stepping, should ignore breakpoints and execute original
+                    # instruction immediately
+                    _ = self.backend.execute_opcode(tmp_break.orig_op)
+                else:
+                    # Must be BRK in code, execute NOP instead
+                    self.backend.execute_mnemonic("nop")
+
+            # port output
+            case OutMessage(payload):
+                self.on_output(payload)
 
         self.on_stop(StopReason.STEP, self.cpu_helper.read_reg16(PC))
 
@@ -123,21 +125,21 @@ class Debugger:
         out = self.client.run_program()
 
         for msg in out:
-            match msg.reason:
-                case RunMessage.Reason.HALT:
+            match msg:
+                case HaltMessage():
                     self.halted = True
                     self.stopped = True
                     # report the addess of HLT, not one past
                     self.on_stop(StopReason.HALT, self.cpu_helper.read_reg16(PC) - 1)
                     break
 
-                case RunMessage.Reason.BRK:
+                case BrkMessage():
                     self.stopped = True
                     self.current_break = self.break_hit()
                     break
 
-                case RunMessage.Reason.OUT:
-                    self.on_output(unwrap(msg.payload))
+                case OutMessage(payload):
+                    self.on_output(payload)
 
 
     def steprun(self) -> None:

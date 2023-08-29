@@ -1,7 +1,7 @@
 import os
 from typing import Union, Iterator, Optional
 import serial
-from .util import RunMessage
+from .util import RunMessage, OutMessage, HaltMessage, BrkMessage
 
 class ConnectionException(Exception):
     pass
@@ -83,15 +83,15 @@ class PinClient:
             line = self.serial.readline().decode('ascii').strip('\r\n')
 
             if line == "#HLT":
-                yield RunMessage(RunMessage.Reason.HALT)
+                yield HaltMessage()
                 break
 
             if line == "#BRK":
-                yield RunMessage(RunMessage.Reason.BRK)
+                yield BrkMessage()
                 break
 
             if line.startswith("#FOUT#"):
-                yield RunMessage(RunMessage.Reason.OUT, line[6:].replace("\\n", "\n"))
+                yield OutMessage(line[6:].replace("\\n", "\n"))
 
     def reset(self) -> None:
         self.send_cmd('Z')

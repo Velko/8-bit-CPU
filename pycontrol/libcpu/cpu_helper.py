@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from io import StringIO
-from libcpu.util import unwrap, RunMessage
+from libcpu.util import OutMessage, HaltMessage, BrkMessage
 from libcpu.devices import Register, WORegister
 from libcpu.opcodes import InvalidOpcodeException, opcode_of
 from libcpu.pinclient import PinClient
@@ -117,12 +117,12 @@ class CPUHelper:
         captured_output = StringIO()
 
         for msg in self.client.run_program():
-            match msg.reason:
-                case RunMessage.Reason.BRK:
+            match msg:
+                case BrkMessage():
                     break
-                case RunMessage.Reason.HALT:
+                case HaltMessage():
                     raise InvalidOpcodeException("Unexpected exit")
-                case RunMessage.Reason.OUT:
-                    captured_output.write(unwrap(msg.payload))
+                case OutMessage(payload):
+                    captured_output.write(payload)
 
         return captured_output.getvalue()

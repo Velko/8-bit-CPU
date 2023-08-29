@@ -4,7 +4,7 @@ from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.DeviceSetup import A, B, C, D
 from libcpu.opcodes import opcode_of
-from libcpu.util import RunMessage
+from libcpu.util import OutMessage
 
 from typing import Iterator, Tuple
 
@@ -13,8 +13,7 @@ def test_outa_emu_char(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     message = acpu.out(4, A)
 
-    assert message is not None
-    assert message.reason == RunMessage.Reason.OUT
+    assert isinstance(message, OutMessage)
     assert message.payload == 'x'
 
 def ansi_red(text: str) -> str:
@@ -36,8 +35,7 @@ def test_outa_emu_num(cpu_helper: CPUHelper, acpu: AssistedCPU, _desc: str, mode
     cpu_helper.load_reg8(A, val)
     message = acpu.out(0, A)
 
-    assert message is not None
-    assert message.reason == RunMessage.Reason.OUT
+    assert isinstance(message, OutMessage)
     assert message.payload == expected
 
 @pytest.mark.emulator
