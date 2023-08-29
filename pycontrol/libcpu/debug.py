@@ -77,9 +77,6 @@ class Debugger:
             # fetch and execute an instruction
             message = self.backend.fetch_and_execute()
 
-        if message is not None:
-            print (repr(message))
-
         # are we done?
         match message:
             case HaltMessage():

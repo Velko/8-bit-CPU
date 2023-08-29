@@ -57,18 +57,24 @@ class AssistedCPUEngine:
         for pin in microstep:
             control.enable(pin)
 
+        result: RunMessage | None = None
+
         if control.c_word != DEFAULT_CW.c_word:
 
             self.client.ctrl_commit(control.c_word)
-            self.client.clock_tick()
 
+            # capture port output BEFORE clock tick.
+            # TODO: think of more reliable approach
+            # this probably messes up the immediate value on the Bus
             if control.is_enabled(IOCtl.laddr):
                 IOMon.select_port(self.client.bus_get())
 
             if control.is_enabled(IOCtl.to_dev):
                 formatted = IOMon.format_value(self.client.bus_get())
                 if formatted is not None:
-                    return OutMessage(formatted)
+                    result = OutMessage(formatted)
+
+            self.client.clock_tick()
 
             if control.is_enabled(PC.load):
                 Imm.invalidate()
@@ -80,10 +86,10 @@ class AssistedCPUEngine:
                 self.flags_cache = None
 
             if control.is_enabled(Clock.halt):
-                return HaltMessage()
+                result = HaltMessage()
 
             if control.is_enabled(Clock.brk):
-                return BrkMessage()
+                result = BrkMessage()
 
             # Drop current opcode since it was a prefix for extended one
             if control.is_enabled(StepCounter.extended):
@@ -92,7 +98,7 @@ class AssistedCPUEngine:
 
         Imm.release_bus()
 
-        return None
+        return result
 
     def get_flags_cached(self) -> Flags:
         if self.flags_cache is None:
