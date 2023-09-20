@@ -12,9 +12,14 @@
 #define BAUDRATE B115200
 #define MODEMDEVICE "pty1"
 
-FILE *serial;
+static FILE *_serial;
 
-void open_serial(void)
+void setup_serial_lazy(void)
+{
+    _serial = NULL;
+}
+
+static FILE *open_serial(void)
 {
     struct termios newtio;
 
@@ -35,11 +40,20 @@ void open_serial(void)
     tcflush(fd, TCIFLUSH);
     tcsetattr(fd,TCSANOW,&newtio);
 
-    serial = fdopen(fd, "ab+");
+    return fdopen(fd, "ab+");
+}
+
+static FILE *get_serial(void)
+{
+    if (_serial == NULL)
+        _serial = open_serial();
+    return _serial;
 }
 
 int serial_get_cmd(void)
 {
+    FILE *serial = get_serial();
+
     int val = fgetc(serial);
 
     if (val < 0) {
@@ -52,6 +66,8 @@ int serial_get_cmd(void)
 
 int serial_get_arg(void)
 {
+    FILE *serial = get_serial();
+
     int val;
     int res = fscanf(serial, "%d", &val);
 
@@ -71,6 +87,8 @@ int serial_get_arg(void)
 
 void serial_send_int(int value)
 {
+    FILE *serial = get_serial();
+
     int res = fprintf(serial, "%d\n", value);
     if (res < 0) {
         perror("serial_send_int");
@@ -80,6 +98,8 @@ void serial_send_int(int value)
 
 void serial_send_str(const char *value)
 {
+    FILE *serial = get_serial();
+
     int res = fprintf(serial, "%s\r\n", value);
     if (res < 0) {
         perror("serial_send_int");

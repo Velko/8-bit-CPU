@@ -2,7 +2,7 @@
 #include "serial_host.h"
 
 void (*vlog_startup_routines[])(void) = {
-    open_serial,
+    setup_serial_lazy,
     register_serial_get_cmd,
     register_serial_get_arg,
     register_serial_send_int,

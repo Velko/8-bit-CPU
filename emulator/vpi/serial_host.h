@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-void open_serial(void);
+void setup_serial_lazy(void);
 int serial_get_cmd(void);
 int serial_get_arg(void);
 void serial_send_int(int value);
