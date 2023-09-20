@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from io import StringIO
-from libcpu.util import OutMessage, HaltMessage, BrkMessage
+from libcpu.util import RunMessage, OutMessage, HaltMessage, BrkMessage
 from libcpu.devices import Register, WORegister
 from libcpu.opcodes import InvalidOpcodeException, opcode_of
 from libcpu.pinclient import PinClient
@@ -126,3 +126,6 @@ class CPUHelper:
                     captured_output.write(payload)
 
         return captured_output.getvalue()
+
+    def fetch_runmessage(self) -> RunMessage:
+        return self.client.receive_message()

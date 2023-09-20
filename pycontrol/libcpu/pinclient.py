@@ -6,6 +6,9 @@ from .util import RunMessage, OutMessage, HaltMessage, BrkMessage
 class ConnectionException(Exception):
     pass
 
+class ProtocolException(Exception):
+    pass
+
 class PinClient:
 
     def __init__(self, serial: Optional[serial.Serial]=None) -> None:
@@ -80,18 +83,20 @@ class PinClient:
     def run_program(self) -> Iterator[RunMessage]:
         self.send_cmd('R')
         while True:
-            line = self.serial.readline().decode('ascii').strip('\r\n')
+            yield self.receive_message()
 
-            if line == "#HLT":
-                yield HaltMessage()
-                break
+    def receive_message(self) -> RunMessage:
+        line = self.serial.readline().decode('ascii').strip('\r\n')
 
-            if line == "#BRK":
-                yield BrkMessage()
-                break
+        match line:
+            case "#HLT":
+                return HaltMessage()
+            case "#BRK":
+                return BrkMessage()
+            case _ if line.startswith("#FOUT#"):
+                return OutMessage(line[6:].replace("\\n", "\n"))
 
-            if line.startswith("#FOUT#"):
-                yield OutMessage(line[6:].replace("\\n", "\n"))
+        raise ProtocolException("RunMessage was expected")
 
     def reset(self) -> None:
         self.send_cmd('Z')

@@ -91,6 +91,11 @@ class AssistedCPUEngine:
             if control.is_enabled(Clock.brk):
                 result = BrkMessage()
 
+            if isinstance(result, OutMessage):
+                hw_message = self.client.receive_message()
+                # not sure if really need to assert, but Ok for now
+                assert hw_message.payload == result.payload
+
             # Drop current opcode since it was a prefix for extended one
             if control.is_enabled(StepCounter.extended):
                 self.opcode_cache = None
