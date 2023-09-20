@@ -13,9 +13,6 @@ module cmd_handler;
     wire [3:0] fout;
     wire [7:0] iout;
 
-    wire [255:0] out_fmt;
-    reg out_rst;
-
     reg rst;
     reg clk;
     reg iclk;
@@ -38,9 +35,7 @@ module cmd_handler;
         .iout(iout),
         .ctrlen(ctrlen),
         .brk(brk),
-        .hlt(hlt),
-        .out_fmt(out_fmt),
-        .out_rst(out_rst));
+        .hlt(hlt));
 
     reg [7:0] cmd;
 
@@ -51,7 +46,6 @@ module cmd_handler;
         iclk <= 0;
         rst <= 1;
         ctrlen <= 1;
-        out_rst <= 0;
         control_word <= `DEFAULT_CW;
 
         #1
@@ -158,17 +152,10 @@ module cmd_handler;
                         #1
                         clk <= 0;
 
-                        // Intercept and send Formatted Out messages
-                        if (out_fmt !== 256'bx) begin
-                            $serial_send_str(out_fmt);
-                            out_rst <= 1;
-                        end
-
                         #1
                         iclk <= 1;
                         #1
                         iclk <= 0;
-                        out_rst <= 0;
                     end
 
                     ctrlen <= 1;

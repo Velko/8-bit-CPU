@@ -1,16 +1,14 @@
 module display_lcd(
     inout [7:0] io_bus,
-    output reg [159:0] out_fmt,
-    input out_rst,
     input enable,
     input rnw,
     input rs
 );
 
+    reg [159:0] out_fmt;
     reg [7:0] busy_val;
 
     initial begin
-        out_fmt <= 160'bx;
         busy_val <= 8'h80;
     end
 
@@ -31,6 +29,7 @@ module display_lcd(
             else begin
                 $sformat(out_fmt, "#FOUT#%c", io_bus);
             end
+            $serial_send_str(out_fmt);
             busy_val <= 8'h80;
         end
 
@@ -46,10 +45,6 @@ module display_lcd(
         if (rnw && !rs) begin
             busy_val <= 8'h00;
         end
-    end
-
-    always @(posedge out_rst) begin
-        out_fmt <= 160'bx;
     end
 
     assign io_bus = rnw && !rs ? busy_val : 8'bz;

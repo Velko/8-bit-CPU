@@ -12,8 +12,6 @@ module cpu(
 
         output brk,
         output hlt,
-        output [255:0] out_fmt,
-        input out_rst,
 
         inout [31:0] control_word
     );
@@ -49,8 +47,6 @@ module cpu(
         .main_bus(main_bus),
         .clk(clk),
         .reset(rst),
-        .out_rst(out_rst),
-        .out_fmt(out_fmt),
         .outctl(splitter.outctl),
         .loadctl(splitter.loadctl)
     );

@@ -6,10 +6,13 @@ test: test-138 test-161-basics test-161-chaining test-245 test-173 test-283 test
       test-flags-reg test-io-control \
       test-alu-block test-pc test-memory test-address-calc test-control-logic test-clock test-cpu
 
-include ../cpu-modules/Modules.mk
+VPATH=../vpi
 
-test-%: tb_%.vvp
-	@vvp -M. $<
+include ../cpu-modules/Modules.mk
+include ../vpi/Makefile
+
+test-%: tb_%.vvp serial_conn.vpi
+	@vvp -M. -mserial_conn $<
 
 
 TB138SRC=../chips/demux_138.v testhelpers.v tb_138.v
