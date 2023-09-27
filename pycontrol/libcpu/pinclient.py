@@ -96,7 +96,7 @@ class PinClient:
             case _ if line.startswith("#FOUT#"):
                 return OutMessage(line[6:].replace("\\n", "\n"))
 
-        raise ProtocolException("RunMessage was expected")
+        raise ProtocolException(f"RunMessage was expected, got: /{line}/")
 
     def reset(self) -> None:
         self.send_cmd('Z')
