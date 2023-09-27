@@ -12,11 +12,12 @@ module memory(
     wire _we;
     wire _boe;
     wire _nand_y3;
+    wire [7:0] _mem_data;
 
-    ram_62256 mem_l(.addr(abus[14:0]), .csn(abus[15]), .oen(_oe), .wen(_we), .data(outbuf.b));
+    ram_62256 mem_l(.addr(abus[14:0]), .csn(abus[15]), .oen(_oe), .wen(_we), .data(_mem_data));
 
     //TODO: CS should use a chip (74xx04 ??), the design of module is not final, however.
-    ram_62256 mem_h(.addr(abus[14:0]), .csn(!abus[15]), .oen(_oe), .wen(_we), .data(outbuf.b));
+    ram_62256 mem_h(.addr(abus[14:0]), .csn(!abus[15]), .oen(_oe), .wen(_we), .data(_mem_data));
 
     // OE = not(LOAD)
     // WE = CLOCK nand OE
@@ -29,6 +30,6 @@ module memory(
         .a4(_nand_y3), .b4(_nand_y3), .y4(_boe)
     );
 
-    buffer_245 outbuf(.dir(_oe), .oen(_boe), .a(mbus));
+    buffer_245 outbuf(.dir(_oe), .oen(_boe), .a(mbus), .b(_mem_data));
 
 endmodule
