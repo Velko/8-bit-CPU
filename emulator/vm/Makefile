@@ -1,7 +1,6 @@
-all: cmd_handler.vvp serial_conn.vpi
 VPATH=../vpi
 
-all: cmd_handler.vvp serial_conn.vpi
+all: launcher.vvp serial_conn.vpi
 
 include ../cpu-modules/Modules.mk
 include ../vpi/Makefile
