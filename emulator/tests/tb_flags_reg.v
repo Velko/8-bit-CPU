@@ -158,7 +158,7 @@ module tb_flags_reg;
             `assert(bus, 8'bz);
             boutn <= 0;
             #1
-            `assert(bus, {4'bz, (4'b1 << i)});
+            `assert(bus, {4'b0, (4'b1 << i)});
         end
 
     end

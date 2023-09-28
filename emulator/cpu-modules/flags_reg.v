@@ -26,6 +26,10 @@ module flags_reg(
                         .a1(reg_prim.q[0]), .a2(reg_prim.q[1]), .a3(reg_prim.q[2]), .a4(reg_prim.q[3]),
                         .y1(bus[0]), .y2(bus[1]), .y3(bus[2]), .y4(bus[3]));
 
+    buffer_125p out_buf_h(.oen1(boutn), .oen2(boutn), .oen3(boutn), .oen4(boutn),
+                        .a1(1'b0), .a2(1'b0), .a3(1'b0), .a4(1'b0),
+                        .y1(bus[4]), .y2(bus[5]), .y3(bus[6]), .y4(bus[7]));
+
     // not all ALU modules produces V and C, pull back to old value if input is Z
     assign (pull0, pull1) cin = reg_prim.q[2];
     assign (pull0, pull1) vin = reg_prim.q[3];
