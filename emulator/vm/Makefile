@@ -6,15 +6,15 @@ all: cmd_handler.vvp serial_conn.vpi
 include ../cpu-modules/Modules.mk
 include ../vpi/Makefile
 
-run: cmd_handler.vvp serial_conn.vpi control_rom*.hex
-	vvp -M. -mserial_conn cmd_handler.vvp
+run: launcher.vvp serial_conn.vpi control_rom*.hex
+	vvp -M. -mserial_conn launcher.vvp
 
 control_rom%.hex:
 	../../pycontrol/tools/microcode.py
 
-CMDSRC=$(CPUSRC) cmd_handler.v cword.vinc
+CMDSRC=$(CPUSRC) launcher.v cword.vinc
 
-cmd_handler.vvp: $(CMDSRC)
+launcher.vvp: $(CMDSRC)
 	iverilog -Wall $^ -o $@
 
 clean:

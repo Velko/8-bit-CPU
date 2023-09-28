@@ -17,4 +17,4 @@ DEMUX16SRC=../cpu-modules/demux_16.v ../chips/demux_138.v
 ALUBLOCKSRC=../cpu-modules/alu_block.v $(GPREGSRC) $(ALUADDSUBSRC) $(ALUANDORSRC) $(ALUXORNOTSRC) $(ALUSHIFTSWAPSRC) $(FLGREGSRC) $(DEMUX16SRC) ../chips/demux_138.v
 MEMBLOCKSRC=../cpu-modules/mem_block.v $(PCSRC) $(MEMSRC) $(IREGSRC) $(TXREGSRC) $(SPSRC) $(ACALCSRC) $(DEMUX16SRC) ../chips/demux_138.v
 IOBLOCKSRC=../cpu-modules/io_block.v $(IOCTLSRC) $(DEMUX16SRC) ../chips/demux_138.v ../cpu-modules/display_num.v ../cpu-modules/display_char.v ../cpu-modules/display_lcd.v
-CPUSRC=../cpu-modules/cpu.v ../cpu-modules/cword_splitter.v $(ALUBLOCKSRC) $(MEMBLOCKSRC) $(CTRLSRC) $(IOBLOCKSRC)
+CPUSRC=../cpu-modules/cpu.v ../cpu-modules/debug.v ../cpu-modules/clock_simple.v ../cpu-modules/cword_splitter.v $(ALUBLOCKSRC) $(MEMBLOCKSRC) $(CTRLSRC) $(IOBLOCKSRC)
