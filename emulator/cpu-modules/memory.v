@@ -32,4 +32,15 @@ module memory(
 
     buffer_245 outbuf(.dir(_oe), .oen(_boe), .a(mbus), .b(_mem_data));
 
+    always @(posedge clk) begin
+        if (outn == 1'b0 && ^abus === 1'bX)
+            $error("Attempting to read invalid address %b", abus);
+
+        if (writen == 1'b0 && ^abus === 1'bX)
+            $error("Attempting to write at invalid address %b", abus);
+
+        if (writen == 1'b0 && ^mbus === 1'bX)
+            $error("Attempting to write invalid data %b", mbus);
+    end
+
 endmodule
