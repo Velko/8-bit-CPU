@@ -40,7 +40,12 @@ initial begin
         // reset
         reset <= 1;
         #1
+        `assert(abus, 16'bX);
+
+        `tick(iclk, 2); // reset value propagation requires ICLK tick
         `assert(abus, 16'b0);
+
+
         reset <= 0;
 
         // count up one
@@ -78,6 +83,7 @@ initial begin
 
         // loop, check if increments correctly
         reset <= 0;
+        `tick(iclk, 2);
         count <= 1;
         #1
 

@@ -17,9 +17,7 @@ module program_counter (
     counter_161 cnt_2(.clk(clk), .mrn(resetn), .pen(loadn), .cep(count), .d(abus[11:8]), .q(addr[11:8]),  .cet(cnt_1.tc));
     counter_161 cnt_3(.clk(clk), .mrn(resetn), .pen(loadn), .cep(count), .d(abus[15:12]),.q(addr[15:12]), .cet(cnt_2.tc));
 
-    dff_173 outst_0(.mr(reset), .cp(iclk), .e1n(1'b0), .e2n(1'b0), .oe1n(outn), .oe2n(outn), .d(addr[3:0]),   .q(abus[3:0]));
-    dff_173 outst_1(.mr(reset), .cp(iclk), .e1n(1'b0), .e2n(1'b0), .oe1n(outn), .oe2n(outn), .d(addr[7:4]),   .q(abus[7:4]));
-    dff_173 outst_2(.mr(reset), .cp(iclk), .e1n(1'b0), .e2n(1'b0), .oe1n(outn), .oe2n(outn), .d(addr[11:8]),  .q(abus[11:8]));
-    dff_173 outst_3(.mr(reset), .cp(iclk), .e1n(1'b0), .e2n(1'b0), .oe1n(outn), .oe2n(outn), .d(addr[15:12]), .q(abus[15:12]));
+    dff_374 outst_0(.cp(iclk), .oen(outn), .d(addr[7:0]), .q(abus[7:0]));
+    dff_374 outst_1(.cp(iclk), .oen(outn), .d(addr[15:8]), .q(abus[15:8]));
 
 endmodule
