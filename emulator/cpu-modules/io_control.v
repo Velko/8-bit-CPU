@@ -14,26 +14,11 @@ module io_control (
 
     wire [7:0] port_addr;
 
-    dff_173 addr_low (
-        .mr(rst),
+    dff_377 addr_reg (
         .cp(clk),
-        .e1n(loadn),
-        .e2n(loadn),
-        .oe1n(1'b0),
-        .oe2n(1'b0),
-        .d(main_bus[3:0]),
-        .q(port_addr[3:0])
-    );
-
-    dff_173 addr_high (
-        .mr(rst),
-        .cp(clk),
-        .e1n(loadn),
-        .e2n(loadn),
-        .oe1n(1'b0),
-        .oe2n(1'b0),
-        .d(main_bus[7:4]),
-        .q(port_addr[7:4])
+        .en(loadn),
+        .d(main_bus),
+        .q(port_addr)
     );
 
     demux_138 sel_mux_x (
