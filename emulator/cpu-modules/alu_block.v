@@ -58,7 +58,6 @@ module alu_block(
 
         .clk(clk),
         .iclk(iclk),
-        .reset(rst),
 
         .bus(main_bus),
         .alu_l(alu_arg_l),
@@ -73,7 +72,6 @@ module alu_block(
 
         .clk(clk),
         .iclk(iclk),
-        .reset(rst),
 
         .bus(main_bus),
         .alu_l(alu_arg_l),
@@ -88,7 +86,6 @@ module alu_block(
 
         .clk(clk),
         .iclk(iclk),
-        .reset(rst),
 
         .bus(main_bus),
         .alu_l(alu_arg_l),
@@ -103,7 +100,6 @@ module alu_block(
 
         .clk(clk),
         .iclk(iclk),
-        .reset(rst),
 
         .bus(main_bus),
         .alu_l(alu_arg_l),

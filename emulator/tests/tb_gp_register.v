@@ -7,7 +7,6 @@ module tb_gp_register;
 
     reg clk;
     reg iclk;
-    reg reset;
 
     wire [7:0] bus;
 
@@ -15,7 +14,14 @@ module tb_gp_register;
     reg wbus;
 
 
-    gp_register r(.outn(outn), .loadn(loadn), .loutn(loutn), .routn(routn), .clk(clk), .iclk(iclk), .reset(reset), .bus(bus));
+    gp_register r(
+        .outn(outn),
+        .loadn(loadn),
+        .loutn(loutn),
+        .routn(routn),
+        .clk(clk),
+        .iclk(iclk),
+        .bus(bus));
 
     initial begin
         $display("Register module...");
@@ -30,8 +36,6 @@ module tb_gp_register;
         clk <= 0;
         iclk <= 0;
 
-        reset <= 0;
-
         // initial bus - disconnected
         #1
         `assert(bus, 8'bZ);
@@ -40,12 +44,6 @@ module tb_gp_register;
         outn <= 0;
         #1
         `assert(bus, 8'bX);
-
-        // zero after reset
-        reset <= 1;
-        #1
-        `assert(bus, 8'b0);
-        reset <= 0;
 
         // disable output
         outn <= 1;
@@ -75,10 +73,10 @@ module tb_gp_register;
         // check ALU LHS output (disconnected initially)
         `assert(r.alu_l, 8'bZ);
 
-        // enable it, holds value-after-reset
+        // enable it, holds undefined value
         loutn <= 0;
         #1
-        `assert(r.alu_l, 8'h0);
+        `assert(r.alu_l, 8'hX);
 
         // after iclk, should load from primary
         `tick(iclk, 2);
