@@ -1,6 +1,6 @@
 test: test-138 test-161-basics test-161-chaining test-245 test-173 test-283 test-86b test-86p \
       test-08b test-08p test-02b test-02p test-157b test-125p test-32b test-32p test-00b test-00p \
-      test-rom_async test-373 test-595 \
+      test-rom_async test-373 test-595 test-377 \
       test-193-basics test-193-chaining test-04p test-74\
       test-gp-register test-alu-addsub test-alu-andor test-alu-xornot test-alu-shiftswap \
       test-flags-reg test-io-control \
@@ -57,6 +57,12 @@ TB373SRC=../chips/tlatch_373.v testhelpers.v tb_373.v
 
 tb_373.vvp: $(TB373SRC)
 	iverilog -Wall $^ -o $@
+
+TB377SRC=../chips/dff_377.v testhelpers.v tb_377.v
+
+tb_377.vvp: $(TB377SRC)
+	iverilog -Wall $^ -o $@
+
 
 TB283SRC=../chips/adder_283.v testhelpers.v tb_283.v
 
