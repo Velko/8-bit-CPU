@@ -134,7 +134,14 @@ module debug (
 
                     "Z": begin
                         rst <= 1;
-                        #1
+                        #1;
+                        clk_l <= 1;
+                        #1;
+                        clk_l <= 0;
+                        #1;
+                        iclk_l <= 1;
+                        #1;
+                        iclk_l <= 0;
                         rst <= 0;
                     end
 
