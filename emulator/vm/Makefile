@@ -11,7 +11,7 @@ run: launcher.vvp serial_conn.vpi control_rom*.hex
 control_rom%.hex:
 	../../pycontrol/tools/microcode.py
 
-CMDSRC=$(CPUSRC) launcher.v cword.vinc
+CMDSRC=$(CPUSRC) launcher.v
 
 launcher.vvp: $(CMDSRC)
 	iverilog -Wall $^ -o $@
