@@ -1,3 +1,5 @@
+`include "cword.vinc"
+
 module debug (
     inout [7:0] main_bus,
     inout [15:0] addr_bus,
@@ -134,6 +136,16 @@ module debug (
 
                     "Z": begin
                         rst <= 1;
+                        /* Reset requires clock pulse to propogate because not all parts have asynchronouse
+                           reset capabilities.
+
+                           Another issue is that CPU may repeat the last operation. Normally we should not
+                           case, except when it is an I/O operation.
+
+                           TODO: handle it here or in I/O controller?? Former prevents similar "head-scratching"
+                              moments in the future. Latter solves the issue just in misbehaving module.
+                         */
+                        control_word_l <= `DEFAULT_CW;
                         #1;
                         clk_l <= 1;
                         #1;
