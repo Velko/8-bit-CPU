@@ -20,7 +20,7 @@ def test_ldi_on_hw(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg8(A, 0)
 
     # run program on hardware
-    cpu_helper.run_snippet(32, ldi_test_prog)
+    cpu_helper.run_snippet(0x2032, ldi_test_prog)
 
     # assert
     val = cpu_helper.read_reg8(A)
@@ -37,9 +37,9 @@ def test_rjmp_on_hw(cpu_helper: CPUHelper) -> None:
     rjmp_test_prog = bytes([opcode_of("rjmp_imm"), 2,
                             opcode_of("hlt")])
 
-    cpu_helper.run_snippet(8, rjmp_test_prog)
+    cpu_helper.run_snippet(0x2008, rjmp_test_prog)
 
     val = cpu_helper.read_reg16(PC)
 
     # should point to next instruction after brk
-    assert val == 12
+    assert val == 0x200C

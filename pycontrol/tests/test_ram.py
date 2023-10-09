@@ -19,8 +19,8 @@ pytestmark = pytest.mark.hardware
 # unpacked for parametrization (couldn't find a way)
 def make_random_addr() -> Sequence[int]:
 
-    # make sure addresses are unique
-    addr = list(range(0x10000))
+    # make sure addresses are unique, skip ROM area
+    addr = list(range(0x2000, 0x10000))
     random.shuffle(addr)
 
     # 64 addresses out of 65536 should be enough to
@@ -48,16 +48,16 @@ def test_store_load(cpu_helper: CPUHelper, acpu: AssistedCPU, fill_ram: FillRam,
 
 def test_ldx_hw(cpu_helper: CPUHelper) -> None:
 
-    cpu_helper.write_ram(0x1203, 0x33)
+    cpu_helper.write_ram(0x2203, 0x33)
     cpu_helper.load_reg8(B, 3)
 
     # prepare binary of:
-    #   ldx A, 0x1200, B
+    #   ldx A, 0x2200, B
     out_test_prog = bytes([
-        opcode_of("ldx_A_addr_B"), 0x00, 0x12,
+        opcode_of("ldx_A_addr_B"), 0x00, 0x22,
         ])
 
-    cpu_helper.run_snippet(0x0, out_test_prog)
+    cpu_helper.run_snippet(0x2000, out_test_prog)
 
     val = cpu_helper.read_reg8(A)
 

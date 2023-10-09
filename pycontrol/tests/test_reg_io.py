@@ -59,10 +59,10 @@ def test_lea(cpu_helper: CPUHelper) -> None:
 
 def test_mar_idx(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
-    cpu_helper.write_ram(45, 0xB5)
+    cpu_helper.write_ram(0x2045, 0xB5)
     cpu_helper.load_reg8(B, 3)
 
-    acpu.ldx (A, Addr(42), B)
+    acpu.ldx (A, Addr(0x2042), B)
 
     val = cpu_helper.read_reg8(A)
 
