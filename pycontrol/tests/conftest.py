@@ -34,13 +34,14 @@ def cpu_helper(pins_client_real: PinClient) -> CPUHelper:
 
 
 class FillRam:
-    def __init__(self, addresses: Sequence[int]) -> None:
+    def __init__(self, addresses: Sequence[int], contents: Sequence[int]=[]) -> None:
         self.addresses = addresses
-        self.contents = []
+        self.contents = list(contents)
 
-        for _ in range(0x10000):
-            value = random.randrange(256)
-            self.contents.append(value)
+        if len(contents) == 0:
+            for _ in range(0x10000):
+                value = random.randrange(256)
+                self.contents.append(value)
 
     def write_ram(self, client: PinClient) -> None:
         cpu_helper = CPUHelper(client)

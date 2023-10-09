@@ -8,22 +8,28 @@ pytestmark = pytest.mark.hardware
 
 from libcpu.cpu_helper import CPUHelper
 from libcpu.pinclient import PinClient
-from typing import Iterator
 
-def singlebit_addresses() -> Iterator[int]:
-    yield 0
-    for b in range(16):
-        yield 1 << b
+SINGLEBIT_ADDRESSES=[0x0000, 0x0001, 0x0002, 0x0004,
+                     0x0008, 0x0010, 0x0020, 0x0040,
+                     0x0080, 0x0100, 0x0200, 0x0400,
+                     0x0800, 0x1000, 0x2000, 0x4000,
+                     0x8000]
+
+KNOWN_VALUES=[0xe5, 0x10, 0xc0, 0xcf,
+              0xe4, 0x06, 0x6c, 0x75,
+              0x93, 0x8e, 0x67, 0x82,
+              0x5e, 0x37, 0x33, 0x54,
+              0xe2]
 
 @pytest.fixture(scope="module")
 def fill_ram(pins_client_real: PinClient) -> FillRam:
-    ram = FillRam(list(singlebit_addresses()))
+    ram = FillRam(SINGLEBIT_ADDRESSES, KNOWN_VALUES)
     ram.write_ram(pins_client_real)
 
     return ram
 
 
-@pytest.mark.parametrize("addr", singlebit_addresses())
+@pytest.mark.parametrize("addr", SINGLEBIT_ADDRESSES)
 def test_load_singlebit_addr(cpu_helper: CPUHelper, fill_ram: FillRam, addr: int) -> None:
 
     actual = cpu_helper.read_ram(addr)
