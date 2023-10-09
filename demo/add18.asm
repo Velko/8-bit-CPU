@@ -1,4 +1,5 @@
-#include "velkocpu.def"
+#include "instructions.def"
+#include "aliases.def"
 #include "ports.def"
 
 #bankdef code ; program code

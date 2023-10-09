@@ -1,0 +1,6 @@
+#bankdef program
+{
+    #bits 8
+    #addr 0
+    #outp 0
+}

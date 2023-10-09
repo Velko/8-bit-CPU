@@ -1,5 +1,4 @@
 #include "velkocpu.def"
-#include "ports.def"
 
     ;TODO: implement initialization sequence for "real" LCD module
 

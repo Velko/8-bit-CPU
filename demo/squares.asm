@@ -1,6 +1,5 @@
 ; The .def file can be generated using casmdefs.py tool
 #include "velkocpu.def"
-#include "ports.def"
 
 ; Bootloader contains common code for ROM->RAM copy
 ; #include "bootloader.asm"
@@ -52,7 +51,7 @@ next_base:
     mov B, D
 
     clr A
-    ldi C , 1
+    ldi C, 1
 
 next_bit:
 

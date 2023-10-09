@@ -1,5 +1,4 @@
 #include "velkocpu.def"
-#include "ports.def"
 
     ldi B, 0
 print_loop:

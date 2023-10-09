@@ -1,5 +1,4 @@
 #include "velkocpu.def"
-#include "ports.def"
 
 start:
     lea SP, stack

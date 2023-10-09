@@ -59,9 +59,8 @@ def generate_casmdefs(rdfile: TextIO) -> None:
 
 
     rdfile.write("}\n")
-    rdfile.write("#include \"aliases.def\"\n")
 
 
 if __name__ == "__main__":
-    with open("../../include/velkocpu.def", "wt", encoding="utf-8") as rdfile:
+    with open("../../include/instructions.def", "wt", encoding="utf-8") as rdfile:
         generate_casmdefs(rdfile)

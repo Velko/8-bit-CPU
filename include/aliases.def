@@ -1,10 +1,3 @@
-#bankdef program
-{
-    #bits 8
-    #addr 0
-    #outp 0
-}
-
 #ruledef
 {
     jmp {target} =>

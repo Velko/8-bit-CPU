@@ -1,6 +1,5 @@
 ; The .def file can be generated using casmdefs.py tool
 #include "velkocpu.def"
-#include "ports.def"
 
 #bank program
 
