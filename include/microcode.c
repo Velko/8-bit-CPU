@@ -734,16 +734,16 @@ const struct op_microcode microcode[] PROGMEM = {
     { .default_steps = {0x07fd5849, 0x07ff5853},},
 
     /* 9f in_A_imm   */
-    { .default_steps = {0x07fd5849, 0x07ff5808},},
+    { .default_steps = {0x07fd5849, 0x07ff1808},},
 
     /* a0 in_B_imm   */
-    { .default_steps = {0x07fd5849, 0x07ff5818},},
+    { .default_steps = {0x07fd5849, 0x07ff1818},},
 
     /* a1 in_C_imm   */
-    { .default_steps = {0x07fd5849, 0x07ff5828},},
+    { .default_steps = {0x07fd5849, 0x07ff1828},},
 
     /* a2 in_D_imm   */
-    { .default_steps = {0x07fd5849, 0x07ff5838},},
+    { .default_steps = {0x07fd5849, 0x07ff1838},},
 
     /* a3 st_addr_A  */
     { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07f85890},},
