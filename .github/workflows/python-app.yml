@@ -35,6 +35,10 @@ jobs:
       working-directory: ./pycontrol/tools
       run: |
         python microcode.py
+    - name: Compile BIOS ROM
+      working-directory: ./bios
+      run: |
+        make
     - name: Hardware emulator - Verilog testbenches
       working-directory: ./emulator/tests
       run: |

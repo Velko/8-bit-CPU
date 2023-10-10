@@ -14,10 +14,33 @@ module memory(
     wire _nand_y3;
     wire [7:0] _mem_data;
 
-    ram_62256 mem_l(.addr(abus[14:0]), .csn(abus[15]), .oen(_oe), .wen(_we), .data(_mem_data));
+    //TODO: should use discrete logic for CS calculations
+    wire rom_sel = abus < 16'h2000; //lowest 8 KiB
+    wire ram_l_sel = !rom_sel && !abus[15];
+    wire ram_h_sel = abus[15];
 
-    //TODO: CS should use a chip (74xx04 ??), the design of module is not final, however.
-    ram_62256 mem_h(.addr(abus[14:0]), .csn(!abus[15]), .oen(_oe), .wen(_we), .data(_mem_data));
+    ram_62256 mem_l(
+        .addr(abus[14:0]),
+        .csn(!ram_l_sel),
+        .oen(_oe),
+        .wen(_we),
+        .data(_mem_data)
+    );
+
+    ram_62256 mem_h(
+        .addr(abus[14:0]),
+        .csn(!ram_h_sel),
+        .oen(_oe),
+        .wen(_we),
+        .data(_mem_data)
+    );
+
+    rom_async #(.ROMFILE("bios.hex"), .ADDR_BITS(13)) bios (
+        .addr(abus[12:0]),
+        .cen(!rom_sel),
+        .oen(_oe),
+        .data(_mem_data)
+    );
 
     // OE = not(LOAD)
     // WE = CLOCK nand OE

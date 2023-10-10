@@ -19,14 +19,19 @@ module tb_memory;
         wen <= 1;
         clk <= 0;
 
-        addr <= 3;
+        addr <= 8;
         #1
 
         // bus disconnected
         `assert(mbus, 8'bz);
 
-        // output current at addr 0
+        // output current at addr 8 (ROM)
         outn <= 0;
+        #1
+        `assert(mbus, 8'he4);
+
+        // output current at addr 0x2003 (ROM)
+        addr <= 16'h2003;
         #1
         `assert(mbus, 8'bx);
 
@@ -45,13 +50,13 @@ module tb_memory;
         #1
         `assert(mbus, 8'ha5);
 
-        // go to addr 1
-        addr <= 1;
+        // go to addr 0x2001
+        addr <= 16'h2001;
         #1
         `assert(mbus, 8'bx);
 
-        // go back to addr 3
-        addr <= 3;
+        // go back to addr 0x2003
+        addr <= 16'h2003;
         #1
         `assert(mbus, 8'ha5);
 
