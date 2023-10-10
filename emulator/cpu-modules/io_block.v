@@ -49,4 +49,12 @@ module io_block (
         .rs(ctl.sel_x[1])
     );
 
+    uart u(
+        .io_bus(io_bus),
+        .sel_data(ctl.sel_x[1] == 1'b0 && ctl.sel_y[2] == 1'b0),
+        .sel_status(ctl.sel_x[0] == 1'b0 && ctl.sel_y[2] == 1'b0),
+        .clk(clk),
+        .rnw(to_devn)
+    );
+
 endmodule
