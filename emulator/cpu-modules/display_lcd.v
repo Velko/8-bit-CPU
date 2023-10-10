@@ -47,6 +47,6 @@ module display_lcd(
         end
     end
 
-    assign io_bus = rnw && !rs ? busy_val : 8'bz;
+    assign io_bus = rnw && !rs && &enable ? busy_val : 8'bz;
 
 endmodule
