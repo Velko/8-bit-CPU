@@ -42,7 +42,7 @@ module debug (
             #100; // give long enough for clock to disengage
 
             while (ctrlen) begin
-                $serial_get_cmd(cmd);
+                $serial_get_char(cmd);
                 case (cmd)
                     "I": begin
                         // Identify
@@ -51,7 +51,7 @@ module debug (
 
                     "A": begin
                         // Write address
-                        $serial_get_arg(addr);
+                        $serial_get_int(addr);
                         faddr <= 1;
                     end
 
@@ -62,7 +62,7 @@ module debug (
 
                     "B": begin
                         // Write bus
-                        $serial_get_arg(data);
+                        $serial_get_int(data);
                         fdata <= 1;
                     end
 
@@ -86,12 +86,12 @@ module debug (
                         // Off
                         faddr <= 0;
                         fdata <= 0;
-                        $serial_get_arg(control_word_l);
+                        $serial_get_int(control_word_l);
                     end
 
                     "M": begin
                         // Set control word
-                        $serial_get_arg(control_word_l);
+                        $serial_get_int(control_word_l);
                     end
 
                     "N", 8'hff: begin
@@ -125,7 +125,7 @@ module debug (
 
                     "r": begin
                         // read current_opcode
-                        $serial_get_arg(_discard); // client sends control word for IRFetch, discard it
+                        $serial_get_int(_discard); // client sends control word for IRFetch, discard it
                         $serial_send_int(iout);
                     end
 

@@ -3,8 +3,9 @@
 
 #include <vpi_user.h>
 
-void register_serial_get_cmd(void);
-void register_serial_get_arg(void);
+void register_serial_get_char(void);
+void register_serial_get_int(void);
+void register_serial_send_char(void);
 void register_serial_send_int(void);
 void register_serial_send_str(void);
 

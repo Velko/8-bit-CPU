@@ -50,21 +50,21 @@ static FILE *get_serial(void)
     return _serial;
 }
 
-int serial_get_cmd(void)
+int serial_get_char(void)
 {
     FILE *serial = get_serial();
 
     int val = fgetc(serial);
 
     if (val < 0) {
-        perror("serial_get_cmd");
+        perror("serial_get_char");
         exit(EXIT_FAILURE);
     }
 
     return val;
 }
 
-int serial_get_arg(void)
+int serial_get_int(void)
 {
     FILE *serial = get_serial();
 
@@ -73,7 +73,7 @@ int serial_get_arg(void)
 
     if (res == EOF) {
         if (ferror(serial)) {
-            perror("serial_get_arg");
+            perror("serial_get_int");
             exit(EXIT_FAILURE);
         }
         return 0;
@@ -83,6 +83,17 @@ int serial_get_arg(void)
     }
 
     return val;
+}
+
+void serial_send_char(int value)
+{
+    FILE *serial = get_serial();
+
+    int res = fputc(value, serial);
+    if (res < 0) {
+        perror("serial_send_char");
+        exit(EXIT_FAILURE);
+    }
 }
 
 void serial_send_int(int value)
