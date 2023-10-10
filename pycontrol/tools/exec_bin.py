@@ -2,6 +2,7 @@
 
 
 import sys
+import argparse
 import localpath
 localpath.install()
 from libcpu.util import OutMessage, HaltMessage, BrkMessage
@@ -12,9 +13,9 @@ cpu_helper: CPUHelper = CPUHelper(get_client_instance())
 
 RAM_OFFSET = 0x2000
 
-def upload() -> None:
+def upload(filename: str) -> None:
 
-    with open(sys.argv[1], "rb") as f:
+    with open(filename, "rb") as f:
         binary = f.read()
 
     print ("# Uploading ", end="", flush=True, file=sys.stderr)
@@ -28,10 +29,13 @@ def upload() -> None:
 
 
 
-def run() -> None:
+def run(reset_only: bool) -> None:
 
     # Reset PC
     cpu_helper.client.reset()
+
+    if reset_only:
+        return;
 
     # Drumroll... now it should happen for real
     print ("# Running ...", flush=True, file=sys.stderr)
@@ -53,5 +57,16 @@ def run() -> None:
 
 
 if __name__ == "__main__":
-    upload()
-    run()
+
+    parser = argparse.ArgumentParser(
+        prog="exec_bin",
+        description="Uploads, starts and monitors a program on the 8-bit CPU"
+    )
+
+    parser.add_argument("filename")
+    parser.add_argument("-u", "--upload-only", action="store_true", help="upload binary and reset CPU, do not start the program")
+
+    args = parser.parse_args()
+
+    upload(args.filename)
+    run(args.upload_only)
