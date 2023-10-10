@@ -5,7 +5,7 @@ import localpath
 localpath.install()
 
 from libcpu.cpu_helper import CPUHelper
-from typing import  Sequence, Iterator
+from typing import  Sequence, Iterator, Optional, Iterable
 
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.pinclient import PinClient, get_client_instance
@@ -34,17 +34,20 @@ def cpu_helper(pins_client_real: PinClient) -> CPUHelper:
 
 
 class FillRam:
-    def __init__(self, addresses: Sequence[int], contents: Sequence[int]=[]) -> None:
-        self.addresses = addresses
-        self.contents = list(contents)
+    def __init__(self, addresses: Sequence[int], values: Optional[Iterable[int]]=None) -> None:
 
-        if len(contents) == 0:
-            for _ in range(0x10000):
-                value = random.randrange(256)
-                self.contents.append(value)
+        if values is None:
+            values = FillRam.random_bytes()
+
+        self.contents = dict(zip(addresses, values))
+
+    @staticmethod
+    def random_bytes() -> Iterator[int]:
+        while True:
+            yield random.randrange(256)
 
     def write_ram(self, client: PinClient) -> None:
         cpu_helper = CPUHelper(client)
 
-        for addr in self.addresses:
-            cpu_helper.write_ram(addr, self.contents[addr])
+        for addr, value in self.contents.items():
+            cpu_helper.write_ram(addr, value)
