@@ -12,6 +12,8 @@ from .util import OutMessage, HaltMessage, BrkMessage
 from .opcodes import opcodes
 from .assisted_cpu import AssistedCPU
 
+RAM_OFFSET = 0x2000
+
 @dataclass
 class Breakpoint:
     addr: int
@@ -57,7 +59,7 @@ class Debugger:
         print ("# Uploading ", end="", flush=True, file=sys.stderr)
 
         for addr, byte in enumerate(binary):
-            self.cpu_helper.write_ram(addr, byte)
+            self.cpu_helper.write_ram(addr + RAM_OFFSET, byte)
 
             print (".", end="", flush=True, file=sys.stderr)
 

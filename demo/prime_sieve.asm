@@ -192,7 +192,7 @@ sieve_start:
 
 #bankdef bss
 {
-    #addr 0x80
+    #addr 0x2080
 }
 
 
@@ -202,7 +202,6 @@ sieve_start:
 ; because seg0[0:1] are never used, re-use locations for m and p variables
 ; arrays are aligned to 16 byte boundary, so that bitwise OR can be used for
 ; calculations (just to demonstrate that And/Or unit works)
-#align 128
 seg0:
 p:
 	#res 1

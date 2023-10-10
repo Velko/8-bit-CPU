@@ -10,6 +10,8 @@ from libcpu.cpu_helper import CPUHelper
 
 cpu_helper: CPUHelper = CPUHelper(get_client_instance())
 
+RAM_OFFSET = 0x2000
+
 def upload() -> None:
 
     with open(sys.argv[1], "rb") as f:
@@ -18,7 +20,7 @@ def upload() -> None:
     print ("# Uploading ", end="", flush=True, file=sys.stderr)
 
     for addr, byte in enumerate(binary):
-        cpu_helper.write_ram(addr, byte)
+        cpu_helper.write_ram(addr + RAM_OFFSET, byte)
 
         print (".", end="", flush=True, file=sys.stderr)
 
