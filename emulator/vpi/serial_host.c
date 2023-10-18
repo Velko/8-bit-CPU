@@ -94,6 +94,12 @@ void serial_send_char(int value)
         perror("serial_send_char");
         exit(EXIT_FAILURE);
     }
+
+    res = fflush(serial);
+    if (res < 0) {
+        perror("serial_send_char");
+        exit(EXIT_FAILURE);
+    }
 }
 
 void serial_send_int(int value)
@@ -101,6 +107,12 @@ void serial_send_int(int value)
     FILE *serial = get_serial();
 
     int res = fprintf(serial, "%d\n", value);
+    if (res < 0) {
+        perror("serial_send_int");
+        exit(EXIT_FAILURE);
+    }
+
+    res = fflush(serial);
     if (res < 0) {
         perror("serial_send_int");
         exit(EXIT_FAILURE);
@@ -113,7 +125,13 @@ void serial_send_str(const char *value)
 
     int res = fprintf(serial, "%s\r\n", value);
     if (res < 0) {
-        perror("serial_send_int");
+        perror("serial_send_str");
+        exit(EXIT_FAILURE);
+    }
+
+    res = fflush(serial);
+    if (res < 0) {
+        perror("serial_send_str");
         exit(EXIT_FAILURE);
     }
 }
