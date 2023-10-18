@@ -17,15 +17,18 @@ module uart(
         if (sel_data && !rnw) begin
             $serial_send_char(io_bus);
         end
-        else if (sel_status && rnw && status[0] == 1'b0) begin
-            $serial_get_char(in_data);
-            status[0] <= 1'b1;
+    end
+
+    always @(posedge sel_status or posedge rnw) begin
+        if (sel_status && rnw) begin
+            $serial_check_input(status);
         end
     end
 
-    always @(negedge clk) begin
-        if (sel_data && rnw) begin
-            status[0] <= 1'b0;
+    always @(posedge sel_data or posedge rnw) begin
+        if (sel_data && rnw && status != 8'b0) begin
+            $serial_get_char(in_data);
+            $serial_check_input(status);
         end
     end
 
