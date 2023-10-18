@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/select.h>
 
 
 
@@ -134,4 +135,25 @@ void serial_send_str(const char *value)
         perror("serial_send_str");
         exit(EXIT_FAILURE);
     }
+}
+
+int serial_check_input(void)
+{
+    FILE *serial = get_serial();
+
+    fd_set read_fd_set;
+    struct timeval timeout;
+    FD_ZERO(&read_fd_set);
+    FD_SET(fileno(serial), &read_fd_set);
+    timeout.tv_usec = 0;
+    timeout.tv_sec = 0;
+
+    int res = select(FD_SETSIZE, &read_fd_set, NULL, NULL, &timeout);
+
+    if (res < 0) {
+        perror("serial_check_input");
+        exit(EXIT_FAILURE);
+    }
+
+    return res;
 }

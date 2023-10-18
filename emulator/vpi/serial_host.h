@@ -9,5 +9,6 @@ int serial_get_int(void);
 void serial_send_char(int value);
 void serial_send_int(int value);
 void serial_send_str(const char *value);
+int serial_check_input(void);
 
 #endif /* SERIAL_HOST_H */
