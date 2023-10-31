@@ -11,7 +11,7 @@
 
 
 #define BAUDRATE B115200
-#define MODEMDEVICE "pty1"
+#define MODEMDEVICE "/tmp/cpu8pty1"
 
 static FILE *_serial;
 

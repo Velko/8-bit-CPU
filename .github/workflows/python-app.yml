@@ -47,7 +47,7 @@ jobs:
       working-directory: ./emulator/vm
       run: |
         make
-        socat PTY,link=pty0,raw,echo=0 PTY,link=pty1,raw,echo=0 &
+        socat PTY,link=/tmp/cpu8pty0,raw,echo=0 PTY,link=/tmp/cpu8pty1,raw,echo=0 &
         sleep 0.5
         make run &
     - name: Check typing with MyPy
@@ -59,12 +59,10 @@ jobs:
     - name: Run tests
       working-directory: ./pycontrol
       run: |
-        ln -s ../emulator/vm/pty0
         python -m pytest
     - name: Run demo programs
       working-directory: ./demo
       run: |
-        ln -s ../emulator/vm/pty0
         customasm hello.asm
         python ../pycontrol/tools/exec_bin.py hello.bin | grep -q "Hello, World!"
         customasm prime_sieve.asm
