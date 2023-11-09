@@ -1,3 +1,3 @@
 #!/bin/sh
 
-killall socat vvp
+killall -9 socat vvp
