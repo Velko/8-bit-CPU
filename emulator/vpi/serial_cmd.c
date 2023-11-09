@@ -20,6 +20,25 @@ static int serial_get_char_handler(char *user_data)
     return 0;
 }
 
+static int serial_peek_char_handler(char *user_data)
+{
+    (void)user_data; // suppress [-Wunused-parameter]
+
+    vpiHandle systfref = vpi_handle(vpiSysTfCall, NULL);
+    vpiHandle args_iter = vpi_iterate(vpiArgument, systfref);
+
+    vpiHandle chr_arg = vpi_scan(args_iter);
+
+    struct t_vpi_value chr_val;
+    chr_val.format = vpiIntVal;
+    chr_val.value.integer = serial_peek_char();
+    vpi_put_value(chr_arg, &chr_val, NULL, vpiNoDelay);
+
+    vpi_free_object(args_iter);
+
+    return 0;
+}
+
 static int serial_get_int_handler(char *user_data)
 {
     (void)user_data; // suppress [-Wunused-parameter]
@@ -115,6 +134,14 @@ static int serial_check_input_handler(char *user_data)
     return 0;
 }
 
+static int serial_discard_char_handler(char *user_data)
+{
+    (void)user_data; // suppress [-Wunused-parameter]
+
+    serial_discard_char();
+
+    return 0;
+}
 
 void register_serial_get_char(void)
 {
@@ -123,6 +150,19 @@ void register_serial_get_char(void)
       tf_data.type      = vpiSysTask;
       tf_data.tfname    = "$serial_get_char";
       tf_data.calltf    = serial_get_char_handler;
+      tf_data.compiletf = 0;
+      tf_data.sizetf    = 0;
+      tf_data.user_data = 0;
+      vpi_register_systf(&tf_data);
+}
+
+void register_serial_peek_char(void)
+{
+      s_vpi_systf_data tf_data;
+
+      tf_data.type      = vpiSysTask;
+      tf_data.tfname    = "$serial_peek_char";
+      tf_data.calltf    = serial_peek_char_handler;
       tf_data.compiletf = 0;
       tf_data.sizetf    = 0;
       tf_data.user_data = 0;
@@ -188,6 +228,20 @@ void register_serial_check_input(void)
       tf_data.type      = vpiSysTask;
       tf_data.tfname    = "$serial_check_input";
       tf_data.calltf    = serial_check_input_handler;
+      tf_data.compiletf = 0;
+      tf_data.sizetf    = 0;
+      tf_data.user_data = 0;
+      vpi_register_systf(&tf_data);
+}
+
+
+void register_serial_discard_char(void)
+{
+      s_vpi_systf_data tf_data;
+
+      tf_data.type      = vpiSysTask;
+      tf_data.tfname    = "$serial_discard_char";
+      tf_data.calltf    = serial_discard_char_handler;
       tf_data.compiletf = 0;
       tf_data.sizetf    = 0;
       tf_data.user_data = 0;

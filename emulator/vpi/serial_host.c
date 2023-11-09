@@ -75,10 +75,14 @@ int serial_get_char(void)
 
     int val = ringbuffer_read_blocking(rb);
 
-    if (val < 0) {
-        perror("serial_get_char");
-        exit(EXIT_FAILURE);
-    }
+    return val;
+}
+
+int serial_peek_char(void)
+{
+    struct ringbuffer *rb = get_ringbuffer();
+
+    int val = ringbuffer_peek(rb);
 
     return val;
 }
@@ -150,4 +154,11 @@ int serial_check_input(void)
     int val = ringbuffer_peek(rb);
 
     return val != -1;
+}
+
+void serial_discard_char(void)
+{
+    struct ringbuffer *rb = get_ringbuffer();
+
+    ringbuffer_discard(rb);
 }

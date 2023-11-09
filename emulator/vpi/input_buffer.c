@@ -99,10 +99,26 @@ int ringbuffer_peek(struct ringbuffer *buffer)
     return result;
 }
 
+void ringbuffer_discard(struct ringbuffer *buffer)
+{
+    pthread_mutex_lock(&buffer->indices_mutex);
+
+    /* discard a char it not empty. If used properly (peeked before) it should
+       not be empty. */
+    if (!ringbuffer_isempty(buffer))
+        buffer->read_index++;
+
+    /* in case it was full, signal that it is not so anymore */
+    pthread_cond_signal(&buffer->full_cond);
+
+    pthread_mutex_unlock(&buffer->indices_mutex);
+}
+
 static int ringbuffer_peek_blocking(struct ringbuffer *buffer)
 {
     pthread_mutex_lock(&buffer->indices_mutex);
 
+    /* wait for new chars to arrive */
     while (ringbuffer_isempty(buffer))
         pthread_cond_wait(&buffer->empty_cond, &buffer->indices_mutex);
 
@@ -116,9 +132,16 @@ static int ringbuffer_discard_and_peek_next_blocking(struct ringbuffer *buffer)
 {
     pthread_mutex_lock(&buffer->indices_mutex);
 
+    /* discard a char it not empty. If used properly (peeked before) it should
+       not be empty. */
     if (!ringbuffer_isempty(buffer))
         buffer->read_index++;
 
+    /* in case it was full, signal that it is not so anymore */
+    pthread_cond_signal(&buffer->full_cond);
+
+    /* if (after discarding the char it became) empty, wait for new chars to
+       arrive */
     while (ringbuffer_isempty(buffer))
         pthread_cond_wait(&buffer->empty_cond, &buffer->indices_mutex);
 

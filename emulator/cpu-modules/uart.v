@@ -19,6 +19,12 @@ module uart(
         end
     end
 
+    always @(negedge clk) begin
+        if (sel_data && rnw) begin
+            $serial_discard_char();
+        end
+    end
+
     always @(posedge sel_status or posedge rnw) begin
         if (sel_status && rnw) begin
             $serial_check_input(status);
@@ -26,9 +32,8 @@ module uart(
     end
 
     always @(posedge sel_data or posedge rnw) begin
-         if (sel_data && rnw && status != 8'b0) begin
-            $serial_get_char(in_data);
-            status <= 0;
+        if (sel_data && rnw) begin
+            $serial_peek_char(in_data);
         end
     end
 

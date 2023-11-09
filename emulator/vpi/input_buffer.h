@@ -22,5 +22,6 @@ void ringbuffer_init(struct ringbuffer *buffer, int source_fd);
 int ringbuffer_read_blocking(struct ringbuffer *buffer);
 int ringbuffer_peek(struct ringbuffer *buffer);
 int ringbuffer_read_int_blocking(struct ringbuffer *buffer);
+void ringbuffer_discard(struct ringbuffer *buffer);
 
 #endif /* INPUT_BUFFER_H */
