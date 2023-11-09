@@ -26,9 +26,9 @@ module uart(
     end
 
     always @(posedge sel_data or posedge rnw) begin
-        if (sel_data && rnw && status != 8'b0) begin
+         if (sel_data && rnw && status != 8'b0) begin
             $serial_get_char(in_data);
-            $serial_check_input(status);
+            status <= 0;
         end
     end
 

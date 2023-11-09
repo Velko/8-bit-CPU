@@ -1,4 +1,5 @@
 #include "serial_host.h"
+#include "input_buffer.h"
 
 #include <termios.h>
 #include <fcntl.h>
@@ -13,14 +14,16 @@
 #define BAUDRATE B115200
 #define MODEMDEVICE "/tmp/cpu8pty1"
 
-static FILE *_serial;
+static FILE *_serial_out;
+static struct ringbuffer _ringbuffer;
+
 
 void setup_serial_lazy(void)
 {
-    _serial = NULL;
+    _serial_out = NULL;
 }
 
-static FILE *open_serial(void)
+static int open_serial(void)
 {
     struct termios newtio;
 
@@ -28,8 +31,8 @@ static FILE *open_serial(void)
     if (fd <0) {perror(MODEMDEVICE); exit(-1); }
 
     memset(&newtio, 0, sizeof(newtio));
-    newtio.c_cflag = BAUDRATE | CRTSCTS | CS8 | CLOCAL | CREAD;
-    newtio.c_iflag = IGNPAR;
+    newtio.c_cflag = BAUDRATE | CS8 | CLOCAL | CREAD;
+    newtio.c_iflag = 0;
     newtio.c_oflag = 0;
 
     /* set input mode (non-canonical, no echo,...) */
@@ -41,21 +44,36 @@ static FILE *open_serial(void)
     tcflush(fd, TCIFLUSH);
     tcsetattr(fd,TCSANOW,&newtio);
 
-    return fdopen(fd, "ab+");
+    return fd;
+}
+
+static void ensure_initialized(void)
+{
+    if (_serial_out == NULL)
+    {
+        int fd = open_serial();
+        _serial_out = fdopen(fd, "ab");
+        ringbuffer_init(&_ringbuffer, fd);
+    }
 }
 
 static FILE *get_serial(void)
 {
-    if (_serial == NULL)
-        _serial = open_serial();
-    return _serial;
+    ensure_initialized();
+    return _serial_out;
+}
+
+static struct ringbuffer *get_ringbuffer(void)
+{
+    ensure_initialized();
+    return &_ringbuffer;
 }
 
 int serial_get_char(void)
 {
-    FILE *serial = get_serial();
+    struct ringbuffer *rb = get_ringbuffer();
 
-    int val = fgetc(serial);
+    int val = ringbuffer_read_blocking(rb);
 
     if (val < 0) {
         perror("serial_get_char");
@@ -67,21 +85,9 @@ int serial_get_char(void)
 
 int serial_get_int(void)
 {
-    FILE *serial = get_serial();
+    struct ringbuffer *rb = get_ringbuffer();
 
-    int val;
-    int res = fscanf(serial, "%d", &val);
-
-    if (res == EOF) {
-        if (ferror(serial)) {
-            perror("serial_get_int");
-            exit(EXIT_FAILURE);
-        }
-        return 0;
-    } else if (res == 0) {
-        fprintf(stderr, "Protocol mismatch: integer argument expected\n");
-        exit(EXIT_FAILURE);
-    }
+    int val = ringbuffer_read_int_blocking(rb);
 
     return val;
 }
@@ -139,21 +145,9 @@ void serial_send_str(const char *value)
 
 int serial_check_input(void)
 {
-    FILE *serial = get_serial();
+    struct ringbuffer *rb = get_ringbuffer();
 
-    fd_set read_fd_set;
-    struct timeval timeout;
-    FD_ZERO(&read_fd_set);
-    FD_SET(fileno(serial), &read_fd_set);
-    timeout.tv_usec = 0;
-    timeout.tv_sec = 0;
+    int val = ringbuffer_peek(rb);
 
-    int res = select(FD_SETSIZE, &read_fd_set, NULL, NULL, &timeout);
-
-    if (res < 0) {
-        perror("serial_check_input");
-        exit(EXIT_FAILURE);
-    }
-
-    return res;
+    return val != -1;
 }
