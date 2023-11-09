@@ -1,8 +1,8 @@
-DISPLAY_NUM_DATA = 0
-DISPLAY_NUM_MODE = 1
-DISPLAY_CHR_DATA = 4
-DISPLAY_LCD_DATA = 0x10
-DISPLAY_LCD_CMD  = 0x11
+#const(noemit) DISPLAY_NUM_DATA = 0
+#const(noemit) DISPLAY_NUM_MODE = 1
+#const(noemit) DISPLAY_CHR_DATA = 4
+#const(noemit) DISPLAY_LCD_DATA = 0x10
+#const(noemit) DISPLAY_LCD_CMD  = 0x11
 
-UART_STATUS = 0x20
-UART_DATA = 0x21
+#const(noemit) UART_STATUS = 0x20
+#const(noemit) UART_DATA = 0x21
