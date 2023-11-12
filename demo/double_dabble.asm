@@ -19,7 +19,7 @@ double_loop:
     ldi D, 123 ; to add if >= 5
 
     ; push initial flags value (C = 0)
-    clr A
+    ldi A, 0; could use CLR (it is essentially xor A, A), but emulator freaks out when register contains X
     push A
 
     ldi C, number_len - 1  ; index in number[]
