@@ -91,9 +91,17 @@ SP = dev.StackPointer("SP",
     inc = AddrRegInc,
     dec = AddrRegDec)
 
-#DP = dev.Register("DP",
-#    out = MuxPin(OutMux, 14),
-#    load = MuxPin(LoadMux, 14))
+SDP = dev.StackPointer("SDP",
+    out = MuxPin(AddrOutMux, 1),
+    load = MuxPin(AddrLoadMux, 1),
+    inc = AddrRegInc,
+    dec = AddrRegDec)
+
+TDP = dev.StackPointer("TDP",
+    out = MuxPin(AddrOutMux, 6),
+    load = MuxPin(AddrLoadMux, 6),
+    inc = AddrRegInc,
+    dec = AddrRegDec)
 
 LR = dev.AddressRegister("LR",
     out = MuxPin(AddrOutMux, 4),

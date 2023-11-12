@@ -1117,20 +1117,20 @@ const struct op_microcode microcode[] PROGMEM = {
     /* 102 lcmp_D_C   */
     { .default_steps = {0x07ff0bf6},},
 
-    /* 103 padding20  */
-    { .default_steps = {0x07ff58ff},},
+    /* 103 lpi_A_SDP  */
+    { .default_steps = {0x07b91809},},
 
-    /* 104 padding21  */
-    { .default_steps = {0x07ff58ff},},
+    /* 104 lpi_B_SDP  */
+    { .default_steps = {0x07b91819},},
 
-    /* 105 padding22  */
-    { .default_steps = {0x07ff58ff},},
+    /* 105 lpi_C_SDP  */
+    { .default_steps = {0x07b91829},},
 
-    /* 106 padding23  */
-    { .default_steps = {0x07ff58ff},},
+    /* 106 lpi_D_SDP  */
+    { .default_steps = {0x07b91839},},
 
-    /* 107 padding24  */
-    { .default_steps = {0x07ff58ff},},
+    /* 107 lea_SDP_addr */
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07c858ff},},
 
     /* 108 padding25  */
     { .default_steps = {0x07ff58ff},},

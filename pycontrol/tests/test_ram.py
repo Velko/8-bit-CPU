@@ -6,7 +6,7 @@ import random
 from libcpu.opcodes import opcode_of
 from libcpu.pinclient import PinClient
 from libcpu.assisted_cpu import AssistedCPU
-from libcpu.DeviceSetup import A, B
+from libcpu.DeviceSetup import A, B, SDP
 from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
 from typing import Sequence
@@ -62,3 +62,16 @@ def test_ldx_hw(cpu_helper: CPUHelper) -> None:
     val = cpu_helper.read_reg8(A)
 
     assert val == 0x33
+
+@pytest.mark.parametrize("addr", random_addr)
+def test_load_sdp(cpu_helper: CPUHelper, acpu: AssistedCPU, fill_ram: FillRam, addr: int) -> None:
+
+    cpu_helper.load_reg16(SDP, addr)
+
+    acpu.lpi (A, SDP)
+
+    actual = cpu_helper.read_reg8(A)
+    new_addr = cpu_helper.read_reg16(SDP)
+
+    assert fill_ram.contents[addr] == actual
+    assert addr + 1 == new_addr

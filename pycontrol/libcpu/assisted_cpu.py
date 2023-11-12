@@ -168,6 +168,10 @@ class AssistedCPU(AssistedCPUEngine):
         opcode = f"out_imm_{source.name}"
         return self.execute_mnemonic(opcode, port)
 
+    def lpi(self, target: GPRegister, addr: AddressRegister) -> None:
+        opcode = f"lpi_{target.name}_{addr.name}"
+        self.execute_mnemonic(opcode)
+
     def dummy_ext(self, value: int) -> None:
         opcode = "dummyext_imm"
         self.execute_mnemonic(opcode, value)

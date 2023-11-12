@@ -85,6 +85,17 @@ module mem_block(
         .cdownn(spdec || addr_out_mux.y[3])
     );
 
+    stack_pointer sdp(
+        .abus(abus),
+        .reset(rst),
+        .clk(clk),
+        .iclk(iclk),
+        .outn(addr_out_mux.y[1]),
+        .loadn(addr_load_mux.y[1]),
+        .cupn(spinc || addr_out_mux.y[1]),
+        .cdownn(spdec || addr_out_mux.y[1])
+    );
+
     address_calc acalc(
         .abus(abus),
         .mbus(mbus),

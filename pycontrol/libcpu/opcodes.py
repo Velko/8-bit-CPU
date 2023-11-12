@@ -336,8 +336,17 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
         builder.add_instruction("lcmp", l, r)\
             .add_step(l.alu_l, r.alu_r, AndOr.out, F.calc)
 
+    for r in gp_regs:
+        builder.add_instruction("lpi", r, SDP)\
+            .add_step(r.load, SDP.out, SDP.inc, Ram.out, F.calc)
+
+    builder.add_instruction("lea", SDP, OpcodeArg.ADDR)\
+        .add_step(PC.out, PC.inc, ProgMem.out, TL.load)\
+        .add_step(PC.out, PC.inc, ProgMem.out, TH.load)\
+        .add_step(TX.out, SDP.load)
+
     # create a bunch of NOPs to exceed 255 instructions
-    for n in range(20, 30):
+    for n in range(25, 30):
         builder.add_instruction(f"padding{n}")\
             .add_step()
 
