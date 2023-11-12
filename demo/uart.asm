@@ -4,12 +4,11 @@
 ; Then issue the command R from minicom session.
 
     ; print "message"
-    ldi B, 0
+    lea SDP, message
 print_loop:
-    ldx A, message, B
+    lpi A, SDP
     beq repeat
     out UART_DATA, A
-    inc B
     jmp print_loop
 
 repeat:
