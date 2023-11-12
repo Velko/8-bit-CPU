@@ -1,6 +1,6 @@
 from . import devices as dev
 from .pseudo_devices import RamProxy
-from .pin import SimplePin, Level, Mux, MuxPin, AliasedPin
+from .pin import SimplePin, Level, Mux, MuxPin, SharedSimplePin
 
 OutMux = Mux("OutMux", [0, 1, 2, 3], 15) # bits 0-3 in Control Word, defaults to 15
 LoadMux = Mux("LoadMux", [4, 5, 6, 7], 15)
@@ -11,7 +11,10 @@ AluArgR = Mux("AluArgR", [10, 11, 12], 6)
 AddrOutMux = Mux("AddrOutMux", [16, 17, 18], 7)
 AddrLoadMux = Mux("AddrLoadMux", [19, 20, 21], 7)
 
-AluAltFn = SimplePin(13, Level.HIGH)
+AluAltFn = SharedSimplePin(13, Level.HIGH, "Alu.alt")
+
+AddrRegInc = SharedSimplePin(22, Level.LOW, "Addr.inc")
+AddrRegDec = SharedSimplePin(23, Level.LOW, "Addr.dec")
 
 A = dev.GPRegister("A",
     out = MuxPin(OutMux, 0),
@@ -82,13 +85,13 @@ pc_out_inc = MuxPin(AddrOutMux, 5)
 PC = dev.ProgramCounter("PC",
     out = pc_out_inc,
     load = MuxPin(AddrLoadMux, 5),
-    inc = AliasedPin(pc_out_inc))
+    inc = pc_out_inc)
 
 SP = dev.StackPointer("SP",
     out = MuxPin(AddrOutMux, 3),
     load = MuxPin(AddrLoadMux, 3),
-    inc = SimplePin(22, Level.LOW),
-    dec = SimplePin(23, Level.LOW))
+    inc = AddrRegInc,
+    dec = AddrRegDec)
 
 #DP = dev.Register("DP",
 #    out = MuxPin(OutMux, 14),

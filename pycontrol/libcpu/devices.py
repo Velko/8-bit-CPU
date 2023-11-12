@@ -9,7 +9,7 @@ class DeviceBase:
     name: str
 
     def __setattr__(self, name: str, value: Any) -> None:
-        if isinstance(value, ControlSignal):
+        if isinstance(value, ControlSignal) and value.name is None:
             value.name = f"{self.name}.{name}"
         super().__setattr__(name, value)
 

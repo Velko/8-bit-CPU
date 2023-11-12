@@ -53,19 +53,10 @@ class SimplePin(Pin):
     def __repr__(self) -> str:
         return f"{super().__repr__()[:-1]}, {self.num}, {self.level.name})"
 
-class AliasedPin(Pin):
-    def __init__(self, target: Pin) -> None:
-        Pin.__init__(self)
-        self.target = target
-
-    def apply_enable(self, c_word: int) -> int:
-        return self.target.apply_enable(c_word)
-
-    def apply_disable(self, c_word: int) -> int:
-        return self.target.apply_disable(c_word)
-
-    def check_enabled(self, c_word: int) -> bool:
-        return self.target.check_enabled(c_word)
+class SharedSimplePin(SimplePin):
+    def __init__(self, num: int, level: Level, alias: str) -> None:
+        SimplePin.__init__(self, num, level)
+        self.name = alias
 
 class Mux:
     def __init__(self, name: str, pins: Sequence[int], default: int) -> None:
