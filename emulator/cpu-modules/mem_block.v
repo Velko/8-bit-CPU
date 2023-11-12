@@ -21,6 +21,7 @@ module mem_block(
         output [7:0] iout
 );
 
+    //TODO: replace quick boolean operators with proper handling using 74* chips
     program_counter pc(
         .abus(abus),
         .reset(rst),
@@ -29,7 +30,7 @@ module mem_block(
         .iclk(iclk),
         .outn(addr_out_mux.y[5]),
         .loadn(addr_load_mux.y[5]),
-        .count(!addr_out_mux.y[5])
+        .count(!(spinc || addr_out_mux.y[5]))
     );
 
     i_register ir(
@@ -80,8 +81,8 @@ module mem_block(
         .iclk(iclk),
         .outn(addr_out_mux.y[3]),
         .loadn(addr_load_mux.y[3]),
-        .cupn(spinc),
-        .cdownn(spdec)
+        .cupn(spinc || addr_out_mux.y[3]),
+        .cdownn(spdec || addr_out_mux.y[3])
     );
 
     address_calc acalc(

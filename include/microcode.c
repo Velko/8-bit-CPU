@@ -1,6 +1,6 @@
 #include "microcode.h"
 
-const cword_t op_fetch[] = {0x07fd5889};
+const cword_t op_fetch[] = {0x07bd5889};
 
 const struct op_microcode microcode[] PROGMEM = {
 
@@ -8,19 +8,19 @@ const struct op_microcode microcode[] PROGMEM = {
     { .default_steps = {0x07ff58ff},},
 
     /* 01 ldi_A_imm  */
-    { .default_steps = {0x07fd5809},},
+    { .default_steps = {0x07bd5809},},
 
     /* 02 ldi_B_imm  */
-    { .default_steps = {0x07fd5819},},
+    { .default_steps = {0x07bd5819},},
 
     /* 03 ldi_C_imm  */
-    { .default_steps = {0x07fd5829},},
+    { .default_steps = {0x07bd5829},},
 
     /* 04 ldi_D_imm  */
-    { .default_steps = {0x07fd5839},},
+    { .default_steps = {0x07bd5839},},
 
     /* 05 ldi_F_imm  */
-    { .default_steps = {0x07fd5879},},
+    { .default_steps = {0x07bd5879},},
 
     /* 06 hlt        */
     { .default_steps = {0x03ff58ff},},
@@ -722,241 +722,241 @@ const struct op_microcode microcode[] PROGMEM = {
     { .default_steps = {0x07ff5832},},
 
     /* 9b out_imm_A  */
-    { .default_steps = {0x07fd5849, 0x07ff5850},},
+    { .default_steps = {0x07bd5849, 0x07ff5850},},
 
     /* 9c out_imm_B  */
-    { .default_steps = {0x07fd5849, 0x07ff5851},},
+    { .default_steps = {0x07bd5849, 0x07ff5851},},
 
     /* 9d out_imm_C  */
-    { .default_steps = {0x07fd5849, 0x07ff5852},},
+    { .default_steps = {0x07bd5849, 0x07ff5852},},
 
     /* 9e out_imm_D  */
-    { .default_steps = {0x07fd5849, 0x07ff5853},},
+    { .default_steps = {0x07bd5849, 0x07ff5853},},
 
     /* 9f in_A_imm   */
-    { .default_steps = {0x07fd5849, 0x07ff1808},},
+    { .default_steps = {0x07bd5849, 0x07ff1808},},
 
     /* a0 in_B_imm   */
-    { .default_steps = {0x07fd5849, 0x07ff1818},},
+    { .default_steps = {0x07bd5849, 0x07ff1818},},
 
     /* a1 in_C_imm   */
-    { .default_steps = {0x07fd5849, 0x07ff1828},},
+    { .default_steps = {0x07bd5849, 0x07ff1828},},
 
     /* a2 in_D_imm   */
-    { .default_steps = {0x07fd5849, 0x07ff1838},},
+    { .default_steps = {0x07bd5849, 0x07ff1838},},
 
     /* a3 st_addr_A  */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07f85890},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07f85890},},
 
     /* a4 st_addr_B  */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07f85891},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07f85891},},
 
     /* a5 st_addr_C  */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07f85892},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07f85892},},
 
     /* a6 st_addr_D  */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07f85893},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07f85893},},
 
     /* a7 stx_addr_A_A */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f0, 0x07fa5890},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f0, 0x07fa5890},},
 
     /* a8 stx_addr_A_B */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f0, 0x07fa5891},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f0, 0x07fa5891},},
 
     /* a9 stx_addr_A_C */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f0, 0x07fa5892},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f0, 0x07fa5892},},
 
     /* aa stx_addr_A_D */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f0, 0x07fa5893},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f0, 0x07fa5893},},
 
     /* ab stx_addr_B_A */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f1, 0x07fa5890},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f1, 0x07fa5890},},
 
     /* ac stx_addr_B_B */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f1, 0x07fa5891},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f1, 0x07fa5891},},
 
     /* ad stx_addr_B_C */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f1, 0x07fa5892},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f1, 0x07fa5892},},
 
     /* ae stx_addr_B_D */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f1, 0x07fa5893},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f1, 0x07fa5893},},
 
     /* af stx_addr_C_A */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f2, 0x07fa5890},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f2, 0x07fa5890},},
 
     /* b0 stx_addr_C_B */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f2, 0x07fa5891},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f2, 0x07fa5891},},
 
     /* b1 stx_addr_C_C */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f2, 0x07fa5892},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f2, 0x07fa5892},},
 
     /* b2 stx_addr_C_D */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f2, 0x07fa5893},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f2, 0x07fa5893},},
 
     /* b3 stx_addr_D_A */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f3, 0x07fa5890},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f3, 0x07fa5890},},
 
     /* b4 stx_addr_D_B */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f3, 0x07fa5891},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f3, 0x07fa5891},},
 
     /* b5 stx_addr_D_C */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f3, 0x07fa5892},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f3, 0x07fa5892},},
 
     /* b6 stx_addr_D_D */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f3, 0x07fa5893},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f3, 0x07fa5893},},
 
     /* b7 ld_A_addr  */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07f81809},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07f81809},},
 
     /* b8 ld_B_addr  */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07f81819},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07f81819},},
 
     /* b9 ld_C_addr  */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07f81829},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07f81829},},
 
     /* ba ld_D_addr  */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07f81839},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07f81839},},
 
     /* bb ldx_A_addr_A */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f0, 0x07fa1809},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f0, 0x07fa1809},},
 
     /* bc ldx_A_addr_B */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f1, 0x07fa1809},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f1, 0x07fa1809},},
 
     /* bd ldx_A_addr_C */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f2, 0x07fa1809},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f2, 0x07fa1809},},
 
     /* be ldx_A_addr_D */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f3, 0x07fa1809},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f3, 0x07fa1809},},
 
     /* bf ldx_B_addr_A */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f0, 0x07fa1819},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f0, 0x07fa1819},},
 
     /* c0 ldx_B_addr_B */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f1, 0x07fa1819},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f1, 0x07fa1819},},
 
     /* c1 ldx_B_addr_C */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f2, 0x07fa1819},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f2, 0x07fa1819},},
 
     /* c2 ldx_B_addr_D */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f3, 0x07fa1819},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f3, 0x07fa1819},},
 
     /* c3 ldx_C_addr_A */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f0, 0x07fa1829},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f0, 0x07fa1829},},
 
     /* c4 ldx_C_addr_B */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f1, 0x07fa1829},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f1, 0x07fa1829},},
 
     /* c5 ldx_C_addr_C */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f2, 0x07fa1829},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f2, 0x07fa1829},},
 
     /* c6 ldx_C_addr_D */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f3, 0x07fa1829},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f3, 0x07fa1829},},
 
     /* c7 ldx_D_addr_A */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f0, 0x07fa1839},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f0, 0x07fa1839},},
 
     /* c8 ldx_D_addr_B */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f1, 0x07fa1839},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f1, 0x07fa1839},},
 
     /* c9 ldx_D_addr_C */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f2, 0x07fa1839},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f2, 0x07fa1839},},
 
     /* ca ldx_D_addr_D */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f3, 0x07fa1839},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f3, 0x07fa1839},},
 
     /* cb tstx_addr_A */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f0, 0x07fa18f9},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f0, 0x07fa18f9},},
 
     /* cc tstx_addr_B */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f1, 0x07fa18f9},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f1, 0x07fa18f9},},
 
     /* cd tstx_addr_C */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f2, 0x07fa18f9},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f2, 0x07fa18f9},},
 
     /* ce tstx_addr_D */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d058f3, 0x07fa18f9},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f3, 0x07fa18f9},},
 
     /* cf ljmp_addr  */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07e858ff},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07e858ff},},
 
     /* d0 beql_addr  */
-    { .default_steps = {0x07fd58ff, 0x07fd58ff},
+    { .default_steps = {0x07bd58ff, 0x07bd58ff},
       .f_alt = {
           /* mask: --Z- value: --Z- */
           { .mask = 0x02, .value = 0x02,
-            .steps = {0x07fd58b9, 0x07fd58c9, 0x07e858ff},
+            .steps = {0x07bd58b9, 0x07bd58c9, 0x07e858ff},
           },
       },
     },
 
     /* d1 bnel_addr  */
-    { .default_steps = {0x07fd58ff, 0x07fd58ff},
+    { .default_steps = {0x07bd58ff, 0x07bd58ff},
       .f_alt = {
           /* mask: --Z- value: ---- */
           { .mask = 0x02, .value = 0x00,
-            .steps = {0x07fd58b9, 0x07fd58c9, 0x07e858ff},
+            .steps = {0x07bd58b9, 0x07bd58c9, 0x07e858ff},
           },
       },
     },
 
     /* d2 bcsl_addr  */
-    { .default_steps = {0x07fd58ff, 0x07fd58ff},
+    { .default_steps = {0x07bd58ff, 0x07bd58ff},
       .f_alt = {
           /* mask: -C-- value: -C-- */
           { .mask = 0x04, .value = 0x04,
-            .steps = {0x07fd58b9, 0x07fd58c9, 0x07e858ff},
+            .steps = {0x07bd58b9, 0x07bd58c9, 0x07e858ff},
           },
       },
     },
 
     /* d3 bccl_addr  */
-    { .default_steps = {0x07fd58ff, 0x07fd58ff},
+    { .default_steps = {0x07bd58ff, 0x07bd58ff},
       .f_alt = {
           /* mask: -C-- value: ---- */
           { .mask = 0x04, .value = 0x00,
-            .steps = {0x07fd58b9, 0x07fd58c9, 0x07e858ff},
+            .steps = {0x07bd58b9, 0x07bd58c9, 0x07e858ff},
           },
       },
     },
 
     /* d4 bmil_addr  */
-    { .default_steps = {0x07fd58ff, 0x07fd58ff},
+    { .default_steps = {0x07bd58ff, 0x07bd58ff},
       .f_alt = {
           /* mask: ---N value: ---N */
           { .mask = 0x01, .value = 0x01,
-            .steps = {0x07fd58b9, 0x07fd58c9, 0x07e858ff},
+            .steps = {0x07bd58b9, 0x07bd58c9, 0x07e858ff},
           },
       },
     },
 
     /* d5 bpll_addr  */
-    { .default_steps = {0x07fd58ff, 0x07fd58ff},
+    { .default_steps = {0x07bd58ff, 0x07bd58ff},
       .f_alt = {
           /* mask: ---N value: ---- */
           { .mask = 0x01, .value = 0x00,
-            .steps = {0x07fd58b9, 0x07fd58c9, 0x07e858ff},
+            .steps = {0x07bd58b9, 0x07bd58c9, 0x07e858ff},
           },
       },
     },
 
     /* d6 push_A     */
-    { .default_steps = {0x077f58ff, 0x07fb5890},},
+    { .default_steps = {0x077b58ff, 0x07fb5890},},
 
     /* d7 push_B     */
-    { .default_steps = {0x077f58ff, 0x07fb5891},},
+    { .default_steps = {0x077b58ff, 0x07fb5891},},
 
     /* d8 push_C     */
-    { .default_steps = {0x077f58ff, 0x07fb5892},},
+    { .default_steps = {0x077b58ff, 0x07fb5892},},
 
     /* d9 push_D     */
-    { .default_steps = {0x077f58ff, 0x07fb5893},},
+    { .default_steps = {0x077b58ff, 0x07fb5893},},
 
     /* da pushf      */
-    { .default_steps = {0x077f58ff, 0x07fb5894},},
+    { .default_steps = {0x077b58ff, 0x07fb5894},},
 
     /* db push_LR    */
-    { .default_steps = {0x074458ff, 0x077b589c, 0x07fb589b},},
+    { .default_steps = {0x07c458ff, 0x077b58ff, 0x077b589c, 0x07fb589b},},
 
     /* dc pop_A      */
     { .default_steps = {0x07bb5809},},
@@ -977,7 +977,7 @@ const struct op_microcode microcode[] PROGMEM = {
     { .default_steps = {0x07bb58b9, 0x07bb58c9, 0x07e058ff},},
 
     /* e2 callf_addr */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07e558ff, 0x07e858ff},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07e558ff, 0x07e858ff},},
 
     /* e3 ret        */
     { .default_steps = {0x07ec58ff},},
@@ -986,100 +986,100 @@ const struct op_microcode microcode[] PROGMEM = {
     { .default_steps = {0x0fff58ff},},
 
     /* e5 lea_SP_addr */
-    { .default_steps = {0x07fd58b9, 0x07fd58c9, 0x07d858ff},},
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d858ff},},
 
     /* e6 ldr_A_SP_imm */
-    { .default_steps = {0x07fd58b9, 0x17d358fb, 0x07fa1809},},
+    { .default_steps = {0x07bd58b9, 0x17d358fb, 0x07fa1809},},
 
     /* e7 ldr_B_SP_imm */
-    { .default_steps = {0x07fd58b9, 0x17d358fb, 0x07fa1819},},
+    { .default_steps = {0x07bd58b9, 0x17d358fb, 0x07fa1819},},
 
     /* e8 ldr_C_SP_imm */
-    { .default_steps = {0x07fd58b9, 0x17d358fb, 0x07fa1829},},
+    { .default_steps = {0x07bd58b9, 0x17d358fb, 0x07fa1829},},
 
     /* e9 ldr_D_SP_imm */
-    { .default_steps = {0x07fd58b9, 0x17d358fb, 0x07fa1839},},
+    { .default_steps = {0x07bd58b9, 0x17d358fb, 0x07fa1839},},
 
     /* ea str_SP_imm_A */
-    { .default_steps = {0x07fd58b9, 0x17d358fb, 0x07fa5890},},
+    { .default_steps = {0x07bd58b9, 0x17d358fb, 0x07fa5890},},
 
     /* eb str_SP_imm_B */
-    { .default_steps = {0x07fd58b9, 0x17d358fb, 0x07fa5891},},
+    { .default_steps = {0x07bd58b9, 0x17d358fb, 0x07fa5891},},
 
     /* ec str_SP_imm_C */
-    { .default_steps = {0x07fd58b9, 0x17d358fb, 0x07fa5892},},
+    { .default_steps = {0x07bd58b9, 0x17d358fb, 0x07fa5892},},
 
     /* ed str_SP_imm_D */
-    { .default_steps = {0x07fd58b9, 0x17d358fb, 0x07fa5893},},
+    { .default_steps = {0x07bd58b9, 0x17d358fb, 0x07fa5893},},
 
     /* ee _xprefix   */
-    { .default_steps = {0x05fd5889, 0x07ff58ff},},
+    { .default_steps = {0x05bd5889, 0x07ff58ff},},
 
     /* ef rjmp_imm   */
-    { .default_steps = {0x17d558f9, 0x07ea58ff},},
+    { .default_steps = {0x179558f9, 0x07ea58ff},},
 
     /* f0 beqr_imm   */
-    { .default_steps = {0x07fd58ff},
+    { .default_steps = {0x07bd58ff},
       .f_alt = {
           /* mask: --Z- value: --Z- */
           { .mask = 0x02, .value = 0x02,
-            .steps = {0x17d558f9, 0x07ea58ff},
+            .steps = {0x179558f9, 0x07ea58ff},
           },
       },
     },
 
     /* f1 bner_imm   */
-    { .default_steps = {0x07fd58ff},
+    { .default_steps = {0x07bd58ff},
       .f_alt = {
           /* mask: --Z- value: ---- */
           { .mask = 0x02, .value = 0x00,
-            .steps = {0x17d558f9, 0x07ea58ff},
+            .steps = {0x179558f9, 0x07ea58ff},
           },
       },
     },
 
     /* f2 bcsr_imm   */
-    { .default_steps = {0x07fd58ff},
+    { .default_steps = {0x07bd58ff},
       .f_alt = {
           /* mask: -C-- value: -C-- */
           { .mask = 0x04, .value = 0x04,
-            .steps = {0x17d558f9, 0x07ea58ff},
+            .steps = {0x179558f9, 0x07ea58ff},
           },
       },
     },
 
     /* f3 bccr_imm   */
-    { .default_steps = {0x07fd58ff},
+    { .default_steps = {0x07bd58ff},
       .f_alt = {
           /* mask: -C-- value: ---- */
           { .mask = 0x04, .value = 0x00,
-            .steps = {0x17d558f9, 0x07ea58ff},
+            .steps = {0x179558f9, 0x07ea58ff},
           },
       },
     },
 
     /* f4 bmir_imm   */
-    { .default_steps = {0x07fd58ff},
+    { .default_steps = {0x07bd58ff},
       .f_alt = {
           /* mask: ---N value: ---N */
           { .mask = 0x01, .value = 0x01,
-            .steps = {0x17d558f9, 0x07ea58ff},
+            .steps = {0x179558f9, 0x07ea58ff},
           },
       },
     },
 
     /* f5 bplr_imm   */
-    { .default_steps = {0x07fd58ff},
+    { .default_steps = {0x07bd58ff},
       .f_alt = {
           /* mask: ---N value: ---- */
           { .mask = 0x01, .value = 0x00,
-            .steps = {0x17d558f9, 0x07ea58ff},
+            .steps = {0x179558f9, 0x07ea58ff},
           },
       },
     },
 
     /* f6 rcall_imm  */
-    { .default_steps = {0x17d558f9, 0x07e558ff, 0x07ea58ff},},
+    { .default_steps = {0x179558f9, 0x07e558ff, 0x07ea58ff},},
 
     /* f7 lcmp_A_B   */
     { .default_steps = {0x07ff04f6},},
@@ -1148,5 +1148,5 @@ const struct op_microcode microcode[] PROGMEM = {
     { .default_steps = {0x07ff58ff},},
 
     /* 10d dummyext_imm */
-    { .default_steps = {0x07ff58ff, 0x07ff58ff, 0x07fd5809},},
+    { .default_steps = {0x07ff58ff, 0x07ff58ff, 0x07bd5809},},
 };

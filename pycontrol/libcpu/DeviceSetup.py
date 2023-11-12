@@ -80,12 +80,10 @@ StepCounter = dev.StepCounter("Steps",
     reset = SimplePin(24, Level.LOW),
     extended = SimplePin(25, Level.LOW))
 
-pc_out_inc = MuxPin(AddrOutMux, 5)
-
 PC = dev.ProgramCounter("PC",
-    out = pc_out_inc,
+    out = MuxPin(AddrOutMux, 5),
     load = MuxPin(AddrLoadMux, 5),
-    inc = pc_out_inc)
+    inc = AddrRegInc)
 
 SP = dev.StackPointer("SP",
     out = MuxPin(AddrOutMux, 3),

@@ -33,7 +33,8 @@ def test_pc_count(cpu_helper: CPUHelper, expected: int) -> None:
     cpu_helper.load_reg16(PC, expected - 1)
 
     control = CtrlWord()\
-        .enable(PC.out)
+        .enable(PC.out)\
+        .enable(PC.inc)
     cpu_helper.client.ctrl_commit(control.c_word)
     cpu_helper.client.clock_tick()
 
