@@ -5,11 +5,7 @@
 
     ; print "message"
     lea SDP, message
-print_loop:
-    lpi A, SDP
-    beq repeat
-    out UART_DATA, A
-    jmp print_loop
+    call b_uart_puts
 
 repeat:
     ; continue with receiving chars from UART and echoing back their hex values

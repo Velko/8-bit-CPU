@@ -1,27 +1,34 @@
 #include "instructions.def"
 #include "aliases.def"
+#include "ports.def"
 
-; od -An -v -tx1 bios.bin > bios.hex
-
-RAM_START = 0x2000
-STACK_END = 0xC010
+#const(noemit) RAM_START = 0x2000
+#const(noemit) STACK_END = 0xC010
 
 #bankdef bios
 {
     #bits 8
     #addr 0
     #outp 0 * 8
-    #addr_end 15
+    #addr_end 32
     #fill
 }
 
-
-start:
+; Startup code, is executed after reset
+; * initialize GP registers to zero (nice default)
+; * load SP to dedicated stack area
+; * jump to RAM location where the program should be loaded
+__start:
+    ldi A, 0x55 ; load something, because VerilogVM has X there by default and freaks out
+    clr A       ; when clr (essentially xor A, A) is tried. Should work fine on hardware.
+    mov B, A    ; Can not also ldi A, 0 directly, because we require bytes 0, 1, 2, 4 to
+    mov C, A    ; be non-zero for memory tests
+    mov D, A
     lea SP, STACK_END
-    nop ; filler for 4
     jmp RAM_START
-    nop ; filler for 8
-    brk
+
+
+#include "uart.asm"
 
 ; BIOS code is treated as "known data" for memory system tests. Test reads from "single-bit"
 ; addresses (0, 1, 2, 4, 8, 16, ...).
@@ -29,15 +36,15 @@ start:
 ; addresses. Feel free to replace it with something more useful. Only try to keep the bytes at
 ; these addresses non-zero (nop-pad if required) and somewhat unique.
 
-#bankdef fill16
-{
-    #bits 8
-    #addr 16
-    #outp 16 * 8
-    #addr_end 32
-    #fill
-}
-    hlt
+; #bankdef fill16
+; {
+;     #bits 8
+;     #addr 16
+;     #outp 16 * 8
+;     #addr_end 32
+;     #fill
+; }
+;     hlt
 
 #bankdef fill32
 {

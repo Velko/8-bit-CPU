@@ -21,6 +21,7 @@
 *.vpi
 *.out
 *.log
+*.tmp
 zz_*.ino
 /sample/
 /temp/

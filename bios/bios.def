@@ -1,0 +1,2 @@
+__start = 0x0
+b_uart_puts = 0xc
