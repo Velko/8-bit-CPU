@@ -16,23 +16,13 @@ repeat:
     beq repeat
 
     ; read
-    in C, UART_DATA
+    in A, UART_DATA
 
     ; check for exit symbol
-    ldi B, "~"
-    cmp C, B
+    cmpi A, "~"
     beq exit
 
-    ; print high nibble
-    mov A, C
-    swap A
-    call to_hex
-    out UART_DATA, A
-
-    ; print low nibble
-    mov A, C
-    call to_hex
-    out UART_DATA, A
+    call b_uart_puthex
 
     ; space
     ldi A, " "
@@ -42,28 +32,6 @@ repeat:
 
 exit:
     hlt
-
-
-to_hex:
-    push B
-
-    ldi B, 0x0F
-    and A, B
-
-    ldi B, 10
-    cmp A, B
-    bcc .add_a
-
-    ldi B, "0"
-    add A, B
-    jmp .done
-.add_a:
-    ldi B, "A"-10
-    add A, B
-
-.done:
-    pop B
-    ret
 
 message:
 #d "\x1B[13;35HHellorld!\r\n\0"

@@ -1,7 +1,7 @@
 bios.hex: bios.bin
 	od -An -v -tx1 bios.bin > bios.hex
 
-bios.bin: bios.asm
+bios.bin: bios.asm uart.asm convert.asm
 	customasm bios.asm -- -f symbols -o bios.def.tmp
 	grep -v "\." bios.def.tmp > bios.def
 

@@ -10,7 +10,7 @@
     #bits 8
     #addr 0
     #outp 0 * 8
-    #addr_end 32
+    #addr_end 64
     #fill
 }
 
@@ -29,6 +29,7 @@ __start:
 
 
 #include "uart.asm"
+#include "convert.asm"
 
 ; BIOS code is treated as "known data" for memory system tests. Test reads from "single-bit"
 ; addresses (0, 1, 2, 4, 8, 16, ...).
@@ -46,15 +47,15 @@ __start:
 ; }
 ;     hlt
 
-#bankdef fill32
-{
-    #bits 8
-    #addr 32
-    #outp 32 * 8
-    #addr_end 64
-    #fill
-}
-   inc B
+; #bankdef fill32
+; {
+;     #bits 8
+;     #addr 32
+;     #outp 32 * 8
+;     #addr_end 64
+;     #fill
+; }
+;    inc B
 
 #bankdef fill64
 {
