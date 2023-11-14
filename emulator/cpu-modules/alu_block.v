@@ -13,6 +13,7 @@
 `define B_LOAD       1
 `define C_LOAD       2
 `define D_LOAD       3
+`define T_LOAD       6
 `define F_LOAD       7
 
 `define A_ARG_L       0
@@ -24,6 +25,7 @@
 `define B_ARG_R       1
 `define C_ARG_R       2
 `define D_ARG_R       3
+`define T_ARG_R       4
 
 module alu_block(
         inout [7:0] main_bus,
@@ -97,6 +99,20 @@ module alu_block(
         .loadn(load_mux.y[`D_LOAD]),
         .loutn(arg_l_mux.y[`D_ARG_L]),
         .routn(arg_r_mux.y[`D_ARG_R]),
+
+        .clk(clk),
+        .iclk(iclk),
+
+        .bus(main_bus),
+        .alu_l(alu_arg_l),
+        .alu_r(alu_arg_r)
+    );
+
+    gp_register t(
+        .outn(1'b1),
+        .loadn(load_mux.y[`T_LOAD]),
+        .loutn(1'b1),
+        .routn(arg_r_mux.y[`T_ARG_R]),
 
         .clk(clk),
         .iclk(iclk),

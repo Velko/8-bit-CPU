@@ -28,6 +28,19 @@ def test_and(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPR
     assert value == result
     assert str(flags) == xflags
 
+@pytest.mark.parametrize("reg", gp_regs)
+@pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", and_test_args())
+def test_andi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+    cpu_helper.load_reg8(reg, val_a)
+
+    acpu.andi(reg, val_b)
+
+    value = cpu_helper.read_reg8(reg)
+    flags = cpu_helper.get_flags(Flags.Z | Flags.N) # we are only interested in Z and N flags
+    assert value == result
+    assert str(flags) == xflags
+
+
 
 def or_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
     yield "small", 230, 92, 254, "---N"
@@ -45,6 +58,20 @@ def test_or(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRe
     flags = cpu_helper.get_flags(Flags.Z | Flags.N)
     assert value == result
     assert str(flags) == xflags
+
+
+@pytest.mark.parametrize("reg", gp_regs)
+@pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", or_test_args())
+def test_ori(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+    cpu_helper.load_reg8(reg, val_a)
+
+    acpu.ori(reg, val_b)
+
+    value = cpu_helper.read_reg8(reg)
+    flags = cpu_helper.get_flags(Flags.Z | Flags.N) # we are only interested in Z and N flags
+    assert value == result
+    assert str(flags) == xflags
+
 
 
 
@@ -224,6 +251,19 @@ def test_xor_zero_same(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     assert value == 0
     assert str(flags) == "--Z-"
+
+
+@pytest.mark.parametrize("reg", gp_regs)
+@pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", xor_test_args())
+def test_xori(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+    cpu_helper.load_reg8(reg, val_a)
+
+    acpu.xori(reg, val_b)
+
+    value = cpu_helper.read_reg8(reg)
+    flags = cpu_helper.get_flags(Flags.Z | Flags.N) # we are only interested in Z and N flags
+    assert value == result
+    assert str(flags) == xflags
 
 
 def not_args() -> Iterator[Tuple[str, int, int, str]]:

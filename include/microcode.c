@@ -1135,18 +1135,158 @@ const struct op_microcode microcode[] PROGMEM = {
     /* 108 padding25  */
     { .default_steps = {0x07ff58ff},},
 
-    /* 109 padding26  */
-    { .default_steps = {0x07ff58ff},},
+    /* 109 addi_A_imm */
+    { .default_steps = {0x07bd5869, 0x07ff1005},},
 
-    /* 10a padding27  */
-    { .default_steps = {0x07ff58ff},},
+    /* 10a addi_B_imm */
+    { .default_steps = {0x07bd5869, 0x07ff1115},},
 
-    /* 10b padding28  */
-    { .default_steps = {0x07ff58ff},},
+    /* 10b addi_C_imm */
+    { .default_steps = {0x07bd5869, 0x07ff1225},},
 
-    /* 10c padding29  */
-    { .default_steps = {0x07ff58ff},},
+    /* 10c addi_D_imm */
+    { .default_steps = {0x07bd5869, 0x07ff1335},},
 
     /* 10d dummyext_imm */
     { .default_steps = {0x07ff58ff, 0x07ff58ff, 0x07bd5809},},
+
+    /* 10e adci_A_imm */
+    { .default_steps = {0x07bd5869, 0x07ff1005},
+      .f_alt = {
+          /* mask: -C-- value: -C-- */
+          { .mask = 0x04, .value = 0x04,
+            .steps = {0x07bd5869, 0x07ff9005},
+          },
+      },
+    },
+
+    /* 10f adci_B_imm */
+    { .default_steps = {0x07bd5869, 0x07ff1115},
+      .f_alt = {
+          /* mask: -C-- value: -C-- */
+          { .mask = 0x04, .value = 0x04,
+            .steps = {0x07bd5869, 0x07ff9115},
+          },
+      },
+    },
+
+    /* 110 adci_C_imm */
+    { .default_steps = {0x07bd5869, 0x07ff1225},
+      .f_alt = {
+          /* mask: -C-- value: -C-- */
+          { .mask = 0x04, .value = 0x04,
+            .steps = {0x07bd5869, 0x07ff9225},
+          },
+      },
+    },
+
+    /* 111 adci_D_imm */
+    { .default_steps = {0x07bd5869, 0x07ff1335},
+      .f_alt = {
+          /* mask: -C-- value: -C-- */
+          { .mask = 0x04, .value = 0x04,
+            .steps = {0x07bd5869, 0x07ff9335},
+          },
+      },
+    },
+
+    /* 112 subi_A_imm */
+    { .default_steps = {0x07bd5869, 0x07ff3005},},
+
+    /* 113 subi_B_imm */
+    { .default_steps = {0x07bd5869, 0x07ff3115},},
+
+    /* 114 subi_C_imm */
+    { .default_steps = {0x07bd5869, 0x07ff3225},},
+
+    /* 115 subi_D_imm */
+    { .default_steps = {0x07bd5869, 0x07ff3335},},
+
+    /* 116 cmpi_A_imm */
+    { .default_steps = {0x07bd5869, 0x07ff30f5},},
+
+    /* 117 cmpi_B_imm */
+    { .default_steps = {0x07bd5869, 0x07ff31f5},},
+
+    /* 118 cmpi_C_imm */
+    { .default_steps = {0x07bd5869, 0x07ff32f5},},
+
+    /* 119 cmpi_D_imm */
+    { .default_steps = {0x07bd5869, 0x07ff33f5},},
+
+    /* 11a sbbi_A_imm */
+    { .default_steps = {0x07bd5869, 0x07ff3005},
+      .f_alt = {
+          /* mask: -C-- value: -C-- */
+          { .mask = 0x04, .value = 0x04,
+            .steps = {0x07bd5869, 0x07ffb005},
+          },
+      },
+    },
+
+    /* 11b sbbi_B_imm */
+    { .default_steps = {0x07bd5869, 0x07ff3115},
+      .f_alt = {
+          /* mask: -C-- value: -C-- */
+          { .mask = 0x04, .value = 0x04,
+            .steps = {0x07bd5869, 0x07ffb115},
+          },
+      },
+    },
+
+    /* 11c sbbi_C_imm */
+    { .default_steps = {0x07bd5869, 0x07ff3225},
+      .f_alt = {
+          /* mask: -C-- value: -C-- */
+          { .mask = 0x04, .value = 0x04,
+            .steps = {0x07bd5869, 0x07ffb225},
+          },
+      },
+    },
+
+    /* 11d sbbi_D_imm */
+    { .default_steps = {0x07bd5869, 0x07ff3335},
+      .f_alt = {
+          /* mask: -C-- value: -C-- */
+          { .mask = 0x04, .value = 0x04,
+            .steps = {0x07bd5869, 0x07ffb335},
+          },
+      },
+    },
+
+    /* 11e andi_A_imm */
+    { .default_steps = {0x07bd5869, 0x07ff1006},},
+
+    /* 11f andi_B_imm */
+    { .default_steps = {0x07bd5869, 0x07ff1116},},
+
+    /* 120 andi_C_imm */
+    { .default_steps = {0x07bd5869, 0x07ff1226},},
+
+    /* 121 andi_D_imm */
+    { .default_steps = {0x07bd5869, 0x07ff1336},},
+
+    /* 122 ori_A_imm  */
+    { .default_steps = {0x07bd5869, 0x07ff3006},},
+
+    /* 123 ori_B_imm  */
+    { .default_steps = {0x07bd5869, 0x07ff3116},},
+
+    /* 124 ori_C_imm  */
+    { .default_steps = {0x07bd5869, 0x07ff3226},},
+
+    /* 125 ori_D_imm  */
+    { .default_steps = {0x07bd5869, 0x07ff3336},},
+
+    /* 126 xori_A_imm */
+    { .default_steps = {0x07bd5869, 0x07ff100a},},
+
+    /* 127 xori_B_imm */
+    { .default_steps = {0x07bd5869, 0x07ff111a},},
+
+    /* 128 xori_C_imm */
+    { .default_steps = {0x07bd5869, 0x07ff122a},},
+
+    /* 129 xori_D_imm */
+    { .default_steps = {0x07bd5869, 0x07ff133a},},
 };

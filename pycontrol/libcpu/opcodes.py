@@ -346,9 +346,13 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
         .add_step(TX.out, SDP.load)
 
     # create a bunch of NOPs to exceed 255 instructions
-    for n in range(25, 30):
-        builder.add_instruction(f"padding{n}")\
-            .add_step()
+    builder.add_instruction(f"padding25")\
+        .add_step()
+
+    for r in gp_regs:
+        builder.add_instruction("addi", r, OpcodeArg.BYTE)\
+            .add_step(PC.out, PC.inc, ProgMem.out, T.load)\
+            .add_step(r.load, r.alu_l, T.alu_r, AddSub.out, F.calc)
 
     # dummy instruction - same as ldi A, imm
     # ext bit should stick, even if it is not
@@ -357,6 +361,47 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
         .add_step()\
         .add_step()\
         .add_step(PC.out, PC.inc, ProgMem.out, A.load)
+
+    for r in gp_regs:
+        builder.add_instruction("adci", r, OpcodeArg.BYTE)\
+            .add_step(PC.out, PC.inc, ProgMem.out, T.load)\
+            .add_step(r.load, r.alu_l, T.alu_r, AddSub.out, F.calc)\
+            .add_condition(mask=Flags.C, value=Flags.C)\
+                .add_step(PC.out, PC.inc, ProgMem.out, T.load)\
+                .add_step(r.load, r.alu_l, T.alu_r, AddSub.out, F.calc, F.carry)
+
+    for r in gp_regs:
+        builder.add_instruction("subi", r, OpcodeArg.BYTE)\
+            .add_step(PC.out, PC.inc, ProgMem.out, T.load)\
+            .add_step(r.load, r.alu_l, T.alu_r, AddSub.out, AddSub.alt, F.calc)
+
+    for r in gp_regs:
+        builder.add_instruction("cmpi", r, OpcodeArg.BYTE)\
+            .add_step(PC.out, PC.inc, ProgMem.out, T.load)\
+            .add_step(r.alu_l, T.alu_r, AddSub.out, AddSub.alt, F.calc)
+
+    for r in gp_regs:
+        builder.add_instruction("sbbi", r, OpcodeArg.BYTE)\
+            .add_step(PC.out, PC.inc, ProgMem.out, T.load)\
+            .add_step(r.load, r.alu_l, T.alu_r, AddSub.out, AddSub.alt, F.calc)\
+            .add_condition(mask=Flags.C, value=Flags.C)\
+                .add_step(PC.out, PC.inc, ProgMem.out, T.load)\
+                .add_step(r.load, r.alu_l, T.alu_r, AddSub.out, AddSub.alt, F.calc, F.carry)
+
+    for r in gp_regs:
+        builder.add_instruction("andi", r, OpcodeArg.BYTE)\
+            .add_step(PC.out, PC.inc, ProgMem.out, T.load)\
+            .add_step(r.load, r.alu_l, T.alu_r, AndOr.out, F.calc)
+
+    for r in gp_regs:
+        builder.add_instruction("ori", r, OpcodeArg.BYTE)\
+            .add_step(PC.out, PC.inc, ProgMem.out, T.load)\
+            .add_step(r.load, r.alu_l, T.alu_r, AndOr.out, AndOr.alt, F.calc)
+
+    for r in gp_regs:
+        builder.add_instruction("xori", r, OpcodeArg.BYTE)\
+            .add_step(PC.out, PC.inc, ProgMem.out, T.load)\
+            .add_step(r.load, r.alu_l, T.alu_r, XorNot.out, F.calc)
 
     return builder.build()
 

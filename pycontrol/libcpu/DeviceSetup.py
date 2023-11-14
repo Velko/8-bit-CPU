@@ -40,6 +40,10 @@ D = dev.GPRegister("D",
     alu_l = MuxPin(AluArgL, 3),
     alu_r = MuxPin(AluArgR, 3))
 
+T = dev.TempRegister("T",
+    load = MuxPin(LoadMux, 6),
+    alu_r = MuxPin(AluArgR, 4))
+
 AddSub = dev.ALU("AddSub",
     out = MuxPin(OutMux, 5),
     alt = AluAltFn)

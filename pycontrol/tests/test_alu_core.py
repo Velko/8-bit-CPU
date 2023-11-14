@@ -48,6 +48,18 @@ def test_add_aa(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc
     assert flags == xflags
 
 
+@pytest.mark.parametrize("reg", gp_regs)
+@pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", add_ab_test_args())
+def test_addi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+    cpu_helper.load_reg8(reg, val_a)
+
+    acpu.addi(reg, val_b)
+
+    value = cpu_helper.read_reg8(reg)
+    flags = cpu_helper.get_flags_s()
+    assert value == result
+    assert flags == xflags
+
 
 def sub_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
     yield "small", 4, 3, 1, "----"
@@ -65,6 +77,19 @@ def test_sub(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPR
     acpu.sub(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
+    flags = cpu_helper.get_flags_s()
+    assert value == result
+    assert flags == xflags
+
+
+@pytest.mark.parametrize("reg", gp_regs)
+@pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", sub_test_args())
+def test_subi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+    cpu_helper.load_reg8(reg, val_a)
+
+    acpu.subi(reg, val_b)
+
+    value = cpu_helper.read_reg8(reg)
     flags = cpu_helper.get_flags_s()
     assert value == result
     assert flags == xflags
@@ -106,6 +131,32 @@ def test_adc_ab_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegiste
     assert flags == xflags
 
 
+@pytest.mark.parametrize("reg", gp_regs)
+@pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", adc_ab_test_args())
+def test_adci_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+    cpu_helper.load_flags(Flags.C)
+    cpu_helper.load_reg8(reg, val_a)
+
+    acpu.adci(reg, val_b)
+
+    value = cpu_helper.read_reg8(reg)
+    flags = cpu_helper.get_flags_s()
+    assert value == result
+    assert flags == xflags
+
+@pytest.mark.parametrize("reg", gp_regs)
+@pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", add_ab_test_args())
+def test_adci_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+    acpu.ldi (F, Flags.Empty)
+    cpu_helper.load_reg8(reg, val_a)
+
+    acpu.adci(reg, val_b)
+
+    value = cpu_helper.read_reg8(reg)
+    flags = cpu_helper.get_flags_s()
+    assert value == result
+    assert flags == xflags
+
 def sbb_test_args() -> Iterator[Tuple[str, int, int, int, str]]:
     yield "small", 5, 3, 1, "----"
     yield "zero", 4, 3, 0, "--Z-"
@@ -137,6 +188,33 @@ def test_sbb_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, 
     acpu.sbb(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
+    flags = cpu_helper.get_flags_s()
+    assert value == result
+    assert flags == xflags
+
+
+@pytest.mark.parametrize("reg", gp_regs)
+@pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", sbb_test_args())
+def test_sbbi_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+    cpu_helper.load_flags(Flags.C)
+    cpu_helper.load_reg8(reg, val_a)
+
+    acpu.sbbi(reg, val_b)
+
+    value = cpu_helper.read_reg8(reg)
+    flags = cpu_helper.get_flags_s()
+    assert value == result
+    assert flags == xflags
+
+@pytest.mark.parametrize("reg", gp_regs)
+@pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", sub_test_args())
+def test_sbbi_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+    acpu.ldi (F, Flags.Empty)
+    cpu_helper.load_reg8(reg, val_a)
+
+    acpu.sbbi(reg, val_b)
+
+    value = cpu_helper.read_reg8(reg)
     flags = cpu_helper.get_flags_s()
     assert value == result
     assert flags == xflags

@@ -31,29 +31,57 @@ class AssistedCPU(AssistedCPUEngine):
         opcode = f"add_{target.name}_{arg.name}"
         self.execute_mnemonic(opcode)
 
+    def addi(self, target: GPRegister, value: int) -> None:
+        opcode = f"addi_{target.name}_imm"
+        self.execute_mnemonic(opcode, value)
+
     def adc(self, target: GPRegister, arg: GPRegister) -> None:
         opcode = f"adc_{target.name}_{arg.name}"
         self.execute_mnemonic(opcode)
+
+    def adci(self, target: GPRegister, value: int) -> None:
+        opcode = f"adci_{target.name}_imm"
+        self.execute_mnemonic(opcode, value)
 
     def sub(self, target: GPRegister, arg: GPRegister) -> None:
         opcode = f"sub_{target.name}_{arg.name}"
         self.execute_mnemonic(opcode)
 
+    def subi(self, target: GPRegister, value: int) -> None:
+        opcode = f"subi_{target.name}_imm"
+        self.execute_mnemonic(opcode, value)
+
     def sbb(self, target: GPRegister, arg: GPRegister) -> None:
         opcode = f"sbb_{target.name}_{arg.name}"
         self.execute_mnemonic(opcode)
+
+    def sbbi(self, target: GPRegister, value: int) -> None:
+        opcode = f"sbbi_{target.name}_imm"
+        self.execute_mnemonic(opcode, value)
 
     def andb(self, target: GPRegister, arg: GPRegister) -> None:
         opcode = f"and_{target.name}_{arg.name}"
         self.execute_mnemonic(opcode)
 
+    def andi(self, target: GPRegister, value: int) -> None:
+        opcode = f"andi_{target.name}_imm"
+        self.execute_mnemonic(opcode, value)
+
     def orb(self, target: GPRegister, arg: GPRegister) -> None:
         opcode = f"or_{target.name}_{arg.name}"
         self.execute_mnemonic(opcode)
 
+    def ori(self, target: GPRegister, value: int) -> None:
+        opcode = f"ori_{target.name}_imm"
+        self.execute_mnemonic(opcode, value)
+
     def xor(self, target: GPRegister, arg: GPRegister) -> None:
         opcode = f"xor_{target.name}_{arg.name}"
         self.execute_mnemonic(opcode)
+
+    def xori(self, target: GPRegister, value: int) -> None:
+        opcode = f"xori_{target.name}_imm"
+        self.execute_mnemonic(opcode, value)
 
     def clr(self, arg: GPRegister) -> None:
         opcode = f"clr_{arg.name}"
@@ -90,6 +118,10 @@ class AssistedCPU(AssistedCPUEngine):
     def cmp(self, target: GPRegister, arg: GPRegister) -> None:
         opcode = f"cmp_{target.name}_{arg.name}"
         self.execute_mnemonic(opcode)
+
+    def cmpi(self, target: GPRegister, value: int) -> None:
+        opcode = f"cmpi_{target.name}_imm"
+        self.execute_mnemonic(opcode, value)
 
     def mov(self, target: GPRegister, source: GPRegister) -> None:
         opcode = f"mov_{target.name}_{source.name}"
