@@ -28,7 +28,7 @@ module tb_memory;
         // output current at addr 8 (ROM)
         outn <= 0;
         #1
-        `assert(mbus, 8'he4);
+        `assert(mbus, 8'hc0);
 
         // output current at addr 0x2003 (ROM)
         addr <= 16'h2003;
