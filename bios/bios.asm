@@ -10,7 +10,7 @@
     #bits 8
     #addr 0
     #outp 0 * 8
-    #addr_end 128
+    #addr_end 256
     #fill
 }
 
@@ -68,15 +68,15 @@ __start:
 ;    shr C
 
 
-#bankdef fill128
-{
-    #bits 8
-    #addr 128
-    #outp 128 * 8
-    #addr_end 256
-    #fill
-}
-   mov B, C
+; #bankdef fill128
+; {
+;     #bits 8
+;     #addr 128
+;     #outp 128 * 8
+;     #addr_end 256
+;     #fill
+; }
+;    mov B, C
 
 #bankdef fill256
 {

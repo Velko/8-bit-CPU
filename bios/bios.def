@@ -1,5 +1,6 @@
 __start = 0x0
 b_uart_puts = 0xc
 b_uart_puthex = 0x17
-b_to_hex = 0x25
-b_to_dec = 0x36
+b_uart_putdec = 0x25
+b_to_hex = 0x56
+b_to_dec = 0x67
