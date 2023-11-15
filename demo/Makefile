@@ -1,5 +1,6 @@
 
-all: double_dabble.bin fibo32.bin fibo.bin hello.bin hello_lcd.bin prime_sieve.bin add18.bin squares2.bin squares.bin uart.bin
+all: double_dabble.bin fibo32.bin fibo.bin hello.bin hello_lcd.bin prime_sieve.bin\
+	add18.bin squares2.bin squares.bin uart.bin uart_output.bin
 
 
 double_dabble.bin: double_dabble.asm
@@ -31,6 +32,9 @@ squares.bin: squares.asm
 
 uart.bin: uart.asm
 	customasm uart.asm
+
+uart_output.bin: uart_output.asm
+	customasm uart_output.asm
 
 clean:
 	rm -rf *.bin

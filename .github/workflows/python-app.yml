@@ -69,3 +69,5 @@ jobs:
         python ../pycontrol/tools/exec_bin.py prime_sieve.bin | diff -u primes.txt -
         customasm double_dabble.asm
         python ../pycontrol/tools/exec_bin.py double_dabble.bin | grep -q "36324058"
+        customasm uart_output.asm
+        python ../pycontrol/tools/exec_bin.py -M uart_output.bin | diff -u uart_output.txt -
