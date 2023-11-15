@@ -29,13 +29,7 @@ def upload(filename: str) -> None:
 
 
 
-def run(reset_only: bool) -> None:
-
-    # Reset PC
-    cpu_helper.client.reset()
-
-    if reset_only:
-        return;
+def run() -> None:
 
     # Drumroll... now it should happen for real
     print ("# Running ...", flush=True, file=sys.stderr)
@@ -55,6 +49,14 @@ def run(reset_only: bool) -> None:
             case OutMessage(payload):
                 print(payload, end="", flush=True)
 
+def monitor():
+    print ("# Running (raw)...", flush=True, file=sys.stderr)
+    cpu_helper.client.send_cmd("R")
+    for line in cpu_helper.client.receive_lines():
+        print(line)
+        if line.endswith("#HLT"):
+            print ("# Halted", flush=True, file=sys.stderr)
+            return
 
 if __name__ == "__main__":
 
@@ -65,8 +67,13 @@ if __name__ == "__main__":
 
     parser.add_argument("filename")
     parser.add_argument("-u", "--upload-only", action="store_true", help="upload binary and reset CPU, do not start the program")
+    parser.add_argument("-M", "--monitor", action="store_true", help="listen for raw UART communication")
 
     args = parser.parse_args()
 
     upload(args.filename)
-    run(args.upload_only)
+    cpu_helper.client.reset()
+    if args.monitor:
+        monitor()
+    elif not args.upload_only:
+        run()
