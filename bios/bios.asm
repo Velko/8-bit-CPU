@@ -10,7 +10,7 @@
     #bits 8
     #addr 0
     #outp 0 * 8
-    #addr_end 64
+    #addr_end 128
     #fill
 }
 
@@ -57,15 +57,15 @@ __start:
 ; }
 ;    inc B
 
-#bankdef fill64
-{
-    #bits 8
-    #addr 64
-    #outp 64 * 8
-    #addr_end 128
-    #fill
-}
-   shr C
+; #bankdef fill64
+; {
+;     #bits 8
+;     #addr 64
+;     #outp 64 * 8
+;     #addr_end 128
+;     #fill
+; }
+;    shr C
 
 
 #bankdef fill128
