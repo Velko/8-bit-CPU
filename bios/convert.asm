@@ -1,3 +1,12 @@
+; ********************************************************************************
+; Convert lowest nibble of value to hexadecimal digit.
+; Parameters:
+;   A - value to convert
+; Returns:
+;   A - hexadecimal digit
+; Post state:
+;   other registers unchanged
+; ********************************************************************************
 b_to_hex:
     andi A, 0x0F
 
@@ -13,7 +22,15 @@ b_to_hex:
     ret
 
 
-
+; ********************************************************************************
+; Convert 8-bit value to BCD encoded.
+; Parameters:
+;   A - value to convert
+; Returns:
+;   A, B - encoded BCD digits: lo(A), hi(B), lo(B)
+; Post state:
+;   other registers unchanged
+; ********************************************************************************
 b_to_dec:
     clr B       ; initialize 2 lowest digits
 

@@ -1,4 +1,10 @@
-
+; ********************************************************************************
+; Send null-terminated string via UART
+; Parameters:
+;   SDP - pointer to a string to send
+; Post state:
+;   SDP points to null-terminating character
+; ********************************************************************************
 b_uart_puts:
     push A
 .loop:
@@ -10,6 +16,13 @@ b_uart_puts:
     pop A
     ret
 
+; ********************************************************************************
+; Send hexadecimal representation of 8-bit value via UART
+; Parameters:
+;   A - value to send
+; Post state:
+;   A - ASCII of last character sent
+; ********************************************************************************
 b_uart_puthex:
     push LR
     push A  ; preserve A, will need once more
@@ -27,6 +40,13 @@ b_uart_puthex:
     pop LR
     ret
 
+; ********************************************************************************
+; Send decimal representation of 8-bit value via UART
+; Parameters:
+;   A - value to send
+; Post state:
+;   A - ASCII of last character sent
+; ********************************************************************************
 b_uart_putdec:
     push LR
     push B
