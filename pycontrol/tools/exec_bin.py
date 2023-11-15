@@ -49,7 +49,7 @@ def run() -> None:
             case OutMessage(payload):
                 print(payload, end="", flush=True)
 
-def monitor():
+def monitor() -> None:
     print ("# Running (raw)...", flush=True, file=sys.stderr)
     cpu_helper.client.send_cmd("R")
     for line in cpu_helper.client.receive_lines():
