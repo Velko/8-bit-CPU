@@ -1,6 +1,7 @@
 import pytest
 import random
 import os
+from dataclasses import dataclass
 import localpath
 localpath.install()
 
@@ -9,6 +10,7 @@ from typing import  Sequence, Iterator, Optional, Iterable
 
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.pinclient import PinClient, get_client_instance
+from libcpu.devices import DeviceBase
 
 @pytest.fixture(scope="session")
 def pins_client_real() -> Iterator[PinClient]:
@@ -51,3 +53,17 @@ class FillRam:
 
         for addr, value in self.contents.items():
             cpu_helper.write_ram(addr, value)
+
+def devname(reg: DeviceBase) -> str:
+    return f"{reg.name} "
+
+@dataclass
+class ALUTestCase:
+    name: str
+    val_a: int
+    val_b: int
+    result: int
+    xflags: str
+
+    def __str__(self):
+        return f"{self.name}: ({self.val_a}, {self.val_b}) -> ({self.result}, {self.xflags}) "

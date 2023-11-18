@@ -4,38 +4,39 @@ import pytest
 
 from libcpu.opcodes import permute_gp_regs_nsame, gp_regs
 from libcpu.devices import GPRegister, Flags
-from typing import Iterator, Tuple
 
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.DeviceSetup import F
 
+from conftest import ALUTestCase, devname
+
 pytestmark = pytest.mark.hardware
 
 add_ab_test_args = [
-    ("small", 24, 18, 42, "----"),
-    ("wraparound", 245, 18, 7, "-C--"),
-    ("overflow_to_negative", 126, 4, 130, "V--N"),
-    ("overflow_to_positive", 226, 145, 115, "VC--"),
-    ("to_zero", 246, 10, 0, "-CZ-"),
+    ALUTestCase("small", 24, 18, 42, "----"),
+    ALUTestCase("wraparound", 245, 18, 7, "-C--"),
+    ALUTestCase("overflow_to_negative", 126, 4, 130, "V--N"),
+    ALUTestCase("overflow_to_positive", 226, 145, 115, "VC--"),
+    ALUTestCase("to_zero", 246, 10, 0, "-CZ-"),
 ]
 
 add_aa_test_args = [
     ("small", 25, 50, "----"),
 ]
 
-@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
-@pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", add_ab_test_args)
-def test_add_ab(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
-    cpu_helper.load_reg8(lhs, val_a)
-    cpu_helper.load_reg8(rhs, val_b)
+@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
+@pytest.mark.parametrize("case", add_ab_test_args, ids=str)
+def test_add_ab(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTestCase) -> None:
+    cpu_helper.load_reg8(lhs, case.val_a)
+    cpu_helper.load_reg8(rhs, case.val_b)
 
     acpu.add(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
     flags = cpu_helper.get_flags_s()
-    assert value == result
-    assert flags == xflags
+    assert value == case.result
+    assert flags == case.xflags
 
 @pytest.mark.parametrize("reg", gp_regs)
 @pytest.mark.parametrize("_desc,val,result,xflags", add_aa_test_args)
@@ -50,17 +51,17 @@ def test_add_aa(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc
     assert flags == xflags
 
 
-@pytest.mark.parametrize("reg", gp_regs)
-@pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", add_ab_test_args)
-def test_addi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
-    cpu_helper.load_reg8(reg, val_a)
+@pytest.mark.parametrize("reg", gp_regs, ids=devname)
+@pytest.mark.parametrize("case", add_ab_test_args, ids=str)
+def test_addi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTestCase) -> None:
+    cpu_helper.load_reg8(reg, case.val_a)
 
-    acpu.addi(reg, val_b)
+    acpu.addi(reg, case.val_b)
 
     value = cpu_helper.read_reg8(reg)
     flags = cpu_helper.get_flags_s()
-    assert value == result
-    assert flags == xflags
+    assert value == case.result
+    assert flags == case.xflags
 
 
 sub_test_args = [
@@ -120,19 +121,19 @@ def test_adc_ab_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister,
     assert value == result
     assert flags == xflags
 
-@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
-@pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", add_ab_test_args)
-def test_adc_ab_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
+@pytest.mark.parametrize("case", add_ab_test_args, ids=str)
+def test_adc_ab_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTestCase) -> None:
     acpu.ldi (F, Flags.Empty)
-    cpu_helper.load_reg8(lhs, val_a)
-    cpu_helper.load_reg8(rhs, val_b)
+    cpu_helper.load_reg8(lhs, case.val_a)
+    cpu_helper.load_reg8(rhs, case.val_b)
 
     acpu.adc(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
     flags = cpu_helper.get_flags_s()
-    assert value == result
-    assert flags == xflags
+    assert value == case.result
+    assert flags == case.xflags
 
 
 @pytest.mark.parametrize("reg", gp_regs)
@@ -148,18 +149,18 @@ def test_adci_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _
     assert value == result
     assert flags == xflags
 
-@pytest.mark.parametrize("reg", gp_regs)
-@pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", add_ab_test_args)
-def test_adci_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
+@pytest.mark.parametrize("reg", gp_regs, ids=devname)
+@pytest.mark.parametrize("case", add_ab_test_args, ids=str)
+def test_adci_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTestCase) -> None:
     acpu.ldi (F, Flags.Empty)
-    cpu_helper.load_reg8(reg, val_a)
+    cpu_helper.load_reg8(reg, case.val_a)
 
-    acpu.adci(reg, val_b)
+    acpu.adci(reg, case.val_b)
 
     value = cpu_helper.read_reg8(reg)
     flags = cpu_helper.get_flags_s()
-    assert value == result
-    assert flags == xflags
+    assert value == case.result
+    assert flags == case.xflags
 
 sbb_test_args = [
     ("small", 5, 3, 1, "----"),
