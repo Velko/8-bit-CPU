@@ -10,12 +10,13 @@ from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 from typing import Iterator, Tuple
 
 
-def acalc_params() -> Iterator[Tuple[str, int, int, bool, int]]:
-    yield "signed", 64737, 168, True, 64737 + 168 - 256
-    yield "unsigned", 64737, 168, False, 64737 + 168
+acalc_params = [
+    ("signed", 64737, 168, True, 64737 + 168 - 256),
+    ("unsigned", 64737, 168, False, 64737 + 168),
+]
 
 
-@pytest.mark.parametrize("_name,addr,offset,signed,expected", acalc_params())
+@pytest.mark.parametrize("_name,addr,offset,signed,expected", acalc_params)
 def test_acalc(pins_client_real: PinClient, _name: str, addr: int, offset: int, signed: bool, expected: int) -> None:
     cpu_helper = CPUHelper(pins_client_real)
 

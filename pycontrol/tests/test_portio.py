@@ -19,15 +19,16 @@ def test_outa_emu_char(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 def ansi_red(text: str) -> str:
     return f"\x1b[1;31m{text}\x1b[0m\n"
 
-def outb_args() -> Iterator[Tuple[str, int, int, str]]:
-    yield "unsigned small", 0, 110, ansi_red(" 110")
-    yield "unsigned large", 0, 245, ansi_red(" 245")
-    yield "signed positive", 1, 40, ansi_red("  40")
-    yield "signed negative", 1, 140, ansi_red("-116")
-    yield "hex", 2, 233, ansi_red("h e9")
-    yield "oct", 3, 89, ansi_red("o131")
+outb_args = [
+    ("unsigned small", 0, 110, ansi_red(" 110")),
+    ("unsigned large", 0, 245, ansi_red(" 245")),
+    ("signed positive", 1, 40, ansi_red("  40")),
+    ("signed negative", 1, 140, ansi_red("-116")),
+    ("hex", 2, 233, ansi_red("h e9")),
+    ("oct", 3, 89, ansi_red("o131")),
+]
 
-@pytest.mark.parametrize("_desc,mode,val,expected", outb_args())
+@pytest.mark.parametrize("_desc,mode,val,expected", outb_args)
 def test_outa_emu_num(cpu_helper: CPUHelper, acpu: AssistedCPU, _desc: str, mode: int, val: int, expected: str) -> None:
     cpu_helper.load_reg8(B, mode)
     acpu.out(1, B)
@@ -39,7 +40,7 @@ def test_outa_emu_num(cpu_helper: CPUHelper, acpu: AssistedCPU, _desc: str, mode
     assert message.payload == expected
 
 @pytest.mark.emulator
-@pytest.mark.parametrize("_desc,mode,val,expected", outb_args())
+@pytest.mark.parametrize("_desc,mode,val,expected", outb_args)
 def test_outb_int_hw(cpu_helper: CPUHelper, _desc: str, mode: int, val: int, expected: str) -> None:
 
     cpu_helper.load_reg8(D, mode)
