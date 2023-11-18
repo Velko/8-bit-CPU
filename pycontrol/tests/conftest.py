@@ -65,5 +65,5 @@ class ALUTestCase:
     result: int
     xflags: str
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.name}: ({self.val_a}, {self.val_b}) -> ({self.result}, {self.xflags}) "

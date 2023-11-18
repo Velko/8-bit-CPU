@@ -7,72 +7,73 @@ from libcpu.assisted_cpu import AssistedCPU
 from libcpu.DeviceSetup import A
 from libcpu.opcodes import permute_gp_regs_nsame, gp_regs, opcode_of
 from libcpu.devices import GPRegister, Flags
-from typing import Iterator, Tuple
+
+from conftest import ALUTestCase, devname
 
 pytestmark = pytest.mark.hardware
 
 and_test_args = [
-    ("small", 230, 92, 68, "----"),
-    ("zero", 0xa5, 0x5a, 0, "--Z-"),
+    ALUTestCase("small", 230, 92, 68, "----"),
+    ALUTestCase("zero", 0xa5, 0x5a, 0, "--Z-"),
 ]
 
-@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
-@pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", and_test_args)
-def test_and(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
-    cpu_helper.load_reg8(lhs, val_a)
-    cpu_helper.load_reg8(rhs, val_b)
+@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
+@pytest.mark.parametrize("case", and_test_args)
+def test_and(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTestCase) -> None:
+    cpu_helper.load_reg8(lhs, case.val_a)
+    cpu_helper.load_reg8(rhs, case.val_b)
 
     acpu.andb(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
     flags = cpu_helper.get_flags(Flags.Z | Flags.N) # we are only interested in Z and N flags
-    assert value == result
-    assert str(flags) == xflags
+    assert value == case.result
+    assert str(flags) == case.xflags
 
-@pytest.mark.parametrize("reg", gp_regs)
-@pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", and_test_args)
-def test_andi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
-    cpu_helper.load_reg8(reg, val_a)
+@pytest.mark.parametrize("reg", gp_regs, ids=devname)
+@pytest.mark.parametrize("case", and_test_args)
+def test_andi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTestCase) -> None:
+    cpu_helper.load_reg8(reg, case.val_a)
 
-    acpu.andi(reg, val_b)
+    acpu.andi(reg, case.val_b)
 
     value = cpu_helper.read_reg8(reg)
     flags = cpu_helper.get_flags(Flags.Z | Flags.N) # we are only interested in Z and N flags
-    assert value == result
-    assert str(flags) == xflags
+    assert value == case.result
+    assert str(flags) == case.xflags
 
 
 
 or_test_args = [
-    ("small", 230, 92, 254, "---N"),
-    ("full", 0xa5, 0x5a, 0xff, "---N"),
+    ALUTestCase("small", 230, 92, 254, "---N"),
+    ALUTestCase("full", 0xa5, 0x5a, 0xff, "---N"),
 ]
 
-@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
-@pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", or_test_args)
-def test_or(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
-    cpu_helper.load_reg8(lhs, val_a)
-    cpu_helper.load_reg8(rhs, val_b)
+@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
+@pytest.mark.parametrize("case", or_test_args)
+def test_or(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTestCase) -> None:
+    cpu_helper.load_reg8(lhs, case.val_a)
+    cpu_helper.load_reg8(rhs, case.val_b)
 
     acpu.orb(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
     flags = cpu_helper.get_flags(Flags.Z | Flags.N)
-    assert value == result
-    assert str(flags) == xflags
+    assert value == case.result
+    assert str(flags) == case.xflags
 
 
-@pytest.mark.parametrize("reg", gp_regs)
-@pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", or_test_args)
-def test_ori(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
-    cpu_helper.load_reg8(reg, val_a)
+@pytest.mark.parametrize("reg", gp_regs, ids=devname)
+@pytest.mark.parametrize("case", or_test_args)
+def test_ori(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTestCase) -> None:
+    cpu_helper.load_reg8(reg, case.val_a)
 
-    acpu.ori(reg, val_b)
+    acpu.ori(reg, case.val_b)
 
     value = cpu_helper.read_reg8(reg)
     flags = cpu_helper.get_flags(Flags.Z | Flags.N) # we are only interested in Z and N flags
-    assert value == result
-    assert str(flags) == xflags
+    assert value == case.result
+    assert str(flags) == case.xflags
 
 
 
@@ -84,7 +85,7 @@ shr_args = [
     ("zero", 1, 0, "-CZ-"),
 ]
 
-@pytest.mark.parametrize("reg", gp_regs)
+@pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("_desc,val,result,xflags", shr_args)
 @pytest.mark.parametrize("carry_in", [False, True])
 def test_shr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
@@ -103,7 +104,7 @@ def test_shr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: s
     assert value == result
     assert flags == xflags
 
-@pytest.mark.parametrize("reg", gp_regs)
+@pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("_desc,val,result,xflags", shr_args)
 @pytest.mark.parametrize("carry_in", [False, True])
 def test_shr_real(cpu_helper: CPUHelper, reg: GPRegister, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
@@ -136,7 +137,7 @@ ror_args = [
     ("cin_zero", True, 0, 128, "---N"),
 ]
 
-@pytest.mark.parametrize("reg", gp_regs)
+@pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("_desc,carry_in,val,result,xflags", ror_args)
 def test_ror(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
 
@@ -161,7 +162,7 @@ asr_args = [
     ("zero", 1, 0, "-CZ-"),
 ]
 
-@pytest.mark.parametrize("reg", gp_regs)
+@pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("_desc,val,result,xflags", asr_args)
 @pytest.mark.parametrize("carry_in", [False, True])
 def test_asr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
@@ -180,7 +181,7 @@ def test_asr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: s
     assert value == result
     assert flags == xflags
 
-@pytest.mark.parametrize("reg", gp_regs)
+@pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("_desc,val,result,xflags", asr_args)
 @pytest.mark.parametrize("carry_in", [False, True])
 def test_asr_real(cpu_helper: CPUHelper, reg: GPRegister, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
@@ -209,7 +210,7 @@ swap_args = [
 ]
 
 
-@pytest.mark.parametrize("reg", gp_regs)
+@pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("_desc,val,result,xflags", swap_args)
 @pytest.mark.parametrize("carry_in", [False, True])
 def test_swap(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
@@ -230,23 +231,23 @@ def test_swap(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: 
 
 
 xor_test_args = [
-    ("small", 230, 92, 186, "---N"),
-    ("fill", 0xa5, 0x5a, 0xff, "---N"),
-    ("zero", 0x142, 0x142, 0, "--Z-"),
+    ALUTestCase("small", 230, 92, 186, "---N"),
+    ALUTestCase("fill", 0xa5, 0x5a, 0xff, "---N"),
+    ALUTestCase("zero", 0x142, 0x142, 0, "--Z-"),
 ]
 
-@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
-@pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", xor_test_args)
-def test_xor(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
-    cpu_helper.load_reg8(lhs, val_a)
-    cpu_helper.load_reg8(rhs, val_b)
+@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
+@pytest.mark.parametrize("case", xor_test_args)
+def test_xor(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTestCase) -> None:
+    cpu_helper.load_reg8(lhs, case.val_a)
+    cpu_helper.load_reg8(rhs, case.val_b)
 
     acpu.xor(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
     flags = cpu_helper.get_flags(Flags.Z | Flags.N) # we are only interested in Z and N flags
-    assert value == result
-    assert str(flags) == xflags
+    assert value == case.result
+    assert str(flags) == case.xflags
 
 def test_xor_zero_same(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.load_reg8(A, 0x5A)
@@ -260,17 +261,17 @@ def test_xor_zero_same(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     assert str(flags) == "--Z-"
 
 
-@pytest.mark.parametrize("reg", gp_regs)
-@pytest.mark.parametrize("_desc,val_a,val_b,result,xflags", xor_test_args)
-def test_xori(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, val_a: int, val_b: int, result: int, xflags: str) -> None:
-    cpu_helper.load_reg8(reg, val_a)
+@pytest.mark.parametrize("reg", gp_regs, ids=devname)
+@pytest.mark.parametrize("case", xor_test_args)
+def test_xori(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTestCase) -> None:
+    cpu_helper.load_reg8(reg, case.val_a)
 
-    acpu.xori(reg, val_b)
+    acpu.xori(reg, case.val_b)
 
     value = cpu_helper.read_reg8(reg)
     flags = cpu_helper.get_flags(Flags.Z | Flags.N) # we are only interested in Z and N flags
-    assert value == result
-    assert str(flags) == xflags
+    assert value == case.result
+    assert str(flags) == case.xflags
 
 
 not_args = [
@@ -278,7 +279,7 @@ not_args = [
     ("zero", 0xFF, 0, "--Z-"),
 ]
 
-@pytest.mark.parametrize("reg", gp_regs)
+@pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("_desc,val,result,xflags", not_args)
 def test_not(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, val: int, result: int, xflags: str) -> None:
 
