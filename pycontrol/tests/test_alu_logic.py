@@ -87,14 +87,9 @@ shr_args = [
 
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("case", shr_args)
-@pytest.mark.parametrize("carry_in", [False, True])
-def test_shr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, carry_in: bool, case: ALUOneRegTestCase) -> None:
-
-    if carry_in:
-        cpu_helper.load_flags(Flags.C)
-    else:
-        cpu_helper.load_flags(Flags.Empty)
-
+@pytest.mark.parametrize("carry_in", [Flags.Empty, Flags.C])
+def test_shr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, carry_in: Flags, case: ALUOneRegTestCase) -> None:
+    cpu_helper.load_flags(carry_in)
     cpu_helper.load_reg8(reg, case.val)
 
     acpu.shr(reg)
@@ -106,16 +101,12 @@ def test_shr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, carry_in
 
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("case", shr_args)
-@pytest.mark.parametrize("carry_in", [False, True])
-def test_shr_real(cpu_helper: CPUHelper, reg: GPRegister, carry_in: bool, case: ALUOneRegTestCase) -> None:
+@pytest.mark.parametrize("carry_in", [Flags.Empty, Flags.C])
+def test_shr_real(cpu_helper: CPUHelper, reg: GPRegister, carry_in: Flags, case: ALUOneRegTestCase) -> None:
 
     shr_test_prog = bytes([opcode_of(f"shr_{reg.name}")])
 
-    if carry_in:
-        cpu_helper.load_flags(Flags.C)
-    else:
-        cpu_helper.load_flags(Flags.Empty)
-
+    cpu_helper.load_flags(carry_in)
     cpu_helper.load_reg8(reg, case.val)
 
     cpu_helper.run_snippet(0x2066, shr_test_prog)
@@ -127,25 +118,20 @@ def test_shr_real(cpu_helper: CPUHelper, reg: GPRegister, carry_in: bool, case: 
 
 
 ror_args = [
-    ("carry_out_1", False, 25, 12, "-C--"),
-    ("carry_out_0", False, 122, 61, "----"),
-    ("no_signext", False, 128, 64, "----"),
-    ("zero", False, 1, 0, "-CZ-"),
+    ("carry_out_1", Flags.Empty, 25, 12, "-C--"),
+    ("carry_out_0", Flags.Empty, 122, 61, "----"),
+    ("no_signext", Flags.Empty, 128, 64, "----"),
+    ("zero", Flags.Empty, 1, 0, "-CZ-"),
 
-    ("carry_in_out_1", True, 25, 140, "-C-N"),
-    ("carry_in_1_out_0", True, 122, 189, "---N"),
-    ("cin_zero", True, 0, 128, "---N"),
+    ("carry_in_out_1", Flags.C, 25, 140, "-C-N"),
+    ("carry_in_1_out_0", Flags.C, 122, 189, "---N"),
+    ("cin_zero", Flags.C, 0, 128, "---N"),
 ]
 
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("_desc,carry_in,val,result,xflags", ror_args)
-def test_ror(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
-
-    if carry_in:
-        cpu_helper.load_flags(Flags.C)
-    else:
-        cpu_helper.load_flags(Flags.Empty)
-
+def test_ror(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, carry_in: Flags, val: int, result: int, xflags: str) -> None:
+    cpu_helper.load_flags(carry_in)
     cpu_helper.load_reg8(reg, val)
 
     acpu.ror(reg)
@@ -164,14 +150,9 @@ asr_args = [
 
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("_desc,val,result,xflags", asr_args)
-@pytest.mark.parametrize("carry_in", [False, True])
-def test_asr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
-
-    if carry_in:
-        cpu_helper.load_flags(Flags.C)
-    else:
-        cpu_helper.load_flags(Flags.Empty)
-
+@pytest.mark.parametrize("carry_in", [Flags.Empty, Flags.C])
+def test_asr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, carry_in: Flags, val: int, result: int, xflags: str) -> None:
+    cpu_helper.load_flags(carry_in)
     cpu_helper.load_reg8(reg, val)
 
     acpu.asr(reg)
@@ -183,16 +164,12 @@ def test_asr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: s
 
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("_desc,val,result,xflags", asr_args)
-@pytest.mark.parametrize("carry_in", [False, True])
-def test_asr_real(cpu_helper: CPUHelper, reg: GPRegister, _desc: str, carry_in: bool, val: int, result: int, xflags: str) -> None:
+@pytest.mark.parametrize("carry_in", [Flags.Empty, Flags.C])
+def test_asr_real(cpu_helper: CPUHelper, reg: GPRegister, _desc: str, carry_in: Flags, val: int, result: int, xflags: str) -> None:
 
     asr_test_prog = bytes([opcode_of(f"asr_{reg.name}")])
 
-    if carry_in:
-        cpu_helper.load_flags(Flags.C)
-    else:
-        cpu_helper.load_flags(Flags.Empty)
-
+    cpu_helper.load_flags(carry_in)
     cpu_helper.load_reg8(reg, val)
 
     cpu_helper.run_snippet(0x2023, asr_test_prog)
