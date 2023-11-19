@@ -58,7 +58,7 @@ def devname(reg: DeviceBase) -> str:
     return f"{reg.name} "
 
 @dataclass
-class ALUTestCase:
+class ALUTwoRegTestCase:
     name: str
     val_a: int
     val_b: int

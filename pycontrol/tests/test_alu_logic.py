@@ -8,18 +8,18 @@ from libcpu.DeviceSetup import A
 from libcpu.opcodes import permute_gp_regs_nsame, gp_regs, opcode_of
 from libcpu.devices import GPRegister, Flags
 
-from conftest import ALUTestCase, devname
+from conftest import ALUTwoRegTestCase, devname
 
 pytestmark = pytest.mark.hardware
 
 and_test_args = [
-    ALUTestCase("small", 230, 92, 68, "----"),
-    ALUTestCase("zero", 0xa5, 0x5a, 0, "--Z-"),
+    ALUTwoRegTestCase("small", 230, 92, 68, "----"),
+    ALUTwoRegTestCase("zero", 0xa5, 0x5a, 0, "--Z-"),
 ]
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
 @pytest.mark.parametrize("case", and_test_args)
-def test_and(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTestCase) -> None:
+def test_and(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.load_reg8(lhs, case.val_a)
     cpu_helper.load_reg8(rhs, case.val_b)
 
@@ -32,7 +32,7 @@ def test_and(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPR
 
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("case", and_test_args)
-def test_andi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTestCase) -> None:
+def test_andi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.load_reg8(reg, case.val_a)
 
     acpu.andi(reg, case.val_b)
@@ -45,13 +45,13 @@ def test_andi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: A
 
 
 or_test_args = [
-    ALUTestCase("small", 230, 92, 254, "---N"),
-    ALUTestCase("full", 0xa5, 0x5a, 0xff, "---N"),
+    ALUTwoRegTestCase("small", 230, 92, 254, "---N"),
+    ALUTwoRegTestCase("full", 0xa5, 0x5a, 0xff, "---N"),
 ]
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
 @pytest.mark.parametrize("case", or_test_args)
-def test_or(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTestCase) -> None:
+def test_or(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.load_reg8(lhs, case.val_a)
     cpu_helper.load_reg8(rhs, case.val_b)
 
@@ -65,7 +65,7 @@ def test_or(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRe
 
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("case", or_test_args)
-def test_ori(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTestCase) -> None:
+def test_ori(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.load_reg8(reg, case.val_a)
 
     acpu.ori(reg, case.val_b)
@@ -231,14 +231,14 @@ def test_swap(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: 
 
 
 xor_test_args = [
-    ALUTestCase("small", 230, 92, 186, "---N"),
-    ALUTestCase("fill", 0xa5, 0x5a, 0xff, "---N"),
-    ALUTestCase("zero", 0x142, 0x142, 0, "--Z-"),
+    ALUTwoRegTestCase("small", 230, 92, 186, "---N"),
+    ALUTwoRegTestCase("fill", 0xa5, 0x5a, 0xff, "---N"),
+    ALUTwoRegTestCase("zero", 0x142, 0x142, 0, "--Z-"),
 ]
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
 @pytest.mark.parametrize("case", xor_test_args)
-def test_xor(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTestCase) -> None:
+def test_xor(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.load_reg8(lhs, case.val_a)
     cpu_helper.load_reg8(rhs, case.val_b)
 
@@ -263,7 +263,7 @@ def test_xor_zero_same(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("case", xor_test_args)
-def test_xori(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTestCase) -> None:
+def test_xori(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.load_reg8(reg, case.val_a)
 
     acpu.xori(reg, case.val_b)

@@ -9,16 +9,16 @@ from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.DeviceSetup import F
 
-from conftest import ALUTestCase, devname
+from conftest import ALUTwoRegTestCase, devname
 
 pytestmark = pytest.mark.hardware
 
 add_ab_test_args = [
-    ALUTestCase("small", 24, 18, 42, "----"),
-    ALUTestCase("wraparound", 245, 18, 7, "-C--"),
-    ALUTestCase("overflow_to_negative", 126, 4, 130, "V--N"),
-    ALUTestCase("overflow_to_positive", 226, 145, 115, "VC--"),
-    ALUTestCase("to_zero", 246, 10, 0, "-CZ-"),
+    ALUTwoRegTestCase("small", 24, 18, 42, "----"),
+    ALUTwoRegTestCase("wraparound", 245, 18, 7, "-C--"),
+    ALUTwoRegTestCase("overflow_to_negative", 126, 4, 130, "V--N"),
+    ALUTwoRegTestCase("overflow_to_positive", 226, 145, 115, "VC--"),
+    ALUTwoRegTestCase("to_zero", 246, 10, 0, "-CZ-"),
 ]
 
 add_aa_test_args = [
@@ -27,7 +27,7 @@ add_aa_test_args = [
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
 @pytest.mark.parametrize("case", add_ab_test_args, ids=str)
-def test_add_ab(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTestCase) -> None:
+def test_add_ab(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.load_reg8(lhs, case.val_a)
     cpu_helper.load_reg8(rhs, case.val_b)
 
@@ -53,7 +53,7 @@ def test_add_aa(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc
 
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("case", add_ab_test_args, ids=str)
-def test_addi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTestCase) -> None:
+def test_addi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.load_reg8(reg, case.val_a)
 
     acpu.addi(reg, case.val_b)
@@ -65,16 +65,16 @@ def test_addi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: A
 
 
 sub_test_args = [
-    ALUTestCase("small", 4, 3, 1, "----"),
-    ALUTestCase("zero", 4, 4, 0, "--Z-"),
-    ALUTestCase("carry", 3, 5, 254, "-C-N"),
-    ALUTestCase("overflow_to_positive", 140, 20, 120, "V---"),
-    ALUTestCase("overflow_to_negative", 120, 130, 246, "VC-N"),
+    ALUTwoRegTestCase("small", 4, 3, 1, "----"),
+    ALUTwoRegTestCase("zero", 4, 4, 0, "--Z-"),
+    ALUTwoRegTestCase("carry", 3, 5, 254, "-C-N"),
+    ALUTwoRegTestCase("overflow_to_positive", 140, 20, 120, "V---"),
+    ALUTwoRegTestCase("overflow_to_negative", 120, 130, 246, "VC-N"),
 ]
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
 @pytest.mark.parametrize("case", sub_test_args, ids=str)
-def test_sub(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTestCase) -> None:
+def test_sub(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.load_reg8(lhs, case.val_a)
     cpu_helper.load_reg8(rhs, case.val_b)
 
@@ -88,7 +88,7 @@ def test_sub(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPR
 
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("case", sub_test_args, ids=str)
-def test_subi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTestCase) -> None:
+def test_subi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.load_reg8(reg, case.val_a)
 
     acpu.subi(reg, case.val_b)
@@ -100,16 +100,16 @@ def test_subi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: A
 
 
 adc_ab_test_args = [
-    ALUTestCase("small", 24, 17, 42, "----"),
-    ALUTestCase("wraparound", 245, 18, 8, "-C--"),
-    ALUTestCase("overflow_to_negative", 126, 4, 131, "V--N"),
-    ALUTestCase("overflow_to_positive", 226, 145, 116, "VC--"),
-    ALUTestCase("to_zero", 246, 9, 0, "-CZ-"),
+    ALUTwoRegTestCase("small", 24, 17, 42, "----"),
+    ALUTwoRegTestCase("wraparound", 245, 18, 8, "-C--"),
+    ALUTwoRegTestCase("overflow_to_negative", 126, 4, 131, "V--N"),
+    ALUTwoRegTestCase("overflow_to_positive", 226, 145, 116, "VC--"),
+    ALUTwoRegTestCase("to_zero", 246, 9, 0, "-CZ-"),
 ]
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
 @pytest.mark.parametrize("case", adc_ab_test_args, ids=str)
-def test_adc_ab_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTestCase) -> None:
+def test_adc_ab_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.load_flags(Flags.C)
     cpu_helper.load_reg8(lhs, case.val_a)
     cpu_helper.load_reg8(rhs, case.val_b)
@@ -123,7 +123,7 @@ def test_adc_ab_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister,
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
 @pytest.mark.parametrize("case", add_ab_test_args, ids=str)
-def test_adc_ab_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTestCase) -> None:
+def test_adc_ab_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
     acpu.ldi (F, Flags.Empty)
     cpu_helper.load_reg8(lhs, case.val_a)
     cpu_helper.load_reg8(rhs, case.val_b)
@@ -138,7 +138,7 @@ def test_adc_ab_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegiste
 
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("case", adc_ab_test_args, ids=str)
-def test_adci_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTestCase) -> None:
+def test_adci_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.load_flags(Flags.C)
     cpu_helper.load_reg8(reg, case.val_a)
 
@@ -151,7 +151,7 @@ def test_adci_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, c
 
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("case", add_ab_test_args, ids=str)
-def test_adci_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTestCase) -> None:
+def test_adci_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTwoRegTestCase) -> None:
     acpu.ldi (F, Flags.Empty)
     cpu_helper.load_reg8(reg, case.val_a)
 
@@ -163,16 +163,16 @@ def test_adci_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister,
     assert flags == case.xflags
 
 sbb_test_args = [
-    ALUTestCase("small", 5, 3, 1, "----"),
-    ALUTestCase("zero", 4, 3, 0, "--Z-"),
-    ALUTestCase("carry", 3, 5, 253, "-C-N"),
-    ALUTestCase("overflow_to_positive", 140, 19, 120, "V---"),
-    ALUTestCase("overflow_to_negative", 120, 130, 245, "VC-N"),
+    ALUTwoRegTestCase("small", 5, 3, 1, "----"),
+    ALUTwoRegTestCase("zero", 4, 3, 0, "--Z-"),
+    ALUTwoRegTestCase("carry", 3, 5, 253, "-C-N"),
+    ALUTwoRegTestCase("overflow_to_positive", 140, 19, 120, "V---"),
+    ALUTwoRegTestCase("overflow_to_negative", 120, 130, 245, "VC-N"),
 ]
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
 @pytest.mark.parametrize("case", sbb_test_args, ids=str)
-def test_sbb_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTestCase) -> None:
+def test_sbb_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.load_flags(Flags.C)
     cpu_helper.load_reg8(lhs, case.val_a)
     cpu_helper.load_reg8(rhs, case.val_b)
@@ -186,7 +186,7 @@ def test_sbb_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rh
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
 @pytest.mark.parametrize("case", sub_test_args, ids=str)
-def test_sbb_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTestCase) -> None:
+def test_sbb_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
     acpu.ldi (F, Flags.Empty)
     cpu_helper.load_reg8(lhs, case.val_a)
     cpu_helper.load_reg8(rhs, case.val_b)
@@ -201,7 +201,7 @@ def test_sbb_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, 
 
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("case", sbb_test_args, ids=str)
-def test_sbbi_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTestCase) -> None:
+def test_sbbi_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.load_flags(Flags.C)
     cpu_helper.load_reg8(reg, case.val_a)
 
@@ -214,7 +214,7 @@ def test_sbbi_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, c
 
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("case", sub_test_args, ids=str)
-def test_sbbi_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTestCase) -> None:
+def test_sbbi_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTwoRegTestCase) -> None:
     acpu.ldi (F, Flags.Empty)
     cpu_helper.load_reg8(reg, case.val_a)
 
