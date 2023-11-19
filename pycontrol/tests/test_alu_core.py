@@ -9,7 +9,7 @@ from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.DeviceSetup import F
 
-from conftest import ALUTwoRegTestCase, devname
+from conftest import ALUTwoRegTestCase, ALUOneRegTestCase, devname
 
 pytestmark = pytest.mark.hardware
 
@@ -22,7 +22,7 @@ add_ab_test_args = [
 ]
 
 add_aa_test_args = [
-    ("small", 25, 50, "----"),
+    ALUOneRegTestCase("small", 25, 50, "----"),
 ]
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
@@ -39,16 +39,16 @@ def test_add_ab(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: 
     assert flags == case.xflags
 
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
-@pytest.mark.parametrize("_desc,val,result,xflags", add_aa_test_args, ids=str)
-def test_add_aa(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, val: int, result: int, xflags: str) -> None:
-    cpu_helper.load_reg8(reg, val)
+@pytest.mark.parametrize("case", add_aa_test_args, ids=str)
+def test_add_aa(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUOneRegTestCase) -> None:
+    cpu_helper.load_reg8(reg, case.val)
 
     acpu.add(reg, reg)
 
     value = cpu_helper.read_reg8(reg)
     flags = cpu_helper.get_flags_s()
-    assert value == result
-    assert flags == xflags
+    assert value == case.result
+    assert flags == case.xflags
 
 
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)

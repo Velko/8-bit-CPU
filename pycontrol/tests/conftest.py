@@ -67,3 +67,13 @@ class ALUTwoRegTestCase:
 
     def __str__(self) -> str:
         return f"{self.name}: ({self.val_a}, {self.val_b}) -> ({self.result}, {self.xflags}) "
+
+@dataclass
+class ALUOneRegTestCase:
+    name: str
+    val: int
+    result: int
+    xflags: str
+
+    def __str__(self) -> str:
+        return f"{self.name}: ({self.val}) -> ({self.result}, {self.xflags}) "
