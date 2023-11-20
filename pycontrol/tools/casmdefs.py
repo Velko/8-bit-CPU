@@ -52,7 +52,10 @@ def generate_casmdefs(rdfile: TextIO) -> None:
                 print (microcode.name, arg)
                 raise TypeError
 
-        iargs = ", ".join(in_args)
+        if microcode.fmt is not None:
+            iargs = microcode.fmt.format(*in_args)
+        else:
+            iargs = ", ".join(in_args)
         gargs = " @ ".join(glue_args)
 
         rdfile.write(f"    {microcode.name}  {iargs} => {gargs}\n")

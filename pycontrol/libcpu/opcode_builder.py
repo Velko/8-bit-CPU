@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Tuple, Mapping, Sequence, Union
+from typing import List, Tuple, Mapping, Sequence, Union, Optional
 from .util import ControlSignal
 from .devices import Register, Flags
 
@@ -36,12 +36,13 @@ class OpcodeArg(Enum):
         raise TypeError # suppress warning, something's really wrong
 
 class MicroCode:
-    def __init__(self, opcode: int, name: str, args: Sequence[Union[Register, OpcodeArg]]):
+    def __init__(self, opcode: int, name: str, fmt: Optional[str], args: Sequence[Union[Register, OpcodeArg]]):
         self._steps: List[Sequence[ControlSignal]] = []
         self.f_alt: List[FlagsAlt] = []
         self.opcode = opcode
         self.name = name
         self.args = args
+        self.fmt = fmt
 
 
     def is_flag_dependent(self) -> bool:
@@ -80,7 +81,14 @@ class MicrocodeBuilder:
 
     def add_instruction(self, name: str, *args: Union[Register, OpcodeArg]) -> MicroCode:
         opcode = "_".join([name] + list(map(str, args)))
-        ucode = MicroCode(len(self.opcodes), name, args)
+        ucode = MicroCode(len(self.opcodes), name, None, args)
+
+        self.opcodes.append((opcode, ucode))
+        return ucode
+
+    def add_formatted(self, name: str, fmt: str, *args: Union[Register, OpcodeArg]) -> MicroCode:
+        opcode = "_".join([name] + list(map(str, args)))
+        ucode = MicroCode(len(self.opcodes), name, fmt, args)
 
         self.opcodes.append((opcode, ucode))
         return ucode
