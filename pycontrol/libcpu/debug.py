@@ -56,7 +56,7 @@ class Debugger:
         with open(file, "rb") as f:
             binary = f.read()
 
-        print ("# Uploading ", end="", flush=True, file=sys.stderr)
+        print (f"# Uploading {file} ", end="", flush=True, file=sys.stderr)
 
         for addr, byte in enumerate(binary):
             self.cpu_helper.write_ram(addr + RAM_OFFSET, byte)
