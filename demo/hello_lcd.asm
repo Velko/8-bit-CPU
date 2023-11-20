@@ -11,7 +11,7 @@ print_loop:
     bne print_loop
 
     ; load and output next char from message, \0 terminates the string
-    ldx A, message, B
+    ldx A, message[B]
     beq end
     out DISPLAY_LCD_DATA, A
 

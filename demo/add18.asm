@@ -25,7 +25,7 @@ subloop:
 
     clr B
 print_loop:
-    ldx A, msg, B
+    ldx A, msg[B]
     beq done
     call print
     inc B

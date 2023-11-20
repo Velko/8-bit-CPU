@@ -18,7 +18,7 @@ sieve_start:
     fill0_loop:
 
         ; store "something" in seg0[A] (any non-zero value will do)
-        stx seg0, A, D
+        stx seg0[A], D
 
         ; next index in A
         inc A
@@ -35,7 +35,7 @@ sieve_start:
 
     seg0_loop:
         ; calculate flags for seg0[B]
-        tstx seg0, B ; test byte in RAM
+        tstx seg0[B] ; test byte in RAM
 
         ; anything non-zero means prime found
         beq seg0_next
@@ -54,7 +54,7 @@ sieve_start:
                 bcc seg0_fill_m_end
 
                 ; write zero at seg0[A]
-                stx seg0, A, C
+                stx seg0[A], C
 
                 ; calculate next multiple
                 add A, B
@@ -64,7 +64,7 @@ sieve_start:
             seg0_fill_m_end:
 
             ; store largest multiple at seg0[B]
-            stx seg0, B, A
+            stx seg0[B], A
 
         seg0_next:
 
@@ -88,7 +88,7 @@ sieve_start:
         seg_n0_loop:
 
             ; store "something" in seg0[A] (any non-zero value will do)
-            stx seg_n, A, D
+            stx seg_n[A], D
 
             ; next index in A
             inc A
@@ -106,7 +106,7 @@ sieve_start:
             st p, B ; save for later
 
             ; load seg0[B], getting the latest calculated multiple
-            ldx A, seg0, B ; it also calculates flags accordingly
+            ldx A, seg0[B] ; it also calculates flags accordingly
 
             beq seg_n_mark_next   ; jump over if not prime
 
@@ -121,7 +121,7 @@ sieve_start:
                     bcc seg_n_mark_mult_end
 
                     ; write a zero over seg_n[A]
-                    stx seg_n, A, C
+                    stx seg_n[A], C
 
                     ; add p for next multiple
                     ld B, p
@@ -139,7 +139,7 @@ sieve_start:
                 ; and store it into the seg0[p]
                 st m, A
                 ld B, p
-                stx seg0, B, A
+                stx seg0[B], A
 
             seg_n_mark_next:
 
@@ -158,7 +158,7 @@ sieve_start:
         seg_n_print_loop:
 
             ; check byte at seg_n[A]
-            tstx seg_n, A
+            tstx seg_n[A]
 
             beq seg_n_print_skip
 

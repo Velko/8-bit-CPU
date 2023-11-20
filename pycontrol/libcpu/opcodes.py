@@ -148,7 +148,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
             .add_step(TX.out, v.out, Ram.write)
 
     for i, v in permute_gp_regs_all():
-        builder.add_instruction("stx", OpcodeArg.ADDR, i, v)\
+        builder.add_formatted("stx", "{}[{}], {}", OpcodeArg.ADDR, i, v)\
             .add_step(PC.out, PC.inc, ProgMem.out, TL.load)\
             .add_step(PC.out, PC.inc, ProgMem.out, TH.load)\
             .add_step(i.out, TX.out, ACalc.load)\
@@ -161,14 +161,14 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
             .add_step(TX.out, Ram.out, r.load, F.calc)
 
     for t, i in permute_gp_regs_all():
-        builder.add_instruction("ldx", t, OpcodeArg.ADDR, i)\
+        builder.add_formatted("ldx", "{}, {}[{}]", t, OpcodeArg.ADDR, i)\
             .add_step(PC.out, PC.inc, ProgMem.out, TL.load)\
             .add_step(PC.out, PC.inc, ProgMem.out, TH.load)\
             .add_step(i.out, TX.out, ACalc.load)\
             .add_step(ACalc.out, t.load, Ram.out, F.calc)
 
     for i in gp_regs:
-        builder.add_instruction("tstx", OpcodeArg.ADDR, i)\
+        builder.add_formatted("tstx", "{}[{}]", OpcodeArg.ADDR, i)\
             .add_step(PC.out, PC.inc, ProgMem.out, TL.load)\
             .add_step(PC.out, PC.inc, ProgMem.out, TH.load)\
             .add_step(i.out, TX.out, ACalc.load)\
@@ -337,7 +337,7 @@ def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
             .add_step(l.alu_l, r.alu_r, AndOr.out, F.calc)
 
     for r in gp_regs:
-        builder.add_instruction("lpi", r, SDP)\
+        builder.add_formatted("lpi", "{}, ({}++)", r, SDP)\
             .add_step(r.load, SDP.out, SDP.inc, Ram.out, F.calc)
 
     builder.add_instruction("lea", SDP, OpcodeArg.ADDR)\

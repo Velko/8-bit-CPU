@@ -2,7 +2,7 @@
 
     ldi B, 0
 print_loop:
-    ldx A, message, B
+    ldx A, message[B]
     beq end
     out DISPLAY_CHR_DATA, A
     inc B

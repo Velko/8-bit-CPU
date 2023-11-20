@@ -18,8 +18,8 @@ print_a:
 
     ldi C, 3
 cp_a_loop:
-    ldx A, num_a, C
-    stx number, C, A
+    ldx A, num_a[C]
+    stx number[C], A
     dec C
     bpl cp_a_loop
 
@@ -35,8 +35,8 @@ print_b:
 
     ldi C, 3
 cp_b_loop:
-    ldx A, num_b, C
-    stx number, C, A
+    ldx A, num_b[C]
+    stx number[C], A
     dec C
     bpl cp_b_loop
 
@@ -54,13 +54,13 @@ add_ab:
     push A
     ldi C, 3
 sum_a_loop:
-    ldx A, num_a, C
-    ldx B, num_b, C
+    ldx A, num_a[C]
+    ldx B, num_b[C]
     popf
     adc A, B
     pushf
-    stx num_a, C, A
-    stx number, C, A
+    stx num_a[C], A
+    stx number[C], A
     dec C
     bpl sum_a_loop
 
@@ -85,13 +85,13 @@ add_ba:
     push A
     ldi C, 3
 sum_b_loop:
-    ldx A, num_b, C
-    ldx B, num_a, C
+    ldx A, num_b[C]
+    ldx B, num_a[C]
     popf
     adc A, B
     pushf
-    stx num_b, C, A
-    stx number, C, A
+    stx num_b[C], A
+    stx number[C], A
     dec C
     bpl sum_b_loop
 
@@ -114,7 +114,7 @@ convert_number:
     clr A
     ldi C, 9
 digits_zero_loop:
-    stx digits, C, A
+    stx digits[C], A
     dec C
     bpl digits_zero_loop
 
@@ -132,10 +132,10 @@ double_loop:
 
     ldi C, 3  ; index in number[]
 num_shift_loop:
-    ldx A, number, C
+    ldx A, number[C]
     popf  ; load flags (initial C = 0, or one from previous iteration)
     adc A, A
-    stx number, C, A
+    stx number[C], A
 
     pushf  ; store for next iteration
 
@@ -149,7 +149,7 @@ num_shift_loop:
 add3_shift_loop:
 
     ; check each digit if >=5
-    ldx A, digits, C
+    ldx A, digits[C]
     cmp A, B
 
     bcs add3_skip
@@ -162,7 +162,7 @@ add3_skip:
     ; now shift
     popf  ; load flags (one from previous iteration)
     adc A, A
-    stx digits, C, A
+    stx digits[C], A
 
     pushf  ; store for next iteration
 
@@ -183,9 +183,9 @@ add3_skip:
 
 to_char_loop:
 
-    ldx A, digits, C
+    ldx A, digits[C]
     or A, B
-    stx digits, C, A
+    stx digits[C], A
 
     dec C
     bpl to_char_loop
@@ -199,7 +199,7 @@ print_digits:
     ldi D, 9  ; upper limit for search
     clr C
 find0_loop:
-    ldx A, digits, C
+    ldx A, digits[C]
     cmp A, B
     bne found_non0
 
@@ -208,7 +208,7 @@ find0_loop:
     bne find0_loop
 
 found_non0:
-    ldx A, digits, C
+    ldx A, digits[C]
     beq print_end
     out DISPLAY_CHR_DATA, A
     inc C
