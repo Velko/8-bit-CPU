@@ -121,7 +121,8 @@ class Debugger:
             self.backend.flags_cache = None
             self.step()
 
-        out = self.client.run_program()
+        self.client.run_program()
+        out = self.client.receive_messages()
 
         for msg in out:
             match msg:

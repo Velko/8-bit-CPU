@@ -34,7 +34,8 @@ def run() -> None:
     # Drumroll... now it should happen for real
     print ("# Running ...", flush=True, file=sys.stderr)
 
-    out = cpu_helper.client.run_program()
+    cpu_helper.client.run_program()
+    out = cpu_helper.client.receive_messages()
 
     for msg in out:
         match msg:
@@ -51,7 +52,7 @@ def run() -> None:
 
 def monitor() -> None:
     print ("# Running (raw)...", flush=True, file=sys.stderr)
-    cpu_helper.client.send_cmd("R")
+    cpu_helper.client.run_program()
     for line in cpu_helper.client.receive_lines():
         print(line)
         if line.endswith("#HLT"):

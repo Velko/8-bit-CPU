@@ -80,8 +80,10 @@ class PinClient:
     def ir_get(self) -> int:
         return int(self.query("r0N"))
 
-    def run_program(self) -> Iterator[RunMessage]:
+    def run_program(self) -> None:
         self.send_cmd('R')
+
+    def receive_messages(self) -> Iterator[RunMessage]:
         while True:
             yield self.receive_message()
 
