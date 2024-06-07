@@ -26,11 +26,11 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install mypy pytest pyserial setuptools
+        pip install mypy pytest pyserial
     - name: Install localpath helper
-      working-directory: ./pycontrol/localpath
+      working-directory: ./pycontrol
       run: |
-        python setup.py install
+        pip install ./localpath
     - name: Generate control ROMs
       working-directory: ./pycontrol/tools
       run: |
