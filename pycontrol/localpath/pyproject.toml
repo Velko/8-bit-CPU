@@ -12,4 +12,4 @@ authors = [
 ]
 
 [tool.hatch.build.targets.wheel]
-    packages = ["localpath"]
+    packages = ["src/localpath"]
