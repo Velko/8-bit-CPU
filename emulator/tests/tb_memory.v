@@ -25,12 +25,13 @@ module tb_memory;
         // bus disconnected
         `assert(mbus, 8'bz);
 
-        // output current at addr 8 (ROM)
+        // output current at addr 0xE007 (ROM)
+        addr <= 16'hE007;
         outn <= 0;
         #1
         `assert(mbus, 8'hc0);
 
-        // output current at addr 0x2003 (ROM)
+        // output current at addr 0x2003 (RAM)
         addr <= 16'h2003;
         #1
         `assert(mbus, 8'bx);

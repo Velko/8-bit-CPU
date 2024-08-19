@@ -20,7 +20,7 @@ pytestmark = pytest.mark.hardware
 def make_random_addr() -> Sequence[int]:
 
     # make sure addresses are unique, skip ROM area
-    addr = list(range(0x2000, 0x10000))
+    addr = list(range(0xE000))
     random.shuffle(addr)
 
     # 64 addresses out of 65536 should be enough to

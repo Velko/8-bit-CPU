@@ -9,6 +9,8 @@ from libcpu.util import OutMessage, HaltMessage, BrkMessage
 from libcpu.pinclient import get_client_instance
 from libcpu.cpu_helper import CPUHelper
 
+from libcpu.DeviceSetup import PC
+
 cpu_helper: CPUHelper = CPUHelper(get_client_instance())
 
 RAM_OFFSET = 0x2000
@@ -74,6 +76,7 @@ if __name__ == "__main__":
 
     upload(args.filename)
     cpu_helper.client.reset()
+    cpu_helper.load_reg16(PC, 0xE000) #TODO: temporary, until reset is able to initialize it properly
     if args.monitor:
         monitor()
     elif not args.upload_only:
