@@ -13,7 +13,7 @@ from libcpu.DeviceSetup import PC
 
 cpu_helper: CPUHelper = CPUHelper(get_client_instance())
 
-RAM_OFFSET = 0x2000
+RAM_OFFSET = 0x0000
 
 def upload(filename: str) -> None:
 

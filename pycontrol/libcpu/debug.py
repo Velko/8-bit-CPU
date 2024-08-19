@@ -12,7 +12,7 @@ from .util import OutMessage, HaltMessage, BrkMessage
 from .opcodes import opcodes
 from .assisted_cpu import AssistedCPU
 
-RAM_OFFSET = 0x2000
+RAM_OFFSET = 0x0000
 
 @dataclass
 class Breakpoint:

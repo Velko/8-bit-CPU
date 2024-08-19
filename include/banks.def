@@ -1,6 +1,6 @@
 #bankdef program
 {
     #bits 8
-    #addr 0x2000
+    #addr 0x0000
     #outp 0
 }

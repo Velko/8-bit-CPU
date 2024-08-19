@@ -192,7 +192,7 @@ sieve_start:
 
 #bankdef bss
 {
-    #addr 0x2080
+    #addr 0x80
 }
 
 

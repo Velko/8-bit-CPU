@@ -2,7 +2,7 @@
 #include "aliases.def"
 #include "ports.def"
 
-#const(noemit) RAM_START = 0x2000
+#const(noemit) RAM_START = 0x0000
 #const(noemit) STACK_END = 0xC010
 
 #bankdef bios
