@@ -28,7 +28,7 @@ module cpu(
         .cin(splitter.alu_cin)
         );
 
-    mem_block mem(.abus(addr_bus), .mbus(main_bus), .rst(rst), .rstn(!rst), .clk(clk), .iclk(iclk),
+    mem_block mem(.abus(addr_bus), .mbus(main_bus), .rst(rst), .clk(clk), .iclk(iclk),
         .addroutctl(splitter.addroutctl),
         .addrloadctl(splitter.addrloadctl),
         .outctl(splitter.outctl),

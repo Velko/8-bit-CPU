@@ -9,7 +9,6 @@ module mem_block(
         input [3:0] loadctl,
 
         input rst,
-        input rstn,
 
         input clk,
         input iclk,
@@ -22,15 +21,15 @@ module mem_block(
 );
 
     //TODO: replace quick boolean operators with proper handling using 74* chips
-    program_counter pc(
+    stack_pointer pc(
         .abus(abus),
         .reset(rst),
-        .resetn(rstn),
         .clk(clk),
         .iclk(iclk),
         .outn(addr_out_mux.y[5]),
         .loadn(addr_load_mux.y[5]),
-        .count(!(spinc || addr_out_mux.y[5]))
+        .cupn(spinc || addr_out_mux.y[5]),
+        .cdownn(1'b1)
     );
 
     i_register ir(
@@ -107,15 +106,15 @@ module mem_block(
     );
 
     //TODO: do we need dedicated module or re-using PC is fine?
-    program_counter lr(
+    stack_pointer lr(
         .abus(abus),
         .reset(rst),
-        .resetn(rstn),
         .clk(clk),
         .iclk(iclk),
         .outn(addr_out_mux.y[4]),
         .loadn(addr_load_mux.y[4]),
-        .count(1'b0)
+        .cupn(1'b1),
+        .cdownn(1'b1)
     );
 
     demux_138 addr_out_mux(.e1n(1'b0), .e2n(1'b0), .e3(1'b1), .a(addroutctl));
