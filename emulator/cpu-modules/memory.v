@@ -1,6 +1,6 @@
 module memory(
     inout [7:0] mbus,
-    input [15:0] abus,
+    inout [15:0] abus,
 
     input outn,
     input writen,
@@ -18,6 +18,8 @@ module memory(
     wire rom_sel = abus >= 16'hE000; //upper 8 KiB
     wire ram_l_sel = !abus[15];
     wire ram_h_sel = !rom_sel && abus[15];
+
+    assign (pull0, pull1) abus = 16'hE000; // pull address bus to reset value (start of ROM)
 
     ram_62256 mem_l(
         .addr(abus[14:0]),
