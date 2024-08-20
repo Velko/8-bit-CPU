@@ -7,8 +7,8 @@
 `define ALU_CIN            15
 `define ADDR_OUT_MUX    18:16
 `define ADDR_LOAD_MUX   21:19
-`define STACK_INC          22
-`define STACK_DEC          23
+`define ADDR_INC          22
+`define ADDR_DEC          23
 `define STEP_RESET         24
 `define STEP_EXT           25
 `define CLK_HLT            26
@@ -32,8 +32,8 @@ module cword_splitter(
         output step_extn,
         output clk_halt,
         output clk_brk,
-        output stack_inc,
-        output stack_dec,
+        output addr_incn,
+        output addr_decn,
         output acalc_signed
     );
 
@@ -51,8 +51,8 @@ module cword_splitter(
     // ROM2 - Address Bus
     assign addroutctl = control_word[`ADDR_OUT_MUX];
     assign addrloadctl = control_word[`ADDR_LOAD_MUX];
-    assign stack_inc = control_word[`STACK_INC];
-    assign stack_dec = control_word[`STACK_DEC];
+    assign addr_incn = control_word[`ADDR_INC];
+    assign addr_decn = control_word[`ADDR_DEC];
 
     // ROM3 - Misc.
     assign step_resetn = control_word[`STEP_RESET];

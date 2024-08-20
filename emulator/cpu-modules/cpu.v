@@ -34,8 +34,8 @@ module cpu(
         .outctl(splitter.outctl),
         .loadctl(splitter.loadctl),
         .iout(iout),
-        .spinc(splitter.stack_inc),
-        .spdec(splitter.stack_dec),
+        .acincn(splitter.addr_incn),
+        .acdecn(splitter.addr_decn),
         .m_sign(splitter.acalc_signed)
         );
 
