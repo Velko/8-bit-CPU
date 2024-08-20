@@ -82,6 +82,29 @@ initial begin
         outn <= 1;
         #1
 
+
+        // try to count up one, while OUT is not enabled
+        cupn <= 0;
+        #1
+        `tick(clk, 2);
+        `tick(iclk, 2);
+        outn <= 0;
+        #1
+        `assert(abus, 16'b0); // should still be 0
+        outn <= 1;
+        cupn <= 1;
+
+        // try to count down one, while OUT is not enabled
+        cdownn <= 0;
+        #1
+        `tick(clk, 2);
+        `tick(iclk, 2);
+        outn <= 0;
+        #1
+        `assert(abus, 16'b0); // should still be 0
+        outn <= 1;
+        cdownn <= 1;
+
         // parallel load
         addr <= 16'hbeef;
         wbus <= 1;

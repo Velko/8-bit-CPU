@@ -28,7 +28,7 @@ module mem_block(
         .iclk(iclk),
         .outn(addr_out_mux.y[5]),
         .loadn(addr_load_mux.y[5]),
-        .cupn(acincn || addr_out_mux.y[5]),
+        .cupn(acincn),
         .cdownn(1'b1)
     );
 
@@ -80,8 +80,8 @@ module mem_block(
         .iclk(iclk),
         .outn(addr_out_mux.y[3]),
         .loadn(addr_load_mux.y[3]),
-        .cupn(acincn || addr_out_mux.y[3]),
-        .cdownn(acdecn || addr_out_mux.y[3])
+        .cupn(acincn),
+        .cdownn(acdecn)
     );
 
     address_counter sdp(
@@ -91,8 +91,8 @@ module mem_block(
         .iclk(iclk),
         .outn(addr_out_mux.y[1]),
         .loadn(addr_load_mux.y[1]),
-        .cupn(acincn || addr_out_mux.y[1]),
-        .cdownn(acdecn || addr_out_mux.y[1])
+        .cupn(acincn),
+        .cdownn(acdecn)
     );
 
     address_calc acalc(

@@ -17,20 +17,20 @@ module address_counter (
     wire cpd;
 
     // pl should follow !clk, when loadn == low
-    // cpu should follow !clk, when cup == enabled (low)
+    // cpu should follow !clk, when cup == enabled (low) and outn == enabled (low)
 
     // pl = not(clk) or loadn
-    // cpu = not(clk) or cupn
-    // cpd = not(clk) or cdownn
+    // cpu = not(clk) or cupn or outn
+    // cpd = not(clk) or cdownn or outn
     not_04p inv(
         .a1(clk),
          .a2(1'b0), .a3(1'b0), .a4(1'b0), .a5(1'b0), .a6(1'b0));
 
     or_32p ctrl(
-        .a1(1'b0), .b1(1'b0),
+        .a1(inv.y1), .b1(outn),
         .a2(inv.y1), .b2(loadn), .y2(p_loadn),
-        .a3(inv.y1), .b3(cupn), .y3(cpu),
-        .a4(inv.y1), .b4(cdownn), .y4(cpd));
+        .a3(ctrl.y1), .b3(cupn), .y3(cpu),
+        .a4(ctrl.y1), .b4(cdownn), .y4(cpd));
 
     udcounter_193 cnt_0(
         .mr(reset),
