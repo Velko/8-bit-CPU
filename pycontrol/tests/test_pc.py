@@ -42,6 +42,12 @@ def test_pc_count(cpu_helper: CPUHelper, expected: int) -> None:
 
     assert value == expected
 
+def test_reset_inits_pc(cpu_helper: CPUHelper) -> None:
+    cpu_helper.client.reset()
+    pcaddr = cpu_helper.read_reg16(PC)
+
+    assert pcaddr == 0xE000
+
 def test_beq_taken(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.load_flags(Flags.Z)
     cpu_helper.load_reg16(PC, 0x1234)
