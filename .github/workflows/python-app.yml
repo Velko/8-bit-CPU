@@ -55,7 +55,7 @@ jobs:
       env:
         MYPYPATH: stubs
       run: |
-        python -m mypy --strict libcpu tests tools
+        python -m mypy --strict libcpu tests tools ../tools
     - name: Run tests
       working-directory: ./pycontrol
       run: |
