@@ -22,9 +22,11 @@ module address_counter (
     // pl = not(clk) or loadn
     // cpu = not(clk) or cupn or outn
     // cpd = not(clk) or cdownn or outn
-    not_04p inv(
-        .a1(clk),
-         .a2(1'b0), .a3(1'b0), .a4(1'b0), .a5(1'b0), .a6(1'b0));
+    nand_00p inv(
+        .a1(clk), .b1(clk),
+        .a2(1'b0), .b2(1'b0),
+        .a3(1'b0), .b3(1'b0),
+        .a4(1'b0), .b4(1'b0));
 
     or_32p ctrl(
         .a1(inv.y1), .b1(outn),
