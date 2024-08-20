@@ -56,7 +56,7 @@ def test_outb_int_hw(cpu_helper: CPUHelper, _desc: str, mode: int, val: int, exp
         ])
 
     # run program on hardware
-    res = cpu_helper.run_snippet(0x2014, out_test_prog)
+    res = cpu_helper.run_snippet(0x14, out_test_prog)
 
     # assert
     assert res == expected
@@ -71,7 +71,7 @@ def test_outc_char_hw(cpu_helper: CPUHelper) -> None:
     out_test_prog = bytes([opcode_of("out_imm_C"), 4])
 
     # run program on hardware
-    val = cpu_helper.run_snippet(0x2033, out_test_prog)
+    val = cpu_helper.run_snippet(0x33, out_test_prog)
 
     # assert
     assert val == 'f'
@@ -86,7 +86,7 @@ def test_outc_newline_hw(cpu_helper: CPUHelper) -> None:
     out_test_prog = bytes([opcode_of("out_imm_C"), 4])
 
     # run program on hardware
-    val = cpu_helper.run_snippet(0x2033, out_test_prog)
+    val = cpu_helper.run_snippet(0x33, out_test_prog)
 
     # assert
     assert val == '\n'

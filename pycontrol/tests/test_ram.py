@@ -57,7 +57,7 @@ def test_ldx_hw(cpu_helper: CPUHelper) -> None:
         opcode_of("ldx_A_addr_B"), 0x00, 0x22,
         ])
 
-    cpu_helper.run_snippet(0x2000, out_test_prog)
+    cpu_helper.run_snippet(0x0, out_test_prog)
 
     val = cpu_helper.read_reg8(A)
 

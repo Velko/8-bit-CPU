@@ -31,7 +31,7 @@ def test_dummy_fetch(acpu: AssistedCPU) -> None:
     cpu_helper = CPUHelper(acpu.client)
 
     # load program into ram
-    cpu_helper.load_snippet(0x2032, fetch_test_prog)
+    cpu_helper.load_snippet(0x32, fetch_test_prog)
 
     # reset A, to see if changed
     cpu_helper.load_reg8(A, 0)
@@ -49,7 +49,7 @@ def test_dummy_fetch_on_hw(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg8(A, 0)
 
     # run program on hardware
-    cpu_helper.run_snippet(0x2054, fetch_test_prog)
+    cpu_helper.run_snippet(0x54, fetch_test_prog)
 
     # assert
     val = cpu_helper.read_reg8(A)

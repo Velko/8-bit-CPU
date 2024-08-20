@@ -109,7 +109,7 @@ def test_shr_real(cpu_helper: CPUHelper, reg: GPRegister, carry_in: Flags, case:
     cpu_helper.load_flags(carry_in)
     cpu_helper.load_reg8(reg, case.val)
 
-    cpu_helper.run_snippet(0x2066, shr_test_prog)
+    cpu_helper.run_snippet(0x66, shr_test_prog)
 
     value = cpu_helper.read_reg8(reg)
     flags = cpu_helper.get_flags_s()
@@ -172,7 +172,7 @@ def test_asr_real(cpu_helper: CPUHelper, reg: GPRegister, _desc: str, carry_in: 
     cpu_helper.load_flags(carry_in)
     cpu_helper.load_reg8(reg, val)
 
-    cpu_helper.run_snippet(0x2023, asr_test_prog)
+    cpu_helper.run_snippet(0x23, asr_test_prog)
 
     value = cpu_helper.read_reg8(reg)
     flags = cpu_helper.get_flags_s()
