@@ -1,6 +1,7 @@
 #!/bin/sh
 
 cd $(dirname $0)/../emulator/tests
+make clean
 make
 
 cd ../../pycontrol
