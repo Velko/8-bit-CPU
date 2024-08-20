@@ -15,6 +15,8 @@ module address_counter (
     wire p_loadn;
     wire cpu;
     wire cpd;
+    wire n_clk;
+    wire gated_count;
 
     // pl should follow !clk, when loadn == low
     // cpu should follow !clk, when cup == enabled (low) and outn == enabled (low)
@@ -23,16 +25,16 @@ module address_counter (
     // cpu = not(clk) or cupn or outn
     // cpd = not(clk) or cdownn or outn
     nand_00p inv(
-        .a1(clk), .b1(clk),
+        .a1(clk), .b1(clk), .y1(n_clk),
         .a2(1'b0), .b2(1'b0),
         .a3(1'b0), .b3(1'b0),
         .a4(1'b0), .b4(1'b0));
 
     or_32p ctrl(
-        .a1(inv.y1), .b1(outn),
-        .a2(inv.y1), .b2(loadn), .y2(p_loadn),
-        .a3(ctrl.y1), .b3(cupn), .y3(cpu),
-        .a4(ctrl.y1), .b4(cdownn), .y4(cpd));
+        .a1(n_clk), .b1(outn), .y1(gated_count),
+        .a2(n_clk), .b2(loadn), .y2(p_loadn),
+        .a3(gated_count), .b3(cupn), .y3(cpu),
+        .a4(gated_count), .b4(cdownn), .y4(cpd));
 
     udcounter_193 cnt_0(
         .mr(reset),
