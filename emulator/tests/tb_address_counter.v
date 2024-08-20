@@ -1,4 +1,4 @@
-module tb_stack_pointer;
+module tb_address_counter;
 
     reg outn;
     reg loadn;
@@ -15,7 +15,7 @@ module tb_stack_pointer;
 
     integer i;
 
-    stack_pointer sp(
+    address_counter ac(
         .outn(outn),
         .loadn(loadn),
         .cupn(cupn),
@@ -26,7 +26,7 @@ module tb_stack_pointer;
         .abus(abus));
 
 initial begin
-        $display("Stack pointer...");
+        $display("Address Counter...");
 
         outn <= 1;
         loadn <= 1;
@@ -41,7 +41,7 @@ initial begin
         #1
         `assert(abus, 16'bZ);
 
-        // enable output from PC, value - undefined
+        // enable output from AC, value - undefined
         outn <= 0;
         #1
         `assert(abus, 16'bX);

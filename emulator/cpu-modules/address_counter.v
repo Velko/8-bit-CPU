@@ -1,4 +1,4 @@
-module stack_pointer (
+module address_counter (
     input outn,
     input loadn,
     input cupn,

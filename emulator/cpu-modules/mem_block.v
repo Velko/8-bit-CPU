@@ -21,7 +21,7 @@ module mem_block(
 );
 
     //TODO: replace quick boolean operators with proper handling using 74* chips
-    stack_pointer pc(
+    address_counter pc(
         .abus(abus),
         .reset(rst),
         .clk(clk),
@@ -73,7 +73,7 @@ module mem_block(
         .mloadn(load_mux.y[12])
     );
 
-    stack_pointer stack(
+    address_counter stack(
         .abus(abus),
         .reset(rst),
         .clk(clk),
@@ -84,7 +84,7 @@ module mem_block(
         .cdownn(spdec || addr_out_mux.y[3])
     );
 
-    stack_pointer sdp(
+    address_counter sdp(
         .abus(abus),
         .reset(rst),
         .clk(clk),
@@ -106,7 +106,7 @@ module mem_block(
     );
 
     //TODO: do we need dedicated module or re-using PC is fine?
-    stack_pointer lr(
+    address_counter lr(
         .abus(abus),
         .reset(rst),
         .clk(clk),

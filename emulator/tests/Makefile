@@ -4,7 +4,7 @@ test: test-138 test-161-basics test-161-chaining test-245 test-173 test-283 test
       test-193-basics test-193-chaining test-04p test-74\
       test-gp-register test-alu-addsub test-alu-andor test-alu-xornot test-alu-shiftswap \
       test-flags-reg test-io-control \
-      test-alu-block test-sp test-memory test-address-calc test-control-logic test-clock
+      test-alu-block test-ac test-memory test-address-calc test-control-logic test-clock
 
 VPATH=../vpi
 
@@ -204,9 +204,9 @@ TBALUBLOCKSRC=$(ALUBLOCKSRC) testhelpers.v tb_alu_block.v
 tb_alu-block.vvp: $(TBALUBLOCKSRC)
 	iverilog -Wall $^ -o $@
 
-TBSPSRC=$(SPSRC) testhelpers.v tb_stack_pointer.v
+TBACSRC=$(ACSRC) testhelpers.v tb_address_counter.v
 
-tb_sp.vvp: $(TBSPSRC)
+tb_ac.vvp: $(TBACSRC)
 	iverilog -Wall $^ -o $@
 
 TBMEMSRC=$(MEMSRC) testhelpers.v tb_memory.v
