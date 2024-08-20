@@ -9,6 +9,7 @@ module mem_block(
         input [3:0] loadctl,
 
         input rst,
+        input rstn,
 
         input clk,
         input iclk,
@@ -23,7 +24,7 @@ module mem_block(
     //TODO: replace quick boolean operators with proper handling using 74* chips
     address_counter pc(
         .abus(abus),
-        .reset(rst),
+        .resetn(rstn),
         .clk(clk),
         .iclk(iclk),
         .outn(addr_out_mux.y[5]),
@@ -75,7 +76,7 @@ module mem_block(
 
     address_counter stack(
         .abus(abus),
-        .reset(rst),
+        .resetn(rstn),
         .clk(clk),
         .iclk(iclk),
         .outn(addr_out_mux.y[3]),
@@ -86,7 +87,7 @@ module mem_block(
 
     address_counter sdp(
         .abus(abus),
-        .reset(rst),
+        .resetn(rstn),
         .clk(clk),
         .iclk(iclk),
         .outn(addr_out_mux.y[1]),
@@ -108,7 +109,7 @@ module mem_block(
     //TODO: do we need dedicated module or re-using PC is fine?
     address_counter lr(
         .abus(abus),
-        .reset(rst),
+        .resetn(rstn),
         .clk(clk),
         .iclk(iclk),
         .outn(addr_out_mux.y[4]),

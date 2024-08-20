@@ -7,7 +7,7 @@ module tb_address_counter;
 
     reg clk;
     reg iclk;
-    reg reset;
+    reg resetn;
 
     wire [15:0] abus;
     reg [15:0] addr;
@@ -22,10 +22,10 @@ module tb_address_counter;
         .cdownn(cdownn),
         .clk(clk),
         .iclk(iclk),
-        .reset(reset),
+        .resetn(resetn),
         .abus(abus));
 
-initial begin
+    initial begin
         $display("Address Counter...");
 
         outn <= 1;
@@ -34,7 +34,7 @@ initial begin
         cdownn <= 1;
         clk <= 0;
         iclk <= 0;
-        reset <= 0;
+        resetn <= 1;
         wbus <= 0;
 
         // initial bus - disconnected
@@ -45,26 +45,32 @@ initial begin
         outn <= 0;
         #1
         `assert(abus, 16'bX);
+        outn <= 1;
 
-        // reset
-        reset <= 1;
+        // reset (should load what's on the address bus immediately)
+        addr <= 16'hE000;
+        wbus <= 1;
+        resetn <= 0;
+        #1
+        resetn <= 1; // release reset and enable output
+        wbus <= 0;
+        outn <= 0;
         #1
         `assert(abus, 16'bX);
 
         `tick(iclk, 2); // reset value propagation requires ICLK tick
-        `assert(abus, 16'b0);
+        `assert(abus, 16'hE000);
 
 
-        reset <= 0;
 
         // count up one
         cupn <= 0;
         #1
         `tick(clk, 2);
-        `assert(abus, 16'b0); // should still be 0
+        `assert(abus, 16'hE000); // should still be E000
 
-        `tick(iclk, 2);
-        `assert(abus, 16'b1); // load 1 into secondary stage
+        `tick(iclk, 2);          // load +1 into secondary stage
+        `assert(abus, 16'hE001);
 
         cupn <= 1;
         #1
@@ -73,10 +79,10 @@ initial begin
         cdownn <= 0;
         #1
         `tick(clk, 2);
-        `assert(abus, 16'b1); // should still be 1
+        `assert(abus, 16'hE001); // should still be +1
 
-        `tick(iclk, 2);
-        `assert(abus, 16'b0); // load 0 into secondary stage
+        `tick(iclk, 2);          // load +0 into secondary stage
+        `assert(abus, 16'hE000);
 
         cdownn <= 1;
         outn <= 1;
@@ -90,7 +96,7 @@ initial begin
         `tick(iclk, 2);
         outn <= 0;
         #1
-        `assert(abus, 16'b0); // should still be 0
+        `assert(abus, 16'hE000); // should remain unchanged
         outn <= 1;
         cupn <= 1;
 
@@ -101,7 +107,7 @@ initial begin
         `tick(iclk, 2);
         outn <= 0;
         #1
-        `assert(abus, 16'b0); // should still be 0
+        `assert(abus, 16'hE000); // should remain unchanged
         outn <= 1;
         cdownn <= 1;
 
@@ -115,18 +121,24 @@ initial begin
         wbus <= 0;
         outn <= 0;
         #1
-        `assert(abus, 16'b0); // should still be 0
+        `assert(abus, 16'hE000); // should remain original
 
         `tick(iclk, 2);
         `assert(abus, 16'hbeef); // load 0xbeef into secondary stage
         loadn <= 1;
 
-        // reset
-        reset <= 1;
+        // reset to 0
+        outn <= 1;
+        addr <= 16'h0;
+        wbus <= 1;
+        #1
+        resetn <= 0;
         #1
 
         // loop, check if increments correctly
-        reset <= 0;
+        resetn <= 1;
+        wbus <= 0;
+        outn <= 0;
         `tick(iclk, 2);
         cupn <= 0;
         #1
@@ -157,7 +169,7 @@ initial begin
         // should be wrapped around to 0xFFFF
         `assert(abus, 16'hffff);
 
-end
+    end
 
     assign abus = wbus ? addr : 16'bZ;
 

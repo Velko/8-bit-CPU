@@ -6,12 +6,14 @@ module address_counter (
 
     input clk,
     input iclk,
-    input reset,
+    input resetn,
 
     inout [15:0] abus
 );
 
     wire [15:0] addr;
+    wire clocked_load;
+    wire res_load;
     wire p_loadn;
     wire cpu;
     wire cpd;
@@ -19,25 +21,27 @@ module address_counter (
     wire gated_count;
 
     // pl should follow !clk, when loadn == low
+    // pl should follow resetn
     // cpu should follow !clk, when cup == enabled (low) and outn == enabled (low)
 
-    // pl = not(clk) or loadn
+    // pl = (not(clk) or loadn) and resetn
+    // pl = not((not(clk) or loadn) nand resetn)
     // cpu = not(clk) or cupn or outn
     // cpd = not(clk) or cdownn or outn
     nand_00p inv(
         .a1(clk), .b1(clk), .y1(n_clk),
-        .a2(1'b0), .b2(1'b0),
-        .a3(1'b0), .b3(1'b0),
+        .a2(clocked_load), .b2(resetn), .y2(res_load),
+        .a3(res_load), .b3(res_load), .y3(p_loadn),
         .a4(1'b0), .b4(1'b0));
 
     or_32p ctrl(
         .a1(n_clk), .b1(outn), .y1(gated_count),
-        .a2(n_clk), .b2(loadn), .y2(p_loadn),
+        .a2(n_clk), .b2(loadn), .y2(clocked_load),
         .a3(gated_count), .b3(cupn), .y3(cpu),
         .a4(gated_count), .b4(cdownn), .y4(cpd));
 
     udcounter_193 cnt_0(
-        .mr(reset),
+        .mr(1'b0),
         .pl(p_loadn),
         .d(abus[3:0]),
         .q(addr[3:0]),
@@ -45,7 +49,7 @@ module address_counter (
         .cpd(cpd));
 
     udcounter_193 cnt_1(
-        .mr(reset),
+        .mr(1'b0),
         .pl(p_loadn),
         .d(abus[7:4]),
         .q(addr[7:4]),
@@ -53,7 +57,7 @@ module address_counter (
         .cpd(cnt_0.tcd));
 
     udcounter_193 cnt_2(
-        .mr(reset),
+        .mr(1'b0),
         .pl(p_loadn),
         .d(abus[11:8]),
         .q(addr[11:8]),
@@ -61,7 +65,7 @@ module address_counter (
         .cpd(cnt_1.tcd));
 
     udcounter_193 cnt_3(
-        .mr(reset),
+        .mr(1'b0),
         .pl(p_loadn),
         .d(abus[15:12]),
         .q(addr[15:12]),
