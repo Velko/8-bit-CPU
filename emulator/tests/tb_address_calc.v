@@ -7,7 +7,6 @@ module tb_address_calc;
     reg [7:0] mbus;
 
     reg clk;
-    reg reset;
     reg outn;
     reg loadn;
     reg m_sign;
@@ -17,7 +16,6 @@ module tb_address_calc;
         .mbus(mbus),
 
         .clk(clk),
-        .reset(reset),
 
         .outn(outn),
         .loadn(loadn),
@@ -29,10 +27,9 @@ initial begin
 
     waddr <= 0;
     clk <= 0;
-    reset <= 1;
     outn <= 1;
     loadn <= 1;
-    #1 reset <= 0;
+    #1
 
     /* 64737 + 168 signed */
     addr <= 16'd64737;

@@ -53,7 +53,6 @@ module mem_block(
     tx_register txl(
         .abus(abus[7:0]),
         .mbus(mbus),
-        .reset(rst),
         .clk(clk),
         .iclk(iclk),
         .aoutn(addr_out_mux.y[0]),
@@ -65,7 +64,6 @@ module mem_block(
     tx_register txh(
         .abus(abus[15:8]),
         .mbus(mbus),
-        .reset(rst),
         .clk(clk),
         .iclk(iclk),
         .aoutn(addr_out_mux.y[0]),
@@ -100,7 +98,6 @@ module mem_block(
         .abus(abus),
         .mbus(mbus),
         .clk(clk),
-        .reset(rst),
         .outn(addr_out_mux.y[2]),
         .loadn(addr_load_mux.y[2]),
         .m_sign(m_sign)

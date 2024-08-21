@@ -6,7 +6,6 @@ module tx_register (
 
     input clk,
     input iclk,
-    input reset,
 
     inout [7:0] mbus,
     inout [7:0] abus);

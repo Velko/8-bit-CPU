@@ -4,7 +4,6 @@ module address_calc (
     input m_sign,
 
     input clk,
-    input reset,
 
     inout [15:0] abus,
     input [7:0] mbus
