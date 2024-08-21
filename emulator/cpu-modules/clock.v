@@ -20,7 +20,6 @@ module clock(
     nor_02p no(.a1(na.y4), .a2(na.y4), .b1(dff_sel.q2), .b2(dff_sel.q2n), .a4(no.y2), .b4(no.y2), .a3(1'b0), .b3(1'b0), .y1(iclk), .y2(clk));
 
     initial begin
-        $monitor("C %t %b", $realtime, dff_sel.q1);
         clk_free <= 0;
         clk_scan <= 0;
         int_reset <= 0;
