@@ -14,16 +14,39 @@ module memory(
     wire _nand_y3;
     wire [7:0] _mem_data;
 
-    //TODO: should use discrete logic for CS calculations
-    wire rom_sel = abus >= 16'hE000; //upper 8 KiB
-    wire ram_l_sel = !abus[15];
-    wire ram_h_sel = !rom_sel && abus[15];
+    // Upper 8 KiB starts at 0xE000 (0b1110 0000 0000 0000)
+    // ROM has to be selected when 3 upper bits are set
+
+    // Upper part of RAM has to be selected when most significant
+    // bit is set, but not the ROM
+
+    // Lower part of RAM has to be selected, when most significant
+    // bit is clear
+    wire rom_seln;
+    wire ram_l_seln = abus[15];
+    wire ram_h_seln;
+
+    nand_10p chip_sel (
+        .a1(abus[15]),
+        .b1(abus[14]),
+        .c1(abus[13]),
+        .y1(rom_seln),
+
+        .a2(rom_seln),
+        .b2(abus[15]),
+        .c2(1'b1),
+        .y2(ram_h_seln),
+
+        .a3(1'b0),
+        .b3(1'b0),
+        .c3(1'b0)
+    );
 
     assign (pull0, pull1) abus = 16'hE000; // pull address bus to reset value (start of ROM)
 
     ram_62256 mem_l(
         .addr(abus[14:0]),
-        .csn(!ram_l_sel),
+        .csn(ram_l_seln),
         .oen(_oe),
         .wen(_we),
         .data(_mem_data)
@@ -31,7 +54,7 @@ module memory(
 
     ram_62256 mem_h(
         .addr(abus[14:0]),
-        .csn(!ram_h_sel),
+        .csn(ram_h_seln),
         .oen(_oe),
         .wen(_we),
         .data(_mem_data)
@@ -39,7 +62,7 @@ module memory(
 
     rom_async #(.ROMFILE("bios.hex"), .ADDR_BITS(13)) bios (
         .addr(abus[12:0]),
-        .cen(!rom_sel),
+        .cen(rom_seln),
         .oen(_oe),
         .data(_mem_data)
     );

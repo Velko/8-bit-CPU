@@ -54,7 +54,14 @@ module tb_memory;
         #1
         `tick(clk, 2);
 
-        // read it back
+        // write 0xB6 to RAM at 0x8004 (same offset in upper chip)
+        addr <= 16'h8004;
+        data <= 8'hb6;
+        #1
+        `tick(clk, 2);
+
+        // read it back from 0x0004
+        addr <= 16'h0004;
         wdata <= 0;
         wen <= 1;
         outn <= 0;
@@ -66,10 +73,10 @@ module tb_memory;
         #1
         `assert(mbus, 8'bx);
 
-        // go back to addr 0x0004
-        addr <= 16'h0004;
+        // read from addr 0x8004
+        addr <= 16'h8004;
         #1
-        `assert(mbus, 8'ha5);
+        `assert(mbus, 8'hb6);
 
     end
 
