@@ -37,11 +37,11 @@ module tb_02b;
     end
 
     function [3:0] bit1 (input [1:0] idx);
-        bit1 = 4'bX | (1 << i);
+        bit1 = 4'bX | (1 << idx);
     endfunction
 
     function [3:0] bit0 (input [1:0] idx);
-        bit0 = 4'bX & ~(1 << i);
+        bit0 = 4'bX & ~(1 << idx);
     endfunction
 
 endmodule

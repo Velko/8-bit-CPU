@@ -27,12 +27,12 @@ module tb_04p;
 
     assign y = {logic_op.y6, logic_op.y5, logic_op.y4, logic_op.y3, logic_op.y2, logic_op.y1};
 
-    function [5:0] bit1 (input [1:0] idx);
-        bit1 = 6'bX | (1 << i);
+    function [5:0] bit1 (input [3:0] idx);
+        bit1 = 6'bX | (1 << idx);
     endfunction
 
-    function [5:0] bit0 (input [1:0] idx);
-        bit0 = 6'bX & ~(1 << i);
+    function [5:0] bit0 (input [3:0] idx);
+        bit0 = 6'bX & ~(1 << idx);
     endfunction
 
 endmodule
