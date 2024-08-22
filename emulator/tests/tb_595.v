@@ -52,12 +52,12 @@ module tb_595;
         `assert(sh_output, 16'b1);
 
         ds <= 0;
-        `toggle(cp_sh, 10);
+        `pulse(cp_sh, 5);
         `assert(sh_output, 16'b1);
         `tick(cp_st);
         `assert(sh_output, 16'b10_0000);
 
-        `toggle(cp_sh, 10);
+        `pulse(cp_sh, 5);
         `tick(cp_st);
         `assert(sh_output, 16'b100_0000_0000);
     end

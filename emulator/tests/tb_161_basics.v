@@ -29,22 +29,22 @@ module tb_161_basics;
         `assert(c0.q, 4'h0)
 
         // count up to 2
-        `toggle(clk, 4);
+        `pulse(clk, 2);
         `assert(c0.q, 4'h2);
 
         // count while holding reset
         rst <= 0;
-        `toggle(clk, 4);
+        `pulse(clk, 2);
         `assert(c0.q, 4'h0);
 
         // release reset and keep counting
         rst <= 1;
-        `toggle(clk, 18);
+        `pulse(clk, 9);
         `assert(c0.q, 4'h9);
 
         // turn off CEP and check if holds
         cep <= 0;
-        `toggle(clk, 6);
+        `pulse(clk, 3);
         `assert(c0.q, 4'h9);
 
         // re-enable CEP, parallel load
@@ -54,7 +54,7 @@ module tb_161_basics;
         `assert(c0.q, 4'he);
 
         // few more ticks, see if holds
-        `toggle(clk, 6);
+        `pulse(clk, 3);
         `assert(c0.q, 4'he);
 
 
@@ -70,7 +70,7 @@ module tb_161_basics;
         `assert(c0.tc, 1'b0);
 
         // few more ticks, see if holds
-        `toggle(clk, 6);
+        `pulse(clk, 3);
         `assert(c0.q, 4'hf);
 
         // re-enable counting, wrap-around
