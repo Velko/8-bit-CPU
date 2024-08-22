@@ -18,7 +18,7 @@ module tb_374;
 
         `assert(dff.q, 8'bZ);
 
-        `tick(cp, 2);
+        `tick(cp);
         `assert(dff.q, 8'bZ);
 
         oen <= 0;
@@ -27,7 +27,7 @@ module tb_374;
 
         data <= 8'h5A;
 
-        `tick(cp, 2);
+        `tick(cp);
         `assert(dff.q, 8'h5A);
 
         oen <= 1;

@@ -52,16 +52,16 @@ module tb_alu_block;
         fdata <= 1;
         loadctl <= 0;
         #1
-        `tick(clk, 2);
-        `tick(iclk, 2);
+        `tick(clk);
+        `tick(iclk);
 
         // load into B
         loadctl <= 1;
         cfn <= 0;
         data <= 8'd18;
         #1
-        `tick(clk, 2);
-        `tick(iclk, 2);
+        `tick(clk);
+        `tick(iclk);
 
         // add and load into A
         fdata <= 0;
@@ -69,8 +69,8 @@ module tb_alu_block;
         loadctl <= 0;
         arg_r <= 1;
         #1
-        `tick(clk, 2);
-        `tick(iclk, 2);
+        `tick(clk);
+        `tick(iclk);
         loadctl <= 15;
         arg_r <= 6;
 
@@ -88,8 +88,8 @@ module tb_alu_block;
         loadctl <= 1;
         data <= 256 - 42;
         #1
-        `tick(clk, 2);
-        `tick(iclk, 2);
+        `tick(clk);
+        `tick(iclk);
 
         // add and load into A
         fdata <= 0;
@@ -97,8 +97,8 @@ module tb_alu_block;
         loadctl <= 0;
         arg_r <= 1;
         #1
-        `tick(clk, 2);
-        `tick(iclk, 2);
+        `tick(clk);
+        `tick(iclk);
         loadctl <= 15;
         arg_r <= 6;
 

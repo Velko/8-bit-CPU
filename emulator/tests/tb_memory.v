@@ -52,13 +52,13 @@ module tb_memory;
         data <= 8'ha5;
         wdata <= 1;
         #1
-        `tick(clk, 2);
+        `tick(clk);
 
         // write 0xB6 to RAM at 0x8004 (same offset in upper chip)
         addr <= 16'h8004;
         data <= 8'hb6;
         #1
-        `tick(clk, 2);
+        `tick(clk);
 
         // read it back from 0x0004
         addr <= 16'h0004;

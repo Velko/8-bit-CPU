@@ -39,7 +39,7 @@ initial begin
     m_sign <= 1;
 
     #1
-    `tick(clk, 2);
+    `tick(clk);
 
     waddr <= 0;
     outn <= 0;
@@ -55,7 +55,7 @@ initial begin
     m_sign <= 0;
 
     #1
-    `tick(clk, 2);
+    `tick(clk);
 
     waddr <= 0;
     outn <= 0;

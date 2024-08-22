@@ -37,8 +37,8 @@ module tb_control_logic;
         `assert(control_word, 32'h07bd5889);
 
         // LDI A, step 1, step reset
-        `tick(clk, 2);
-        `tick(iclk, 2);
+        `tick(clk);
+        `tick(iclk);
         `assert(control_word, 32'h06bd5809);
 
         opcode <= 8'h17;
@@ -59,37 +59,37 @@ module tb_control_logic;
         step_extn <= 0;
         opcode <= 8'h0d;
         #1
-        `tick(clk, 2);
-        `tick(iclk, 2);
+        `tick(clk);
+        `tick(iclk);
         // DUMMY_EXT step1, no step reset, no step ext
         `assert(control_word, 32'h07ff58ff);
 
         // ext. bit should "stick"
         step_extn <= 1;
         #1
-        `tick(clk, 2);
-        `tick(iclk, 2);
+        `tick(clk);
+        `tick(iclk);
         // DUMMY_EXT step2, no step reset, no step ext
         `assert(control_word, 32'h07ff58ff);
 
-        `tick(clk, 2);
-        `tick(iclk, 2);
+        `tick(clk);
+        `tick(iclk);
         // DUMMY_EXT step3, step reset, no step ext
         `assert(control_word, 32'h06bd5809);
 
         step_resetn <= 0;
         opcode <= 8'h01;
         #1
-        `tick(clk, 2);
-        `tick(iclk, 2);
+        `tick(clk);
+        `tick(iclk);
         // fetch again
         `assert(control_word, 32'h07bd5889);
 
         step_resetn <= 1;
         #1
         // LDI A, step 1, step reset (again)
-        `tick(clk, 2);
-        `tick(iclk, 2);
+        `tick(clk);
+        `tick(iclk);
         `assert(control_word, 32'h06bd5809);
 
     end

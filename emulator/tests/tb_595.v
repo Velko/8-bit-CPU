@@ -46,19 +46,19 @@ module tb_595;
 
         mrn <= 1;
         ds <= 1;
-        `tick(cp_sh, 2);
+        `tick(cp_sh);
         `assert(sh_output, 16'b0);
-        `tick(cp_st, 2);
+        `tick(cp_st);
         `assert(sh_output, 16'b1);
 
         ds <= 0;
-        `tick(cp_sh, 10);
+        `toggle(cp_sh, 10);
         `assert(sh_output, 16'b1);
-        `tick(cp_st, 2);
+        `tick(cp_st);
         `assert(sh_output, 16'b10_0000);
 
-        `tick(cp_sh, 10);
-        `tick(cp_st, 2);
+        `toggle(cp_sh, 10);
+        `tick(cp_st);
         `assert(sh_output, 16'b100_0000_0000);
     end
 

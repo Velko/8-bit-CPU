@@ -71,7 +71,7 @@ module tb_74;
         `assert(dff.q1n, 1'b0);
 
         // clock in
-        `tick(cp1, 2);
+        `tick(cp1);
         `assert(dff.q1, 1'b0);
         `assert(dff.q1n, 1'b1);
 
@@ -82,7 +82,7 @@ module tb_74;
         `assert(dff.q1n, 1'b1);
 
         // clock in
-        `tick(cp1, 2);
+        `tick(cp1);
         `assert(dff.q1, 1'b1);
         `assert(dff.q1n, 1'b0);
 
@@ -142,7 +142,7 @@ module tb_74;
         `assert(dff.q2n, 1'b0);
 
         // clock in
-        `tick(cp2, 2);
+        `tick(cp2);
         `assert(dff.q2, 1'b0);
         `assert(dff.q2n, 1'b1);
 
@@ -153,7 +153,7 @@ module tb_74;
         `assert(dff.q2n, 1'b1);
 
         // clock in
-        `tick(cp2, 2);
+        `tick(cp2);
         `assert(dff.q2, 1'b1);
         `assert(dff.q2n, 1'b0);
 

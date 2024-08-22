@@ -21,12 +21,12 @@ module tb_377;
         `assert(dff.q, 8'bX);
 
         data <= 8'hA5;
-        `tick(cp, 2);
+        `tick(cp);
 
         `assert(dff.q, 8'bX);
 
         en <= 0;
-        `tick(cp, 2);
+        `tick(cp);
         `assert(dff.q, 8'hA5);
     end
 

@@ -50,19 +50,19 @@ module tb_flags_reg;
         data <= 8'h80;
         calcn <= 0;
         #1
-        `tick(clk, 2);
+        `tick(clk);
         `assert(flags.fout, 4'h0);
 
         // output should change on iclk
-        `tick(iclk, 2);
+        `tick(iclk);
         `assert(flags.fout[0], 1'b1);
         `assert(flags.fout[1], 1'b0);
 
         // load zero
         data <= 8'h00;
         #1
-        `tick(clk, 2);
-        `tick(iclk, 2);
+        `tick(clk);
+        `tick(iclk);
         `assert(flags.fout[0], 1'b0);
         `assert(flags.fout[1], 1'b1);
 
@@ -70,65 +70,65 @@ module tb_flags_reg;
         for (i = 0; i < 8; i = i + 1) begin
             data <= 1 << i;
             #1
-            `tick(clk, 2);
-            `tick(iclk, 2);
+            `tick(clk);
+            `tick(iclk);
             `assert(flags.fout[1], 1'b0);
         end
 
         // check oVerflow input
         vin <= 1;
         #1
-        `tick(clk, 2);
-        `tick(iclk, 2);
+        `tick(clk);
+        `tick(iclk);
         `assert(flags.fout[3], 1'b1);
 
         // release the pin, see if it holds
         vin <= 1'bz;
         #1
-        `tick(clk, 2);
-        `tick(iclk, 2);
+        `tick(clk);
+        `tick(iclk);
         `assert(flags.fout[3], 1'b1);
 
         // drive low
         vin <= 0;
         #1
-        `tick(clk, 2);
-        `tick(iclk, 2);
+        `tick(clk);
+        `tick(iclk);
         `assert(flags.fout[3], 1'b0);
 
         // release the pin, see if it holds
         vin <= 1'bz;
         #1
-        `tick(clk, 2);
-        `tick(iclk, 2);
+        `tick(clk);
+        `tick(iclk);
         `assert(flags.fout[3], 1'b0);
 
         // same with Carry input
         cin <= 1;
         #1
-        `tick(clk, 2);
-        `tick(iclk, 2);
+        `tick(clk);
+        `tick(iclk);
         `assert(flags.fout[2], 1'b1);
 
         // release the pin, see if it holds
         cin <= 1'bz;
         #1
-        `tick(clk, 2);
-        `tick(iclk, 2);
+        `tick(clk);
+        `tick(iclk);
         `assert(flags.fout[2], 1'b1);
 
         // drive low
         cin <= 0;
         #1
-        `tick(clk, 2);
-        `tick(iclk, 2);
+        `tick(clk);
+        `tick(iclk);
         `assert(flags.fout[2], 1'b0);
 
         // release the pin, see if it holds
         cin <= 1'bz;
         #1
-        `tick(clk, 2);
-        `tick(iclk, 2);
+        `tick(clk);
+        `tick(iclk);
         `assert(flags.fout[2], 1'b0);
 
 
@@ -140,8 +140,8 @@ module tb_flags_reg;
         for (i = 0; i < 4; i = i + 1) begin
             data <= 1 << i;
             #1
-            `tick(clk, 2);
-            `tick(iclk, 2);
+            `tick(clk);
+            `tick(iclk);
             `assert(flags.fout, 1 << i);
         end
 
@@ -151,8 +151,8 @@ module tb_flags_reg;
             wbus <= 1;
             boutn <= 1;
             #1
-            `tick(clk, 2);
-            `tick(iclk, 2);
+            `tick(clk);
+            `tick(iclk);
             wbus <= 0;
             #1
             `assert(bus, 8'bz);

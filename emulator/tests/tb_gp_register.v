@@ -57,7 +57,7 @@ module tb_gp_register;
 
         // load into register
         loadn <= 0;
-        `tick(clk, 2);
+        `tick(clk);
 
         // release bus
         wbus <= 0;
@@ -79,7 +79,7 @@ module tb_gp_register;
         `assert(r.alu_l, 8'hX);
 
         // after iclk, should load from primary
-        `tick(iclk, 2);
+        `tick(iclk);
         `assert(r.alu_l, 8'h3a);
 
         // check ALU RHS output (disconnected initially)

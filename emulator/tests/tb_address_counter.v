@@ -58,7 +58,7 @@ module tb_address_counter;
         #1
         `assert(abus, 16'bX);
 
-        `tick(iclk, 2); // reset value propagation requires ICLK tick
+        `tick(iclk); // reset value propagation requires ICLK tick
         `assert(abus, 16'hE000);
 
 
@@ -66,10 +66,10 @@ module tb_address_counter;
         // count up one
         cupn <= 0;
         #1
-        `tick(clk, 2);
+        `tick(clk);
         `assert(abus, 16'hE000); // should still be E000
 
-        `tick(iclk, 2);          // load +1 into secondary stage
+        `tick(iclk);          // load +1 into secondary stage
         `assert(abus, 16'hE001);
 
         cupn <= 1;
@@ -78,10 +78,10 @@ module tb_address_counter;
         // count down one
         cdownn <= 0;
         #1
-        `tick(clk, 2);
+        `tick(clk);
         `assert(abus, 16'hE001); // should still be +1
 
-        `tick(iclk, 2);          // load +0 into secondary stage
+        `tick(iclk);          // load +0 into secondary stage
         `assert(abus, 16'hE000);
 
         cdownn <= 1;
@@ -92,8 +92,8 @@ module tb_address_counter;
         // try to count up one, while OUT is not enabled
         cupn <= 0;
         #1
-        `tick(clk, 2);
-        `tick(iclk, 2);
+        `tick(clk);
+        `tick(iclk);
         outn <= 0;
         #1
         `assert(abus, 16'hE000); // should remain unchanged
@@ -103,8 +103,8 @@ module tb_address_counter;
         // try to count down one, while OUT is not enabled
         cdownn <= 0;
         #1
-        `tick(clk, 2);
-        `tick(iclk, 2);
+        `tick(clk);
+        `tick(iclk);
         outn <= 0;
         #1
         `assert(abus, 16'hE000); // should remain unchanged
@@ -116,14 +116,14 @@ module tb_address_counter;
         wbus <= 1;
         loadn <= 0;
         #1
-        `tick(clk, 2);
+        `tick(clk);
 
         wbus <= 0;
         outn <= 0;
         #1
         `assert(abus, 16'hE000); // should remain original
 
-        `tick(iclk, 2);
+        `tick(iclk);
         `assert(abus, 16'hbeef); // load 0xbeef into secondary stage
         loadn <= 1;
 
@@ -139,15 +139,15 @@ module tb_address_counter;
         resetn <= 1;
         wbus <= 0;
         outn <= 0;
-        `tick(iclk, 2);
+        `tick(iclk);
         cupn <= 0;
         #1
 
         for (i = 0; i < 'h10000 ; i = i + 1) begin
             #1
             `assert(abus, i);
-            `tick(clk, 2);
-            `tick(iclk, 2);
+            `tick(clk);
+            `tick(iclk);
         end
         cupn <= 1;
 
@@ -161,8 +161,8 @@ module tb_address_counter;
         for (i = 'h10000; i >= 0  ; i = i - 1) begin
             #1
             `assert(abus, (i & 'hffff));
-            `tick(clk, 2);
-            `tick(iclk, 2);
+            `tick(clk);
+            `tick(iclk);
         end
         cdownn <= 1;
 

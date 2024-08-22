@@ -38,7 +38,7 @@ module tb_io_control;
         loadn <= 0;
 
         #1
-        `tick(clk, 2);
+        `tick(clk);
 
         to_devn <= 0;
         #1
