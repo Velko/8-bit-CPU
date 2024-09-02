@@ -30,7 +30,7 @@ jobs:
     - name: Install localpath helper
       working-directory: ./pycontrol
       run: |
-        pip install ./localpath
+        pip install ./localpath-0.1
     - name: Generate control ROMs
       working-directory: ./pycontrol/tools
       run: |
