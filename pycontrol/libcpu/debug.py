@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import sys
-from typing import Dict, List, Mapping, Optional, Union
+from typing import Dict, List, Mapping
 from enum import Enum
 from dataclasses import dataclass
 
@@ -33,9 +33,9 @@ class Debugger:
         self.halted = False
         self.stopped = True
 
-        self.breakpoints: Dict[int, Breakpoint] = {}
+        self.breakpoints: dict[int, Breakpoint] = {}
 
-        self.current_break: Optional[Breakpoint] = None
+        self.current_break: Breakpoint | None = None
 
         self.on_stop = self.stop_event
         self.on_output = self.output_event
@@ -183,7 +183,7 @@ class Debugger:
             self.cpu_helper.write_ram(addr, self.breakpoints[addr].orig_op)
             del self.breakpoints[addr]
 
-    def break_hit(self) -> Optional[Breakpoint]:
+    def break_hit(self) -> Breakpoint | None:
         addr = self.cpu_helper.read_reg16(PC) - 1
 
         if addr in self.breakpoints:
@@ -208,8 +208,8 @@ class Debugger:
     def output_event(self, msg: str) -> None:
         print(msg, end="", flush=True)
 
-    def get_registers(self) -> Mapping[str, Union[int, str]]:
-        registers: Dict[str, Union[int, str]] = {
+    def get_registers(self) -> Mapping[str, int | str]:
+        registers: Dict[str, int | str] = {
             "A": self.cpu_helper.read_reg8(A),
             "B": self.cpu_helper.read_reg8(B),
             "C": self.cpu_helper.read_reg8(C),

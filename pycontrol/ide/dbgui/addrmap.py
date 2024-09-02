@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import re, os.path
-from typing import Dict, Iterable, Optional
+from typing import Iterable
 
 class AddrMapItem:
     def __init__(self, addr: int, filename: str, lineno: int) -> None:
@@ -25,7 +25,7 @@ class AddrMap:
 
     def reload(self) -> None:
 
-        self.by_addr: Dict[int, AddrMapItem] = dict()
+        self.by_addr: dict[int, AddrMapItem] = dict()
         self.all_files = [os.path.basename(self.main_file)]
 
         fnnoxt = os.path.splitext(self.main_file)[0]
@@ -48,7 +48,7 @@ class AddrMap:
 
         self.by_file_line = dict(map(lambda k: (f'{k.filename}:{k.lineno:06d}', k), self.by_addr.values()))
 
-    def lookup_by_line(self, filename: str, lineno: int) -> Optional[AddrMapItem]:
+    def lookup_by_line(self, filename: str, lineno: int) -> AddrMapItem | None:
         key = f'{filename}:{lineno:06d}'
 
         if key in self.by_file_line:
@@ -56,7 +56,7 @@ class AddrMap:
         else:
             return None
 
-    def lookup_by_addr(self, addr: int) -> Optional[AddrMapItem]:
+    def lookup_by_addr(self, addr: int) -> AddrMapItem | None:
         if addr in self.by_addr:
             return self.by_addr[addr]
         else:

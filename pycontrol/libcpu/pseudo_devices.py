@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Union, Callable, Optional, List
+from typing import Callable, List
 from .markers import AddrBase
 from .devices import RAM, DeviceBase
 from .util import ControlSignal, UninitializedError
@@ -24,14 +24,14 @@ class RamHook:
 
 class ImmediateValue(RamHook):
     def __init__(self) -> None:
-        self.client: Optional[PinClient] = None
+        self.client: PinClient | None = None
         self.value: List[int] = []
         self.write_enabled = False
 
     def connect(self, client: PinClient) -> None:
         self.client = client
 
-    def inject(self, value: Union[None, int, AddrBase]) -> None:
+    def inject(self, value: int | AddrBase | None) -> None:
         if value is None:
             self.value = []
         elif isinstance(value, int):
@@ -74,8 +74,8 @@ class RamProxy(DeviceBase):
         self.out = EnableCallback(self.enable_out, ram.out)
         self.write = EnableCallback(self.enable_write, ram.write)
 
-        self._out_hook: Optional[RamHook] = None
-        self._write_hook: Optional[RamHook] = None
+        self._out_hook: RamHook | None = None
+        self._write_hook: RamHook | None = None
 
     # update to intercept ram.out
     def hook_out(self, hook: RamHook) -> None:
@@ -106,13 +106,13 @@ def sign_extend(b: int) -> int:
 
 class IOMonitor:
     def __init__(self) -> None:
-        self.selected_port: Optional[int] = None
+        self.selected_port: int | None = None
         self.numeric_mode = 0
 
     def select_port(self, port: int) -> None:
         self.selected_port = port
 
-    def format_value(self, value: int) -> Optional[str]:
+    def format_value(self, value: int) -> str | None:
         if self.selected_port == 1:
             self.numeric_mode = value
             return None

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import cmd, readline
-from typing import Optional
 import multiprocessing.connection
 
 
@@ -14,7 +13,7 @@ class CmdUI(cmd.Cmd):
         self.ui_pipe.send(("cmd", line))
         return self.ui_pipe.recv()
 
-    def complete(self, text: str, state: int) -> Optional[list[str]]:
+    def complete(self, text: str, state: int) -> list[str] | None:
 
         self.ui_pipe.send(("complete", readline.get_line_buffer(), readline.get_begidx(), readline.get_endidx(), text, state))
         return self.ui_pipe.recv()

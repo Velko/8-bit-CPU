@@ -1,5 +1,5 @@
 import os
-from typing import Union, Iterator, Optional
+from typing import Iterator
 import serial
 from .util import RunMessage, OutMessage, HaltMessage, BrkMessage
 
@@ -11,7 +11,7 @@ class ProtocolException(Exception):
 
 class PinClient:
 
-    def __init__(self, serial: Optional[serial.Serial]=None) -> None:
+    def __init__(self, serial: serial.Serial | None = None) -> None:
 
         if serial is not None:
             self.serial = serial
@@ -43,7 +43,7 @@ class PinClient:
         # have to wait for timeout
         self.send_cmd(f"O{c_word}N")
 
-    def bus_set(self, arg: Union[int, str]) -> None:
+    def bus_set(self, arg: int | str) -> None:
         if isinstance(arg, str):
             arg = int(arg, 0)
         self.send_cmd(f"B{arg}N")
@@ -51,7 +51,7 @@ class PinClient:
     def bus_get(self) -> int:
         return int(self.query("b"))
 
-    def addr_set(self, arg: Union[int, str]) -> None:
+    def addr_set(self, arg: int | str) -> None:
         if isinstance(arg, str):
             arg = int(arg, 0)
         self.send_cmd(f"A{arg}N")
@@ -135,7 +135,7 @@ def open_port() -> serial.Serial:
     return serial.Serial(find_port(), 115200, timeout=3)
 
 
-single_inst: Optional[PinClient] = None
+single_inst: PinClient | None = None
 
 def get_client_instance() -> PinClient:
     global single_inst

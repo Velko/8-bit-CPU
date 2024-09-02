@@ -1,4 +1,4 @@
-from typing import List, Union, Optional, Sequence
+from collections.abc import Sequence
 from .markers import AddrBase
 from .devices import Flags
 from .pseudo_devices import Imm, IOMon
@@ -11,15 +11,15 @@ from .util import ControlSignal, RunMessage, OutMessage, HaltMessage, BrkMessage
 class AssistedCPUEngine:
     def __init__(self, client: PinClient) -> None:
         self.client = client
-        self.flags_cache: Optional[Flags] = None
-        self.opcode_cache: Optional[int] = None
+        self.flags_cache: Flags | None = None
+        self.opcode_cache: int | None = None
         self.op_extension = 0
 
         # RAM hooks
         Imm.connect(self.client)
         ProgMem.hook_out(Imm)
 
-    def execute_mnemonic(self, mnemonic: str, arg: Union[None, int, AddrBase]=None) -> Optional[RunMessage]:
+    def execute_mnemonic(self, mnemonic: str, arg: int | AddrBase | None = None) -> RunMessage | None:
         if not mnemonic in opcodes:
             raise InvalidOpcodeException(mnemonic)
 
@@ -27,7 +27,7 @@ class AssistedCPUEngine:
 
         return self.execute_opcode(opcodes[mnemonic].opcode)
 
-    def execute_opcode(self, opcode: Optional[int]) -> Optional[RunMessage]:
+    def execute_opcode(self, opcode: int | None) -> RunMessage | None:
 
         # reset op_extension when starting new instruction
         # the variable adds multiples of 256 to the opcode from IR and
@@ -43,7 +43,7 @@ class AssistedCPUEngine:
             microcode = ops_by_code[self.get_opcode_cached()]
             microstep, is_last = microcode.get_step(s_idx - self.op_extension , self.get_flags_cached())
             if is_last:
-                fin_steps: List[ControlSignal] = [StepCounter.reset]
+                fin_steps: list[ControlSignal] = [StepCounter.reset]
                 fin_steps.extend(microstep)
                 return self.execute_step(fin_steps)
             # only last step is expected to produce RunMessage
@@ -51,7 +51,7 @@ class AssistedCPUEngine:
             assert step_result is None
         return None
 
-    def execute_step(self, microstep: Sequence[ControlSignal]) -> Optional[RunMessage]:
+    def execute_step(self, microstep: Sequence[ControlSignal]) -> RunMessage | None:
         control = CtrlWord()
 
         for pin in microstep:
@@ -123,7 +123,7 @@ class AssistedCPUEngine:
 
 
 
-    def fetch_and_execute(self) -> Optional[RunMessage]:
+    def fetch_and_execute(self) -> RunMessage | None:
         # fetch the instruction
         for microstep in fetch:
             self.execute_step(microstep)

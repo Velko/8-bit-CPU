@@ -6,7 +6,7 @@ import localpath
 localpath.install()
 
 from libcpu.cpu_helper import CPUHelper
-from typing import  Sequence, Iterator, Optional, Iterable
+from typing import  Sequence, Iterator, Iterable
 
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.pinclient import PinClient, get_client_instance
@@ -36,7 +36,7 @@ def cpu_helper(pins_client_real: PinClient) -> CPUHelper:
 
 
 class FillRam:
-    def __init__(self, addresses: Sequence[int], values: Optional[Iterable[int]]=None) -> None:
+    def __init__(self, addresses: Sequence[int], values: Iterable[int] | None = None) -> None:
 
         if values is None:
             values = FillRam.random_bytes()

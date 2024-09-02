@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from dataclasses import dataclass
-from typing import TypeVar, Optional
+from typing import TypeVar
 from enum import Enum
 
 class UninitializedError(Exception):
@@ -8,14 +8,14 @@ class UninitializedError(Exception):
 
 T = TypeVar('T')
 
-def unwrap(val: Optional[T]) -> T:
+def unwrap(val: T | None) -> T:
     if val is None:
         raise UninitializedError
     return val
 
 class ControlSignal:
     def __init__(self) -> None:
-        self.name: Optional[str] = None
+        self.name: str | None = None
 
     @abstractmethod
     def apply_enable(self, c_word: int) -> int:

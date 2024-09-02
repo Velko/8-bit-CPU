@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
-from typing import Iterable, Optional, Tuple, Self
+from typing import Iterable, Tuple, Self
 from .discovery import all_pins
 from .pin import Pin
 from .util import ControlSignal
 
 class CtrlWord:
-    def __init__(self, pins: Optional[Iterable[Tuple[str, Pin]]]=None):
+    def __init__(self, pins: Iterable[Tuple[str, Pin]] | None = None):
         self.c_word = 0
         if pins is None:
             self.c_word = DEFAULT_CW.c_word

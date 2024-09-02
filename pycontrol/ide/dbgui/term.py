@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 import cmd, sys
-from typing import Optional
 import multiprocessing
 
 from . import script_file
@@ -50,14 +49,14 @@ class ProxiedCmd(cmd.Cmd):
     def rpc_cmd(self, line: str) -> bool:
         return self.onecmd(line)
 
-    def rpc_complete(self, buffer: str, begidx: int, endidx: int, text: str, state: int) -> Optional[list[str]]:
+    def rpc_complete(self, buffer: str, begidx: int, endidx: int, text: str, state: int) -> list[str] | None:
         self.buffer = buffer
         self.begidx = begidx
         self.endidx = endidx
 
         return self.complete(text, state)
 
-    def rpc_help(self, arg: str) -> Optional[bool]:
+    def rpc_help(self, arg: str) -> bool | None:
         return self.do_help(arg)
 
 class StdOutRedir:

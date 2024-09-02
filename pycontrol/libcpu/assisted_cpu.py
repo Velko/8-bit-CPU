@@ -1,4 +1,4 @@
-from typing import Optional, Union, overload
+from typing import overload
 from .util import RunMessage
 from .devices import GPRegister, Flags, FlagsRegister, AddressRegister
 from .markers import AddrBase
@@ -17,7 +17,7 @@ class AssistedCPU(AssistedCPUEngine):
     def ldi(self, target: FlagsRegister, value: Flags) -> None:
         ...
 
-    def ldi(self, target: Union[GPRegister, FlagsRegister], value: int | Flags ) -> None:
+    def ldi(self, target: GPRegister | FlagsRegister, value: int | Flags ) -> None:
         opcode = f"ldi_{target.name}_imm"
         if isinstance(value, Flags):
             value = value.value
@@ -147,16 +147,16 @@ class AssistedCPU(AssistedCPUEngine):
         opcode = f"ld_{target.name}_addr"
         self.execute_mnemonic(opcode, addr)
 
-    def bcs(self, label: Optional[AddrBase]=None) -> None:
+    def bcs(self, label: AddrBase | None = None) -> None:
         self.execute_mnemonic("bcsl_addr", label)
 
-    def bcc(self, label: Optional[AddrBase]=None) -> None:
+    def bcc(self, label: AddrBase | None = None) -> None:
         self.execute_mnemonic("bccl_addr", label)
 
-    def beq(self, label: Optional[AddrBase]=None) -> None:
+    def beq(self, label: AddrBase | None = None) -> None:
         self.execute_mnemonic("beql_addr", label)
 
-    def bne(self, label: Optional[AddrBase]=None) -> None:
+    def bne(self, label: AddrBase | None = None) -> None:
         self.execute_mnemonic("bnel_addr", label)
 
     def jmp(self, label: AddrBase) -> None:
@@ -196,7 +196,7 @@ class AssistedCPU(AssistedCPUEngine):
         opcode = f"str_{base.name}_imm_{source.name}"
         self.execute_mnemonic(opcode, offset)
 
-    def out(self, port: int, source: GPRegister) -> Optional[RunMessage]:
+    def out(self, port: int, source: GPRegister) -> RunMessage | None:
         opcode = f"out_imm_{source.name}"
         return self.execute_mnemonic(opcode, port)
 
