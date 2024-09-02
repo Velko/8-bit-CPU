@@ -1,4 +1,4 @@
-from typing import List, Sequence, Iterator, Tuple, Mapping
+from typing import Sequence, Iterator, Mapping
 from libcpu.util import ControlSignal
 from .DeviceSetup import *
 from .opcode_builder import MicrocodeBuilder, MicroCode, OpcodeArg
@@ -6,24 +6,24 @@ from .devices import Register, GPRegister, Flags
 
 gp_regs: Sequence[GPRegister] = [A, B, C, D]
 
-fetch: List[Sequence[ControlSignal]] = [[PC.out, PC.inc, ProgMem.out, IR.load]]
+fetch: list[Sequence[ControlSignal]] = [[PC.out, PC.inc, ProgMem.out, IR.load]]
 
 class InvalidOpcodeException(Exception):
     pass
 
-def permute_gp_regs_all() -> Iterator[Tuple[GPRegister, GPRegister]]:
+def permute_gp_regs_all() -> Iterator[tuple[GPRegister, GPRegister]]:
     for l in gp_regs:
         for r in gp_regs:
             yield l, r
 
 
-def permute_gp_regs_nsame() -> Iterator[Tuple[GPRegister, GPRegister]]:
+def permute_gp_regs_nsame() -> Iterator[tuple[GPRegister, GPRegister]]:
     for l in gp_regs:
         for r in gp_regs:
             if l != r:
                 yield l, r
 
-def permute_regs_lr(lregs: Sequence[Register], rregs: Sequence[Register]) -> Iterator[Tuple[Register, Register]]:
+def permute_regs_lr(lregs: Sequence[Register], rregs: Sequence[Register]) -> Iterator[tuple[Register, Register]]:
     for l in lregs:
         for r in rregs:
             yield l, r
@@ -34,7 +34,7 @@ def opcode_of(instr: str) -> int:
     return opcodes[instr].opcode
 
 
-def build_opcodes() -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
+def build_opcodes() -> tuple[Mapping[str, MicroCode], list[MicroCode]]:
 
     builder = MicrocodeBuilder()
 

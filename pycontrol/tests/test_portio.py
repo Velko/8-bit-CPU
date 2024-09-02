@@ -6,7 +6,7 @@ from libcpu.DeviceSetup import A, B, C, D
 from libcpu.opcodes import opcode_of
 from libcpu.util import OutMessage
 
-from typing import Iterator, Tuple
+from typing import Iterator
 
 def test_outa_emu_char(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.load_reg8(A, 120)

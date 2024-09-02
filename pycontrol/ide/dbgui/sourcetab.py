@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 from distutils.sysconfig import customize_compiler
-from typing import Tuple
 import gi
 import os.path
 
@@ -75,7 +74,7 @@ class SourceTab:
         self.buffer.set_modified(False)
         self.update_label()
 
-    def notepad_args(self) -> Tuple[Gtk.Widget, Gtk.Widget]:
+    def notepad_args(self) -> tuple[Gtk.Widget, Gtk.Widget]:
         return self.scroll, self.label
 
     def on_line_mark(self, view: GtkSource.View, iter: Gtk.TextIter, event: Gdk.Event) -> None:

@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Tuple, Mapping, Sequence
+from typing import Mapping, Sequence
 from .util import ControlSignal
 from .devices import Register, Flags
 
@@ -11,7 +11,7 @@ class FlagsAlt:
         self.owner = owner
         self.mask = mask
         self.value = value
-        self.steps: List[Sequence[ControlSignal]] = []
+        self.steps: list[Sequence[ControlSignal]] = []
 
     def add_step(self, *args: ControlSignal) -> 'FlagsAlt':
         self.steps.append(args)
@@ -37,8 +37,8 @@ class OpcodeArg(Enum):
 
 class MicroCode:
     def __init__(self, opcode: int, name: str, fmt: str | None, args: Sequence[Register | OpcodeArg]):
-        self._steps: List[Sequence[ControlSignal]] = []
-        self.f_alt: List[FlagsAlt] = []
+        self._steps: list[Sequence[ControlSignal]] = []
+        self.f_alt: list[FlagsAlt] = []
         self.opcode = opcode
         self.name = name
         self.args = args
@@ -48,7 +48,7 @@ class MicroCode:
     def is_flag_dependent(self) -> bool:
         return any(self.f_alt)
 
-    def get_step(self, step_index: int, flags: Flags) -> Tuple[Sequence[ControlSignal], bool]:
+    def get_step(self, step_index: int, flags: Flags) -> tuple[Sequence[ControlSignal], bool]:
         matches = list(filter(lambda alt: flags & alt.mask == alt.value, self.f_alt))
 
         if len(matches) > 1:
@@ -77,7 +77,7 @@ class MicroCode:
 
 class MicrocodeBuilder:
     def __init__(self) -> None:
-        self.opcodes: List[Tuple[str, MicroCode]] = []
+        self.opcodes: list[tuple[str, MicroCode]] = []
 
     def add_instruction(self, name: str, *args: Register | OpcodeArg) -> MicroCode:
         opcode = "_".join([name] + list(map(str, args)))
@@ -93,5 +93,5 @@ class MicrocodeBuilder:
         self.opcodes.append((opcode, ucode))
         return ucode
 
-    def build(self) -> Tuple[Mapping[str, MicroCode], List[MicroCode]]:
+    def build(self) -> tuple[Mapping[str, MicroCode], list[MicroCode]]:
         return dict(self.opcodes), list(map(lambda o: o[1], self.opcodes))

@@ -7,7 +7,7 @@ from libcpu.pinclient import PinClient
 from libcpu.DeviceSetup import ACalc
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
-from typing import Iterator, Tuple
+from typing import Iterator
 
 
 acalc_params = [

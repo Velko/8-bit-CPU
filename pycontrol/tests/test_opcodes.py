@@ -11,11 +11,11 @@ from libcpu.pin import MuxPin
 from libcpu.pseudo_devices import EnableCallback
 from libcpu.ctrl_word import CtrlWord
 
-from typing import Iterator, Sequence, Tuple
+from typing import Iterator, Sequence
 
 from libcpu.util import ControlSignal
 
-def calc_flags_alt_PC_counts() -> Iterator[Tuple[str, int, int, str, str]]:
+def calc_flags_alt_PC_counts() -> Iterator[tuple[str, int, int, str, str]]:
 
     # all opcodes, that are flags-dependent
     for name, microcode in filter(lambda opc: opc[1].is_flag_dependent(), opcodes.items()):
@@ -121,7 +121,7 @@ def test_opcode_flag_default(fake_opcodes: OpcodeFixture) -> None:
 
 
 
-def all_steps() -> Iterator[Tuple[str, str, int, Sequence[ControlSignal]]]:
+def all_steps() -> Iterator[tuple[str, str, int, Sequence[ControlSignal]]]:
     for name, op in opcodes.items():
         for steps in op._steps:
             yield name, "default", 0, steps

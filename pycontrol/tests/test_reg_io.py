@@ -8,12 +8,12 @@ from libcpu.DeviceSetup import SP, A, B, F
 from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
-from typing import Iterator, Tuple
+from typing import Iterator
 from libcpu.opcodes import permute_gp_regs_nsame, gp_regs
 
 pytestmark = pytest.mark.hardware
 
-def all_regs_and_bits() -> Iterator[Tuple[GPRegister, int]]:
+def all_regs_and_bits() -> Iterator[tuple[GPRegister, int]]:
     bits = range(8)
 
     for r in gp_regs:

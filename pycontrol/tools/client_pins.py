@@ -4,7 +4,7 @@ import sys
 import cmd
 import localpath
 localpath.install()
-from typing import Dict, Sequence
+from typing import Sequence
 
 from libcpu.pinclient import get_client_instance
 client = get_client_instance()
@@ -13,7 +13,7 @@ from libcpu.pin import Pin, SimplePin, Level
 from libcpu.discovery import all_pins
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
-pin_map: Dict[str, Pin] = {}
+pin_map: dict[str, Pin] = {}
 
 class Unsupported(Exception):
     pass

@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Callable, List
+from typing import Callable
 from .markers import AddrBase
 from .devices import RAM, DeviceBase
 from .util import ControlSignal, UninitializedError
@@ -25,7 +25,7 @@ class RamHook:
 class ImmediateValue(RamHook):
     def __init__(self) -> None:
         self.client: PinClient | None = None
-        self.value: List[int] = []
+        self.value: list[int] = []
         self.write_enabled = False
 
     def connect(self, client: PinClient) -> None:

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import sys
-from typing import Dict, List, Mapping
+from typing import Mapping
 from enum import Enum
 from dataclasses import dataclass
 
@@ -44,7 +44,7 @@ class Debugger:
         self.client.close()
 
     def read_ram(self, addr: int, size: int) -> bytes:
-        data: List[int] = []
+        data: list[int] = []
         for i in range(size):
             data.append(self.cpu_helper.read_ram(addr + i))
 
@@ -209,7 +209,7 @@ class Debugger:
         print(msg, end="", flush=True)
 
     def get_registers(self) -> Mapping[str, int | str]:
-        registers: Dict[str, int | str] = {
+        registers: dict[str, int | str] = {
             "A": self.cpu_helper.read_reg8(A),
             "B": self.cpu_helper.read_reg8(B),
             "C": self.cpu_helper.read_reg8(C),

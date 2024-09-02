@@ -2,7 +2,7 @@
 
 import os.path
 from socket import timeout
-from typing import List, cast
+from typing import cast
 import gi
 
 from dbgui.addrmap import AddrMap
@@ -60,7 +60,7 @@ class MainWindow(MainUI):
 
         setup_cmd(self.terminal, CmdHandler())
 
-        self.tabs: List[SourceTab] = []
+        self.tabs: list[SourceTab] = []
 
         self.started = False
 

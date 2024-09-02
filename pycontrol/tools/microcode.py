@@ -3,7 +3,7 @@
 import localpath
 localpath.install()
 
-from typing import List, Iterator, Sequence, TypeVar
+from typing import Iterator, Sequence, TypeVar
 from libcpu.opcode_builder import MicroCode
 from libcpu.util import ControlSignal
 from libcpu.opcodes import opcodes, fetch
@@ -51,7 +51,7 @@ def process_steps(microcode: MicroCode, flags: Flags) -> Iterator[int]:
 
 T = TypeVar('T')
 
-def split_chunks(seq: Sequence[T], size: int) -> Iterator[List[T]]:
+def split_chunks(seq: Sequence[T], size: int) -> Iterator[list[T]]:
     it = iter(seq)
     return iter(lambda: list(islice(it, size)), [])
 

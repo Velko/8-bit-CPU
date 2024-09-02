@@ -4,9 +4,8 @@ import localpath
 localpath.install()
 
 from libcpu.discovery import simple_pins, mux_pins, all_muxes
-from typing import Dict
 
-pinmap: Dict[int, str] = {}
+pinmap: dict[int, str] = {}
 
 for name, pin in simple_pins():
     pinmap[pin.num] = name
@@ -30,7 +29,7 @@ for p in range(totalpins):
 
 for name, mux in all_muxes():
     print (name, mux.pins)
-    mpm: Dict[int, str] = {}
+    mpm: dict[int, str] = {}
 
     for mpname, mpin in mux_pins(mux):
         mpm[mpin.num] = mpname
