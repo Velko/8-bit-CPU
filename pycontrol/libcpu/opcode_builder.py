@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Mapping, Sequence
+from collections.abc import Mapping, Sequence
 from .util import ControlSignal
 from .devices import Register, Flags
 

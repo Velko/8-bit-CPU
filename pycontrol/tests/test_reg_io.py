@@ -8,7 +8,7 @@ from libcpu.DeviceSetup import SP, A, B, F
 from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
-from typing import Iterator
+from collections.abc import Iterator
 from libcpu.opcodes import permute_gp_regs_nsame, gp_regs
 
 pytestmark = pytest.mark.hardware

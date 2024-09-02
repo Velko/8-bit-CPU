@@ -4,7 +4,7 @@ import sys
 import cmd
 import localpath
 localpath.install()
-from typing import Sequence
+from collections.abc import Sequence
 
 from libcpu.pinclient import get_client_instance
 client = get_client_instance()

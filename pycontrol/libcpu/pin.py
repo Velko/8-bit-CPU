@@ -1,4 +1,4 @@
-from typing import Sequence
+from collections.abc import Sequence
 from enum import Enum
 from abc import abstractmethod
 from .util import ControlSignal

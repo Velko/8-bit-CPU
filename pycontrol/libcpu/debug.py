@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import sys
-from typing import Mapping
+from collections.abc import Mapping
 from enum import Enum
 from dataclasses import dataclass
 

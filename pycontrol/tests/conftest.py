@@ -6,7 +6,7 @@ import localpath
 localpath.install()
 
 from libcpu.cpu_helper import CPUHelper
-from typing import  Sequence, Iterator, Iterable
+from collections.abc import  Sequence, Iterator, Iterable
 
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.pinclient import PinClient, get_client_instance

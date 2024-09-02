@@ -3,7 +3,8 @@
 import localpath
 localpath.install()
 
-from typing import Iterator, Sequence, TypeVar
+from collections.abc import Iterator, Sequence
+from typing import TypeVar
 from libcpu.opcode_builder import MicroCode
 from libcpu.util import ControlSignal
 from libcpu.opcodes import opcodes, fetch

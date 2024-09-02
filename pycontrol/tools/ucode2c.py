@@ -10,7 +10,8 @@ from libcpu.pin import Level, Mux
 from libcpu.discovery import all_muxes, simple_pins, mux_pins
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
-from typing import TextIO, Iterable, Iterator
+from collections.abc import Iterable, Iterator
+from typing import TextIO
 
 CWORD_WIDTH_BYTES = 4
 

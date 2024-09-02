@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import re, os.path
-from typing import Iterable
+from collections.abc import Iterable
 
 class AddrMapItem:
     def __init__(self, addr: int, filename: str, lineno: int) -> None:

@@ -1,4 +1,4 @@
-from typing import Iterator
+from collections.abc import Iterator
 from .pin import Pin, SimplePin, MuxPin, Mux, SharedSimplePin
 from .devices import DeviceBase
 from . import DeviceSetup

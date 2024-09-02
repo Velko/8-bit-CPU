@@ -1,4 +1,4 @@
-from typing import Sequence, Iterator, Mapping
+from collections.abc import Sequence, Iterator, Mapping
 from libcpu.util import ControlSignal
 from .DeviceSetup import *
 from .opcode_builder import MicrocodeBuilder, MicroCode, OpcodeArg

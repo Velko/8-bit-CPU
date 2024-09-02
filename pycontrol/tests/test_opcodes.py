@@ -11,7 +11,7 @@ from libcpu.pin import MuxPin
 from libcpu.pseudo_devices import EnableCallback
 from libcpu.ctrl_word import CtrlWord
 
-from typing import Iterator, Sequence
+from collections.abc import Iterator, Sequence
 
 from libcpu.util import ControlSignal
 

@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Callable
+from collections.abc import Callable
 from .markers import AddrBase
 from .devices import RAM, DeviceBase
 from .util import ControlSignal, UninitializedError

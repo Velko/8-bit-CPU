@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-from typing import Iterable, Self
+from collections.abc import Iterable
+from typing import Self
 from .discovery import all_pins
 from .pin import Pin
 from .util import ControlSignal

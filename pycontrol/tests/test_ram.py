@@ -9,7 +9,7 @@ from libcpu.assisted_cpu import AssistedCPU
 from libcpu.DeviceSetup import A, B, SDP
 from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
-from typing import Sequence
+from collections.abc import Sequence
 
 from conftest import FillRam
 
