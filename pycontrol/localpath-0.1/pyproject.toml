@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "Localpath"
 version = "0.1"
 description = "Add local packages to path"
-license = ""
+license = "MIT"
 authors = [
     { name = "Jurģis Brigmanis", email = "velko.x@gmail.com" },
 ]
