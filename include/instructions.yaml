@@ -1,0 +1,1067 @@
+fetch:
+  - - PC.out
+    - PC.inc
+    - ProgMem.out
+    - IR.load
+
+instructions:
+  - name: "nop"
+    repeat: "once"
+    steps:
+      - []
+
+  - name: "ldi"
+    repeat: "gp_regs"
+    args:
+      - reg
+      - BYTE
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - reg.load
+
+  - name: "ldi_F"
+    args:
+      - BYTE
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - F.load
+  - name: "hlt"
+    steps:
+      - - Clock.halt
+
+  - name: "add"
+    repeat: "gp_reg_pair_all"
+    args:
+      - left
+      - right
+    steps:
+      - - left.load
+        - left.alu_l
+        - right.alu_r
+        - AddSub.out
+        - F.calc
+
+  - name: "adc"
+    repeat: "gp_reg_pair_all"
+    args:
+      - left
+      - right
+    steps:
+      - - left.load
+        - left.alu_l
+        - right.alu_r
+        - AddSub.out
+        - F.calc
+    conditions:
+      - match:
+          C: true
+        steps:
+          - - left.load
+            - left.alu_l
+            - right.alu_r
+            - AddSub.out
+            - F.calc
+            - F.carry
+
+  - name: "sub"
+    repeat: "gp_reg_pair_different"
+    args:
+      - left
+      - right
+    steps:
+      - - left.load
+        - left.alu_l
+        - right.alu_r
+        - AddSub.out
+        - AddSub.alt
+        - F.calc
+
+  - name: "sbb"
+    repeat: "gp_reg_pair_different"
+    args:
+      - left
+      - right
+    steps:
+      - - left.load
+        - left.alu_l
+        - right.alu_r
+        - AddSub.out
+        - AddSub.alt
+        - F.calc
+    conditions:
+      - match:
+          C: true
+        steps:
+          - - left.load
+            - left.alu_l
+            - right.alu_r
+            - AddSub.out
+            - AddSub.alt
+            - F.calc
+            - F.carry
+
+  - name: "and"
+    repeat: "gp_reg_pair_different"
+    args:
+      - left
+      - right
+    steps:
+      - - left.load
+        - left.alu_l
+        - right.alu_r
+        - AndOr.out
+        - F.calc
+
+  - name: "or"
+    repeat: "gp_reg_pair_different"
+    args:
+      - left
+      - right
+    steps:
+      - - left.load
+        - left.alu_l
+        - right.alu_r
+        - AndOr.out
+        - AndOr.alt
+        - F.calc
+
+  - name: "xor"
+    repeat: "gp_reg_pair_different"
+    args:
+      - left
+      - right
+    steps:
+      - - left.load
+        - left.alu_l
+        - right.alu_r
+        - XorNot.out
+        - F.calc
+
+  - name: "not"
+    repeat: "gp_regs"
+    args:
+      - reg
+    steps:
+      - - reg.load
+        - reg.alu_l
+        - XorNot.out
+        - XorNot.alt
+        - F.calc
+
+  - name: "clr"
+    repeat: "gp_regs"
+    args:
+      - reg
+    steps:
+      - - reg.load
+        - reg.alu_l
+        - reg.alu_r
+        - XorNot.out
+        - F.calc
+
+  - name: "inc"
+    repeat: "gp_regs"
+    args:
+      - reg
+    steps:
+      - - reg.load
+        - reg.alu_l
+        - AddSub.out
+        - F.calc
+        - F.carry
+
+  - name: "dec"
+    repeat: "gp_regs"
+    args:
+      - reg
+    steps:
+      - - reg.load
+        - reg.alu_l
+        - AddSub.out
+        - AddSub.alt
+        - F.calc
+        - F.carry
+
+  - name: "shr"
+    repeat: "gp_regs"
+    args:
+      - reg
+    steps:
+      - - reg.load
+        - reg.alu_l
+        - ShiftSwap.out
+        - F.calc
+
+  - name: "ror"
+    repeat: "gp_regs"
+    args:
+      - reg
+    steps:
+      - - reg.load
+        - reg.alu_l
+        - ShiftSwap.out
+        - F.calc
+    conditions:
+      - match:
+          C: true
+        steps:
+          - - reg.load
+            - reg.alu_l
+            - ShiftSwap.out
+            - F.carry
+            - F.calc
+
+  - name: "asr"
+    repeat: "gp_regs"
+    args:
+      - reg
+    steps:
+      - - reg.out
+        - F.calc
+      - - reg.load
+        - reg.alu_l
+        - ShiftSwap.out
+        - F.calc
+    conditions:
+      - match:
+          N: true
+        steps:
+          - - reg.out
+            - F.calc
+          - - reg.load
+            - reg.alu_l
+            - ShiftSwap.out
+            - F.carry
+            - F.calc
+
+  - name: "swap"
+    repeat: "gp_regs"
+    args:
+      - reg
+    steps:
+      - - reg.load
+        - reg.alu_l
+        - ShiftSwap.out
+        - ShiftSwap.alt
+        - F.calc
+
+  - name: "cmp"
+    repeat: "gp_reg_pair_different"
+    args:
+      - left
+      - right
+    steps:
+      - - left.alu_l
+        - right.alu_r
+        - AddSub.out
+        - AddSub.alt
+        - F.calc
+
+  - name: "mov"
+    repeat: "gp_reg_pair_different"
+    args:
+      - left
+      - right
+    steps:
+      - - left.load
+        - right.out
+
+  - name: "out"
+    repeat: "gp_regs"
+    args:
+      - BYTE
+      - reg
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - IOCtl.laddr
+      - - reg.out
+        - IOCtl.to_dev
+
+  - name: "in"
+    repeat: "gp_regs"
+    args:
+      - reg
+      - BYTE
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - IOCtl.laddr
+      - - reg.load
+        - IOCtl.from_dev
+        - F.calc
+
+  - name: "st"
+    repeat: "gp_regs"
+    args:
+      - ADDR
+      - reg
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TL.load
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TH.load
+      - - TX.out
+        - reg.out
+        - Ram.write
+
+  - name: "stx"
+    repeat: "gp_reg_pair_all"
+    args:
+      - ADDR
+      - left
+      - right
+    format: "{}[{}], {}"
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TL.load
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TH.load
+      - - left.out
+        - TX.out
+        - ACalc.load
+      - - ACalc.out
+        - right.out
+        - Ram.write
+
+  - name: "ld"
+    repeat: "gp_regs"
+    args:
+      - reg
+      - ADDR
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TL.load
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TH.load
+      - - TX.out
+        - reg.load
+        - Ram.out
+        - F.calc
+
+  - name: "ldx"
+    repeat: "gp_reg_pair_all"
+    args:
+      - left
+      - ADDR
+      - right
+    format: "{}, {}[{}]"
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TL.load
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TH.load
+      - - right.out
+        - TX.out
+        - ACalc.load
+      - - ACalc.out
+        - left.load
+        - Ram.out
+        - F.calc
+
+  - name: "tstx"
+    repeat: "gp_regs"
+    args:
+      - ADDR
+      - reg
+    format: "{}[{}]"
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TL.load
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TH.load
+      - - reg.out
+        - TX.out
+        - ACalc.load
+      - - ACalc.out
+        - Ram.out
+        - F.calc
+
+  - name: "ljmp"
+    args:
+      - ADDR
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TL.load
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TH.load
+      - - TX.out
+        - PC.load
+
+  - name: "beql"
+    args:
+      - ADDR
+    steps:
+      - - PC.out
+        - PC.inc
+      - - PC.out
+        - PC.inc
+    conditions:
+      - match:
+          Z: true
+        steps:
+          - - PC.out
+            - PC.inc
+            - ProgMem.out
+            - TL.load
+          - - PC.out
+            - PC.inc
+            - ProgMem.out
+            - TH.load
+          - - TX.out
+            - PC.load
+
+  - name: "bnel"
+    args:
+      - ADDR
+    steps:
+      - - PC.out
+        - PC.inc
+      - - PC.out
+        - PC.inc
+    conditions:
+      - match:
+          Z: false
+        steps:
+          - - PC.out
+            - PC.inc
+            - ProgMem.out
+            - TL.load
+          - - PC.out
+            - PC.inc
+            - ProgMem.out
+            - TH.load
+          - - TX.out
+            - PC.load
+
+  - name: "bcsl"
+    args:
+      - ADDR
+    steps:
+      - - PC.out
+        - PC.inc
+      - - PC.out
+        - PC.inc
+    conditions:
+      - match:
+          C: true
+        steps:
+          - - PC.out
+            - PC.inc
+            - ProgMem.out
+            - TL.load
+          - - PC.out
+            - PC.inc
+            - ProgMem.out
+            - TH.load
+          - - TX.out
+            - PC.load
+
+  - name: "bccl"
+    args:
+      - ADDR
+    steps:
+      - - PC.out
+        - PC.inc
+      - - PC.out
+        - PC.inc
+    conditions:
+      - match:
+          C: false
+        steps:
+          - - PC.out
+            - PC.inc
+            - ProgMem.out
+            - TL.load
+          - - PC.out
+            - PC.inc
+            - ProgMem.out
+            - TH.load
+          - - TX.out
+            - PC.load
+
+  - name: "bmil"
+    args:
+      - ADDR
+    steps:
+      - - PC.out
+        - PC.inc
+      - - PC.out
+        - PC.inc
+    conditions:
+      - match:
+          N: true
+        steps:
+          - - PC.out
+            - PC.inc
+            - ProgMem.out
+            - TL.load
+          - - PC.out
+            - PC.inc
+            - ProgMem.out
+            - TH.load
+          - - TX.out
+            - PC.load
+
+  - name: "bpll"
+    args:
+      - ADDR
+    steps:
+      - - PC.out
+        - PC.inc
+      - - PC.out
+        - PC.inc
+    conditions:
+      - match:
+          N: false
+        steps:
+          - - PC.out
+            - PC.inc
+            - ProgMem.out
+            - TL.load
+          - - PC.out
+            - PC.inc
+            - ProgMem.out
+            - TH.load
+          - - TX.out
+            - PC.load
+
+  - name: "push"
+    repeat: "gp_regs"
+    args:
+      - reg
+    steps:
+      - - SP.out
+        - SP.dec
+      - - SP.out
+        - reg.out
+        - Ram.write
+
+  - name: "pushf"
+    steps:
+      - - SP.out
+        - SP.dec
+      - - SP.out
+        - F.out
+        - Ram.write
+
+  - name: "push"
+    args:
+      - LR
+    steps:
+      - - LR.out
+        - TX.load
+      - - SP.out
+        - SP.dec
+      - - SP.out
+        - SP.dec
+        - TH.out
+        - Ram.write
+      - - SP.out
+        - TL.out
+        - Ram.write
+
+  - name: "pop"
+    repeat: "gp_regs"
+    args:
+      - reg
+    steps:
+      - - SP.out
+        - SP.inc
+        - reg.load
+        - Ram.out
+
+  - name: "popf"
+    steps:
+      - - SP.out
+        - SP.inc
+        - F.load
+        - Ram.out
+
+  - name: "pop"
+    args:
+      - LR
+    steps:
+      - - SP.out
+        - SP.inc
+        - TL.load
+        - Ram.out
+      - - SP.out
+        - SP.inc
+        - TH.load
+        - Ram.out
+      - - TX.out
+        - LR.load
+
+  - name: "callf"
+    args:
+      - ADDR
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TL.load
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TH.load
+      - - PC.out
+        - LR.load
+      - - TX.out
+        - PC.load
+
+  - name: "ret"
+    steps:
+      - - LR.out
+        - PC.load
+
+  - name: "brk"
+    steps:
+      - - Clock.brk
+
+  - name: "lea"
+    args:
+      - SP
+      - ADDR
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TL.load
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TH.load
+      - - TX.out
+        - SP.load
+
+  - name: "ldr"
+    repeat: "gp_regs"
+    args:
+      - reg
+      - SP
+      - BYTE
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TL.load
+      - - SP.out
+        - TL.out
+        - ACalc.load
+        - ACalc.signed
+      - - ACalc.out
+        - reg.load
+        - Ram.out
+        - F.calc
+
+  - name: "str"
+    repeat: "gp_regs"
+    args:
+      - SP
+      - BYTE
+      - reg
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TL.load
+      - - SP.out
+        - TL.out
+        - ACalc.load
+        - ACalc.signed
+      - - ACalc.out
+        - reg.out
+        - Ram.write
+
+  - name: "_xprefix"
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - IR.load
+        - StepCounter.extended
+      - []        # extra NOP to prevent microcode ROM generator from inserting steps reset
+
+  - name: "rjmp"
+    args:
+      - BYTE
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - ACalc.load
+        - ACalc.signed
+      - - ACalc.out
+        - PC.load
+
+  - name: "beqr"
+    args:
+      - BYTE
+    steps:
+      - - PC.out
+        - PC.inc
+    conditions:
+      - match:
+          Z: true
+        steps:
+          - - PC.out
+            - PC.inc
+            - ProgMem.out
+            - ACalc.load
+            - ACalc.signed
+          - - ACalc.out
+            - PC.load
+
+  - name: "bner"
+    args:
+      - BYTE
+    steps:
+      - - PC.out
+        - PC.inc
+    conditions:
+      - match:
+          Z: false
+        steps:
+          - - PC.out
+            - PC.inc
+            - ProgMem.out
+            - ACalc.load
+            - ACalc.signed
+          - - ACalc.out
+            - PC.load
+
+  - name: "bcsr"
+    args:
+      - BYTE
+    steps:
+      - - PC.out
+        - PC.inc
+    conditions:
+      - match:
+          C: true
+        steps:
+          - - PC.out
+            - PC.inc
+            - ProgMem.out
+            - ACalc.load
+            - ACalc.signed
+          - - ACalc.out
+            - PC.load
+
+  - name: "bccr"
+    args:
+      - BYTE
+    steps:
+      - - PC.out
+        - PC.inc
+    conditions:
+      - match:
+          C: false
+        steps:
+          - - PC.out
+            - PC.inc
+            - ProgMem.out
+            - ACalc.load
+            - ACalc.signed
+          - - ACalc.out
+            - PC.load
+
+  - name: "bmir"
+    args:
+      - BYTE
+    steps:
+      - - PC.out
+        - PC.inc
+    conditions:
+      - match:
+          N: true
+        steps:
+          - - PC.out
+            - PC.inc
+            - ProgMem.out
+            - ACalc.load
+            - ACalc.signed
+          - - ACalc.out
+            - PC.load
+
+  - name: "bplr"
+    args:
+      - BYTE
+    steps:
+      - - PC.out
+        - PC.inc
+    conditions:
+      - match:
+          N: false
+        steps:
+          - - PC.out
+            - PC.inc
+            - ProgMem.out
+            - ACalc.load
+            - ACalc.signed
+          - - ACalc.out
+            - PC.load
+
+  - name: "rcall"
+    args:
+      - BYTE
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - ACalc.load
+        - ACalc.signed
+      - - PC.out
+        - LR.load
+      - - ACalc.out
+        - PC.load
+
+  - name: "lcmp"
+    repeat: "gp_reg_pair_different"
+    args:
+      - left
+      - right
+    steps:
+      # .add_step(l.alu_l, r.alu_r, AndOr.out, F.calc)
+      - - left.alu_l
+        - right.alu_r
+        - AndOr.out
+        - F.calc
+
+  - name: "lpi"
+    repeat: "gp_regs"
+    args:
+      - reg
+      - SDP
+    format: "{}, ({}++)"
+    steps:
+      - - reg.load
+        - SDP.out
+        - SDP.inc
+        - Ram.out
+        - F.calc
+
+  - name: "lea"
+    args:
+      - SDP
+      - ADDR
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TL.load
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TH.load
+      - - TX.out
+        - SDP.load
+
+  - name: "padding25"
+    steps:
+      - []
+
+  - name: "addi"
+    repeat: "gp_regs"
+    args:
+      - reg
+      - BYTE
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - T.load
+      - - reg.load
+        - reg.alu_l
+        - T.alu_r
+        - AddSub.out
+        - F.calc
+
+  - name: "dummyext"
+    args:
+      - BYTE
+    # dummy instruction - same as ldi A, imm
+    # ext bit should stick, even if it is not
+    # present in each step. Only steps_reset can clear it
+    steps:
+      - []
+      - []
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - A.load
+
+  - name: "adci"
+    repeat: "gp_regs"
+    args:
+      - reg
+      - BYTE
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - T.load
+      - - reg.load
+        - reg.alu_l
+        - T.alu_r
+        - AddSub.out
+        - F.calc
+    conditions:
+      - match:
+          C: true
+        steps:
+          - - PC.out
+            - PC.inc
+            - ProgMem.out
+            - T.load
+          - - reg.load
+            - reg.alu_l
+            - T.alu_r
+            - AddSub.out
+            - F.calc
+            - F.carry
+
+  - name: "subi"
+    repeat: "gp_regs"
+    args:
+      - reg
+      - BYTE
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - T.load
+      - - reg.load
+        - reg.alu_l
+        - T.alu_r
+        - AddSub.out
+        - AddSub.alt
+        - F.calc
+
+  - name: "cmpi"
+    repeat: "gp_regs"
+    args:
+      - reg
+      - BYTE
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - T.load
+      - - reg.alu_l
+        - T.alu_r
+        - AddSub.out
+        - AddSub.alt
+        - F.calc
+
+  - name: "sbbi"
+    repeat: "gp_regs"
+    args:
+      - reg
+      - BYTE
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - T.load
+      - - reg.load
+        - reg.alu_l
+        - T.alu_r
+        - AddSub.out
+        - AddSub.alt
+        - F.calc
+    conditions:
+      - match:
+          C: true
+        steps:
+          - - PC.out
+            - PC.inc
+            - ProgMem.out
+            - T.load
+          - - reg.load
+            - reg.alu_l
+            - T.alu_r
+            - AddSub.out
+            - AddSub.alt
+            - F.calc
+            - F.carry
+
+  - name: "andi"
+    repeat: "gp_regs"
+    args:
+      - reg
+      - BYTE
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - T.load
+      - - reg.load
+        - reg.alu_l
+        - T.alu_r
+        - AndOr.out
+        - F.calc
+
+  - name: "ori"
+    repeat: "gp_regs"
+    args:
+      - reg
+      - BYTE
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - T.load
+      - - reg.load
+        - reg.alu_l
+        - T.alu_r
+        - AndOr.out
+        - AndOr.alt
+        - F.calc
+
+  - name: "xori"
+    repeat: "gp_regs"
+    args:
+      - reg
+      - BYTE
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - T.load
+      - - reg.load
+        - reg.alu_l
+        - T.alu_r
+        - XorNot.out
+        - F.calc
