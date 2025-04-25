@@ -1,4 +1,5 @@
 from collections.abc import Sequence, Iterator, Mapping
+from typing import Tuple
 from libcpu.util import ControlSignal
 from .instruction_cfg import InstructionConfig, Repeat, Instruction
 from .DeviceSetup import *
@@ -7,7 +8,7 @@ from .devices import Register, GPRegister, Flags
 
 gp_regs: Sequence[GPRegister] = [A, B, C, D]
 
-fetch: list[Sequence[ControlSignal]] = [[PC.out, PC.inc, ProgMem.out, IR.load]]
+fetch: list[Sequence[ControlSignal]] = []
 
 class InvalidOpcodeException(Exception):
     pass
@@ -34,16 +35,20 @@ def opcode_of(instr: str) -> int:
         raise InvalidOpcodeException(instr)
     return opcodes[instr].opcode
 
-def resolve_pin(name: str, **kwargs: dict[str, Register]) -> ControlSignal:
+def resolve_pin(name: str, **kwargs: Register) -> ControlSignal:
     dev, pin = name.split('.')
     device = globals().get(dev)
     if device is None:
         device = kwargs.get(dev)
     if device is None:
         raise ValueError(f"Unknown device: {dev}")
-    return getattr(device, pin)
+    signal = getattr(device, pin, None)
+    if isinstance(signal, ControlSignal):
+        return signal;
+    else:
+        raise ValueError(f"Unknown pin: {pin} on device: {dev}")
 
-def resolve_arg(name: str, **kwargs: dict[str, Register]) -> Register | OpcodeArg:
+def resolve_arg(name: str, **kwargs: Register) -> Register | OpcodeArg:
     if name == "ADDR":
         return OpcodeArg.ADDR
     elif name == "BYTE":
@@ -51,11 +56,15 @@ def resolve_arg(name: str, **kwargs: dict[str, Register]) -> Register | OpcodeAr
     elif name in kwargs:
         return kwargs[name]
     elif name in globals():
-        return globals()[name]
+        reg = globals()[name]
+        if isinstance(reg, Register):
+            return reg
+        else:
+            raise ValueError(f"{name} is not a register")
     else:
         raise ValueError(f"Unknown argument type: {name}")
 
-def map_flags(flags: dict[str, bool]) -> (Flags, Flags):
+def map_flags(flags: dict[str, bool]) -> Tuple[Flags, Flags]:
     mask = Flags.Empty
     value = Flags.Empty
 
@@ -66,7 +75,7 @@ def map_flags(flags: dict[str, bool]) -> (Flags, Flags):
 
     return mask, value
 
-def add_instruction(builder: MicrocodeBuilder, instr: Instruction, **kwargs: dict[str, Register]) -> None:
+def add_instruction(builder: MicrocodeBuilder, instr: Instruction, **kwargs: Register) -> None:
     args = [ resolve_arg(a, **kwargs) for a in instr.args ]
     if instr.format:
         t_instr = builder.add_formatted(instr.name, instr.format, *args)
