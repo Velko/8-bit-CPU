@@ -5,6 +5,7 @@ from .instruction_cfg import InstructionConfig, Repeat, Instruction
 from .DeviceSetup import *
 from .opcode_builder import MicrocodeBuilder, MicroCode, OpcodeArg
 from .devices import Register, GPRegister, Flags
+import os.path
 
 gp_regs: Sequence[GPRegister] = [A, B, C, D]
 
@@ -93,7 +94,8 @@ def build_opcodes() -> tuple[Mapping[str, MicroCode], list[MicroCode]]:
 
     builder = MicrocodeBuilder()
 
-    icfg = InstructionConfig.load_from_yaml("../../include/instructions.yaml")
+    yaml_path = os.path.join(os.path.dirname(__file__), "../../include/instructions.yaml")
+    icfg = InstructionConfig.load_from_yaml(yaml_path)
 
     global fetch
     fetch = [[resolve_pin(pin) for pin in step] for step in icfg.fetch]
