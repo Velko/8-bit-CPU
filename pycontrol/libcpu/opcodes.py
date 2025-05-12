@@ -40,7 +40,7 @@ def resolve_pin(name: str, **kwargs: Register) -> ControlSignal:
     dev, pin = name.split('.')
     device = globals().get(dev)
     if device is None:
-        device = hardware.gp_registers.get(dev)
+        device = hardware.get(dev)
     if device is None:
         device = kwargs.get(dev)
     if device is None:

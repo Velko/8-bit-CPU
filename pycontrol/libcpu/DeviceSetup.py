@@ -19,6 +19,15 @@ AddrRegDec = SharedSimplePin(23, Level.LOW, "Addr.dec")
 class DeviceSetup:
     def __init__(self) -> None:
         self.gp_registers: dict[str, dev.GPRegister] = {}
+        self.alu: dict[str, dev.ALU] = {}
+
+    def get(self, key: str) -> dev.DeviceBase | None:
+        if key in self.gp_registers:
+            return self.gp_registers[key]
+        elif key in self.alu:
+            return self.alu[key]
+        else:
+            return None
 
     def setup_devices(self) -> None:
         self.gp_registers["A"] = dev.GPRegister("A",
@@ -45,6 +54,23 @@ class DeviceSetup:
             alu_l = MuxPin(AluArgL, 3),
             alu_r = MuxPin(AluArgR, 3))
 
+        self.alu["AddSub"] = dev.ALU("AddSub",
+            out = MuxPin(OutMux, 5),
+            alt = AluAltFn)
+
+        self.alu["AndOr"] = dev.ALU("AndOr",
+            out = MuxPin(OutMux, 6),
+            alt = AluAltFn)
+
+        self.alu["XorNot"] = dev.ALU("XorNot",
+            out = MuxPin(OutMux, 10),
+            alt = AluAltFn)
+
+        self.alu["ShiftSwap"] = dev.ALU("ShiftSwap",
+            out = MuxPin(OutMux, 7),
+            alt = AluAltFn)
+
+
 
 hardware = DeviceSetup()
 hardware.setup_devices()
@@ -53,21 +79,6 @@ T = dev.TempRegister("T",
     load = MuxPin(LoadMux, 6),
     alu_r = MuxPin(AluArgR, 4))
 
-AddSub = dev.ALU("AddSub",
-    out = MuxPin(OutMux, 5),
-    alt = AluAltFn)
-
-AndOr = dev.ALU("AndOr",
-    out = MuxPin(OutMux, 6),
-    alt = AluAltFn)
-
-XorNot = dev.ALU("XorNot",
-    out = MuxPin(OutMux, 10),
-    alt = AluAltFn)
-
-ShiftSwap = dev.ALU("ShiftSwap",
-    out = MuxPin(OutMux, 7),
-    alt = AluAltFn)
 
 F = dev.FlagsRegister("F",
     out = MuxPin(OutMux, 4),
