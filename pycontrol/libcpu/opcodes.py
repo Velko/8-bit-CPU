@@ -7,7 +7,7 @@ from .opcode_builder import MicrocodeBuilder, MicroCode, OpcodeArg
 from .devices import Register, GPRegister, Flags
 import os.path
 
-gp_regs: Sequence[GPRegister] = [A, B, C, D]
+gp_regs: list[GPRegister] = [r for r in hardware.gp_registers.values()]
 
 fetch: list[Sequence[ControlSignal]] = []
 
@@ -39,6 +39,8 @@ def opcode_of(instr: str) -> int:
 def resolve_pin(name: str, **kwargs: Register) -> ControlSignal:
     dev, pin = name.split('.')
     device = globals().get(dev)
+    if device is None:
+        device = hardware.gp_registers.get(dev)
     if device is None:
         device = kwargs.get(dev)
     if device is None:

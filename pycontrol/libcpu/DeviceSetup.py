@@ -49,13 +49,6 @@ class DeviceSetup:
 hardware = DeviceSetup()
 hardware.setup_devices()
 
-A = hardware.gp_registers["A"]
-B = hardware.gp_registers["B"]
-C = hardware.gp_registers["C"]
-D = hardware.gp_registers["D"]
-
-
-
 T = dev.TempRegister("T",
     load = MuxPin(LoadMux, 6),
     alu_r = MuxPin(AluArgR, 4))

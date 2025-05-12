@@ -4,13 +4,15 @@ import pytest
 
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
-from libcpu.DeviceSetup import A
+from libcpu.DeviceSetup import hardware
 from libcpu.opcodes import permute_gp_regs_nsame, gp_regs, opcode_of
 from libcpu.devices import GPRegister, Flags
 
 from conftest import ALUTwoRegTestCase, ALUOneRegTestCase, devname
 
 pytestmark = pytest.mark.hardware
+
+A = hardware.gp_registers["A"]
 
 and_test_args = [
     ALUTwoRegTestCase("small", 230, 92, 68, "----"),

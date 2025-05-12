@@ -6,8 +6,10 @@ pytestmark = pytest.mark.hardware
 
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
-from libcpu.DeviceSetup import A
+from libcpu.DeviceSetup import hardware
 from libcpu.opcodes import opcode_of
+
+A = hardware.gp_registers["A"]
 
 def test_dummy_local(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 

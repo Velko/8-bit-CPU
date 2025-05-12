@@ -4,7 +4,7 @@ import pytest
 import random
 
 from libcpu.devices import GPRegister, Flags
-from libcpu.DeviceSetup import SP, A, B, F
+from libcpu.DeviceSetup import SP, F, hardware
 from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
@@ -12,6 +12,9 @@ from collections.abc import Iterator
 from libcpu.opcodes import permute_gp_regs_nsame, gp_regs
 
 pytestmark = pytest.mark.hardware
+
+A = hardware.gp_registers["A"]
+B = hardware.gp_registers["B"]
 
 def all_regs_and_bits() -> Iterator[tuple[GPRegister, int]]:
     bits = range(8)

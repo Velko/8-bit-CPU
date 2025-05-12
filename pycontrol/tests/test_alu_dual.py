@@ -4,12 +4,15 @@ import pytest
 
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
-from libcpu.DeviceSetup import A, B
+from libcpu.DeviceSetup import hardware
 
 pytestmark = pytest.mark.hardware
 
 hardwired_alu = False
 hardwired_reason = "unsupported with hardwired ALU inputs"
+
+A = hardware.gp_registers["A"]
+B = hardware.gp_registers["B"]
 
 @pytest.mark.skipif(hardwired_alu, reason=hardwired_reason)
 def test_sub_b_a_small(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:

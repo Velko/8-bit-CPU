@@ -2,11 +2,16 @@ import pytest
 
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
-from libcpu.DeviceSetup import A, B, C, D
+from libcpu.DeviceSetup import hardware
 from libcpu.opcodes import opcode_of
 from libcpu.util import OutMessage
 
 from collections.abc import Iterator
+
+A = hardware.gp_registers["A"]
+B = hardware.gp_registers["B"]
+C = hardware.gp_registers["C"]
+D = hardware.gp_registers["D"]
 
 def test_outa_emu_char(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.load_reg8(A, 120)
