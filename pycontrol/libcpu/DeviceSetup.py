@@ -20,12 +20,18 @@ class DeviceSetup:
     def __init__(self) -> None:
         self.gp_registers: dict[str, dev.GPRegister] = {}
         self.alu: dict[str, dev.ALU] = {}
+        self.ram: dev.RAM = None # type: ignore[assignment]
+        self.prog_mem: RamProxy = None # type: ignore[assignment]
 
     def get(self, key: str) -> dev.DeviceBase | None:
         if key in self.gp_registers:
             return self.gp_registers[key]
         elif key in self.alu:
             return self.alu[key]
+        elif key == "Ram":
+            return self.ram
+        elif key == "ProgMem":
+            return self.prog_mem
         else:
             return None
 
@@ -70,6 +76,12 @@ class DeviceSetup:
             out = MuxPin(OutMux, 7),
             alt = AluAltFn)
 
+        self.ram = dev.RAM("Ram",
+            out = MuxPin(OutMux, 9),
+            write = MuxPin(LoadMux, 9))
+
+        self.prog_mem = RamProxy("ProgMem",
+            ram = self.ram)
 
 
 hardware = DeviceSetup()
@@ -86,12 +98,6 @@ F = dev.FlagsRegister("F",
     calc = SimplePin(14, Level.LOW),
     carry = SimplePin(15, Level.HIGH))
 
-Ram = dev.RAM("Ram",
-    out = MuxPin(OutMux, 9),
-    write = MuxPin(LoadMux, 9))
-
-ProgMem = RamProxy("ProgMem",
-    ram = Ram)
 
 IR = dev.WORegister("IR",
     load = MuxPin(LoadMux, 8))

@@ -2,7 +2,7 @@ from collections.abc import Sequence
 from .markers import AddrBase
 from .devices import Flags
 from .pseudo_devices import Imm, IOMon
-from .DeviceSetup import IOCtl, ProgMem, PC, F, StepCounter, Clock
+from .DeviceSetup import IOCtl, hardware, PC, F, StepCounter, Clock
 from .opcodes import opcodes, ops_by_code, fetch, InvalidOpcodeException
 from .pinclient import PinClient
 from .ctrl_word import CtrlWord, DEFAULT_CW
@@ -17,7 +17,7 @@ class AssistedCPUEngine:
 
         # RAM hooks
         Imm.connect(self.client)
-        ProgMem.hook_out(Imm)
+        hardware.prog_mem.hook_out(Imm)
 
     def execute_mnemonic(self, mnemonic: str, arg: int | AddrBase | None = None) -> RunMessage | None:
         if not mnemonic in opcodes:

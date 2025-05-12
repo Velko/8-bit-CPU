@@ -6,7 +6,7 @@ from libcpu.devices import Register, WORegister
 from libcpu.opcodes import InvalidOpcodeException, opcode_of
 from libcpu.pinclient import PinClient
 from libcpu.devices import Flags
-from libcpu.DeviceSetup import PC, Ram, F
+from libcpu.DeviceSetup import PC, F, hardware
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
 class CPUHelper:
@@ -37,7 +37,7 @@ class CPUHelper:
     def read_ram(self, addr: int) -> int:
         self.client.addr_set(addr)
         control = CtrlWord()\
-            .enable(Ram.out)
+            .enable(hardware.ram.out)
         self.client.ctrl_commit(control.c_word)
 
         value = self.client.bus_get()
@@ -48,7 +48,7 @@ class CPUHelper:
 
     def write_ram(self, addr: int, value: int) -> None:
         control = CtrlWord()\
-            .enable(Ram.write)
+            .enable(hardware.ram.write)
         self.client.ctrl_commit(control.c_word)
 
         self.client.addr_set(addr)
