@@ -16,29 +16,45 @@ AluAltFn = SharedSimplePin(13, Level.HIGH, "Alu.alt")
 AddrRegInc = SharedSimplePin(22, Level.LOW, "Addr.inc")
 AddrRegDec = SharedSimplePin(23, Level.LOW, "Addr.dec")
 
-A = dev.GPRegister("A",
-    out = MuxPin(OutMux, 0),
-    load = MuxPin(LoadMux, 0),
-    alu_l = MuxPin(AluArgL, 0),
-    alu_r = MuxPin(AluArgR, 0))
+class DeviceSetup:
+    def __init__(self) -> None:
+        self.gp_registers: dict[str, dev.GPRegister] = {}
 
-B = dev.GPRegister("B",
-    out = MuxPin(OutMux, 1),
-    load = MuxPin(LoadMux, 1),
-    alu_l = MuxPin(AluArgL, 1),
-    alu_r = MuxPin(AluArgR, 1))
+    def setup_devices(self) -> None:
+        self.gp_registers["A"] = dev.GPRegister("A",
+            out = MuxPin(OutMux, 0),
+            load = MuxPin(LoadMux, 0),
+            alu_l = MuxPin(AluArgL, 0),
+            alu_r = MuxPin(AluArgR, 0))
 
-C = dev.GPRegister("C",
-    out = MuxPin(OutMux, 2),
-    load = MuxPin(LoadMux, 2),
-    alu_l = MuxPin(AluArgL, 2),
-    alu_r = MuxPin(AluArgR, 2))
+        self.gp_registers["B"] = dev.GPRegister("B",
+            out = MuxPin(OutMux, 1),
+            load = MuxPin(LoadMux, 1),
+            alu_l = MuxPin(AluArgL, 1),
+            alu_r = MuxPin(AluArgR, 1))
 
-D = dev.GPRegister("D",
-    out = MuxPin(OutMux, 3),
-    load = MuxPin(LoadMux, 3),
-    alu_l = MuxPin(AluArgL, 3),
-    alu_r = MuxPin(AluArgR, 3))
+        self.gp_registers["C"] = dev.GPRegister("C",
+            out = MuxPin(OutMux, 2),
+            load = MuxPin(LoadMux, 2),
+            alu_l = MuxPin(AluArgL, 2),
+            alu_r = MuxPin(AluArgR, 2))
+
+        self.gp_registers["D"] = dev.GPRegister("D",
+            out = MuxPin(OutMux, 3),
+            load = MuxPin(LoadMux, 3),
+            alu_l = MuxPin(AluArgL, 3),
+            alu_r = MuxPin(AluArgR, 3))
+
+
+hardware = DeviceSetup()
+hardware.setup_devices()
+
+A = hardware.gp_registers["A"]
+B = hardware.gp_registers["B"]
+C = hardware.gp_registers["C"]
+D = hardware.gp_registers["D"]
+
+
 
 T = dev.TempRegister("T",
     load = MuxPin(LoadMux, 6),
