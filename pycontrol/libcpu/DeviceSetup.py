@@ -20,6 +20,7 @@ class DeviceSetup:
     def __init__(self) -> None:
         self.gp_registers: dict[str, dev.GPRegister] = {}
         self.alu: dict[str, dev.ALU] = {}
+        self.F: dev.FlagsRegister = None # type: ignore[assignment]
         self.ram: dev.RAM = None # type: ignore[assignment]
         self.prog_mem: RamProxy = None # type: ignore[assignment]
 
@@ -28,12 +29,23 @@ class DeviceSetup:
             return self.gp_registers[key]
         elif key in self.alu:
             return self.alu[key]
+        elif key == "F":
+            return self.F
         elif key == "Ram":
             return self.ram
         elif key == "ProgMem":
             return self.prog_mem
         else:
             return None
+
+    def all_devices(self) -> list[dev.DeviceBase]:
+        devices: list[dev.DeviceBase] = []
+        devices.extend(self.gp_registers.values())
+        devices.extend(self.alu.values())
+        devices.append(self.F)
+        devices.append(self.ram)
+        devices.append(self.prog_mem)
+        return devices
 
     def setup_devices(self) -> None:
         self.gp_registers["A"] = dev.GPRegister("A",
@@ -76,6 +88,12 @@ class DeviceSetup:
             out = MuxPin(OutMux, 7),
             alt = AluAltFn)
 
+        self.F = dev.FlagsRegister("F",
+            out = MuxPin(OutMux, 4),
+            load = MuxPin(LoadMux, 7),
+            calc = SimplePin(14, Level.LOW),
+            carry = SimplePin(15, Level.HIGH))
+
         self.ram = dev.RAM("Ram",
             out = MuxPin(OutMux, 9),
             write = MuxPin(LoadMux, 9))
@@ -92,11 +110,7 @@ T = dev.TempRegister("T",
     alu_r = MuxPin(AluArgR, 4))
 
 
-F = dev.FlagsRegister("F",
-    out = MuxPin(OutMux, 4),
-    load = MuxPin(LoadMux, 7),
-    calc = SimplePin(14, Level.LOW),
-    carry = SimplePin(15, Level.HIGH))
+
 
 
 IR = dev.WORegister("IR",

@@ -1,10 +1,11 @@
 from collections.abc import Iterator
+from itertools import chain
 from .pin import Pin, SimplePin, MuxPin, Mux, SharedSimplePin
 from .devices import DeviceBase
 from . import DeviceSetup
 
 def _all_devices() -> Iterator[DeviceBase]:
-    return filter(lambda x: isinstance(x, DeviceBase), vars(DeviceSetup).values())
+    return filter(lambda x: isinstance(x, DeviceBase), chain(vars(DeviceSetup).values(), DeviceSetup.hardware.all_devices()))
 
 def all_pins() -> Iterator[tuple[str, Pin]]:
     dupe_filter = set()

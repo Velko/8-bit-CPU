@@ -5,7 +5,7 @@ import itertools
 
 pytestmark = pytest.mark.hardware
 
-from libcpu.DeviceSetup import SP, LR, F, hardware
+from libcpu.DeviceSetup import SP, LR, hardware
 from libcpu.devices import Flags
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
@@ -123,10 +123,10 @@ def test_push_popf(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     flags_val = Flags(0b1101)
 
     cpu_helper.load_reg16(SP, 0x88)
-    acpu.ldi (F, flags_val)
+    cpu_helper.load_flags(flags_val)
 
     acpu.pushf ()
-    acpu.ldi (F, Flags.Empty)
+    cpu_helper.load_flags(Flags.Empty)
     acpu.popf ()
 
     val = cpu_helper.get_flags()

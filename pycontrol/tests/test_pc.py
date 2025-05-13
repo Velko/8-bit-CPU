@@ -5,7 +5,7 @@ import itertools
 
 pytestmark = pytest.mark.hardware
 
-from libcpu.DeviceSetup import PC, LR, F
+from libcpu.DeviceSetup import PC, LR
 from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU

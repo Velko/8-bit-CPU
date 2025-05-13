@@ -6,7 +6,7 @@ from libcpu.devices import Register, WORegister
 from libcpu.opcodes import InvalidOpcodeException, opcode_of
 from libcpu.pinclient import PinClient
 from libcpu.devices import Flags
-from libcpu.DeviceSetup import PC, F, hardware
+from libcpu.DeviceSetup import PC, hardware
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
 class CPUHelper:
@@ -87,7 +87,7 @@ class CPUHelper:
         self.client.off(DEFAULT_CW.c_word)
 
     def load_flags(self, value: Flags) -> None:
-        self.load_reg8(F, value.value)
+        self.load_reg8(hardware.F, value.value)
 
     def load_snippet(self, addr: int, code: bytes) -> None:
         self.write_bytes(addr, code)
