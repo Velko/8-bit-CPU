@@ -7,7 +7,7 @@ from dataclasses import dataclass
 
 from .cpu_helper import CPUHelper
 from .pinclient import PinClient
-from .DeviceSetup import IR, LR, PC, SP, hardware
+from .DeviceSetup import LR, PC, SP, hardware
 from .util import OutMessage, HaltMessage, BrkMessage
 from .opcodes import opcodes
 from .assisted_cpu import AssistedCPU
@@ -188,7 +188,7 @@ class Debugger:
 
         if addr in self.breakpoints:
             tmp_break = self.breakpoints[addr]
-            self.cpu_helper.load_reg8(IR, tmp_break.orig_op)
+            self.cpu_helper.load_reg8(hardware.IR, tmp_break.orig_op)
             self.on_stop(StopReason.DEBUG_BRK, addr)
             return tmp_break
 

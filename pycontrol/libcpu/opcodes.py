@@ -2,7 +2,7 @@ from collections.abc import Sequence, Iterator, Mapping
 from typing import Tuple
 from libcpu.util import ControlSignal
 from .instruction_cfg import InstructionConfig, Repeat, Instruction
-from .DeviceSetup import hardware, PC, IR, Clock, IOCtl, TL, TH, TX, SP, SDP, TDP, LR, ACalc, StepCounter
+from .DeviceSetup import hardware, PC, Clock, IOCtl, TL, TH, TX, SP, SDP, TDP, LR, ACalc, StepCounter
 from .opcode_builder import MicrocodeBuilder, MicroCode, OpcodeArg
 from .devices import Register, GPRegister, Flags
 import os.path

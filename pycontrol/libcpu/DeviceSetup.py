@@ -24,6 +24,7 @@ class DeviceSetup:
         self.ram: dev.RAM = None # type: ignore[assignment]
         self.prog_mem: RamProxy = None # type: ignore[assignment]
         self.T: dev.TempRegister | None = None
+        self.IR: dev.WORegister = None # type: ignore[assignment]
 
     def get(self, key: str) -> dev.DeviceBase | None:
         if key in self.gp_registers:
@@ -38,6 +39,8 @@ class DeviceSetup:
             return self.prog_mem
         elif key == "T":
             return self.T
+        elif key == "IR":
+            return self.IR
         else:
             return None
 
@@ -50,6 +53,7 @@ class DeviceSetup:
         devices.append(self.prog_mem)
         if self.T is not None:
             devices.append(self.T)
+        devices.append(self.IR)
         return devices
 
     def setup_devices(self) -> None:
@@ -110,13 +114,14 @@ class DeviceSetup:
             load = MuxPin(LoadMux, 6),
             alu_r = MuxPin(AluArgR, 4))
 
+        self.IR = dev.WORegister("IR",
+            load = MuxPin(LoadMux, 8))
+
+
 
 
 hardware = DeviceSetup()
 hardware.setup_devices()
-
-IR = dev.WORegister("IR",
-    load = MuxPin(LoadMux, 8))
 
 Clock = dev.Clock("Clk",
     halt = SimplePin(26, Level.LOW),

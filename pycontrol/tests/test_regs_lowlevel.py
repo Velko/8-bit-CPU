@@ -2,7 +2,7 @@
 
 import pytest
 
-from libcpu.DeviceSetup import IR, TH,TL, TX, hardware
+from libcpu.DeviceSetup import TH,TL, TX, hardware
 from libcpu.cpu_helper import CPUHelper
 from collections.abc import Iterator
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
@@ -12,6 +12,7 @@ pytestmark = pytest.mark.hardware
 A = hardware.gp_registers["A"]
 B = hardware.gp_registers["B"]
 alu = hardware.alu["AddSub"]
+IR = hardware.IR
 
 def test_reg_a_latch(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg8(A, 54)
