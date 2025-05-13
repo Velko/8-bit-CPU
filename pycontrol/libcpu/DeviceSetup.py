@@ -25,6 +25,8 @@ class DeviceSetup:
         self.prog_mem: RamProxy = None # type: ignore[assignment]
         self.T: dev.TempRegister | None = None
         self.IR: dev.WORegister = None # type: ignore[assignment]
+        self.Clock: dev.Clock | None = None
+        self.StepCounter: dev.StepCounter = None # type: ignore[assignment]
 
     def get(self, key: str) -> dev.DeviceBase | None:
         if key in self.gp_registers:
@@ -41,6 +43,10 @@ class DeviceSetup:
             return self.T
         elif key == "IR":
             return self.IR
+        elif key == "Clock":
+            return self.Clock
+        elif key == "StepCounter":
+            return self.StepCounter
         else:
             return None
 
@@ -54,6 +60,9 @@ class DeviceSetup:
         if self.T is not None:
             devices.append(self.T)
         devices.append(self.IR)
+        if self.Clock is not None:
+            devices.append(self.Clock)
+        devices.append(self.StepCounter)
         return devices
 
     def setup_devices(self) -> None:
@@ -117,19 +126,19 @@ class DeviceSetup:
         self.IR = dev.WORegister("IR",
             load = MuxPin(LoadMux, 8))
 
+        self.Clock = dev.Clock("Clk",
+            halt = SimplePin(26, Level.LOW),
+            brk = SimplePin(27, Level.HIGH))
+
+        self.StepCounter = dev.StepCounter("Steps",
+            reset = SimplePin(24, Level.LOW),
+            extended = SimplePin(25, Level.LOW))
+
 
 
 
 hardware = DeviceSetup()
 hardware.setup_devices()
-
-Clock = dev.Clock("Clk",
-    halt = SimplePin(26, Level.LOW),
-    brk = SimplePin(27, Level.HIGH))
-
-StepCounter = dev.StepCounter("Steps",
-    reset = SimplePin(24, Level.LOW),
-    extended = SimplePin(25, Level.LOW))
 
 PC = dev.ProgramCounter("PC",
     out = MuxPin(AddrOutMux, 5),

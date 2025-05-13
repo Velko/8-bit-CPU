@@ -9,7 +9,7 @@ from libcpu.opcode_builder import MicroCode
 from libcpu.util import ControlSignal
 from libcpu.opcodes import opcodes, fetch
 from libcpu.devices import Flags
-from libcpu.DeviceSetup import StepCounter
+from libcpu.DeviceSetup import hardware
 
 from libcpu.ctrl_word import CtrlWord
 from itertools import islice
@@ -27,7 +27,7 @@ def finalize_steps(microcode: MicroCode, flags: Flags) -> Iterator[Sequence[Cont
         step, is_last = microcode.get_step(s_idx, flags)
         if is_last:
             # add Steps.reset at last relevant step
-            yield list(step) + [StepCounter.reset]
+            yield list(step) + [hardware.StepCounter.reset]
         else:
             yield step
 
