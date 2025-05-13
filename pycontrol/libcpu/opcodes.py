@@ -2,7 +2,7 @@ from collections.abc import Sequence, Iterator, Mapping
 from typing import Tuple
 from libcpu.util import ControlSignal
 from .instruction_cfg import InstructionConfig, Repeat, Instruction
-from .DeviceSetup import hardware, IOCtl, SP, SDP, TDP, LR, ACalc
+from .DeviceSetup import hardware, IOCtl, LR, ACalc
 from .opcode_builder import MicrocodeBuilder, MicroCode, OpcodeArg
 from .devices import Register, GPRegister, Flags
 import os.path
@@ -58,6 +58,8 @@ def resolve_arg(name: str, **kwargs: Register) -> Register | OpcodeArg:
         return OpcodeArg.BYTE
     elif name in kwargs:
         return kwargs[name]
+    elif name in hardware.apointers:
+        return hardware.apointers[name]
     elif name in globals():
         reg = globals()[name]
         if isinstance(reg, Register):

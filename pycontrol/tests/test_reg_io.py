@@ -4,7 +4,7 @@ import pytest
 import random
 
 from libcpu.devices import GPRegister, Flags
-from libcpu.DeviceSetup import SP, hardware
+from libcpu.DeviceSetup import hardware
 from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
@@ -16,6 +16,7 @@ pytestmark = pytest.mark.hardware
 A = hardware.gp_registers["A"]
 B = hardware.gp_registers["B"]
 F = hardware.F
+SP = hardware.apointers["SP"]
 
 def all_regs_and_bits() -> Iterator[tuple[GPRegister, int]]:
     bits = range(8)
@@ -51,11 +52,11 @@ def test_mov_a_b(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs:
     value = cpu_helper.read_reg8(lhs)
     assert value == val
 
-def test_lea(cpu_helper: CPUHelper) -> None:
+def test_lea(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
-    cpu_helper.load_reg16(SP, 0x4314)
+    cpu_helper.load_reg16(SP, 0)
 
-    #lea(SP, Addr(0x4314))
+    acpu.lea(SP, Addr(0x4314))
 
     val = cpu_helper.read_reg16(SP)
 

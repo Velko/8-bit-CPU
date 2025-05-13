@@ -29,6 +29,7 @@ class DeviceSetup:
         self.StepCounter: dev.StepCounter = None # type: ignore[assignment]
         self.PC: dev.ProgramCounter = None # type: ignore[assignment]
         self.transfer: dict[str, dev.TransferRegister] = {}
+        self.apointers: dict[str, dev.StackPointer] = {}
 
     def get(self, key: str) -> dev.DeviceBase | None:
         if key in self.gp_registers:
@@ -53,6 +54,8 @@ class DeviceSetup:
             return self.PC
         elif key in self.transfer:
             return self.transfer[key]
+        elif key in self.apointers:
+            return self.apointers[key]
         else:
             return None
 
@@ -71,6 +74,7 @@ class DeviceSetup:
         devices.append(self.StepCounter)
         devices.append(self.PC)
         devices.extend(self.transfer.values())
+        devices.extend(self.apointers.values())
         return devices
 
     def setup_devices(self) -> None:
@@ -159,28 +163,28 @@ class DeviceSetup:
             out = MuxPin(OutMux, 11),
             load = MuxPin(LoadMux, 11))
 
+        self.apointers["SP"] = dev.StackPointer("SP",
+            out = MuxPin(AddrOutMux, 3),
+            load = MuxPin(AddrLoadMux, 3),
+            inc = AddrRegInc,
+            dec = AddrRegDec)
+
+        self.apointers["SDP"] = dev.StackPointer("SDP",
+            out = MuxPin(AddrOutMux, 1),
+            load = MuxPin(AddrLoadMux, 1),
+            inc = AddrRegInc,
+            dec = AddrRegDec)
+
+        self.apointers["TDP"] = dev.StackPointer("TDP",
+            out = MuxPin(AddrOutMux, 6),
+            load = MuxPin(AddrLoadMux, 6),
+            inc = AddrRegInc,
+            dec = AddrRegDec)
+
 
 
 hardware = DeviceSetup()
 hardware.setup_devices()
-
-SP = dev.StackPointer("SP",
-    out = MuxPin(AddrOutMux, 3),
-    load = MuxPin(AddrLoadMux, 3),
-    inc = AddrRegInc,
-    dec = AddrRegDec)
-
-SDP = dev.StackPointer("SDP",
-    out = MuxPin(AddrOutMux, 1),
-    load = MuxPin(AddrLoadMux, 1),
-    inc = AddrRegInc,
-    dec = AddrRegDec)
-
-TDP = dev.StackPointer("TDP",
-    out = MuxPin(AddrOutMux, 6),
-    load = MuxPin(AddrLoadMux, 6),
-    inc = AddrRegInc,
-    dec = AddrRegDec)
 
 LR = dev.AddressRegister("LR",
     out = MuxPin(AddrOutMux, 4),

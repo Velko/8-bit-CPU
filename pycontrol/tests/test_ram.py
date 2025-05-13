@@ -6,7 +6,7 @@ import random
 from libcpu.opcodes import opcode_of
 from libcpu.pinclient import PinClient
 from libcpu.assisted_cpu import AssistedCPU
-from libcpu.DeviceSetup import SDP, hardware
+from libcpu.DeviceSetup import hardware
 from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
 from collections.abc import Sequence
@@ -17,6 +17,7 @@ pytestmark = pytest.mark.hardware
 
 A = hardware.gp_registers["A"]
 B = hardware.gp_registers["B"]
+SDP = hardware.apointers["SDP"]
 
 # can not make as a fixture, because it can not be
 # unpacked for parametrization (couldn't find a way)

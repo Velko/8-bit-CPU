@@ -7,7 +7,7 @@ from dataclasses import dataclass
 
 from .cpu_helper import CPUHelper
 from .pinclient import PinClient
-from .DeviceSetup import LR, SP, hardware
+from .DeviceSetup import LR, hardware
 from .util import OutMessage, HaltMessage, BrkMessage
 from .opcodes import opcodes
 from .assisted_cpu import AssistedCPU
@@ -214,7 +214,8 @@ class Debugger:
             registers[gpr.name] = self.cpu_helper.read_reg8(gpr)
         registers["Flags"] = self.cpu_helper.get_flags_s()
         registers["LR"] = self.cpu_helper.read_reg16(LR)
-        registers["SP"] = self.cpu_helper.read_reg16(SP)
+        for ap in hardware.apointers.values():
+            registers[ap.name] = self.cpu_helper.read_reg16(ap)
 
         # if breakpoint just hit, PC is not accurate
         # show breakpoint address instead
