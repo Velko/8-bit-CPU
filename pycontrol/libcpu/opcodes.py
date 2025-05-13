@@ -38,9 +38,7 @@ def opcode_of(instr: str) -> int:
 
 def resolve_pin(name: str, **kwargs: Register) -> ControlSignal:
     dev, pin = name.split('.')
-    device = globals().get(dev)
-    if device is None:
-        device = hardware.get(dev)
+    device = hardware.get(dev)
     if device is None:
         device = kwargs.get(dev)
     if device is None:
@@ -62,12 +60,6 @@ def resolve_arg(name: str, **kwargs: Register) -> Register | OpcodeArg:
         return hardware.apointers[name]
     elif name == "LR":
         return unwrap(hardware.LR)
-    elif name in globals():
-        reg = globals()[name]
-        if isinstance(reg, Register):
-            return reg
-        else:
-            raise ValueError(f"{name} is not a register")
     else:
         raise ValueError(f"Unknown argument type: {name}")
 

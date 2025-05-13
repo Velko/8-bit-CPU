@@ -4,12 +4,9 @@ from .pin import Pin, SimplePin, MuxPin, Mux, SharedSimplePin
 from .devices import DeviceBase
 from . import DeviceSetup
 
-def _all_devices() -> Iterator[DeviceBase]:
-    return filter(lambda x: isinstance(x, DeviceBase), chain(vars(DeviceSetup).values(), DeviceSetup.hardware.all_devices()))
-
 def all_pins() -> Iterator[tuple[str, Pin]]:
     dupe_filter = set()
-    for dev in _all_devices():
+    for dev in DeviceSetup.hardware.all_devices():
         pin_attrs = filter(lambda x: isinstance(x[1], Pin), vars(dev).items())
         for a_name, attr in pin_attrs:
             if attr not in dupe_filter:
