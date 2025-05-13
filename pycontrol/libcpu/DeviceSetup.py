@@ -28,6 +28,7 @@ class DeviceSetup:
         self.Clock: dev.Clock | None = None
         self.StepCounter: dev.StepCounter = None # type: ignore[assignment]
         self.PC: dev.ProgramCounter = None # type: ignore[assignment]
+        self.transfer: dict[str, dev.TransferRegister] = {}
 
     def get(self, key: str) -> dev.DeviceBase | None:
         if key in self.gp_registers:
@@ -50,6 +51,8 @@ class DeviceSetup:
             return self.StepCounter
         elif key == "PC":
             return self.PC
+        elif key in self.transfer:
+            return self.transfer[key]
         else:
             return None
 
@@ -67,6 +70,7 @@ class DeviceSetup:
             devices.append(self.Clock)
         devices.append(self.StepCounter)
         devices.append(self.PC)
+        devices.extend(self.transfer.values())
         return devices
 
     def setup_devices(self) -> None:
@@ -143,6 +147,17 @@ class DeviceSetup:
             load = MuxPin(AddrLoadMux, 5),
             inc = AddrRegInc)
 
+        self.transfer["TX"] = dev.TransferRegister("TX",
+            out = MuxPin(AddrOutMux, 0),
+            load = MuxPin(AddrLoadMux, 0))
+
+        self.transfer["TH"] = dev.TransferRegister("TH",
+            out = MuxPin(OutMux, 12),
+            load = MuxPin(LoadMux, 12))
+
+        self.transfer["TL"] = dev.TransferRegister("TL",
+            out = MuxPin(OutMux, 11),
+            load = MuxPin(LoadMux, 11))
 
 
 
@@ -170,18 +185,6 @@ TDP = dev.StackPointer("TDP",
 LR = dev.AddressRegister("LR",
     out = MuxPin(AddrOutMux, 4),
     load = MuxPin(AddrLoadMux, 4))
-
-TX = dev.TransferRegister("TX",
-    out = MuxPin(AddrOutMux, 0),
-    load = MuxPin(AddrLoadMux, 0))
-
-TH = dev.TransferRegister("TH",
-    out = MuxPin(OutMux, 12),
-    load = MuxPin(LoadMux, 12))
-
-TL = dev.TransferRegister("TL",
-    out = MuxPin(OutMux, 11),
-    load = MuxPin(LoadMux, 11))
 
 ACalc = dev.AddressCalculator("ACalc",
     out = MuxPin(AddrOutMux, 2),
