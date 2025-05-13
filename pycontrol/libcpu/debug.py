@@ -7,7 +7,7 @@ from dataclasses import dataclass
 
 from .cpu_helper import CPUHelper
 from .pinclient import PinClient
-from .DeviceSetup import LR, hardware
+from .DeviceSetup import hardware
 from .util import OutMessage, HaltMessage, BrkMessage
 from .opcodes import opcodes
 from .assisted_cpu import AssistedCPU
@@ -213,7 +213,8 @@ class Debugger:
         for gpr in hardware.gp_registers.values():
             registers[gpr.name] = self.cpu_helper.read_reg8(gpr)
         registers["Flags"] = self.cpu_helper.get_flags_s()
-        registers["LR"] = self.cpu_helper.read_reg16(LR)
+        if hardware.LR is not None:
+            registers["LR"] = self.cpu_helper.read_reg16(hardware.LR)
         for ap in hardware.apointers.values():
             registers[ap.name] = self.cpu_helper.read_reg16(ap)
 

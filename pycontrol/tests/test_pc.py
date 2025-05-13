@@ -5,14 +5,16 @@ import itertools
 
 pytestmark = pytest.mark.hardware
 
-from libcpu.DeviceSetup import hardware, LR
+from libcpu.DeviceSetup import hardware
 from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.devices import Flags
 from libcpu.ctrl_word import CtrlWord
+from libcpu.util import unwrap
 
 PC = hardware.PC
+LR = unwrap(hardware.LR)
 
 @pytest.mark.parametrize("expected", [65535, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 0])
 def test_pc_load(cpu_helper: CPUHelper, expected: int) -> None:

@@ -1,8 +1,8 @@
 from collections.abc import Sequence, Iterator, Mapping
 from typing import Tuple
-from libcpu.util import ControlSignal
+from libcpu.util import ControlSignal, unwrap
 from .instruction_cfg import InstructionConfig, Repeat, Instruction
-from .DeviceSetup import hardware, IOCtl, LR, ACalc
+from .DeviceSetup import hardware
 from .opcode_builder import MicrocodeBuilder, MicroCode, OpcodeArg
 from .devices import Register, GPRegister, Flags
 import os.path
@@ -60,6 +60,8 @@ def resolve_arg(name: str, **kwargs: Register) -> Register | OpcodeArg:
         return kwargs[name]
     elif name in hardware.apointers:
         return hardware.apointers[name]
+    elif name == "LR":
+        return unwrap(hardware.LR)
     elif name in globals():
         reg = globals()[name]
         if isinstance(reg, Register):

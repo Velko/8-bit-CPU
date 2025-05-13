@@ -2,7 +2,7 @@ from collections.abc import Sequence
 from .markers import AddrBase
 from .devices import Flags
 from .pseudo_devices import Imm, IOMon
-from .DeviceSetup import IOCtl, hardware
+from .DeviceSetup import hardware
 from .opcodes import opcodes, ops_by_code, fetch, InvalidOpcodeException
 from .pinclient import PinClient
 from .ctrl_word import CtrlWord, DEFAULT_CW
@@ -66,10 +66,10 @@ class AssistedCPUEngine:
             # capture port output BEFORE clock tick.
             # TODO: think of more reliable approach
             # this probably messes up the immediate value on the Bus
-            if control.is_enabled(IOCtl.laddr):
+            if hardware.IOCtl is not None and control.is_enabled(hardware.IOCtl.laddr):
                 IOMon.select_port(self.client.bus_get())
 
-            if control.is_enabled(IOCtl.to_dev):
+            if hardware.IOCtl is not None and control.is_enabled(hardware.IOCtl.to_dev):
                 formatted = IOMon.format_value(self.client.bus_get())
                 if formatted is not None:
                     result = OutMessage(formatted)

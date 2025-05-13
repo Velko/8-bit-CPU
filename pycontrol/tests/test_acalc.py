@@ -4,10 +4,13 @@ import pytest
 
 from libcpu.cpu_helper import CPUHelper
 from libcpu.pinclient import PinClient
-from libcpu.DeviceSetup import ACalc
+from libcpu.DeviceSetup import hardware
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
+from libcpu.util import unwrap
 
 from collections.abc import Iterator
+
+ACalc = unwrap(hardware.ACalc)
 
 
 acalc_params = [

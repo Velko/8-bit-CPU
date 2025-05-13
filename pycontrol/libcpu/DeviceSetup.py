@@ -30,6 +30,9 @@ class DeviceSetup:
         self.PC: dev.ProgramCounter = None # type: ignore[assignment]
         self.transfer: dict[str, dev.TransferRegister] = {}
         self.apointers: dict[str, dev.StackPointer] = {}
+        self.LR: dev.AddressRegister | None = None
+        self.ACalc: dev.AddressCalculator | None = None
+        self.IOCtl: dev.IOController | None = None
 
     def get(self, key: str) -> dev.DeviceBase | None:
         if key in self.gp_registers:
@@ -56,6 +59,12 @@ class DeviceSetup:
             return self.transfer[key]
         elif key in self.apointers:
             return self.apointers[key]
+        elif key == "LR":
+            return self.LR
+        elif key == "ACalc":
+            return self.ACalc
+        elif key == "IOCtl":
+            return self.IOCtl
         else:
             return None
 
@@ -75,6 +84,12 @@ class DeviceSetup:
         devices.append(self.PC)
         devices.extend(self.transfer.values())
         devices.extend(self.apointers.values())
+        if self.LR is not None:
+            devices.append(self.LR)
+        if self.ACalc is not None:
+            devices.append(self.ACalc)
+        if self.IOCtl is not None:
+            devices.append(self.IOCtl)
         return devices
 
     def setup_devices(self) -> None:
@@ -181,21 +196,22 @@ class DeviceSetup:
             inc = AddrRegInc,
             dec = AddrRegDec)
 
+        self.LR = dev.AddressRegister("LR",
+            out = MuxPin(AddrOutMux, 4),
+            load = MuxPin(AddrLoadMux, 4))
+
+        self.ACalc = dev.AddressCalculator("ACalc",
+            out = MuxPin(AddrOutMux, 2),
+            load = MuxPin(AddrLoadMux, 2),
+            signed = SimplePin(28, Level.HIGH))
+
+        self.IOCtl = dev.IOController("IOCtl",
+            laddr = MuxPin(LoadMux, 4),
+            to_dev = MuxPin(LoadMux, 5),
+            from_dev = MuxPin(OutMux, 8))
 
 
 hardware = DeviceSetup()
 hardware.setup_devices()
 
-LR = dev.AddressRegister("LR",
-    out = MuxPin(AddrOutMux, 4),
-    load = MuxPin(AddrLoadMux, 4))
 
-ACalc = dev.AddressCalculator("ACalc",
-    out = MuxPin(AddrOutMux, 2),
-    load = MuxPin(AddrLoadMux, 2),
-    signed = SimplePin(28, Level.HIGH))
-
-IOCtl = dev.IOController("IOCtl",
-    laddr = MuxPin(LoadMux, 4),
-    to_dev = MuxPin(LoadMux, 5),
-    from_dev = MuxPin(OutMux, 8))
