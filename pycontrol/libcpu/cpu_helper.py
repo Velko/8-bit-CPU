@@ -6,7 +6,7 @@ from libcpu.devices import Register, WORegister
 from libcpu.opcodes import InvalidOpcodeException, opcode_of
 from libcpu.pinclient import PinClient
 from libcpu.devices import Flags
-from libcpu.DeviceSetup import PC, hardware
+from libcpu.DeviceSetup import hardware
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
 class CPUHelper:
@@ -91,7 +91,7 @@ class CPUHelper:
 
     def load_snippet(self, addr: int, code: bytes) -> None:
         self.write_bytes(addr, code)
-        self.load_reg16(PC, addr)
+        self.load_reg16(hardware.PC, addr)
 
     def run_snippet(self, addr: int, code: bytes) -> str:
         """Run pre-compiled binary snippet. BRK instruction is appended automatically

@@ -2,7 +2,7 @@ from collections.abc import Sequence
 from .markers import AddrBase
 from .devices import Flags
 from .pseudo_devices import Imm, IOMon
-from .DeviceSetup import IOCtl, hardware, PC
+from .DeviceSetup import IOCtl, hardware
 from .opcodes import opcodes, ops_by_code, fetch, InvalidOpcodeException
 from .pinclient import PinClient
 from .ctrl_word import CtrlWord, DEFAULT_CW
@@ -76,10 +76,10 @@ class AssistedCPUEngine:
 
             self.client.clock_tick()
 
-            if control.is_enabled(PC.load):
+            if control.is_enabled(hardware.PC.load):
                 Imm.invalidate()
 
-            if control.is_enabled(PC.inc):
+            if control.is_enabled(hardware.PC.inc):
                 Imm.consume() # next byte for imm value
 
             if control.is_enabled(hardware.F.calc) or control.is_enabled(hardware.F.load):

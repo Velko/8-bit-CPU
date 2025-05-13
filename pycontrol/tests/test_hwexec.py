@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 
 import pytest
-from libcpu.DeviceSetup import PC, hardware
+from libcpu.DeviceSetup import hardware
 
 pytestmark = pytest.mark.hardware
 
 A = hardware.gp_registers["A"]
+PC = hardware.PC
 
 from libcpu.cpu_helper import CPUHelper
 from libcpu.opcodes import opcode_of
