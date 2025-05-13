@@ -71,21 +71,21 @@ class DeviceSetup:
     def all_devices(self) -> list[dev.DeviceBase]:
         devices: list[dev.DeviceBase] = []
         devices.extend(self.gp_registers.values())
+        if self.T is not None:
+            devices.append(self.T)
         devices.extend(self.alu.values())
         devices.append(self.F)
         devices.append(self.ram)
         devices.append(self.prog_mem)
-        if self.T is not None:
-            devices.append(self.T)
         devices.append(self.IR)
         if self.Clock is not None:
             devices.append(self.Clock)
         devices.append(self.StepCounter)
         devices.append(self.PC)
-        devices.extend(self.transfer.values())
         devices.extend(self.apointers.values())
         if self.LR is not None:
             devices.append(self.LR)
+        devices.extend(self.transfer.values())
         if self.ACalc is not None:
             devices.append(self.ACalc)
         if self.IOCtl is not None:
