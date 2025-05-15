@@ -5,7 +5,7 @@ from libcpu.DeviceSetup import hardware
 
 pytestmark = pytest.mark.hardware
 
-A = hardware.gp_registers["A"]
+A = hardware.gp_reg("A")
 PC = hardware.PC
 
 from libcpu.cpu_helper import CPUHelper

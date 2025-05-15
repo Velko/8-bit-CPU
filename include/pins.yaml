@@ -1,0 +1,99 @@
+muxes:
+  - name: "OutMux"
+    pins:
+      - 0
+      - 1
+      - 2
+      - 3
+    default: 15
+  - name: "LoadMux"
+    pins:
+      - 4
+      - 5
+      - 6
+      - 7
+    default: 15
+  - name: "AluArgL"
+    pins:
+      - 8
+      - 9
+    default: 4
+  - name: "AluArgR"
+    pins:
+      - 10
+      - 11
+      - 12
+    default: 6
+  - name: "AddrOutMux"
+    pins:
+      - 16
+      - 17
+      - 18
+    default: 7
+  - name: "AddrLoadMux"
+    pins:
+      - 19
+      - 20
+      - 21
+    default: 7
+devices:
+  - name: "A"
+    type: "GPRegister"
+    pins:
+      out:
+        mux: "OutMux"
+        pin: 0
+      load:
+        mux: "LoadMux"
+        pin: 0
+      alu_l:
+        mux: "AluArgL"
+        pin: 0
+      alu_r:
+        mux: "AluArgR"
+        pin: 0
+  - name: "B"
+    type: "GPRegister"
+    pins:
+      out:
+        mux: "OutMux"
+        pin: 1
+      load:
+        mux: "LoadMux"
+        pin: 1
+      alu_l:
+        mux: "AluArgL"
+        pin: 1
+      alu_r:
+        mux: "AluArgR"
+        pin: 1
+  - name: "C"
+    type: "GPRegister"
+    pins:
+      out:
+        mux: "OutMux"
+        pin: 2
+      load:
+        mux: "LoadMux"
+        pin: 2
+      alu_l:
+        mux: "AluArgL"
+        pin: 2
+      alu_r:
+        mux: "AluArgR"
+        pin: 2
+  - name: "D"
+    type: "GPRegister"
+    pins:
+      out:
+        mux: "OutMux"
+        pin: 3
+      load:
+        mux: "LoadMux"
+        pin: 3
+      alu_l:
+        mux: "AluArgL"
+        pin: 3
+      alu_r:
+        mux: "AluArgR"
+        pin: 3

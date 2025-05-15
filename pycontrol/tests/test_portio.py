@@ -8,10 +8,10 @@ from libcpu.util import OutMessage
 
 from collections.abc import Iterator
 
-A = hardware.gp_registers["A"]
-B = hardware.gp_registers["B"]
-C = hardware.gp_registers["C"]
-D = hardware.gp_registers["D"]
+A = hardware.gp_reg("A")
+B = hardware.gp_reg("B")
+C = hardware.gp_reg("C")
+D = hardware.gp_reg("D")
 
 def test_outa_emu_char(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.load_reg8(A, 120)

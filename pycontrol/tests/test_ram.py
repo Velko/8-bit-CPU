@@ -15,8 +15,8 @@ from conftest import FillRam
 
 pytestmark = pytest.mark.hardware
 
-A = hardware.gp_registers["A"]
-B = hardware.gp_registers["B"]
+A = hardware.gp_reg("A")
+B = hardware.gp_reg("B")
 SDP = hardware.apointers["SDP"]
 
 # can not make as a fixture, because it can not be

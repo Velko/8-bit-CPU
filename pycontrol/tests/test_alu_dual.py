@@ -11,8 +11,8 @@ pytestmark = pytest.mark.hardware
 hardwired_alu = False
 hardwired_reason = "unsupported with hardwired ALU inputs"
 
-A = hardware.gp_registers["A"]
-B = hardware.gp_registers["B"]
+A = hardware.gp_reg("A")
+B = hardware.gp_reg("B")
 
 @pytest.mark.skipif(hardwired_alu, reason=hardwired_reason)
 def test_sub_b_a_small(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:

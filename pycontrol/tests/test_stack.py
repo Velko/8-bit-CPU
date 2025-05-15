@@ -13,8 +13,8 @@ from libcpu.markers import Addr
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 from libcpu.util import unwrap
 
-A = hardware.gp_registers["A"]
-C = hardware.gp_registers["C"]
+A = hardware.gp_reg("A")
+C = hardware.gp_reg("C")
 SP = hardware.apointers["SP"]
 LR = unwrap(hardware.LR)
 

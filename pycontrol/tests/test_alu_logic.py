@@ -12,7 +12,7 @@ from conftest import ALUTwoRegTestCase, ALUOneRegTestCase, devname
 
 pytestmark = pytest.mark.hardware
 
-A = hardware.gp_registers["A"]
+A = hardware.gp_reg("A")
 
 and_test_args = [
     ALUTwoRegTestCase("small", 230, 92, 68, "----"),

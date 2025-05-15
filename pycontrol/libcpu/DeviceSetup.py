@@ -1,24 +1,13 @@
 from . import devices as dev
 from .pseudo_devices import RamProxy
 from .pin import SimplePin, Level, Mux, MuxPin, SharedSimplePin
-
-OutMux = Mux("OutMux", [0, 1, 2, 3], 15) # bits 0-3 in Control Word, defaults to 15
-LoadMux = Mux("LoadMux", [4, 5, 6, 7], 15)
-
-AluArgL = Mux("AluArgL", [8, 9], 4)
-AluArgR = Mux("AluArgR", [10, 11, 12], 6)
-
-AddrOutMux = Mux("AddrOutMux", [16, 17, 18], 7)
-AddrLoadMux = Mux("AddrLoadMux", [19, 20, 21], 7)
-
-AluAltFn = SharedSimplePin(13, Level.HIGH, "Alu.alt")
-
-AddrRegInc = SharedSimplePin(22, Level.LOW, "Addr.inc")
-AddrRegDec = SharedSimplePin(23, Level.LOW, "Addr.dec")
+from .pin_cfg import PinConfig
+import os.path
 
 class DeviceSetup:
     def __init__(self) -> None:
-        self.gp_registers: dict[str, dev.GPRegister] = {}
+        self.muxes: dict[str, Mux] = {}
+        self.devices: dict[str, dev.DeviceBase] = {}
         self.alu: dict[str, dev.ALU] = {}
         self.F: dev.FlagsRegister = None # type: ignore[assignment]
         self.ram: dev.RAM = None # type: ignore[assignment]
@@ -35,8 +24,8 @@ class DeviceSetup:
         self.IOCtl: dev.IOController | None = None
 
     def get(self, key: str) -> dev.DeviceBase | None:
-        if key in self.gp_registers:
-            return self.gp_registers[key]
+        if key in self.devices:
+            return self.devices[key]
         elif key in self.alu:
             return self.alu[key]
         elif key == "F":
@@ -70,7 +59,7 @@ class DeviceSetup:
 
     def all_devices(self) -> list[dev.DeviceBase]:
         devices: list[dev.DeviceBase] = []
-        devices.extend(self.gp_registers.values())
+        devices.extend(self.devices.values())
         if self.T is not None:
             devices.append(self.T)
         devices.extend(self.alu.values())
@@ -93,29 +82,26 @@ class DeviceSetup:
         return devices
 
     def setup_devices(self) -> None:
-        self.gp_registers["A"] = dev.GPRegister("A",
-            out = MuxPin(OutMux, 0),
-            load = MuxPin(LoadMux, 0),
-            alu_l = MuxPin(AluArgL, 0),
-            alu_r = MuxPin(AluArgR, 0))
+        yaml_path = os.path.join(os.path.dirname(__file__), "../../include/pins.yaml")
 
-        self.gp_registers["B"] = dev.GPRegister("B",
-            out = MuxPin(OutMux, 1),
-            load = MuxPin(LoadMux, 1),
-            alu_l = MuxPin(AluArgL, 1),
-            alu_r = MuxPin(AluArgR, 1))
+        p_cfg = PinConfig.load_from_yaml(yaml_path)
+        self.muxes = p_cfg.muxes
 
-        self.gp_registers["C"] = dev.GPRegister("C",
-            out = MuxPin(OutMux, 2),
-            load = MuxPin(LoadMux, 2),
-            alu_l = MuxPin(AluArgL, 2),
-            alu_r = MuxPin(AluArgR, 2))
+        OutMux = p_cfg.muxes["OutMux"]
+        LoadMux = p_cfg.muxes["LoadMux"]
 
-        self.gp_registers["D"] = dev.GPRegister("D",
-            out = MuxPin(OutMux, 3),
-            load = MuxPin(LoadMux, 3),
-            alu_l = MuxPin(AluArgL, 3),
-            alu_r = MuxPin(AluArgR, 3))
+        AluArgL = p_cfg.muxes["AluArgL"]
+        AluArgR = p_cfg.muxes["AluArgR"]
+
+        AddrOutMux = p_cfg.muxes["AddrOutMux"]
+        AddrLoadMux = p_cfg.muxes["AddrLoadMux"]
+
+        AluAltFn = SharedSimplePin(13, Level.HIGH, "Alu.alt")
+
+        AddrRegInc = SharedSimplePin(22, Level.LOW, "Addr.inc")
+        AddrRegDec = SharedSimplePin(23, Level.LOW, "Addr.dec")
+
+        self.devices = p_cfg.devices
 
         self.alu["AddSub"] = dev.ALU("AddSub",
             out = MuxPin(OutMux, 5),
@@ -209,6 +195,13 @@ class DeviceSetup:
             laddr = MuxPin(LoadMux, 4),
             to_dev = MuxPin(LoadMux, 5),
             from_dev = MuxPin(OutMux, 8))
+
+    def gp_reg(self, name: str) -> dev.GPRegister:
+        d = self.devices.get(name)
+        if isinstance(d, dev.GPRegister):
+            return d
+        else:
+            raise ValueError(f"Device {name} is not a GPRegister")
 
 
 hardware = DeviceSetup()

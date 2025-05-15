@@ -9,7 +9,7 @@ from libcpu.assisted_cpu import AssistedCPU
 from libcpu.DeviceSetup import hardware
 from libcpu.opcodes import opcode_of
 
-A = hardware.gp_registers["A"]
+A = hardware.gp_reg("A")
 
 def test_dummy_local(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 

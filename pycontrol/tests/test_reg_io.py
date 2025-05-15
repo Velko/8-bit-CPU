@@ -13,8 +13,8 @@ from libcpu.opcodes import permute_gp_regs_nsame, gp_regs
 
 pytestmark = pytest.mark.hardware
 
-A = hardware.gp_registers["A"]
-B = hardware.gp_registers["B"]
+A = hardware.gp_reg("A")
+B = hardware.gp_reg("B")
 F = hardware.F
 SP = hardware.apointers["SP"]
 

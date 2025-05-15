@@ -7,7 +7,7 @@ from .opcode_builder import MicrocodeBuilder, MicroCode, OpcodeArg
 from .devices import Register, GPRegister, Flags
 import os.path
 
-gp_regs: list[GPRegister] = [r for r in hardware.gp_registers.values()]
+gp_regs: list[GPRegister] = [r for r in hardware.devices.values() if isinstance(r, GPRegister)]
 
 fetch: list[Sequence[ControlSignal]] = []
 

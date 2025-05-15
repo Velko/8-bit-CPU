@@ -22,7 +22,7 @@ def simple_pins() -> Iterator[tuple[str, SimplePin]]:
             yield name, pin
 
 def all_muxes() -> Iterator[tuple[str, Mux]]:
-    for v_name, var in vars(DeviceSetup).items():
+    for v_name, var in DeviceSetup.hardware.muxes.items():
         if isinstance(var, Mux):
             yield v_name, var
 

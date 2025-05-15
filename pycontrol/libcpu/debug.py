@@ -11,6 +11,7 @@ from .DeviceSetup import hardware
 from .util import OutMessage, HaltMessage, BrkMessage
 from .opcodes import opcodes
 from .assisted_cpu import AssistedCPU
+from .devices import GPRegister
 
 RAM_OFFSET = 0x0000
 
@@ -210,7 +211,7 @@ class Debugger:
 
     def get_registers(self) -> Mapping[str, int | str]:
         registers: dict[str, int | str] = {}
-        for gpr in hardware.gp_registers.values():
+        for gpr in [r for r in hardware.devices.values() if isinstance(r, GPRegister)]:
             registers[gpr.name] = self.cpu_helper.read_reg8(gpr)
         registers["Flags"] = self.cpu_helper.get_flags_s()
         if hardware.LR is not None:
