@@ -15,7 +15,7 @@ from libcpu.util import unwrap
 
 A = hardware.gp_reg("A")
 C = hardware.gp_reg("C")
-SP = hardware.apointers["SP"]
+SP = hardware.a_ptr("SP")
 LR = unwrap(hardware.LR)
 
 @pytest.mark.parametrize("expected", [255, 1, 2, 4, 8, 16, 32, 64, 128, 0])

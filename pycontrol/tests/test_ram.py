@@ -17,7 +17,7 @@ pytestmark = pytest.mark.hardware
 
 A = hardware.gp_reg("A")
 B = hardware.gp_reg("B")
-SDP = hardware.apointers["SDP"]
+SDP = hardware.a_ptr("SDP")
 
 # can not make as a fixture, because it can not be
 # unpacked for parametrization (couldn't find a way)

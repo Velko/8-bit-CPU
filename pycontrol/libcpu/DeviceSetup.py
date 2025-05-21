@@ -18,7 +18,6 @@ class DeviceSetup:
         self.StepCounter: dev.StepCounter = None # type: ignore[assignment]
         self.PC: dev.ProgramCounter = None # type: ignore[assignment]
         self.transfer: dict[str, dev.TransferRegister] = {}
-        self.apointers: dict[str, dev.StackPointer] = {}
         self.LR: dev.AddressRegister | None = None
         self.ACalc: dev.AddressCalculator | None = None
         self.IOCtl: dev.IOController | None = None
@@ -46,8 +45,6 @@ class DeviceSetup:
             return self.PC
         elif key in self.transfer:
             return self.transfer[key]
-        elif key in self.apointers:
-            return self.apointers[key]
         elif key == "LR":
             return self.LR
         elif key == "ACalc":
@@ -71,7 +68,6 @@ class DeviceSetup:
             devices.append(self.Clock)
         devices.append(self.StepCounter)
         devices.append(self.PC)
-        devices.extend(self.apointers.values())
         if self.LR is not None:
             devices.append(self.LR)
         devices.extend(self.transfer.values())
@@ -164,19 +160,19 @@ class DeviceSetup:
             out = MuxPin(OutMux, 11),
             load = MuxPin(LoadMux, 11))
 
-        self.apointers["SP"] = dev.StackPointer("SP",
+        self.devices["SP"] = dev.StackPointer("SP",
             out = MuxPin(AddrOutMux, 3),
             load = MuxPin(AddrLoadMux, 3),
             inc = AddrRegInc,
             dec = AddrRegDec)
 
-        self.apointers["SDP"] = dev.StackPointer("SDP",
+        self.devices["SDP"] = dev.StackPointer("SDP",
             out = MuxPin(AddrOutMux, 1),
             load = MuxPin(AddrLoadMux, 1),
             inc = AddrRegInc,
             dec = AddrRegDec)
 
-        self.apointers["TDP"] = dev.StackPointer("TDP",
+        self.devices["TDP"] = dev.StackPointer("TDP",
             out = MuxPin(AddrOutMux, 6),
             load = MuxPin(AddrLoadMux, 6),
             inc = AddrRegInc,
@@ -202,6 +198,13 @@ class DeviceSetup:
             return d
         else:
             raise ValueError(f"Device {name} is not a GPRegister")
+
+    def a_ptr(self, name: str) -> dev.StackPointer:
+        d = self.devices.get(name)
+        if isinstance(d, dev.StackPointer):
+            return d
+        else:
+            raise ValueError(f"Device {name} is not an AddressPointer")
 
 
 hardware = DeviceSetup()

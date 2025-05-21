@@ -11,7 +11,7 @@ from .DeviceSetup import hardware
 from .util import OutMessage, HaltMessage, BrkMessage
 from .opcodes import opcodes
 from .assisted_cpu import AssistedCPU
-from .devices import GPRegister
+from .devices import GPRegister, StackPointer
 
 RAM_OFFSET = 0x0000
 
@@ -216,7 +216,7 @@ class Debugger:
         registers["Flags"] = self.cpu_helper.get_flags_s()
         if hardware.LR is not None:
             registers["LR"] = self.cpu_helper.read_reg16(hardware.LR)
-        for ap in hardware.apointers.values():
+        for ap in [r for r in hardware.devices.values() if isinstance(r, StackPointer)]:
             registers[ap.name] = self.cpu_helper.read_reg16(ap)
 
         # if breakpoint just hit, PC is not accurate
