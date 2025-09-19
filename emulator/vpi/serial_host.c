@@ -1,4 +1,4 @@
-#include "serial_host.h"
+#include "hdb_comm.h"
 #include "input_buffer.h"
 
 #include <termios.h>

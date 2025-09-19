@@ -1,5 +1,5 @@
 #include "registration.h"
-#include "serial_host.h"
+#include "hdb_comm.h"
 
 void (*vlog_startup_routines[])(void) = {
     hdb_setup_comm_lazy,

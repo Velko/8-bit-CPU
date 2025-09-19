@@ -1,5 +1,5 @@
 #include <vpi_user.h>
-#include "serial_host.h"
+#include "hdb_comm.h"
 
 static int hdb_get_char_handler(char *user_data)
 {
