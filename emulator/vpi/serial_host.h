@@ -3,14 +3,14 @@
 
 #include <stdio.h>
 
-void setup_serial_lazy(void);
-int serial_get_char(void);
-int serial_peek_char(void);
-int serial_get_int(void);
-void serial_send_char(int value);
-void serial_send_int(int value);
-void serial_send_str(const char *value);
-int serial_check_input(void);
-void serial_discard_char(void);
+void hdb_setup_comm_lazy(void);
+int hdb_get_char(void);
+int hdb_peek_char(void);
+int hdb_get_int(void);
+void hdb_send_char(int value);
+void hdb_send_int(int value);
+void hdb_send_str(const char *value);
+int hdb_check_input(void);
+void hdb_discard_char(void);
 
 #endif /* SERIAL_HOST_H */

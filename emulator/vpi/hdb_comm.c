@@ -12,7 +12,7 @@ static int hdb_get_char_handler(char *user_data)
 
     struct t_vpi_value chr_val;
     chr_val.format = vpiIntVal;
-    chr_val.value.integer = serial_get_char();
+    chr_val.value.integer = hdb_get_char();
     vpi_put_value(chr_arg, &chr_val, NULL, vpiNoDelay);
 
     vpi_free_object(args_iter);
@@ -31,7 +31,7 @@ static int hdb_peek_char_handler(char *user_data)
 
     struct t_vpi_value chr_val;
     chr_val.format = vpiIntVal;
-    chr_val.value.integer = serial_peek_char();
+    chr_val.value.integer = hdb_peek_char();
     vpi_put_value(chr_arg, &chr_val, NULL, vpiNoDelay);
 
     vpi_free_object(args_iter);
@@ -50,7 +50,7 @@ static int hdb_get_int_handler(char *user_data)
 
     struct t_vpi_value int_val;
     int_val.format = vpiIntVal;
-    int_val.value.integer = serial_get_int();
+    int_val.value.integer = hdb_get_int();
     vpi_put_value(int_arg, &int_val, NULL, vpiNoDelay);
 
     vpi_free_object(args_iter);
@@ -70,7 +70,7 @@ static int hdb_send_char_handler(char *user_data)
     struct t_vpi_value resp_val;
     resp_val.format = vpiIntVal;
     vpi_get_value(resp_arg, &resp_val);
-    serial_send_char(resp_val.value.integer);
+    hdb_send_char(resp_val.value.integer);
 
     vpi_free_object(args_iter);
 
@@ -89,7 +89,7 @@ static int hdb_send_int_handler(char *user_data)
     struct t_vpi_value resp_val;
     resp_val.format = vpiIntVal;
     vpi_get_value(resp_arg, &resp_val);
-    serial_send_int(resp_val.value.integer);
+    hdb_send_int(resp_val.value.integer);
 
     vpi_free_object(args_iter);
 
@@ -108,7 +108,7 @@ static int hdb_send_str_handler(char *user_data)
     struct t_vpi_value resp_val;
     resp_val.format = vpiStringVal;
     vpi_get_value(resp_arg, &resp_val);
-    serial_send_str(resp_val.value.str);
+    hdb_send_str(resp_val.value.str);
 
     vpi_free_object(args_iter);
 
@@ -126,7 +126,7 @@ static int hdb_check_input_handler(char *user_data)
 
     struct t_vpi_value status_val;
     status_val.format = vpiIntVal;
-    status_val.value.integer = serial_check_input();
+    status_val.value.integer = hdb_check_input();
     vpi_put_value(chr_arg, &status_val, NULL, vpiNoDelay);
 
     vpi_free_object(args_iter);
@@ -138,7 +138,7 @@ static int hdb_discard_char_handler(char *user_data)
 {
     (void)user_data; // suppress [-Wunused-parameter]
 
-    serial_discard_char();
+    hdb_discard_char();
 
     return 0;
 }

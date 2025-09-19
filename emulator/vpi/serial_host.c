@@ -18,7 +18,7 @@ static FILE *_serial_out;
 static struct ringbuffer _ringbuffer;
 
 
-void setup_serial_lazy(void)
+void hdb_setup_comm_lazy(void)
 {
     _serial_out = NULL;
 }
@@ -69,7 +69,7 @@ static struct ringbuffer *get_ringbuffer(void)
     return &_ringbuffer;
 }
 
-int serial_get_char(void)
+int hdb_get_char(void)
 {
     struct ringbuffer *rb = get_ringbuffer();
 
@@ -78,7 +78,7 @@ int serial_get_char(void)
     return val;
 }
 
-int serial_peek_char(void)
+int hdb_peek_char(void)
 {
     struct ringbuffer *rb = get_ringbuffer();
 
@@ -87,7 +87,7 @@ int serial_peek_char(void)
     return val;
 }
 
-int serial_get_int(void)
+int hdb_get_int(void)
 {
     struct ringbuffer *rb = get_ringbuffer();
 
@@ -96,58 +96,58 @@ int serial_get_int(void)
     return val;
 }
 
-void serial_send_char(int value)
+void hdb_send_char(int value)
 {
     FILE *serial = get_serial();
 
     int res = fputc(value, serial);
     if (res < 0) {
-        perror("serial_send_char");
+        perror("hdb_send_char");
         exit(EXIT_FAILURE);
     }
 
     res = fflush(serial);
     if (res < 0) {
-        perror("serial_send_char");
+        perror("hdb_send_char");
         exit(EXIT_FAILURE);
     }
 }
 
-void serial_send_int(int value)
+void hdb_send_int(int value)
 {
     FILE *serial = get_serial();
 
     int res = fprintf(serial, "%d\n", value);
     if (res < 0) {
-        perror("serial_send_int");
+        perror("hdb_send_int");
         exit(EXIT_FAILURE);
     }
 
     res = fflush(serial);
     if (res < 0) {
-        perror("serial_send_int");
+        perror("hdb_send_int");
         exit(EXIT_FAILURE);
     }
 }
 
-void serial_send_str(const char *value)
+void hdb_send_str(const char *value)
 {
     FILE *serial = get_serial();
 
     int res = fprintf(serial, "%s\r\n", value);
     if (res < 0) {
-        perror("serial_send_str");
+        perror("hdb_send_str");
         exit(EXIT_FAILURE);
     }
 
     res = fflush(serial);
     if (res < 0) {
-        perror("serial_send_str");
+        perror("hdb_send_str");
         exit(EXIT_FAILURE);
     }
 }
 
-int serial_check_input(void)
+int hdb_check_input(void)
 {
     struct ringbuffer *rb = get_ringbuffer();
 
@@ -156,7 +156,7 @@ int serial_check_input(void)
     return val != -1;
 }
 
-void serial_discard_char(void)
+void hdb_discard_char(void)
 {
     struct ringbuffer *rb = get_ringbuffer();
 

@@ -2,7 +2,7 @@
 #include "serial_host.h"
 
 void (*vlog_startup_routines[])(void) = {
-    setup_serial_lazy,
+    hdb_setup_comm_lazy,
     register_hdb_get_char,
     register_hdb_peek_char,
     register_hdb_get_int,
