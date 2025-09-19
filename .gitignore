@@ -36,3 +36,4 @@ fp-info-cache
 pty?
 /emulator/experimental
 *.lst
+*.deb
