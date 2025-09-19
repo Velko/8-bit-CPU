@@ -14,7 +14,7 @@ module display_char(
             else begin
                 $sformat(out_fmt, "#FOUT#%c", main_bus);
             end
-            $serial_send_str(out_fmt);
+            $hdb_send_str(out_fmt);
         end
     end
 

@@ -15,25 +15,25 @@ module uart(
 
     always @(posedge clk) begin
         if (sel_data && !rnw) begin
-            $serial_send_char(io_bus);
+            $hdb_send_char(io_bus);
         end
     end
 
     always @(negedge clk) begin
         if (sel_data && rnw) begin
-            $serial_discard_char();
+            $hdb_discard_char();
         end
     end
 
     always @(posedge sel_status or posedge rnw) begin
         if (sel_status && rnw) begin
-            $serial_check_input(status);
+            $hdb_check_input(status);
         end
     end
 
     always @(posedge sel_data or posedge rnw) begin
         if (sel_data && rnw) begin
-            $serial_peek_char(in_data);
+            $hdb_peek_char(in_data);
         end
     end
 

@@ -32,48 +32,48 @@ module debug (
     always @(negedge iclk or posedge power_on) begin
         if (brk || !hlt || power_on) begin
             if (brk) begin
-                $serial_send_str("#BRK");
+                $hdb_send_str("#BRK");
             end
             if (!hlt) begin
-                $serial_send_str("#HLT");
+                $hdb_send_str("#HLT");
             end
 
             ctrlen <= 1;
             #100; // give long enough for clock to disengage
 
             while (ctrlen) begin
-                $serial_get_char(cmd);
+                $hdb_get_char(cmd);
                 case (cmd)
                     "I": begin
                         // Identify
-                        $serial_send_str("VerilogVM");
+                        $hdb_send_str("VerilogVM");
                     end
 
                     "A": begin
                         // Write address
-                        $serial_get_int(addr);
+                        $hdb_get_int(addr);
                         faddr <= 1;
                     end
 
                     "a": begin
                         // Read address
-                        $serial_send_int(addr_bus);
+                        $hdb_send_int(addr_bus);
                     end
 
                     "B": begin
                         // Write bus
-                        $serial_get_int(data);
+                        $hdb_get_int(data);
                         fdata <= 1;
                     end
 
                     "b": begin
                         // Read bus
-                        $serial_send_int(main_bus);
+                        $hdb_send_int(main_bus);
                     end
 
                     "s": begin
                         // Flags
-                        $serial_send_int(fout);
+                        $hdb_send_int(fout);
                     end
 
                     "f": begin
@@ -86,16 +86,16 @@ module debug (
                         // Off
                         faddr <= 0;
                         fdata <= 0;
-                        $serial_get_int(control_word_l);
+                        $hdb_get_int(control_word_l);
                     end
 
                     "M": begin
                         // Set control word
-                        $serial_get_int(control_word_l);
+                        $hdb_get_int(control_word_l);
                     end
 
                     "N", 8'hff: begin
-                        // NOP, serial read timeout
+                        // NOP, read timeout
                     end
 
                     "c": begin
@@ -125,8 +125,8 @@ module debug (
 
                     "r": begin
                         // read current_opcode
-                        $serial_get_int(_discard); // client sends control word for IRFetch, discard it
-                        $serial_send_int(iout);
+                        $hdb_get_int(_discard); // client sends control word for IRFetch, discard it
+                        $hdb_send_int(iout);
                     end
 
                     "R": begin

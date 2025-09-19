@@ -1,7 +1,7 @@
 #include <vpi_user.h>
 #include "serial_host.h"
 
-static int serial_get_char_handler(char *user_data)
+static int hdb_get_char_handler(char *user_data)
 {
     (void)user_data; // suppress [-Wunused-parameter]
 
@@ -20,7 +20,7 @@ static int serial_get_char_handler(char *user_data)
     return 0;
 }
 
-static int serial_peek_char_handler(char *user_data)
+static int hdb_peek_char_handler(char *user_data)
 {
     (void)user_data; // suppress [-Wunused-parameter]
 
@@ -39,7 +39,7 @@ static int serial_peek_char_handler(char *user_data)
     return 0;
 }
 
-static int serial_get_int_handler(char *user_data)
+static int hdb_get_int_handler(char *user_data)
 {
     (void)user_data; // suppress [-Wunused-parameter]
 
@@ -58,7 +58,7 @@ static int serial_get_int_handler(char *user_data)
     return 0;
 }
 
-static int serial_send_char_handler(char *user_data)
+static int hdb_send_char_handler(char *user_data)
 {
     (void)user_data; // suppress [-Wunused-parameter]
 
@@ -77,7 +77,7 @@ static int serial_send_char_handler(char *user_data)
     return 0;
 }
 
-static int serial_send_int_handler(char *user_data)
+static int hdb_send_int_handler(char *user_data)
 {
     (void)user_data; // suppress [-Wunused-parameter]
 
@@ -96,7 +96,7 @@ static int serial_send_int_handler(char *user_data)
     return 0;
 }
 
-static int serial_send_str_handler(char *user_data)
+static int hdb_send_str_handler(char *user_data)
 {
     (void)user_data; // suppress [-Wunused-parameter]
 
@@ -115,7 +115,7 @@ static int serial_send_str_handler(char *user_data)
     return 0;
 }
 
-static int serial_check_input_handler(char *user_data)
+static int hdb_check_input_handler(char *user_data)
 {
     (void)user_data; // suppress [-Wunused-parameter]
 
@@ -134,7 +134,7 @@ static int serial_check_input_handler(char *user_data)
     return 0;
 }
 
-static int serial_discard_char_handler(char *user_data)
+static int hdb_discard_char_handler(char *user_data)
 {
     (void)user_data; // suppress [-Wunused-parameter]
 
@@ -143,91 +143,91 @@ static int serial_discard_char_handler(char *user_data)
     return 0;
 }
 
-void register_serial_get_char(void)
+void register_hdb_get_char(void)
 {
       s_vpi_systf_data tf_data;
 
       tf_data.type      = vpiSysTask;
-      tf_data.tfname    = "$serial_get_char";
-      tf_data.calltf    = serial_get_char_handler;
+      tf_data.tfname    = "$hdb_get_char";
+      tf_data.calltf    = hdb_get_char_handler;
       tf_data.compiletf = 0;
       tf_data.sizetf    = 0;
       tf_data.user_data = 0;
       vpi_register_systf(&tf_data);
 }
 
-void register_serial_peek_char(void)
+void register_hdb_peek_char(void)
 {
       s_vpi_systf_data tf_data;
 
       tf_data.type      = vpiSysTask;
-      tf_data.tfname    = "$serial_peek_char";
-      tf_data.calltf    = serial_peek_char_handler;
+      tf_data.tfname    = "$hdb_peek_char";
+      tf_data.calltf    = hdb_peek_char_handler;
       tf_data.compiletf = 0;
       tf_data.sizetf    = 0;
       tf_data.user_data = 0;
       vpi_register_systf(&tf_data);
 }
 
-void register_serial_get_int(void)
+void register_hdb_get_int(void)
 {
       s_vpi_systf_data tf_data;
 
       tf_data.type      = vpiSysTask;
-      tf_data.tfname    = "$serial_get_int";
-      tf_data.calltf    = serial_get_int_handler;
+      tf_data.tfname    = "$hdb_get_int";
+      tf_data.calltf    = hdb_get_int_handler;
       tf_data.compiletf = 0;
       tf_data.sizetf    = 0;
       tf_data.user_data = 0;
       vpi_register_systf(&tf_data);
 }
 
-void register_serial_send_char(void)
+void register_hdb_send_char(void)
 {
       s_vpi_systf_data tf_data;
 
       tf_data.type      = vpiSysTask;
-      tf_data.tfname    = "$serial_send_char";
-      tf_data.calltf    = serial_send_char_handler;
+      tf_data.tfname    = "$hdb_send_char";
+      tf_data.calltf    = hdb_send_char_handler;
       tf_data.compiletf = 0;
       tf_data.sizetf    = 0;
       tf_data.user_data = 0;
       vpi_register_systf(&tf_data);
 }
 
-void register_serial_send_int(void)
+void register_hdb_send_int(void)
 {
       s_vpi_systf_data tf_data;
 
       tf_data.type      = vpiSysTask;
-      tf_data.tfname    = "$serial_send_int";
-      tf_data.calltf    = serial_send_int_handler;
+      tf_data.tfname    = "$hdb_send_int";
+      tf_data.calltf    = hdb_send_int_handler;
       tf_data.compiletf = 0;
       tf_data.sizetf    = 0;
       tf_data.user_data = 0;
       vpi_register_systf(&tf_data);
 }
 
-void register_serial_send_str(void)
+void register_hdb_send_str(void)
 {
       s_vpi_systf_data tf_data;
 
       tf_data.type      = vpiSysTask;
-      tf_data.tfname    = "$serial_send_str";
-      tf_data.calltf    = serial_send_str_handler;
+      tf_data.tfname    = "$hdb_send_str";
+      tf_data.calltf    = hdb_send_str_handler;
       tf_data.compiletf = 0;
       tf_data.sizetf    = 0;
       tf_data.user_data = 0;
       vpi_register_systf(&tf_data);
 }
 
-void register_serial_check_input(void)
+void register_hdb_check_input(void)
 {
       s_vpi_systf_data tf_data;
 
       tf_data.type      = vpiSysTask;
-      tf_data.tfname    = "$serial_check_input";
-      tf_data.calltf    = serial_check_input_handler;
+      tf_data.tfname    = "$hdb_check_input";
+      tf_data.calltf    = hdb_check_input_handler;
       tf_data.compiletf = 0;
       tf_data.sizetf    = 0;
       tf_data.user_data = 0;
@@ -235,13 +235,13 @@ void register_serial_check_input(void)
 }
 
 
-void register_serial_discard_char(void)
+void register_hdb_discard_char(void)
 {
       s_vpi_systf_data tf_data;
 
       tf_data.type      = vpiSysTask;
-      tf_data.tfname    = "$serial_discard_char";
-      tf_data.calltf    = serial_discard_char_handler;
+      tf_data.tfname    = "$hdb_discard_char";
+      tf_data.calltf    = hdb_discard_char_handler;
       tf_data.compiletf = 0;
       tf_data.sizetf    = 0;
       tf_data.user_data = 0;

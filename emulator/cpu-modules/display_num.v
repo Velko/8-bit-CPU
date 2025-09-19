@@ -19,7 +19,7 @@ module display_num(
             3: $sformat(out_fmt, "#FOUT#\033[1;31mo%o\033[0m\\n", main_bus);
             default: $swrite(out_fmt, "#FOUT#x\\n");
             endcase
-            $serial_send_str(out_fmt);
+            $hdb_send_str(out_fmt);
         end
 
         if (load_mode) begin
