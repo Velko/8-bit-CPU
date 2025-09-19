@@ -64,6 +64,9 @@ class Mux:
         self.pins = pins
         self.default = default
 
+    def __repr__(self) -> str:
+        return f"Mux({self.pins}, {self.default})"
+
     def apply_enable(self, c_word: int, num: int) -> int:
         for bit_idx, pin in enumerate(self.pins):
             if (num & (1 << bit_idx)) != 0:
