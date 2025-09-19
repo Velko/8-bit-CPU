@@ -1,12 +1,12 @@
 VPATH=../vpi
 
-all: launcher.vvp serial_conn.vpi
+all: launcher.vvp hdb_comm.vpi
 
 include ../cpu-modules/Modules.mk
 include ../vpi/Makefile
 
-run: launcher.vvp serial_conn.vpi control_rom*.hex
-	vvp -M. -mserial_conn launcher.vvp
+run: launcher.vvp hdb_comm.vpi control_rom*.hex
+	vvp -M. -mhdb_comm launcher.vvp
 
 control_rom%.hex:
 	../../pycontrol/tools/microcode.py
