@@ -14,13 +14,13 @@
 #define BAUDRATE B115200
 #define MODEMDEVICE "/tmp/cpu8pty1"
 
-static FILE *_serial_out;
+static int _serial_fd;
 static struct ringbuffer _ringbuffer;
 
 
 void hdb_setup_comm_lazy(void)
 {
-    _serial_out = NULL;
+    _serial_fd = -1;
 }
 
 static int open_serial(void)
@@ -49,18 +49,17 @@ static int open_serial(void)
 
 static void ensure_initialized(void)
 {
-    if (_serial_out == NULL)
+    if (_serial_fd == -1)
     {
-        int fd = open_serial();
-        _serial_out = fdopen(fd, "ab");
-        ringbuffer_init(&_ringbuffer, fd);
+        _serial_fd = open_serial();
+        ringbuffer_init(&_ringbuffer, _serial_fd);
     }
 }
 
-static FILE *get_serial(void)
+static int get_serial(void)
 {
     ensure_initialized();
-    return _serial_out;
+    return _serial_fd;
 }
 
 static struct ringbuffer *get_ringbuffer(void)
@@ -98,15 +97,9 @@ int hdb_get_int(void)
 
 void hdb_send_char(int value)
 {
-    FILE *serial = get_serial();
+    int serial = get_serial();
 
-    int res = fputc(value, serial);
-    if (res < 0) {
-        perror("hdb_send_char");
-        exit(EXIT_FAILURE);
-    }
-
-    res = fflush(serial);
+    int res = write(serial, &value, 1);
     if (res < 0) {
         perror("hdb_send_char");
         exit(EXIT_FAILURE);
@@ -115,15 +108,22 @@ void hdb_send_char(int value)
 
 void hdb_send_int(int value)
 {
-    FILE *serial = get_serial();
+    char buffer[20];
+    int serial = get_serial();
 
-    int res = fprintf(serial, "%d\n", value);
-    if (res < 0) {
-        perror("hdb_send_int");
+    int nbytes = snprintf(buffer, sizeof(buffer), "%d\n", value);
+
+    if (nbytes < 0) {
+        perror("hdb_send_int: snprintf");
         exit(EXIT_FAILURE);
     }
 
-    res = fflush(serial);
+    if (nbytes > (int)sizeof(buffer)) {
+        fprintf(stderr, "hdb_send_int: integer too large: %d\n", value);
+        exit(EXIT_FAILURE);
+    }
+
+    int res = write(serial, buffer, nbytes);
     if (res < 0) {
         perror("hdb_send_int");
         exit(EXIT_FAILURE);
@@ -132,15 +132,22 @@ void hdb_send_int(int value)
 
 void hdb_send_str(const char *value)
 {
-    FILE *serial = get_serial();
+    char buffer[1024];
+    int serial = get_serial();
 
-    int res = fprintf(serial, "%s\r\n", value);
-    if (res < 0) {
-        perror("hdb_send_str");
+    int nbytes = snprintf(buffer, sizeof(buffer), "%s\r\n", value);
+
+    if (nbytes < 0) {
+        perror("hdb_send_int: snprintf");
         exit(EXIT_FAILURE);
     }
 
-    res = fflush(serial);
+    if (nbytes > (int)sizeof(buffer)) {
+        fprintf(stderr, "hdb_send_str: string too long: %s\n", value);
+        exit(EXIT_FAILURE);
+    }
+
+    int res = write(serial, buffer, nbytes);
     if (res < 0) {
         perror("hdb_send_str");
         exit(EXIT_FAILURE);
