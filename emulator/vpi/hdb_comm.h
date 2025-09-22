@@ -13,4 +13,6 @@ void hdb_send_str(const char *value);
 int hdb_check_input(void);
 void hdb_discard_char(void);
 
+int channel_open(void);
+
 #endif /* SERIAL_HOST_H */
