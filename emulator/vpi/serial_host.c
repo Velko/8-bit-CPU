@@ -38,3 +38,18 @@ int channel_open(void)
 
     return fd;
 }
+
+int channel_send(int fd, const void *buf, size_t len)
+{
+    return write(fd, buf, len);
+}
+
+int channel_receive(int fd, void *buf, size_t len)
+{
+    return read(fd, buf, len);
+}
+
+void channel_close(int fd)
+{
+    close(fd);
+}

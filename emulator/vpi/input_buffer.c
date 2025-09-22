@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include "input_buffer.h"
+#include "hdb_comm.h"
 
 /* Circular buffer, that is filled with data read from FD by helper thread.
    It provides both blocking, non-blocking reads. There's also integer parsing
@@ -16,18 +17,22 @@ static void ringbuffer_write(struct ringbuffer *buffer, char c);
 
 static void *filler(void *arg)
 {
-    struct ringbuffer *buffer = arg;
-
-    FILE *f = fdopen(buffer->source_fd, "rb");
+    struct ringbuffer *queue = arg;
+    char buffer[BUFFER_SIZE];
 
     for (;;)
     {
-        int c = fgetc(f);
-        if (c == EOF) break;
-        ringbuffer_write(buffer, c);
+        int r = channel_receive(queue->source_fd, buffer, sizeof(buffer));
+        if (r < 0) {
+            perror("ringbuffer filler: read");
+            exit(EXIT_FAILURE);
+        }
+        if (r == 0) break; /* EOF */
+        for (int i = 0; i < r; i++)
+            ringbuffer_write(queue, buffer[i]);
     }
 
-    fclose(f);
+    channel_close(queue->source_fd);
 
     return NULL;
 }
