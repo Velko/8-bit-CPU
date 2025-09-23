@@ -53,9 +53,9 @@ def run() -> None:
 def monitor() -> None:
     print ("# Running (raw)...", flush=True, file=sys.stderr)
     cpu_helper.client.run_program()
-    for line in cpu_helper.client.receive_lines():
-        print(line)
-        if line.endswith("#HLT"):
+    for text in cpu_helper.client.receive_raw():
+        print(text, flush=True, end="")
+        if text.endswith("#HLT\r\n"):
             print ("# Halted", flush=True, file=sys.stderr)
             return
 

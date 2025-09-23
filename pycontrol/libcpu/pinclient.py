@@ -89,11 +89,11 @@ class PinClient:
         while True:
             yield self.receive_message()
 
-    def receive_lines(self) -> Iterator[str]:
+    def receive_raw(self) -> Iterator[str]:
         while True:
             packet, src = self.serial.recvfrom(1024)
-            line = packet.decode('ascii').strip('\r\n')
-            yield line
+            text = packet.decode('ascii')
+            yield text
 
     def receive_message(self) -> RunMessage:
         packet, src = self.serial.recvfrom(1024)
