@@ -75,7 +75,9 @@ class PinClient:
         self.send_cmd('C')
 
     def clock_tick(self) -> None:
-        self.send_cmd('T')
+        t = self.query('T')
+        if t != "#T":
+            raise ProtocolException(f"Expected #T from clock tick, got: /{t}/")
 
     def ir_get(self) -> int:
         return int(self.query("r0N"))

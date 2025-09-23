@@ -114,6 +114,7 @@ module debug (
 
                     "T": begin
                         // clock_tick
+                        $hdb_send_str("#T"); // send response immediately, as executing the tick may produce additional output
                         clk_l <= 1;
                         #1
                         clk_l <= 0;
