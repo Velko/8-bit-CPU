@@ -11,8 +11,8 @@ VPATH=../vpi
 include ../cpu-modules/Modules.mk
 include ../vpi/Makefile
 
-test-%: tb_%.vvp serial_conn.vpi
-	@vvp -M. -mserial_conn $<
+test-%: tb_%.vvp hdb_comm.vpi
+	@vvp -M. -mhdb_comm $<
 
 
 TB138SRC=../chips/demux_138.v testhelpers.v tb_138.v

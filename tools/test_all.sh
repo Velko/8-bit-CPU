@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 cd $(dirname $0)/../emulator/tests
 make clean
