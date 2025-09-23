@@ -1,7 +1,11 @@
 import os
 from collections.abc import Iterator
-import serial
+import socket
 from .util import RunMessage, OutMessage, HaltMessage, BrkMessage
+
+LOCAL_PORT = 9999
+TARGET_IP = "127.0.0.1"
+TARGET_PORT = 8888
 
 class ConnectionException(Exception):
     pass
@@ -11,12 +15,9 @@ class ProtocolException(Exception):
 
 class PinClient:
 
-    def __init__(self, serial: serial.Serial | None = None) -> None:
+    def __init__(self) -> None:
 
-        if serial is not None:
-            self.serial = serial
-        else:
-            self.serial = open_port()
+        self.serial = open_port()
 
         # Arduino is not ready directly after connecting
         # try a single operation before proceeding
@@ -26,13 +27,12 @@ class PinClient:
         self.serial.close()
 
     def send_cmd(self, cmd: str) -> None:
-        self.serial.write(cmd.encode("ascii"))
-        self.serial.flush()
+        self.serial.sendto(cmd.encode("ascii"), (TARGET_IP, TARGET_PORT))
 
     def query(self, cmd: str) -> str:
         self.send_cmd(cmd)
-        line: bytes = self.serial.readline()
-        return line.decode('ascii').strip()
+        packet, src = self.serial.recvfrom(1024)
+        return packet.decode('ascii').strip()
 
     def identify(self) -> str:
         return self.query('I')
@@ -91,11 +91,13 @@ class PinClient:
 
     def receive_lines(self) -> Iterator[str]:
         while True:
-            line = self.serial.readline().decode('ascii').strip('\r\n')
+            packet, src = self.serial.recvfrom(1024)
+            line = packet.decode('ascii').strip('\r\n')
             yield line
 
     def receive_message(self) -> RunMessage:
-        line = self.serial.readline().decode('ascii').strip('\r\n')
+        packet, src = self.serial.recvfrom(1024)
+        line = packet.decode('ascii').strip('\r\n')
 
         match line:
             case "#HLT":
@@ -113,28 +115,10 @@ class PinClient:
     def shutdown(self) -> None:
         self.send_cmd('Q')
 
-def find_port() -> str:
-    port = os.environ.get("SER_PORT")
-    if port is not None:
-        return port
-
-    # if there's a virtual pty0 in current directory, it must be connected to emulator
-    if os.path.exists("/tmp/cpu8pty0"):
-        return "/tmp/cpu8pty0"
-
-    # look for Arduino
-    ports = list(filter(lambda fn: fn.startswith("ttyACM") or fn.startswith("ttyUSB"),  os.listdir("/dev")))
-
-    if len(ports) > 1:
-        raise ConnectionException("Multiple USB serial devices found")
-
-    if len(ports) == 0:
-        raise ConnectionException("No USB serial devices found")
-
-    return os.path.join("/dev", ports[0])
-
-def open_port() -> serial.Serial:
-    return serial.Serial(find_port(), 115200, timeout=3)
+def open_port() -> socket.socket:
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.bind((TARGET_IP, LOCAL_PORT))
+    return sock
 
 
 single_inst: PinClient | None = None
