@@ -57,7 +57,7 @@ class SimplePin(Pin):
         return not check_bit(c_word, self.num)
 
     def __repr__(self) -> str:
-        return f"{super().__repr__()[:-1]}, {self.num}, {self.level.name})"
+        return f"{super().__repr__()[:-1]}, {self.num}, {self.level.name}, {self.usage.name})"
 
 class Mux:
     def __init__(self, name: str, pins: Sequence[int], default: int) -> None:

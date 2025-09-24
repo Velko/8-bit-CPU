@@ -36,6 +36,16 @@ muxes:
       - 20
       - 21
     default: 7
+shared_pins:
+  - name: "Alu.alt"
+    level: "HIGH"
+    pin: 13
+  - name: "Addr.inc"
+    level: "LOW"
+    pin: 22
+  - name: "Addr.dec"
+    level: "LOW"
+    pin: 23
 devices:
   - name: "A"
     type: "GPRegister"
@@ -97,3 +107,35 @@ devices:
       alu_r:
         mux: "AluArgR"
         pin: 3
+  - name: "AddSub"
+    type: "ALU"
+    pins:
+      out:
+        mux: "OutMux"
+        pin: 5
+      alt:
+        pin: "Alu.alt"
+  - name: "AndOr"
+    type: "ALU"
+    pins:
+      out:
+        mux: "OutMux"
+        pin: 6
+      alt:
+        pin: "Alu.alt"
+  - name: "XorNot"
+    type: "ALU"
+    pins:
+      out:
+        mux: "OutMux"
+        pin: 10
+      alt:
+        pin: "Alu.alt"
+  - name: "ShiftSwap"
+    type: "ALU"
+    pins:
+      out:
+        mux: "OutMux"
+        pin: 7
+      alt:
+        pin: "Alu.alt"

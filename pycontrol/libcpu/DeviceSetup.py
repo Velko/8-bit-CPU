@@ -8,7 +8,6 @@ class DeviceSetup:
     def __init__(self) -> None:
         self.muxes: dict[str, Mux] = {}
         self.devices: dict[str, dev.DeviceBase] = {}
-        self.alu: dict[str, dev.ALU] = {}
         self.F: dev.FlagsRegister = None # type: ignore[assignment]
         self.ram: dev.RAM = None # type: ignore[assignment]
         self.prog_mem: RamProxy = None # type: ignore[assignment]
@@ -25,8 +24,6 @@ class DeviceSetup:
     def get(self, key: str) -> dev.DeviceBase | None:
         if key in self.devices:
             return self.devices[key]
-        elif key in self.alu:
-            return self.alu[key]
         elif key == "F":
             return self.F
         elif key == "Ram":
@@ -59,7 +56,6 @@ class DeviceSetup:
         devices.extend(self.devices.values())
         if self.T is not None:
             devices.append(self.T)
-        devices.extend(self.alu.values())
         devices.append(self.F)
         devices.append(self.ram)
         devices.append(self.prog_mem)
@@ -98,22 +94,6 @@ class DeviceSetup:
         AddrRegDec = SimplePin(23, Level.LOW, PinUsage.SHARED, "Addr.dec")
 
         self.devices = p_cfg.devices
-
-        self.alu["AddSub"] = dev.ALU("AddSub",
-            out = MuxPin(OutMux, 5),
-            alt = AluAltFn)
-
-        self.alu["AndOr"] = dev.ALU("AndOr",
-            out = MuxPin(OutMux, 6),
-            alt = AluAltFn)
-
-        self.alu["XorNot"] = dev.ALU("XorNot",
-            out = MuxPin(OutMux, 10),
-            alt = AluAltFn)
-
-        self.alu["ShiftSwap"] = dev.ALU("ShiftSwap",
-            out = MuxPin(OutMux, 7),
-            alt = AluAltFn)
 
         self.F = dev.FlagsRegister("F",
             out = MuxPin(OutMux, 4),
@@ -198,6 +178,13 @@ class DeviceSetup:
             return d
         else:
             raise ValueError(f"Device {name} is not a GPRegister")
+
+    def alu(self, name: str) -> dev.ALU:
+        d = self.devices.get(name)
+        if isinstance(d, dev.ALU):
+            return d
+        else:
+            raise ValueError(f"Device {name} is not an ALU")
 
     def a_ptr(self, name: str) -> dev.StackPointer:
         d = self.devices.get(name)

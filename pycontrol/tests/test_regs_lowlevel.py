@@ -11,7 +11,7 @@ pytestmark = pytest.mark.hardware
 
 A = hardware.gp_reg("A")
 B = hardware.gp_reg("B")
-alu = hardware.alu["AddSub"]
+alu = hardware.alu("AddSub")
 IR = hardware.IR
 TX = hardware.transfer["TX"]
 TH = hardware.transfer["TH"]
