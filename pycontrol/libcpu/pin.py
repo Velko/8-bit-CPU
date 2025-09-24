@@ -7,6 +7,10 @@ class Level(Enum):
     LOW = 0
     HIGH = 1
 
+class PinUsage(Enum):
+    EXCLUSIVE = 0
+    SHARED = 1
+
 def set_bit(c_word: int, pin: int) -> int:
     return c_word | (1 << pin)
 
@@ -30,10 +34,11 @@ class Pin(ControlSignal):
 
 
 class SimplePin(Pin):
-    def __init__(self, num: int, level: Level) -> None:
+    def __init__(self, num: int, level: Level, usage: PinUsage) -> None:
         Pin.__init__(self)
         self.num = num
         self.level = level
+        self.usage = usage
 
     def apply_enable(self, c_word: int) -> int:
         if self.level == Level.HIGH:
@@ -55,7 +60,7 @@ class SimplePin(Pin):
 
 class SharedSimplePin(SimplePin):
     def __init__(self, num: int, level: Level, alias: str) -> None:
-        SimplePin.__init__(self, num, level)
+        SimplePin.__init__(self, num, level, PinUsage.SHARED)
         self.name = alias
 
 class Mux:

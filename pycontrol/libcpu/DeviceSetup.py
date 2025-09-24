@@ -1,6 +1,6 @@
 from . import devices as dev
 from .pseudo_devices import RamProxy
-from .pin import SimplePin, Level, Mux, MuxPin, SharedSimplePin
+from .pin import SimplePin, Level, Mux, MuxPin, SharedSimplePin, PinUsage
 from .pin_cfg import PinConfig
 import os.path
 
@@ -118,8 +118,8 @@ class DeviceSetup:
         self.F = dev.FlagsRegister("F",
             out = MuxPin(OutMux, 4),
             load = MuxPin(LoadMux, 7),
-            calc = SimplePin(14, Level.LOW),
-            carry = SimplePin(15, Level.HIGH))
+            calc = SimplePin(14, Level.LOW, PinUsage.EXCLUSIVE),
+            carry = SimplePin(15, Level.HIGH, PinUsage.EXCLUSIVE),)
 
         self.ram = dev.RAM("Ram",
             out = MuxPin(OutMux, 9),
@@ -136,12 +136,12 @@ class DeviceSetup:
             load = MuxPin(LoadMux, 8))
 
         self.Clock = dev.Clock("Clk",
-            halt = SimplePin(26, Level.LOW),
-            brk = SimplePin(27, Level.HIGH))
+            halt = SimplePin(26, Level.LOW, PinUsage.EXCLUSIVE),
+            brk = SimplePin(27, Level.HIGH, PinUsage.EXCLUSIVE),)
 
         self.StepCounter = dev.StepCounter("Steps",
-            reset = SimplePin(24, Level.LOW),
-            extended = SimplePin(25, Level.LOW))
+            reset = SimplePin(24, Level.LOW, PinUsage.EXCLUSIVE),
+            extended = SimplePin(25, Level.LOW, PinUsage.EXCLUSIVE),)
 
         self.PC = dev.ProgramCounter("PC",
             out = MuxPin(AddrOutMux, 5),
@@ -185,7 +185,7 @@ class DeviceSetup:
         self.ACalc = dev.AddressCalculator("ACalc",
             out = MuxPin(AddrOutMux, 2),
             load = MuxPin(AddrLoadMux, 2),
-            signed = SimplePin(28, Level.HIGH))
+            signed = SimplePin(28, Level.HIGH, PinUsage.EXCLUSIVE))
 
         self.IOCtl = dev.IOController("IOCtl",
             laddr = MuxPin(LoadMux, 4),

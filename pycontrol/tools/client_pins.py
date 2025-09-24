@@ -9,7 +9,7 @@ from collections.abc import Sequence
 from libcpu.pinclient import get_client_instance
 client = get_client_instance()
 
-from libcpu.pin import Pin, SimplePin, Level
+from libcpu.pin import Pin, SimplePin, Level, PinUsage
 from libcpu.discovery import all_pins
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
@@ -75,13 +75,13 @@ class TesterClient(cmd.Cmd):
             pin = pin_map[arg]
             if isinstance(pin, SimplePin):
                 # in order to always set, make an active-high copy of the pin
-                high_pin = SimplePin(pin.num, Level.HIGH)
+                high_pin = SimplePin(pin.num, Level.HIGH, pin.usage)
                 self.control.enable(high_pin)
             else:
                 raise Unsupported
         else:
             # create an artificial pin for numeric
-            high_pin = SimplePin(int(arg, 0), Level.HIGH)
+            high_pin = SimplePin(int(arg, 0), Level.HIGH, PinUsage.EXCLUSIVE)
             self.control.enable(high_pin)
         print(bin(self.control.c_word))
 
@@ -93,13 +93,13 @@ class TesterClient(cmd.Cmd):
             pin = pin_map[arg]
             if isinstance(pin, SimplePin):
                 # in order to always set, make an active-high copy of the pin
-                high_pin = SimplePin(pin.num, Level.HIGH)
+                high_pin = SimplePin(pin.num, Level.HIGH, pin.usage)
                 self.control.disable(high_pin)
             else:
                 raise Unsupported
         else:
             # create an artificial pin for numeric
-            high_pin = SimplePin(int(arg, 0), Level.HIGH)
+            high_pin = SimplePin(int(arg, 0), Level.HIGH, PinUsage.EXCLUSIVE)
             self.control.disable(high_pin)
         print(bin(self.control.c_word))
 
