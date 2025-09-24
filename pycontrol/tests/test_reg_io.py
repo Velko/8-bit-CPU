@@ -15,7 +15,7 @@ pytestmark = pytest.mark.hardware
 
 A = hardware.gp_reg("A")
 B = hardware.gp_reg("B")
-F = hardware.F
+F = hardware.flags()
 SP = hardware.a_ptr("SP")
 
 def all_regs_and_bits() -> Iterator[tuple[GPRegister, int]]:

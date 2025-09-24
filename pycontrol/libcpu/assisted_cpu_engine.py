@@ -82,7 +82,7 @@ class AssistedCPUEngine:
             if control.is_enabled(hardware.PC.inc):
                 Imm.consume() # next byte for imm value
 
-            if control.is_enabled(hardware.F.calc) or control.is_enabled(hardware.F.load):
+            if control.is_enabled(hardware.flags().calc) or control.is_enabled(hardware.flags().load):
                 self.flags_cache = None
 
             if hardware.Clock is not None and control.is_enabled(hardware.Clock.halt):

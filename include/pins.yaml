@@ -139,3 +139,19 @@ devices:
         pin: 7
       alt:
         pin: "Alu.alt"
+  - name: "F"
+    type: "FlagsRegister"
+    pins:
+      out:
+        mux: "OutMux"
+        pin: 4
+      load:
+        mux: "LoadMux"
+        pin: 7
+      calc:
+        pin: 14
+        level: "LOW"
+      carry:
+        pin: 15
+        level: "HIGH"
+

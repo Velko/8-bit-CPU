@@ -8,7 +8,6 @@ class DeviceSetup:
     def __init__(self) -> None:
         self.muxes: dict[str, Mux] = {}
         self.devices: dict[str, dev.DeviceBase] = {}
-        self.F: dev.FlagsRegister = None # type: ignore[assignment]
         self.ram: dev.RAM = None # type: ignore[assignment]
         self.prog_mem: RamProxy = None # type: ignore[assignment]
         self.T: dev.TempRegister | None = None
@@ -24,8 +23,6 @@ class DeviceSetup:
     def get(self, key: str) -> dev.DeviceBase | None:
         if key in self.devices:
             return self.devices[key]
-        elif key == "F":
-            return self.F
         elif key == "Ram":
             return self.ram
         elif key == "ProgMem":
@@ -56,7 +53,6 @@ class DeviceSetup:
         devices.extend(self.devices.values())
         if self.T is not None:
             devices.append(self.T)
-        devices.append(self.F)
         devices.append(self.ram)
         devices.append(self.prog_mem)
         devices.append(self.IR)
@@ -94,12 +90,6 @@ class DeviceSetup:
         AddrRegDec = SimplePin(23, Level.LOW, PinUsage.SHARED, "Addr.dec")
 
         self.devices = p_cfg.devices
-
-        self.F = dev.FlagsRegister("F",
-            out = MuxPin(OutMux, 4),
-            load = MuxPin(LoadMux, 7),
-            calc = SimplePin(14, Level.LOW, PinUsage.EXCLUSIVE),
-            carry = SimplePin(15, Level.HIGH, PinUsage.EXCLUSIVE),)
 
         self.ram = dev.RAM("Ram",
             out = MuxPin(OutMux, 9),
@@ -185,6 +175,11 @@ class DeviceSetup:
             return d
         else:
             raise ValueError(f"Device {name} is not an ALU")
+    def flags(self) -> dev.FlagsRegister:
+        for d in self.devices.values():
+            if isinstance(d, dev.FlagsRegister):
+                return d
+        raise ValueError("No FlagsRegister found")
 
     def a_ptr(self, name: str) -> dev.StackPointer:
         d = self.devices.get(name)
