@@ -154,4 +154,12 @@ devices:
       carry:
         pin: 15
         level: "HIGH"
-
+  - name: "Ram"
+    type: "RAM"
+    pins:
+      out:
+        mux: "OutMux"
+        pin: 9
+      write:
+        mux: "LoadMux"
+        pin: 9

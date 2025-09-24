@@ -6,7 +6,7 @@ from typing import Any
 from enum import Enum, auto
 
 from .pin import Mux, MuxPin, SimplePin, Level, PinUsage
-from .devices import GPRegister, DeviceBase, ALU, FlagsRegister
+from .devices import GPRegister, DeviceBase, ALU, FlagsRegister, RAM
 
 
 @dataclass
@@ -50,3 +50,5 @@ class PinConfig:
                     self.devices[name] = ALU(**args)
                 case "FlagsRegister":
                     self.devices[name] = FlagsRegister(**args)
+                case "RAM":
+                    self.devices[name] = RAM(**args)
