@@ -1,6 +1,6 @@
 from collections.abc import Iterator
 from itertools import chain
-from .pin import Pin, SimplePin, MuxPin, Mux, SharedSimplePin
+from .pin import Pin, SimplePin, MuxPin, Mux
 from .devices import DeviceBase
 from . import DeviceSetup
 
@@ -11,9 +11,9 @@ def all_pins() -> Iterator[tuple[str, Pin]]:
         for a_name, attr in pin_attrs:
             if attr not in dupe_filter:
                 dupe_filter.add(attr)
-                if isinstance(attr, SharedSimplePin):
+                if attr.name is not None:
                     yield f"{attr.name}", attr
-                elif isinstance(attr, (SimplePin, MuxPin)):
+                else:
                     yield f"{dev.name}.{a_name}", attr
 
 def simple_pins() -> Iterator[tuple[str, SimplePin]]:

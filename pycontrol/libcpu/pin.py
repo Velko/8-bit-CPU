@@ -34,11 +34,12 @@ class Pin(ControlSignal):
 
 
 class SimplePin(Pin):
-    def __init__(self, num: int, level: Level, usage: PinUsage) -> None:
+    def __init__(self, num: int, level: Level, usage: PinUsage, alias: str | None = None) -> None:
         Pin.__init__(self)
         self.num = num
         self.level = level
         self.usage = usage
+        self.name = alias
 
     def apply_enable(self, c_word: int) -> int:
         if self.level == Level.HIGH:
@@ -57,11 +58,6 @@ class SimplePin(Pin):
 
     def __repr__(self) -> str:
         return f"{super().__repr__()[:-1]}, {self.num}, {self.level.name})"
-
-class SharedSimplePin(SimplePin):
-    def __init__(self, num: int, level: Level, alias: str) -> None:
-        SimplePin.__init__(self, num, level, PinUsage.SHARED)
-        self.name = alias
 
 class Mux:
     def __init__(self, name: str, pins: Sequence[int], default: int) -> None:

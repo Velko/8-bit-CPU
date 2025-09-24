@@ -1,6 +1,6 @@
 from . import devices as dev
 from .pseudo_devices import RamProxy
-from .pin import SimplePin, Level, Mux, MuxPin, SharedSimplePin, PinUsage
+from .pin import SimplePin, Level, Mux, MuxPin, PinUsage
 from .pin_cfg import PinConfig
 import os.path
 
@@ -92,10 +92,10 @@ class DeviceSetup:
         AddrOutMux = p_cfg.muxes["AddrOutMux"]
         AddrLoadMux = p_cfg.muxes["AddrLoadMux"]
 
-        AluAltFn = SharedSimplePin(13, Level.HIGH, "Alu.alt")
+        AluAltFn = SimplePin(13, Level.HIGH, PinUsage.SHARED, "Alu.alt")
 
-        AddrRegInc = SharedSimplePin(22, Level.LOW, "Addr.inc")
-        AddrRegDec = SharedSimplePin(23, Level.LOW, "Addr.dec")
+        AddrRegInc = SimplePin(22, Level.LOW, PinUsage.SHARED, "Addr.inc")
+        AddrRegDec = SimplePin(23, Level.LOW, PinUsage.SHARED, "Addr.dec")
 
         self.devices = p_cfg.devices
 
