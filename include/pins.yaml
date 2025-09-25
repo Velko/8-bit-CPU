@@ -163,3 +163,6 @@ devices:
       write:
         mux: "LoadMux"
         pin: 9
+  - name: "ProgMem"
+    type: "Alias"
+    alias_of: "Ram"

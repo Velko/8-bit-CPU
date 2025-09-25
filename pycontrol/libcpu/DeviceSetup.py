@@ -8,7 +8,6 @@ class DeviceSetup:
     def __init__(self) -> None:
         self.muxes: dict[str, Mux] = {}
         self.devices: dict[str, dev.DeviceBase] = {}
-        self.prog_mem: RamProxy = None # type: ignore[assignment]
         self.T: dev.TempRegister | None = None
         self.IR: dev.WORegister = None # type: ignore[assignment]
         self.Clock: dev.Clock | None = None
@@ -22,8 +21,6 @@ class DeviceSetup:
     def get(self, key: str) -> dev.DeviceBase | None:
         if key in self.devices:
             return self.devices[key]
-        elif key == "ProgMem":
-            return self.prog_mem
         elif key == "T":
             return self.T
         elif key == "IR":
@@ -50,7 +47,6 @@ class DeviceSetup:
         devices.extend(self.devices.values())
         if self.T is not None:
             devices.append(self.T)
-        devices.append(self.prog_mem)
         devices.append(self.IR)
         if self.Clock is not None:
             devices.append(self.Clock)
@@ -86,9 +82,6 @@ class DeviceSetup:
         AddrRegDec = SimplePin(23, Level.LOW, PinUsage.SHARED, "Addr.dec")
 
         self.devices = p_cfg.devices
-
-        self.prog_mem = RamProxy("ProgMem",
-            ram = self.ram())
 
         self.T = dev.TempRegister("T",
             load = MuxPin(LoadMux, 6),
@@ -179,6 +172,12 @@ class DeviceSetup:
             if isinstance(d, dev.RAM):
                 return d
         raise ValueError("No RAM found")
+
+    def prog_mem(self) -> RamProxy:
+        for d in self.devices.values():
+            if isinstance(d, RamProxy):
+                return d
+        raise ValueError("No ProgMem (RamProxy) found")
 
     def a_ptr(self, name: str) -> dev.StackPointer:
         d = self.devices.get(name)

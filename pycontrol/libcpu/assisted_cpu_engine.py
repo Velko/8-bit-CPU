@@ -17,7 +17,7 @@ class AssistedCPUEngine:
 
         # RAM hooks
         Imm.connect(self.client)
-        hardware.prog_mem.hook_out(Imm)
+        hardware.prog_mem().hook_out(Imm)
 
     def execute_mnemonic(self, mnemonic: str, arg: int | AddrBase | None = None) -> RunMessage | None:
         if not mnemonic in opcodes:
