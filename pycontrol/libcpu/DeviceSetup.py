@@ -162,21 +162,21 @@ class DeviceSetup:
             raise ValueError(f"Device {name} is not an ALU")
 
     def flags(self) -> dev.FlagsRegister:
-        for d in self.devices.values():
-            if isinstance(d, dev.FlagsRegister):
-                return d
+        d = self.devices.get("F")
+        if isinstance(d, dev.FlagsRegister):
+            return d
         raise ValueError("No FlagsRegister found")
 
     def ram(self) -> dev.RAM:
-        for d in self.devices.values():
-            if isinstance(d, dev.RAM):
-                return d
+        d = self.devices.get("Ram")
+        if isinstance(d, dev.RAM):
+            return d
         raise ValueError("No RAM found")
 
     def prog_mem(self) -> RamProxy:
-        for d in self.devices.values():
-            if isinstance(d, RamProxy):
-                return d
+        d = self.devices.get("ProgMem")
+        if isinstance(d, RamProxy):
+            return d
         raise ValueError("No ProgMem (RamProxy) found")
 
     def a_ptr(self, name: str) -> dev.StackPointer:
