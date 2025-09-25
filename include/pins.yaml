@@ -166,3 +166,18 @@ devices:
   - name: "ProgMem"
     type: "Alias"
     alias_of: "Ram"
+  - name: "T"
+    type: "TempRegister"
+    pins:
+      load:
+        mux: "LoadMux"
+        pin: 6
+      alu_r:
+        mux: "AluArgR"
+        pin: 4
+  - name: "IR"
+    type: "WORegister"
+    pins:
+      load:
+        mux: "LoadMux"
+        pin: 8

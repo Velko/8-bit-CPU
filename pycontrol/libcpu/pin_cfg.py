@@ -6,7 +6,7 @@ from typing import Any
 from enum import Enum, auto
 
 from .pin import Mux, MuxPin, SimplePin, Level, PinUsage
-from .devices import GPRegister, DeviceBase, ALU, FlagsRegister, RAM
+from .devices import GPRegister, DeviceBase, ALU, FlagsRegister, RAM, TempRegister, WORegister
 from .pseudo_devices import RamProxy
 
 
@@ -64,3 +64,8 @@ class PinConfig:
                         self.devices[name] = RamProxy(name, ram = self.devices[alias_of]) # type: ignore[arg-type]
                     else:
                         raise ValueError(f"Alias device {name} references unsupported device {alias_of}")
+                case "TempRegister":
+                    self.devices[name] = TempRegister(**args)
+                case "WORegister":
+                    self.devices[name] = WORegister(**args)
+

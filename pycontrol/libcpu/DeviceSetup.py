@@ -8,8 +8,6 @@ class DeviceSetup:
     def __init__(self) -> None:
         self.muxes: dict[str, Mux] = {}
         self.devices: dict[str, dev.DeviceBase] = {}
-        self.T: dev.TempRegister | None = None
-        self.IR: dev.WORegister = None # type: ignore[assignment]
         self.Clock: dev.Clock | None = None
         self.StepCounter: dev.StepCounter = None # type: ignore[assignment]
         self.PC: dev.ProgramCounter = None # type: ignore[assignment]
@@ -21,10 +19,6 @@ class DeviceSetup:
     def get(self, key: str) -> dev.DeviceBase | None:
         if key in self.devices:
             return self.devices[key]
-        elif key == "T":
-            return self.T
-        elif key == "IR":
-            return self.IR
         elif key == "Clock":
             return self.Clock
         elif key == "StepCounter":
@@ -45,9 +39,6 @@ class DeviceSetup:
     def all_devices(self) -> list[dev.DeviceBase]:
         devices: list[dev.DeviceBase] = []
         devices.extend(self.devices.values())
-        if self.T is not None:
-            devices.append(self.T)
-        devices.append(self.IR)
         if self.Clock is not None:
             devices.append(self.Clock)
         devices.append(self.StepCounter)
@@ -82,13 +73,6 @@ class DeviceSetup:
         AddrRegDec = SimplePin(23, Level.LOW, PinUsage.SHARED, "Addr.dec")
 
         self.devices = p_cfg.devices
-
-        self.T = dev.TempRegister("T",
-            load = MuxPin(LoadMux, 6),
-            alu_r = MuxPin(AluArgR, 4))
-
-        self.IR = dev.WORegister("IR",
-            load = MuxPin(LoadMux, 8))
 
         self.Clock = dev.Clock("Clk",
             halt = SimplePin(26, Level.LOW, PinUsage.EXCLUSIVE),
@@ -178,6 +162,13 @@ class DeviceSetup:
         if isinstance(d, RamProxy):
             return d
         raise ValueError("No ProgMem (RamProxy) found")
+
+    def ir(self) -> dev.WORegister:
+        d = self.devices.get("IR")
+        if isinstance(d, dev.WORegister):
+            return d
+        else:
+            raise ValueError(f"Device IR is not a WORegister")
 
     def a_ptr(self, name: str) -> dev.StackPointer:
         d = self.devices.get(name)

@@ -189,7 +189,7 @@ class Debugger:
 
         if addr in self.breakpoints:
             tmp_break = self.breakpoints[addr]
-            self.cpu_helper.load_reg8(hardware.IR, tmp_break.orig_op)
+            self.cpu_helper.load_reg8(hardware.ir(), tmp_break.orig_op)
             self.on_stop(StopReason.DEBUG_BRK, addr)
             return tmp_break
 
