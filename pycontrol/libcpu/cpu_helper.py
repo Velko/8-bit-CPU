@@ -91,7 +91,7 @@ class CPUHelper:
 
     def load_snippet(self, addr: int, code: bytes) -> None:
         self.write_bytes(addr, code)
-        self.load_reg16(hardware.PC, addr)
+        self.load_reg16(hardware.pc(), addr)
 
     def run_snippet(self, addr: int, code: bytes) -> str:
         """Run pre-compiled binary snippet. BRK instruction is appended automatically

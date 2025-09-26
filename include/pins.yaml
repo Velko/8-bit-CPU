@@ -199,3 +199,14 @@ devices:
       extended:
         pin: 25
         level: "LOW"
+  - name: "PC"
+    type: "ProgramCounter"
+    pins:
+      out:
+        mux: "AddrOutMux"
+        pin: 5
+      load:
+        mux: "AddrLoadMux"
+        pin: 5
+      inc:
+        pin: "Addr.inc"

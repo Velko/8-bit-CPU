@@ -15,7 +15,7 @@ from collections.abc import Iterator, Sequence
 
 from libcpu.util import ControlSignal
 
-PC = hardware.PC
+PC = hardware.pc()
 
 def calc_flags_alt_PC_counts() -> Iterator[tuple[str, int, int, str, str]]:
 

@@ -8,7 +8,6 @@ class DeviceSetup:
     def __init__(self) -> None:
         self.muxes: dict[str, Mux] = {}
         self.devices: dict[str, dev.DeviceBase] = {}
-        self.PC: dev.ProgramCounter = None # type: ignore[assignment]
         self.transfer: dict[str, dev.TransferRegister] = {}
         self.LR: dev.AddressRegister | None = None
         self.ACalc: dev.AddressCalculator | None = None
@@ -17,8 +16,6 @@ class DeviceSetup:
     def get(self, key: str) -> dev.DeviceBase | None:
         if key in self.devices:
             return self.devices[key]
-        elif key == "PC":
-            return self.PC
         elif key in self.transfer:
             return self.transfer[key]
         elif key == "LR":
@@ -33,7 +30,6 @@ class DeviceSetup:
     def all_devices(self) -> list[dev.DeviceBase]:
         devices: list[dev.DeviceBase] = []
         devices.extend(self.devices.values())
-        devices.append(self.PC)
         if self.LR is not None:
             devices.append(self.LR)
         devices.extend(self.transfer.values())
@@ -64,11 +60,6 @@ class DeviceSetup:
         AddrRegDec = SimplePin(23, Level.LOW, PinUsage.SHARED, "Addr.dec")
 
         self.devices = p_cfg.devices
-
-        self.PC = dev.ProgramCounter("PC",
-            out = MuxPin(AddrOutMux, 5),
-            load = MuxPin(AddrLoadMux, 5),
-            inc = AddrRegInc)
 
         self.transfer["TX"] = dev.TransferRegister("TX",
             out = MuxPin(AddrOutMux, 0),
@@ -166,6 +157,13 @@ class DeviceSetup:
             return d
         else:
             raise ValueError(f"Device StepCounter is not a StepCounter")
+
+    def pc(self) -> dev.ProgramCounter:
+        d = self.devices.get("PC")
+        if isinstance(d, dev.ProgramCounter):
+            return d
+        else:
+            raise ValueError(f"Device PC is not a ProgramCounter")
 
     def a_ptr(self, name: str) -> dev.StackPointer:
         d = self.devices.get(name)
