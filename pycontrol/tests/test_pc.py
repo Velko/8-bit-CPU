@@ -14,7 +14,7 @@ from libcpu.ctrl_word import CtrlWord
 from libcpu.util import unwrap
 
 PC = hardware.pc()
-LR = unwrap(hardware.LR)
+LR = unwrap(hardware.lr())
 
 @pytest.mark.parametrize("expected", [65535, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 0])
 def test_pc_load(cpu_helper: CPUHelper, expected: int) -> None:

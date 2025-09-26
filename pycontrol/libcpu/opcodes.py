@@ -56,10 +56,10 @@ def resolve_arg(name: str, **kwargs: Register) -> Register | OpcodeArg:
         return OpcodeArg.BYTE
     elif name in kwargs:
         return kwargs[name]
+    elif name == "LR":
+        return unwrap(hardware.lr())
     elif name in hardware.devices:
         return hardware.a_ptr(name)
-    elif name == "LR":
-        return unwrap(hardware.LR)
     else:
         raise ValueError(f"Unknown argument type: {name}")
 

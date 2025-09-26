@@ -8,15 +8,12 @@ class DeviceSetup:
     def __init__(self) -> None:
         self.muxes: dict[str, Mux] = {}
         self.devices: dict[str, dev.DeviceBase] = {}
-        self.LR: dev.AddressRegister | None = None
         self.ACalc: dev.AddressCalculator | None = None
         self.IOCtl: dev.IOController | None = None
 
     def get(self, key: str) -> dev.DeviceBase | None:
         if key in self.devices:
             return self.devices[key]
-        elif key == "LR":
-            return self.LR
         elif key == "ACalc":
             return self.ACalc
         elif key == "IOCtl":
@@ -27,8 +24,6 @@ class DeviceSetup:
     def all_devices(self) -> list[dev.DeviceBase]:
         devices: list[dev.DeviceBase] = []
         devices.extend(self.devices.values())
-        if self.LR is not None:
-            devices.append(self.LR)
         if self.ACalc is not None:
             devices.append(self.ACalc)
         if self.IOCtl is not None:
@@ -56,10 +51,6 @@ class DeviceSetup:
         AddrRegDec = SimplePin(23, Level.LOW, PinUsage.SHARED, "Addr.dec")
 
         self.devices = p_cfg.devices
-
-        self.LR = dev.AddressRegister("LR",
-            out = MuxPin(AddrOutMux, 4),
-            load = MuxPin(AddrLoadMux, 4))
 
         self.ACalc = dev.AddressCalculator("ACalc",
             out = MuxPin(AddrOutMux, 2),
@@ -138,12 +129,19 @@ class DeviceSetup:
         else:
             raise ValueError(f"Device {name} is not a TransferRegister")
 
+    def lr(self) -> dev.AddressRegister:
+        d = self.devices.get("LR")
+        if isinstance(d, dev.AddressRegister):
+            return d
+        else:
+            raise ValueError(f"Device LR is not an AddressRegister")
+
     def a_ptr(self, name: str) -> dev.StackPointer:
         d = self.devices.get(name)
         if isinstance(d, dev.StackPointer):
             return d
         else:
-            raise ValueError(f"Device {name} is not an AddressPointer")
+            raise ValueError(f"Device {name} is not an StackPointer")
 
 
 hardware = DeviceSetup()

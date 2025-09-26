@@ -214,8 +214,8 @@ class Debugger:
         for gpr in [r for r in hardware.devices.values() if isinstance(r, GPRegister)]:
             registers[gpr.name] = self.cpu_helper.read_reg8(gpr)
         registers["Flags"] = self.cpu_helper.get_flags_s()
-        if hardware.LR is not None:
-            registers["LR"] = self.cpu_helper.read_reg16(hardware.LR)
+        if hardware.lr() is not None:
+            registers["LR"] = self.cpu_helper.read_reg16(hardware.lr())
         for ap in [r for r in hardware.devices.values() if isinstance(r, StackPointer)]:
             registers[ap.name] = self.cpu_helper.read_reg16(ap)
 

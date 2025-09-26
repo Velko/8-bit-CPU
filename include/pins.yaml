@@ -276,3 +276,12 @@ devices:
         pin: "Addr.inc"
       dec:
         pin: "Addr.dec"
+  - name: "LR"
+    type: "AddressRegister"
+    pins:
+      out:
+        mux: "AddrOutMux"
+        pin: 4
+      load:
+        mux: "AddrLoadMux"
+        pin: 4
