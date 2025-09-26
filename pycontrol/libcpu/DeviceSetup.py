@@ -8,8 +8,6 @@ class DeviceSetup:
     def __init__(self) -> None:
         self.muxes: dict[str, Mux] = {}
         self.devices: dict[str, dev.DeviceBase] = {}
-        self.Clock: dev.Clock | None = None
-        self.StepCounter: dev.StepCounter = None # type: ignore[assignment]
         self.PC: dev.ProgramCounter = None # type: ignore[assignment]
         self.transfer: dict[str, dev.TransferRegister] = {}
         self.LR: dev.AddressRegister | None = None
@@ -19,10 +17,6 @@ class DeviceSetup:
     def get(self, key: str) -> dev.DeviceBase | None:
         if key in self.devices:
             return self.devices[key]
-        elif key == "Clock":
-            return self.Clock
-        elif key == "StepCounter":
-            return self.StepCounter
         elif key == "PC":
             return self.PC
         elif key in self.transfer:
@@ -39,9 +33,6 @@ class DeviceSetup:
     def all_devices(self) -> list[dev.DeviceBase]:
         devices: list[dev.DeviceBase] = []
         devices.extend(self.devices.values())
-        if self.Clock is not None:
-            devices.append(self.Clock)
-        devices.append(self.StepCounter)
         devices.append(self.PC)
         if self.LR is not None:
             devices.append(self.LR)
@@ -73,14 +64,6 @@ class DeviceSetup:
         AddrRegDec = SimplePin(23, Level.LOW, PinUsage.SHARED, "Addr.dec")
 
         self.devices = p_cfg.devices
-
-        self.Clock = dev.Clock("Clk",
-            halt = SimplePin(26, Level.LOW, PinUsage.EXCLUSIVE),
-            brk = SimplePin(27, Level.HIGH, PinUsage.EXCLUSIVE),)
-
-        self.StepCounter = dev.StepCounter("Steps",
-            reset = SimplePin(24, Level.LOW, PinUsage.EXCLUSIVE),
-            extended = SimplePin(25, Level.LOW, PinUsage.EXCLUSIVE),)
 
         self.PC = dev.ProgramCounter("PC",
             out = MuxPin(AddrOutMux, 5),
@@ -169,6 +152,20 @@ class DeviceSetup:
             return d
         else:
             raise ValueError(f"Device IR is not a WORegister")
+
+    def clock(self) -> dev.Clock:
+        d = self.devices.get("Clock")
+        if isinstance(d, dev.Clock):
+            return d
+        else:
+            raise ValueError(f"Device Clock is not a Clock")
+
+    def step_counter(self) -> dev.StepCounter:
+        d = self.devices.get("StepCounter")
+        if isinstance(d, dev.StepCounter):
+            return d
+        else:
+            raise ValueError(f"Device StepCounter is not a StepCounter")
 
     def a_ptr(self, name: str) -> dev.StackPointer:
         d = self.devices.get(name)

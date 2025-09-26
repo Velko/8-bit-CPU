@@ -181,3 +181,21 @@ devices:
       load:
         mux: "LoadMux"
         pin: 8
+  - name: "Clock"
+    type: "Clock"
+    pins:
+      halt:
+        pin: 26
+        level: "LOW"
+      brk:
+        pin: 27
+        level: "HIGH"
+  - name: "StepCounter"
+    type: "StepCounter"
+    pins:
+      reset:
+        pin: 24
+        level: "LOW"
+      extended:
+        pin: 25
+        level: "LOW"

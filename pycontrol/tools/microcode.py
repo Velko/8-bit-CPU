@@ -27,7 +27,7 @@ def finalize_steps(microcode: MicroCode, flags: Flags) -> Iterator[Sequence[Cont
         step, is_last = microcode.get_step(s_idx, flags)
         if is_last:
             # add Steps.reset at last relevant step
-            yield list(step) + [hardware.StepCounter.reset]
+            yield list(step) + [hardware.step_counter().reset]
         else:
             yield step
 
