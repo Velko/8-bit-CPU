@@ -237,3 +237,42 @@ devices:
       load:
         mux: "LoadMux"
         pin: 11
+  - name: "SP"
+    type: "StackPointer"
+    pins:
+      out:
+        mux: "AddrOutMux"
+        pin: 3
+      load:
+        mux: "AddrLoadMux"
+        pin: 3
+      inc:
+        pin: "Addr.inc"
+      dec:
+        pin: "Addr.dec"
+  - name: "SDP"
+    type: "StackPointer"
+    pins:
+      out:
+        mux: "AddrOutMux"
+        pin: 1
+      load:
+        mux: "AddrLoadMux"
+        pin: 1
+      inc:
+        pin: "Addr.inc"
+      dec:
+        pin: "Addr.dec"
+  - name: "TDP"
+    type: "StackPointer"
+    pins:
+      out:
+        mux: "AddrOutMux"
+        pin: 6
+      load:
+        mux: "AddrLoadMux"
+        pin: 6
+      inc:
+        pin: "Addr.inc"
+      dec:
+        pin: "Addr.dec"

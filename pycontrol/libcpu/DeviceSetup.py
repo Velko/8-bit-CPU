@@ -57,24 +57,6 @@ class DeviceSetup:
 
         self.devices = p_cfg.devices
 
-        self.devices["SP"] = dev.StackPointer("SP",
-            out = MuxPin(AddrOutMux, 3),
-            load = MuxPin(AddrLoadMux, 3),
-            inc = AddrRegInc,
-            dec = AddrRegDec)
-
-        self.devices["SDP"] = dev.StackPointer("SDP",
-            out = MuxPin(AddrOutMux, 1),
-            load = MuxPin(AddrLoadMux, 1),
-            inc = AddrRegInc,
-            dec = AddrRegDec)
-
-        self.devices["TDP"] = dev.StackPointer("TDP",
-            out = MuxPin(AddrOutMux, 6),
-            load = MuxPin(AddrLoadMux, 6),
-            inc = AddrRegInc,
-            dec = AddrRegDec)
-
         self.LR = dev.AddressRegister("LR",
             out = MuxPin(AddrOutMux, 4),
             load = MuxPin(AddrLoadMux, 4))
