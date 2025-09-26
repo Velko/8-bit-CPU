@@ -210,3 +210,30 @@ devices:
         pin: 5
       inc:
         pin: "Addr.inc"
+  - name: "TX"
+    type: "TransferRegister"
+    pins:
+      out:
+        mux: "AddrOutMux"
+        pin: 0
+      load:
+        mux: "AddrLoadMux"
+        pin: 0
+  - name: "TH"
+    type: "TransferRegister"
+    pins:
+      out:
+        mux: "OutMux"
+        pin: 12
+      load:
+        mux: "LoadMux"
+        pin: 12
+  - name: "TL"
+    type: "TransferRegister"
+    pins:
+      out:
+        mux: "OutMux"
+        pin: 11
+      load:
+        mux: "LoadMux"
+        pin: 11

@@ -8,7 +8,6 @@ class DeviceSetup:
     def __init__(self) -> None:
         self.muxes: dict[str, Mux] = {}
         self.devices: dict[str, dev.DeviceBase] = {}
-        self.transfer: dict[str, dev.TransferRegister] = {}
         self.LR: dev.AddressRegister | None = None
         self.ACalc: dev.AddressCalculator | None = None
         self.IOCtl: dev.IOController | None = None
@@ -16,8 +15,6 @@ class DeviceSetup:
     def get(self, key: str) -> dev.DeviceBase | None:
         if key in self.devices:
             return self.devices[key]
-        elif key in self.transfer:
-            return self.transfer[key]
         elif key == "LR":
             return self.LR
         elif key == "ACalc":
@@ -32,7 +29,6 @@ class DeviceSetup:
         devices.extend(self.devices.values())
         if self.LR is not None:
             devices.append(self.LR)
-        devices.extend(self.transfer.values())
         if self.ACalc is not None:
             devices.append(self.ACalc)
         if self.IOCtl is not None:
@@ -60,18 +56,6 @@ class DeviceSetup:
         AddrRegDec = SimplePin(23, Level.LOW, PinUsage.SHARED, "Addr.dec")
 
         self.devices = p_cfg.devices
-
-        self.transfer["TX"] = dev.TransferRegister("TX",
-            out = MuxPin(AddrOutMux, 0),
-            load = MuxPin(AddrLoadMux, 0))
-
-        self.transfer["TH"] = dev.TransferRegister("TH",
-            out = MuxPin(OutMux, 12),
-            load = MuxPin(LoadMux, 12))
-
-        self.transfer["TL"] = dev.TransferRegister("TL",
-            out = MuxPin(OutMux, 11),
-            load = MuxPin(LoadMux, 11))
 
         self.devices["SP"] = dev.StackPointer("SP",
             out = MuxPin(AddrOutMux, 3),
@@ -164,6 +148,13 @@ class DeviceSetup:
             return d
         else:
             raise ValueError(f"Device PC is not a ProgramCounter")
+
+    def transfer(self, name: str) -> dev.TransferRegister:
+        d = self.devices.get(name)
+        if isinstance(d, dev.TransferRegister):
+            return d
+        else:
+            raise ValueError(f"Device {name} is not a TransferRegister")
 
     def a_ptr(self, name: str) -> dev.StackPointer:
         d = self.devices.get(name)

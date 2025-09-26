@@ -13,9 +13,9 @@ A = hardware.gp_reg("A")
 B = hardware.gp_reg("B")
 alu = hardware.alu("AddSub")
 IR = hardware.ir()
-TX = hardware.transfer["TX"]
-TH = hardware.transfer["TH"]
-TL = hardware.transfer["TL"]
+TX = hardware.transfer("TX")
+TH = hardware.transfer("TH")
+TL = hardware.transfer("TL")
 
 def test_reg_a_latch(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg8(A, 54)
