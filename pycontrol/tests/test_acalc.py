@@ -10,7 +10,7 @@ from libcpu.util import unwrap
 
 from collections.abc import Iterator
 
-ACalc = unwrap(hardware.ACalc)
+ACalc = unwrap(hardware.acalc())
 
 
 acalc_params = [

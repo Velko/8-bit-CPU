@@ -8,26 +8,16 @@ class DeviceSetup:
     def __init__(self) -> None:
         self.muxes: dict[str, Mux] = {}
         self.devices: dict[str, dev.DeviceBase] = {}
-        self.ACalc: dev.AddressCalculator | None = None
-        self.IOCtl: dev.IOController | None = None
 
     def get(self, key: str) -> dev.DeviceBase | None:
         if key in self.devices:
             return self.devices[key]
-        elif key == "ACalc":
-            return self.ACalc
-        elif key == "IOCtl":
-            return self.IOCtl
         else:
             return None
 
     def all_devices(self) -> list[dev.DeviceBase]:
         devices: list[dev.DeviceBase] = []
         devices.extend(self.devices.values())
-        if self.ACalc is not None:
-            devices.append(self.ACalc)
-        if self.IOCtl is not None:
-            devices.append(self.IOCtl)
         return devices
 
     def setup_devices(self) -> None:
@@ -51,16 +41,6 @@ class DeviceSetup:
         AddrRegDec = SimplePin(23, Level.LOW, PinUsage.SHARED, "Addr.dec")
 
         self.devices = p_cfg.devices
-
-        self.ACalc = dev.AddressCalculator("ACalc",
-            out = MuxPin(AddrOutMux, 2),
-            load = MuxPin(AddrLoadMux, 2),
-            signed = SimplePin(28, Level.HIGH, PinUsage.EXCLUSIVE))
-
-        self.IOCtl = dev.IOController("IOCtl",
-            laddr = MuxPin(LoadMux, 4),
-            to_dev = MuxPin(LoadMux, 5),
-            from_dev = MuxPin(OutMux, 8))
 
     def gp_reg(self, name: str) -> dev.GPRegister:
         d = self.devices.get(name)
@@ -143,6 +123,19 @@ class DeviceSetup:
         else:
             raise ValueError(f"Device {name} is not an StackPointer")
 
+    def acalc(self) -> dev.AddressCalculator:
+        d = self.devices.get("ACalc")
+        if isinstance(d, dev.AddressCalculator):
+            return d
+        else:
+            raise ValueError(f"Device ACalc is not an AddressCalculator")
+
+    def io_controller(self) -> dev.IOController:
+        d = self.devices.get("IOCtl")
+        if isinstance(d, dev.IOController):
+            return d
+        else:
+            raise ValueError(f"Device IOCtl is not an IOController")
 
 hardware = DeviceSetup()
 hardware.setup_devices()

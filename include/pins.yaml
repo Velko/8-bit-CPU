@@ -285,3 +285,27 @@ devices:
       load:
         mux: "AddrLoadMux"
         pin: 4
+  - name: "ACalc"
+    type: "AddressCalculator"
+    pins:
+      out:
+        mux: "AddrOutMux"
+        pin: 2
+      load:
+        mux: "AddrLoadMux"
+        pin: 2
+      signed:
+        pin: 28
+        level: "HIGH"
+  - name: "IOCtl"
+    type: "IOController"
+    pins:
+      laddr:
+        mux: "LoadMux"
+        pin: 4
+      to_dev:
+        mux: "LoadMux"
+        pin: 5
+      from_dev:
+        mux: "OutMux"
+        pin: 8

@@ -6,7 +6,7 @@ from typing import Any
 from enum import Enum, auto
 
 from .pin import Mux, MuxPin, SimplePin, Level, PinUsage
-from .devices import GPRegister, DeviceBase, ALU, FlagsRegister, RAM, TempRegister, WORegister, Clock, StepCounter, ProgramCounter, TransferRegister, StackPointer, AddressRegister
+from .devices import GPRegister, DeviceBase, ALU, FlagsRegister, RAM, TempRegister, WORegister, Clock, StepCounter, ProgramCounter, TransferRegister, StackPointer, AddressRegister, AddressCalculator, IOController
 from .pseudo_devices import RamProxy
 
 
@@ -80,4 +80,8 @@ class PinConfig:
                     self.devices[name] = StackPointer(**args)
                 case "AddressRegister":
                     self.devices[name] = AddressRegister(**args)
+                case "AddressCalculator":
+                    self.devices[name] = AddressCalculator(**args)
+                case "IOController":
+                    self.devices[name] = IOController(**args)
 

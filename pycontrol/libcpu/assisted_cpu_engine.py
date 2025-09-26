@@ -66,10 +66,10 @@ class AssistedCPUEngine:
             # capture port output BEFORE clock tick.
             # TODO: think of more reliable approach
             # this probably messes up the immediate value on the Bus
-            if hardware.IOCtl is not None and control.is_enabled(hardware.IOCtl.laddr):
+            if hardware.io_controller() is not None and control.is_enabled(hardware.io_controller().laddr):
                 IOMon.select_port(self.client.bus_get())
 
-            if hardware.IOCtl is not None and control.is_enabled(hardware.IOCtl.to_dev):
+            if hardware.io_controller() is not None and control.is_enabled(hardware.io_controller().to_dev):
                 formatted = IOMon.format_value(self.client.bus_get())
                 if formatted is not None:
                     result = OutMessage(formatted)
