@@ -19,6 +19,7 @@ class HardwareSetup:
 
 
         self.AddSub = self.get_typed_dev("AddSub", dev.ALU)
+        self.F = self.get_typed_dev("F", dev.FlagsRegister)
 
     def get_typed_dev(self, name: str, expected_type: Type[T]) -> T:
         device = self.devices.get(name)
@@ -43,12 +44,6 @@ class HardwareSetup:
             return d
         else:
             raise ValueError(f"Device {name} is not a GPRegister")
-
-    def flags(self) -> dev.FlagsRegister:
-        d = self.devices.get("F")
-        if isinstance(d, dev.FlagsRegister):
-            return d
-        raise ValueError("No FlagsRegister found")
 
     def ram(self) -> dev.RAM:
         d = self.devices.get("Ram")

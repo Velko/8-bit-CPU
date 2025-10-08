@@ -15,7 +15,6 @@ pytestmark = pytest.mark.hardware
 
 A = hardware.gp_reg("A")
 B = hardware.gp_reg("B")
-F = hardware.flags()
 SP = hardware.a_ptr("SP")
 
 def all_regs_and_bits() -> Iterator[tuple[GPRegister, int]]:
@@ -36,7 +35,7 @@ def test_load_store_reg(cpu_helper: CPUHelper, acpu: AssistedCPU, register: GPRe
 
 @pytest.mark.parametrize("value", [~Flags.Empty, Flags.N, Flags.Z, Flags.C, Flags.V, Flags.Empty])
 def test_load_store_flags(cpu_helper: CPUHelper, acpu: AssistedCPU, value: Flags) -> None:
-    acpu.ldi (F, value)
+    acpu.ldi (hardware.F, value)
     received = cpu_helper.get_flags()
 
     assert value == received

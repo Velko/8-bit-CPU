@@ -87,7 +87,7 @@ class CPUHelper:
         self.client.off(DEFAULT_CW.c_word)
 
     def load_flags(self, value: Flags) -> None:
-        self.load_reg8(hardware.flags(), value.value)
+        self.load_reg8(hardware.F, value.value)
 
     def load_snippet(self, addr: int, code: bytes) -> None:
         self.write_bytes(addr, code)
