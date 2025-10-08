@@ -43,7 +43,7 @@ class AssistedCPUEngine:
             microcode = ops_by_code[self.get_opcode_cached()]
             microstep, is_last = microcode.get_step(s_idx - self.op_extension , self.get_flags_cached())
             if is_last:
-                fin_steps: list[ControlSignal] = [hardware.step_counter().reset]
+                fin_steps: list[ControlSignal] = [hardware.StepCounter.reset]
                 fin_steps.extend(microstep)
                 return self.execute_step(fin_steps)
             # only last step is expected to produce RunMessage
@@ -85,10 +85,10 @@ class AssistedCPUEngine:
             if control.is_enabled(hardware.F.calc) or control.is_enabled(hardware.F.load):
                 self.flags_cache = None
 
-            if control.is_enabled(hardware.clock().halt):
+            if control.is_enabled(hardware.Clock.halt):
                 result = HaltMessage()
 
-            if control.is_enabled(hardware.clock().brk):
+            if control.is_enabled(hardware.Clock.brk):
                 result = BrkMessage()
 
             if isinstance(result, OutMessage):
@@ -98,7 +98,7 @@ class AssistedCPUEngine:
                 assert hw_message.payload == result.payload
 
             # Drop current opcode since it was a prefix for extended one
-            if control.is_enabled(hardware.step_counter().extended):
+            if control.is_enabled(hardware.StepCounter.extended):
                 self.opcode_cache = None
                 self.op_extension += 1
 

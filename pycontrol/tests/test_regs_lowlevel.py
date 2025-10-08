@@ -11,7 +11,6 @@ pytestmark = pytest.mark.hardware
 
 A = hw.gp_reg("A")
 B = hw.gp_reg("B")
-IR = hw.ir()
 TX = hw.transfer("TX")
 TH = hw.transfer("TH")
 TL = hw.transfer("TL")
@@ -57,7 +56,7 @@ def singlebit_vals() -> Iterator[int]:
 def test_ir_load(cpu_helper: CPUHelper, expected: int) -> None:
     cpu_helper.client.bus_set(expected)
     control = CtrlWord()\
-        .enable(IR.load)
+        .enable(hw.IR.load)
     cpu_helper.client.ctrl_commit(control.c_word)
     cpu_helper.client.clock_tick()
 
