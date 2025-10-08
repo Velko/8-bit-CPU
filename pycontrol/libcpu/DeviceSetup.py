@@ -26,6 +26,12 @@ class HardwareSetup:
         self.Clock = self.get_typed_dev("Clock", dev.Clock)
         self.StepCounter = self.get_typed_dev("StepCounter", dev.StepCounter)
         self.PC = self.get_typed_dev("PC", dev.ProgramCounter)
+        self.TX = self.get_typed_dev("TX", dev.TransferRegister)
+        self.TL = self.get_typed_dev("TL", dev.TransferRegister)
+        self.TH = self.get_typed_dev("TH", dev.TransferRegister)
+        self.LR = self.get_typed_dev("LR", dev.AddressRegister)
+        self.ACalc = self.get_typed_dev("ACalc", dev.AddressCalculator)
+        self.IOCtl = self.get_typed_dev("IOCtl", dev.IOController)
 
     def get_typed_dev(self, name: str, expected_type: Type[T]) -> T:
         device = self.devices.get(name)
@@ -51,40 +57,12 @@ class HardwareSetup:
         else:
             raise ValueError(f"Device {name} is not a GPRegister")
 
-    def transfer(self, name: str) -> dev.TransferRegister:
-        d = self.devices.get(name)
-        if isinstance(d, dev.TransferRegister):
-            return d
-        else:
-            raise ValueError(f"Device {name} is not a TransferRegister")
-
-    def lr(self) -> dev.AddressRegister:
-        d = self.devices.get("LR")
-        if isinstance(d, dev.AddressRegister):
-            return d
-        else:
-            raise ValueError(f"Device LR is not an AddressRegister")
-
     def a_ptr(self, name: str) -> dev.StackPointer:
         d = self.devices.get(name)
         if isinstance(d, dev.StackPointer):
             return d
         else:
             raise ValueError(f"Device {name} is not an StackPointer")
-
-    def acalc(self) -> dev.AddressCalculator:
-        d = self.devices.get("ACalc")
-        if isinstance(d, dev.AddressCalculator):
-            return d
-        else:
-            raise ValueError(f"Device ACalc is not an AddressCalculator")
-
-    def io_controller(self) -> dev.IOController:
-        d = self.devices.get("IOCtl")
-        if isinstance(d, dev.IOController):
-            return d
-        else:
-            raise ValueError(f"Device IOCtl is not an IOController")
 
 hardware = HardwareSetup()
 

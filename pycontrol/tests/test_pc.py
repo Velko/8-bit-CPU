@@ -13,8 +13,6 @@ from libcpu.devices import Flags
 from libcpu.ctrl_word import CtrlWord
 from libcpu.util import unwrap
 
-LR = unwrap(hw.lr())
-
 @pytest.mark.parametrize("expected", [65535, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 0])
 def test_pc_load(cpu_helper: CPUHelper, expected: int) -> None:
 
@@ -126,7 +124,7 @@ def test_bcc_fallthrough(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
 def test_lr_pc_swap(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.load_reg16(hw.PC, 0xaa)
-    cpu_helper.load_reg16(LR, 43)
+    cpu_helper.load_reg16(hw.LR, 43)
 
     acpu.ret()
 
@@ -141,7 +139,7 @@ def test_call_addr(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     value = cpu_helper.read_reg16(hw.PC)
 
-    retaddr = cpu_helper.read_reg16(LR)
+    retaddr = cpu_helper.read_reg16(hw.LR)
 
     assert value == 452
     assert retaddr == 0x12bd

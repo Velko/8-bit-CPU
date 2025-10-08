@@ -5,7 +5,7 @@ import itertools
 
 pytestmark = pytest.mark.hardware
 
-from libcpu.DeviceSetup import hardware
+from libcpu.DeviceSetup import hardware as hw
 from libcpu.devices import Flags
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
@@ -13,10 +13,9 @@ from libcpu.markers import Addr
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 from libcpu.util import unwrap
 
-A = hardware.gp_reg("A")
-C = hardware.gp_reg("C")
-SP = hardware.a_ptr("SP")
-LR = unwrap(hardware.lr())
+A = hw.gp_reg("A")
+C = hw.gp_reg("C")
+SP = hw.a_ptr("SP")
 
 @pytest.mark.parametrize("expected", [255, 1, 2, 4, 8, 16, 32, 64, 128, 0])
 def test_sp_load(cpu_helper: CPUHelper, expected: int) -> None:
@@ -137,9 +136,9 @@ def test_push_popf(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 def test_push_lr(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.load_reg16(SP, 0x88)
 
-    cpu_helper.load_reg16(LR, 0x1234)
+    cpu_helper.load_reg16(hw.LR, 0x1234)
 
-    acpu.push (LR)
+    acpu.push (hw.LR)
 
     h = cpu_helper.read_ram(0x87)
     l = cpu_helper.read_ram(0x86)
@@ -149,27 +148,27 @@ def test_push_lr(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
 def test_pop_lr(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.load_reg16(SP, 0x21)
-    cpu_helper.load_reg16(LR, 0)
+    cpu_helper.load_reg16(hw.LR, 0)
 
     cpu_helper.write_ram(0x21, 0x54)
     cpu_helper.write_ram(0x22, 0x83)
 
-    acpu.pop (LR)
+    acpu.pop (hw.LR)
 
-    val = cpu_helper.read_reg16(LR)
+    val = cpu_helper.read_reg16(hw.LR)
 
     assert val == 0x8354
 
 def test_push_pop_lr(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.load_reg16(SP, 0x40)
 
-    cpu_helper.load_reg16(LR, 0x5314)
-    acpu.push (LR)
-    cpu_helper.load_reg16(LR, 0)
+    cpu_helper.load_reg16(hw.LR, 0x5314)
+    acpu.push (hw.LR)
+    cpu_helper.load_reg16(hw.LR, 0)
 
-    acpu.pop (LR)
+    acpu.pop (hw.LR)
 
-    val = cpu_helper.read_reg16(LR)
+    val = cpu_helper.read_reg16(hw.LR)
     assert val == 0x5314
 
 def test_ldr_sp_plus(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:

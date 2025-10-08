@@ -57,7 +57,7 @@ def resolve_arg(name: str, **kwargs: Register) -> Register | OpcodeArg:
     elif name in kwargs:
         return kwargs[name]
     elif name == "LR":
-        return unwrap(hardware.lr())
+        return unwrap(hardware.LR)
     elif name in hardware.devices:
         return hardware.a_ptr(name)
     else:

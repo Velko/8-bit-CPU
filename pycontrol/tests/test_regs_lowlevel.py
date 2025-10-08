@@ -11,9 +11,6 @@ pytestmark = pytest.mark.hardware
 
 A = hw.gp_reg("A")
 B = hw.gp_reg("B")
-TX = hw.transfer("TX")
-TH = hw.transfer("TH")
-TL = hw.transfer("TL")
 
 def test_reg_a_latch(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg8(A, 54)
@@ -67,10 +64,10 @@ def test_ir_load(cpu_helper: CPUHelper, expected: int) -> None:
     assert readback == expected
 
 def test_tx_load(cpu_helper: CPUHelper) -> None:
-    cpu_helper.load_reg8(TH, 0x12)
-    cpu_helper.load_reg8(TL, 0x34)
+    cpu_helper.load_reg8(hw.TH, 0x12)
+    cpu_helper.load_reg8(hw.TL, 0x34)
 
 
-    loaded = cpu_helper.read_reg16(TX)
+    loaded = cpu_helper.read_reg16(hw.TX)
 
     assert loaded == 0x1234
