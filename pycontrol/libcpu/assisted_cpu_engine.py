@@ -76,10 +76,10 @@ class AssistedCPUEngine:
 
             self.client.clock_tick()
 
-            if control.is_enabled(hardware.pc().load):
+            if control.is_enabled(hardware.PC.load):
                 Imm.invalidate()
 
-            if control.is_enabled(hardware.pc().inc):
+            if control.is_enabled(hardware.PC.inc):
                 Imm.consume() # next byte for imm value
 
             if control.is_enabled(hardware.F.calc) or control.is_enabled(hardware.F.load):

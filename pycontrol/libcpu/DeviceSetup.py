@@ -25,6 +25,7 @@ class HardwareSetup:
         self.IR = self.get_typed_dev("IR", dev.WORegister)
         self.Clock = self.get_typed_dev("Clock", dev.Clock)
         self.StepCounter = self.get_typed_dev("StepCounter", dev.StepCounter)
+        self.PC = self.get_typed_dev("PC", dev.ProgramCounter)
 
     def get_typed_dev(self, name: str, expected_type: Type[T]) -> T:
         device = self.devices.get(name)
@@ -49,13 +50,6 @@ class HardwareSetup:
             return d
         else:
             raise ValueError(f"Device {name} is not a GPRegister")
-
-    def pc(self) -> dev.ProgramCounter:
-        d = self.devices.get("PC")
-        if isinstance(d, dev.ProgramCounter):
-            return d
-        else:
-            raise ValueError(f"Device PC is not a ProgramCounter")
 
     def transfer(self, name: str) -> dev.TransferRegister:
         d = self.devices.get(name)

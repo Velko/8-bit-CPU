@@ -1,12 +1,11 @@
 #!/usr/bin/python3
 
 import pytest
-from libcpu.DeviceSetup import hardware
+from libcpu.DeviceSetup import hardware as hw
 
 pytestmark = pytest.mark.hardware
 
-A = hardware.gp_reg("A")
-PC = hardware.pc()
+A = hw.gp_reg("A")
 
 from libcpu.cpu_helper import CPUHelper
 from libcpu.opcodes import opcode_of
@@ -42,7 +41,7 @@ def test_rjmp_on_hw(cpu_helper: CPUHelper) -> None:
 
     cpu_helper.run_snippet(0x8, rjmp_test_prog)
 
-    val = cpu_helper.read_reg16(PC)
+    val = cpu_helper.read_reg16(hw.PC)
 
     # should point to next instruction after brk
     assert val == 0x0C
