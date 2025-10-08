@@ -6,8 +6,11 @@ import os.path
 
 class DeviceSetup:
     def __init__(self) -> None:
-        self.muxes: dict[str, Mux] = {}
-        self.devices: dict[str, dev.DeviceBase] = {}
+        yaml_path = os.path.join(os.path.dirname(__file__), "../../include/pins.yaml")
+
+        p_cfg = PinConfig.load_from_yaml(yaml_path)
+        self.muxes = p_cfg.muxes
+        self.devices = p_cfg.devices
 
     def get(self, key: str) -> dev.DeviceBase | None:
         if key in self.devices:
@@ -19,13 +22,6 @@ class DeviceSetup:
         devices: list[dev.DeviceBase] = []
         devices.extend(self.devices.values())
         return devices
-
-    def setup_devices(self) -> None:
-        yaml_path = os.path.join(os.path.dirname(__file__), "../../include/pins.yaml")
-
-        p_cfg = PinConfig.load_from_yaml(yaml_path)
-        self.muxes = p_cfg.muxes
-        self.devices = p_cfg.devices
 
     def gp_reg(self, name: str) -> dev.GPRegister:
         d = self.devices.get(name)
@@ -123,6 +119,5 @@ class DeviceSetup:
             raise ValueError(f"Device IOCtl is not an IOController")
 
 hardware = DeviceSetup()
-hardware.setup_devices()
 
 
