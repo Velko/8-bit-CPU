@@ -25,21 +25,6 @@ class DeviceSetup:
 
         p_cfg = PinConfig.load_from_yaml(yaml_path)
         self.muxes = p_cfg.muxes
-
-        OutMux = p_cfg.muxes["OutMux"]
-        LoadMux = p_cfg.muxes["LoadMux"]
-
-        AluArgL = p_cfg.muxes["AluArgL"]
-        AluArgR = p_cfg.muxes["AluArgR"]
-
-        AddrOutMux = p_cfg.muxes["AddrOutMux"]
-        AddrLoadMux = p_cfg.muxes["AddrLoadMux"]
-
-        AluAltFn = SimplePin(13, Level.HIGH, PinUsage.SHARED, "Alu.alt")
-
-        AddrRegInc = SimplePin(22, Level.LOW, PinUsage.SHARED, "Addr.inc")
-        AddrRegDec = SimplePin(23, Level.LOW, PinUsage.SHARED, "Addr.dec")
-
         self.devices = p_cfg.devices
 
     def gp_reg(self, name: str) -> dev.GPRegister:
