@@ -2,20 +2,19 @@
 
 import pytest
 
-from libcpu.DeviceSetup import hardware
+from libcpu.DeviceSetup import hardware as hw
 from libcpu.cpu_helper import CPUHelper
 from collections.abc import Iterator
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
 pytestmark = pytest.mark.hardware
 
-A = hardware.gp_reg("A")
-B = hardware.gp_reg("B")
-alu = hardware.alu("AddSub")
-IR = hardware.ir()
-TX = hardware.transfer("TX")
-TH = hardware.transfer("TH")
-TL = hardware.transfer("TL")
+A = hw.gp_reg("A")
+B = hw.gp_reg("B")
+IR = hw.ir()
+TX = hw.transfer("TX")
+TH = hw.transfer("TH")
+TL = hw.transfer("TL")
 
 def test_reg_a_latch(cpu_helper: CPUHelper) -> None:
     cpu_helper.load_reg8(A, 54)
@@ -36,7 +35,7 @@ def test_reg_a_latch(cpu_helper: CPUHelper) -> None:
     # Not try to sense what it sends to ALU by enabling it and
     # reading value on the bus
     control = CtrlWord()\
-        .enable(alu.out)\
+        .enable(hw.AddSub.out)\
         .enable(A.alu_l)\
         .enable(B.alu_r)
     cpu_helper.client.ctrl_commit(control.c_word)

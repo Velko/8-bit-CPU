@@ -4,13 +4,27 @@ from .pin import SimplePin, Level, Mux, MuxPin, PinUsage
 from .pin_cfg import PinConfig
 import os.path
 
-class DeviceSetup:
+from typing import TypeVar, Type, cast
+
+T = TypeVar('T')
+
+
+class HardwareSetup:
     def __init__(self) -> None:
         yaml_path = os.path.join(os.path.dirname(__file__), "../../include/pins.yaml")
 
         p_cfg = PinConfig.load_from_yaml(yaml_path)
         self.muxes = p_cfg.muxes
         self.devices = p_cfg.devices
+
+
+        self.AddSub = self.get_typed_dev("AddSub", dev.ALU)
+
+    def get_typed_dev(self, name: str, expected_type: Type[T]) -> T:
+        device = self.devices.get(name)
+        if not isinstance(device, expected_type):
+            raise TypeError(f"Expected type {expected_type.__name__} for key '{name}', got {type(device).__name__}")
+        return cast(T, device)
 
     def get(self, key: str) -> dev.DeviceBase | None:
         if key in self.devices:
@@ -29,13 +43,6 @@ class DeviceSetup:
             return d
         else:
             raise ValueError(f"Device {name} is not a GPRegister")
-
-    def alu(self, name: str) -> dev.ALU:
-        d = self.devices.get(name)
-        if isinstance(d, dev.ALU):
-            return d
-        else:
-            raise ValueError(f"Device {name} is not an ALU")
 
     def flags(self) -> dev.FlagsRegister:
         d = self.devices.get("F")
@@ -118,6 +125,6 @@ class DeviceSetup:
         else:
             raise ValueError(f"Device IOCtl is not an IOController")
 
-hardware = DeviceSetup()
+hardware = HardwareSetup()
 
 
