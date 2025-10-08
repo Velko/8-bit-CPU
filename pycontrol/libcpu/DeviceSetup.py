@@ -20,6 +20,8 @@ class HardwareSetup:
 
         self.AddSub = self.get_typed_dev("AddSub", dev.ALU)
         self.F = self.get_typed_dev("F", dev.FlagsRegister)
+        self.RAM = self.get_typed_dev("Ram", dev.RAM)
+        self.ProgMem = self.get_typed_dev("ProgMem", RamProxy)
 
     def get_typed_dev(self, name: str, expected_type: Type[T]) -> T:
         device = self.devices.get(name)
@@ -44,18 +46,6 @@ class HardwareSetup:
             return d
         else:
             raise ValueError(f"Device {name} is not a GPRegister")
-
-    def ram(self) -> dev.RAM:
-        d = self.devices.get("Ram")
-        if isinstance(d, dev.RAM):
-            return d
-        raise ValueError("No RAM found")
-
-    def prog_mem(self) -> RamProxy:
-        d = self.devices.get("ProgMem")
-        if isinstance(d, RamProxy):
-            return d
-        raise ValueError("No ProgMem (RamProxy) found")
 
     def ir(self) -> dev.WORegister:
         d = self.devices.get("IR")
