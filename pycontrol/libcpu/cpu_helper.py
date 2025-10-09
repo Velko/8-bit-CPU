@@ -12,6 +12,8 @@ from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 class CPUHelper:
     def __init__(self, client: PinClient) -> None:
         self.client = client
+        self.regs = Regs(self)
+        self.ram = Memory(self)
 
     def load_reg16(self, reg: Register, value: int) -> None:
         control = CtrlWord()\
@@ -130,3 +132,66 @@ class CPUHelper:
 
     def fetch_runmessage(self) -> RunMessage:
         return self.client.receive_message()
+
+class Regs:
+    def __init__(self, cpu: CPUHelper) -> None:
+        self.cpu = cpu
+
+    @property
+    def A(self) -> int:
+        return self.cpu.read_reg8(hardware.A)
+    @A.setter
+    def A(self, value: int) -> None:
+        self.cpu.load_reg8(hardware.A, value & 0xFF)
+
+    @property
+    def B(self) -> int:
+        return self.cpu.read_reg8(hardware.B)
+    @B.setter
+    def B(self, value: int) -> None:
+        self.cpu.load_reg8(hardware.B, value & 0xFF)
+
+    @property
+    def C(self) -> int:
+        return self.cpu.read_reg8(hardware.C)
+    @C.setter
+    def C(self, value: int) -> None:
+        self.cpu.load_reg8(hardware.C, value & 0xFF)
+
+    @property
+    def D(self) -> int:
+        return self.cpu.read_reg8(hardware.D)
+    @D.setter
+    def D(self, value: int) -> None:
+        self.cpu.load_reg8(hardware.D, value & 0xFF)
+
+    @property
+    def F(self) -> Flags:
+        return self.cpu.get_flags()
+    @F.setter
+    def F(self, value: Flags) -> None:
+        self.cpu.load_flags(value)
+
+    @property
+    def SP(self) -> int:
+        return self.cpu.read_reg16(hardware.SP)
+    @SP.setter
+    def SP(self, value: int) -> None:
+        self.cpu.load_reg16(hardware.SP, value & 0xFFFF)
+
+    @property
+    def LR(self) -> int:
+        return self.cpu.read_reg16(hardware.LR)
+    @LR.setter
+    def LR(self, value: int) -> None:
+        self.cpu.load_reg16(hardware.LR, value & 0xFFFF)
+
+class Memory:
+    def __init__(self, cpu: CPUHelper) -> None:
+        self.cpu = cpu
+
+    def __getitem__(self, addr: int) -> int:
+        return self.cpu.read_ram(addr)
+
+    def __setitem__(self, addr: int, value: int) -> None:
+        self.cpu.write_ram(addr, value & 0xFF)
