@@ -5,8 +5,6 @@ from libcpu.DeviceSetup import hardware as hw
 
 pytestmark = pytest.mark.hardware
 
-A = hw.gp_reg("A")
-
 from libcpu.cpu_helper import CPUHelper
 from libcpu.opcodes import opcode_of
 
@@ -19,13 +17,13 @@ def test_ldi_on_hw(cpu_helper: CPUHelper) -> None:
                            123])
 
     # reset A, to see if changed
-    cpu_helper.load_reg8(A, 0)
+    cpu_helper.load_reg8(hw.A, 0)
 
     # run program on hardware
     cpu_helper.run_snippet(0x32, ldi_test_prog)
 
     # assert
-    val = cpu_helper.read_reg8(A)
+    val = cpu_helper.read_reg8(hw.A)
     assert val == 123
 
 @pytest.mark.hardware

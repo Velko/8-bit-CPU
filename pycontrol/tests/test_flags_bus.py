@@ -7,42 +7,39 @@ pytestmark = pytest.mark.hardware
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.devices import Flags
-from libcpu.DeviceSetup import hardware
-
-A = hardware.gp_reg("A")
-B = hardware.gp_reg("B")
+from libcpu.DeviceSetup import hardware as hw
 
 def test_flags_out_n(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(A, 230)
-    cpu_helper.load_reg8(B, 5)
-    acpu.add(A, B)
+    cpu_helper.load_reg8(hw.A, 230)
+    cpu_helper.load_reg8(hw.B, 5)
+    acpu.add(hw.A, hw.B)
 
     flags = cpu_helper.get_flags_s()
 
     assert flags == "---N"
 
 def test_flags_out_z(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(A, 5)
-    cpu_helper.load_reg8(B, 5)
-    acpu.sub(A, B)
+    cpu_helper.load_reg8(hw.A, 5)
+    cpu_helper.load_reg8(hw.B, 5)
+    acpu.sub(hw.A, hw.B)
 
     flags = cpu_helper.get_flags_s()
 
     assert flags == "--Z-"
 
 def test_flags_out_c(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(A, 230)
-    cpu_helper.load_reg8(B, 40)
-    acpu.add(A, B)
+    cpu_helper.load_reg8(hw.A, 230)
+    cpu_helper.load_reg8(hw.B, 40)
+    acpu.add(hw.A, hw.B)
 
     flags = cpu_helper.get_flags_s()
 
     assert flags == "-C--"
 
 def test_flags_out_v(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(A, 140)
-    cpu_helper.load_reg8(B, 20)
-    acpu.sub(A, B)
+    cpu_helper.load_reg8(hw.A, 140)
+    cpu_helper.load_reg8(hw.B, 20)
+    acpu.sub(hw.A, hw.B)
 
     flags = cpu_helper.get_flags_s()
 

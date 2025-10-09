@@ -9,18 +9,15 @@ from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
 pytestmark = pytest.mark.hardware
 
-A = hw.gp_reg("A")
-B = hw.gp_reg("B")
-
 def test_reg_a_latch(cpu_helper: CPUHelper) -> None:
-    cpu_helper.load_reg8(A, 54)
-    cpu_helper.load_reg8(B, 0)
+    cpu_helper.load_reg8(hw.A, 54)
+    cpu_helper.load_reg8(hw.B, 0)
 
     # Load another value into A, but "forget" to pulse the
     # inverted clock
     cpu_helper.client.bus_set(40)
     control = CtrlWord()\
-        .enable(A.load)
+        .enable(hw.A.load)
     cpu_helper.client.ctrl_commit(control.c_word)
 
     cpu_helper.client.clock_pulse()
@@ -32,8 +29,8 @@ def test_reg_a_latch(cpu_helper: CPUHelper) -> None:
     # reading value on the bus
     control = CtrlWord()\
         .enable(hw.AddSub.out)\
-        .enable(A.alu_l)\
-        .enable(B.alu_r)
+        .enable(hw.A.alu_l)\
+        .enable(hw.B.alu_r)
     cpu_helper.client.ctrl_commit(control.c_word)
     value = cpu_helper.client.bus_get()
 

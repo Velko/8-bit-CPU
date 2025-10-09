@@ -4,7 +4,7 @@ import pytest
 import random
 
 from libcpu.devices import GPRegister, Flags
-from libcpu.DeviceSetup import hardware
+from libcpu.DeviceSetup import hardware as hw
 from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
@@ -13,9 +13,7 @@ from libcpu.opcodes import permute_gp_regs_nsame, gp_regs
 
 pytestmark = pytest.mark.hardware
 
-A = hardware.gp_reg("A")
-B = hardware.gp_reg("B")
-SP = hardware.a_ptr("SP")
+SP = hw.a_ptr("SP")
 
 def all_regs_and_bits() -> Iterator[tuple[GPRegister, int]]:
     bits = range(8)
@@ -35,7 +33,7 @@ def test_load_store_reg(cpu_helper: CPUHelper, acpu: AssistedCPU, register: GPRe
 
 @pytest.mark.parametrize("value", [~Flags.Empty, Flags.N, Flags.Z, Flags.C, Flags.V, Flags.Empty])
 def test_load_store_flags(cpu_helper: CPUHelper, acpu: AssistedCPU, value: Flags) -> None:
-    acpu.ldi (hardware.F, value)
+    acpu.ldi (hw.F, value)
     received = cpu_helper.get_flags()
 
     assert value == received
@@ -64,10 +62,10 @@ def test_lea(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 def test_mar_idx(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     cpu_helper.write_ram(0x45, 0xB5)
-    cpu_helper.load_reg8(B, 3)
+    cpu_helper.load_reg8(hw.B, 3)
 
-    acpu.ldx (A, Addr(0x42), B)
+    acpu.ldx (hw.A, Addr(0x42), hw.B)
 
-    val = cpu_helper.read_reg8(A)
+    val = cpu_helper.read_reg8(hw.A)
 
     assert val == 0xB5

@@ -17,6 +17,10 @@ class HardwareSetup:
         self.muxes = p_cfg.muxes
         self.devices = p_cfg.devices
 
+        self.A = self.get_typed_dev("A", dev.GPRegister)
+        self.B = self.get_typed_dev("B", dev.GPRegister)
+        self.C = self.get_typed_dev("C", dev.GPRegister)
+        self.D = self.get_typed_dev("D", dev.GPRegister)
 
         self.AddSub = self.get_typed_dev("AddSub", dev.ALU)
         self.F = self.get_typed_dev("F", dev.FlagsRegister)
@@ -49,13 +53,6 @@ class HardwareSetup:
         devices: list[dev.DeviceBase] = []
         devices.extend(self.devices.values())
         return devices
-
-    def gp_reg(self, name: str) -> dev.GPRegister:
-        d = self.devices.get(name)
-        if isinstance(d, dev.GPRegister):
-            return d
-        else:
-            raise ValueError(f"Device {name} is not a GPRegister")
 
     def a_ptr(self, name: str) -> dev.StackPointer:
         d = self.devices.get(name)
