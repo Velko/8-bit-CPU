@@ -13,8 +13,6 @@ from libcpu.opcodes import permute_gp_regs_nsame, gp_regs
 
 pytestmark = pytest.mark.hardware
 
-SP = hw.a_ptr("SP")
-
 def all_regs_and_bits() -> Iterator[tuple[GPRegister, int]]:
     bits = range(8)
 
@@ -51,11 +49,11 @@ def test_mov_a_b(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs:
 
 def test_lea(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
-    cpu_helper.load_reg16(SP, 0)
+    cpu_helper.load_reg16(hw.SP, 0)
 
-    acpu.lea(SP, Addr(0x4314))
+    acpu.lea(hw.SP, Addr(0x4314))
 
-    val = cpu_helper.read_reg16(SP)
+    val = cpu_helper.read_reg16(hw.SP)
 
     assert val == 0x4314
 

@@ -15,8 +15,6 @@ from conftest import FillRam
 
 pytestmark = pytest.mark.hardware
 
-SDP = hw.a_ptr("SDP")
-
 # can not make as a fixture, because it can not be
 # unpacked for parametrization (couldn't find a way)
 def make_random_addr() -> Sequence[int]:
@@ -68,12 +66,12 @@ def test_ldx_hw(cpu_helper: CPUHelper) -> None:
 @pytest.mark.parametrize("addr", random_addr)
 def test_load_sdp(cpu_helper: CPUHelper, acpu: AssistedCPU, fill_ram: FillRam, addr: int) -> None:
 
-    cpu_helper.load_reg16(SDP, addr)
+    cpu_helper.load_reg16(hw.SDP, addr)
 
-    acpu.lpi (hw.A, SDP)
+    acpu.lpi (hw.A, hw.SDP)
 
     actual = cpu_helper.read_reg8(hw.A)
-    new_addr = cpu_helper.read_reg16(SDP)
+    new_addr = cpu_helper.read_reg16(hw.SDP)
 
     assert fill_ram.contents[addr] == actual
     assert addr + 1 == new_addr

@@ -30,6 +30,8 @@ class HardwareSetup:
         self.Clock = self.get_typed_dev("Clock", dev.Clock)
         self.StepCounter = self.get_typed_dev("StepCounter", dev.StepCounter)
         self.PC = self.get_typed_dev("PC", dev.ProgramCounter)
+        self.SP = self.get_typed_dev("SP", dev.StackPointer)
+        self.SDP = self.get_typed_dev("SDP", dev.StackPointer)
         self.TX = self.get_typed_dev("TX", dev.TransferRegister)
         self.TL = self.get_typed_dev("TL", dev.TransferRegister)
         self.TH = self.get_typed_dev("TH", dev.TransferRegister)
