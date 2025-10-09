@@ -4,7 +4,7 @@ from .pin import SimplePin, Level, Mux, MuxPin, PinUsage
 from .pin_cfg import PinConfig
 import os.path
 
-from typing import TypeVar, Type, cast
+from typing import TypeVar, Type
 
 T = TypeVar('T')
 
@@ -44,7 +44,7 @@ class HardwareSetup:
         device = self.devices.get(name)
         if not isinstance(device, expected_type):
             raise TypeError(f"Expected type {expected_type.__name__} for key '{name}', got {type(device).__name__}")
-        return cast(T, device)
+        return device
 
     def get(self, key: str) -> dev.DeviceBase | None:
         if key in self.devices:
