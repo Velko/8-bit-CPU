@@ -186,6 +186,14 @@ class Regs:
     def LR(self, value: int) -> None:
         self.cpu.load_reg16(hardware.LR, value & 0xFFFF)
 
+    @property
+    def PC(self) -> int:
+        return self.cpu.read_reg16(hardware.PC)
+    @PC.setter
+    def PC(self, value: int) -> None:
+        self.cpu.load_reg16(hardware.PC, value & 0xFFFF)
+
+
 class Memory:
     def __init__(self, cpu: CPUHelper) -> None:
         self.cpu = cpu
