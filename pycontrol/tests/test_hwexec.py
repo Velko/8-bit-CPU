@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import pytest
-from libcpu.DeviceSetup import hardware as hw
+from libcpu.devmap import A, PC
 
 pytestmark = pytest.mark.hardware
 
@@ -17,13 +17,13 @@ def test_ldi_on_hw(cpu_helper: CPUHelper) -> None:
                            123])
 
     # reset A, to see if changed
-    cpu_helper.load_reg8(hw.A, 0)
+    cpu_helper.load_reg8(A, 0)
 
     # run program on hardware
     cpu_helper.run_snippet(0x32, ldi_test_prog)
 
     # assert
-    val = cpu_helper.read_reg8(hw.A)
+    val = cpu_helper.read_reg8(A)
     assert val == 123
 
 @pytest.mark.hardware
@@ -39,7 +39,7 @@ def test_rjmp_on_hw(cpu_helper: CPUHelper) -> None:
 
     cpu_helper.run_snippet(0x8, rjmp_test_prog)
 
-    val = cpu_helper.read_reg16(hw.PC)
+    val = cpu_helper.read_reg16(PC)
 
     # should point to next instruction after brk
     assert val == 0x0C

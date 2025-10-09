@@ -4,7 +4,7 @@ import pytest
 
 from libcpu.cpu_helper import CPUHelper
 from libcpu.pinclient import PinClient
-from libcpu.DeviceSetup import hardware as hw
+from libcpu.devmap import ACalc
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 from libcpu.util import unwrap
 
@@ -24,16 +24,16 @@ def test_acalc(pins_client_real: PinClient, _name: str, addr: int, offset: int, 
     pins_client_real.addr_set(addr)
 
     control = CtrlWord()\
-        .enable(hw.ACalc.load)
+        .enable(ACalc.load)
 
     if signed:
-        control.enable(hw.ACalc.signed)
+        control.enable(ACalc.signed)
 
     pins_client_real.ctrl_commit(control.c_word)
     pins_client_real.clock_tick()
 
     pins_client_real.off(DEFAULT_CW.c_word)
 
-    readback = cpu_helper.read_reg16(hw.ACalc)
+    readback = cpu_helper.read_reg16(ACalc)
 
     assert  expected == readback

@@ -4,7 +4,7 @@ import pytest
 
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
-from libcpu.DeviceSetup import hardware as hw
+from libcpu.devmap import A, B
 from libcpu.opcodes import permute_gp_regs_nsame, gp_regs, opcode_of
 from libcpu.devices import GPRegister, Flags
 
@@ -220,11 +220,11 @@ def test_xor(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPR
     assert str(flags) == case.xflags
 
 def test_xor_zero_same(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(hw.A, 0x5A)
+    cpu_helper.load_reg8(A, 0x5A)
 
-    acpu.clr(hw.A)
+    acpu.clr(A)
 
-    value = cpu_helper.read_reg8(hw.A)
+    value = cpu_helper.read_reg8(A)
     flags = cpu_helper.get_flags(Flags.Z | Flags.N)
 
     assert value == 0

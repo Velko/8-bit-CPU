@@ -2,7 +2,7 @@
 
 import pytest
 
-from libcpu.DeviceSetup import hardware as hw
+from libcpu.devmap import A, B, AddSub, IR, TH, TL, TX
 from libcpu.cpu_helper import CPUHelper
 from collections.abc import Iterator
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
@@ -10,14 +10,14 @@ from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 pytestmark = pytest.mark.hardware
 
 def test_reg_a_latch(cpu_helper: CPUHelper) -> None:
-    cpu_helper.load_reg8(hw.A, 54)
-    cpu_helper.load_reg8(hw.B, 0)
+    cpu_helper.load_reg8(A, 54)
+    cpu_helper.load_reg8(B, 0)
 
     # Load another value into A, but "forget" to pulse the
     # inverted clock
     cpu_helper.client.bus_set(40)
     control = CtrlWord()\
-        .enable(hw.A.load)
+        .enable(A.load)
     cpu_helper.client.ctrl_commit(control.c_word)
 
     cpu_helper.client.clock_pulse()
@@ -28,9 +28,9 @@ def test_reg_a_latch(cpu_helper: CPUHelper) -> None:
     # Not try to sense what it sends to ALU by enabling it and
     # reading value on the bus
     control = CtrlWord()\
-        .enable(hw.AddSub.out)\
-        .enable(hw.A.alu_l)\
-        .enable(hw.B.alu_r)
+        .enable(AddSub.out)\
+        .enable(A.alu_l)\
+        .enable(B.alu_r)
     cpu_helper.client.ctrl_commit(control.c_word)
     value = cpu_helper.client.bus_get()
 
@@ -50,7 +50,7 @@ def singlebit_vals() -> Iterator[int]:
 def test_ir_load(cpu_helper: CPUHelper, expected: int) -> None:
     cpu_helper.client.bus_set(expected)
     control = CtrlWord()\
-        .enable(hw.IR.load)
+        .enable(IR.load)
     cpu_helper.client.ctrl_commit(control.c_word)
     cpu_helper.client.clock_tick()
 
@@ -61,10 +61,10 @@ def test_ir_load(cpu_helper: CPUHelper, expected: int) -> None:
     assert readback == expected
 
 def test_tx_load(cpu_helper: CPUHelper) -> None:
-    cpu_helper.load_reg8(hw.TH, 0x12)
-    cpu_helper.load_reg8(hw.TL, 0x34)
+    cpu_helper.load_reg8(TH, 0x12)
+    cpu_helper.load_reg8(TL, 0x34)
 
 
-    loaded = cpu_helper.read_reg16(hw.TX)
+    loaded = cpu_helper.read_reg16(TX)
 
     assert loaded == 0x1234

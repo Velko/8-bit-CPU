@@ -2,16 +2,16 @@ import pytest
 
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
-from libcpu.DeviceSetup import hardware as hw
+from libcpu.devmap import A, B, C, D
 from libcpu.opcodes import opcode_of
 from libcpu.util import OutMessage
 
 from collections.abc import Iterator
 
 def test_outa_emu_char(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(hw.A, 120)
+    cpu_helper.load_reg8(A, 120)
 
-    message = acpu.out(4, hw.A)
+    message = acpu.out(4, A)
 
     assert isinstance(message, OutMessage)
     assert message.payload == 'x'
@@ -30,11 +30,11 @@ outb_args = [
 
 @pytest.mark.parametrize("_desc,mode,val,expected", outb_args)
 def test_outa_emu_num(cpu_helper: CPUHelper, acpu: AssistedCPU, _desc: str, mode: int, val: int, expected: str) -> None:
-    cpu_helper.load_reg8(hw.B, mode)
-    acpu.out(1, hw.B)
+    cpu_helper.load_reg8(B, mode)
+    acpu.out(1, B)
 
-    cpu_helper.load_reg8(hw.A, val)
-    message = acpu.out(0, hw.A)
+    cpu_helper.load_reg8(A, val)
+    message = acpu.out(0, A)
 
     assert isinstance(message, OutMessage)
     assert message.payload == expected
@@ -43,9 +43,9 @@ def test_outa_emu_num(cpu_helper: CPUHelper, acpu: AssistedCPU, _desc: str, mode
 @pytest.mark.parametrize("_desc,mode,val,expected", outb_args)
 def test_outb_int_hw(cpu_helper: CPUHelper, _desc: str, mode: int, val: int, expected: str) -> None:
 
-    cpu_helper.load_reg8(hw.D, mode)
+    cpu_helper.load_reg8(D, mode)
 
-    cpu_helper.load_reg8(hw.B, val)
+    cpu_helper.load_reg8(B, val)
 
     # prepare binary of:
     #   out 1, D
@@ -64,7 +64,7 @@ def test_outb_int_hw(cpu_helper: CPUHelper, _desc: str, mode: int, val: int, exp
 @pytest.mark.emulator
 def test_outc_char_hw(cpu_helper: CPUHelper) -> None:
 
-    cpu_helper.load_reg8(hw.C, 102)
+    cpu_helper.load_reg8(C, 102)
 
     # prepare binary of:
     #   out 4, C
@@ -79,7 +79,7 @@ def test_outc_char_hw(cpu_helper: CPUHelper) -> None:
 @pytest.mark.emulator
 def test_outc_newline_hw(cpu_helper: CPUHelper) -> None:
 
-    cpu_helper.load_reg8(hw.C, 10)
+    cpu_helper.load_reg8(C, 10)
 
     # prepare binary of:
     #   out 4, C

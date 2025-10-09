@@ -4,7 +4,7 @@ import pytest
 import random
 
 from libcpu.devices import GPRegister, Flags
-from libcpu.DeviceSetup import hardware as hw
+from libcpu.devmap import F, SP, A, B
 from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
@@ -31,7 +31,7 @@ def test_load_store_reg(cpu_helper: CPUHelper, acpu: AssistedCPU, register: GPRe
 
 @pytest.mark.parametrize("value", [~Flags.Empty, Flags.N, Flags.Z, Flags.C, Flags.V, Flags.Empty])
 def test_load_store_flags(cpu_helper: CPUHelper, acpu: AssistedCPU, value: Flags) -> None:
-    acpu.ldi (hw.F, value)
+    acpu.ldi (F, value)
     received = cpu_helper.get_flags()
 
     assert value == received
@@ -49,21 +49,21 @@ def test_mov_a_b(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs:
 
 def test_lea(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
-    cpu_helper.load_reg16(hw.SP, 0)
+    cpu_helper.load_reg16(SP, 0)
 
-    acpu.lea(hw.SP, Addr(0x4314))
+    acpu.lea(SP, Addr(0x4314))
 
-    val = cpu_helper.read_reg16(hw.SP)
+    val = cpu_helper.read_reg16(SP)
 
     assert val == 0x4314
 
 def test_mar_idx(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     cpu_helper.write_ram(0x45, 0xB5)
-    cpu_helper.load_reg8(hw.B, 3)
+    cpu_helper.load_reg8(B, 3)
 
-    acpu.ldx (hw.A, Addr(0x42), hw.B)
+    acpu.ldx (A, Addr(0x42), B)
 
-    val = cpu_helper.read_reg8(hw.A)
+    val = cpu_helper.read_reg8(A)
 
     assert val == 0xB5

@@ -4,7 +4,7 @@ import pytest
 
 
 from libcpu.opcodes import opcodes
-from libcpu.DeviceSetup import hardware as hw
+from libcpu.devmap import PC
 from libcpu.devices import Flags
 from libcpu.opcode_builder import MicrocodeBuilder
 from libcpu.pin import MuxPin
@@ -21,17 +21,17 @@ def calc_flags_alt_PC_counts() -> Iterator[tuple[str, int, int, str, str]]:
     for name, microcode in filter(lambda opc: opc[1].is_flag_dependent(), opcodes.items()):
 
         # count PC increments in default path
-        default_len = sum(1 for s in microcode._steps if hw.PC.out in s)
+        default_len = sum(1 for s in microcode._steps if PC.out in s)
 
         # and compare it to flags-alternative
         for f_alt in microcode.f_alt:
 
             # skip those where PC is loaded with new value
-            if hw.PC.load in f_alt.steps[-1]:
+            if PC.load in f_alt.steps[-1]:
                 continue
 
             # count PC increments in flags-alt steps
-            alt_len = sum(1 for s in f_alt.steps if hw.PC.out in s)
+            alt_len = sum(1 for s in f_alt.steps if PC.out in s)
 
             yield name, default_len, alt_len, str(f_alt.mask), str(f_alt.value)
 
