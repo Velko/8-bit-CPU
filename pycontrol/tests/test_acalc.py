@@ -34,6 +34,4 @@ def test_acalc(pins_client_real: PinClient, _name: str, addr: int, offset: int, 
 
     pins_client_real.off(DEFAULT_CW.c_word)
 
-    readback = cpu_helper.read_reg16(ACalc)
-
-    assert  expected == readback
+    assert  expected == cpu_helper.regs.ACalc

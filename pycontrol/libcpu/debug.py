@@ -69,7 +69,7 @@ class Debugger:
     def step(self) -> None:
 
         if self.halted:
-            self.on_stop(StopReason.HALT, self.cpu_helper.read_reg16(hardware.PC))
+            self.on_stop(StopReason.HALT, self.cpu_helper.regs.PC)
             return
 
         if self.current_break is not None:
@@ -85,7 +85,7 @@ class Debugger:
             case HaltMessage():
                 self.halted = True
                 self.stopped = True
-                self.on_stop(StopReason.HALT, self.cpu_helper.read_reg16(hardware.PC))
+                self.on_stop(StopReason.HALT, self.cpu_helper.regs.PC)
                 return
 
             # breakpoint?
@@ -104,12 +104,12 @@ class Debugger:
             case OutMessage(payload):
                 self.on_output(payload)
 
-        self.on_stop(StopReason.STEP, self.cpu_helper.read_reg16(hardware.PC))
+        self.on_stop(StopReason.STEP, self.cpu_helper.regs.PC)
 
     def cont(self) -> None:
 
         if self.halted:
-            self.on_stop(StopReason.HALT, self.cpu_helper.read_reg16(hardware.PC))
+            self.on_stop(StopReason.HALT, self.cpu_helper.regs.PC)
             return
 
         self.stopped = False
@@ -131,7 +131,7 @@ class Debugger:
                     self.halted = True
                     self.stopped = True
                     # report the addess of HLT, not one past
-                    self.on_stop(StopReason.HALT, self.cpu_helper.read_reg16(hardware.PC) - 1)
+                    self.on_stop(StopReason.HALT, self.cpu_helper.regs.PC - 1)
                     break
 
                 case BrkMessage():
@@ -145,7 +145,7 @@ class Debugger:
 
     def steprun(self) -> None:
         if self.halted:
-            self.on_stop(StopReason.HALT, self.cpu_helper.read_reg16(hardware.PC))
+            self.on_stop(StopReason.HALT, self.cpu_helper.regs.PC)
             return
 
         self.stopped = False
@@ -185,11 +185,11 @@ class Debugger:
             del self.breakpoints[addr]
 
     def break_hit(self) -> Breakpoint | None:
-        addr = self.cpu_helper.read_reg16(hardware.PC) - 1
+        addr = self.cpu_helper.regs.PC - 1
 
         if addr in self.breakpoints:
             tmp_break = self.breakpoints[addr]
-            self.cpu_helper.load_reg8(hardware.IR, tmp_break.orig_op)
+            self.cpu_helper.regs.IR = tmp_break.orig_op
             self.on_stop(StopReason.DEBUG_BRK, addr)
             return tmp_break
 
@@ -215,7 +215,7 @@ class Debugger:
             registers[gpr.name] = self.cpu_helper.read_reg8(gpr)
         registers["Flags"] = self.cpu_helper.get_flags_s()
         if hardware.LR is not None:
-            registers["LR"] = self.cpu_helper.read_reg16(hardware.LR)
+            registers["LR"] = self.cpu_helper.regs.LR
         for ap in [r for r in hardware.devices.values() if isinstance(r, StackPointer)]:
             registers[ap.name] = self.cpu_helper.read_reg16(ap)
 
@@ -224,6 +224,6 @@ class Debugger:
         if self.current_break is not None:
             registers["PC"] = self.current_break.addr
         else:
-            registers["PC"] = self.cpu_helper.read_reg16(hardware.PC)
+            registers["PC"] = self.cpu_helper.regs.PC
 
         return registers

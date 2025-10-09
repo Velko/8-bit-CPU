@@ -39,7 +39,5 @@ def test_rjmp_on_hw(cpu_helper: CPUHelper) -> None:
 
     cpu_helper.run_snippet(0x8, rjmp_test_prog)
 
-    val = cpu_helper.read_reg16(PC)
-
     # should point to next instruction after brk
-    assert val == 0x0C
+    assert cpu_helper.regs.PC == 0x0C

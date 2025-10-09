@@ -193,6 +193,44 @@ class Regs:
     def PC(self, value: int) -> None:
         self.cpu.load_reg16(hardware.PC, value & 0xFFFF)
 
+    @property
+    def SDP(self) -> int:
+        return self.cpu.read_reg16(hardware.SDP)
+    @SDP.setter
+    def SDP(self, value: int) -> None:
+        self.cpu.load_reg16(hardware.SDP, value & 0xFFFF)
+
+    @property
+    def TX(self) -> int:
+        return self.cpu.read_reg16(hardware.TX)
+    @TX.setter
+    def TX(self, value: int) -> None:
+        self.cpu.load_reg16(hardware.TX, value & 0xFFFF)
+
+    @property
+    def TL(self) -> int:
+        return self.cpu.read_reg8(hardware.TL)
+    @TL.setter
+    def TL(self, value: int) -> None:
+        self.cpu.load_reg8(hardware.TL, value & 0xFF)
+
+    @property
+    def TH(self) -> int:
+        return self.cpu.read_reg8(hardware.TH)
+    @TH.setter
+    def TH(self, value: int) -> None:
+        self.cpu.load_reg8(hardware.TH, value & 0xFF)
+
+    @property
+    def IR(self) -> int:
+        return self.cpu.client.ir_get()
+    @IR.setter
+    def IR(self, value: int) -> None:
+        self.cpu.load_reg8(hardware.IR, value & 0xFF)
+
+    @property
+    def ACalc(self) -> int:
+        return self.cpu.read_reg16(hardware.ACalc)
 
 class Memory:
     def __init__(self, cpu: CPUHelper) -> None:

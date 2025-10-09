@@ -10,8 +10,8 @@ from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 pytestmark = pytest.mark.hardware
 
 def test_reg_a_latch(cpu_helper: CPUHelper) -> None:
-    cpu_helper.load_reg8(A, 54)
-    cpu_helper.load_reg8(B, 0)
+    cpu_helper.regs.A = 54
+    cpu_helper.regs.B = 0
 
     # Load another value into A, but "forget" to pulse the
     # inverted clock
@@ -61,10 +61,7 @@ def test_ir_load(cpu_helper: CPUHelper, expected: int) -> None:
     assert readback == expected
 
 def test_tx_load(cpu_helper: CPUHelper) -> None:
-    cpu_helper.load_reg8(TH, 0x12)
-    cpu_helper.load_reg8(TL, 0x34)
+    cpu_helper.regs.TH = 0x12
+    cpu_helper.regs.TL = 0x34
 
-
-    loaded = cpu_helper.read_reg16(TX)
-
-    assert loaded == 0x1234
+    assert cpu_helper.regs.TX == 0x1234

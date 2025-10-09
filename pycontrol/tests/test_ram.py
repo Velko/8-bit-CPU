@@ -42,14 +42,13 @@ def fill_ram(pins_client_real: PinClient) -> FillRam:
 def test_store_load(cpu_helper: CPUHelper, acpu: AssistedCPU, fill_ram: FillRam, addr: int) -> None:
 
     acpu.ld (A, Addr(addr))
-    actual = cpu_helper.read_reg8(A)
 
-    assert fill_ram.contents[addr] == actual
+    assert fill_ram.contents[addr] == cpu_helper.regs.A
 
 def test_ldx_hw(cpu_helper: CPUHelper) -> None:
 
-    cpu_helper.write_ram(0x2203, 0x33)
-    cpu_helper.load_reg8(B, 3)
+    cpu_helper.ram[0x2203] = 0x33
+    cpu_helper.regs.B = 3
 
     # prepare binary of:
     #   ldx A, 0x2200, B
@@ -59,19 +58,14 @@ def test_ldx_hw(cpu_helper: CPUHelper) -> None:
 
     cpu_helper.run_snippet(0x0, out_test_prog)
 
-    val = cpu_helper.read_reg8(A)
-
-    assert val == 0x33
+    assert cpu_helper.regs.A == 0x33
 
 @pytest.mark.parametrize("addr", random_addr)
 def test_load_sdp(cpu_helper: CPUHelper, acpu: AssistedCPU, fill_ram: FillRam, addr: int) -> None:
 
-    cpu_helper.load_reg16(SDP, addr)
+    cpu_helper.regs.SDP = addr
 
     acpu.lpi (A, SDP)
 
-    actual = cpu_helper.read_reg8(A)
-    new_addr = cpu_helper.read_reg16(SDP)
-
-    assert fill_ram.contents[addr] == actual
-    assert addr + 1 == new_addr
+    assert fill_ram.contents[addr] == cpu_helper.regs.A
+    assert addr + 1 == cpu_helper.regs.SDP
