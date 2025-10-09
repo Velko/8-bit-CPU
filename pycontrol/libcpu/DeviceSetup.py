@@ -32,6 +32,7 @@ class HardwareSetup:
         self.PC = self.get_typed_dev("PC", dev.ProgramCounter)
         self.SP = self.get_typed_dev("SP", dev.StackPointer)
         self.SDP = self.get_typed_dev("SDP", dev.StackPointer)
+        self.TDP = self.get_typed_dev("TDP", dev.StackPointer)
         self.TX = self.get_typed_dev("TX", dev.TransferRegister)
         self.TL = self.get_typed_dev("TL", dev.TransferRegister)
         self.TH = self.get_typed_dev("TH", dev.TransferRegister)
@@ -56,12 +57,12 @@ class HardwareSetup:
         devices.extend(self.devices.values())
         return devices
 
-    def a_ptr(self, name: str) -> dev.StackPointer:
+    def a_ptr(self, name: str) -> dev.AddressRegister:
         d = self.devices.get(name)
-        if isinstance(d, dev.StackPointer):
+        if isinstance(d, dev.AddressRegister):
             return d
         else:
-            raise ValueError(f"Device {name} is not an StackPointer")
+            raise ValueError(f"Device {name} is not an AddressRegister")
 
 hardware = HardwareSetup()
 
