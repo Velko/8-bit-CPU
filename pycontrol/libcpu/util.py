@@ -28,6 +28,7 @@ class ControlSignal:
 
 @dataclass
 class OutMessage:
+    target: int
     payload: str
 
 @dataclass

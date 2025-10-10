@@ -105,7 +105,7 @@ class PinClient:
             case "#BRK":
                 return BrkMessage()
             case _ if line.startswith("#FOUT#"):
-                return OutMessage(line[6:].replace("\\n", "\n"))
+                return OutMessage(0, line[6:].replace("\\n", "\n"))
 
         raise ProtocolException(f"RunMessage was expected, got: /{line}/")
 

@@ -125,7 +125,7 @@ class CPUHelper:
                     break
                 case HaltMessage():
                     raise InvalidOpcodeException("Unexpected exit")
-                case OutMessage(payload):
+                case OutMessage(target, payload):
                     captured_output.write(payload)
 
         return captured_output.getvalue()

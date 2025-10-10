@@ -4,6 +4,7 @@ from .markers import AddrBase
 from .devices import RAM, DeviceBase
 from .util import ControlSignal, UninitializedError
 from .pinclient import PinClient
+from typing import Tuple
 
 class EnableCallback(ControlSignal):
     def __init__(self, callback: Callable[[int], int], original: ControlSignal) -> None:
@@ -112,22 +113,22 @@ class IOMonitor:
     def select_port(self, port: int) -> None:
         self.selected_port = port
 
-    def format_value(self, value: int) -> str | None:
+    def format_value(self, value: int) -> Tuple[int, str] | None:
         if self.selected_port == 1:
             self.numeric_mode = value
             return None
 
         if self.selected_port == 0:
             if self.numeric_mode == 0:
-                return f"\033[1;31m{value:>4}\033[0m\n"
+                return self.selected_port, f"\033[1;31m{value:>4}\033[0m\n"
             if self.numeric_mode == 1:
-                return f"\033[1;31m{sign_extend(value):>4}\033[0m\n"
+                return self.selected_port, f"\033[1;31m{sign_extend(value):>4}\033[0m\n"
             if self.numeric_mode == 2:
-                return f"\033[1;31mh {value:02x}\033[0m\n"
+                return self.selected_port, f"\033[1;31mh {value:02x}\033[0m\n"
             if self.numeric_mode == 3:
-                return f"\033[1;31mo{value:>o}\033[0m\n"
-        elif IOMon.selected_port == 4:
-            return chr(value)
+                return self.selected_port, f"\033[1;31mo{value:>o}\033[0m\n"
+        elif self.selected_port == 4:
+            return self.selected_port, chr(value)
 
         return None
 

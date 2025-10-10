@@ -70,9 +70,9 @@ class AssistedCPUEngine:
                 IOMon.select_port(self.client.bus_get())
 
             if hardware.IOCtl is not None and control.is_enabled(hardware.IOCtl.to_dev):
-                formatted = IOMon.format_value(self.client.bus_get())
-                if formatted is not None:
-                    result = OutMessage(formatted)
+                tf = IOMon.format_value(self.client.bus_get())
+                if tf is not None:
+                    result = OutMessage(*tf)
 
             self.client.clock_tick()
 

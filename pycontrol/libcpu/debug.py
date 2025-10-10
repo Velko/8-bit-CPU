@@ -101,8 +101,8 @@ class Debugger:
                     self.backend.execute_mnemonic("nop")
 
             # port output
-            case OutMessage(payload):
-                self.on_output(payload)
+            case OutMessage(target, payload):
+                self.on_output(target, payload)
 
         self.on_stop(StopReason.STEP, self.cpu_helper.regs.PC)
 
@@ -139,8 +139,8 @@ class Debugger:
                     self.current_break = self.break_hit()
                     break
 
-                case OutMessage(payload):
-                    self.on_output(payload)
+                case OutMessage(target, payload):
+                    self.on_output(target, payload)
 
 
     def steprun(self) -> None:
@@ -206,7 +206,7 @@ class Debugger:
             case StopReason.CODE_BRK:
                 print (f"# Hardcoded breakpoint @ {addr:04x}")
 
-    def output_event(self, msg: str) -> None:
+    def output_event(self, target: int, msg: str) -> None:
         print(msg, end="", flush=True)
 
     def get_registers(self) -> Mapping[str, int | str]:
