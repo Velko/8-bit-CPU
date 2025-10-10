@@ -3,8 +3,6 @@
 
 import sys
 import argparse
-import localpath
-localpath.install()
 from libcpu.util import OutMessage, HaltMessage, BrkMessage
 from libcpu.pinclient import get_client_instance
 from libcpu.cpu_helper import CPUHelper

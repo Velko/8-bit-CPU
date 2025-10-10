@@ -2,8 +2,6 @@ import pytest
 import random
 import os
 from dataclasses import dataclass
-import localpath
-localpath.install()
 
 from libcpu.cpu_helper import CPUHelper
 from collections.abc import  Sequence, Iterator, Iterable

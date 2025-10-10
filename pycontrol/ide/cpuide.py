@@ -1,8 +1,5 @@
 #!/usr/bin/python3
 
-import localpath
-localpath.install()
-
 import sys
 
 import gi

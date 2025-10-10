@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 
-import localpath
-localpath.install()
-
 from collections.abc import Iterator, Sequence
 from typing import TypeVar
 from libcpu.opcode_builder import MicroCode

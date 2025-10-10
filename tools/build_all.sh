@@ -1,6 +1,10 @@
 #!/bin/sh
+set -e
 
 cd $(dirname $0)/../pycontrol/tools
+echo "Install PTH"
+./install-pth.py
+
 echo "CustomASM definitions"
 ./casmdefs.py
 echo "Microcode C files"

@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 
-import localpath
-localpath.install()
-
 from libcpu.discovery import all_pins
 from libcpu.ctrl_word import CtrlWord
 

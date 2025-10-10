@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 
-import localpath
-localpath.install()
-
 from libcpu.discovery import simple_pins, mux_pins, all_muxes
 
 pinmap: dict[int, str] = {}

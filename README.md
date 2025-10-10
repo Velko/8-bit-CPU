@@ -308,7 +308,6 @@ Repository index
 * **pycontrol** - Python-based control logic, microcode, tests, demo programs, etc.
     * **ide** - a simple PyGTK-based IDE with graphical debugger
     * **libcpu** - main implementation of control logic, microcode
-    * **localpath** - helper lib, bring arbitary locations in package search path
     * **stubs** - MyPy type definitions for packages that lack those
     * **tests** - PyTest scripts, testing (real or emulated) hardware and PyControl itself
     * **tools** - various tools that generates microcode, customasm definitions, execute and debug binaries
