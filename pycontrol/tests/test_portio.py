@@ -4,7 +4,7 @@ from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.devmap import A, B, C, D
 from libcpu.opcodes import opcode_of
-from libcpu.util import OutMessage
+from libcpu.util import OutMessage, ansi_red
 
 from collections.abc import Iterator
 
@@ -16,16 +16,13 @@ def test_outa_emu_char(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     assert isinstance(message, OutMessage)
     assert message.payload == 'x'
 
-def ansi_red(text: str) -> str:
-    return f"\x1b[1;31m{text}\x1b[0m\n"
-
 outb_args = [
-    ("unsigned small", 0, 110, ansi_red(" 110")),
-    ("unsigned large", 0, 245, ansi_red(" 245")),
-    ("signed positive", 1, 40, ansi_red("  40")),
-    ("signed negative", 1, 140, ansi_red("-116")),
-    ("hex", 2, 233, ansi_red("h e9")),
-    ("oct", 3, 89, ansi_red("o131")),
+    ("unsigned small", 0, 110, ansi_red(" 110\n")),
+    ("unsigned large", 0, 245, ansi_red(" 245\n")),
+    ("signed positive", 1, 40, ansi_red("  40\n")),
+    ("signed negative", 1, 140, ansi_red("-116\n")),
+    ("hex", 2, 233, ansi_red("h e9\n")),
+    ("oct", 3, 89, ansi_red("o131\n")),
 ]
 
 @pytest.mark.parametrize("_desc,mode,val,expected", outb_args)
@@ -37,7 +34,8 @@ def test_outa_emu_num(cpu_helper: CPUHelper, acpu: AssistedCPU, _desc: str, mode
     message = acpu.out(0, A)
 
     assert isinstance(message, OutMessage)
-    assert message.payload == expected
+    assert message.target == 0
+    assert message.formatted() == expected
 
 @pytest.mark.emulator
 @pytest.mark.parametrize("_desc,mode,val,expected", outb_args)

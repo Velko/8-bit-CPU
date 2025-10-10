@@ -96,6 +96,8 @@ class AssistedCPUEngine:
                 # not sure if really need to assert, but Ok for now
                 assert isinstance(hw_message, OutMessage)
                 assert hw_message.payload == result.payload
+                assert hw_message.target == result.target
+
 
             # Drop current opcode since it was a prefix for extended one
             if control.is_enabled(hardware.StepCounter.extended):

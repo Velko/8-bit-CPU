@@ -30,6 +30,10 @@ class ControlSignal:
 class OutMessage:
     target: int
     payload: str
+    def formatted(self) -> str:
+        if self.target == 0:
+            return ansi_red(self.payload)
+        return self.payload
 
 @dataclass
 class HaltMessage:
@@ -41,3 +45,5 @@ class BrkMessage:
 
 RunMessage = OutMessage | HaltMessage | BrkMessage
 
+def ansi_red(text: str) -> str:
+    return f"\x1b[1;31m{text}\x1b[0m"

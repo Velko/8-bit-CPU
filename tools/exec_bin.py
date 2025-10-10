@@ -45,8 +45,8 @@ def run() -> None:
                 print ("# Break", flush=True, file=sys.stderr)
                 break
 
-            case OutMessage(payload):
-                print(payload, end="", flush=True)
+            case OutMessage(target, payload):
+                print(msg.formatted(), end="", flush=True)
 
 def monitor() -> None:
     print ("# Running (raw)...", flush=True, file=sys.stderr)

@@ -14,10 +14,10 @@ python3 -m pytest
 
 cd ../demo
 
-../tools/exec_bin.py hello.bin | grep -q "Hello, World!"
-../tools/exec_bin.py prime_sieve.bin | diff -u primes.txt -
-../tools/exec_bin.py double_dabble.bin | grep -q "36324058"
-../tools/exec_bin.py -M uart_output.bin | diff -u uart_output.txt -
+../tools/exec_bin.py hello.bin | grep -q "Hello, World!" || echo "FAILED: hello.bin"
+../tools/exec_bin.py prime_sieve.bin | diff -u primes.txt - || echo "FAILED: prime_sieve.bin"
+../tools/exec_bin.py double_dabble.bin | grep -q "36324058" || echo "FAILED: double_dabble.bin"
+../tools/exec_bin.py -M uart_output.bin | diff -u uart_output.txt - || echo "FAILED: uart_output.bin"
 
 
 kill -- -$$

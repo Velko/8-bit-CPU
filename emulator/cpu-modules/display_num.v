@@ -13,10 +13,10 @@ module display_num(
     always @(posedge clk) begin
         if (load_val) begin
             case (ifmt_mode)
-            0: $sformat(out_fmt, "#FOUT#0#\033[1;31m %d\033[0m\\n", main_bus);
-            1: $sformat(out_fmt, "#FOUT#0#\033[1;31m%d\033[0m\\n", signed_bus);
-            2: $sformat(out_fmt, "#FOUT#0#\033[1;31mh %h\033[0m\\n", main_bus);
-            3: $sformat(out_fmt, "#FOUT#0#\033[1;31mo%o\033[0m\\n", main_bus);
+            0: $sformat(out_fmt, "#FOUT#0# %d\\n", main_bus);
+            1: $sformat(out_fmt, "#FOUT#0#%d\\n", signed_bus);
+            2: $sformat(out_fmt, "#FOUT#0#h %h\\n", main_bus);
+            3: $sformat(out_fmt, "#FOUT#0#o%o\\n", main_bus);
             default: $swrite(out_fmt, "#FOUT#0#x\\n");
             endcase
             $hdb_send_str(out_fmt);

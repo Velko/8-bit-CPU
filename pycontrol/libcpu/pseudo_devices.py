@@ -120,17 +120,18 @@ class IOMonitor:
 
         if self.selected_port == 0:
             if self.numeric_mode == 0:
-                return self.selected_port, f"\033[1;31m{value:>4}\033[0m\n"
+                return self.selected_port, f"{value:>4}\n"
             if self.numeric_mode == 1:
-                return self.selected_port, f"\033[1;31m{sign_extend(value):>4}\033[0m\n"
+                return self.selected_port, f"{sign_extend(value):>4}\n"
             if self.numeric_mode == 2:
-                return self.selected_port, f"\033[1;31mh {value:02x}\033[0m\n"
+                return self.selected_port, f"h {value:02x}\n"
             if self.numeric_mode == 3:
-                return self.selected_port, f"\033[1;31mo{value:>o}\033[0m\n"
+                return self.selected_port, f"o{value:>o}\n"
         elif self.selected_port == 4:
             return self.selected_port, chr(value)
 
         return None
+
 
 
 Imm = ImmediateValue()
