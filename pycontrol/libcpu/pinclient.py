@@ -1,6 +1,7 @@
 import os
 from collections.abc import Iterator
 import socket
+import re
 from .util import RunMessage, OutMessage, HaltMessage, BrkMessage
 
 LOCAL_PORT = 9999
@@ -95,6 +96,8 @@ class PinClient:
             text = packet.decode('ascii')
             yield text
 
+    FOUT_RE = re.compile(r"#FOUT#(\d+)#(.*)")
+
     def receive_message(self) -> RunMessage:
         packet, src = self.serial.recvfrom(1024)
         line = packet.decode('ascii').strip('\r\n')
@@ -104,8 +107,10 @@ class PinClient:
                 return HaltMessage()
             case "#BRK":
                 return BrkMessage()
-            case _ if line.startswith("#FOUT#"):
-                return OutMessage(0, line[6:].replace("\\n", "\n"))
+            case _ if m := self.FOUT_RE.match(line):
+                target = int(m.group(1))
+                payload = m.group(2).replace("\\n", "\n")
+                return OutMessage(target, payload)
 
         raise ProtocolException(f"RunMessage was expected, got: /{line}/")
 

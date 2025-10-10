@@ -9,10 +9,10 @@ module display_char(
     always @(posedge clk) begin
         if (load_val) begin
             if (main_bus == "\n") begin
-                $swrite(out_fmt, "#FOUT#\\n");
+                $swrite(out_fmt, "#FOUT#4#\\n");
             end
             else begin
-                $sformat(out_fmt, "#FOUT#%c", main_bus);
+                $sformat(out_fmt, "#FOUT#4#%c", main_bus);
             end
             $hdb_send_str(out_fmt);
         end

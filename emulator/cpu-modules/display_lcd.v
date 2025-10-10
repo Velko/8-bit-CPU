@@ -24,10 +24,10 @@ module display_lcd(
         /* Data write */
         if (!rnw && rs && busy_val == 8'h00) begin
             if (io_bus == "\n") begin
-                $swrite(out_fmt, "#FOUT#\\n");
+                $swrite(out_fmt, "#FOUT#16#\\n");
             end
             else begin
-                $sformat(out_fmt, "#FOUT#%c", io_bus);
+                $sformat(out_fmt, "#FOUT#16#%c", io_bus);
             end
             $hdb_send_str(out_fmt);
             busy_val <= 8'h80;
