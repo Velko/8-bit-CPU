@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from .cpu_helper import CPUHelper
 from .pinclient import PinClient
 from .DeviceSetup import hardware
-from .util import OutMessage, HaltMessage, BrkMessage
+from .messages import OutMessage, HaltMessage, BrkMessage
 from .opcodes import opcodes
 from .assisted_cpu import AssistedCPU
 from .devices import GPRegister, StackPointer

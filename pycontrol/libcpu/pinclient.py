@@ -2,7 +2,7 @@ import os
 from collections.abc import Iterator
 import socket
 import re
-from .util import RunMessage, OutMessage, HaltMessage, BrkMessage
+from .messages import RunMessage, OutMessage, HaltMessage, BrkMessage
 
 LOCAL_PORT = 9999
 TARGET_IP = "127.0.0.1"

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from io import StringIO
-from libcpu.util import RunMessage, OutMessage, HaltMessage, BrkMessage
+from .messages import RunMessage, OutMessage, HaltMessage, BrkMessage
 from libcpu.devices import Register, WORegister
 from libcpu.opcodes import InvalidOpcodeException, opcode_of
 from libcpu.pinclient import PinClient

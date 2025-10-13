@@ -7,7 +7,7 @@ from .opcodes import opcodes, ops_by_code, fetch, InvalidOpcodeException
 from .pinclient import PinClient
 from .ctrl_word import CtrlWord, DEFAULT_CW
 from .pin import ControlSignal
-from .util import RunMessage, OutMessage, HaltMessage, BrkMessage
+from .messages import RunMessage, OutMessage, HaltMessage, BrkMessage
 
 class AssistedCPUEngine:
     def __init__(self, client: PinClient) -> None:

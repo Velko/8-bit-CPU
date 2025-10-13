@@ -1,5 +1,5 @@
 from typing import overload
-from .util import RunMessage
+from .messages import RunMessage
 from .devices import GPRegister, Flags, FlagsRegister, AddressRegister
 from .markers import AddrBase
 from .pinclient import PinClient
