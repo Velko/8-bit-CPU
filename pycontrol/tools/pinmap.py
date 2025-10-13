@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
-from libcpu.discovery import simple_pins, mux_pins, all_muxes
+from libcpu.DeviceSetup import hardware as hw
 
 pinmap: dict[int, str] = {}
 
-for name, pin in simple_pins():
+for name, pin in hw.simple_pins():
     pinmap[pin.num] = name
 
-for name, mux in all_muxes():
+for name, mux in hw.all_muxes():
     for i, mp in enumerate(mux.pins):
         pinmap[mp] = f"{name}.{i}"
 
@@ -24,11 +24,11 @@ for p in range(totalpins):
     else:
         print (f"{p:2} -")
 
-for name, mux in all_muxes():
+for name, mux in hw.all_muxes():
     print (name, mux.pins)
     mpm: dict[int, str] = {}
 
-    for mpname, mpin in mux_pins(mux):
+    for mpname, mpin in hw.mux_pins(mux):
         mpm[mpin.num] = mpname
 
     mpm[mux.default] = "(default)"

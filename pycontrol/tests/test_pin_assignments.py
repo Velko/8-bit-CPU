@@ -2,16 +2,16 @@
 
 import pytest
 
-from libcpu.discovery import simple_pins, all_muxes, mux_pins
+from libcpu.DeviceSetup import hardware as hw
 from libcpu.pin import Mux
 from collections.abc import Iterator
 
 def simple_pin_nums() -> Iterator[tuple[str, int]]:
-    for name, pin in simple_pins():
+    for name, pin in hw.simple_pins():
         yield name, pin.num
 
 def mux_addr_lines() -> Iterator[tuple[str, int]]:
-    for name, mux in all_muxes():
+    for name, mux in hw.all_muxes():
         for num, pin in enumerate(mux.pins):
             yield f"{name}.A{num}", pin
 
@@ -31,7 +31,7 @@ def test_simple_pin_and_mux_addr_overlap(_name_a: str, pin_a: int, _name_b: str,
 
 
 def pins_in_mux(mux: Mux, include_default: bool) -> Iterator[tuple[str, int]]:
-    for name, pin in mux_pins(mux):
+    for name, pin in hw.mux_pins(mux):
         yield name, pin.num
 
     # also add default as assigned pin
@@ -40,7 +40,7 @@ def pins_in_mux(mux: Mux, include_default: bool) -> Iterator[tuple[str, int]]:
 
 def each_pin_with_others_in_mux() -> Iterator[tuple[str, int, str, int]]:
 
-    for mux_name, mux in all_muxes():
+    for mux_name, mux in hw.all_muxes():
         mpins = list(pins_in_mux(mux, True))
 
         for a_id, (a_name, a_num) in enumerate(mpins):
@@ -54,7 +54,7 @@ def test_mux_pin_overlap(_name_a: str, pin_a: int, _name_b: str, pin_b: int) -> 
 
 
 def each_pin_with_capacity_in_mux() -> Iterator[tuple[str, int, int]]:
-    for mux_name, mux in all_muxes():
+    for mux_name, mux in hw.all_muxes():
         mpins = list(pins_in_mux(mux, False))
         capacity = 2**len(mux.pins)
         for p_name, p_num in mpins:

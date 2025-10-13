@@ -1,9 +1,10 @@
 from . import devices as dev
 from .pseudo_devices import RamProxy
-from .pin import SimplePin, Level, Mux, MuxPin, PinUsage
+from .pin import Pin, SimplePin, Level, Mux, MuxPin, PinUsage
 from .pin_cfg import PinConfig
 import os.path
 
+from collections.abc import Iterator
 from typing import TypeVar, Type
 
 T = TypeVar('T')
@@ -63,6 +64,33 @@ class HardwareSetup:
             return d
         else:
             raise ValueError(f"Device {name} is not an AddressRegister")
+
+    def all_pins(self) -> Iterator[tuple[str, Pin]]:
+        dupe_filter = set()
+        for dev in self.devices.values():
+            pin_attrs = filter(lambda x: isinstance(x[1], Pin), vars(dev).items())
+            for a_name, attr in pin_attrs:
+                if attr not in dupe_filter:
+                    dupe_filter.add(attr)
+                    if attr.name is not None:
+                        yield f"{attr.name}", attr
+                    else:
+                        yield f"{dev.name}.{a_name}", attr
+
+    def simple_pins(self) -> Iterator[tuple[str, SimplePin]]:
+        for name, pin in self.all_pins():
+            if isinstance(pin, SimplePin):
+                yield name, pin
+
+    def all_muxes(self) -> Iterator[tuple[str, Mux]]:
+        for v_name, var in self.muxes.items():
+            if isinstance(var, Mux):
+                yield v_name, var
+
+    def mux_pins(self, mux: Mux) -> Iterator[tuple[str, MuxPin]]:
+        for name, pin in self.all_pins():
+            if isinstance(pin, MuxPin) and pin.mux == mux:
+                yield name, pin
 
 hardware = HardwareSetup()
 

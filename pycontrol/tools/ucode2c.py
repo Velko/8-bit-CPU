@@ -4,7 +4,7 @@ from libcpu.opcodes import opcodes, fetch
 from libcpu.util import ControlSignal
 from libcpu.devices import Flags
 from libcpu.pin import Level, Mux
-from libcpu.discovery import all_muxes, simple_pins, mux_pins
+from libcpu.DeviceSetup import hardware as hw
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
 from collections.abc import Iterable, Iterator
@@ -87,7 +87,7 @@ def write_mux(hfile: TextIO, name: str, mux: Mux) -> None:
     define = "#define MUX_{}_MASK".format(name)
     hfile.write("{define:40}0b{mask:0{bits}b}\n".format(define=define, mask=mask, bits=CWORD_WIDTH_BITS))
 
-    for pname, pin in mux_pins(mux):
+    for pname, pin in hw.mux_pins(mux):
         pname = pname.replace(".", "_").upper()
         control = CtrlWord()\
             .enable(pin)
@@ -98,7 +98,7 @@ def write_mux(hfile: TextIO, name: str, mux: Mux) -> None:
 
 
 def write_simple_pins(hfile: TextIO) -> None:
-    for name, pin in simple_pins():
+    for name, pin in hw.simple_pins():
         name = name.replace(".", "_").upper()
         val = 1 << pin.num
 
@@ -119,7 +119,7 @@ def generate_defines(hfile: TextIO) -> None:
     hfile.write("/* Device setup */\n")
     write_default_cword(hfile)
 
-    for name, mux in all_muxes():
+    for name, mux in hw.all_muxes():
         write_mux(hfile, name, mux)
 
     write_simple_pins(hfile)

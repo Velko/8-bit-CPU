@@ -8,7 +8,7 @@ from libcpu.pinclient import get_client_instance
 client = get_client_instance()
 
 from libcpu.pin import Pin, SimplePin, Level, PinUsage
-from libcpu.discovery import all_pins
+from libcpu.DeviceSetup import hardware as hw
 from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
 
 pin_map: dict[str, Pin] = {}
@@ -147,7 +147,7 @@ class TesterClient(cmd.Cmd):
         client.shutdown()
 
 def build_pinmap() -> None:
-    for name, attr in all_pins():
+    for name, attr in hw.all_pins():
         pin_map[name.lower()] = attr
 
 

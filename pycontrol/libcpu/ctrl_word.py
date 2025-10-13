@@ -2,7 +2,7 @@
 
 from collections.abc import Iterable
 from typing import Self
-from .discovery import all_pins
+from .DeviceSetup import hardware as hw
 from .pin import Pin
 from .util import ControlSignal
 
@@ -27,4 +27,4 @@ class CtrlWord:
         return pin.check_enabled(self.c_word)
 
 
-DEFAULT_CW = CtrlWord(all_pins())
+DEFAULT_CW = CtrlWord(hw.all_pins())
