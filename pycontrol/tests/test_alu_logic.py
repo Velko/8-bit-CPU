@@ -89,7 +89,7 @@ shr_args = [
 @pytest.mark.parametrize("case", shr_args)
 @pytest.mark.parametrize("carry_in", [Flags.Empty, Flags.C])
 def test_shr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, carry_in: Flags, case: ALUOneRegTestCase) -> None:
-    cpu_helper.load_flags(carry_in)
+    cpu_helper.regs.F = carry_in
     cpu_helper.load_reg8(reg, case.val)
 
     acpu.shr(reg)
@@ -106,7 +106,7 @@ def test_shr_real(cpu_helper: CPUHelper, reg: GPRegister, carry_in: Flags, case:
 
     shr_test_prog = bytes([opcode_of(f"shr_{reg.name}")])
 
-    cpu_helper.load_flags(carry_in)
+    cpu_helper.regs.F = carry_in
     cpu_helper.load_reg8(reg, case.val)
 
     cpu_helper.run_snippet(0x66, shr_test_prog)
@@ -131,7 +131,7 @@ ror_args = [
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("_desc,carry_in,val,result,xflags", ror_args)
 def test_ror(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, carry_in: Flags, val: int, result: int, xflags: str) -> None:
-    cpu_helper.load_flags(carry_in)
+    cpu_helper.regs.F = carry_in
     cpu_helper.load_reg8(reg, val)
 
     acpu.ror(reg)
@@ -152,7 +152,7 @@ asr_args = [
 @pytest.mark.parametrize("_desc,val,result,xflags", asr_args)
 @pytest.mark.parametrize("carry_in", [Flags.Empty, Flags.C])
 def test_asr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: str, carry_in: Flags, val: int, result: int, xflags: str) -> None:
-    cpu_helper.load_flags(carry_in)
+    cpu_helper.regs.F = carry_in
     cpu_helper.load_reg8(reg, val)
 
     acpu.asr(reg)
@@ -169,7 +169,7 @@ def test_asr_real(cpu_helper: CPUHelper, reg: GPRegister, _desc: str, carry_in: 
 
     asr_test_prog = bytes([opcode_of(f"asr_{reg.name}")])
 
-    cpu_helper.load_flags(carry_in)
+    cpu_helper.regs.F = carry_in
     cpu_helper.load_reg8(reg, val)
 
     cpu_helper.run_snippet(0x23, asr_test_prog)
@@ -220,11 +220,11 @@ def test_xor(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPR
     assert str(flags) == case.xflags
 
 def test_xor_zero_same(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(A, 0x5A)
+    cpu_helper.regs.A = 0x5A
 
     acpu.clr(A)
 
-    value = cpu_helper.read_reg8(A)
+    value = cpu_helper.regs.A
     flags = cpu_helper.get_flags(Flags.Z | Flags.N)
 
     assert value == 0

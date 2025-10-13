@@ -110,7 +110,7 @@ adc_ab_test_args = [
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
 @pytest.mark.parametrize("case", adc_ab_test_args, ids=str)
 def test_adc_ab_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
-    cpu_helper.load_flags(Flags.C)
+    cpu_helper.regs.F = Flags.C
     cpu_helper.load_reg8(lhs, case.val_a)
     cpu_helper.load_reg8(rhs, case.val_b)
 
@@ -124,7 +124,7 @@ def test_adc_ab_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister,
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
 @pytest.mark.parametrize("case", add_ab_test_args, ids=str)
 def test_adc_ab_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
-    cpu_helper.load_flags(Flags.Empty)
+    cpu_helper.regs.F = Flags.Empty
     cpu_helper.load_reg8(lhs, case.val_a)
     cpu_helper.load_reg8(rhs, case.val_b)
 
@@ -139,7 +139,7 @@ def test_adc_ab_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegiste
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("case", adc_ab_test_args, ids=str)
 def test_adci_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTwoRegTestCase) -> None:
-    cpu_helper.load_flags(Flags.C)
+    cpu_helper.regs.F = Flags.C
     cpu_helper.load_reg8(reg, case.val_a)
 
     acpu.adci(reg, case.val_b)
@@ -152,7 +152,7 @@ def test_adci_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, c
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("case", add_ab_test_args, ids=str)
 def test_adci_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTwoRegTestCase) -> None:
-    cpu_helper.load_flags(Flags.Empty)
+    cpu_helper.regs.F = Flags.Empty
     cpu_helper.load_reg8(reg, case.val_a)
 
     acpu.adci(reg, case.val_b)
@@ -173,7 +173,7 @@ sbb_test_args = [
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
 @pytest.mark.parametrize("case", sbb_test_args, ids=str)
 def test_sbb_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
-    cpu_helper.load_flags(Flags.C)
+    cpu_helper.regs.F = Flags.C
     cpu_helper.load_reg8(lhs, case.val_a)
     cpu_helper.load_reg8(rhs, case.val_b)
 
@@ -187,7 +187,7 @@ def test_sbb_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rh
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
 @pytest.mark.parametrize("case", sub_test_args, ids=str)
 def test_sbb_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
-    cpu_helper.load_flags(Flags.Empty)
+    cpu_helper.regs.F = Flags.Empty
     cpu_helper.load_reg8(lhs, case.val_a)
     cpu_helper.load_reg8(rhs, case.val_b)
 
@@ -202,7 +202,7 @@ def test_sbb_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, 
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("case", sbb_test_args, ids=str)
 def test_sbbi_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTwoRegTestCase) -> None:
-    cpu_helper.load_flags(Flags.C)
+    cpu_helper.regs.F = Flags.C
     cpu_helper.load_reg8(reg, case.val_a)
 
     acpu.sbbi(reg, case.val_b)
@@ -215,7 +215,7 @@ def test_sbbi_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, c
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("case", sub_test_args, ids=str)
 def test_sbbi_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUTwoRegTestCase) -> None:
-    cpu_helper.load_flags(Flags.Empty)
+    cpu_helper.regs.F = Flags.Empty
     cpu_helper.load_reg8(reg, case.val_a)
 
     acpu.sbbi(reg, case.val_b)

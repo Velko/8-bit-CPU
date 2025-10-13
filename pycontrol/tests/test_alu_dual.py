@@ -13,50 +13,47 @@ hardwired_reason = "unsupported with hardwired ALU inputs"
 
 @pytest.mark.skipif(hardwired_alu, reason=hardwired_reason)
 def test_sub_b_a_small(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(A, 3)
-    cpu_helper.load_reg8(B, 4)
+    cpu_helper.regs.A = 3
+    cpu_helper.regs.B = 4
 
     acpu.sub(B, A)
 
-    value = cpu_helper.read_reg8(B)
-    assert value == 1
+    assert cpu_helper.regs.B == 1
 
 @pytest.mark.skipif(hardwired_alu, reason=hardwired_reason)
 def test_add_a_a(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(A, 21)
+    cpu_helper.regs.A = 21
 
     acpu.add(A, A)
 
-    value = cpu_helper.read_reg8(A)
-    assert value == 42
+    assert cpu_helper.regs.A == 42
 
 @pytest.mark.skipif(hardwired_alu, reason=hardwired_reason)
 def test_add_b_b(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(B, 18)
+    cpu_helper.regs.B = 18
 
     acpu.add(B, B)
 
-    value = cpu_helper.read_reg8(B)
-    assert value == 36
+    assert cpu_helper.regs.B == 36
 
 def test_inc_a(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(A, 4)
+    cpu_helper.regs.A = 4
 
     acpu.inc(A)
 
-    value = cpu_helper.read_reg8(A)
+    value = cpu_helper.regs.A
     assert value == 5
 
 def test_dec_a(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(A, 4)
+    cpu_helper.regs.A = 4
 
     acpu.dec(A)
 
-    value = cpu_helper.read_reg8(A)
+    value = cpu_helper.regs.A
     assert value == 3
 
 def test_inc_flags_cz(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(A, 255)
+    cpu_helper.regs.A = 255
 
     acpu.inc(A)
 
@@ -64,7 +61,7 @@ def test_inc_flags_cz(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     assert flags == "-CZ-"
 
 def test_inc_flags_v(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(A, 127)
+    cpu_helper.regs.A = 127
 
     acpu.inc(A)
 
@@ -73,7 +70,7 @@ def test_inc_flags_v(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
 
 def test_dec_flags_z(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(A, 1)
+    cpu_helper.regs.A = 1
 
     acpu.dec(A)
 
@@ -81,7 +78,7 @@ def test_dec_flags_z(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     assert flags == "--Z-"
 
 def test_dec_flags_cn(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(A, 0)
+    cpu_helper.regs.A = 0
 
     acpu.dec(A)
 
@@ -89,7 +86,7 @@ def test_dec_flags_cn(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     assert flags == "-C-N"
 
 def test_dec_flags_v(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.load_reg8(A, 128)
+    cpu_helper.regs.A = 128
 
     acpu.dec(A)
 

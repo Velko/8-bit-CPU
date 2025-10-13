@@ -11,11 +11,11 @@ from libcpu.opcodes import opcode_of
 
 def test_dummy_local(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
-    cpu_helper.load_reg8(A, 0)
+    cpu_helper.regs.A = 0
 
     acpu.dummy_ext(45)
 
-    val = cpu_helper.read_reg8(A)
+    val = cpu_helper.regs.A
 
     assert val == 45
 
@@ -34,23 +34,23 @@ def test_dummy_fetch(acpu: AssistedCPU) -> None:
     cpu_helper.load_snippet(0x32, fetch_test_prog)
 
     # reset A, to see if changed
-    cpu_helper.load_reg8(A, 0)
+    cpu_helper.regs.A = 0
 
     # act
     acpu.fetch_and_execute()
 
     # assert
-    val = cpu_helper.read_reg8(A)
+    val = cpu_helper.regs.A
     assert val == opcode_of("hlt")
 
 #@pytest.mark.skip("Not supported by current emulator")
 def test_dummy_fetch_on_hw(cpu_helper: CPUHelper) -> None:
     # reset A, to see if changed
-    cpu_helper.load_reg8(A, 0)
+    cpu_helper.regs.A = 0
 
     # run program on hardware
     cpu_helper.run_snippet(0x54, fetch_test_prog)
 
     # assert
-    val = cpu_helper.read_reg8(A)
+    val = cpu_helper.regs.A
     assert val == opcode_of("hlt")
