@@ -58,7 +58,7 @@ def test_inc_flags_cz(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     acpu.inc(A)
 
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
     assert flags == Flags.C | Flags.Z
 
 def test_inc_flags_v(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
@@ -66,7 +66,7 @@ def test_inc_flags_v(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     acpu.inc(A)
 
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
     assert flags == Flags.V | Flags.N
 
 
@@ -75,7 +75,7 @@ def test_dec_flags_z(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     acpu.dec(A)
 
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
     assert flags == Flags.Z
 
 def test_dec_flags_cn(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
@@ -83,7 +83,7 @@ def test_dec_flags_cn(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     acpu.dec(A)
 
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
     assert flags == Flags.C | Flags.N
 
 def test_dec_flags_v(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
@@ -91,5 +91,5 @@ def test_dec_flags_v(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     acpu.dec(A)
 
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
     assert flags == Flags.V

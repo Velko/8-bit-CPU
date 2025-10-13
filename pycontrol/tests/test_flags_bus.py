@@ -14,7 +14,7 @@ def test_flags_out_n(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.regs.B = 5
     acpu.add(A, B)
 
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
 
     assert flags == Flags.N
 
@@ -23,7 +23,7 @@ def test_flags_out_z(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.regs.B = 5
     acpu.sub(A, B)
 
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
 
     assert flags == Flags.Z
 
@@ -32,7 +32,7 @@ def test_flags_out_c(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.regs.B = 40
     acpu.add(A, B)
 
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
 
     assert flags == Flags.C
 
@@ -41,7 +41,7 @@ def test_flags_out_v(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.regs.B = 20
     acpu.sub(A, B)
 
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
 
     assert flags == Flags.V
 
@@ -50,5 +50,5 @@ def test_flags_preload(cpu_helper: CPUHelper, f_int: int) -> None:
     flags = Flags(f_int)
     cpu_helper.regs.F = flags
 
-    f = cpu_helper.get_flags()
+    f = cpu_helper.regs.F
     assert f == flags

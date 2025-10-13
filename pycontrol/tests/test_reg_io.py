@@ -32,7 +32,7 @@ def test_load_store_reg(cpu_helper: CPUHelper, acpu: AssistedCPU, register: GPRe
 @pytest.mark.parametrize("value", [~Flags.Empty, Flags.N, Flags.Z, Flags.C, Flags.V, Flags.Empty])
 def test_load_store_flags(cpu_helper: CPUHelper, acpu: AssistedCPU, value: Flags) -> None:
     acpu.ldi (F, value)
-    received = cpu_helper.get_flags()
+    received = cpu_helper.regs.F
 
     assert value == received
 

@@ -34,7 +34,7 @@ def test_add_ab(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: 
     acpu.add(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
     assert value == case.result
     assert flags == case.xflags
 
@@ -46,7 +46,7 @@ def test_add_aa(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case:
     acpu.add(reg, reg)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
     assert value == case.result
     assert flags == case.xflags
 
@@ -59,7 +59,7 @@ def test_addi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: A
     acpu.addi(reg, case.val_b)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
     assert value == case.result
     assert flags == case.xflags
 
@@ -81,7 +81,7 @@ def test_sub(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPR
     acpu.sub(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
     assert value == case.result
     assert flags == case.xflags
 
@@ -94,7 +94,7 @@ def test_subi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: A
     acpu.subi(reg, case.val_b)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
     assert value == case.result
     assert flags == case.xflags
 
@@ -117,7 +117,7 @@ def test_adc_ab_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister,
     acpu.adc(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
     assert value == case.result
     assert flags == case.xflags
 
@@ -131,7 +131,7 @@ def test_adc_ab_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegiste
     acpu.adc(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
     assert value == case.result
     assert flags == case.xflags
 
@@ -145,7 +145,7 @@ def test_adci_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, c
     acpu.adci(reg, case.val_b)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
     assert value == case.result
     assert flags == case.xflags
 
@@ -158,7 +158,7 @@ def test_adci_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister,
     acpu.adci(reg, case.val_b)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
     assert value == case.result
     assert flags == case.xflags
 
@@ -180,7 +180,7 @@ def test_sbb_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rh
     acpu.sbb(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
     assert value == case.result
     assert flags == case.xflags
 
@@ -194,7 +194,7 @@ def test_sbb_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, 
     acpu.sbb(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
     assert value == case.result
     assert flags == case.xflags
 
@@ -208,7 +208,7 @@ def test_sbbi_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, c
     acpu.sbbi(reg, case.val_b)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
     assert value == case.result
     assert flags == case.xflags
 
@@ -221,6 +221,6 @@ def test_sbbi_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister,
     acpu.sbbi(reg, case.val_b)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
     assert value == case.result
     assert flags == case.xflags

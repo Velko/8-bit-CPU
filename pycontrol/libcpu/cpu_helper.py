@@ -64,8 +64,8 @@ class CPUHelper:
         for i, b in enumerate(data):
             self.write_ram(addr + i, b)
 
-    def get_flags(self, mask: Flags = ~Flags.Empty) -> Flags:
-        return Flags(self.client.flags_get()) & mask
+    def get_flags(self) -> Flags:
+        return Flags(self.client.flags_get())
 
     def read_reg8(self, reg: Register) -> int:
         control = CtrlWord()\

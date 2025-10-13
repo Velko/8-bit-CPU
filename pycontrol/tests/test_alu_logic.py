@@ -12,6 +12,8 @@ from conftest import ALUTwoRegTestCase, ALUOneRegTestCase, devname
 
 pytestmark = pytest.mark.hardware
 
+NZ_MASK = Flags.N | Flags.Z
+
 and_test_args = [
     ALUTwoRegTestCase("small", 230, 92, 68, Flags.Empty),
     ALUTwoRegTestCase("zero", 0xa5, 0x5a, 0, Flags.Z),
@@ -26,7 +28,7 @@ def test_and(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPR
     acpu.andb(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = cpu_helper.get_flags(Flags.Z | Flags.N) # we are only interested in Z and N flags
+    flags = cpu_helper.regs.F & NZ_MASK # we are only interested in Z and N flags
     assert value == case.result
     assert flags == case.xflags
 
@@ -38,7 +40,7 @@ def test_andi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: A
     acpu.andi(reg, case.val_b)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags(Flags.Z | Flags.N) # we are only interested in Z and N flags
+    flags = cpu_helper.regs.F & NZ_MASK # we are only interested in Z and N flags
     assert value == case.result
     assert flags == case.xflags
 
@@ -58,7 +60,7 @@ def test_or(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRe
     acpu.orb(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = cpu_helper.get_flags(Flags.Z | Flags.N)
+    flags = cpu_helper.regs.F & NZ_MASK
     assert value == case.result
     assert flags == case.xflags
 
@@ -71,7 +73,7 @@ def test_ori(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: AL
     acpu.ori(reg, case.val_b)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags(Flags.Z | Flags.N) # we are only interested in Z and N flags
+    flags = cpu_helper.regs.F & NZ_MASK # we are only interested in Z and N flags
     assert value == case.result
     assert flags == case.xflags
 
@@ -95,7 +97,7 @@ def test_shr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, carry_in
     acpu.shr(reg)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
     assert value == case.result
     assert flags == case.xflags
 
@@ -112,7 +114,7 @@ def test_shr_real(cpu_helper: CPUHelper, reg: GPRegister, carry_in: Flags, case:
     cpu_helper.run_snippet(0x66, shr_test_prog)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
     assert value == case.result
     assert flags == case.xflags
 
@@ -137,7 +139,7 @@ def test_ror(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: s
     acpu.ror(reg)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
     assert value == result
     assert flags == xflags
 
@@ -158,7 +160,7 @@ def test_asr(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: s
     acpu.asr(reg)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
     assert value == result
     assert flags == xflags
 
@@ -175,7 +177,7 @@ def test_asr_real(cpu_helper: CPUHelper, reg: GPRegister, _desc: str, carry_in: 
     cpu_helper.run_snippet(0x23, asr_test_prog)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags()
+    flags = cpu_helper.regs.F
     assert value == result
     assert flags == xflags
 
@@ -195,7 +197,7 @@ def test_swap(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: A
     acpu.swap(reg)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags(Flags.Z | Flags.N)
+    flags = cpu_helper.regs.F & NZ_MASK
     assert value == case.result
     assert flags == case.xflags
 
@@ -215,7 +217,7 @@ def test_xor(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPR
     acpu.xor(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = cpu_helper.get_flags(Flags.Z | Flags.N) # we are only interested in Z and N flags
+    flags = cpu_helper.regs.F & NZ_MASK # we are only interested in Z and N flags
     assert value == case.result
     assert flags == case.xflags
 
@@ -225,7 +227,7 @@ def test_xor_zero_same(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     acpu.clr(A)
 
     value = cpu_helper.regs.A
-    flags = cpu_helper.get_flags(Flags.Z | Flags.N)
+    flags = cpu_helper.regs.F & NZ_MASK
 
     assert value == 0
     assert flags == Flags.Z
@@ -239,7 +241,7 @@ def test_xori(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: A
     acpu.xori(reg, case.val_b)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags(Flags.Z | Flags.N) # we are only interested in Z and N flags
+    flags = cpu_helper.regs.F & NZ_MASK # we are only interested in Z and N flags
     assert value == case.result
     assert flags == case.xflags
 
@@ -258,6 +260,6 @@ def test_not(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: AL
     acpu.notb(reg)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags(Flags.Z | Flags.N)
+    flags = cpu_helper.regs.F & NZ_MASK
     assert value == case.result
     assert flags == case.xflags
