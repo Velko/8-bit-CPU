@@ -1,6 +1,6 @@
 from enum import Enum
 from collections.abc import Mapping, Sequence
-from .util import ControlSignal
+from .pin import ControlSignal
 from .devices import Register, Flags
 
 class InvalidInstructionDefinition(Exception):

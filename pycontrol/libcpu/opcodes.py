@@ -1,6 +1,7 @@
 from collections.abc import Sequence, Iterator, Mapping
 from typing import Tuple
-from libcpu.util import ControlSignal, unwrap
+from libcpu.util import unwrap
+from .pin import ControlSignal
 from .instruction_cfg import InstructionConfig, Repeat, Instruction
 from .DeviceSetup import hardware
 from .opcode_builder import MicrocodeBuilder, MicroCode, OpcodeArg

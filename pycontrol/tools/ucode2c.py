@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from libcpu.opcodes import opcodes, fetch
-from libcpu.util import ControlSignal
+from libcpu.pin import ControlSignal
 from libcpu.devices import Flags
 from libcpu.pin import Level, Mux
 from libcpu.DeviceSetup import hardware as hw

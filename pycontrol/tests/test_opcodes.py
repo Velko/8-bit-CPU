@@ -7,13 +7,11 @@ from libcpu.opcodes import opcodes
 from libcpu.devmap import PC
 from libcpu.devices import Flags
 from libcpu.opcode_builder import MicrocodeBuilder
-from libcpu.pin import MuxPin
+from libcpu.pin import ControlSignal, MuxPin
 from libcpu.pseudo_devices import EnableCallback
 from libcpu.ctrl_word import CtrlWord
 
 from collections.abc import Iterator, Sequence
-
-from libcpu.util import ControlSignal
 
 def calc_flags_alt_PC_counts() -> Iterator[tuple[str, int, int, str, str]]:
 

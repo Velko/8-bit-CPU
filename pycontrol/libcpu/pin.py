@@ -1,7 +1,6 @@
 from collections.abc import Sequence
 from enum import Enum
 from abc import abstractmethod
-from .util import ControlSignal
 
 class Level(Enum):
     LOW = 0
@@ -19,6 +18,19 @@ def clr_bit(c_word: int, pin: int) -> int:
 
 def check_bit(c_word: int, pin: int) -> bool:
     return (c_word & (1 << pin)) != 0
+
+class ControlSignal:
+    def __init__(self) -> None:
+        self.name: str | None = None
+
+    @abstractmethod
+    def apply_enable(self, c_word: int) -> int:
+        pass
+
+    def __repr__(self) -> str:
+        if self.name is None:
+            return super().__repr__()
+        return f"{self.__class__.__name__}({self.name})"
 
 class Pin(ControlSignal):
     def __init__(self) -> None:

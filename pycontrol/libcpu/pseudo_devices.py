@@ -2,7 +2,8 @@ from abc import abstractmethod
 from collections.abc import Callable
 from .markers import AddrBase
 from .devices import RAM, DeviceBase
-from .util import ControlSignal, UninitializedError
+from .pin import ControlSignal
+from .util import UninitializedError
 from .pinclient import PinClient
 from typing import Tuple
 

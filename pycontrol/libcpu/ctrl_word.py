@@ -3,8 +3,7 @@
 from collections.abc import Iterable
 from typing import Self
 from .DeviceSetup import hardware as hw
-from .pin import Pin
-from .util import ControlSignal
+from .pin import ControlSignal, Pin
 
 class CtrlWord:
     def __init__(self, pins: Iterable[tuple[str, Pin]] | None = None):

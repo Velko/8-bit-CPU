@@ -1,8 +1,7 @@
 from typing import Any, Self
 import enum
 from dataclasses import dataclass
-from .pin import Pin
-from .util import ControlSignal
+from .pin import ControlSignal, Pin
 
 @dataclass
 class DeviceBase:

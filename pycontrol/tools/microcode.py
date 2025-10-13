@@ -3,7 +3,7 @@
 from collections.abc import Iterator, Sequence
 from typing import TypeVar
 from libcpu.opcode_builder import MicroCode
-from libcpu.util import ControlSignal
+from libcpu.pin import ControlSignal
 from libcpu.opcodes import opcodes, fetch
 from libcpu.devices import Flags
 from libcpu.DeviceSetup import hardware
