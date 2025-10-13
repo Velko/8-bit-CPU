@@ -67,9 +67,6 @@ class CPUHelper:
     def get_flags(self, mask: Flags = ~Flags.Empty) -> Flags:
         return Flags(self.client.flags_get()) & mask
 
-    def get_flags_s(self, mask: Flags = ~Flags.Empty) -> str:
-        return str(self.get_flags(mask))
-
     def read_reg8(self, reg: Register) -> int:
         control = CtrlWord()\
             .enable(reg.out)

@@ -8,7 +8,7 @@ from collections.abc import  Sequence, Iterator, Iterable
 
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.pinclient import PinClient, get_client_instance
-from libcpu.devices import DeviceBase
+from libcpu.devices import DeviceBase, Flags
 
 @pytest.fixture(scope="session")
 def pins_client_real() -> Iterator[PinClient]:
@@ -61,7 +61,7 @@ class ALUTwoRegTestCase:
     val_a: int
     val_b: int
     result: int
-    xflags: str
+    xflags: Flags
 
     def __str__(self) -> str:
         return f"{self.name}: ({self.val_a}, {self.val_b}) -> ({self.result}, {self.xflags}) "
@@ -71,7 +71,7 @@ class ALUOneRegTestCase:
     name: str
     val: int
     result: int
-    xflags: str
+    xflags: Flags
 
     def __str__(self) -> str:
         return f"{self.name}: ({self.val}) -> ({self.result}, {self.xflags}) "

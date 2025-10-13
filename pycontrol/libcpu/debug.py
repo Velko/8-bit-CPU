@@ -213,7 +213,7 @@ class Debugger:
         registers: dict[str, int | str] = {}
         for gpr in [r for r in hardware.devices.values() if isinstance(r, GPRegister)]:
             registers[gpr.name] = self.cpu_helper.read_reg8(gpr)
-        registers["Flags"] = self.cpu_helper.get_flags_s()
+        registers["Flags"] = str(self.cpu_helper.get_flags())
         if hardware.LR is not None:
             registers["LR"] = self.cpu_helper.regs.LR
         for ap in [r for r in hardware.devices.values() if isinstance(r, StackPointer)]:

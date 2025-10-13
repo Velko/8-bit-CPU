@@ -4,6 +4,7 @@ import pytest
 
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
+from libcpu.devices import Flags
 from libcpu.devmap import A, B
 
 pytestmark = pytest.mark.hardware
@@ -57,16 +58,16 @@ def test_inc_flags_cz(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     acpu.inc(A)
 
-    flags = cpu_helper.get_flags_s()
-    assert flags == "-CZ-"
+    flags = cpu_helper.get_flags()
+    assert flags == Flags.C | Flags.Z
 
 def test_inc_flags_v(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.regs.A = 127
 
     acpu.inc(A)
 
-    flags = cpu_helper.get_flags_s()
-    assert flags == "V--N"
+    flags = cpu_helper.get_flags()
+    assert flags == Flags.V | Flags.N
 
 
 def test_dec_flags_z(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
@@ -74,21 +75,21 @@ def test_dec_flags_z(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     acpu.dec(A)
 
-    flags = cpu_helper.get_flags_s()
-    assert flags == "--Z-"
+    flags = cpu_helper.get_flags()
+    assert flags == Flags.Z
 
 def test_dec_flags_cn(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.regs.A = 0
 
     acpu.dec(A)
 
-    flags = cpu_helper.get_flags_s()
-    assert flags == "-C-N"
+    flags = cpu_helper.get_flags()
+    assert flags == Flags.C | Flags.N
 
 def test_dec_flags_v(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.regs.A = 128
 
     acpu.dec(A)
 
-    flags = cpu_helper.get_flags_s()
-    assert flags == "V---"
+    flags = cpu_helper.get_flags()
+    assert flags == Flags.V

@@ -14,15 +14,15 @@ from conftest import ALUTwoRegTestCase, ALUOneRegTestCase, devname
 pytestmark = pytest.mark.hardware
 
 add_ab_test_args = [
-    ALUTwoRegTestCase("small", 24, 18, 42, "----"),
-    ALUTwoRegTestCase("wraparound", 245, 18, 7, "-C--"),
-    ALUTwoRegTestCase("overflow_to_negative", 126, 4, 130, "V--N"),
-    ALUTwoRegTestCase("overflow_to_positive", 226, 145, 115, "VC--"),
-    ALUTwoRegTestCase("to_zero", 246, 10, 0, "-CZ-"),
+    ALUTwoRegTestCase("small", 24, 18, 42, Flags.Empty),
+    ALUTwoRegTestCase("wraparound", 245, 18, 7, Flags.C),
+    ALUTwoRegTestCase("overflow_to_negative", 126, 4, 130, Flags.V | Flags.N),
+    ALUTwoRegTestCase("overflow_to_positive", 226, 145, 115, Flags.V | Flags.C),
+    ALUTwoRegTestCase("to_zero", 246, 10, 0, Flags.C | Flags.Z),
 ]
 
 add_aa_test_args = [
-    ALUOneRegTestCase("small", 25, 50, "----"),
+    ALUOneRegTestCase("small", 25, 50, Flags.Empty),
 ]
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
@@ -34,7 +34,7 @@ def test_add_ab(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: 
     acpu.add(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = cpu_helper.get_flags_s()
+    flags = cpu_helper.get_flags()
     assert value == case.result
     assert flags == case.xflags
 
@@ -46,7 +46,7 @@ def test_add_aa(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case:
     acpu.add(reg, reg)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags_s()
+    flags = cpu_helper.get_flags()
     assert value == case.result
     assert flags == case.xflags
 
@@ -59,17 +59,17 @@ def test_addi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: A
     acpu.addi(reg, case.val_b)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags_s()
+    flags = cpu_helper.get_flags()
     assert value == case.result
     assert flags == case.xflags
 
 
 sub_test_args = [
-    ALUTwoRegTestCase("small", 4, 3, 1, "----"),
-    ALUTwoRegTestCase("zero", 4, 4, 0, "--Z-"),
-    ALUTwoRegTestCase("carry", 3, 5, 254, "-C-N"),
-    ALUTwoRegTestCase("overflow_to_positive", 140, 20, 120, "V---"),
-    ALUTwoRegTestCase("overflow_to_negative", 120, 130, 246, "VC-N"),
+    ALUTwoRegTestCase("small", 4, 3, 1, Flags.Empty),
+    ALUTwoRegTestCase("zero", 4, 4, 0, Flags.Z),
+    ALUTwoRegTestCase("carry", 3, 5, 254, Flags.C | Flags.N),
+    ALUTwoRegTestCase("overflow_to_positive", 140, 20, 120, Flags.V),
+    ALUTwoRegTestCase("overflow_to_negative", 120, 130, 246, Flags.V | Flags.C | Flags.N),
 ]
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
@@ -81,7 +81,7 @@ def test_sub(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPR
     acpu.sub(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = cpu_helper.get_flags_s()
+    flags = cpu_helper.get_flags()
     assert value == case.result
     assert flags == case.xflags
 
@@ -94,17 +94,17 @@ def test_subi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: A
     acpu.subi(reg, case.val_b)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags_s()
+    flags = cpu_helper.get_flags()
     assert value == case.result
     assert flags == case.xflags
 
 
 adc_ab_test_args = [
-    ALUTwoRegTestCase("small", 24, 17, 42, "----"),
-    ALUTwoRegTestCase("wraparound", 245, 18, 8, "-C--"),
-    ALUTwoRegTestCase("overflow_to_negative", 126, 4, 131, "V--N"),
-    ALUTwoRegTestCase("overflow_to_positive", 226, 145, 116, "VC--"),
-    ALUTwoRegTestCase("to_zero", 246, 9, 0, "-CZ-"),
+    ALUTwoRegTestCase("small", 24, 17, 42, Flags.Empty),
+    ALUTwoRegTestCase("wraparound", 245, 18, 8, Flags.C),
+    ALUTwoRegTestCase("overflow_to_negative", 126, 4, 131, Flags.V | Flags.N),
+    ALUTwoRegTestCase("overflow_to_positive", 226, 145, 116, Flags.V | Flags.C),
+    ALUTwoRegTestCase("to_zero", 246, 9, 0, Flags.C | Flags.Z),
 ]
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
@@ -117,7 +117,7 @@ def test_adc_ab_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister,
     acpu.adc(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = cpu_helper.get_flags_s()
+    flags = cpu_helper.get_flags()
     assert value == case.result
     assert flags == case.xflags
 
@@ -131,7 +131,7 @@ def test_adc_ab_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegiste
     acpu.adc(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = cpu_helper.get_flags_s()
+    flags = cpu_helper.get_flags()
     assert value == case.result
     assert flags == case.xflags
 
@@ -145,7 +145,7 @@ def test_adci_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, c
     acpu.adci(reg, case.val_b)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags_s()
+    flags = cpu_helper.get_flags()
     assert value == case.result
     assert flags == case.xflags
 
@@ -158,16 +158,16 @@ def test_adci_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister,
     acpu.adci(reg, case.val_b)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags_s()
+    flags = cpu_helper.get_flags()
     assert value == case.result
     assert flags == case.xflags
 
 sbb_test_args = [
-    ALUTwoRegTestCase("small", 5, 3, 1, "----"),
-    ALUTwoRegTestCase("zero", 4, 3, 0, "--Z-"),
-    ALUTwoRegTestCase("carry", 3, 5, 253, "-C-N"),
-    ALUTwoRegTestCase("overflow_to_positive", 140, 19, 120, "V---"),
-    ALUTwoRegTestCase("overflow_to_negative", 120, 130, 245, "VC-N"),
+    ALUTwoRegTestCase("small", 5, 3, 1, Flags.Empty),
+    ALUTwoRegTestCase("zero", 4, 3, 0, Flags.Z),
+    ALUTwoRegTestCase("carry", 3, 5, 253, Flags.C | Flags.N),
+    ALUTwoRegTestCase("overflow_to_positive", 140, 19, 120, Flags.V),
+    ALUTwoRegTestCase("overflow_to_negative", 120, 130, 245, Flags.V | Flags.C | Flags.N),
 ]
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
@@ -180,7 +180,7 @@ def test_sbb_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rh
     acpu.sbb(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = cpu_helper.get_flags_s()
+    flags = cpu_helper.get_flags()
     assert value == case.result
     assert flags == case.xflags
 
@@ -194,7 +194,7 @@ def test_sbb_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, 
     acpu.sbb(lhs, rhs)
 
     value = cpu_helper.read_reg8(lhs)
-    flags = cpu_helper.get_flags_s()
+    flags = cpu_helper.get_flags()
     assert value == case.result
     assert flags == case.xflags
 
@@ -208,7 +208,7 @@ def test_sbbi_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, c
     acpu.sbbi(reg, case.val_b)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags_s()
+    flags = cpu_helper.get_flags()
     assert value == case.result
     assert flags == case.xflags
 
@@ -221,6 +221,6 @@ def test_sbbi_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister,
     acpu.sbbi(reg, case.val_b)
 
     value = cpu_helper.read_reg8(reg)
-    flags = cpu_helper.get_flags_s()
+    flags = cpu_helper.get_flags()
     assert value == case.result
     assert flags == case.xflags
