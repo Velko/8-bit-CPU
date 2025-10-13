@@ -3,7 +3,7 @@ from collections.abc import Callable
 from .markers import AddrBase
 from .devices import RAM, DeviceBase
 from .pin import ControlSignal
-from .util import UninitializedError
+from .util import UninitializedError, sign_extend
 from .pinclient import PinClient
 from typing import Tuple
 
@@ -100,11 +100,6 @@ class RamProxy(DeviceBase):
             return c_word
 
         return self.ram.write.apply_enable(c_word)
-
-def sign_extend(b: int) -> int:
-    if b > 127:
-        return b - 256
-    return b
 
 class IOMonitor:
     def __init__(self) -> None:
