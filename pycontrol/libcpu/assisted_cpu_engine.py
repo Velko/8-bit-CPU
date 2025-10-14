@@ -1,7 +1,7 @@
 from collections.abc import Sequence
 from .markers import AddrBase
 from .devices import Flags
-from .pseudo_devices import Imm, IOMonitor
+from .pseudo_devices import ImmediateValue, IOMonitor
 from .DeviceSetup import hardware
 from .opcodes import opcodes, ops_by_code, fetch, InvalidOpcodeException
 from .pinclient import PinClient
@@ -19,14 +19,14 @@ class AssistedCPUEngine:
         self.iomon = IOMonitor()
 
         # RAM hooks
-        Imm.connect(self.client)
-        hardware.ProgMem.hook_out(Imm)
+        self.imm = ImmediateValue(self.client)
+        hardware.ProgMem.hook_out(self.imm)
 
     def execute_mnemonic(self, mnemonic: str, arg: int | AddrBase | None = None) -> RunMessage | None:
         if not mnemonic in opcodes:
             raise InvalidOpcodeException(mnemonic)
 
-        Imm.inject(arg)
+        self.imm.inject(arg)
 
         return self.execute_opcode(opcodes[mnemonic].opcode)
 
@@ -78,10 +78,10 @@ class AssistedCPUEngine:
             self.client.clock_tick()
 
             if control.is_enabled(hardware.PC.load):
-                Imm.invalidate()
+                self.imm.invalidate()
 
             if control.is_enabled(hardware.PC.inc):
-                Imm.consume() # next byte for imm value
+                self.imm.consume() # next byte for imm value
 
             if control.is_enabled(hardware.F.calc) or control.is_enabled(hardware.F.load):
                 self.flags_cache = None
@@ -105,7 +105,7 @@ class AssistedCPUEngine:
                 self.opcode_cache = None
                 self.op_extension += 1
 
-        Imm.release_bus()
+        self.imm.release_bus()
 
         return result
 

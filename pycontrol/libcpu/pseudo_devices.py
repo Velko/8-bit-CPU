@@ -3,7 +3,7 @@ from collections.abc import Callable
 from .markers import AddrBase
 from .devices import RAM, DeviceBase
 from .pin import ControlSignal
-from .util import UninitializedError, sign_extend
+from .util import sign_extend
 from .pinclient import PinClient
 from .messages import OutMessage
 from typing import Tuple
@@ -26,13 +26,10 @@ class RamHook:
     def invoke(self) -> None: ...
 
 class ImmediateValue(RamHook):
-    def __init__(self) -> None:
-        self.client: PinClient | None = None
+    def __init__(self, client: PinClient) -> None:
+        self.client = client
         self.value: list[int] = []
         self.write_enabled = False
-
-    def connect(self, client: PinClient) -> None:
-        self.client = client
 
     def inject(self, value: int | AddrBase | None) -> None:
         if value is None:
@@ -52,15 +49,11 @@ class ImmediateValue(RamHook):
             del self.value[0]
 
     def release_bus(self) -> None:
-        if self.client is None:
-            return
         if self.write_enabled:
             self.client.bus_free()
             self.write_enabled = False
 
     def invoke(self) -> None:
-        if self.client is None:
-            raise UninitializedError
         if len(self.value) > 0:
             self.client.bus_set(self.value[0])
             self.write_enabled = True
@@ -128,7 +121,3 @@ class IOMonitor:
             return OutMessage(self.selected_port, chr(value))
 
         return None
-
-
-
-Imm = ImmediateValue()
