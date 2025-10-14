@@ -39,7 +39,9 @@ class PinClient:
     def identify(self) -> str:
         return self.query('I')
 
-    def off(self, cw: CtrlWord) -> None:
+    def off(self) -> None:
+        # Control word initializes to off-state
+        cw = CtrlWord()
         # Add NOP command at the end, so that
         # Serial.parseInt() in Arduino does not
         # have to wait for timeout

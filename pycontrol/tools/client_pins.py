@@ -40,7 +40,7 @@ class TesterClient(cmd.Cmd):
     def do_off(self, _arg: str) -> None:
         'Turn everything off, release Bus'
         self.control = CtrlWord()
-        client.off(DEFAULT_CW.c_word)
+        client.off()
         print(bin(self.control.c_word))
 
     def do_addr(self, arg: str) -> None:
@@ -140,7 +140,7 @@ class TesterClient(cmd.Cmd):
 
     def do_reset(self, _arg: str) -> None:
         self.control = CtrlWord()
-        client.off(DEFAULT_CW.c_word)
+        client.off()
         client.reset()
 
     def do_shutdown(self, _arg: str) -> None:

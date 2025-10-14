@@ -22,7 +22,7 @@ class CPUHelper:
         self.client.ctrl_commit(control)
         self.client.clock_tick()
 
-        self.client.off(hardware.DEFAULT_CW)
+        self.client.off()
 
 
     def read_reg16(self, reg: Register) -> int:
@@ -31,7 +31,7 @@ class CPUHelper:
         self.client.ctrl_commit(control)
         value = self.client.addr_get()
 
-        self.client.off(hardware.DEFAULT_CW)
+        self.client.off()
 
         return value
 
@@ -44,7 +44,7 @@ class CPUHelper:
 
         value = self.client.bus_get()
 
-        self.client.off(hardware.DEFAULT_CW)
+        self.client.off()
 
         return value
 
@@ -58,7 +58,7 @@ class CPUHelper:
 
         self.client.clock_tick()
 
-        self.client.off(hardware.DEFAULT_CW)
+        self.client.off()
 
     def write_bytes(self, addr: int, data: bytes) -> None:
         for i, b in enumerate(data):
@@ -73,7 +73,7 @@ class CPUHelper:
         self.client.ctrl_commit(control)
         value = self.client.bus_get()
 
-        self.client.off(hardware.DEFAULT_CW)
+        self.client.off()
 
         return value
 
@@ -83,7 +83,7 @@ class CPUHelper:
         self.client.bus_set(value)
         self.client.ctrl_commit(control)
         self.client.clock_tick()
-        self.client.off(hardware.DEFAULT_CW)
+        self.client.off()
 
     def load_flags(self, value: Flags) -> None:
         self.load_reg8(hardware.F, value.value)

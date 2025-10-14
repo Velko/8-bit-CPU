@@ -24,7 +24,7 @@ def test_reg_a_latch(cpu_helper: CPUHelper) -> None:
     cpu_helper.client.clock_pulse()
     #backend.client.clock_inverted()
 
-    cpu_helper.client.off(hw.DEFAULT_CW)
+    cpu_helper.client.off()
 
     # Not try to sense what it sends to ALU by enabling it and
     # reading value on the bus
@@ -35,7 +35,7 @@ def test_reg_a_latch(cpu_helper: CPUHelper) -> None:
     cpu_helper.client.ctrl_commit(control)
     value = cpu_helper.client.bus_get()
 
-    cpu_helper.client.off(hw.DEFAULT_CW)
+    cpu_helper.client.off()
 
     # should have kept the old value
     assert value == 54
@@ -57,7 +57,7 @@ def test_ir_load(cpu_helper: CPUHelper, expected: int) -> None:
 
     readback = cpu_helper.client.ir_get()
 
-    cpu_helper.client.off(hw.DEFAULT_CW)
+    cpu_helper.client.off()
 
     assert readback == expected
 

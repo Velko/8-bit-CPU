@@ -37,7 +37,7 @@ def test_sp_inc(cpu_helper: CPUHelper, expected: int) -> None:
         .enable(SP.out)
     cpu_helper.client.ctrl_commit(control)
     cpu_helper.client.clock_tick()
-    cpu_helper.client.off(hw.DEFAULT_CW)
+    cpu_helper.client.off()
 
     assert cpu_helper.regs.SP == expected
 
@@ -50,7 +50,7 @@ def test_sp_dec(cpu_helper: CPUHelper, expected: int) -> None:
         .enable(SP.out)
     cpu_helper.client.ctrl_commit(control)
     cpu_helper.client.clock_tick()
-    cpu_helper.client.off(hw.DEFAULT_CW)
+    cpu_helper.client.off()
 
     assert cpu_helper.regs.SP == expected
 
