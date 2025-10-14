@@ -5,7 +5,8 @@ import pytest
 from libcpu.devmap import A, B, AddSub, IR, TH, TL, TX
 from libcpu.cpu_helper import CPUHelper
 from collections.abc import Iterator
-from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
+from libcpu.ctrl_word import CtrlWord
+from libcpu.DeviceSetup import hardware as hw
 
 pytestmark = pytest.mark.hardware
 
@@ -23,7 +24,7 @@ def test_reg_a_latch(cpu_helper: CPUHelper) -> None:
     cpu_helper.client.clock_pulse()
     #backend.client.clock_inverted()
 
-    cpu_helper.client.off(DEFAULT_CW.c_word)
+    cpu_helper.client.off(hw.DEFAULT_CW.c_word)
 
     # Not try to sense what it sends to ALU by enabling it and
     # reading value on the bus
@@ -34,7 +35,7 @@ def test_reg_a_latch(cpu_helper: CPUHelper) -> None:
     cpu_helper.client.ctrl_commit(control.c_word)
     value = cpu_helper.client.bus_get()
 
-    cpu_helper.client.off(DEFAULT_CW.c_word)
+    cpu_helper.client.off(hw.DEFAULT_CW.c_word)
 
     # should have kept the old value
     assert value == 54
@@ -56,7 +57,7 @@ def test_ir_load(cpu_helper: CPUHelper, expected: int) -> None:
 
     readback = cpu_helper.client.ir_get()
 
-    cpu_helper.client.off(DEFAULT_CW.c_word)
+    cpu_helper.client.off(hw.DEFAULT_CW.c_word)
 
     assert readback == expected
 

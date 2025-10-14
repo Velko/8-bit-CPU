@@ -2,6 +2,7 @@ from . import devices as dev
 from .pseudo_devices import RamProxy
 from .pin import Pin, SimplePin, Level, Mux, MuxPin, PinUsage
 from .pin_cfg import PinConfig
+from .ctrl_word import CtrlWord
 import os.path
 
 from collections.abc import Iterator
@@ -17,6 +18,9 @@ class HardwareSetup:
         p_cfg = PinConfig.load_from_yaml(yaml_path)
         self.muxes = p_cfg.muxes
         self.devices = p_cfg.devices
+
+        self.DEFAULT_CW = CtrlWord(self.all_pins())
+        self.DEFAULT_CW.set_default()
 
         self.A = self.get_typed_dev("A", dev.GPRegister)
         self.B = self.get_typed_dev("B", dev.GPRegister)

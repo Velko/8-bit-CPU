@@ -5,7 +5,8 @@ import pytest
 from libcpu.cpu_helper import CPUHelper
 from libcpu.pinclient import PinClient
 from libcpu.devmap import ACalc
-from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
+from libcpu.ctrl_word import CtrlWord
+from libcpu.DeviceSetup import hardware as hw
 from libcpu.util import unwrap
 
 from collections.abc import Iterator
@@ -32,6 +33,6 @@ def test_acalc(pins_client_real: PinClient, _name: str, addr: int, offset: int, 
     pins_client_real.ctrl_commit(control.c_word)
     pins_client_real.clock_tick()
 
-    pins_client_real.off(DEFAULT_CW.c_word)
+    pins_client_real.off(hw.DEFAULT_CW.c_word)
 
     assert  expected == cpu_helper.regs.ACalc

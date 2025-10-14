@@ -10,7 +10,8 @@ from libcpu.devices import Flags
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.markers import Addr
-from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
+from libcpu.ctrl_word import CtrlWord
+from libcpu.DeviceSetup import hardware as hw
 from libcpu.util import unwrap
 
 @pytest.mark.parametrize("expected", [255, 1, 2, 4, 8, 16, 32, 64, 128, 0])
@@ -36,7 +37,7 @@ def test_sp_inc(cpu_helper: CPUHelper, expected: int) -> None:
         .enable(SP.out)
     cpu_helper.client.ctrl_commit(control.c_word)
     cpu_helper.client.clock_tick()
-    cpu_helper.client.off(DEFAULT_CW.c_word)
+    cpu_helper.client.off(hw.DEFAULT_CW.c_word)
 
     assert cpu_helper.regs.SP == expected
 
@@ -49,7 +50,7 @@ def test_sp_dec(cpu_helper: CPUHelper, expected: int) -> None:
         .enable(SP.out)
     cpu_helper.client.ctrl_commit(control.c_word)
     cpu_helper.client.clock_tick()
-    cpu_helper.client.off(DEFAULT_CW.c_word)
+    cpu_helper.client.off(hw.DEFAULT_CW.c_word)
 
     assert cpu_helper.regs.SP == expected
 

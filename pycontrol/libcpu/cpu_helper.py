@@ -7,7 +7,7 @@ from libcpu.opcodes import InvalidOpcodeException, opcode_of
 from libcpu.pinclient import PinClient
 from libcpu.devices import Flags
 from libcpu.DeviceSetup import hardware
-from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
+from libcpu.ctrl_word import CtrlWord
 
 class CPUHelper:
     def __init__(self, client: PinClient) -> None:
@@ -22,7 +22,7 @@ class CPUHelper:
         self.client.ctrl_commit(control.c_word)
         self.client.clock_tick()
 
-        self.client.off(DEFAULT_CW.c_word)
+        self.client.off(hardware.DEFAULT_CW.c_word)
 
 
     def read_reg16(self, reg: Register) -> int:
@@ -31,7 +31,7 @@ class CPUHelper:
         self.client.ctrl_commit(control.c_word)
         value = self.client.addr_get()
 
-        self.client.off(DEFAULT_CW.c_word)
+        self.client.off(hardware.DEFAULT_CW.c_word)
 
         return value
 
@@ -44,7 +44,7 @@ class CPUHelper:
 
         value = self.client.bus_get()
 
-        self.client.off(DEFAULT_CW.c_word)
+        self.client.off(hardware.DEFAULT_CW.c_word)
 
         return value
 
@@ -58,7 +58,7 @@ class CPUHelper:
 
         self.client.clock_tick()
 
-        self.client.off(DEFAULT_CW.c_word)
+        self.client.off(hardware.DEFAULT_CW.c_word)
 
     def write_bytes(self, addr: int, data: bytes) -> None:
         for i, b in enumerate(data):
@@ -73,7 +73,7 @@ class CPUHelper:
         self.client.ctrl_commit(control.c_word)
         value = self.client.bus_get()
 
-        self.client.off(DEFAULT_CW.c_word)
+        self.client.off(hardware.DEFAULT_CW.c_word)
 
         return value
 
@@ -83,7 +83,7 @@ class CPUHelper:
         self.client.bus_set(value)
         self.client.ctrl_commit(control.c_word)
         self.client.clock_tick()
-        self.client.off(DEFAULT_CW.c_word)
+        self.client.off(hardware.DEFAULT_CW.c_word)
 
     def load_flags(self, value: Flags) -> None:
         self.load_reg8(hardware.F, value.value)

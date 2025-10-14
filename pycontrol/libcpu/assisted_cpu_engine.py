@@ -5,7 +5,7 @@ from .pseudo_devices import Imm, IOMon
 from .DeviceSetup import hardware
 from .opcodes import opcodes, ops_by_code, fetch, InvalidOpcodeException
 from .pinclient import PinClient
-from .ctrl_word import CtrlWord, DEFAULT_CW
+from .ctrl_word import CtrlWord
 from .pin import ControlSignal
 from .messages import RunMessage, OutMessage, HaltMessage, BrkMessage
 
@@ -60,7 +60,7 @@ class AssistedCPUEngine:
 
         result: RunMessage | None = None
 
-        if control.c_word != DEFAULT_CW.c_word:
+        if control.c_word != hardware.DEFAULT_CW.c_word:
 
             self.client.ctrl_commit(control.c_word)
 
