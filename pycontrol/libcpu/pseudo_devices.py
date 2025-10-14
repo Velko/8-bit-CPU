@@ -5,6 +5,7 @@ from .devices import RAM, DeviceBase
 from .pin import ControlSignal
 from .util import UninitializedError, sign_extend
 from .pinclient import PinClient
+from .messages import OutMessage
 from typing import Tuple
 
 class EnableCallback(ControlSignal):
@@ -109,22 +110,22 @@ class IOMonitor:
     def select_port(self, port: int) -> None:
         self.selected_port = port
 
-    def format_value(self, value: int) -> Tuple[int, str] | None:
+    def format_value(self, value: int) -> OutMessage | None:
         if self.selected_port == 1:
             self.numeric_mode = value
             return None
 
         if self.selected_port == 0:
             if self.numeric_mode == 0:
-                return self.selected_port, f"{value:>4}\n"
+                return OutMessage(self.selected_port, f"{value:>4}\n")
             if self.numeric_mode == 1:
-                return self.selected_port, f"{sign_extend(value):>4}\n"
+                return OutMessage(self.selected_port, f"{sign_extend(value):>4}\n")
             if self.numeric_mode == 2:
-                return self.selected_port, f"h {value:02x}\n"
+                return OutMessage(self.selected_port, f"h {value:02x}\n")
             if self.numeric_mode == 3:
-                return self.selected_port, f"o{value:>o}\n"
+                return OutMessage(self.selected_port, f"o{value:>o}\n")
         elif self.selected_port == 4:
-            return self.selected_port, chr(value)
+            return OutMessage(self.selected_port, chr(value))
 
         return None
 
