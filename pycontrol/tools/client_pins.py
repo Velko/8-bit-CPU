@@ -9,7 +9,7 @@ client = get_client_instance()
 
 from libcpu.pin import Pin, SimplePin, Level, PinUsage
 from libcpu.DeviceSetup import hardware as hw
-from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
+from libcpu.ctrl_word import CtrlWord
 
 pin_map: dict[str, Pin] = {}
 
@@ -119,7 +119,7 @@ class TesterClient(cmd.Cmd):
 
     def do_commit(self, _arg: str) -> None:
         'Send the control word to Arduino'
-        client.ctrl_commit(self.control.c_word)
+        client.ctrl_commit(self.control)
 
     def do_pulse(self, _arg: str) -> None:
         'Pulse normal clock'

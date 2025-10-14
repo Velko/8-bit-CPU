@@ -5,7 +5,7 @@ from libcpu.pin import ControlSignal
 from libcpu.devices import Flags
 from libcpu.pin import Level, Mux
 from libcpu.DeviceSetup import hardware as hw
-from libcpu.ctrl_word import CtrlWord, DEFAULT_CW
+from libcpu.ctrl_word import CtrlWord
 
 from collections.abc import Iterable, Iterator
 from typing import TextIO
@@ -74,7 +74,7 @@ def write_opcodes(hfile: TextIO) -> None:
     hfile.write("\n")
 
 def write_default_cword(hfile: TextIO) -> None:
-    hfile.write("#define CTRL_DEFAULT                    0b{word:0{bits}b}\n\n".format(word=DEFAULT_CW.c_word, bits=CWORD_WIDTH_BITS))
+    hfile.write("#define CTRL_DEFAULT                    0b{word:0{bits}b}\n\n".format(word=hw.DEFAULT_CW.c_word, bits=CWORD_WIDTH_BITS))
 
 
 def write_mux(hfile: TextIO, name: str, mux: Mux) -> None:
@@ -129,7 +129,7 @@ def generate_defines(hfile: TextIO) -> None:
     write_footer(hfile)
 
 def generate_cword(vfile: TextIO) -> None:
-    vfile.write("`define DEFAULT_CW {bits}'h{word:0{digits}x}\n".format(word=DEFAULT_CW.c_word, bits=CWORD_WIDTH_BYTES * 8, digits=CWORD_WIDTH_BYTES * 2))
+    vfile.write("`define DEFAULT_CW {bits}'h{word:0{digits}x}\n".format(word=hw.DEFAULT_CW.c_word, bits=CWORD_WIDTH_BYTES * 8, digits=CWORD_WIDTH_BYTES * 2))
 
 if __name__ == "__main__":
     with open("../../include/microcode.c", "wt", encoding="utf-8") as cfile:
