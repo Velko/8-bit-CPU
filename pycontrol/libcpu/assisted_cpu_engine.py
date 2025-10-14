@@ -93,6 +93,9 @@ class AssistedCPUEngine:
                 result = BrkMessage()
 
             if isinstance(result, OutMessage):
+                # if we have captured a simulated OutMessage,
+                # hardware should also produced one
+                # consume and (potantially) verify it
                 hw_message = self.client.receive_message()
                 # not sure if really need to assert, but Ok for now
                 assert isinstance(hw_message, OutMessage)

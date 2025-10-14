@@ -106,12 +106,6 @@ class MuxPin(Pin):
         self.mux = mux
         self.num = num
 
-    # There are some inefficiencies how MuxPin handles passing
-    # the data back to Mux, but it does not matter much because
-    # it occurs purely in Python
-    # for example: Mux.connect() is called for by each MuxPin's
-    # connect(), while calling it only once per Mux should be
-    # enough. But it does not make any noticable impact on peformance
     def apply_enable(self, c_word: int) -> int:
         return self.mux.apply_enable(c_word, self.num)
 
