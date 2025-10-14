@@ -35,9 +35,9 @@ def test_sp_inc(cpu_helper: CPUHelper, expected: int) -> None:
     control = CtrlWord()\
         .enable(SP.inc)\
         .enable(SP.out)
-    cpu_helper.client.ctrl_commit(control.c_word)
+    cpu_helper.client.ctrl_commit(control)
     cpu_helper.client.clock_tick()
-    cpu_helper.client.off(hw.DEFAULT_CW.c_word)
+    cpu_helper.client.off(hw.DEFAULT_CW)
 
     assert cpu_helper.regs.SP == expected
 
@@ -48,9 +48,9 @@ def test_sp_dec(cpu_helper: CPUHelper, expected: int) -> None:
     control = CtrlWord()\
         .enable(SP.dec)\
         .enable(SP.out)
-    cpu_helper.client.ctrl_commit(control.c_word)
+    cpu_helper.client.ctrl_commit(control)
     cpu_helper.client.clock_tick()
-    cpu_helper.client.off(hw.DEFAULT_CW.c_word)
+    cpu_helper.client.off(hw.DEFAULT_CW)
 
     assert cpu_helper.regs.SP == expected
 

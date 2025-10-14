@@ -34,7 +34,7 @@ def test_pc_count(cpu_helper: CPUHelper, expected: int) -> None:
     control = CtrlWord()\
         .enable(PC.out)\
         .enable(PC.inc)
-    cpu_helper.client.ctrl_commit(control.c_word)
+    cpu_helper.client.ctrl_commit(control)
     cpu_helper.client.clock_tick()
 
     assert cpu_helper.regs.PC == expected

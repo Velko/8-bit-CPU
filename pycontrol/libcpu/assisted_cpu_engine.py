@@ -62,7 +62,7 @@ class AssistedCPUEngine:
 
         if control.c_word != hardware.DEFAULT_CW.c_word:
 
-            self.client.ctrl_commit(control.c_word)
+            self.client.ctrl_commit(control)
 
             # capture port output BEFORE clock tick.
             # TODO: think of more reliable approach

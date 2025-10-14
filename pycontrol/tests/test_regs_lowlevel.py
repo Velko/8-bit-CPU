@@ -19,12 +19,12 @@ def test_reg_a_latch(cpu_helper: CPUHelper) -> None:
     cpu_helper.client.bus_set(40)
     control = CtrlWord()\
         .enable(A.load)
-    cpu_helper.client.ctrl_commit(control.c_word)
+    cpu_helper.client.ctrl_commit(control)
 
     cpu_helper.client.clock_pulse()
     #backend.client.clock_inverted()
 
-    cpu_helper.client.off(hw.DEFAULT_CW.c_word)
+    cpu_helper.client.off(hw.DEFAULT_CW)
 
     # Not try to sense what it sends to ALU by enabling it and
     # reading value on the bus
@@ -32,10 +32,10 @@ def test_reg_a_latch(cpu_helper: CPUHelper) -> None:
         .enable(AddSub.out)\
         .enable(A.alu_l)\
         .enable(B.alu_r)
-    cpu_helper.client.ctrl_commit(control.c_word)
+    cpu_helper.client.ctrl_commit(control)
     value = cpu_helper.client.bus_get()
 
-    cpu_helper.client.off(hw.DEFAULT_CW.c_word)
+    cpu_helper.client.off(hw.DEFAULT_CW)
 
     # should have kept the old value
     assert value == 54
@@ -52,12 +52,12 @@ def test_ir_load(cpu_helper: CPUHelper, expected: int) -> None:
     cpu_helper.client.bus_set(expected)
     control = CtrlWord()\
         .enable(IR.load)
-    cpu_helper.client.ctrl_commit(control.c_word)
+    cpu_helper.client.ctrl_commit(control)
     cpu_helper.client.clock_tick()
 
     readback = cpu_helper.client.ir_get()
 
-    cpu_helper.client.off(hw.DEFAULT_CW.c_word)
+    cpu_helper.client.off(hw.DEFAULT_CW)
 
     assert readback == expected
 

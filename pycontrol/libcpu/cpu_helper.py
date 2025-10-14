@@ -19,19 +19,19 @@ class CPUHelper:
         control = CtrlWord()\
             .enable(reg.load)
         self.client.addr_set(value)
-        self.client.ctrl_commit(control.c_word)
+        self.client.ctrl_commit(control)
         self.client.clock_tick()
 
-        self.client.off(hardware.DEFAULT_CW.c_word)
+        self.client.off(hardware.DEFAULT_CW)
 
 
     def read_reg16(self, reg: Register) -> int:
         control = CtrlWord()\
             .enable(reg.out)
-        self.client.ctrl_commit(control.c_word)
+        self.client.ctrl_commit(control)
         value = self.client.addr_get()
 
-        self.client.off(hardware.DEFAULT_CW.c_word)
+        self.client.off(hardware.DEFAULT_CW)
 
         return value
 
@@ -40,25 +40,25 @@ class CPUHelper:
         self.client.addr_set(addr)
         control = CtrlWord()\
             .enable(hardware.RAM.out)
-        self.client.ctrl_commit(control.c_word)
+        self.client.ctrl_commit(control)
 
         value = self.client.bus_get()
 
-        self.client.off(hardware.DEFAULT_CW.c_word)
+        self.client.off(hardware.DEFAULT_CW)
 
         return value
 
     def write_ram(self, addr: int, value: int) -> None:
         control = CtrlWord()\
             .enable(hardware.RAM.write)
-        self.client.ctrl_commit(control.c_word)
+        self.client.ctrl_commit(control)
 
         self.client.addr_set(addr)
         self.client.bus_set(value)
 
         self.client.clock_tick()
 
-        self.client.off(hardware.DEFAULT_CW.c_word)
+        self.client.off(hardware.DEFAULT_CW)
 
     def write_bytes(self, addr: int, data: bytes) -> None:
         for i, b in enumerate(data):
@@ -70,10 +70,10 @@ class CPUHelper:
     def read_reg8(self, reg: Register) -> int:
         control = CtrlWord()\
             .enable(reg.out)
-        self.client.ctrl_commit(control.c_word)
+        self.client.ctrl_commit(control)
         value = self.client.bus_get()
 
-        self.client.off(hardware.DEFAULT_CW.c_word)
+        self.client.off(hardware.DEFAULT_CW)
 
         return value
 
@@ -81,9 +81,9 @@ class CPUHelper:
         control = CtrlWord()\
             .enable(reg.load)
         self.client.bus_set(value)
-        self.client.ctrl_commit(control.c_word)
+        self.client.ctrl_commit(control)
         self.client.clock_tick()
-        self.client.off(hardware.DEFAULT_CW.c_word)
+        self.client.off(hardware.DEFAULT_CW)
 
     def load_flags(self, value: Flags) -> None:
         self.load_reg8(hardware.F, value.value)

@@ -3,6 +3,7 @@ from collections.abc import Iterator
 import socket
 import re
 from .messages import RunMessage, OutMessage, HaltMessage, BrkMessage
+from .ctrl_word import CtrlWord
 
 LOCAL_PORT = 9999
 TARGET_IP = "127.0.0.1"
@@ -38,11 +39,11 @@ class PinClient:
     def identify(self) -> str:
         return self.query('I')
 
-    def off(self, c_word: int) -> None:
+    def off(self, cw: CtrlWord) -> None:
         # Add NOP command at the end, so that
         # Serial.parseInt() in Arduino does not
         # have to wait for timeout
-        self.send_cmd(f"O{c_word}N")
+        self.send_cmd(f"O{cw.c_word}N")
 
     def bus_set(self, arg: int | str) -> None:
         if isinstance(arg, str):
@@ -66,8 +67,8 @@ class PinClient:
     def bus_free(self) -> None:
         self.send_cmd("f")
 
-    def ctrl_commit(self, c_word: int) -> None:
-        self.send_cmd(f"M{c_word}N")
+    def ctrl_commit(self, cw: CtrlWord) -> None:
+        self.send_cmd(f"M{cw.c_word}N")
 
     def clock_pulse(self) -> None:
         self.send_cmd('c')

@@ -30,9 +30,9 @@ def test_acalc(pins_client_real: PinClient, _name: str, addr: int, offset: int, 
     if signed:
         control.enable(ACalc.signed)
 
-    pins_client_real.ctrl_commit(control.c_word)
+    pins_client_real.ctrl_commit(control)
     pins_client_real.clock_tick()
 
-    pins_client_real.off(hw.DEFAULT_CW.c_word)
+    pins_client_real.off(hw.DEFAULT_CW)
 
     assert  expected == cpu_helper.regs.ACalc
