@@ -132,4 +132,3 @@ class IOMonitor:
 
 
 Imm = ImmediateValue()
-IOMon = IOMonitor()

@@ -1,7 +1,7 @@
 from collections.abc import Sequence
 from .markers import AddrBase
 from .devices import Flags
-from .pseudo_devices import Imm, IOMon
+from .pseudo_devices import Imm, IOMonitor
 from .DeviceSetup import hardware
 from .opcodes import opcodes, ops_by_code, fetch, InvalidOpcodeException
 from .pinclient import PinClient
@@ -15,6 +15,8 @@ class AssistedCPUEngine:
         self.flags_cache: Flags | None = None
         self.opcode_cache: int | None = None
         self.op_extension = 0
+
+        self.iomon = IOMonitor()
 
         # RAM hooks
         Imm.connect(self.client)
@@ -68,10 +70,10 @@ class AssistedCPUEngine:
             # TODO: think of more reliable approach
             # this probably messes up the immediate value on the Bus
             if hardware.IOCtl is not None and control.is_enabled(hardware.IOCtl.laddr):
-                IOMon.select_port(self.client.bus_get())
+                self.iomon.select_port(self.client.bus_get())
 
             if hardware.IOCtl is not None and control.is_enabled(hardware.IOCtl.to_dev):
-                result = IOMon.format_value(self.client.bus_get())
+                result = self.iomon.format_value(self.client.bus_get())
 
             self.client.clock_tick()
 
