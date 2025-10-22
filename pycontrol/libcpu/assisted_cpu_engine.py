@@ -20,7 +20,7 @@ class AssistedCPUEngine:
 
         # RAM hooks
         self.imm = ImmediateValue(self.client)
-        hardware.ProgMem.hook_out(self.imm)
+        hardware.ProgMem.out.forward_enable = False
 
     def execute_mnemonic(self, mnemonic: str, arg: int | AddrBase | None = None) -> RunMessage | None:
         if not mnemonic in opcodes:
@@ -66,6 +66,9 @@ class AssistedCPUEngine:
 
             self.client.ctrl_commit(control)
 
+            if hardware.ProgMem.out.check_enabled(control.c_word):
+                self.imm.invoke()
+
             # capture port output BEFORE clock tick.
             # TODO: think of more reliable approach
             # this probably messes up the immediate value on the Bus
@@ -109,6 +112,7 @@ class AssistedCPUEngine:
                 self.op_extension += 1
 
         self.imm.release_bus()
+        hardware.ProgMem.out.apply_disable(control.c_word)
 
         return result
 

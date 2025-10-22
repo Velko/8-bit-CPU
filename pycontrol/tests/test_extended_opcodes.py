@@ -30,8 +30,9 @@ fetch_test_prog = bytes([opcode_of("_xprefix"),
 def test_dummy_fetch(acpu: AssistedCPU) -> None:
     cpu_helper = CPUHelper(acpu.client)
 
-    # load program into ram
-    cpu_helper.load_snippet(0x32, fetch_test_prog)
+    # when acpu is enabled, loading from ProgMem does not work at all,
+    # so we need to inject everything into imm device
+    acpu.imm.inject(fetch_test_prog)
 
     # reset A, to see if changed
     cpu_helper.regs.A = 0

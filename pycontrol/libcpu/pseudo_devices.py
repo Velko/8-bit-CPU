@@ -2,11 +2,35 @@ from abc import abstractmethod
 from collections.abc import Callable
 from .markers import AddrBase
 from .devices import RAM, DeviceBase
-from .pin import ControlSignal
+from .pin import Pin, ControlSignal
 from .util import sign_extend
 from .pinclient import PinClient
 from .messages import OutMessage
 from typing import Tuple
+
+class InterceptorPin(Pin):
+    def __init__(self, original: Pin) -> None:
+        Pin.__init__(self)
+        self.original = original
+        self.forward_enable = True
+        self.enabled = False
+
+    def apply_enable(self, c_word: int) -> int:
+        self.enabled = True
+        if self.forward_enable:
+            return self.original.apply_enable(c_word)
+        return c_word
+
+    def apply_disable(self, c_word: int) -> int:
+        self.enabled = False
+        if self.forward_enable:
+            return self.original.apply_disable(c_word)
+        return c_word
+
+    def check_enabled(self, c_word: int) -> bool:
+        if self.forward_enable:
+            return self.original.check_enabled(c_word)
+        return self.enabled
 
 class EnableCallback(ControlSignal):
     def __init__(self, callback: Callable[[int], int], original: ControlSignal) -> None:
@@ -31,13 +55,15 @@ class ImmediateValue(RamHook):
         self.value: list[int] = []
         self.write_enabled = False
 
-    def inject(self, value: int | AddrBase | None) -> None:
+    def inject(self, value: int | AddrBase | bytes | None) -> None:
         if value is None:
             self.value = []
         elif isinstance(value, int):
             self.value = [value]
         elif isinstance(value, AddrBase):
             self.value = value.a_bytes()
+        elif isinstance(value, bytes):
+            self.value = list(value)
         else:
             raise TypeError
 
@@ -67,33 +93,8 @@ class RamProxy(DeviceBase):
         DeviceBase.__init__(self, name)
         self.name = name
         self.ram = ram
-        self.out = EnableCallback(self.enable_out, ram.out)
-        self.write = EnableCallback(self.enable_write, ram.write)
-
-        self._out_hook: RamHook | None = None
-        self._write_hook: RamHook | None = None
-
-    # update to intercept ram.out
-    def hook_out(self, hook: RamHook) -> None:
-        self._out_hook = hook
-
-    # update to intercept ram.write
-    def hook_write(self, hook: RamHook) -> None:
-        self._write_hook = hook
-
-    def enable_out(self, c_word: int) -> int:
-        if self._out_hook is not None and self._out_hook.is_active():
-            self._out_hook.invoke()
-            return c_word
-
-        return self.ram.out.apply_enable(c_word)
-
-    def enable_write(self, c_word: int) -> int:
-        if self._write_hook is not None and self._write_hook.is_active():
-            self._write_hook.invoke()
-            return c_word
-
-        return self.ram.write.apply_enable(c_word)
+        self.out = InterceptorPin(ram.out)
+        self.write = InterceptorPin(ram.write)
 
 class IOMonitor:
     def __init__(self) -> None:
