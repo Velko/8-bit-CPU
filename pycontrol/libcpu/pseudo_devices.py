@@ -1,8 +1,6 @@
-from abc import abstractmethod
-from collections.abc import Callable
 from .markers import AddrBase
 from .devices import RAM, DeviceBase
-from .pin import Pin, ControlSignal
+from .pin import Pin
 from .util import sign_extend
 from .pinclient import PinClient
 from .messages import OutMessage
@@ -31,15 +29,6 @@ class InterceptorPin(Pin):
         if self.forward_enable:
             return self.original.check_enabled(c_word)
         return self.enabled
-
-class EnableCallback(ControlSignal):
-    def __init__(self, callback: Callable[[int], int], original: ControlSignal) -> None:
-        ControlSignal.__init__(self)
-        self.callback = callback
-        self.original = original
-
-    def apply_enable(self, c_word: int) -> int:
-        return self.callback(c_word)
 
 
 class ImmediateValue:

@@ -8,7 +8,7 @@ from libcpu.devmap import PC
 from libcpu.devices import Flags
 from libcpu.opcode_builder import MicrocodeBuilder
 from libcpu.pin import ControlSignal, MuxPin
-from libcpu.pseudo_devices import EnableCallback
+from libcpu.pseudo_devices import InterceptorPin
 from libcpu.ctrl_word import CtrlWord
 
 from collections.abc import Iterator, Sequence
@@ -41,39 +41,26 @@ def test_opcode_pc_len_equal_in_flags_alt(_name: str, default_len: int, alt_len:
 class DummySignal(ControlSignal):
     def __init__(self) -> None:
         ControlSignal.__init__(self)
+        self.enabled = False
 
     def apply_enable(self, c_word: int) -> int:
-        raise Exception("Should not reach")
+        self.enabled = True
+        return c_word
 
 class OpcodeFixture:
     def __init__(self) -> None:
         builder = MicrocodeBuilder()
 
-        self.orig_default = DummySignal()
-        self.orig_alt = DummySignal()
+        self.default_path = DummySignal()
+        self.alt_path = DummySignal()
         self.control = CtrlWord()
-        self.default_taken = False
-        self.alt_taken = False
 
         builder.add_instruction("dummy")\
-            .add_step(EnableCallback(self.log_default, self.orig_default))\
+            .add_step(self.default_path)\
             .add_condition(mask=Flags.C, value=Flags.C)\
-                .add_step(EnableCallback(self.log_alt, self.orig_alt))
+                .add_step(self.alt_path)
 
         self.opcodes, self.ops_by_code = builder.build()
-
-    def log_default(self, c_word: int) -> int:
-        self.default_taken = True
-        return c_word
-
-    def log_alt(self, c_word: int) -> int:
-        self.alt_taken = True
-        return c_word
-
-    def reset(self) -> None:
-        self.default_taken = False
-        self.alt_taken = False
-
 
 
 
@@ -85,8 +72,6 @@ def test_opcode_flag_taken(fake_opcodes: OpcodeFixture) -> None:
 
     op = fake_opcodes.opcodes["dummy"]
 
-    fake_opcodes.reset()
-
     for s_idx in range(8):
         c, is_last = op.get_step(s_idx, Flags.C)
 
@@ -96,14 +81,12 @@ def test_opcode_flag_taken(fake_opcodes: OpcodeFixture) -> None:
         if is_last:
             break
 
-    assert fake_opcodes.alt_taken == True
-    assert fake_opcodes.default_taken == False
+    assert fake_opcodes.alt_path.enabled == True
+    assert fake_opcodes.default_path.enabled == False
 
 def test_opcode_flag_default(fake_opcodes: OpcodeFixture) -> None:
 
     op = fake_opcodes.opcodes["dummy"]
-
-    fake_opcodes.reset()
 
     for s_idx in range(8):
         c, is_last = op.get_step(s_idx, Flags.Empty)
@@ -114,8 +97,8 @@ def test_opcode_flag_default(fake_opcodes: OpcodeFixture) -> None:
         if is_last:
             break
 
-    assert fake_opcodes.alt_taken == False
-    assert fake_opcodes.default_taken == True
+    assert fake_opcodes.alt_path.enabled == False
+    assert fake_opcodes.default_path.enabled == True
 
 
 
@@ -126,14 +109,12 @@ def all_steps() -> Iterator[tuple[str, str, int, Sequence[ControlSignal]]]:
 
 @pytest.mark.parametrize("_name,_flags,_vfal,step", all_steps())
 def test_mux_enables(_name: str, _flags: str, _vfal: int, step: Sequence[ControlSignal]) -> None:
-#    instr = opcodes["ld_A_addr"]
-#    steps = instr._steps[3]
 
     muxes_found = []
     sig_cache = []
 
     for signal in step:
-        if isinstance(signal, EnableCallback):
+        if isinstance(signal, InterceptorPin):
             signal = signal.original
 
         if isinstance(signal, MuxPin):
