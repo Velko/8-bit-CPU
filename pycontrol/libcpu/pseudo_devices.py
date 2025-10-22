@@ -42,14 +42,7 @@ class EnableCallback(ControlSignal):
         return self.callback(c_word)
 
 
-class RamHook:
-    @abstractmethod
-    def is_active(self) -> bool: ...
-
-    @abstractmethod
-    def invoke(self) -> None: ...
-
-class ImmediateValue(RamHook):
+class ImmediateValue:
     def __init__(self, client: PinClient) -> None:
         self.client = client
         self.value: list[int] = []
