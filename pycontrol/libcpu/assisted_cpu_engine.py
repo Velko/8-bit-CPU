@@ -67,7 +67,7 @@ class AssistedCPUEngine:
             self.client.ctrl_commit(control)
 
             if hardware.ProgMem.out.check_enabled(control.c_word):
-                self.imm.invoke()
+                self.imm.publish()
 
             # capture port output BEFORE clock tick.
             # TODO: think of more reliable approach
@@ -82,9 +82,6 @@ class AssistedCPUEngine:
 
             if control.is_enabled(hardware.PC.load):
                 self.imm.invalidate()
-
-            if control.is_enabled(hardware.PC.inc):
-                self.imm.consume() # next byte for imm value
 
             if control.is_enabled(hardware.F.calc) or control.is_enabled(hardware.F.load):
                 self.flags_cache = None
@@ -111,7 +108,7 @@ class AssistedCPUEngine:
                 self.opcode_cache = None
                 self.op_extension += 1
 
-        self.imm.release_bus()
+        self.imm.unpublish()
         hardware.ProgMem.out.apply_disable(control.c_word)
 
         return result

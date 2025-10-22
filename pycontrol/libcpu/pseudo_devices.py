@@ -52,22 +52,16 @@ class ImmediateValue:
     def invalidate(self) -> None:
         self.value = []
 
-    def consume(self) -> None:
-        if len(self.value) > 0:
-            del self.value[0]
-
-    def release_bus(self) -> None:
+    def unpublish(self) -> None:
         if self.write_enabled:
             self.client.bus_free()
             self.write_enabled = False
 
-    def invoke(self) -> None:
+    def publish(self) -> None:
         if len(self.value) > 0:
             self.client.bus_set(self.value[0])
             self.write_enabled = True
-
-    def is_active(self) -> bool:
-        return len(self.value) > 0
+            del self.value[0]
 
 
 class RamProxy(DeviceBase):
