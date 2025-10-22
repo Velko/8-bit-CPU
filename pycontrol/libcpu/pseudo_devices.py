@@ -4,7 +4,6 @@ from .pin import Pin
 from .util import sign_extend
 from .pinclient import PinClient
 from .messages import OutMessage
-from typing import Tuple
 
 class InterceptorPin(Pin):
     def __init__(self, original: Pin) -> None:
@@ -32,8 +31,7 @@ class InterceptorPin(Pin):
 
 
 class ImmediateValue:
-    def __init__(self, client: PinClient) -> None:
-        self.client = client
+    def __init__(self) -> None:
         self.value: list[int] = []
         self.write_enabled = False
 
@@ -52,14 +50,14 @@ class ImmediateValue:
     def invalidate(self) -> None:
         self.value = []
 
-    def unpublish(self) -> None:
+    def unpublish(self, client: PinClient) -> None:
         if self.write_enabled:
-            self.client.bus_free()
+            client.bus_free()
             self.write_enabled = False
 
-    def publish(self) -> None:
+    def publish(self, client: PinClient) -> None:
         if len(self.value) > 0:
-            self.client.bus_set(self.value[0])
+            client.bus_set(self.value[0])
             self.write_enabled = True
             del self.value[0]
 

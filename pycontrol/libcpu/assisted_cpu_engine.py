@@ -19,7 +19,7 @@ class AssistedCPUEngine:
         self.iomon = IOMonitor()
 
         # RAM hooks
-        self.imm = ImmediateValue(self.client)
+        self.imm = ImmediateValue()
         hardware.ProgMem.out.forward_enable = False
 
     def execute_mnemonic(self, mnemonic: str, arg: int | AddrBase | None = None) -> RunMessage | None:
@@ -67,7 +67,7 @@ class AssistedCPUEngine:
             self.client.ctrl_commit(control)
 
             if hardware.ProgMem.out.check_enabled(control.c_word):
-                self.imm.publish()
+                self.imm.publish(self.client)
 
             # capture port output BEFORE clock tick.
             # TODO: think of more reliable approach
@@ -108,7 +108,7 @@ class AssistedCPUEngine:
                 self.opcode_cache = None
                 self.op_extension += 1
 
-        self.imm.unpublish()
+        self.imm.unpublish(self.client)
         hardware.ProgMem.out.apply_disable(control.c_word)
 
         return result
