@@ -3,7 +3,7 @@
 import pytest
 
 
-from libcpu.pin import Mux, MuxPin
+from libcpu.pin import Mux, MuxPin, PinUsage
 from libcpu.ctrl_word import CtrlWord
 
 
@@ -11,7 +11,7 @@ from libcpu.ctrl_word import CtrlWord
 class MuxFixture:
     def __init__(self) -> None:
         self.mux = Mux("TestMux", [6, 9, 2], 5)
-        self.pin = MuxPin(self.mux, 3)
+        self.pin = MuxPin(self.mux, 3, PinUsage.EXCLUSIVE)
         self.control = CtrlWord([("", self.pin)])
 
 @pytest.fixture

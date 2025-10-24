@@ -73,7 +73,16 @@ class PinConfig:
     def create_shared_pins(self, shared_pins: list[dict[str, Any]]) ->  dict[str, Pin]:
         shared: dict[str, Pin] = {}
         for s in shared_pins:
-            shared[s['name']] = SimplePin(s['pin'], Level[s['level']], PinUsage.SHARED, s['name'])
+            if (pin_name := s.get('name')) is None:
+                raise ValueError(f"Missing pin for shared pin definition: {s}")
+
+            if (pin_def := s.get('pin')) is None:
+                raise ValueError(f"Missing pin definition for shared pin {pin_name}")
+
+            if (mux_name := s.get('mux')) is not None:
+                shared[pin_name] = MuxPin(self.muxes[mux_name], pin_def, PinUsage.SHARED, pin_name)
+            else:
+                shared[pin_name] = SimplePin(s['pin'], Level[s['level']], PinUsage.SHARED, pin_name)
         return shared
 
     def resolve_pins(self, pindef: dict[str, Any], name: str) -> dict[str, Pin]:
@@ -88,7 +97,7 @@ class PinConfig:
                 raise ValueError(f"Missing pin definition for pin {pn} in device {name}")
 
             if (mux_name := p.get('mux')) is not None:
-                mux = MuxPin(self.muxes[mux_name], pin_def)
+                mux = MuxPin(self.muxes[mux_name], pin_def, PinUsage.EXCLUSIVE)
                 args[pn] = mux
             else:
                 if isinstance(pin_def, str):

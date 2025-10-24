@@ -46,6 +46,9 @@ shared_pins:
   - name: "Addr.dec"
     level: "LOW"
     pin: 23
+  - name: "Memory.out"
+    mux: "OutMux"
+    pin: 9
 devices:
   - name: "A"
     type: "GPRegister"
@@ -158,8 +161,7 @@ devices:
     type: "RAM"
     pins:
       out:
-        mux: "OutMux"
-        pin: 9
+        pin: "Memory.out"
       write:
         mux: "LoadMux"
         pin: 9

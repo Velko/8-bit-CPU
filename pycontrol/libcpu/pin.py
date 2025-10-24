@@ -101,10 +101,12 @@ class Mux:
         return result
 
 class MuxPin(Pin):
-    def __init__(self, mux: Mux, num: int) -> None:
+    def __init__(self, mux: Mux, num: int, usage: PinUsage, alias: str | None = None) -> None:
         Pin.__init__(self)
         self.mux = mux
         self.num = num
+        self.usage = usage
+        self.name = alias
 
     def apply_enable(self, c_word: int) -> int:
         return self.mux.apply_enable(c_word, self.num)
