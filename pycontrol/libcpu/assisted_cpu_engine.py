@@ -20,7 +20,6 @@ class AssistedCPUEngine:
 
         # RAM hooks
         self.imm = ImmediateValue()
-        hardware.ProgMem.out.forward_enable = False
 
     def execute_mnemonic(self, mnemonic: str, arg: int | AddrBase | None = None) -> RunMessage | None:
         if not mnemonic in opcodes:
@@ -57,8 +56,14 @@ class AssistedCPUEngine:
     def execute_step(self, microstep: Sequence[ControlSignal]) -> RunMessage | None:
         control = CtrlWord()
 
+        progmem_out = False
         for pin in microstep:
-            control.enable(pin)
+            if pin == hardware.ProgMem.out:
+                # special handling for ProgMem.out
+                # to allow ImmediateValue to hijack the output
+                progmem_out = True
+            else:
+                control.enable(pin)
 
         result: RunMessage | None = None
 
@@ -66,7 +71,7 @@ class AssistedCPUEngine:
 
             self.client.ctrl_commit(control)
 
-            if hardware.ProgMem.out.check_enabled(control.c_word):
+            if progmem_out:
                 self.imm.publish(self.client)
 
             # capture port output BEFORE clock tick.
@@ -109,7 +114,6 @@ class AssistedCPUEngine:
                 self.op_extension += 1
 
         self.imm.unpublish(self.client)
-        hardware.ProgMem.out.apply_disable(control.c_word)
 
         return result
 

@@ -5,29 +5,19 @@ from .util import sign_extend
 from .pinclient import PinClient
 from .messages import OutMessage
 
-class InterceptorPin(Pin):
+class ProxyPin(Pin):
     def __init__(self, original: Pin) -> None:
         Pin.__init__(self)
         self.original = original
-        self.forward_enable = True
-        self.enabled = False
 
     def apply_enable(self, c_word: int) -> int:
-        self.enabled = True
-        if self.forward_enable:
-            return self.original.apply_enable(c_word)
-        return c_word
+        return self.original.apply_enable(c_word)
 
     def apply_disable(self, c_word: int) -> int:
-        self.enabled = False
-        if self.forward_enable:
-            return self.original.apply_disable(c_word)
-        return c_word
+        return self.original.apply_disable(c_word)
 
     def check_enabled(self, c_word: int) -> bool:
-        if self.forward_enable:
-            return self.original.check_enabled(c_word)
-        return self.enabled
+        return self.original.check_enabled(c_word)
 
 
 class ImmediateValue:
@@ -67,8 +57,8 @@ class RamProxy(DeviceBase):
         DeviceBase.__init__(self, name)
         self.name = name
         self.ram = ram
-        self.out = InterceptorPin(ram.out)
-        self.write = InterceptorPin(ram.write)
+        self.out = ProxyPin(ram.out)
+        self.write = ProxyPin(ram.write)
 
 class IOMonitor:
     def __init__(self) -> None:
