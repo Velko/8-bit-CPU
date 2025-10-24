@@ -4,56 +4,56 @@
 # Useful if control bits are re-arranged.
 
 from libcpu.ctrl_word import CtrlWord
-from libcpu.DeviceSetup import RegA, RegB, AddSub, Ram, XorNot, Flags
+from libcpu.DeviceSetup import hardware as hw
+
 
 control = CtrlWord()
 
 print("Clear, reset")
-control.reset()
 print(f"32'b{control.c_word:032b}")
 
 print ("Load A")
-RegA.load.enable()
+control.enable(hw.A.load)
 print(f"32'b{control.c_word:032b}")
 
 print ("Load B")
-control.reset()
-RegB.load.enable()
+control = CtrlWord()
+control.enable(hw.B.load)
 print(f"32'b{control.c_word:032b}")
 
 print ("Add A to B")
-control.reset()
-RegA.load.enable()
-RegA.alu_l.enable()
-RegB.alu_r.enable()
-AddSub.out.enable()
+control = CtrlWord()
+control.enable(hw.A.load)
+control.enable(hw.A.alu_l)
+control.enable(hw.B.alu_r)
+control.enable(hw.AddSub.out)
 print(f"32'b{control.c_word:032b}")
 
 print ("Output A to Bus")
-control.reset()
-RegA.out.enable()
+control = CtrlWord()
+control.enable(hw.A.out)
 print(f"32'b{control.c_word:032b}")
 
 print ("Write something in RAM")
-control.reset()
-Ram.write.enable()
+control = CtrlWord()
+control.enable(hw.RAM.write)
 print(f"32'b{control.c_word:032b}")
 
 print ("Read from different addr")
-control.reset()
-Ram.out.enable()
+control = CtrlWord()
+control.enable(hw.RAM.out)
 print(f"32'b{control.c_word:032b}")
 
 print ("XOR A, A")
-control.reset()
-RegA.load.enable()
-RegA.alu_l.enable()
-RegA.alu_r.enable()
-XorNot.out.enable()
-Flags.calc.enable()
+control = CtrlWord()
+control.enable(hw.A.load)
+control.enable(hw.A.alu_l)
+control.enable(hw.A.alu_r)
+control.enable(hw.XorNot.out)
+control.enable(hw.F.calc)
 print(f"32'b{control.c_word:032b}")
 
 print ("Put F on bus")
-control.reset()
-Flags.out.enable()
+control = CtrlWord()
+control.enable(hw.F.out)
 print(f"32'b{control.c_word:032b}")

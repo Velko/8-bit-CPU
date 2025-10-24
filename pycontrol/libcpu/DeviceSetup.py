@@ -28,6 +28,7 @@ class HardwareSetup:
         self.D = self.get_typed_dev("D", dev.GPRegister)
 
         self.AddSub = self.get_typed_dev("AddSub", dev.ALU)
+        self.XorNot = self.get_typed_dev("XorNot", dev.ALU)
         self.F = self.get_typed_dev("F", dev.FlagsRegister)
         self.RAM = self.get_typed_dev("Ram", dev.RAM)
         self.ProgMem = self.get_typed_dev("ProgMem", RamProxy)
