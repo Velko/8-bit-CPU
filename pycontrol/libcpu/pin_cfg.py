@@ -75,19 +75,27 @@ class PinConfig:
     def resolve_pins(self, pindef: dict[str, Any], name: str) -> dict[str, Pin]:
         args: dict[str, Pin] = {}
         for pn, p in pindef.items():
-            if p.get('mux') is not None:
-                mux = MuxPin(self.muxes[p['mux']], p['pin'])
+            # There are three possibilities:
+            # 1. MuxPin: mux and numeric pin specified
+            # 2. Shared Pin: shared pin name specified
+            # 3. Exclusive SimplePin: numeric pin and level specified
+
+            if (pin_def := p.get('pin')) is None:
+                raise ValueError(f"Missing pin definition for pin {pn} in device {name}")
+
+            if (mux_name := p.get('mux')) is not None:
+                mux = MuxPin(self.muxes[mux_name], pin_def)
                 args[pn] = mux
             else:
-                if isinstance(p['pin'], str):
-                    if p['pin'] in self.shared:
-                        pin = self.shared[p['pin']]
+                if isinstance(pin_def, str):
+                    if pin_def in self.shared:
+                        pin = self.shared[pin_def]
                     else:
-                        raise ValueError(f"Unknown shared pin {p['pin']} in device {name}")
+                        raise ValueError(f"Unknown shared pin {pin_def} in device {name}")
                 else:
-                    if 'level' not in p:
+                    if (level_name := p.get('level')) is None:
                         raise ValueError(f"Missing level for pin {pn} in device {name}")
-                    pin = SimplePin(p['pin'], Level[p.get('level')], PinUsage.EXCLUSIVE)
+                    pin = SimplePin(pin_def, Level[level_name], PinUsage.EXCLUSIVE)
                 args[pn] = pin
         return args
 
