@@ -5,21 +5,6 @@ from .util import sign_extend
 from .pinclient import PinClient
 from .messages import OutMessage
 
-class ProxyPin(Pin):
-    def __init__(self, original: Pin) -> None:
-        Pin.__init__(self)
-        self.original = original
-
-    def apply_enable(self, c_word: int) -> int:
-        return self.original.apply_enable(c_word)
-
-    def apply_disable(self, c_word: int) -> int:
-        return self.original.apply_disable(c_word)
-
-    def check_enabled(self, c_word: int) -> bool:
-        return self.original.check_enabled(c_word)
-
-
 class ImmediateValue:
     def __init__(self) -> None:
         self.value: list[int] = []
@@ -51,14 +36,6 @@ class ImmediateValue:
             self.write_enabled = True
             del self.value[0]
 
-
-class RamProxy(DeviceBase):
-    def __init__(self, name: str, ram: RAM) -> None:
-        DeviceBase.__init__(self, name)
-        self.name = name
-        self.ram = ram
-        self.out = ProxyPin(ram.out)
-        self.write = ProxyPin(ram.write)
 
 class IOMonitor:
     def __init__(self) -> None:

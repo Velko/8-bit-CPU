@@ -1,6 +1,5 @@
 from .DeviceSetup import hardware as hw
 from . import devices as dev
-from .pseudo_devices import RamProxy
 
 A = hw.get_typed_dev("A", dev.GPRegister)
 B = hw.get_typed_dev("B", dev.GPRegister)

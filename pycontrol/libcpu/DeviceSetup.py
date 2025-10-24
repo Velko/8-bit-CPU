@@ -1,5 +1,4 @@
 from . import devices as dev
-from .pseudo_devices import RamProxy
 from .pin import Pin, SimplePin, Level, Mux, MuxPin, PinUsage
 from .pin_cfg import PinConfig
 from .ctrl_word import CtrlWord

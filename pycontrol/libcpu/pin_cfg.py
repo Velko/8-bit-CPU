@@ -7,7 +7,6 @@ from enum import Enum, auto
 
 from .pin import Mux, MuxPin, SimplePin, Level, PinUsage, Pin
 from .devices import GPRegister, DeviceBase, ALU, FlagsRegister, RAM, ROM, TempRegister, WORegister, Clock, StepCounter, ProgramCounter, TransferRegister, StackPointer, AddressRegister, AddressCalculator, IOController
-from .pseudo_devices import RamProxy
 import copy
 
 
@@ -42,16 +41,6 @@ class PinConfig:
                     self.devices[name] = RAM(**args)
                 case "ROM":
                     self.devices[name] = ROM(**args)
-                case "Alias":
-                    alias_of = d.get('alias_of')
-                    if alias_of is None:
-                        raise ValueError(f"Alias device {name} missing 'alias_of' field")
-                    if alias_of not in self.devices:
-                        raise ValueError(f"Alias device {name} references unknown device {alias_of}")
-                    if alias_of == "Ram":
-                        self.devices[name] = RamProxy(name, ram = self.devices[alias_of]) # type: ignore[arg-type]
-                    else:
-                        raise ValueError(f"Alias device {name} references unsupported device {alias_of}")
                 case "TempRegister":
                     self.devices[name] = TempRegister(**args)
                 case "WORegister":

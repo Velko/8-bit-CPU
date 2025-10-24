@@ -8,7 +8,6 @@ from libcpu.devmap import PC
 from libcpu.devices import Flags
 from libcpu.opcode_builder import MicrocodeBuilder
 from libcpu.pin import ControlSignal, MuxPin
-from libcpu.pseudo_devices import ProxyPin
 from libcpu.ctrl_word import CtrlWord
 
 from collections.abc import Iterator, Sequence
@@ -114,9 +113,6 @@ def test_mux_enables(_name: str, _flags: str, _vfal: int, step: Sequence[Control
     sig_cache = []
 
     for signal in step:
-        if isinstance(signal, ProxyPin):
-            signal = signal.original
-
         if isinstance(signal, MuxPin):
             if signal not in sig_cache: # aliased pins (PC.out == PC.inc)
                 assert signal.mux not in muxes_found
