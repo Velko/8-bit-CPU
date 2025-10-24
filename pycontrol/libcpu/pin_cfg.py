@@ -6,8 +6,9 @@ from typing import Any
 from enum import Enum, auto
 
 from .pin import Mux, MuxPin, SimplePin, Level, PinUsage, Pin
-from .devices import GPRegister, DeviceBase, ALU, FlagsRegister, RAM, TempRegister, WORegister, Clock, StepCounter, ProgramCounter, TransferRegister, StackPointer, AddressRegister, AddressCalculator, IOController
+from .devices import GPRegister, DeviceBase, ALU, FlagsRegister, RAM, ROM, TempRegister, WORegister, Clock, StepCounter, ProgramCounter, TransferRegister, StackPointer, AddressRegister, AddressCalculator, IOController
 from .pseudo_devices import RamProxy
+import copy
 
 
 @dataclass
@@ -39,6 +40,8 @@ class PinConfig:
                     self.devices[name] = FlagsRegister(**args)
                 case "RAM":
                     self.devices[name] = RAM(**args)
+                case "ROM":
+                    self.devices[name] = ROM(**args)
                 case "Alias":
                     alias_of = d.get('alias_of')
                     if alias_of is None:
@@ -102,7 +105,7 @@ class PinConfig:
             else:
                 if isinstance(pin_def, str):
                     if pin_def in self.shared:
-                        pin = self.shared[pin_def]
+                        pin = copy.copy(self.shared[pin_def])
                     else:
                         raise ValueError(f"Unknown shared pin {pin_def} in device {name}")
                 else:

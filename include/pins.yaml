@@ -166,8 +166,10 @@ devices:
         mux: "LoadMux"
         pin: 9
   - name: "ProgMem"
-    type: "Alias"
-    alias_of: "Ram"
+    type: "ROM"
+    pins:
+      out:
+        pin: "Memory.out"
   - name: "T"
     type: "TempRegister"
     pins:

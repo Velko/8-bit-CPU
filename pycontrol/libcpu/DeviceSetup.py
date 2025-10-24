@@ -31,7 +31,7 @@ class HardwareSetup:
         self.XorNot = self.get_typed_dev("XorNot", dev.ALU)
         self.F = self.get_typed_dev("F", dev.FlagsRegister)
         self.RAM = self.get_typed_dev("Ram", dev.RAM)
-        self.ProgMem = self.get_typed_dev("ProgMem", RamProxy)
+        self.ProgMem = self.get_typed_dev("ProgMem", dev.ROM)
         self.IR = self.get_typed_dev("IR", dev.WORegister)
         self.Clock = self.get_typed_dev("Clock", dev.Clock)
         self.StepCounter = self.get_typed_dev("StepCounter", dev.StepCounter)

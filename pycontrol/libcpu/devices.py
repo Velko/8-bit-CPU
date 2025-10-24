@@ -71,6 +71,10 @@ class RAM(DeviceBase):
     write: Pin
 
 @dataclass
+class ROM(DeviceBase):
+    out: Pin
+
+@dataclass
 class Clock(DeviceBase):
     halt: Pin
     brk: Pin
