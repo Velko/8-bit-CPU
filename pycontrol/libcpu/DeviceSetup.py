@@ -75,12 +75,13 @@ class HardwareSetup:
         for dev in self.devices.values():
             pin_attrs = filter(lambda x: isinstance(x[1], Pin), vars(dev).items())
             for a_name, attr in pin_attrs:
-                if attr not in dupe_filter:
-                    dupe_filter.add(attr)
-                    if attr.name is not None:
-                        yield f"{attr.name}", attr
-                    else:
-                        yield f"{dev.name}.{a_name}", attr
+                if attr.name is not None:
+                    pin_name = f"{attr.name}"
+                else:
+                    pin_name = f"{dev.name}.{a_name}"
+                if pin_name not in dupe_filter:
+                    dupe_filter.add(pin_name)
+                    yield pin_name, attr
 
     def simple_pins(self) -> Iterator[tuple[str, SimplePin]]:
         for name, pin in self.all_pins():
