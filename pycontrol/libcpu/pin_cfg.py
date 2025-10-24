@@ -20,9 +20,7 @@ class PinConfig:
 
     def __init__(self, muxes: list[dict[str, Any]], shared_pins: list[dict[str, Any]], devices: list[dict[str, Any]]) -> None:
         self.muxes = {m['name']: Mux(**m) for m in muxes}
-        self.shared = {}
-        for s in shared_pins:
-            self.shared[s['name']] = SimplePin(s['pin'], Level[s['level']], PinUsage.SHARED, s['name'])
+        self.shared = self.create_shared_pins(shared_pins)
         self.devices: dict[str, DeviceBase] = {}
 
         for d in devices:
@@ -71,6 +69,12 @@ class PinConfig:
                     self.devices[name] = AddressCalculator(**args)
                 case "IOController":
                     self.devices[name] = IOController(**args)
+
+    def create_shared_pins(self, shared_pins: list[dict[str, Any]]) ->  dict[str, Pin]:
+        shared: dict[str, Pin] = {}
+        for s in shared_pins:
+            shared[s['name']] = SimplePin(s['pin'], Level[s['level']], PinUsage.SHARED, s['name'])
+        return shared
 
     def resolve_pins(self, pindef: dict[str, Any], name: str) -> dict[str, Pin]:
         args: dict[str, Pin] = {}
