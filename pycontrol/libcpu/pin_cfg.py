@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from typing import Any
 from enum import Enum, auto
 
-from .pin import Mux, MuxPin, SimplePin, Level, PinUsage
+from .pin import Mux, MuxPin, SimplePin, Level, PinUsage, Pin
 from .devices import GPRegister, DeviceBase, ALU, FlagsRegister, RAM, TempRegister, WORegister, Clock, StepCounter, ProgramCounter, TransferRegister, StackPointer, AddressRegister, AddressCalculator, IOController
 from .pseudo_devices import RamProxy
 
@@ -28,22 +28,9 @@ class PinConfig:
         for d in devices:
             name = d['name']
             args = {'name': name}
+
             if 'pins' in d:
-                for pn, p in d['pins'].items():
-                    if p.get('mux') is not None:
-                        mux = MuxPin(self.muxes[p['mux']], p['pin'])
-                        args[pn] = mux
-                    else:
-                        if isinstance(p['pin'], str):
-                            if p['pin'] in self.shared:
-                                pin = self.shared[p['pin']]
-                            else:
-                                raise ValueError(f"Unknown shared pin {p['pin']} in device {name}")
-                        else:
-                            if 'level' not in p:
-                                raise ValueError(f"Missing level for pin {pn} in device {name}")
-                            pin = SimplePin(p['pin'], Level[p.get('level')], PinUsage.EXCLUSIVE)
-                        args[pn] = pin
+                args.update(self.resolve_pins(d['pins'], name))
 
             match d['type']:
                 case 'GPRegister':
@@ -84,4 +71,23 @@ class PinConfig:
                     self.devices[name] = AddressCalculator(**args)
                 case "IOController":
                     self.devices[name] = IOController(**args)
+
+    def resolve_pins(self, pindef: dict[str, Any], name: str) -> dict[str, Pin]:
+        args: dict[str, Pin] = {}
+        for pn, p in pindef.items():
+            if p.get('mux') is not None:
+                mux = MuxPin(self.muxes[p['mux']], p['pin'])
+                args[pn] = mux
+            else:
+                if isinstance(p['pin'], str):
+                    if p['pin'] in self.shared:
+                        pin = self.shared[p['pin']]
+                    else:
+                        raise ValueError(f"Unknown shared pin {p['pin']} in device {name}")
+                else:
+                    if 'level' not in p:
+                        raise ValueError(f"Missing level for pin {pn} in device {name}")
+                    pin = SimplePin(p['pin'], Level[p.get('level')], PinUsage.EXCLUSIVE)
+                args[pn] = pin
+        return args
 
