@@ -3,7 +3,7 @@
 
 #include <pthread.h>
 
-#define BUFFER_SIZE     64  /* only power-of-two allowed */
+#define BUFFER_SIZE     1024  /* only power-of-two allowed */
 
 struct ringbuffer
 {
