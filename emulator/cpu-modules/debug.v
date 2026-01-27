@@ -29,6 +29,37 @@ module debug (
     reg [7:0] cmd;
     reg [31:0] _discard;
 
+    task tick();
+        begin
+            clk_l <= 1;
+            #1
+            clk_l <= 0;
+            #1
+            iclk_l <= 1;
+            #1
+            iclk_l <= 0;
+        end
+    endtask
+
+    task reset();
+        begin
+            rst <= 1;
+            /* Reset requires clock pulse to propogate because not all parts have asynchronouse
+               reset capabilities.
+
+               Another issue is that CPU may repeat the last operation. Normally we should not
+               case, except when it is an I/O operation.
+
+               TODO: handle it here or in I/O controller?? Former prevents similar "head-scratching"
+               moments in the future. Latter solves the issue just in misbehaving module.
+             */
+            control_word_l <= `DEFAULT_CW;
+            #1;
+            tick();
+            rst <= 0;
+        end
+    endtask
+
     always @(negedge iclk or posedge power_on) begin
         if (brk || !hlt || power_on) begin
             if (brk) begin
@@ -115,13 +146,7 @@ module debug (
                     "T": begin
                         // clock_tick
                         $hdb_send_str("#T"); // send response immediately, as executing the tick may produce additional output
-                        clk_l <= 1;
-                        #1
-                        clk_l <= 0;
-                        #1
-                        iclk_l <= 1;
-                        #1
-                        iclk_l <= 0;
+                        tick();
                     end
 
                     "r": begin
@@ -136,26 +161,7 @@ module debug (
                     end
 
                     "Z": begin
-                        rst <= 1;
-                        /* Reset requires clock pulse to propogate because not all parts have asynchronouse
-                           reset capabilities.
-
-                           Another issue is that CPU may repeat the last operation. Normally we should not
-                           case, except when it is an I/O operation.
-
-                           TODO: handle it here or in I/O controller?? Former prevents similar "head-scratching"
-                              moments in the future. Latter solves the issue just in misbehaving module.
-                         */
-                        control_word_l <= `DEFAULT_CW;
-                        #1;
-                        clk_l <= 1;
-                        #1;
-                        clk_l <= 0;
-                        #1;
-                        iclk_l <= 1;
-                        #1;
-                        iclk_l <= 0;
-                        rst <= 0;
+                        reset();
                     end
 
                     "Q": begin
