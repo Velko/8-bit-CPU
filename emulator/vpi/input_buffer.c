@@ -171,6 +171,12 @@ int ringbuffer_read_int_blocking(struct ringbuffer *buffer)
         c = ringbuffer_discard_and_peek_next_blocking(buffer);
     }
     numbuf[cidx] = 0;
+    if (c == ';')
+    {
+        // discard separator
+        ringbuffer_discard(buffer);
+    }
+
 
     return strtol(numbuf, NULL, 0);
 }
