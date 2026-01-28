@@ -37,3 +37,4 @@ pty?
 /emulator/experimental
 *.lst
 *.deb
+/wiki/
