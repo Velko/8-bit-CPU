@@ -61,8 +61,11 @@ class CPUHelper:
         self.client.off()
 
     def write_bytes(self, addr: int, data: bytes) -> None:
-        for i, b in enumerate(data):
-            self.write_ram(addr + i, b)
+        control = CtrlWord()\
+            .enable(hardware.RAM.write)
+
+        self.client.write_mem(control, addr, data)
+        self.client.off()
 
     def get_flags(self) -> Flags:
         return Flags(self.client.flags_get())

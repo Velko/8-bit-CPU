@@ -27,7 +27,7 @@ module debug (
     reg [31:0] control_word_l;
 
     reg [7:0] cmd;
-    reg [31:0] _discard;
+    reg [31:0] temp;
 
     task tick();
         begin
@@ -59,6 +59,30 @@ module debug (
             rst <= 0;
         end
     endtask
+
+    task write_ram();
+        begin
+            // Set control word (client supplies the bits)
+            $hdb_get_int(control_word_l);
+
+            // Start address
+            $hdb_get_int(addr);
+            faddr <= 1;
+
+            $hdb_get_int(temp);
+            fdata <= 1;
+
+            while (temp < 32'h100) begin
+                // Write bus
+                data <= temp[7:0];
+                #1
+                tick();
+                $hdb_get_int(temp);
+                addr++;
+            end
+        end
+    endtask
+
 
     always @(negedge iclk or posedge power_on) begin
         if (brk || !hlt || power_on) begin
@@ -151,7 +175,7 @@ module debug (
 
                     "r": begin
                         // read current_opcode
-                        $hdb_get_int(_discard); // client sends control word for IRFetch, discard it
+                        $hdb_get_int(temp); // client sends control word for IRFetch, discard it
                         $hdb_send_int(iout);
                     end
 
@@ -162,6 +186,10 @@ module debug (
 
                     "Z": begin
                         reset();
+                    end
+
+                    "W": begin
+                        write_ram();
                     end
 
                     "Q": begin

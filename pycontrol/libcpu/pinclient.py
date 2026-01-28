@@ -83,6 +83,10 @@ class PinClient:
         if t != "#T":
             raise ProtocolException(f"Expected #T from clock tick, got: /{t}/")
 
+    def write_mem(self, cw: CtrlWord, addr: int, data: bytes) -> None:
+        w = ";".join(map(lambda b: str(int(b)), data))
+        self.send_cmd(f"W{cw.c_word};{addr};{w};256N")
+
     def ir_get(self) -> int:
         return int(self.query("r0N"))
 
