@@ -1,7 +1,7 @@
 from .markers import AddrBase
 from .devices import RAM, DeviceBase
 from .pin import Pin
-from .util import sign_extend
+from .util import to_i8
 from .pinclient import PinClient
 from .messages import OutMessage
 
@@ -54,7 +54,7 @@ class IOMonitor:
             if self.numeric_mode == 0:
                 return OutMessage(self.selected_port, f"{value:>4}\n")
             if self.numeric_mode == 1:
-                return OutMessage(self.selected_port, f"{sign_extend(value):>4}\n")
+                return OutMessage(self.selected_port, f"{to_i8(value):>4}\n")
             if self.numeric_mode == 2:
                 return OutMessage(self.selected_port, f"h {value:02x}\n")
             if self.numeric_mode == 3:
