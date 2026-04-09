@@ -7,7 +7,8 @@ from libcpu.devices import GPRegister, Flags
 
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
-from libcpu.DeviceSetup import hardware
+from libcpu.devmap import A, B
+
 
 from conftest import ALUTwoRegTestCase, ALUOneRegTestCase, devname
 
@@ -222,5 +223,91 @@ def test_sbbi_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister,
 
     value = cpu_helper.read_reg8(reg)
     flags = cpu_helper.regs.F
+    assert value == case.result
+    assert flags == case.xflags
+
+overflow_test_args = [
+    # A+, B+, R+  → no overflow
+    ALUTwoRegTestCase(
+        "pos_pos_no_overflow",
+        20,     # +20
+        30,     # +30
+        50,     # +50
+        Flags.Empty
+    ),
+
+    # A+, B+, R-  → OVERFLOW
+    ALUTwoRegTestCase(
+        "pos_pos_overflow",
+        100,    # +100
+        50,     # +50
+        150,    # +150 (MSB=1)
+        Flags.V
+    ),
+
+    # A+, B-, R+  → no overflow
+    ALUTwoRegTestCase(
+        "pos_neg_no_overflow_1",
+        30,     # +30
+        246,    # -10
+        20,     # +20
+        Flags.Empty
+    ),
+
+    # A+, B-, R-  → no overflow
+    ALUTwoRegTestCase(
+        "pos_neg_no_overflow_2",
+        10,     # +10
+        236,    # -20
+        246,    # -10
+        Flags.Empty
+    ),
+
+    # A-, B+, R+  → no overflow
+    ALUTwoRegTestCase(
+        "neg_pos_no_overflow_1",
+        246,    # -10
+        20,     # +20
+        10,     # +10
+        Flags.Empty
+    ),
+
+    # A-, B+, R-  → no overflow
+    ALUTwoRegTestCase(
+        "neg_pos_no_overflow_2",
+        206,    # -50
+        20,     # +20
+        226,    # -30
+        Flags.Empty
+    ),
+
+    # A-, B-, R-  → no overflow
+    ALUTwoRegTestCase(
+        "neg_neg_no_overflow",
+        226,    # -30
+        216,    # -40
+        186,    # -70
+        Flags.Empty
+    ),
+
+    # A-, B-, R+  → OVERFLOW
+    ALUTwoRegTestCase(
+        "neg_neg_overflow",
+        176,    # -80
+        176,    # -80
+        96,     # -160 mod 256 = 96 (MSB=0)
+        Flags.V
+    ),
+]
+
+@pytest.mark.parametrize("case", overflow_test_args, ids=str)
+def test_add_overflow_flag(cpu_helper: CPUHelper, acpu: AssistedCPU, case: ALUTwoRegTestCase) -> None:
+    cpu_helper.regs.A = case.val_a
+    cpu_helper.regs.B = case.val_b
+
+    acpu.add(A, B)
+
+    value = cpu_helper.regs.A
+    flags = cpu_helper.regs.F & Flags.V
     assert value == case.result
     assert flags == case.xflags

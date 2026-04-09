@@ -10,9 +10,35 @@ module alu_addsub (
 
     wire [7:0] out_v;
 
-    xor_86p xor_flags(.a4(xor_h.y[3]), .a3(arg_l[7]), .a2(cin), .a1(add_h.cout), .b4(add_h.s[3]), .b3(add_h.s[3]), .b2(sub), .b1(sub));
-    and_08p and_v(.a1(xor_flags.y3), .b1(xor_flags.y4),
-        .a2(1'b0), .a3(1'b0), .a4(1'b0), .b2(1'b0), .b3(1'b0), .b4(1'b0));
+    wire msb_l = arg_l[7];
+    wire msb_r_adderin = xor_h.y[3];
+    wire msb_adderout = add_h.s[3];
+    wire v_flag;
+
+    xor_86p xor_flags(
+        /* oVerflow */
+        .a4(msb_r_adderin),
+        .b4(msb_adderout),
+        .a3(msb_l),
+        .b3(msb_adderout),
+
+        /* Carry inversion */
+        .a2(cin),
+        .a1(add_h.cout),
+        .b2(sub),
+        .b1(sub));
+
+    and_08p and_v(
+        .a1(xor_flags.y3),
+        .b1(xor_flags.y4),
+        .y1(v_flag),
+
+        .a2(1'b0),
+        .a3(1'b0),
+        .a4(1'b0),
+        .b2(1'b0),
+        .b3(1'b0),
+        .b4(1'b0));
 
     xor_86b xor_l(.a(arg_r[3:0]), .b({sub, sub, sub, sub}));
     adder_283 add_l(.a(arg_l[3:0]), .b(xor_l.y), .cin(xor_flags.y2), .s(out_v[3:0]));
@@ -23,7 +49,7 @@ module alu_addsub (
     buffer_245 bus_buf(.oen(outn), .dir(1'b1), .a(out_v), .b(bus));
 
     buffer_125p flags_buf(.a1(xor_flags.y1), .y1(cout),
-                          .a2(and_v.y1), .y2(vout),
+                          .a2(v_flag), .y2(vout),
                           .a3(1'b0), .a4(1'b0),
                           .oen1(outn), .oen2(outn), .oen3(outn), .oen4(outn));
 
