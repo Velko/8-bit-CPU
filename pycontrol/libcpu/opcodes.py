@@ -112,6 +112,8 @@ def build_opcodes() -> tuple[Mapping[str, MicroCode], list[MicroCode]]:
             case Repeat.gp_reg_pair_different:
                 for l, r in permute_gp_regs_nsame():
                     add_instruction(builder, instr, left=l, right=r)
+            case _:
+                raise ValueError(f"Unsupported repeat type: {instr.repeat}")
 
     return builder.build()
 
