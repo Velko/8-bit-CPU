@@ -3,8 +3,8 @@
     jmp {target} =>
     {
         offset = target - $ - 1
-        assert (offset <= 127)
-        assert (offset >= -128)
+        $assert (offset <= 127)
+        $assert (offset >= -128)
         asm { rjmp {offset} }
     }
 
@@ -16,8 +16,8 @@
     beq {target} =>
     {
         offset = target - $ - 1
-        assert (offset <= 127)
-        assert (offset >= -128)
+        $assert (offset <= 127)
+        $assert (offset >= -128)
         asm { beqr {offset} }
     }
 
@@ -29,8 +29,8 @@
     bne {target} =>
     {
         offset = target - $ - 1
-        assert (offset <= 127)
-        assert (offset >= -128)
+        $assert (offset <= 127)
+        $assert (offset >= -128)
         asm { bner {offset} }
     }
 
@@ -42,8 +42,8 @@
     bcs {target} =>
     {
         offset = target - $ - 1
-        assert (offset <= 127)
-        assert (offset >= -128)
+        $assert (offset <= 127)
+        $assert (offset >= -128)
         asm { bcsr {offset} }
     }
 
@@ -55,8 +55,8 @@
     bcc {target} =>
     {
         offset = target - $ - 1
-        assert (offset <= 127)
-        assert (offset >= -128)
+        $assert (offset <= 127)
+        $assert (offset >= -128)
         asm { bccr {offset} }
     }
 
@@ -68,8 +68,8 @@
     bmi {target} =>
     {
         offset = target - $ - 1
-        assert (offset <= 127)
-        assert (offset >= -128)
+        $assert (offset <= 127)
+        $assert (offset >= -128)
         asm { bmir {offset} }
     }
 
@@ -81,8 +81,8 @@
     bpl {target} =>
     {
         offset = target - $ - 1
-        assert (offset <= 127)
-        assert (offset >= -128)
+        $assert (offset <= 127)
+        $assert (offset >= -128)
         asm { bplr {offset} }
     }
 
@@ -94,8 +94,8 @@
     call {target} =>
     {
         offset = target - $ - 1
-        assert (offset <= 127)
-        assert (offset >= -128)
+        $assert (offset <= 127)
+        $assert (offset >= -128)
         asm { rcall {offset} }
     }
 
