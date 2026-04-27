@@ -4,7 +4,7 @@ from collections.abc import Iterator, Sequence
 from typing import TypeVar
 from libcpu.opcode_builder import MicroCode
 from libcpu.pin import ControlSignal
-from libcpu.opcodes import ops_by_code, fetch
+from libcpu.opcodes import ops_by_num, fetch
 from libcpu.devices import Flags
 from libcpu.DeviceSetup import hardware
 
@@ -29,12 +29,12 @@ def finalize_steps(microcode: MicroCode, flags: Flags) -> Iterator[Sequence[Cont
             yield step
 
 def generate_microcode() -> Iterator[int]:
-    for microcode in ops_by_code:
+    for microcode in ops_by_num:
         for flags in range(16):
             for c_word in process_steps(microcode, Flags(flags)):
                 yield c_word
 
-    for _ in range(512 - len(ops_by_code)):
+    for _ in range(512 - len(ops_by_num)):
         for c_word in [0xFFFFFFFF] * 16 * MAX_STEPS:
             yield c_word
 

@@ -3,7 +3,7 @@ from .markers import AddrBase
 from .devices import Flags
 from .pseudo_devices import ImmediateValue, IOMonitor
 from .DeviceSetup import hardware
-from .opcodes import ops_by_str, ops_by_code, fetch, InvalidOpcodeException
+from .opcodes import ops_by_str, ops_by_num, fetch, InvalidOpcodeException
 from .pinclient import PinClient
 from .ctrl_word import CtrlWord
 from .pin import ControlSignal
@@ -42,7 +42,7 @@ class AssistedCPUEngine:
 
         for s_idx in range(8-len(fetch)):
             # re-evaluate opcode, as it may change mid-instruction (when extended is loaded)
-            microcode = ops_by_code[self.get_opcode_cached()]
+            microcode = ops_by_num[self.get_opcode_cached()]
             microstep, is_last = microcode.get_step(s_idx - self.op_extension , self.get_flags_cached())
             if is_last:
                 fin_steps: list[ControlSignal] = [hardware.StepCounter.reset]
@@ -127,7 +127,7 @@ class AssistedCPUEngine:
         if self.opcode_cache is None:
             self.opcode_cache = self.client.ir_get() + (self.op_extension * 0x100)
 
-        if self.opcode_cache >= len(ops_by_code):
+        if self.opcode_cache >= len(ops_by_num):
             raise InvalidOpcodeException(self.opcode_cache)
 
         return self.opcode_cache

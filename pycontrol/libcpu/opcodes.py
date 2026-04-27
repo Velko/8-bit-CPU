@@ -114,4 +114,4 @@ def build_opcodes() -> tuple[Mapping[str, MicroCode], list[MicroCode]]:
     return builder.build()
 
 
-ops_by_str, ops_by_code = build_opcodes()
+ops_by_str, ops_by_num = build_opcodes()

@@ -59,7 +59,7 @@ class OpcodeFixture:
             .add_condition(mask=Flags.C, value=Flags.C)\
                 .add_step(self.alt_path)
 
-        self.opcodes, self.ops_by_code = builder.build()
+        self.opcodes, self.ops_by_num = builder.build()
 
 
 

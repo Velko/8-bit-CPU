@@ -2,7 +2,7 @@
 
 from libcpu.devices import Register
 from libcpu.opcode_builder import OpcodeArg
-from libcpu.opcodes import ops_by_str, ops_by_code
+from libcpu.opcodes import ops_by_str, ops_by_num
 
 from typing import TextIO
 
@@ -14,7 +14,7 @@ def generate_casmdefs(rdfile: TextIO) -> None:
 
     xprefix = ops_by_str["_xprefix"]
 
-    for microcode in ops_by_code:
+    for microcode in ops_by_num:
 
         # skip "internal opcodes"
         if microcode.name.startswith("_"):
