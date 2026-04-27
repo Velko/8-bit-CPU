@@ -18,7 +18,7 @@ class PinConfig:
             return PinConfig(**yconf)
 
     def __init__(self, muxes: list[dict[str, Any]], shared_pins: list[dict[str, Any]], devices: list[dict[str, Any]]) -> None:
-        self.muxes = {m['name']: Mux(**m) for m in muxes}
+        self.muxes = {str(m['name']): Mux(**m) for m in muxes}
         self.shared = self.create_shared_pins(shared_pins)
         self.devices: dict[str, DeviceBase] = {}
 

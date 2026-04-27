@@ -86,9 +86,7 @@ class HardwareSetup:
                 yield name, pin
 
     def all_muxes(self) -> Iterator[tuple[str, Mux]]:
-        for v_name, var in self.muxes.items():
-            if isinstance(var, Mux):
-                yield v_name, var
+        yield from self.muxes.items()
 
     def mux_pins(self, mux: Mux) -> Iterator[tuple[str, MuxPin]]:
         for name, pin in self.all_pins():
