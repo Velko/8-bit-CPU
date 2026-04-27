@@ -57,7 +57,7 @@ def resolve_arg(name: str, **kwargs: Register) -> Register | OpcodeArg:
     elif name in kwargs:
         return kwargs[name]
     elif name in hardware.devices:
-        return hardware.a_ptr(name)
+        return hardware.get_typed_dev(name, Register)
     else:
         raise ValueError(f"Unknown argument type: {name}")
 

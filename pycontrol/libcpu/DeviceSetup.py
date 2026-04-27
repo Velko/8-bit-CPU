@@ -50,22 +50,12 @@ class HardwareSetup:
         return device
 
     def get(self, key: str) -> dev.DeviceBase | None:
-        if key in self.devices:
-            return self.devices[key]
-        else:
-            return None
+        return self.devices.get(key, None)
 
     def all_devices(self) -> list[dev.DeviceBase]:
         devices: list[dev.DeviceBase] = []
         devices.extend(self.devices.values())
         return devices
-
-    def a_ptr(self, name: str) -> dev.AddressRegister:
-        d = self.devices.get(name)
-        if isinstance(d, dev.AddressRegister):
-            return d
-        else:
-            raise ValueError(f"Device {name} is not an AddressRegister")
 
     def all_pins(self) -> Iterator[tuple[str, Pin]]:
         dupe_filter = set()
