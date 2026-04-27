@@ -1,6 +1,4 @@
 from .markers import AddrBase
-from .devices import RAM, DeviceBase
-from .pin import Pin
 from .util import to_i8
 from .pinclient import PinClient
 from .messages import OutMessage

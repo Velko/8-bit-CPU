@@ -1,4 +1,4 @@
-from typing import Any, Self
+from typing import Any
 import enum
 from dataclasses import dataclass
 from .pin import ControlSignal, Pin

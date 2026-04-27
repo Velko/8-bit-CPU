@@ -2,11 +2,10 @@
 
 import pytest
 
-from libcpu.devmap import A, B, AddSub, IR, TH, TL, TX
+from libcpu.devmap import A, B, AddSub, IR
 from libcpu.cpu_helper import CPUHelper
 from collections.abc import Iterator
 from libcpu.ctrl_word import CtrlWord
-from libcpu.DeviceSetup import hardware as hw
 
 pytestmark = pytest.mark.hardware
 

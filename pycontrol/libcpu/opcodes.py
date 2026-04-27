@@ -1,6 +1,5 @@
 from collections.abc import Sequence, Iterator, Mapping
 from typing import Tuple
-from libcpu.util import unwrap
 from .pin import ControlSignal
 from .instruction_cfg import InstructionConfig, Repeat, Instruction
 from .DeviceSetup import hardware

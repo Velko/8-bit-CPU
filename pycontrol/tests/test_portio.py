@@ -2,7 +2,7 @@ import pytest
 
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
-from libcpu.devmap import A, B, C, D
+from libcpu.devmap import A, B
 from libcpu.opcodes import opcode_of
 from libcpu.util import ansi_red
 from libcpu.messages import OutMessage

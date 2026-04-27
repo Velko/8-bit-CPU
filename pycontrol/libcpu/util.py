@@ -1,5 +1,4 @@
 from typing import TypeVar
-from enum import Enum
 
 class UninitializedError(Exception):
     pass

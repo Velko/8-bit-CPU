@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 
 import yaml # type: ignore
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
-from enum import Enum, auto
 
 from .pin import Mux, MuxPin, SimplePin, Level, PinUsage, Pin
 from .devices import GPRegister, DeviceBase, ALU, FlagsRegister, RAM, ROM, TempRegister, WORegister, Clock, StepCounter, ProgramCounter, TransferRegister, StackPointer, AddressRegister, AddressCalculator, IOController

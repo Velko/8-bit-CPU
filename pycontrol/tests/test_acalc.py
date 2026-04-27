@@ -6,10 +6,6 @@ from libcpu.cpu_helper import CPUHelper
 from libcpu.pinclient import PinClient
 from libcpu.devmap import ACalc
 from libcpu.ctrl_word import CtrlWord
-from libcpu.DeviceSetup import hardware as hw
-from libcpu.util import unwrap
-
-from collections.abc import Iterator
 
 acalc_params = [
     ("signed", 64737, 168, True, 64737 + 168 - 256),

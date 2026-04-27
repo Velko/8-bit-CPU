@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 import pytest
-from libcpu.devmap import A, PC
 
 pytestmark = pytest.mark.hardware
 

@@ -11,8 +11,6 @@ from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.markers import Addr
 from libcpu.ctrl_word import CtrlWord
-from libcpu.DeviceSetup import hardware as hw
-from libcpu.util import unwrap
 
 @pytest.mark.parametrize("expected", [255, 1, 2, 4, 8, 16, 32, 64, 128, 0])
 def test_sp_load(cpu_helper: CPUHelper, expected: int) -> None:

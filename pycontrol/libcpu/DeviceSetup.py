@@ -1,5 +1,5 @@
 from . import devices as dev
-from .pin import Pin, SimplePin, Level, Mux, MuxPin, PinUsage
+from .pin import Pin, SimplePin, Mux, MuxPin
 from .pin_cfg import PinConfig
 from .ctrl_word import CtrlWord
 import os.path
