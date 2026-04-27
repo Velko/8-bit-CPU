@@ -11,9 +11,7 @@ T = TypeVar('T')
 
 
 class HardwareSetup:
-    def __init__(self) -> None:
-        yaml_path = os.path.join(os.path.dirname(__file__), "../../include/pins.yaml")
-
+    def __init__(self, yaml_path: str) -> None:
         p_cfg = PinConfig.load_from_yaml(yaml_path)
         self.muxes = p_cfg.muxes
         self.devices = p_cfg.devices
@@ -97,6 +95,6 @@ class HardwareSetup:
             if isinstance(pin, MuxPin) and pin.mux == mux:
                 yield name, pin
 
-hardware = HardwareSetup()
+hardware = HardwareSetup(os.path.join(os.path.dirname(__file__), "../../include/pins.yaml"))
 
 
