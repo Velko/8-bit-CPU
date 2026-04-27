@@ -83,11 +83,9 @@ def add_instruction(builder: MicrocodeBuilder, instr: Instruction, **kwargs: Reg
             t_cond.add_step(*[resolve_pin(pin, **kwargs) for pin in step])
 
 
-def build_opcodes() -> tuple[Mapping[str, MicroCode], list[MicroCode]]:
+def build_opcodes(yaml_path: str) -> tuple[Mapping[str, MicroCode], list[MicroCode]]:
 
     builder = MicrocodeBuilder()
-
-    yaml_path = os.path.join(os.path.dirname(__file__), "../../include/instructions.yaml")
     icfg = InstructionConfig.load_from_yaml(yaml_path)
 
     global fetch
@@ -114,4 +112,4 @@ def build_opcodes() -> tuple[Mapping[str, MicroCode], list[MicroCode]]:
     return builder.build()
 
 
-ops_by_str, ops_by_num = build_opcodes()
+ops_by_str, ops_by_num = build_opcodes(os.path.join(os.path.dirname(__file__), "../../include/instructions.yaml"))
