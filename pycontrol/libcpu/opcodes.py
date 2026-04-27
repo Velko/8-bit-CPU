@@ -32,9 +32,9 @@ def permute_regs_lr(lregs: Sequence[Register], rregs: Sequence[Register]) -> Ite
             yield l, r
 
 def opcode_of(instr: str) -> int:
-    if not instr in opcodes:
+    if not instr in ops_by_str:
         raise InvalidOpcodeException(instr)
-    return opcodes[instr].opcode
+    return ops_by_str[instr].opcode
 
 def resolve_pin(name: str, **kwargs: Register) -> ControlSignal:
     dev, pin = name.split('.')
@@ -114,4 +114,4 @@ def build_opcodes() -> tuple[Mapping[str, MicroCode], list[MicroCode]]:
     return builder.build()
 
 
-opcodes, ops_by_code = build_opcodes()
+ops_by_str, ops_by_code = build_opcodes()

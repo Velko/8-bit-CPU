@@ -3,7 +3,7 @@
 import pytest
 
 
-from libcpu.opcodes import opcodes
+from libcpu.opcodes import ops_by_str
 from libcpu.devmap import PC
 from libcpu.devices import Flags
 from libcpu.opcode_builder import MicrocodeBuilder
@@ -15,7 +15,7 @@ from collections.abc import Iterator, Sequence
 def calc_flags_alt_PC_counts() -> Iterator[tuple[str, int, int, str, str]]:
 
     # all opcodes, that are flags-dependent
-    for name, microcode in filter(lambda opc: opc[1].is_flag_dependent(), opcodes.items()):
+    for name, microcode in filter(lambda opc: opc[1].is_flag_dependent(), ops_by_str.items()):
 
         # count PC increments in default path
         default_len = sum(1 for s in microcode._steps if PC.out in s)
@@ -102,7 +102,7 @@ def test_opcode_flag_default(fake_opcodes: OpcodeFixture) -> None:
 
 
 def all_steps() -> Iterator[tuple[str, str, int, Sequence[ControlSignal]]]:
-    for name, op in opcodes.items():
+    for name, op in ops_by_str.items():
         for steps in op._steps:
             yield name, "default", 0, steps
 

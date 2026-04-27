@@ -80,10 +80,10 @@ class MicrocodeBuilder:
         self.opcodes: list[tuple[str, MicroCode]] = []
 
     def add_instruction(self, name: str, fmt: str | None, *args: Register | OpcodeArg) -> MicroCode:
-        opcode = "_".join([name] + list(map(str, args)))
+        opstr = "_".join([name] + list(map(str, args)))
         ucode = MicroCode(len(self.opcodes), name, fmt, args)
 
-        self.opcodes.append((opcode, ucode))
+        self.opcodes.append((opstr, ucode))
         return ucode
 
     def build(self) -> tuple[Mapping[str, MicroCode], list[MicroCode]]:
