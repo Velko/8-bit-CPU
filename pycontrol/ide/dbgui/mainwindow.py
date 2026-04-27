@@ -25,7 +25,7 @@ from .sourcetab import SourceTab
 from .addrmap import AddrMap
 
 from libcpu.debug import Debugger
-from libcpu.util import unwrap
+from .util import unwrap
 
 class MainWindow(MainUI):
     def __init__(self) -> None:
