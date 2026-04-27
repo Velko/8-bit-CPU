@@ -52,11 +52,6 @@ class HardwareSetup:
     def get(self, key: str) -> dev.DeviceBase | None:
         return self.devices.get(key, None)
 
-    def all_devices(self) -> list[dev.DeviceBase]:
-        devices: list[dev.DeviceBase] = []
-        devices.extend(self.devices.values())
-        return devices
-
     def all_pins(self) -> Iterator[tuple[str, Pin]]:
         dupe_filter = set()
         for dev in self.devices.values():
