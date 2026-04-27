@@ -79,14 +79,7 @@ class MicrocodeBuilder:
     def __init__(self) -> None:
         self.opcodes: list[tuple[str, MicroCode]] = []
 
-    def add_instruction(self, name: str, *args: Register | OpcodeArg) -> MicroCode:
-        opcode = "_".join([name] + list(map(str, args)))
-        ucode = MicroCode(len(self.opcodes), name, None, args)
-
-        self.opcodes.append((opcode, ucode))
-        return ucode
-
-    def add_formatted(self, name: str, fmt: str, *args: Register | OpcodeArg) -> MicroCode:
+    def add_instruction(self, name: str, fmt: str | None, *args: Register | OpcodeArg) -> MicroCode:
         opcode = "_".join([name] + list(map(str, args)))
         ucode = MicroCode(len(self.opcodes), name, fmt, args)
 

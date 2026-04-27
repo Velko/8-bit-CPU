@@ -74,10 +74,7 @@ def map_flags(flags: dict[str, bool]) -> Tuple[Flags, Flags]:
 
 def add_instruction(builder: MicrocodeBuilder, instr: Instruction, **kwargs: Register) -> None:
     args = [ resolve_arg(a, **kwargs) for a in instr.args ]
-    if instr.format:
-        t_instr = builder.add_formatted(instr.name, instr.format, *args)
-    else:
-        t_instr = builder.add_instruction(instr.name, *args)
+    t_instr = builder.add_instruction(instr.name, instr.format, *args)
     for step in instr.steps:
         t_instr.add_step(*[resolve_pin(pin, **kwargs) for pin in step])
     for cond in instr.conditions:
