@@ -43,6 +43,7 @@ class MicroCode:
         self.name = name
         self.args = args
         self.fmt = fmt
+        self.opstr = "_".join([name] + list(map(str, args)))
 
 
     def is_flag_dependent(self) -> bool:
@@ -77,14 +78,14 @@ class MicroCode:
 
 class MicrocodeBuilder:
     def __init__(self) -> None:
-        self.opcodes: list[tuple[str, MicroCode]] = []
+        self.opcodes: list[MicroCode] = []
 
     def add_instruction(self, name: str, fmt: str | None, *args: Register | OpcodeArg) -> MicroCode:
-        opstr = "_".join([name] + list(map(str, args)))
+
         ucode = MicroCode(len(self.opcodes), name, fmt, args)
 
-        self.opcodes.append((opstr, ucode))
+        self.opcodes.append(ucode)
         return ucode
 
     def build(self) -> tuple[Mapping[str, MicroCode], list[MicroCode]]:
-        return dict(self.opcodes), list(map(lambda o: o[1], self.opcodes))
+        return {ucode.opstr: ucode for ucode in self.opcodes}, self.opcodes
