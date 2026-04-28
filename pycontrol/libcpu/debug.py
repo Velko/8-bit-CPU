@@ -9,7 +9,7 @@ from .cpu_helper import CPUHelper
 from .pinclient import PinClient
 from .DeviceSetup import hardware
 from .messages import OutMessage, HaltMessage, BrkMessage
-from .opcodes import ops_by_str
+from .opcodes import opcode_of
 from .assisted_cpu import AssistedCPU
 from .devices import GPRegister, StackPointer
 
@@ -176,7 +176,7 @@ class Debugger:
         self.breakpoints[addr] = bkp
 
         # replace it with brk()
-        self.cpu_helper.write_ram(addr, ops_by_str["brk"].opcode)
+        self.cpu_helper.write_ram(addr, opcode_of("brk"))
 
     def clear_breakpoint(self, addr: int) -> None:
 
