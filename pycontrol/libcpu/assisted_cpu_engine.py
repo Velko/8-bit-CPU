@@ -3,7 +3,7 @@ from .markers import AddrBase
 from .devices import Flags
 from .pseudo_devices import ImmediateValue, IOMonitor
 from .DeviceSetup import hardware
-from .opcodes import ops_by_str, ops_by_num, fetch, InvalidOpcodeException
+from .opcodes import ops_by_num, fetch, InvalidOpcodeException
 from .pinclient import PinClient
 from .ctrl_word import CtrlWord
 from .pin import ControlSignal
@@ -21,13 +21,15 @@ class AssistedCPUEngine:
         # RAM hooks
         self.imm = ImmediateValue()
 
+        self.ops_by_str = {op.opstr: op for op in ops_by_num}
+
     def execute_mnemonic(self, mnemonic: str, arg: int | AddrBase | None = None) -> RunMessage | None:
-        if not mnemonic in ops_by_str:
+        if not mnemonic in self.ops_by_str:
             raise InvalidOpcodeException(mnemonic)
 
         self.imm.inject(arg)
 
-        return self.execute_opcode(ops_by_str[mnemonic].opcode)
+        return self.execute_opcode(self.ops_by_str[mnemonic].opcode)
 
     def execute_opcode(self, opcode: int | None) -> RunMessage | None:
 

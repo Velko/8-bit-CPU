@@ -3,7 +3,7 @@
 import pytest
 
 
-from libcpu.opcodes import ops_by_str
+from libcpu.opcodes import ops_by_num
 from libcpu.devmap import PC
 from libcpu.devices import Flags
 from libcpu.opcode_builder import MicrocodeBuilder
@@ -15,7 +15,7 @@ from collections.abc import Iterator, Sequence
 def calc_flags_alt_PC_counts() -> Iterator[tuple[str, int, int, str, str]]:
 
     # all opcodes, that are flags-dependent
-    for name, microcode in filter(lambda opc: opc[1].is_flag_dependent(), ops_by_str.items()):
+    for microcode in filter(lambda opc: opc.is_flag_dependent(), ops_by_num):
 
         # count PC increments in default path
         default_len = sum(1 for s in microcode._steps if PC.out in s)
@@ -30,7 +30,7 @@ def calc_flags_alt_PC_counts() -> Iterator[tuple[str, int, int, str, str]]:
             # count PC increments in flags-alt steps
             alt_len = sum(1 for s in f_alt.steps if PC.out in s)
 
-            yield name, default_len, alt_len, str(f_alt.mask), str(f_alt.value)
+            yield microcode.opstr, default_len, alt_len, str(f_alt.mask), str(f_alt.value)
 
 
 @pytest.mark.parametrize("_name,default_len,alt_len,_mask,_val",  calc_flags_alt_PC_counts())
@@ -102,9 +102,9 @@ def test_opcode_flag_default(fake_opcodes: OpcodeFixture) -> None:
 
 
 def all_steps() -> Iterator[tuple[str, str, int, Sequence[ControlSignal]]]:
-    for name, op in ops_by_str.items():
-        for steps in op._steps:
-            yield name, "default", 0, steps
+    for microcode in ops_by_num:
+        for steps in microcode._steps:
+            yield microcode.opstr, "default", 0, steps
 
 @pytest.mark.parametrize("_name,_flags,_vfal,step", all_steps())
 def test_mux_enables(_name: str, _flags: str, _vfal: int, step: Sequence[ControlSignal]) -> None:

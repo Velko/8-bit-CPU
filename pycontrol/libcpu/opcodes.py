@@ -32,9 +32,9 @@ def permute_regs_lr(lregs: Sequence[Register], rregs: Sequence[Register]) -> Ite
             yield l, r
 
 def opcode_of(instr: str) -> int:
-    if not instr in ops_by_str:
+    if not instr in _ops_by_str:
         raise InvalidOpcodeException(instr)
-    return ops_by_str[instr].opcode
+    return _ops_by_str[instr].opcode
 
 def resolve_pin(name: str, **kwargs: Register) -> ControlSignal:
     dev, pin = name.split('.')
@@ -112,4 +112,4 @@ def build_opcodes(yaml_path: str) -> tuple[Mapping[str, MicroCode], list[MicroCo
     return builder.build()
 
 
-ops_by_str, ops_by_num = build_opcodes(os.path.join(os.path.dirname(__file__), "../../include/instructions.yaml"))
+_ops_by_str, ops_by_num = build_opcodes(os.path.join(os.path.dirname(__file__), "../../include/instructions.yaml"))

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from libcpu.opcodes import ops_by_str, fetch
+from libcpu.opcodes import ops_by_num, fetch
 from libcpu.pin import ControlSignal
 from libcpu.pin import Level, Mux
 from libcpu.DeviceSetup import hardware as hw
@@ -22,10 +22,10 @@ def generate_microcode(cfile: TextIO) -> None:
     cfile.write ("const struct op_microcode microcode[] PROGMEM = {\n")
 
 
-    for key, microcode in ops_by_str.items():
+    for microcode in ops_by_num:
 
         words = process_steps(microcode._steps)
-        cfile.write ("\n    /* {:02x} {:10} */\n".format(microcode.opcode, key))
+        cfile.write ("\n    /* {:02x} {:10} */\n".format(microcode.opcode, microcode.opstr))
         cfile.write ("    {{ .default_steps = {{{}}},".format(", ".join(words)))
 
         if not microcode.f_alt:
@@ -63,12 +63,12 @@ def write_footer(hfile: TextIO) -> None:
 
 def write_opcodes(hfile: TextIO) -> None:
     hfile.write("/* Opcodes */\n")
-    for key, microcode in ops_by_str.items():
-        name = key.upper()
+    for microcode in ops_by_num:
+        name = microcode.opstr.upper()
 
         hfile.write("#define OP_{:20}0x{:02x}\n".format(name, microcode.opcode))
 
-    hfile.write("#define NUM_OPS                {:02}\n".format(len(ops_by_str)))
+    hfile.write("#define NUM_OPS                {:02}\n".format(len(ops_by_num)))
 
     hfile.write("\n")
 
