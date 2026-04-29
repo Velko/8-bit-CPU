@@ -24,6 +24,7 @@ class Instruction:
     format: str | None
     steps: list[list[str]]
     conditions: list[Condition]
+    hidden: bool
 
     def __init__(self, **kwargs: dict[str, Any]) -> None:
         self.name = kwargs['name']                      # type: ignore
@@ -32,6 +33,7 @@ class Instruction:
         self.format = kwargs.get('format', None)        # type: ignore
         self.steps = kwargs.get('steps', [])            # type: ignore
         self.conditions = [Condition(**c) for c in kwargs.get('conditions', [])]   # type: ignore
+        self.hidden = kwargs.get('hidden', False)      # type: ignore
 
 @dataclass
 class InstructionConfig:

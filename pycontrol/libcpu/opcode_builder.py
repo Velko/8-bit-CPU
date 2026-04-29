@@ -36,11 +36,12 @@ class OpcodeArg(Enum):
         raise TypeError # suppress warning, something's really wrong
 
 class MicroCode:
-    def __init__(self, opcode: int, name: str, fmt: str | None, args: Sequence[Register | OpcodeArg]):
+    def __init__(self, opcode: int, name: str, hidden: bool, fmt: str | None, args: Sequence[Register | OpcodeArg]):
         self._steps: list[Sequence[ControlSignal]] = []
         self.f_alt: list[FlagsAlt] = []
         self.opcode = opcode
         self.name = name
+        self.hidden = hidden
         self.args = args
         self.fmt = fmt
         self.opstr = "_".join([name] + list(map(str, args)))
@@ -80,9 +81,9 @@ class MicrocodeBuilder:
     def __init__(self) -> None:
         self.opcodes: list[MicroCode] = []
 
-    def add_instruction(self, name: str, fmt: str | None, *args: Register | OpcodeArg) -> MicroCode:
+    def add_instruction(self, name: str, hidden: bool, fmt: str | None, *args: Register | OpcodeArg) -> MicroCode:
 
-        ucode = MicroCode(len(self.opcodes), name, fmt, args)
+        ucode = MicroCode(len(self.opcodes), name, hidden, fmt, args)
 
         self.opcodes.append(ucode)
         return ucode

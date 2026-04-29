@@ -704,7 +704,8 @@ instructions:
         - reg.out
         - Ram.write
 
-  - name: "_xprefix"
+  - name: "xprefix"
+    hidden: true
     steps:
       - - PC.out
         - PC.inc

@@ -54,7 +54,7 @@ class OpcodeFixture:
         self.alt_path = DummySignal()
         self.control = CtrlWord()
 
-        builder.add_instruction("dummy", None)\
+        builder.add_instruction("dummy", False, None)\
             .add_step(self.default_path)\
             .add_condition(mask=Flags.C, value=Flags.C)\
                 .add_step(self.alt_path)

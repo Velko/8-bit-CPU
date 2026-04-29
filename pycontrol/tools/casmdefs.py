@@ -12,12 +12,12 @@ def generate_casmdefs(rdfile: TextIO) -> None:
     rdfile.write("#ruledef\n")
     rdfile.write("{\n")
 
-    xprefix_opcode = opcode_of("_xprefix")
+    xprefix_opcode = opcode_of("xprefix")
 
     for microcode in ops_by_num:
 
         # skip "internal opcodes"
-        if microcode.name.startswith("_"):
+        if microcode.hidden:
             continue
 
         in_args = []
