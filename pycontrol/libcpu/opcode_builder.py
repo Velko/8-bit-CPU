@@ -80,22 +80,19 @@ class MicroCode:
         return alt
 
 class MicrocodeBuilder:
-    def __init__(self) -> None:
+    def __init__(self, reserved_opcodes: set[int]) -> None:
         self.num_gen = count()
-        self.used_nums: set[int] = set()
+        self.reserved_opcodes = reserved_opcodes
         self.opcodes: list[MicroCode] = []
 
     def add_instruction(self, instr_def: Instruction, *args: Register | OpcodeArg) -> MicroCode:
         opcode = instr_def.opcode
         if opcode is None:
             opcode = next(self.num_gen)
-            while opcode in self.used_nums:
+            while opcode in self.reserved_opcodes:
                 opcode = next(self.num_gen)
-        elif opcode in self.used_nums:
-            raise ValueError(f"Opcode {opcode} already used")
 
         ucode = MicroCode(opcode, instr_def.name, instr_def.hidden, instr_def.format, args)
-        self.used_nums.add(opcode)
 
         self.opcodes.append(ucode)
         return ucode

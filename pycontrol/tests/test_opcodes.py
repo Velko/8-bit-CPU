@@ -49,7 +49,7 @@ class DummySignal(ControlSignal):
 
 class OpcodeFixture:
     def __init__(self) -> None:
-        builder = MicrocodeBuilder()
+        builder = MicrocodeBuilder(set())
 
         self.default_path = DummySignal()
         self.alt_path = DummySignal()

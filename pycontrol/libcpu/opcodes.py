@@ -89,8 +89,10 @@ def add_instruction(builder: MicrocodeBuilder, instr: Instruction, **kwargs: Reg
 
 def build_opcodes(yaml_path: str) -> tuple[list[list[ControlSignal]], list[MicroCode]]:
 
-    builder = MicrocodeBuilder()
     icfg = InstructionConfig.load_from_yaml(yaml_path)
+
+    reserved_opcodes = set(i.opcode for i in icfg.instructions if i.opcode is not None)
+    builder = MicrocodeBuilder(reserved_opcodes)
 
     fetch = [[resolve_pin(pin) for pin in step] for step in icfg.fetch]
 
