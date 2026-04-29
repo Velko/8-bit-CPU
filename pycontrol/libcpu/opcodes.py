@@ -9,8 +9,6 @@ import os.path
 
 gp_regs: list[GPRegister] = [r for r in hardware.devices.values() if isinstance(r, GPRegister)]
 
-fetch: list[Sequence[ControlSignal]] = []
-
 _ops_by_str: dict[str, MicroCode] = {}
 
 class InvalidOpcodeException(Exception):
@@ -89,12 +87,11 @@ def add_instruction(builder: MicrocodeBuilder, instr: Instruction, **kwargs: Reg
             t_cond.add_step(*[resolve_pin(pin, **kwargs) for pin in step])
 
 
-def build_opcodes(yaml_path: str) -> list[MicroCode]:
+def build_opcodes(yaml_path: str) -> tuple[list[list[ControlSignal]], list[MicroCode]]:
 
     builder = MicrocodeBuilder()
     icfg = InstructionConfig.load_from_yaml(yaml_path)
 
-    global fetch
     fetch = [[resolve_pin(pin) for pin in step] for step in icfg.fetch]
 
     for instr in icfg.instructions:
@@ -116,7 +113,7 @@ def build_opcodes(yaml_path: str) -> list[MicroCode]:
             case _:
                 raise ValueError(f"Unsupported repeat type: {instr.repeat}")
 
-    return builder.build()
+    return fetch, builder.build()
 
 
-ops_by_num = build_opcodes(os.path.join(os.path.dirname(__file__), "../../include/instructions.yaml"))
+fetch, ops_by_num = build_opcodes(os.path.join(os.path.dirname(__file__), "../../include/instructions.yaml"))
