@@ -37,13 +37,13 @@ def generate_casmdefs(rdfile: TextIO) -> None:
                 in_args.append(str(arg))
             elif isinstance(arg, OpcodeArg):
                 if arg == OpcodeArg.BYTE:
-                    in_args.append(f"{{value{i}}}")
-                    glue_args.append(f"value{i}`8")
+                    in_args.append(f"{{value{i}: u8}}")
+                    glue_args.append(f"value{i}")
                 elif arg == OpcodeArg.PCREL:
-                    in_args.append(f"{{value{i}}}")
-                    glue_args.append(f"value{i}`8")
+                    in_args.append(f"{{value{i}: addr_pcrel}}")
+                    glue_args.append(f"value{i}")
                 elif arg == OpcodeArg.ADDR:
-                    in_args.append(f"{{address{i}}}")
+                    in_args.append(f"{{address{i}: u16}}")
                     glue_args.append(f"address{i}[7:0]")
                     glue_args.append(f"address{i}[15:8]")
                 else:

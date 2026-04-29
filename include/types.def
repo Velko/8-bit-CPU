@@ -1,0 +1,10 @@
+#subruledef addr_pcrel
+{
+    {addr: u16} =>
+    {
+        reladdr = addr - $ - 1
+        $assert (reladdr <= 127)
+        $assert (reladdr >= -128)
+        reladdr`8
+    }
+}

@@ -1,10 +1,7 @@
 #ruledef
 {
-    jmp {target} =>
+    jmp {offset: addr_pcrel} =>
     {
-        offset = target - $ - 1
-        $assert (offset <= 127)
-        $assert (offset >= -128)
         asm { rjmp {offset} }
     }
 
@@ -13,11 +10,8 @@
         asm { ljmp {target} }
     }
 
-    beq {target} =>
+    beq {offset: addr_pcrel} =>
     {
-        offset = target - $ - 1
-        $assert (offset <= 127)
-        $assert (offset >= -128)
         asm { beqr {offset} }
     }
 
@@ -26,11 +20,8 @@
         asm { beql {target} }
     }
 
-    bne {target} =>
+    bne {offset: addr_pcrel} =>
     {
-        offset = target - $ - 1
-        $assert (offset <= 127)
-        $assert (offset >= -128)
         asm { bner {offset} }
     }
 
@@ -39,11 +30,8 @@
         asm { bnel {target} }
     }
 
-    bcs {target} =>
+    bcs {offset: addr_pcrel} =>
     {
-        offset = target - $ - 1
-        $assert (offset <= 127)
-        $assert (offset >= -128)
         asm { bcsr {offset} }
     }
 
@@ -52,11 +40,8 @@
         asm { bcsl {target} }
     }
 
-    bcc {target} =>
+    bcc {offset: addr_pcrel} =>
     {
-        offset = target - $ - 1
-        $assert (offset <= 127)
-        $assert (offset >= -128)
         asm { bccr {offset} }
     }
 
@@ -65,11 +50,8 @@
         asm { bccl {target} }
     }
 
-    bmi {target} =>
+    bmi {offset: addr_pcrel} =>
     {
-        offset = target - $ - 1
-        $assert (offset <= 127)
-        $assert (offset >= -128)
         asm { bmir {offset} }
     }
 
@@ -78,11 +60,8 @@
         asm { bmil {target} }
     }
 
-    bpl {target} =>
+    bpl {offset: addr_pcrel} =>
     {
-        offset = target - $ - 1
-        $assert (offset <= 127)
-        $assert (offset >= -128)
         asm { bplr {offset} }
     }
 
@@ -91,11 +70,8 @@
         asm { bpll {target} }
     }
 
-    call {target} =>
+    call {offset: addr_pcrel} =>
     {
-        offset = target - $ - 1
-        $assert (offset <= 127)
-        $assert (offset >= -128)
         asm { rcall {offset} }
     }
 
