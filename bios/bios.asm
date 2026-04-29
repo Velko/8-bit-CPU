@@ -1,6 +1,5 @@
 #include "types.def"
 #include "instructions.def"
-#include "aliases.def"
 #include "ports.def"
 
 #const(noemit) RAM_START = 0x0000

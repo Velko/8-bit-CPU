@@ -148,22 +148,22 @@ class AssistedCPU(AssistedCPUEngine):
         self.execute_mnemonic(opcode, addr)
 
     def bcs(self, label: AddrBase | None = None) -> None:
-        self.execute_mnemonic("bcsl_addr", label)
+        self.execute_mnemonic("bcs_addr", label)
 
     def bcc(self, label: AddrBase | None = None) -> None:
-        self.execute_mnemonic("bccl_addr", label)
+        self.execute_mnemonic("bcc_addr", label)
 
     def beq(self, label: AddrBase | None = None) -> None:
-        self.execute_mnemonic("beql_addr", label)
+        self.execute_mnemonic("beq_addr", label)
 
     def bne(self, label: AddrBase | None = None) -> None:
-        self.execute_mnemonic("bnel_addr", label)
+        self.execute_mnemonic("bne_addr", label)
 
     def jmp(self, label: AddrBase) -> None:
-        self.execute_mnemonic("ljmp_addr", label)
+        self.execute_mnemonic("jmp_addr", label)
 
     def rjmp(self, offset: int) -> None:
-        self.execute_mnemonic("rjmp_pcrel", offset)
+        self.execute_mnemonic("jmp_pcrel", offset)
 
     def hlt(self) -> None:
         self.execute_mnemonic("hlt")
@@ -186,7 +186,7 @@ class AssistedCPU(AssistedCPUEngine):
         self.execute_mnemonic("ret")
 
     def call(self, addr: AddrBase) -> None:
-        self.execute_mnemonic("callf_addr", addr)
+        self.execute_mnemonic("call_addr", addr)
 
     def ldr(self, target: GPRegister, base: AddressRegister, offset: int) -> None:
         opcode = f"ldr_{target.name}_{base.name}_imm"

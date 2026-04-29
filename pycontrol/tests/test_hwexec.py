@@ -33,10 +33,10 @@ def test_rjmp_on_hw(cpu_helper: CPUHelper) -> None:
     #   hlt       ; hlt is unexpected exit from snippet
     # next:
     #   brk       ; appended by run_snippet
-    rjmp_test_prog = bytes([opcode_of("rjmp_pcrel"), 2,
+    jmp_test_prog = bytes([opcode_of("jmp_pcrel"), 2,
                             opcode_of("hlt")])
 
-    cpu_helper.run_snippet(0x8, rjmp_test_prog)
+    cpu_helper.run_snippet(0x8, jmp_test_prog)
 
     # should point to next instruction after brk
     assert cpu_helper.regs.PC == 0x0C

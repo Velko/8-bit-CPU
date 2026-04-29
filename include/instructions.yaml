@@ -414,7 +414,7 @@ instructions:
         - Ram.out
         - F.calc
 
-  - name: "ljmp"
+  - name: "jmp"
     args:
       - ADDR
     steps:
@@ -429,7 +429,7 @@ instructions:
       - - TX.out
         - PC.load
 
-  - name: "beql"
+  - name: "beq"
     args:
       - ADDR
     steps:
@@ -452,7 +452,7 @@ instructions:
           - - TX.out
             - PC.load
 
-  - name: "bnel"
+  - name: "bne"
     args:
       - ADDR
     steps:
@@ -475,7 +475,7 @@ instructions:
           - - TX.out
             - PC.load
 
-  - name: "bcsl"
+  - name: "bcs"
     args:
       - ADDR
     steps:
@@ -498,7 +498,7 @@ instructions:
           - - TX.out
             - PC.load
 
-  - name: "bccl"
+  - name: "bcc"
     args:
       - ADDR
     steps:
@@ -521,7 +521,7 @@ instructions:
           - - TX.out
             - PC.load
 
-  - name: "bmil"
+  - name: "bmi"
     args:
       - ADDR
     steps:
@@ -544,7 +544,7 @@ instructions:
           - - TX.out
             - PC.load
 
-  - name: "bpll"
+  - name: "bpl"
     args:
       - ADDR
     steps:
@@ -634,7 +634,7 @@ instructions:
       - - TX.out
         - LR.load
 
-  - name: "callf"
+  - name: "call"
     args:
       - ADDR
     steps:
@@ -715,7 +715,7 @@ instructions:
         - reg.out
         - Ram.write
 
-  - name: "rjmp"
+  - name: "jmp"
     args:
       - PCREL
     steps:
@@ -727,7 +727,7 @@ instructions:
       - - ACalc.out
         - PC.load
 
-  - name: "beqr"
+  - name: "beq"
     args:
       - PCREL
     steps:
@@ -745,7 +745,7 @@ instructions:
           - - ACalc.out
             - PC.load
 
-  - name: "bner"
+  - name: "bne"
     args:
       - PCREL
     steps:
@@ -763,7 +763,7 @@ instructions:
           - - ACalc.out
             - PC.load
 
-  - name: "bcsr"
+  - name: "bcs"
     args:
       - PCREL
     steps:
@@ -781,7 +781,7 @@ instructions:
           - - ACalc.out
             - PC.load
 
-  - name: "bccr"
+  - name: "bcc"
     args:
       - PCREL
     steps:
@@ -799,7 +799,7 @@ instructions:
           - - ACalc.out
             - PC.load
 
-  - name: "bmir"
+  - name: "bmi"
     args:
       - PCREL
     steps:
@@ -817,7 +817,7 @@ instructions:
           - - ACalc.out
             - PC.load
 
-  - name: "bplr"
+  - name: "bpl"
     args:
       - PCREL
     steps:
@@ -835,7 +835,7 @@ instructions:
           - - ACalc.out
             - PC.load
 
-  - name: "rcall"
+  - name: "call"
     args:
       - PCREL
     steps:
