@@ -80,7 +80,7 @@ def map_flags(flags: dict[str, bool]) -> Tuple[Flags, Flags]:
 
 def add_instruction(builder: MicrocodeBuilder, instr: Instruction, **kwargs: Register) -> None:
     args = [ resolve_arg(a, **kwargs) for a in instr.args ]
-    t_instr = builder.add_instruction(instr.name, instr.hidden, instr.format, *args)
+    t_instr = builder.add_instruction(instr.name, instr.hidden, instr.opcode, instr.format, *args)
     for step in instr.steps:
         t_instr.add_step(*[resolve_pin(pin, **kwargs) for pin in step])
     for cond in instr.conditions:
@@ -98,14 +98,15 @@ def build_opcodes(yaml_path: str) -> list[MicroCode]:
     fetch = [[resolve_pin(pin) for pin in step] for step in icfg.fetch]
 
     for instr in icfg.instructions:
+        if instr.opcode is not None and instr.repeat != Repeat.once:
+            raise ValueError(f"Opcode should not be specified for repeated instruction: {instr.name}")
+
         match instr.repeat:
             case Repeat.once:
                 add_instruction(builder, instr)
-
             case Repeat.gp_regs:
                 for r in gp_regs:
                     add_instruction(builder, instr, reg=r)
-
             case Repeat.gp_reg_pair_all:
                 for l, r in permute_gp_regs_all():
                     add_instruction(builder, instr, left=l, right=r)

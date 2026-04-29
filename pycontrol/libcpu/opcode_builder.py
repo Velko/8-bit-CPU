@@ -1,5 +1,6 @@
 from enum import Enum
-from collections.abc import Mapping, Sequence
+from collections.abc import Sequence
+from itertools import count
 from .pin import ControlSignal
 from .devices import Register, Flags
 
@@ -79,14 +80,25 @@ class MicroCode:
 
 class MicrocodeBuilder:
     def __init__(self) -> None:
+        self.num_gen = count()
+        self.used_nums: set[int] = set()
         self.opcodes: list[MicroCode] = []
 
-    def add_instruction(self, name: str, hidden: bool, fmt: str | None, *args: Register | OpcodeArg) -> MicroCode:
+    def add_instruction(self, name: str, hidden: bool, opcode: int | None, fmt: str | None, *args: Register | OpcodeArg) -> MicroCode:
 
-        ucode = MicroCode(len(self.opcodes), name, hidden, fmt, args)
+        if opcode is None:
+            opcode = next(self.num_gen)
+            while opcode in self.used_nums:
+                opcode = next(self.num_gen)
+        elif opcode in self.used_nums:
+            raise ValueError(f"Opcode {opcode} already used")
+
+        ucode = MicroCode(opcode, name, hidden, fmt, args)
+        self.used_nums.add(opcode)
 
         self.opcodes.append(ucode)
         return ucode
 
     def build(self) -> list[MicroCode]:
+        self.opcodes.sort(key=lambda u: u.opcode)
         return self.opcodes

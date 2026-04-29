@@ -54,7 +54,7 @@ class OpcodeFixture:
         self.alt_path = DummySignal()
         self.control = CtrlWord()
 
-        builder.add_instruction("dummy", False, None)\
+        builder.add_instruction("dummy", False, None, None)\
             .add_step(self.default_path)\
             .add_condition(mask=Flags.C, value=Flags.C)\
                 .add_step(self.alt_path)
@@ -118,3 +118,11 @@ def test_mux_enables(_name: str, _flags: str, _vfal: int, step: Sequence[Control
                 assert signal.mux not in muxes_found
                 muxes_found.append(signal.mux)
                 sig_cache.append(signal)
+
+def named_opcodes_and_expected() -> Iterator[tuple[str, int, int]]:
+    for idx, microcode in enumerate(ops_by_num):
+        yield microcode.opstr, microcode.opcode, idx
+
+@pytest.mark.parametrize("_name,opcode,expected", named_opcodes_and_expected())
+def test_opcodes_sequential(_name: str, opcode: int, expected: int) -> None:
+    assert opcode == expected

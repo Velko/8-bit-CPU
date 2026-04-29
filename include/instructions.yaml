@@ -10,6 +10,17 @@ instructions:
     steps:
       - []
 
+  - name: "xprefix"
+    hidden: true
+    opcode: 0xEE
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - IR.load
+        - StepCounter.extended
+      - []        # extra NOP to prevent microcode ROM generator from inserting steps reset
+
   - name: "ldi"
     repeat: "gp_regs"
     args:
@@ -703,16 +714,6 @@ instructions:
       - - ACalc.out
         - reg.out
         - Ram.write
-
-  - name: "xprefix"
-    hidden: true
-    steps:
-      - - PC.out
-        - PC.inc
-        - ProgMem.out
-        - IR.load
-        - StepCounter.extended
-      - []        # extra NOP to prevent microcode ROM generator from inserting steps reset
 
   - name: "rjmp"
     args:
