@@ -58,6 +58,8 @@ def resolve_arg(name: str, **kwargs: Register) -> Register | OpcodeArg:
         return OpcodeArg.ADDR
     elif name == "BYTE":
         return OpcodeArg.BYTE
+    elif name == "PCREL":
+        return OpcodeArg.PCREL
     elif name in kwargs:
         return kwargs[name]
     elif name in hardware.devices:

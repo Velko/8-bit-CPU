@@ -33,7 +33,7 @@ def test_rjmp_on_hw(cpu_helper: CPUHelper) -> None:
     #   hlt       ; hlt is unexpected exit from snippet
     # next:
     #   brk       ; appended by run_snippet
-    rjmp_test_prog = bytes([opcode_of("rjmp_imm"), 2,
+    rjmp_test_prog = bytes([opcode_of("rjmp_pcrel"), 2,
                             opcode_of("hlt")])
 
     cpu_helper.run_snippet(0x8, rjmp_test_prog)

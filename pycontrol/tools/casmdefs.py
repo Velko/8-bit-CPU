@@ -39,6 +39,9 @@ def generate_casmdefs(rdfile: TextIO) -> None:
                 if arg == OpcodeArg.BYTE:
                     in_args.append(f"{{value{i}}}")
                     glue_args.append(f"value{i}`8")
+                elif arg == OpcodeArg.PCREL:
+                    in_args.append(f"{{value{i}}}")
+                    glue_args.append(f"value{i}`8")
                 elif arg == OpcodeArg.ADDR:
                     in_args.append(f"{{address{i}}}")
                     glue_args.append(f"address{i}[7:0]")

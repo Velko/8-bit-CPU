@@ -1015,10 +1015,10 @@ const struct op_microcode microcode[] PROGMEM = {
     /* ee xprefix    */
     { .default_steps = {0x05bd5889, 0x07ff58ff},},
 
-    /* ef rjmp_imm   */
+    /* ef rjmp_pcrel */
     { .default_steps = {0x179558f9, 0x07ea58ff},},
 
-    /* f0 beqr_imm   */
+    /* f0 beqr_pcrel */
     { .default_steps = {0x07bd58ff},
       .f_alt = {
           /* mask: --Z- value: --Z- */
@@ -1028,7 +1028,7 @@ const struct op_microcode microcode[] PROGMEM = {
       },
     },
 
-    /* f1 bner_imm   */
+    /* f1 bner_pcrel */
     { .default_steps = {0x07bd58ff},
       .f_alt = {
           /* mask: --Z- value: ---- */
@@ -1038,7 +1038,7 @@ const struct op_microcode microcode[] PROGMEM = {
       },
     },
 
-    /* f2 bcsr_imm   */
+    /* f2 bcsr_pcrel */
     { .default_steps = {0x07bd58ff},
       .f_alt = {
           /* mask: -C-- value: -C-- */
@@ -1048,7 +1048,7 @@ const struct op_microcode microcode[] PROGMEM = {
       },
     },
 
-    /* f3 bccr_imm   */
+    /* f3 bccr_pcrel */
     { .default_steps = {0x07bd58ff},
       .f_alt = {
           /* mask: -C-- value: ---- */
@@ -1058,7 +1058,7 @@ const struct op_microcode microcode[] PROGMEM = {
       },
     },
 
-    /* f4 bmir_imm   */
+    /* f4 bmir_pcrel */
     { .default_steps = {0x07bd58ff},
       .f_alt = {
           /* mask: ---N value: ---N */
@@ -1068,7 +1068,7 @@ const struct op_microcode microcode[] PROGMEM = {
       },
     },
 
-    /* f5 bplr_imm   */
+    /* f5 bplr_pcrel */
     { .default_steps = {0x07bd58ff},
       .f_alt = {
           /* mask: ---N value: ---- */
@@ -1078,7 +1078,7 @@ const struct op_microcode microcode[] PROGMEM = {
       },
     },
 
-    /* f6 rcall_imm  */
+    /* f6 rcall_pcrel */
     { .default_steps = {0x179558f9, 0x07e558ff, 0x07ea58ff},},
 
     /* f7 lcmp_A_B   */

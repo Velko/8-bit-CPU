@@ -163,7 +163,7 @@ class AssistedCPU(AssistedCPUEngine):
         self.execute_mnemonic("ljmp_addr", label)
 
     def rjmp(self, offset: int) -> None:
-        self.execute_mnemonic("rjmp_imm", offset)
+        self.execute_mnemonic("rjmp_pcrel", offset)
 
     def hlt(self) -> None:
         self.execute_mnemonic("hlt")

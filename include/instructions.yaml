@@ -717,7 +717,7 @@ instructions:
 
   - name: "rjmp"
     args:
-      - BYTE
+      - PCREL
     steps:
       - - PC.out
         - PC.inc
@@ -729,7 +729,7 @@ instructions:
 
   - name: "beqr"
     args:
-      - BYTE
+      - PCREL
     steps:
       - - PC.out
         - PC.inc
@@ -747,7 +747,7 @@ instructions:
 
   - name: "bner"
     args:
-      - BYTE
+      - PCREL
     steps:
       - - PC.out
         - PC.inc
@@ -765,7 +765,7 @@ instructions:
 
   - name: "bcsr"
     args:
-      - BYTE
+      - PCREL
     steps:
       - - PC.out
         - PC.inc
@@ -783,7 +783,7 @@ instructions:
 
   - name: "bccr"
     args:
-      - BYTE
+      - PCREL
     steps:
       - - PC.out
         - PC.inc
@@ -801,7 +801,7 @@ instructions:
 
   - name: "bmir"
     args:
-      - BYTE
+      - PCREL
     steps:
       - - PC.out
         - PC.inc
@@ -819,7 +819,7 @@ instructions:
 
   - name: "bplr"
     args:
-      - BYTE
+      - PCREL
     steps:
       - - PC.out
         - PC.inc
@@ -837,7 +837,7 @@ instructions:
 
   - name: "rcall"
     args:
-      - BYTE
+      - PCREL
     steps:
       - - PC.out
         - PC.inc

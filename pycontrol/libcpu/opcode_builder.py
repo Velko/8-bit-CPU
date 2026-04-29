@@ -26,12 +26,15 @@ class FlagsAlt:
 
 class OpcodeArg(Enum):
     BYTE = 1
-    ADDR = 2
+    PCREL = 2
+    ADDR = 3
 
     def __str__(self) -> str:
         match self:
             case OpcodeArg.BYTE:
                 return "imm"
+            case OpcodeArg.PCREL:
+                return "pcrel"
             case OpcodeArg.ADDR:
                 return "addr"
 
