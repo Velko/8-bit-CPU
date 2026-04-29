@@ -9,6 +9,7 @@ from libcpu.devices import Flags
 from libcpu.opcode_builder import MicrocodeBuilder
 from libcpu.pin import ControlSignal, MuxPin
 from libcpu.ctrl_word import CtrlWord
+from libcpu.instruction_cfg import Instruction
 
 from collections.abc import Iterator, Sequence
 
@@ -54,7 +55,9 @@ class OpcodeFixture:
         self.alt_path = DummySignal()
         self.control = CtrlWord()
 
-        builder.add_instruction("dummy", False, None, None)\
+        idef = Instruction(name="dummy")
+
+        builder.add_instruction(idef)\
             .add_step(self.default_path)\
             .add_condition(mask=Flags.C, value=Flags.C)\
                 .add_step(self.alt_path)

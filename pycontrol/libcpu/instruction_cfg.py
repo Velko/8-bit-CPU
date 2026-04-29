@@ -27,15 +27,15 @@ class Instruction:
     hidden: bool
     opcode: int | None
 
-    def __init__(self, **kwargs: dict[str, Any]) -> None:
-        self.name = kwargs['name']                      # type: ignore
-        self.repeat = Repeat[kwargs.get('repeat', 'once')]      # type: ignore
-        self.args = kwargs.get('args', [])              # type: ignore
-        self.format = kwargs.get('format', None)        # type: ignore
-        self.steps = kwargs.get('steps', [])            # type: ignore
-        self.conditions = [Condition(**c) for c in kwargs.get('conditions', [])]   # type: ignore
-        self.hidden = kwargs.get('hidden', False)      # type: ignore
-        self.opcode = kwargs.get('opcode', None)       # type: ignore
+    def __init__(self, **kwargs: Any) -> None:
+        self.name = kwargs['name']
+        self.repeat = Repeat[kwargs.get('repeat', 'once')]
+        self.args = kwargs.get('args', [])
+        self.format = kwargs.get('format', None)
+        self.steps = kwargs.get('steps', [])
+        self.conditions = [Condition(**c) for c in kwargs.get('conditions', [])]
+        self.hidden = kwargs.get('hidden', False)
+        self.opcode = kwargs.get('opcode', None)
 
 @dataclass
 class InstructionConfig:

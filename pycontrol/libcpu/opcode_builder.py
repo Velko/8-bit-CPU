@@ -3,6 +3,7 @@ from collections.abc import Sequence
 from itertools import count
 from .pin import ControlSignal
 from .devices import Register, Flags
+from .instruction_cfg import Instruction
 
 class InvalidInstructionDefinition(Exception):
     pass
@@ -84,8 +85,8 @@ class MicrocodeBuilder:
         self.used_nums: set[int] = set()
         self.opcodes: list[MicroCode] = []
 
-    def add_instruction(self, name: str, hidden: bool, opcode: int | None, fmt: str | None, *args: Register | OpcodeArg) -> MicroCode:
-
+    def add_instruction(self, instr_def: Instruction, *args: Register | OpcodeArg) -> MicroCode:
+        opcode = instr_def.opcode
         if opcode is None:
             opcode = next(self.num_gen)
             while opcode in self.used_nums:
@@ -93,7 +94,7 @@ class MicrocodeBuilder:
         elif opcode in self.used_nums:
             raise ValueError(f"Opcode {opcode} already used")
 
-        ucode = MicroCode(opcode, name, hidden, fmt, args)
+        ucode = MicroCode(opcode, instr_def.name, instr_def.hidden, instr_def.format, args)
         self.used_nums.add(opcode)
 
         self.opcodes.append(ucode)
