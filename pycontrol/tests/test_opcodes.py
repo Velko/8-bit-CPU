@@ -59,7 +59,7 @@ class OpcodeFixture:
             .add_condition(mask=Flags.C, value=Flags.C)\
                 .add_step(self.alt_path)
 
-        self.opcodes, self.ops_by_num = builder.build()
+        self.ops_by_num = builder.build()
 
 
 
@@ -69,7 +69,7 @@ def fake_opcodes() -> OpcodeFixture:
 
 def test_opcode_flag_taken(fake_opcodes: OpcodeFixture) -> None:
 
-    op = fake_opcodes.opcodes["dummy"]
+    op = fake_opcodes.ops_by_num[0]
 
     for s_idx in range(8):
         c, is_last = op.get_step(s_idx, Flags.C)
@@ -85,7 +85,7 @@ def test_opcode_flag_taken(fake_opcodes: OpcodeFixture) -> None:
 
 def test_opcode_flag_default(fake_opcodes: OpcodeFixture) -> None:
 
-    op = fake_opcodes.opcodes["dummy"]
+    op = fake_opcodes.ops_by_num[0]
 
     for s_idx in range(8):
         c, is_last = op.get_step(s_idx, Flags.Empty)

@@ -1,4 +1,4 @@
-from collections.abc import Sequence, Iterator, Mapping
+from collections.abc import Sequence, Iterator
 from typing import Tuple
 from .pin import ControlSignal
 from .instruction_cfg import InstructionConfig, Repeat, Instruction
@@ -10,6 +10,8 @@ import os.path
 gp_regs: list[GPRegister] = [r for r in hardware.devices.values() if isinstance(r, GPRegister)]
 
 fetch: list[Sequence[ControlSignal]] = []
+
+_ops_by_str: dict[str, MicroCode] = {}
 
 class InvalidOpcodeException(Exception):
     pass
@@ -32,9 +34,13 @@ def permute_regs_lr(lregs: Sequence[Register], rregs: Sequence[Register]) -> Ite
             yield l, r
 
 def opcode_of(instr: str) -> int:
-    if not instr in _ops_by_str:
-        raise InvalidOpcodeException(instr)
-    return _ops_by_str[instr].opcode
+    microcode = _ops_by_str.get(instr)
+    if microcode is None:
+        microcode = next((op for op in ops_by_num if op.opstr == instr), None)
+        if microcode is None:
+            raise InvalidOpcodeException(instr)
+        _ops_by_str[instr] = microcode
+    return microcode.opcode
 
 def resolve_pin(name: str, **kwargs: Register) -> ControlSignal:
     dev, pin = name.split('.')
@@ -83,7 +89,7 @@ def add_instruction(builder: MicrocodeBuilder, instr: Instruction, **kwargs: Reg
             t_cond.add_step(*[resolve_pin(pin, **kwargs) for pin in step])
 
 
-def build_opcodes(yaml_path: str) -> tuple[Mapping[str, MicroCode], list[MicroCode]]:
+def build_opcodes(yaml_path: str) -> list[MicroCode]:
 
     builder = MicrocodeBuilder()
     icfg = InstructionConfig.load_from_yaml(yaml_path)
@@ -112,4 +118,4 @@ def build_opcodes(yaml_path: str) -> tuple[Mapping[str, MicroCode], list[MicroCo
     return builder.build()
 
 
-_ops_by_str, ops_by_num = build_opcodes(os.path.join(os.path.dirname(__file__), "../../include/instructions.yaml"))
+ops_by_num = build_opcodes(os.path.join(os.path.dirname(__file__), "../../include/instructions.yaml"))

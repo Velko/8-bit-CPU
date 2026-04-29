@@ -87,5 +87,5 @@ class MicrocodeBuilder:
         self.opcodes.append(ucode)
         return ucode
 
-    def build(self) -> tuple[Mapping[str, MicroCode], list[MicroCode]]:
-        return {ucode.opstr: ucode for ucode in self.opcodes}, self.opcodes
+    def build(self) -> list[MicroCode]:
+        return self.opcodes
