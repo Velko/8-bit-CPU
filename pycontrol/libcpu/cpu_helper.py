@@ -60,7 +60,7 @@ class CPUHelper:
 
         self.client.off()
 
-    def write_bytes(self, addr: int, data: bytes) -> None:
+    def _write_ram_bytes(self, addr: int, data: bytes) -> None:
         control = CtrlWord()\
             .enable(hardware.RAM.write)
 
@@ -92,7 +92,7 @@ class CPUHelper:
         self.load_reg8(hardware.F, value.value)
 
     def load_snippet(self, addr: int, code: bytes) -> None:
-        self.write_bytes(addr, code)
+        self._write_ram_bytes(addr, code)
         self.load_reg16(hardware.PC, addr)
 
     def run_snippet(self, addr: int, code: bytes) -> str:
@@ -241,3 +241,6 @@ class Memory:
 
     def __setitem__(self, addr: int, value: int) -> None:
         self.cpu._write_ram(addr, value & 0xFF)
+
+    def write(self, addr: int, data: bytes) -> None:
+        self.cpu._write_ram_bytes(addr, data)
