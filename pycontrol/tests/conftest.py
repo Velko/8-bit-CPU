@@ -50,7 +50,7 @@ class FillRam:
         cpu_helper = CPUHelper(client)
 
         for addr, value in self.contents.items():
-            cpu_helper.write_ram(addr, value)
+            cpu_helper.ram[addr] = value
 
 def devname(reg: DeviceBase) -> str:
     return f"{reg.name} "

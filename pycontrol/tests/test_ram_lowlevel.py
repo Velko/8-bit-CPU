@@ -32,6 +32,6 @@ def fill_ram(pins_client_real: PinClient) -> FillRam:
 @pytest.mark.parametrize("addr", SINGLEBIT_ADDRESSES)
 def test_load_singlebit_addr(cpu_helper: CPUHelper, fill_ram: FillRam, addr: int) -> None:
 
-    actual = cpu_helper.read_ram(addr)
+    actual = cpu_helper.ram[addr]
 
     assert fill_ram.contents[addr] == actual

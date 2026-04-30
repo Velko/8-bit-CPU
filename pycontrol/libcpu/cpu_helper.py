@@ -36,7 +36,7 @@ class CPUHelper:
         return value
 
 
-    def read_ram(self, addr: int) -> int:
+    def _read_ram(self, addr: int) -> int:
         self.client.addr_set(addr)
         control = CtrlWord()\
             .enable(hardware.RAM.out)
@@ -48,7 +48,7 @@ class CPUHelper:
 
         return value
 
-    def write_ram(self, addr: int, value: int) -> None:
+    def _write_ram(self, addr: int, value: int) -> None:
         control = CtrlWord()\
             .enable(hardware.RAM.write)
         self.client.ctrl_commit(control)
@@ -237,7 +237,7 @@ class Memory:
         self.cpu = cpu
 
     def __getitem__(self, addr: int) -> int:
-        return self.cpu.read_ram(addr)
+        return self.cpu._read_ram(addr)
 
     def __setitem__(self, addr: int, value: int) -> None:
-        self.cpu.write_ram(addr, value & 0xFF)
+        self.cpu._write_ram(addr, value & 0xFF)

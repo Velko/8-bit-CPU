@@ -47,7 +47,7 @@ class Debugger:
     def read_ram(self, addr: int, size: int) -> bytes:
         data: list[int] = []
         for i in range(size):
-            data.append(self.cpu_helper.read_ram(addr + i))
+            data.append(self.cpu_helper.ram[addr + i])
 
         return bytes(data)
 
@@ -60,7 +60,7 @@ class Debugger:
         print (f"# Uploading {file} ", end="", flush=True, file=sys.stderr)
 
         for addr, byte in enumerate(binary):
-            self.cpu_helper.write_ram(addr + RAM_OFFSET, byte)
+            self.cpu_helper.ram[addr + RAM_OFFSET] = byte
 
             print (".", end="", flush=True, file=sys.stderr)
 
@@ -169,19 +169,19 @@ class Debugger:
 
     def set_breakpoint(self, addr: int) -> None:
 
-        pmem = self.cpu_helper.read_ram(addr)
+        pmem = self.cpu_helper.ram[addr]
 
         bkp = Breakpoint(addr, pmem)
 
         self.breakpoints[addr] = bkp
 
         # replace it with brk()
-        self.cpu_helper.write_ram(addr, opcode_of("brk"))
+        self.cpu_helper.ram[addr] = opcode_of("brk")
 
     def clear_breakpoint(self, addr: int) -> None:
 
         if addr in self.breakpoints:
-            self.cpu_helper.write_ram(addr, self.breakpoints[addr].orig_op)
+            self.cpu_helper.ram[addr] = self.breakpoints[addr].orig_op
             del self.breakpoints[addr]
 
     def break_hit(self) -> Breakpoint | None:
