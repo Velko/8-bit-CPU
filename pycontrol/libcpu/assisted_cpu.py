@@ -3,7 +3,7 @@ from .messages import RunMessage
 from .devices import GPRegister, Flags, FlagsRegister, AddressRegister
 from .markers import AddrBase
 from .pinclient import PinClient
-from .assisted_cpu_engine import AssistedCPUEngine
+from .assisted_cpu_engine import AssistedCPUEngine, check_pcrel
 
 class AssistedCPU(AssistedCPUEngine):
     def __init__(self, client: PinClient) -> None:
@@ -163,7 +163,7 @@ class AssistedCPU(AssistedCPUEngine):
         self.execute_mnemonic("jmp_addr", label)
 
     def rjmp(self, offset: int) -> None:
-        self._check_pcrel(offset)
+        check_pcrel(offset)
         self.execute_mnemonic("jmp_pcrel", offset)
 
     def hlt(self) -> None:  # no test
@@ -229,34 +229,30 @@ class AssistedCPU(AssistedCPUEngine):
         opcode = f"lcmp_{target.name}_{arg.name}"
         self.execute_mnemonic(opcode)
 
-    def _check_pcrel(self, offset: int) -> None:
-        if not (-128 <= offset <= 127):
-            raise ValueError(f"PC-relative offset {offset} out of range [-128, 127]")
-
     def rbeq(self, offset: int) -> None:
-        self._check_pcrel(offset)
+        check_pcrel(offset)
         self.execute_mnemonic("beq_pcrel", offset)
 
     def rbne(self, offset: int) -> None:
-        self._check_pcrel(offset)
+        check_pcrel(offset)
         self.execute_mnemonic("bne_pcrel", offset)
 
     def rbcs(self, offset: int) -> None:
-        self._check_pcrel(offset)
+        check_pcrel(offset)
         self.execute_mnemonic("bcs_pcrel", offset)
 
     def rbcc(self, offset: int) -> None:
-        self._check_pcrel(offset)
+        check_pcrel(offset)
         self.execute_mnemonic("bcc_pcrel", offset)
 
     def rbmi(self, offset: int) -> None:
-        self._check_pcrel(offset)
+        check_pcrel(offset)
         self.execute_mnemonic("bmi_pcrel", offset)
 
     def rbpl(self, offset: int) -> None:
-        self._check_pcrel(offset)
+        check_pcrel(offset)
         self.execute_mnemonic("bpl_pcrel", offset)
 
     def rcall(self, offset: int) -> None:
-        self._check_pcrel(offset)
+        check_pcrel(offset)
         self.execute_mnemonic("call_pcrel", offset)

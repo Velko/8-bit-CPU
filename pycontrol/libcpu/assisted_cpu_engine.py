@@ -143,3 +143,8 @@ class AssistedCPUEngine:
 
         # and execute it (will retrieve opcode automatically)
         return self.execute_opcode(None)
+
+def check_pcrel(offset: int) -> None:
+    if not (-128 <= offset <= 127):
+        raise ValueError(f"PC-relative offset {offset} out of range [-128, 127]")
+
