@@ -15,8 +15,13 @@ pytestmark = pytest.mark.hardware
 NZ_MASK = Flags.N | Flags.Z
 
 and_test_args = [
-    ALUTwoRegTestCase("small", 230, 92, 68, Flags.Empty),
-    ALUTwoRegTestCase("zero", 0xa5, 0x5a, 0, Flags.Z),
+    # Expected reachable AND flag combinations: {}, N, Z.
+    ALUTwoRegTestCase("empty_flags", 1, 1, 1, Flags.Empty),
+    ALUTwoRegTestCase("empty_flags_2", 0xff, 0x01, 0x01, Flags.Empty),
+    ALUTwoRegTestCase("n_only", 128, 128, 128, Flags.N),
+    ALUTwoRegTestCase("n_only_2", 255, 255, 255, Flags.N),
+    ALUTwoRegTestCase("z_only", 0, 0, 0, Flags.Z),
+    ALUTwoRegTestCase("z_only_2", 128, 127, 0, Flags.Z),
 ]
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
@@ -47,8 +52,12 @@ def test_andi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: A
 
 
 or_test_args = [
-    ALUTwoRegTestCase("small", 230, 92, 254, Flags.N),
-    ALUTwoRegTestCase("full", 0xa5, 0x5a, 0xff, Flags.N),
+    # Expected reachable OR flag combinations: {}, N, Z.
+    ALUTwoRegTestCase("empty_flags", 0, 1, 1, Flags.Empty),
+    ALUTwoRegTestCase("empty_flags_2", 0x7f, 0x01, 0x7f, Flags.Empty),
+    ALUTwoRegTestCase("n_only", 0, 128, 128, Flags.N),
+    ALUTwoRegTestCase("n_only_2", 0x80, 0x7f, 0xff, Flags.N),
+    ALUTwoRegTestCase("z_only", 0, 0, 0, Flags.Z),
 ]
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
@@ -76,6 +85,60 @@ def test_ori(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: AL
     flags = cpu_helper.regs.F & NZ_MASK # we are only interested in Z and N flags
     assert value == case.result
     assert flags == case.xflags
+
+
+@pytest.mark.parametrize("vc_flags", [Flags.Empty, Flags.C, Flags.V, Flags.C | Flags.V])
+@pytest.mark.parametrize(
+    "lhs_val,rhs_val,expected_nz",
+    [
+        (0x80, 0x80, Flags.N),
+        (0xAA, 0x55, Flags.Z),
+    ],
+)
+def test_and_preserves_vc_flags(
+    cpu_helper: CPUHelper,
+    acpu: AssistedCPU,
+    vc_flags: Flags,
+    lhs_val: int,
+    rhs_val: int,
+    expected_nz: Flags,
+) -> None:
+    cpu_helper.regs.F = vc_flags
+    cpu_helper.load_reg8(A, lhs_val)
+    cpu_helper.load_reg8(B, rhs_val)
+
+    acpu.andb(A, B)
+
+    flags = cpu_helper.regs.F
+    assert (flags & (Flags.C | Flags.V)) == vc_flags
+    assert (flags & NZ_MASK) == expected_nz
+
+
+@pytest.mark.parametrize("vc_flags", [Flags.Empty, Flags.C, Flags.V, Flags.C | Flags.V])
+@pytest.mark.parametrize(
+    "lhs_val,rhs_val,expected_nz",
+    [
+        (0x80, 0x00, Flags.N),
+        (0x00, 0x00, Flags.Z),
+    ],
+)
+def test_or_preserves_vc_flags(
+    cpu_helper: CPUHelper,
+    acpu: AssistedCPU,
+    vc_flags: Flags,
+    lhs_val: int,
+    rhs_val: int,
+    expected_nz: Flags,
+) -> None:
+    cpu_helper.regs.F = vc_flags
+    cpu_helper.load_reg8(A, lhs_val)
+    cpu_helper.load_reg8(B, rhs_val)
+
+    acpu.orb(A, B)
+
+    flags = cpu_helper.regs.F
+    assert (flags & (Flags.C | Flags.V)) == vc_flags
+    assert (flags & NZ_MASK) == expected_nz
 
 
 
