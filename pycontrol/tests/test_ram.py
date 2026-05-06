@@ -2,6 +2,7 @@
 
 import pytest
 import random
+from itertools import repeat
 
 from libcpu.opcodes import opcode_of
 from libcpu.pinclient import PinClient
@@ -37,13 +38,31 @@ def fill_ram(pins_client_real: PinClient) -> FillRam:
 
     return ram
 
+@pytest.fixture(scope="module")
+def zero_ram(pins_client_real: PinClient) -> FillRam:
+    ram = FillRam(random_addr, repeat(0))
+    ram.write_ram(pins_client_real)
+
+    return ram
+
+
 
 @pytest.mark.parametrize("addr", random_addr)
-def test_store_load(cpu_helper: CPUHelper, acpu: AssistedCPU, fill_ram: FillRam, addr: int) -> None:
+def test_load(cpu_helper: CPUHelper, acpu: AssistedCPU, fill_ram: FillRam, addr: int) -> None:
 
     acpu.ld (A, Addr(addr))
 
     assert fill_ram.contents[addr] == cpu_helper.regs.A
+
+@pytest.mark.parametrize("addr", random_addr)
+def test_store(cpu_helper: CPUHelper, acpu: AssistedCPU, zero_ram: FillRam, addr: int) -> None:
+
+    test_val = random.randint(1, 255) # do not use 0, because it is the default value in RAM
+    cpu_helper.regs.A = test_val
+
+    acpu.st (Addr(addr), A)
+
+    assert cpu_helper.ram[addr] == test_val
 
 def test_ldx_hw(cpu_helper: CPUHelper) -> None:
 
