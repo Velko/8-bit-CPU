@@ -12,8 +12,6 @@ from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
 from collections.abc import Sequence
 
-from conftest import FillRam
-
 pytestmark = pytest.mark.hardware
 
 # can not make as a fixture, because it can not be
@@ -30,32 +28,18 @@ def make_random_addr() -> Sequence[int]:
 
 random_addr = make_random_addr()
 
-
-@pytest.fixture(scope="module")
-def fill_ram(pins_client_real: PinClient) -> FillRam:
-    ram = FillRam(random_addr)
-    ram.write_ram(pins_client_real)
-
-    return ram
-
-@pytest.fixture(scope="module")
-def zero_ram(pins_client_real: PinClient) -> FillRam:
-    ram = FillRam(random_addr, repeat(0))
-    ram.write_ram(pins_client_real)
-
-    return ram
-
-
-
 @pytest.mark.parametrize("addr", random_addr)
-def test_load(cpu_helper: CPUHelper, acpu: AssistedCPU, fill_ram: FillRam, addr: int) -> None:
+def test_load(cpu_helper: CPUHelper, acpu: AssistedCPU, addr: int) -> None:
+    test_val = random.randint(0, 255)
+    cpu_helper.ram[addr] = test_val
 
     acpu.ld (A, Addr(addr))
 
-    assert fill_ram.contents[addr] == cpu_helper.regs.A
+    assert test_val == cpu_helper.regs.A
 
 @pytest.mark.parametrize("addr", random_addr)
-def test_store(cpu_helper: CPUHelper, acpu: AssistedCPU, zero_ram: FillRam, addr: int) -> None:
+def test_store(cpu_helper: CPUHelper, acpu: AssistedCPU, addr: int) -> None:
+    cpu_helper.ram[addr] = 0
 
     test_val = random.randint(1, 255) # do not use 0, because it is the default value in RAM
     cpu_helper.regs.A = test_val
@@ -80,13 +64,15 @@ def test_ldx_hw(cpu_helper: CPUHelper) -> None:
     assert cpu_helper.regs.A == 0x33
 
 @pytest.mark.parametrize("addr", random_addr)
-def test_load_sdp(cpu_helper: CPUHelper, acpu: AssistedCPU, fill_ram: FillRam, addr: int) -> None:
+def test_load_sdp(cpu_helper: CPUHelper, acpu: AssistedCPU, addr: int) -> None:
 
+    test_val = random.randint(0, 255)
+    cpu_helper.ram[addr] = test_val
     cpu_helper.regs.SDP = addr
 
     acpu.lpi (A, SDP)
 
-    assert fill_ram.contents[addr] == cpu_helper.regs.A
+    assert test_val == cpu_helper.regs.A
     assert addr + 1 == cpu_helper.regs.SDP
 
 
