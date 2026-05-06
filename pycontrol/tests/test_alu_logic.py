@@ -147,6 +147,7 @@ shr_args = [
     ALUOneRegTestCase("carry_out_1", 25, 12, Flags.C),
     ALUOneRegTestCase("carry_out_0", 122, 61, Flags.Empty),
     ALUOneRegTestCase("no_signext", 128, 64, Flags.Empty),
+    ALUOneRegTestCase("z_only", 0, 0, Flags.Z),
     ALUOneRegTestCase("zero", 1, 0, Flags.C | Flags.Z),
 ]
 
@@ -186,6 +187,7 @@ ror_args = [
     ("carry_out_1", Flags.Empty, 25, 12, Flags.C),
     ("carry_out_0", Flags.Empty, 122, 61, Flags.Empty),
     ("no_signext", Flags.Empty, 128, 64, Flags.Empty),
+    ("z_only", Flags.Empty, 0, 0, Flags.Z),
     ("zero", Flags.Empty, 1, 0, Flags.C | Flags.Z),
 
     ("carry_in_out_1", Flags.C, 25, 140, Flags.C | Flags.N),
@@ -210,7 +212,9 @@ asr_args = [
     ("carry_out_1", 25, 12, Flags.C),
     ("carry_out_0", 122, 61, Flags.Empty),
     ("signext", 128, 192, Flags.N),
+    ("z_only", 0, 0, Flags.Z),
     ("zero", 1, 0, Flags.C | Flags.Z),
+    ("cn", 129, 192, Flags.C | Flags.N),
 ]
 
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
