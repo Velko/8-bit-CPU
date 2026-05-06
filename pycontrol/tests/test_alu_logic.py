@@ -183,6 +183,18 @@ def test_shr_real(cpu_helper: CPUHelper, reg: GPRegister, carry_in: Flags, case:
     assert flags == case.xflags
 
 
+@pytest.mark.parametrize("initial_flags", [Flags.Empty, Flags.C, Flags.V, Flags.C | Flags.V])
+@pytest.mark.parametrize("val", [0x00, 0x01, 0x80])
+def test_shr_preserves_v_flag(cpu_helper: CPUHelper, acpu: AssistedCPU, initial_flags: Flags, val: int) -> None:
+    cpu_helper.regs.F = initial_flags
+    cpu_helper.load_reg8(A, val)
+
+    acpu.shr(A)
+
+    flags = cpu_helper.regs.F
+    assert (flags & Flags.V) == (initial_flags & Flags.V)
+
+
 ror_args = [
     ("carry_out_1", Flags.Empty, 25, 12, Flags.C),
     ("carry_out_0", Flags.Empty, 122, 61, Flags.Empty),
@@ -207,6 +219,18 @@ def test_ror(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, _desc: s
     flags = cpu_helper.regs.F
     assert value == result
     assert flags == xflags
+
+
+@pytest.mark.parametrize("initial_flags", [Flags.Empty, Flags.C, Flags.V, Flags.C | Flags.V])
+@pytest.mark.parametrize("val", [0x00, 0x01, 0x80])
+def test_ror_preserves_v_flag(cpu_helper: CPUHelper, acpu: AssistedCPU, initial_flags: Flags, val: int) -> None:
+    cpu_helper.regs.F = initial_flags
+    cpu_helper.load_reg8(A, val)
+
+    acpu.ror(A)
+
+    flags = cpu_helper.regs.F
+    assert (flags & Flags.V) == (initial_flags & Flags.V)
 
 asr_args = [
     ("carry_out_1", 25, 12, Flags.C),
@@ -247,6 +271,18 @@ def test_asr_real(cpu_helper: CPUHelper, reg: GPRegister, _desc: str, carry_in: 
     flags = cpu_helper.regs.F
     assert value == result
     assert flags == xflags
+
+
+@pytest.mark.parametrize("initial_flags", [Flags.Empty, Flags.C, Flags.V, Flags.C | Flags.V])
+@pytest.mark.parametrize("val", [0x00, 0x01, 0x80])
+def test_asr_preserves_v_flag(cpu_helper: CPUHelper, acpu: AssistedCPU, initial_flags: Flags, val: int) -> None:
+    cpu_helper.regs.F = initial_flags
+    cpu_helper.load_reg8(A, val)
+
+    acpu.asr(A)
+
+    flags = cpu_helper.regs.F
+    assert (flags & Flags.V) == (initial_flags & Flags.V)
 
 
 swap_args = [
