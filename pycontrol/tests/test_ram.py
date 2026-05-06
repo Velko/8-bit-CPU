@@ -88,3 +88,24 @@ def test_load_sdp(cpu_helper: CPUHelper, acpu: AssistedCPU, fill_ram: FillRam, a
 
     assert fill_ram.contents[addr] == cpu_helper.regs.A
     assert addr + 1 == cpu_helper.regs.SDP
+
+
+def test_load_idx(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
+
+    cpu_helper.ram[0x45] = 0xB5
+    cpu_helper.regs.B = 3
+
+    acpu.ldx (A, Addr(0x42), B)
+
+    assert cpu_helper.regs.A == 0xB5
+
+
+def test_store_idx(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
+
+    cpu_helper.ram[0x45] = 0
+    cpu_helper.regs.A = 0xB5
+    cpu_helper.regs.B = 3
+
+    acpu.stx (Addr(0x42), B, A)
+
+    assert cpu_helper.ram[0x45] == 0xB5

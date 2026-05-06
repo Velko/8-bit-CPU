@@ -55,11 +55,3 @@ def test_lea(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     assert cpu_helper.regs.SP == 0x4314
 
-def test_mar_idx(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-
-    cpu_helper.ram[0x45] = 0xB5
-    cpu_helper.regs.B = 3
-
-    acpu.ldx (A, Addr(0x42), B)
-
-    assert cpu_helper.regs.A == 0xB5
