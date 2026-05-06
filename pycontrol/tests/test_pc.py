@@ -86,19 +86,62 @@ def test_branch_fallthrough(
 
     assert cpu_helper.regs.PC == 0x1234 + 2
 
-def test_rbeq_taken(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.regs.F = Flags.Z
+
+
+pcrel_branch_instructions = [
+    ("rbeq", AssistedCPU.rbeq, Flags.Z, True),
+    ("rbne", AssistedCPU.rbne, Flags.Z, False),
+    ("rbcs", AssistedCPU.rbcs, Flags.C, True),
+    ("rbcc", AssistedCPU.rbcc, Flags.C, False),
+    ("rbmi", AssistedCPU.rbmi, Flags.N, True),
+    ("rbpl", AssistedCPU.rbpl, Flags.N, False),
+]
+
+@pytest.mark.parametrize("_name, method, flag, branch_on_set", pcrel_branch_instructions)
+def test_pcrel_branch_taken(
+    cpu_helper: CPUHelper,
+    acpu: AssistedCPU,
+    _name: str,
+    method: Callable[[AssistedCPU, int], None],
+    flag: Flags,
+    branch_on_set: bool) -> None:
+
+    cpu_helper.regs.F = flag if branch_on_set else Flags.Empty
     cpu_helper.regs.PC = 0x1234
 
-    acpu.rbeq(10)
+    method(acpu, 10)
 
     assert cpu_helper.regs.PC == 0x1234 + 10
 
-def test_rbeq_fallthrough(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.regs.F = Flags.Empty
+@pytest.mark.parametrize("_name, method, flag, branch_on_set", pcrel_branch_instructions)
+def test_pcrel_branch_taken_negative(
+    cpu_helper: CPUHelper,
+    acpu: AssistedCPU,
+    _name: str,
+    method: Callable[[AssistedCPU, int], None],
+    flag: Flags,
+    branch_on_set: bool) -> None:
+
+    cpu_helper.regs.F = flag if branch_on_set else Flags.Empty
     cpu_helper.regs.PC = 0x1234
 
-    acpu.rbeq(10)
+    method(acpu, -10)
+
+    assert cpu_helper.regs.PC == 0x1234 - 10
+
+@pytest.mark.parametrize("_name, method, flag, branch_on_set", pcrel_branch_instructions)
+def test_pcrel_branch_fallthrough(
+    cpu_helper: CPUHelper,
+    acpu: AssistedCPU,
+    _name: str,
+    method: Callable[[AssistedCPU, int], None],
+    flag: Flags,
+    branch_on_set: bool) -> None:
+
+    cpu_helper.regs.F = flag if not branch_on_set else Flags.Empty
+    cpu_helper.regs.PC = 0x1234
+
+    method(acpu, 10)
 
     assert cpu_helper.regs.PC == 0x1234 + 1
 
