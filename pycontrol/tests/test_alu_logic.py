@@ -49,6 +49,19 @@ def test_andi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: A
     assert value == case.result
     assert flags == case.xflags
 
+@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
+@pytest.mark.parametrize("case", and_test_args)
+def test_lcmp(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
+    cpu_helper.load_reg8(lhs, case.val_a)
+    cpu_helper.load_reg8(rhs, case.val_b)
+    lhs_orig = case.val_a
+
+    acpu.lcmp(lhs, rhs)
+
+    value = cpu_helper.read_reg8(lhs)
+    flags = cpu_helper.regs.F & NZ_MASK # we are only interested in Z and N flags
+    assert value == lhs_orig  # Value unchanged
+    assert flags == case.xflags
 
 
 or_test_args = [
@@ -108,6 +121,32 @@ def test_and_preserves_vc_flags(
     cpu_helper.load_reg8(B, rhs_val)
 
     acpu.andb(A, B)
+
+    flags = cpu_helper.regs.F
+    assert (flags & (Flags.C | Flags.V)) == vc_flags
+    assert (flags & NZ_MASK) == expected_nz
+
+@pytest.mark.parametrize("vc_flags", [Flags.Empty, Flags.C, Flags.V, Flags.C | Flags.V])
+@pytest.mark.parametrize(
+    "lhs_val,rhs_val,expected_nz",
+    [
+        (0x80, 0x80, Flags.N),
+        (0xAA, 0x55, Flags.Z),
+    ],
+)
+def test_lcmp_preserves_vc_flags(
+    cpu_helper: CPUHelper,
+    acpu: AssistedCPU,
+    vc_flags: Flags,
+    lhs_val: int,
+    rhs_val: int,
+    expected_nz: Flags,
+) -> None:
+    cpu_helper.regs.F = vc_flags
+    cpu_helper.load_reg8(A, lhs_val)
+    cpu_helper.load_reg8(B, rhs_val)
+
+    acpu.lcmp(A, B)
 
     flags = cpu_helper.regs.F
     assert (flags & (Flags.C | Flags.V)) == vc_flags

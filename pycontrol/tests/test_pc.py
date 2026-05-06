@@ -161,6 +161,14 @@ def test_call_addr(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     assert cpu_helper.regs.PC == 452
     assert cpu_helper.regs.LR == 0x12bd
 
+def test_rcall_offset(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
+    cpu_helper.regs.PC = 0x12bb
+
+    acpu.rcall (10)
+
+    assert cpu_helper.regs.PC == 0x12c5
+    assert cpu_helper.regs.LR == 0x12bc
+
 def test_jmp_addr(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.regs.PC = 0
 
