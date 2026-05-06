@@ -289,9 +289,13 @@ def test_swap_twice_returns_original(cpu_helper: CPUHelper, acpu: AssistedCPU, r
 
 
 xor_test_args = [
-    ALUTwoRegTestCase("small", 230, 92, 186, Flags.N),
-    ALUTwoRegTestCase("fill", 0xa5, 0x5a, 0xff, Flags.N),
-    ALUTwoRegTestCase("zero", 0x142, 0x142, 0, Flags.Z),
+    # Expected reachable XOR flag combinations: {}, N, Z.
+    ALUTwoRegTestCase("empty_flags", 0x55, 0x01, 0x54, Flags.Empty),
+    ALUTwoRegTestCase("empty_flags_2", 0x55, 0x0f, 0x5a, Flags.Empty),
+    ALUTwoRegTestCase("n_only", 230, 92, 186, Flags.N),
+    ALUTwoRegTestCase("n_only_2", 0xa5, 0x5a, 0xff, Flags.N),
+    ALUTwoRegTestCase("z_only", 0x42, 0x42, 0, Flags.Z),
+    ALUTwoRegTestCase("z_only_2", 0x00, 0x00, 0, Flags.Z),
 ]
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
@@ -332,9 +336,39 @@ def test_xori(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: A
     assert flags == case.xflags
 
 
+@pytest.mark.parametrize("vc_flags", [Flags.Empty, Flags.C, Flags.V, Flags.C | Flags.V])
+@pytest.mark.parametrize(
+    "lhs_val,rhs_val,expected_nz",
+    [
+        (0x80, 0x00, Flags.N),
+        (0x5A, 0x5A, Flags.Z),
+    ],
+)
+def test_xor_preserves_vc_flags(
+    cpu_helper: CPUHelper,
+    acpu: AssistedCPU,
+    vc_flags: Flags,
+    lhs_val: int,
+    rhs_val: int,
+    expected_nz: Flags,
+) -> None:
+    cpu_helper.regs.F = vc_flags
+    cpu_helper.load_reg8(A, lhs_val)
+    cpu_helper.load_reg8(B, rhs_val)
+
+    acpu.xor(A, B)
+
+    flags = cpu_helper.regs.F
+    assert (flags & (Flags.C | Flags.V)) == vc_flags
+    assert (flags & NZ_MASK) == expected_nz
+
+
 not_args = [
-    ALUOneRegTestCase("normal", 25, 230, Flags.N),
-    ALUOneRegTestCase("zero", 0xFF, 0, Flags.Z),
+    # Expected reachable NOT flag combinations: {}, N, Z.
+    ALUOneRegTestCase("empty_flags", 0x80, 0x7f, Flags.Empty),
+    ALUOneRegTestCase("n_only", 25, 230, Flags.N),
+    ALUOneRegTestCase("n_only_2", 0x00, 0xff, Flags.N),
+    ALUOneRegTestCase("z_only", 0xFF, 0, Flags.Z),
 ]
 
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
@@ -349,3 +383,28 @@ def test_not(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: AL
     flags = cpu_helper.regs.F & NZ_MASK
     assert value == case.result
     assert flags == case.xflags
+
+
+@pytest.mark.parametrize("vc_flags", [Flags.Empty, Flags.C, Flags.V, Flags.C | Flags.V])
+@pytest.mark.parametrize(
+    "val,expected_nz",
+    [
+        (0xFF, Flags.Z),
+        (0x00, Flags.N),
+    ],
+)
+def test_not_preserves_vc_flags(
+    cpu_helper: CPUHelper,
+    acpu: AssistedCPU,
+    vc_flags: Flags,
+    val: int,
+    expected_nz: Flags,
+) -> None:
+    cpu_helper.regs.F = vc_flags
+    cpu_helper.load_reg8(A, val)
+
+    acpu.notb(A)
+
+    flags = cpu_helper.regs.F
+    assert (flags & (Flags.C | Flags.V)) == vc_flags
+    assert (flags & NZ_MASK) == expected_nz
