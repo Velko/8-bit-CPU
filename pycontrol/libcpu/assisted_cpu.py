@@ -163,6 +163,7 @@ class AssistedCPU(AssistedCPUEngine):
         self.execute_mnemonic("jmp_addr", label)
 
     def rjmp(self, offset: int) -> None:
+        self._check_pcrel(offset)
         self.execute_mnemonic("jmp_pcrel", offset)
 
     def hlt(self) -> None:
@@ -207,3 +208,55 @@ class AssistedCPU(AssistedCPUEngine):
     def dummy_ext(self, value: int) -> None:
         opcode = "dummyext_imm"
         self.execute_mnemonic(opcode, value)
+
+    def nop(self) -> None:
+        self.execute_mnemonic("nop")
+
+    def brk(self) -> None:
+        self.execute_mnemonic("brk")
+
+    def inb(self, target: GPRegister, port: int) -> None:
+        opcode = f"in_{target.name}_imm"
+        self.execute_mnemonic(opcode, port)
+
+    def bmi(self, label: AddrBase | None = None) -> None:
+        self.execute_mnemonic("bmi_addr", label)
+
+    def bpl(self, label: AddrBase | None = None) -> None:
+        self.execute_mnemonic("bpl_addr", label)
+
+    def lcmp(self, target: GPRegister, arg: GPRegister) -> None:
+        opcode = f"lcmp_{target.name}_{arg.name}"
+        self.execute_mnemonic(opcode)
+
+    def _check_pcrel(self, offset: int) -> None:
+        if not (-128 <= offset <= 127):
+            raise ValueError(f"PC-relative offset {offset} out of range [-128, 127]")
+
+    def rbeq(self, offset: int) -> None:
+        self._check_pcrel(offset)
+        self.execute_mnemonic("beq_pcrel", offset)
+
+    def rbne(self, offset: int) -> None:
+        self._check_pcrel(offset)
+        self.execute_mnemonic("bne_pcrel", offset)
+
+    def rbcs(self, offset: int) -> None:
+        self._check_pcrel(offset)
+        self.execute_mnemonic("bcs_pcrel", offset)
+
+    def rbcc(self, offset: int) -> None:
+        self._check_pcrel(offset)
+        self.execute_mnemonic("bcc_pcrel", offset)
+
+    def rbmi(self, offset: int) -> None:
+        self._check_pcrel(offset)
+        self.execute_mnemonic("bmi_pcrel", offset)
+
+    def rbpl(self, offset: int) -> None:
+        self._check_pcrel(offset)
+        self.execute_mnemonic("bpl_pcrel", offset)
+
+    def rcall(self, offset: int) -> None:
+        self._check_pcrel(offset)
+        self.execute_mnemonic("call_pcrel", offset)
