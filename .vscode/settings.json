@@ -21,5 +21,11 @@
         "**/*.vcd": true,
         "**/pty?": true
     },
-    "python.analysis.extraPaths": ["pycontrol"]
+    "python.analysis.extraPaths": [
+        "pycontrol"
+    ],
+    "chat.tools.terminal.autoApprove": {
+        "./emu_check.sh": true,
+        "./mypy_check.sh": true
+    }
 }
