@@ -2,6 +2,7 @@
 
 import pytest
 import itertools
+from collections.abc import Callable
 
 pytestmark = pytest.mark.hardware
 
@@ -43,21 +44,47 @@ def test_reset_inits_pc(cpu_helper: CPUHelper) -> None:
 
     assert cpu_helper.regs.PC == 0xE000
 
-def test_beq_taken(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.regs.F = Flags.Z
+
+branch_instructions = [
+    ("beq", AssistedCPU.beq, Flags.Z, True),
+    ("bne", AssistedCPU.bne, Flags.Z, False),
+    ("bcs", AssistedCPU.bcs, Flags.C, True),
+    ("bcc", AssistedCPU.bcc, Flags.C, False),
+    ("bmi", AssistedCPU.bmi, Flags.N, True),
+    ("bpl", AssistedCPU.bpl, Flags.N, False),
+]
+
+@pytest.mark.parametrize("_name, method, flag, branch_on_set", branch_instructions)
+def test_branch_taken(
+    cpu_helper: CPUHelper,
+    acpu: AssistedCPU,
+    _name: str,
+    method: Callable[[AssistedCPU, Addr], None],
+    flag: Flags,
+    branch_on_set: bool) -> None:
+
+    cpu_helper.regs.F = flag if branch_on_set else Flags.Empty
     cpu_helper.regs.PC = 0x1234
 
-    acpu.beq(Addr(0x4321))
+    method(acpu, Addr(0x4321))
 
     assert cpu_helper.regs.PC == 0x4321
 
-def test_beq_fallthrough(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.regs.F = Flags.Empty
+@pytest.mark.parametrize("_name, method, flag, branch_on_set", branch_instructions)
+def test_branch_fallthrough(
+    cpu_helper: CPUHelper,
+    acpu: AssistedCPU,
+    _name: str,
+    method: Callable[[AssistedCPU, Addr], None],
+    flag: Flags,
+    branch_on_set: bool) -> None:
+
+    cpu_helper.regs.F = flag if not branch_on_set else Flags.Empty
     cpu_helper.regs.PC = 0x1234
 
-    acpu.beq(Addr(0x4321))
+    method(acpu, Addr(0x4321))
 
-    assert cpu_helper.regs.PC == 0x1236
+    assert cpu_helper.regs.PC == 0x1234 + 2
 
 def test_rbeq_taken(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.regs.F = Flags.Z
@@ -74,54 +101,6 @@ def test_rbeq_fallthrough(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     acpu.rbeq(10)
 
     assert cpu_helper.regs.PC == 0x1234 + 1
-
-def test_bne_taken(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.regs.F = Flags.Empty
-    cpu_helper.regs.PC = 0x1234
-
-    acpu.bne(Addr(0x4321))
-
-    assert cpu_helper.regs.PC == 0x4321
-
-def test_bne_fallthrough(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.regs.F = Flags.Z
-    cpu_helper.regs.PC = 0x1234
-
-    acpu.bne(Addr(0x4321))
-
-    assert cpu_helper.regs.PC == 0x1236
-
-def test_bcs_taken(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.regs.F = Flags.C
-    cpu_helper.regs.PC = 0x1234
-
-    acpu.bcs(Addr(0x4321))
-
-    assert cpu_helper.regs.PC == 0x4321
-
-def test_bcs_fallthrough(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.regs.F = Flags.Empty
-    cpu_helper.regs.PC = 0x1234
-
-    acpu.bcs(Addr(0x4321))
-
-    assert cpu_helper.regs.PC == 0x1236
-
-def test_bcc_taken(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.regs.F = Flags.Empty
-    cpu_helper.regs.PC = 0x1234
-
-    acpu.bcc(Addr(0x4321))
-
-    assert cpu_helper.regs.PC == 0x4321
-
-def test_bcc_fallthrough(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
-    cpu_helper.regs.F = Flags.C
-    cpu_helper.regs.PC = 0x1234
-
-    acpu.bcc(Addr(0x4321))
-
-    assert cpu_helper.regs.PC == 0x1236
 
 def test_lr_pc_swap(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.regs.PC, 0xaa
