@@ -139,7 +139,7 @@ class AssistedCPU(AssistedCPUEngine):
         opcode = f"ldx_{target.name}_addr_{idx_reg.name}"
         self.execute_mnemonic(opcode, base)
 
-    def tstx(self, base: AddrBase, idx_reg: GPRegister) -> None:
+    def tstx(self, base: AddrBase, idx_reg: GPRegister) -> None:  # no test
         opcode = f"tstx_addr_{idx_reg.name}"
         self.execute_mnemonic(opcode, base)
 
@@ -166,7 +166,7 @@ class AssistedCPU(AssistedCPUEngine):
         self._check_pcrel(offset)
         self.execute_mnemonic("jmp_pcrel", offset)
 
-    def hlt(self) -> None:
+    def hlt(self) -> None:  # no test
         self.execute_mnemonic("hlt")
 
     def push(self, source: GPRegister | AddressRegister) -> None:
@@ -209,13 +209,13 @@ class AssistedCPU(AssistedCPUEngine):
         opcode = "dummyext_imm"
         self.execute_mnemonic(opcode, value)
 
-    def nop(self) -> None:
+    def nop(self) -> None:  # no test
         self.execute_mnemonic("nop")
 
-    def brk(self) -> None:
+    def brk(self) -> None:  # no test
         self.execute_mnemonic("brk")
 
-    def inb(self, target: GPRegister, port: int) -> None:
+    def inb(self, target: GPRegister, port: int) -> None:  # no test
         opcode = f"in_{target.name}_imm"
         self.execute_mnemonic(opcode, port)
 
