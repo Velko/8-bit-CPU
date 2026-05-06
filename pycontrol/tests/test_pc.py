@@ -59,6 +59,21 @@ def test_beq_fallthrough(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     assert cpu_helper.regs.PC == 0x1236
 
+def test_rbeq_taken(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
+    cpu_helper.regs.F = Flags.Z
+    cpu_helper.regs.PC = 0x1234
+
+    acpu.rbeq(10)
+
+    assert cpu_helper.regs.PC == 0x1234 + 10
+
+def test_rbeq_fallthrough(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
+    cpu_helper.regs.F = Flags.Empty
+    cpu_helper.regs.PC = 0x1234
+
+    acpu.rbeq(10)
+
+    assert cpu_helper.regs.PC == 0x1234 + 1
 
 def test_bne_taken(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.regs.F = Flags.Empty
