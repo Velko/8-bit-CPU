@@ -252,7 +252,12 @@ def test_asr_real(cpu_helper: CPUHelper, reg: GPRegister, _desc: str, carry_in: 
 swap_args = [
     ALUOneRegTestCase("simple", 0xa2, 0x2a, Flags.Empty),
     ALUOneRegTestCase("neg", 0x58, 0x85, Flags.N),
-    ALUOneRegTestCase("zero", 0, 0, Flags.Z),
+    ALUOneRegTestCase("zero", 0x00, 0x00, Flags.Z),
+    ALUOneRegTestCase("all_ones", 0xff, 0xff, Flags.N),
+    ALUOneRegTestCase("low_to_high", 0x0f, 0xf0, Flags.N),
+    ALUOneRegTestCase("high_to_low", 0xf0, 0x0f, Flags.Empty),
+    ALUOneRegTestCase("mixed_to_negative", 0x3c, 0xc3, Flags.N),
+    ALUOneRegTestCase("mixed_to_positive", 0xc3, 0x3c, Flags.Empty),
 ]
 
 
@@ -267,6 +272,20 @@ def test_swap(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: A
     flags = cpu_helper.regs.F & NZ_MASK
     assert value == case.result
     assert flags == case.xflags
+
+
+@pytest.mark.parametrize("reg", gp_regs, ids=devname)
+@pytest.mark.parametrize("val", [0x00, 0x01, 0x0f, 0x10, 0x3c, 0x80, 0xc3, 0xff])
+def test_swap_twice_returns_original(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, val: int) -> None:
+    cpu_helper.load_reg8(reg, val)
+
+    acpu.swap(reg)
+    acpu.swap(reg)
+
+    value = cpu_helper.read_reg8(reg)
+    flags = cpu_helper.regs.F & NZ_MASK
+    assert value == val
+    assert flags == (Flags.Z if val == 0 else (Flags.N if val & 0x80 else Flags.Empty))
 
 
 xor_test_args = [
