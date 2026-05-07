@@ -10,8 +10,8 @@ from .pinclient import PinClient
 from .DeviceSetup import hardware
 from .messages import OutMessage, HaltMessage, BrkMessage
 from .opcodes import opcode_of
-from .assisted_cpu import AssistedCPU
-from .devices import GPRegister, StackPointer
+from .assisted_cpu_engine import AssistedCPUEngine
+from .devices import GPRegister, AddressRegister
 
 RAM_OFFSET = 0x0000
 
@@ -29,7 +29,7 @@ class StopReason(Enum):
 class Debugger:
     def __init__(self) -> None:
         self.client = PinClient()
-        self.backend = AssistedCPU(self.client)
+        self.backend = AssistedCPUEngine(self.client)
         self.cpu_helper = CPUHelper(self.client)
         self.halted = False
         self.stopped = True
@@ -203,21 +203,17 @@ class Debugger:
     def output_event(self, target: int, msg: str) -> None:
         print(msg, end="", flush=True)
 
-    def get_registers(self) -> Mapping[str, int | str]:
-        registers: dict[str, int | str] = {}
+    def get_registers(self) -> Mapping[str, str]:
+        registers: dict[str, str] = {}
         for gpr in [r for r in hardware.devices.values() if isinstance(r, GPRegister)]:
-            registers[gpr.name] = self.cpu_helper.read_reg8(gpr)
+            registers[gpr.name] = f"{self.cpu_helper.read_reg8(gpr):02x}"
         registers["Flags"] = str(self.cpu_helper.regs.F)
-        if hardware.LR is not None:
-            registers["LR"] = self.cpu_helper.regs.LR
-        for ap in [r for r in hardware.devices.values() if isinstance(r, StackPointer)]:
-            registers[ap.name] = self.cpu_helper.read_reg16(ap)
+        for ap in [r for r in hardware.devices.values() if isinstance(r, AddressRegister)]:
+            registers[ap.name] = f"{self.cpu_helper.read_reg16(ap):04x}"
 
         # if breakpoint just hit, PC is not accurate
         # show breakpoint address instead
         if self.current_break is not None:
-            registers["PC"] = self.current_break.addr
-        else:
-            registers["PC"] = self.cpu_helper.regs.PC
+            registers["PC"] = f"{self.current_break.addr:04x}"
 
         return registers

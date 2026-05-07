@@ -51,14 +51,9 @@ class DebugCmd(cmd.Cmd):
     def do_regs(self, _arg: str) -> None:
         regs = debugger.get_registers()
 
-        print (f"A = {regs['A']:02x}")
-        print (f"B = {regs['B']:02x}")
-        print (f"C = {regs['C']:02x}")
-        print (f"D = {regs['D']:02x}")
-        print (f"Flags = {regs['Flags']}")
-        print (f"PC = {regs['PC']:04x}")
-        print (f"LR = {regs['LR']:04x}")
-        print (f"SP = {regs['SP']:04x}")
+        for name, value in regs.items():
+            print (f"{name} = {value}")
+
 
     def do_break(self, arg: str) -> None:
         if not arg:
