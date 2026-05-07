@@ -16,14 +16,8 @@ def upload(filename: str) -> None:
     with open(filename, "rb") as f:
         binary = f.read()
 
-    print (f"# Uploading {filename} ", end="", flush=True, file=sys.stderr)
-
-    for addr, byte in enumerate(binary):
-        cpu_helper.ram[addr + RAM_OFFSET] = byte
-
-        print (".", end="", flush=True, file=sys.stderr)
-
-    print (" OK", file=sys.stderr)
+    print (f"# Uploading {filename} ", file=sys.stderr)
+    cpu_helper.ram.write(RAM_OFFSET, binary)
 
 
 
