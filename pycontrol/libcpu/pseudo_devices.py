@@ -34,6 +34,9 @@ class ImmediateValue:
             self.write_enabled = True
             del self.value[0]
 
+    def has_value(self) -> bool:
+        return len(self.value) > 0
+
 
 class IOMonitor:
     def __init__(self) -> None:

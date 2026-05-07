@@ -60,9 +60,12 @@ class AssistedCPUEngine:
 
         progmem_out = False
         for pin in microstep:
-            if pin == hardware.ProgMem.out:
-                # special handling for ProgMem.out
-                # to allow ImmediateValue to hijack the output
+            if pin == hardware.ProgMem.out and self.imm.has_value():
+                # special handling for ProgMem.out to allow ImmediateValue to
+                # hijack the output if python code needs to inject a value.
+                # For example, when acpu.ldi() is executed from tests.
+                # It should fall back to normal ProgMem.out behavior when nothing
+                # is injected, to allow step-execution in debugger.
                 progmem_out = True
             else:
                 control.enable(pin)
