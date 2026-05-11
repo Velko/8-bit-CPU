@@ -201,6 +201,13 @@ class Regs:
         self.cpu.load_reg16(hardware.SDP, value & 0xFFFF)
 
     @property
+    def TDP(self) -> int:
+        return self.cpu.read_reg16(hardware.TDP)
+    @TDP.setter
+    def TDP(self, value: int) -> None:
+        self.cpu.load_reg16(hardware.TDP, value & 0xFFFF)
+
+    @property
     def TX(self) -> int:
         return self.cpu.read_reg16(hardware.TX)
     @TX.setter

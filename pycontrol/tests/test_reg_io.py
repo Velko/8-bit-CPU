@@ -4,7 +4,7 @@ import pytest
 import random
 
 from libcpu.devices import GPRegister, Flags
-from libcpu.devmap import F, SP, A, B
+from libcpu.devmap import F, SDP, SP, A, B, TDP
 from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
@@ -47,11 +47,27 @@ def test_mov_a_b(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs:
     value = cpu_helper.read_reg8(lhs)
     assert value == val
 
-def test_lea(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
+def test_lea_sp(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     cpu_helper.regs.SP = 0
 
     acpu.lea(SP, Addr(0x4314))
 
     assert cpu_helper.regs.SP == 0x4314
+
+def test_lea_sdp(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
+
+    cpu_helper.regs.SDP = 0
+
+    acpu.lea(SDP, Addr(0x4314))
+
+    assert cpu_helper.regs.SDP == 0x4314
+
+def test_lea_tdp(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
+
+    cpu_helper.regs.TDP = 0
+
+    acpu.lea(TDP, Addr(0x4314))
+
+    assert cpu_helper.regs.TDP == 0x4314
 

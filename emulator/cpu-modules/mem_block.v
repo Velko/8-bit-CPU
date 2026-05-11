@@ -94,6 +94,17 @@ module mem_block(
         .cdownn(acdecn)
     );
 
+    address_counter tdp(
+        .abus(abus),
+        .resetn(rstn),
+        .clk(clk),
+        .iclk(iclk),
+        .outn(addr_out_mux.y[6]),
+        .loadn(addr_load_mux.y[6]),
+        .cupn(acincn),
+        .cdownn(acdecn)
+    );
+
     address_calc acalc(
         .abus(abus),
         .mbus(mbus),
