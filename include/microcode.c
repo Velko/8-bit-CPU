@@ -757,53 +757,53 @@ const struct op_microcode microcode[] PROGMEM = {
     /* a6 st_addr_D  */
     { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07f85893},},
 
-    /* a7 stx_addr_A_A */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f0, 0x07fa5890},},
+    /* a7 st_TDP_A_A */
+    { .default_steps = {0x07d658f0, 0x07fa5890},},
 
-    /* a8 stx_addr_A_B */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f0, 0x07fa5891},},
+    /* a8 st_TDP_A_B */
+    { .default_steps = {0x07d658f0, 0x07fa5891},},
 
-    /* a9 stx_addr_A_C */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f0, 0x07fa5892},},
+    /* a9 st_TDP_A_C */
+    { .default_steps = {0x07d658f0, 0x07fa5892},},
 
-    /* aa stx_addr_A_D */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f0, 0x07fa5893},},
+    /* aa st_TDP_A_D */
+    { .default_steps = {0x07d658f0, 0x07fa5893},},
 
-    /* ab stx_addr_B_A */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f1, 0x07fa5890},},
+    /* ab st_TDP_B_A */
+    { .default_steps = {0x07d658f1, 0x07fa5890},},
 
-    /* ac stx_addr_B_B */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f1, 0x07fa5891},},
+    /* ac st_TDP_B_B */
+    { .default_steps = {0x07d658f1, 0x07fa5891},},
 
-    /* ad stx_addr_B_C */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f1, 0x07fa5892},},
+    /* ad st_TDP_B_C */
+    { .default_steps = {0x07d658f1, 0x07fa5892},},
 
-    /* ae stx_addr_B_D */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f1, 0x07fa5893},},
+    /* ae st_TDP_B_D */
+    { .default_steps = {0x07d658f1, 0x07fa5893},},
 
-    /* af stx_addr_C_A */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f2, 0x07fa5890},},
+    /* af st_TDP_C_A */
+    { .default_steps = {0x07d658f2, 0x07fa5890},},
 
-    /* b0 stx_addr_C_B */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f2, 0x07fa5891},},
+    /* b0 st_TDP_C_B */
+    { .default_steps = {0x07d658f2, 0x07fa5891},},
 
-    /* b1 stx_addr_C_C */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f2, 0x07fa5892},},
+    /* b1 st_TDP_C_C */
+    { .default_steps = {0x07d658f2, 0x07fa5892},},
 
-    /* b2 stx_addr_C_D */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f2, 0x07fa5893},},
+    /* b2 st_TDP_C_D */
+    { .default_steps = {0x07d658f2, 0x07fa5893},},
 
-    /* b3 stx_addr_D_A */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f3, 0x07fa5890},},
+    /* b3 st_TDP_D_A */
+    { .default_steps = {0x07d658f3, 0x07fa5890},},
 
-    /* b4 stx_addr_D_B */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f3, 0x07fa5891},},
+    /* b4 st_TDP_D_B */
+    { .default_steps = {0x07d658f3, 0x07fa5891},},
 
-    /* b5 stx_addr_D_C */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f3, 0x07fa5892},},
+    /* b5 st_TDP_D_C */
+    { .default_steps = {0x07d658f3, 0x07fa5892},},
 
-    /* b6 stx_addr_D_D */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f3, 0x07fa5893},},
+    /* b6 st_TDP_D_D */
+    { .default_steps = {0x07d658f3, 0x07fa5893},},
 
     /* b7 ld_A_addr  */
     { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07f81809},},
@@ -817,53 +817,53 @@ const struct op_microcode microcode[] PROGMEM = {
     /* ba ld_D_addr  */
     { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07f81839},},
 
-    /* bb ldx_A_addr_A */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f0, 0x07fa1809},},
+    /* bb ld_A_SDP_A */
+    { .default_steps = {0x07d158f0, 0x07fa1809},},
 
-    /* bc ldx_A_addr_B */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f1, 0x07fa1809},},
+    /* bc ld_A_SDP_B */
+    { .default_steps = {0x07d158f1, 0x07fa1809},},
 
-    /* bd ldx_A_addr_C */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f2, 0x07fa1809},},
+    /* bd ld_A_SDP_C */
+    { .default_steps = {0x07d158f2, 0x07fa1809},},
 
-    /* be ldx_A_addr_D */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f3, 0x07fa1809},},
+    /* be ld_A_SDP_D */
+    { .default_steps = {0x07d158f3, 0x07fa1809},},
 
-    /* bf ldx_B_addr_A */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f0, 0x07fa1819},},
+    /* bf ld_B_SDP_A */
+    { .default_steps = {0x07d158f0, 0x07fa1819},},
 
-    /* c0 ldx_B_addr_B */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f1, 0x07fa1819},},
+    /* c0 ld_B_SDP_B */
+    { .default_steps = {0x07d158f1, 0x07fa1819},},
 
-    /* c1 ldx_B_addr_C */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f2, 0x07fa1819},},
+    /* c1 ld_B_SDP_C */
+    { .default_steps = {0x07d158f2, 0x07fa1819},},
 
-    /* c2 ldx_B_addr_D */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f3, 0x07fa1819},},
+    /* c2 ld_B_SDP_D */
+    { .default_steps = {0x07d158f3, 0x07fa1819},},
 
-    /* c3 ldx_C_addr_A */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f0, 0x07fa1829},},
+    /* c3 ld_C_SDP_A */
+    { .default_steps = {0x07d158f0, 0x07fa1829},},
 
-    /* c4 ldx_C_addr_B */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f1, 0x07fa1829},},
+    /* c4 ld_C_SDP_B */
+    { .default_steps = {0x07d158f1, 0x07fa1829},},
 
-    /* c5 ldx_C_addr_C */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f2, 0x07fa1829},},
+    /* c5 ld_C_SDP_C */
+    { .default_steps = {0x07d158f2, 0x07fa1829},},
 
-    /* c6 ldx_C_addr_D */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f3, 0x07fa1829},},
+    /* c6 ld_C_SDP_D */
+    { .default_steps = {0x07d158f3, 0x07fa1829},},
 
-    /* c7 ldx_D_addr_A */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f0, 0x07fa1839},},
+    /* c7 ld_D_SDP_A */
+    { .default_steps = {0x07d158f0, 0x07fa1839},},
 
-    /* c8 ldx_D_addr_B */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f1, 0x07fa1839},},
+    /* c8 ld_D_SDP_B */
+    { .default_steps = {0x07d158f1, 0x07fa1839},},
 
-    /* c9 ldx_D_addr_C */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f2, 0x07fa1839},},
+    /* c9 ld_D_SDP_C */
+    { .default_steps = {0x07d158f2, 0x07fa1839},},
 
-    /* ca ldx_D_addr_D */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f3, 0x07fa1839},},
+    /* ca ld_D_SDP_D */
+    { .default_steps = {0x07d158f3, 0x07fa1839},},
 
     /* cb padding1   */
     { .default_steps = {0x07ff58ff},},
@@ -1289,4 +1289,100 @@ const struct op_microcode microcode[] PROGMEM = {
 
     /* 129 xori_D_imm */
     { .default_steps = {0x07bd5869, 0x07ff133a},},
+
+    /* 12a st_SDP_A_A */
+    { .default_steps = {0x07d158f0, 0x07fa5890},},
+
+    /* 12b st_SDP_A_B */
+    { .default_steps = {0x07d158f0, 0x07fa5891},},
+
+    /* 12c st_SDP_A_C */
+    { .default_steps = {0x07d158f0, 0x07fa5892},},
+
+    /* 12d st_SDP_A_D */
+    { .default_steps = {0x07d158f0, 0x07fa5893},},
+
+    /* 12e st_SDP_B_A */
+    { .default_steps = {0x07d158f1, 0x07fa5890},},
+
+    /* 12f st_SDP_B_B */
+    { .default_steps = {0x07d158f1, 0x07fa5891},},
+
+    /* 130 st_SDP_B_C */
+    { .default_steps = {0x07d158f1, 0x07fa5892},},
+
+    /* 131 st_SDP_B_D */
+    { .default_steps = {0x07d158f1, 0x07fa5893},},
+
+    /* 132 st_SDP_C_A */
+    { .default_steps = {0x07d158f2, 0x07fa5890},},
+
+    /* 133 st_SDP_C_B */
+    { .default_steps = {0x07d158f2, 0x07fa5891},},
+
+    /* 134 st_SDP_C_C */
+    { .default_steps = {0x07d158f2, 0x07fa5892},},
+
+    /* 135 st_SDP_C_D */
+    { .default_steps = {0x07d158f2, 0x07fa5893},},
+
+    /* 136 st_SDP_D_A */
+    { .default_steps = {0x07d158f3, 0x07fa5890},},
+
+    /* 137 st_SDP_D_B */
+    { .default_steps = {0x07d158f3, 0x07fa5891},},
+
+    /* 138 st_SDP_D_C */
+    { .default_steps = {0x07d158f3, 0x07fa5892},},
+
+    /* 139 st_SDP_D_D */
+    { .default_steps = {0x07d158f3, 0x07fa5893},},
+
+    /* 13a ld_A_TDP_A */
+    { .default_steps = {0x07d658f0, 0x07fa1809},},
+
+    /* 13b ld_A_TDP_B */
+    { .default_steps = {0x07d658f1, 0x07fa1809},},
+
+    /* 13c ld_A_TDP_C */
+    { .default_steps = {0x07d658f2, 0x07fa1809},},
+
+    /* 13d ld_A_TDP_D */
+    { .default_steps = {0x07d658f3, 0x07fa1809},},
+
+    /* 13e ld_B_TDP_A */
+    { .default_steps = {0x07d658f0, 0x07fa1819},},
+
+    /* 13f ld_B_TDP_B */
+    { .default_steps = {0x07d658f1, 0x07fa1819},},
+
+    /* 140 ld_B_TDP_C */
+    { .default_steps = {0x07d658f2, 0x07fa1819},},
+
+    /* 141 ld_B_TDP_D */
+    { .default_steps = {0x07d658f3, 0x07fa1819},},
+
+    /* 142 ld_C_TDP_A */
+    { .default_steps = {0x07d658f0, 0x07fa1829},},
+
+    /* 143 ld_C_TDP_B */
+    { .default_steps = {0x07d658f1, 0x07fa1829},},
+
+    /* 144 ld_C_TDP_C */
+    { .default_steps = {0x07d658f2, 0x07fa1829},},
+
+    /* 145 ld_C_TDP_D */
+    { .default_steps = {0x07d658f3, 0x07fa1829},},
+
+    /* 146 ld_D_TDP_A */
+    { .default_steps = {0x07d658f0, 0x07fa1839},},
+
+    /* 147 ld_D_TDP_B */
+    { .default_steps = {0x07d658f1, 0x07fa1839},},
+
+    /* 148 ld_D_TDP_C */
+    { .default_steps = {0x07d658f2, 0x07fa1839},},
+
+    /* 149 ld_D_TDP_D */
+    { .default_steps = {0x07d658f3, 0x07fa1839},},
 };

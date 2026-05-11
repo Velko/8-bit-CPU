@@ -14,12 +14,21 @@ fibo_loop:
 
 ; ---------------------------------------------------------------------------------------
 print_a:
+    lea SDP, num_a
+    jmp print_n
+
+print_b:
+    lea SDP, num_b
+    ; fall through to print_n
+
+print_n:
     push LR
 
     ldi C, 3
+    lea TDP, number
 cp_a_loop:
-    ldx A, num_a[C]
-    stx number[C], A
+    ld A, (SDP + C)
+    st (TDP + C), A
     dec C
     bpl cp_a_loop
 
@@ -29,47 +38,6 @@ cp_a_loop:
     pop LR
     ret
 
-; ---------------------------------------------------------------------------------------
-print_b:
-    push LR
-
-    ldi C, 3
-cp_b_loop:
-    ldx A, num_b[C]
-    stx number[C], A
-    dec C
-    bpl cp_b_loop
-
-    call convert_number
-    call print_digits
-
-    pop LR
-    ret
-
-; ---------------------------------------------------------------------------------------
-add_ab:
-    push LR
-
-    clr A
-    push A
-    ldi C, 3
-sum_a_loop:
-    ldx A, num_a[C]
-    ldx B, num_b[C]
-    popf
-    adc A, B
-    pushf
-    stx num_a[C], A
-    stx number[C], A
-    dec C
-    bpl sum_a_loop
-
-    popf
-
-    bcc print_res_a
-
-    hlt
-
 print_res_a:
     call convert_number
     call print_digits
@@ -78,32 +46,40 @@ print_res_a:
     ret
 
 ; ---------------------------------------------------------------------------------------
+add_ab:
+    lea SDP, num_a
+    lea TDP, num_b
+    jmp add_st
+
 add_ba:
+    lea SDP, num_b
+    lea TDP, num_a
+    ; fallthrough to add_st
+
+add_st:
     push LR
 
     clr A
     push A
     ldi C, 3
 sum_b_loop:
-    ldx A, num_b[C]
-    ldx B, num_a[C]
+    ld A, (SDP + C)
+    ld B, (TDP + C)
     popf
     adc A, B
     pushf
-    stx num_b[C], A
-    stx number[C], A
+    st (SDP + C), A
     dec C
     bpl sum_b_loop
 
     popf
 
-    bcc print_res_b
+    bcc print_res
 
     hlt
 
-print_res_b:
-    call convert_number
-    call print_digits
+print_res:
+    call print_n
 
     pop LR
     ret
@@ -113,14 +89,17 @@ print_res_b:
 convert_number:
     clr A
     ldi C, 9
+    lea TDP, digits
 digits_zero_loop:
-    stx digits[C], A
+    st (TDP + C), A
     dec C
     bpl digits_zero_loop
 
 
     ldi D, 32  ; repeat for each bit
     ldi B, 5   ; for comparison
+    lea SDP, number
+    lea TDP, digits
 
 double_loop:
     push D
@@ -132,10 +111,10 @@ double_loop:
 
     ldi C, 3  ; index in number[]
 num_shift_loop:
-    ldx A, number[C]
+    ld A, (SDP + C)
     popf  ; load flags (initial C = 0, or one from previous iteration)
     adc A, A
-    stx number[C], A
+    st (SDP + C), A
 
     pushf  ; store for next iteration
 
@@ -149,7 +128,7 @@ num_shift_loop:
 add3_shift_loop:
 
     ; check each digit if >=5
-    ldx A, digits[C]
+    ld A, (TDP + C)
     cmp A, B
 
     bcs add3_skip
@@ -162,7 +141,7 @@ add3_skip:
     ; now shift
     popf  ; load flags (one from previous iteration)
     adc A, A
-    stx digits[C], A
+    st (TDP + C), A
 
     pushf  ; store for next iteration
 
@@ -183,9 +162,9 @@ add3_skip:
 
 to_char_loop:
 
-    ldx A, digits[C]
+    ld A, (TDP + C)
     or A, B
-    stx digits[C], A
+    st (TDP + C), A
 
     dec C
     bpl to_char_loop
@@ -197,9 +176,10 @@ print_digits:
     ; find first non-0 digit
     ldi B, 0x30 ; code of '0'
     ldi D, 9  ; upper limit for search
+    lea SDP, digits
     clr C
 find0_loop:
-    ldx A, digits[C]
+    ld A, (SDP + C)
     cmp A, B
     bne found_non0
 
@@ -208,7 +188,7 @@ find0_loop:
     bne find0_loop
 
 found_non0:
-    ldx A, digits[C]
+    ld A, (SDP + C)
     beq print_end
     out DISPLAY_CHR_DATA, A
     inc C

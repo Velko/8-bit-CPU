@@ -22,12 +22,14 @@ double_loop:
     ldi A, 0; could use CLR (it is essentially xor A, A), but emulator freaks out when register contains X
     push A
 
+    lea SDP, number
+    lea TDP, digits
     ldi C, number_len - 1  ; index in number[]
 num_shift_loop:
-    ldx A, number[C]
+    ld A, (SDP + C)
     popf  ; load flags (initial C = 0, or one from previous iteration)
     adc A, A
-    stx number[C], A
+    st (SDP + C), A
 
     pushf  ; store for next iteration
 
@@ -41,7 +43,7 @@ num_shift_loop:
 add3_shift_loop:
 
     ; check each digit if >=5
-    ldx A, digits[C]
+    ld A, (TDP + C)
     cmp A, B
 
     bcs add3_skip
@@ -54,7 +56,7 @@ add3_skip:
     ; now shift
     popf  ; load flags (one from previous iteration)
     adc A, A
-    stx digits[C], A
+    st (TDP + C), A
 
     pushf  ; store for next iteration
 
@@ -75,9 +77,9 @@ add3_skip:
 
 to_char_loop:
 
-    ldx A, digits[C]
+    ld A, (TDP + C)
     or A, B
-    stx digits[C], A
+    st (TDP + C), A
 
     dec C
     bpl to_char_loop
@@ -91,7 +93,7 @@ print_digits:
     ldi D, digits_len - 1  ; upper limit for search (keep last digit)
     clr C
 find0_loop:
-    ldx A, digits[C]
+    ld A, (TDP + C)
     cmp A, B
     bne found_non0
 
@@ -100,7 +102,7 @@ find0_loop:
     bne find0_loop
 
 found_non0:
-    ldx A, digits[C]
+    ld A, (TDP + C)
     beq print_end
     out DISPLAY_CHR_DATA, A
     inc C

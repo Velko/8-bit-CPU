@@ -131,13 +131,13 @@ class AssistedCPU(AssistedCPUEngine):
         opcode = f"st_addr_{source.name}"
         self.execute_mnemonic(opcode, addr)
 
-    def stx(self, base: AddrBase, idx_reg: GPRegister, source: GPRegister) -> None:
-        opcode = f"stx_addr_{idx_reg.name}_{source.name}"
-        self.execute_mnemonic(opcode, base)
+    def stx(self, addr: AddressRegister, idx_reg: GPRegister, source: GPRegister) -> None:
+        opcode = f"st_{addr.name}_{idx_reg.name}_{source.name}"
+        self.execute_mnemonic(opcode)
 
-    def ldx(self, target: GPRegister, base: AddrBase, idx_reg: GPRegister) -> None:
-        opcode = f"ldx_{target.name}_addr_{idx_reg.name}"
-        self.execute_mnemonic(opcode, base)
+    def ldx(self, target: GPRegister, addr: AddressRegister, idx_reg: GPRegister) -> None:
+        opcode = f"ld_{target.name}_{addr.name}_{idx_reg.name}"
+        self.execute_mnemonic(opcode)
 
     def ld(self, target: GPRegister, addr: AddrBase) -> None:
         opcode = f"ld_{target.name}_addr"

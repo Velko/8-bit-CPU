@@ -7,7 +7,7 @@ from itertools import repeat
 from libcpu.opcodes import opcode_of
 from libcpu.pinclient import PinClient
 from libcpu.assisted_cpu import AssistedCPU
-from libcpu.devmap import A, B, SDP
+from libcpu.devmap import A, B, SDP, TDP
 from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
 from collections.abc import Sequence
@@ -52,11 +52,12 @@ def test_ldx_hw(cpu_helper: CPUHelper) -> None:
 
     cpu_helper.ram[0x2203] = 0x33
     cpu_helper.regs.B = 3
+    cpu_helper.regs.SDP = 0x2200
 
     # prepare binary of:
-    #   ldx A, 0x2200, B
+    #   ld A, (SDP + B)
     out_test_prog = bytes([
-        opcode_of("ldx_A_addr_B"), 0x00, 0x22,
+        opcode_of("ld_A_SDP_B"),
         ])
 
     cpu_helper.run_snippet(0x0, out_test_prog)
@@ -80,8 +81,9 @@ def test_load_idx(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     cpu_helper.ram[0x45] = 0xB5
     cpu_helper.regs.B = 3
+    cpu_helper.regs.SDP = 0x42
 
-    acpu.ldx (A, Addr(0x42), B)
+    acpu.ldx (A, SDP, B)
 
     assert cpu_helper.regs.A == 0xB5
 
@@ -91,7 +93,25 @@ def test_store_idx(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.ram[0x45] = 0
     cpu_helper.regs.A = 0xB5
     cpu_helper.regs.B = 3
+    cpu_helper.regs.TDP = 0x42
 
-    acpu.stx (Addr(0x42), B, A)
+    acpu.stx (TDP, B, A)
 
     assert cpu_helper.ram[0x45] == 0xB5
+
+def test_stx_hw(cpu_helper: CPUHelper) -> None:
+
+    cpu_helper.ram[0x2203] = 0
+    cpu_helper.regs.A = 0x33
+    cpu_helper.regs.B = 3
+    cpu_helper.regs.TDP = 0x2200
+
+    # prepare binary of:
+    #   st (TDP + B), A
+    out_test_prog = bytes([
+        opcode_of("st_TDP_B_A"),
+        ])
+
+    cpu_helper.run_snippet(0x0, out_test_prog)
+
+    assert cpu_helper.ram[0x2203] == 0x33

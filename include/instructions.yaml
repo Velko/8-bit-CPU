@@ -326,24 +326,16 @@ instructions:
         - reg.out
         - Ram.write
 
-  - name: "stx"
+  - name: "st"
     repeat: "gp_reg_pair_all"
     args:
-      - ADDR
+      - TDP
       - left
       - right
-    format: "{}[{}], {}"
+    format: "({}+{}), {}"
     steps:
-      - - PC.out
-        - PC.inc
-        - ProgMem.out
-        - TL.load
-      - - PC.out
-        - PC.inc
-        - ProgMem.out
-        - TH.load
       - - left.out
-        - TX.out
+        - TDP.out
         - ACalc.load
       - - ACalc.out
         - right.out
@@ -368,24 +360,16 @@ instructions:
         - Ram.out
         - F.calc
 
-  - name: "ldx"
+  - name: "ld"
     repeat: "gp_reg_pair_all"
     args:
       - left
-      - ADDR
+      - SDP
       - right
-    format: "{}, {}[{}]"
+    format: "{}, ({}+{})"
     steps:
-      - - PC.out
-        - PC.inc
-        - ProgMem.out
-        - TL.load
-      - - PC.out
-        - PC.inc
-        - ProgMem.out
-        - TH.load
       - - right.out
-        - TX.out
+        - SDP.out
         - ACalc.load
       - - ACalc.out
         - left.load
@@ -1076,4 +1060,35 @@ instructions:
         - reg.alu_l
         - T.alu_r
         - XorNot.out
+        - F.calc
+
+  - name: "st"
+    repeat: "gp_reg_pair_all"
+    args:
+      - SDP
+      - left
+      - right
+    format: "({}+{}), {}"
+    steps:
+      - - left.out
+        - SDP.out
+        - ACalc.load
+      - - ACalc.out
+        - right.out
+        - Ram.write
+
+  - name: "ld"
+    repeat: "gp_reg_pair_all"
+    args:
+      - left
+      - TDP
+      - right
+    format: "{}, ({}+{})"
+    steps:
+      - - right.out
+        - TDP.out
+        - ACalc.load
+      - - ACalc.out
+        - left.load
+        - Ram.out
         - F.calc

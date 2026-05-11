@@ -13,12 +13,13 @@ sieve_start:
 
     ; start with seg0[2]
     ldi A, 2
+    lea TDP, seg0
 
     ; fill seg0 with non-zero values
     fill0_loop:
 
         ; store "something" in seg0[A] (any non-zero value will do)
-        stx seg0[A], D
+        st (TDP + A), D
 
         ; next index in A
         inc A
@@ -35,7 +36,7 @@ sieve_start:
 
     seg0_loop:
         ; check seg0[B]
-        ldx A, seg0[B] ; test byte in RAM
+        ld A, (TDP + B)
 
         ; anything non-zero means prime found
         beq seg0_next
@@ -54,7 +55,7 @@ sieve_start:
                 bcc seg0_fill_m_end
 
                 ; write zero at seg0[A]
-                stx seg0[A], C
+                st (TDP + A), C
 
                 ; calculate next multiple
                 add A, B
@@ -64,7 +65,7 @@ sieve_start:
             seg0_fill_m_end:
 
             ; store largest multiple at seg0[B]
-            stx seg0[B], A
+            st (TDP + B), A
 
         seg0_next:
 
@@ -76,9 +77,9 @@ sieve_start:
 
         bne seg0_loop
 
-
     ; Continue with segmented sieve
     mov A, D
+    lea SDP, seg_n
 
     seg_n_loop:
         st r_low, A
@@ -88,7 +89,7 @@ sieve_start:
         seg_n0_loop:
 
             ; store "something" in seg0[A] (any non-zero value will do)
-            stx seg_n[A], D
+            st (SDP + A), D
 
             ; next index in A
             inc A
@@ -106,7 +107,7 @@ sieve_start:
             st p, B ; save for later
 
             ; load seg0[B], getting the latest calculated multiple
-            ldx A, seg0[B] ; it also calculates flags accordingly
+            ld A, (TDP + B) ; it also calculates flags accordingly
 
             beq seg_n_mark_next   ; jump over if not prime
 
@@ -121,7 +122,7 @@ sieve_start:
                     bcc seg_n_mark_mult_end
 
                     ; write a zero over seg_n[A]
-                    stx seg_n[A], C
+                    st (SDP + A), C
 
                     ; add p for next multiple
                     ld B, p
@@ -139,7 +140,7 @@ sieve_start:
                 ; and store it into the seg0[p]
                 st m, A
                 ld B, p
-                stx seg0[B], A
+                st (TDP + B), A
 
             seg_n_mark_next:
 
@@ -158,7 +159,7 @@ sieve_start:
         seg_n_print_loop:
 
             ; check byte at seg_n[A]
-            ldx B, seg_n[A]
+            ld B, (SDP + A)
 
             beq seg_n_print_skip
 
