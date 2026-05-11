@@ -34,8 +34,8 @@ sieve_start:
     ldi B, 2  ; B holds current prime tested/processed
 
     seg0_loop:
-        ; calculate flags for seg0[B]
-        tstx seg0[B] ; test byte in RAM
+        ; check seg0[B]
+        ldx A, seg0[B] ; test byte in RAM
 
         ; anything non-zero means prime found
         beq seg0_next
@@ -158,7 +158,7 @@ sieve_start:
         seg_n_print_loop:
 
             ; check byte at seg_n[A]
-            tstx seg_n[A]
+            ldx B, seg_n[A]
 
             beq seg_n_print_skip
 

@@ -392,27 +392,25 @@ instructions:
         - Ram.out
         - F.calc
 
-  - name: "tstx"
-    repeat: "gp_regs"
-    args:
-      - ADDR
-      - reg
-    format: "{}[{}]"
+  - name: "padding1"
+    repeat: "once"
     steps:
-      - - PC.out
-        - PC.inc
-        - ProgMem.out
-        - TL.load
-      - - PC.out
-        - PC.inc
-        - ProgMem.out
-        - TH.load
-      - - reg.out
-        - TX.out
-        - ACalc.load
-      - - ACalc.out
-        - Ram.out
-        - F.calc
+      - []
+
+  - name: "padding2"
+    repeat: "once"
+    steps:
+      - []
+
+  - name: "padding3"
+    repeat: "once"
+    steps:
+      - []
+
+  - name: "padding4"
+    repeat: "once"
+    steps:
+      - []
 
   - name: "jmp"
     args:

@@ -865,17 +865,17 @@ const struct op_microcode microcode[] PROGMEM = {
     /* ca ldx_D_addr_D */
     { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f3, 0x07fa1839},},
 
-    /* cb tstx_addr_A */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f0, 0x07fa18f9},},
+    /* cb padding1   */
+    { .default_steps = {0x07ff58ff},},
 
-    /* cc tstx_addr_B */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f1, 0x07fa18f9},},
+    /* cc padding2   */
+    { .default_steps = {0x07ff58ff},},
 
-    /* cd tstx_addr_C */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f2, 0x07fa18f9},},
+    /* cd padding3   */
+    { .default_steps = {0x07ff58ff},},
 
-    /* ce tstx_addr_D */
-    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d058f3, 0x07fa18f9},},
+    /* ce padding4   */
+    { .default_steps = {0x07ff58ff},},
 
     /* cf jmp_addr   */
     { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07e858ff},},

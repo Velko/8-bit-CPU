@@ -205,10 +205,10 @@
 #define OP_LDX_D_ADDR_B        0xc8
 #define OP_LDX_D_ADDR_C        0xc9
 #define OP_LDX_D_ADDR_D        0xca
-#define OP_TSTX_ADDR_A         0xcb
-#define OP_TSTX_ADDR_B         0xcc
-#define OP_TSTX_ADDR_C         0xcd
-#define OP_TSTX_ADDR_D         0xce
+#define OP_PADDING1            0xcb
+#define OP_PADDING2            0xcc
+#define OP_PADDING3            0xcd
+#define OP_PADDING4            0xce
 #define OP_JMP_ADDR            0xcf
 #define OP_BEQ_ADDR            0xd0
 #define OP_BNE_ADDR            0xd1

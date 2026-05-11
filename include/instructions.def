@@ -203,10 +203,10 @@
     ldx  D, {address1: u16}[B] => 0xc8 @ address1[7:0] @ address1[15:8]
     ldx  D, {address1: u16}[C] => 0xc9 @ address1[7:0] @ address1[15:8]
     ldx  D, {address1: u16}[D] => 0xca @ address1[7:0] @ address1[15:8]
-    tstx  {address0: u16}[A] => 0xcb @ address0[7:0] @ address0[15:8]
-    tstx  {address0: u16}[B] => 0xcc @ address0[7:0] @ address0[15:8]
-    tstx  {address0: u16}[C] => 0xcd @ address0[7:0] @ address0[15:8]
-    tstx  {address0: u16}[D] => 0xce @ address0[7:0] @ address0[15:8]
+    padding1   => 0xcb
+    padding2   => 0xcc
+    padding3   => 0xcd
+    padding4   => 0xce
     jmp  {address0: u16} => 0xcf @ address0[7:0] @ address0[15:8]
     beq  {address0: u16} => 0xd0 @ address0[7:0] @ address0[15:8]
     bne  {address0: u16} => 0xd1 @ address0[7:0] @ address0[15:8]
