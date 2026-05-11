@@ -190,7 +190,7 @@ class AssistedCPU(AssistedCPUEngine):
         self.execute_mnemonic("call_addr", addr)
 
     def ldr(self, target: GPRegister, base: AddressRegister, offset: int) -> None:
-        opcode = f"ldr_{target.name}_{base.name}_imm"
+        opcode = f"ld_{target.name}_{base.name}_imm"
         self.execute_mnemonic(opcode, offset)
 
     def strel(self, base: AddressRegister, offset: int, source: GPRegister) -> None:
@@ -202,7 +202,7 @@ class AssistedCPU(AssistedCPUEngine):
         return self.execute_mnemonic(opcode, port)
 
     def lpi(self, target: GPRegister, addr: AddressRegister) -> None:
-        opcode = f"lpi_{target.name}_{addr.name}"
+        opcode = f"ld_{target.name}_{addr.name}"
         self.execute_mnemonic(opcode)
 
     def dummy_ext(self, value: int) -> None:

@@ -988,16 +988,16 @@ const struct op_microcode microcode[] PROGMEM = {
     /* e5 lea_SP_addr */
     { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07d858ff},},
 
-    /* e6 ldr_A_SP_imm */
+    /* e6 ld_A_SP_imm */
     { .default_steps = {0x07bd58b9, 0x17d358fb, 0x07fa1809},},
 
-    /* e7 ldr_B_SP_imm */
+    /* e7 ld_B_SP_imm */
     { .default_steps = {0x07bd58b9, 0x17d358fb, 0x07fa1819},},
 
-    /* e8 ldr_C_SP_imm */
+    /* e8 ld_C_SP_imm */
     { .default_steps = {0x07bd58b9, 0x17d358fb, 0x07fa1829},},
 
-    /* e9 ldr_D_SP_imm */
+    /* e9 ld_D_SP_imm */
     { .default_steps = {0x07bd58b9, 0x17d358fb, 0x07fa1839},},
 
     /* ea str_SP_imm_A */
@@ -1117,16 +1117,16 @@ const struct op_microcode microcode[] PROGMEM = {
     /* 102 lcmp_D_C   */
     { .default_steps = {0x07ff0bf6},},
 
-    /* 103 lpi_A_SDP  */
+    /* 103 ld_A_SDP   */
     { .default_steps = {0x07b91809},},
 
-    /* 104 lpi_B_SDP  */
+    /* 104 ld_B_SDP   */
     { .default_steps = {0x07b91819},},
 
-    /* 105 lpi_C_SDP  */
+    /* 105 ld_C_SDP   */
     { .default_steps = {0x07b91829},},
 
-    /* 106 lpi_D_SDP  */
+    /* 106 ld_D_SDP   */
     { .default_steps = {0x07b91839},},
 
     /* 107 lea_SDP_addr */

@@ -11,7 +11,7 @@ print_loop:
     ;bne print_loop
 
     ; load and output next char from message, \0 terminates the string
-    lpi A, (SDP++)
+    ld A, (SDP++)
     beq end
     out DISPLAY_LCD_DATA, A
 

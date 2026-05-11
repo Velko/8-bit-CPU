@@ -676,7 +676,7 @@ instructions:
       - - TX.out
         - SP.load
 
-  - name: "ldr"
+  - name: "ld"
     repeat: "gp_regs"
     args:
       - reg
@@ -861,7 +861,7 @@ instructions:
         - AndOr.out
         - F.calc
 
-  - name: "lpi"
+  - name: "ld"
     repeat: "gp_regs"
     args:
       - reg

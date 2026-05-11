@@ -2,7 +2,7 @@
 
     lea SDP, message
 print_loop:
-    lpi A, (SDP++)
+    ld A, (SDP++)
     beq end
     out DISPLAY_CHR_DATA, A
     jmp print_loop

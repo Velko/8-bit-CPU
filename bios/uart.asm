@@ -8,7 +8,7 @@
 b_uart_puts:
     push A
 .loop:
-    lpi A, (SDP++)
+    ld A, (SDP++)
     beq .done
     out UART_DATA, A
     jmp .loop

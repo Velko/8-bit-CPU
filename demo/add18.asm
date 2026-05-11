@@ -25,7 +25,7 @@ subloop:
 
     lea SDP, msg
 print_loop:
-    lpi A, (SDP++)
+    ld A, (SDP++)
     beq done
     call print
     jmp print_loop
