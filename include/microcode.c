@@ -1132,8 +1132,8 @@ const struct op_microcode microcode[] PROGMEM = {
     /* 107 lea_SDP_addr */
     { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07c858ff},},
 
-    /* 108 padding25  */
-    { .default_steps = {0x07ff58ff},},
+    /* 108 lea_TDP_addr */
+    { .default_steps = {0x07bd58b9, 0x07bd58c9, 0x07f058ff},},
 
     /* 109 addi_A_imm */
     { .default_steps = {0x07bd5869, 0x07ff1005},},

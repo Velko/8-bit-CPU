@@ -263,7 +263,7 @@
     ld  C, (SDP++) => 0xee @ 0x05
     ld  D, (SDP++) => 0xee @ 0x06
     lea  SDP, {address1: u16} => 0xee @ 0x07 @ address1[7:0] @ address1[15:8]
-    padding25   => 0xee @ 0x08
+    lea  TDP, {address1: u16} => 0xee @ 0x08 @ address1[7:0] @ address1[15:8]
     addi  A, {value1: i8} => 0xee @ 0x09 @ value1
     addi  B, {value1: i8} => 0xee @ 0x0a @ value1
     addi  C, {value1: i8} => 0xee @ 0x0b @ value1

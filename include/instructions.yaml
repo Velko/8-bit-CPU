@@ -890,9 +890,21 @@ instructions:
       - - TX.out
         - SDP.load
 
-  - name: "padding25"
+  - name: "lea"
+    args:
+      - TDP
+      - ADDR
     steps:
-      - []
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TL.load
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TH.load
+      - - TX.out
+        - TDP.load
 
   - name: "addi"
     repeat: "gp_regs"

@@ -266,7 +266,7 @@
 #define OP_LD_C_SDP            0x105
 #define OP_LD_D_SDP            0x106
 #define OP_LEA_SDP_ADDR        0x107
-#define OP_PADDING25           0x108
+#define OP_LEA_TDP_ADDR        0x108
 #define OP_ADDI_A_IMM          0x109
 #define OP_ADDI_B_IMM          0x10a
 #define OP_ADDI_C_IMM          0x10b
