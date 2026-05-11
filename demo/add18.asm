@@ -23,12 +23,11 @@ subloop:
     bcc subloop
 
 
-    clr B
+    lea SDP, msg
 print_loop:
-    ldx A, msg[B]
+    lpi A, (SDP++)
     beq done
     call print
-    inc B
     jmp print_loop
 
 done:
