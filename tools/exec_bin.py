@@ -63,7 +63,7 @@ def monitor() -> None:
                 text = cpu_helper.client.receive_raw()
                 print(text, flush=True, end="")
                 if text.endswith("#HLT\r\n"):
-                    print ("# Halted", flush=True, file=sys.stderr)
+                    print ("# Halted", flush=True, file=sys.stderr, end="\r\n")
                     return
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, old)

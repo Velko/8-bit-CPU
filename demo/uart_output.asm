@@ -8,6 +8,8 @@ main:
 next_dec:
     mov A, C
     call b_uart_putdec
+    ldi A, "\r"
+    out UART_DATA, A
     ldi A, "\n"
     out UART_DATA, A
     inc C
@@ -17,6 +19,8 @@ next_dec:
 next_hex:
     mov A, C
     call b_uart_puthex
+    ldi A, "\r"
+    out UART_DATA, A
     ldi A, "\n"
     out UART_DATA, A
     inc C
@@ -25,4 +29,4 @@ next_hex:
     hlt
 
 message:
-#d "Hellorld!\n", 0x00
+#d "Hellorld!\r\n", 0x00
