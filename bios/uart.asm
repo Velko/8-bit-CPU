@@ -1,4 +1,15 @@
 ; ********************************************************************************
+; Send character via UART
+; Parameters:
+;   A - character to send
+; Post state:
+;   Unchanged
+; ********************************************************************************
+b_uart_putc:
+    out UART_DATA, A
+    ret
+
+; ********************************************************************************
 ; Send null-terminated string via UART
 ; Parameters:
 ;   SDP - pointer to a string to send
