@@ -201,6 +201,10 @@ class AssistedCPU(AssistedCPUEngine):
         opcode = f"ld_{target.name}_{addr.name}"
         self.execute_mnemonic(opcode)
 
+    def spi(self, addr: AddressRegister, source: GPRegister) -> None:
+        opcode = f"st_{addr.name}_{source.name}"
+        self.execute_mnemonic(opcode)
+
     def dummy_ext(self, value: int) -> None:
         opcode = "dummyext_imm"
         self.execute_mnemonic(opcode, value)

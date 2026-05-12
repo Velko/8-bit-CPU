@@ -203,10 +203,10 @@
     ld  D, (SDP+B) => 0xc8
     ld  D, (SDP+C) => 0xc9
     ld  D, (SDP+D) => 0xca
-    padding1   => 0xcb
-    padding2   => 0xcc
-    padding3   => 0xcd
-    padding4   => 0xce
+    st  (TDP++), A => 0xcb
+    st  (TDP++), B => 0xcc
+    st  (TDP++), C => 0xcd
+    st  (TDP++), D => 0xce
     jmp  {address0: u16} => 0xcf @ address0[7:0] @ address0[15:8]
     beq  {address0: u16} => 0xd0 @ address0[7:0] @ address0[15:8]
     bne  {address0: u16} => 0xd1 @ address0[7:0] @ address0[15:8]

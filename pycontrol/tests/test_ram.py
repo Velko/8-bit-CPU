@@ -77,6 +77,21 @@ def test_load_sdp(cpu_helper: CPUHelper, acpu: AssistedCPU, addr: int) -> None:
     assert addr + 1 == cpu_helper.regs.SDP
 
 
+@pytest.mark.parametrize("addr", random_addr)
+def test_store_tdp(cpu_helper: CPUHelper, acpu: AssistedCPU, addr: int) -> None:
+
+    test_val = random.randint(1, 255)
+    cpu_helper.ram[addr] = 0
+    cpu_helper.regs.A = test_val
+    cpu_helper.regs.TDP = addr
+
+    acpu.spi (TDP, A)
+
+    assert test_val == cpu_helper.ram[addr]
+    assert addr + 1 == cpu_helper.regs.TDP
+
+
+
 def test_load_idx(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     cpu_helper.ram[0x45] = 0xB5

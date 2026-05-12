@@ -376,25 +376,17 @@ instructions:
         - Ram.out
         - F.calc
 
-  - name: "padding1"
-    repeat: "once"
+  - name: "st"
+    repeat: "gp_regs"
+    args:
+      - TDP
+      - reg
+    format: "({}++), {}"
     steps:
-      - []
-
-  - name: "padding2"
-    repeat: "once"
-    steps:
-      - []
-
-  - name: "padding3"
-    repeat: "once"
-    steps:
-      - []
-
-  - name: "padding4"
-    repeat: "once"
-    steps:
-      - []
+      - - reg.out
+        - TDP.out
+        - TDP.inc
+        - Ram.write
 
   - name: "jmp"
     args:
