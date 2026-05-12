@@ -6,6 +6,11 @@ DIR_RIGHT = 1
 DIR_DOWN = 2
 DIR_LEFT = 3
 
+KEY_UP = 0x41
+KEY_RIGHT = 0x43
+KEY_DOWN = 0x42
+KEY_LEFT = 0x44
+
     lea SDP, clrscr_message
     call b_uart_puts
 
@@ -50,6 +55,16 @@ DIR_LEFT = 3
 
     lea SDP, goto_10
     call b_uart_puts
+
+listen:
+    in A, UART_DATA
+    bmi listen
+    call b_uart_puthex
+    ldi A, 0x20
+    call b_uart_putc
+    jmp listen
+
+
 
     hlt
 
@@ -133,8 +148,7 @@ buffer_putdec:
 
     ; decide on which digit to begin (optimized for only 1 or 2 digits)
     cmpi C, 10
-    bcc .put_10s
-    jmp .put_1s
+    bcs .put_1s
 
     ; pull from BCD, convert to ASCII and add to buffer
 .put_10s:
