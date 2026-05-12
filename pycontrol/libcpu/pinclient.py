@@ -103,6 +103,9 @@ class PinClient:
             text = packet.decode('ascii')
             yield text
 
+    def send_raw(self, byte: int) -> None:
+        self.serial.sendto(bytes([byte]), (TARGET_IP, TARGET_PORT))
+
     FOUT_RE = re.compile(r"#FOUT#(\d+)#(.*)")
 
     def receive_message(self) -> RunMessage:

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-import sys
+import sys, termios, tty, threading, os, signal
 import argparse
 from libcpu.messages import OutMessage, HaltMessage, BrkMessage
 from libcpu.pinclient import get_client_instance
@@ -45,11 +45,29 @@ def run() -> None:
 def monitor() -> None:
     print ("# Running (raw)...", flush=True, file=sys.stderr)
     cpu_helper.client.run_program()
-    for text in cpu_helper.client.receive_raw():
-        print(text, flush=True, end="")
-        if text.endswith("#HLT\r\n"):
-            print ("# Halted", flush=True, file=sys.stderr)
-            return
+
+    fd = sys.stdin.fileno()
+    old = termios.tcgetattr(fd)
+
+    try:
+        tty.setraw(fd)
+        t = threading.Thread(target=forward_raw_input, daemon=True)
+        t.start()
+        for text in cpu_helper.client.receive_raw():
+            print(text, flush=True, end="")
+            if text.endswith("#HLT\r\n"):
+                print ("# Halted", flush=True, file=sys.stderr)
+                return
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old)
+
+def forward_raw_input() -> None:
+    while True:
+        ch = sys.stdin.buffer.read(1)
+        if ch == b'\x03':  # Ctrl-C
+            break
+        cpu_helper.client.send_raw(ch[0])
+    os.kill(os.getpid(), signal.SIGTERM)
 
 if __name__ == "__main__":
 
