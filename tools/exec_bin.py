@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 
-import sys, termios, tty, threading, os, signal
+import sys, termios, tty, select, os
 import argparse
 from libcpu.messages import OutMessage, HaltMessage, BrkMessage
 from libcpu.pinclient import get_client_instance
@@ -51,23 +51,22 @@ def monitor() -> None:
 
     try:
         tty.setraw(fd)
-        t = threading.Thread(target=forward_raw_input, daemon=True)
-        t.start()
-        for text in cpu_helper.client.receive_raw():
-            print(text, flush=True, end="")
-            if text.endswith("#HLT\r\n"):
-                print ("# Halted", flush=True, file=sys.stderr)
-                return
+        while True:
+            r, _, _ = select.select([sys.stdin, cpu_helper.client.serial], [], [])
+            if sys.stdin in r:
+                data = os.read(sys.stdin.fileno(), 32)
+                if b'\x03' in data:  # Ctrl-C
+                    return
+                cpu_helper.client.send_raw(data)
+
+            if cpu_helper.client.serial in r:
+                text = cpu_helper.client.receive_raw()
+                print(text, flush=True, end="")
+                if text.endswith("#HLT\r\n"):
+                    print ("# Halted", flush=True, file=sys.stderr)
+                    return
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, old)
-
-def forward_raw_input() -> None:
-    while True:
-        ch = sys.stdin.buffer.read(1)
-        if ch == b'\x03':  # Ctrl-C
-            break
-        cpu_helper.client.send_raw(ch[0])
-    os.kill(os.getpid(), signal.SIGTERM)
 
 if __name__ == "__main__":
 

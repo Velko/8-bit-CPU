@@ -97,14 +97,12 @@ class PinClient:
         while True:
             yield self.receive_message()
 
-    def receive_raw(self) -> Iterator[str]:
-        while True:
-            packet, src = self.serial.recvfrom(1024)
-            text = packet.decode('ascii')
-            yield text
+    def receive_raw(self) -> str:
+        packet, _ = self.serial.recvfrom(1024)
+        return packet.decode('ascii')
 
-    def send_raw(self, byte: int) -> None:
-        self.serial.sendto(bytes([byte]), (TARGET_IP, TARGET_PORT))
+    def send_raw(self, data: bytes) -> None:
+        self.serial.sendto(data, (TARGET_IP, TARGET_PORT))
 
     FOUT_RE = re.compile(r"#FOUT#(\d+)#(.*)")
 
