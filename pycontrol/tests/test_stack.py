@@ -5,7 +5,7 @@ import itertools
 
 pytestmark = pytest.mark.hardware
 
-from libcpu.devmap import SP, A, C, LR
+from libcpu.devmap import SP, A, C, LR, SDP, TDP
 from libcpu.devices import Flags
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
@@ -171,3 +171,45 @@ def test_str_sp_plus(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     acpu.strel (SP, 3, A)
 
     assert cpu_helper.ram[0x33] == 0x56
+
+def test_push_sdp(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
+    cpu_helper.regs.SP = 0x88
+
+    cpu_helper.regs.SDP = 0x1234
+
+    acpu.push (SDP)
+
+    assert cpu_helper.ram[0x87] == 0x12
+    assert cpu_helper.ram[0x86] == 0x34
+
+def test_pop_sdp(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
+    cpu_helper.regs.SP = 0x21
+    cpu_helper.regs.SDP = 0
+
+    cpu_helper.ram[0x21] = 0x54
+    cpu_helper.ram[0x22] = 0x83
+
+    acpu.pop (SDP)
+
+    assert cpu_helper.regs.SDP == 0x8354
+
+def test_push_tdp(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
+    cpu_helper.regs.SP = 0x88
+
+    cpu_helper.regs.TDP = 0x1234
+
+    acpu.push (TDP)
+
+    assert cpu_helper.ram[0x87] == 0x12
+    assert cpu_helper.ram[0x86] == 0x34
+
+def test_pop_tdp(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
+    cpu_helper.regs.SP = 0x21
+    cpu_helper.regs.TDP = 0
+
+    cpu_helper.ram[0x21] = 0x54
+    cpu_helper.ram[0x22] = 0x83
+
+    acpu.pop (TDP)
+
+    assert cpu_helper.regs.TDP == 0x8354

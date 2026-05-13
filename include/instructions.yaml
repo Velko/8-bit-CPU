@@ -1084,3 +1084,65 @@ instructions:
         - left.load
         - Ram.out
         - F.calc
+
+  - name: "push"
+    args:
+      - SDP
+    steps:
+      - - SDP.out
+        - TX.load
+      - - SP.out
+        - SP.dec
+      - - SP.out
+        - SP.dec
+        - TH.out
+        - Ram.write
+      - - SP.out
+        - TL.out
+        - Ram.write
+
+  - name: "pop"
+    args:
+      - SDP
+    steps:
+      - - SP.out
+        - SP.inc
+        - TL.load
+        - Ram.out
+      - - SP.out
+        - SP.inc
+        - TH.load
+        - Ram.out
+      - - TX.out
+        - SDP.load
+
+  - name: "push"
+    args:
+      - TDP
+    steps:
+      - - TDP.out
+        - TX.load
+      - - SP.out
+        - SP.dec
+      - - SP.out
+        - SP.dec
+        - TH.out
+        - Ram.write
+      - - SP.out
+        - TL.out
+        - Ram.write
+
+  - name: "pop"
+    args:
+      - TDP
+    steps:
+      - - SP.out
+        - SP.inc
+        - TL.load
+        - Ram.out
+      - - SP.out
+        - SP.inc
+        - TH.load
+        - Ram.out
+      - - TX.out
+        - TDP.load

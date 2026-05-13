@@ -332,7 +332,11 @@
 #define OP_LD_D_TDP_B          0x147
 #define OP_LD_D_TDP_C          0x148
 #define OP_LD_D_TDP_D          0x149
-#define NUM_OPS                330
+#define OP_PUSH_SDP            0x14a
+#define OP_POP_SDP             0x14b
+#define OP_PUSH_TDP            0x14c
+#define OP_POP_TDP             0x14d
+#define NUM_OPS                334
 
 /* Fetch */
 #define NUM_FETCH_STEPS        1

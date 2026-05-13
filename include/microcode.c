@@ -1385,4 +1385,16 @@ const struct op_microcode microcode[] PROGMEM = {
 
     /* 149 ld_D_TDP_D */
     { .default_steps = {0x07d658f3, 0x07fa1839},},
+
+    /* 14a push_SDP   */
+    { .default_steps = {0x07c158ff, 0x077b58ff, 0x077b589c, 0x07fb589b},},
+
+    /* 14b pop_SDP    */
+    { .default_steps = {0x07bb58b9, 0x07bb58c9, 0x07c858ff},},
+
+    /* 14c push_TDP   */
+    { .default_steps = {0x07c658ff, 0x077b58ff, 0x077b589c, 0x07fb589b},},
+
+    /* 14d pop_TDP    */
+    { .default_steps = {0x07bb58b9, 0x07bb58c9, 0x07f058ff},},
 };
