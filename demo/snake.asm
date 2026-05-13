@@ -1,10 +1,11 @@
 #include "velkocpu.def"
 
 ARENA_WIDTH = 40
+
 DIR_UP = 0x00
-DIR_RIGHT = 0x01
+DIR_LEFT = 0x01
 DIR_DOWN = 0x02
-DIR_LEFT = 0x03
+DIR_RIGHT = 0x03
 
 KEY_UP = 0x41
 KEY_RIGHT = 0x43
@@ -57,39 +58,34 @@ startup:
 
 
 .move_head:
-    ld D, direction
-    ld A, head_x
-    ld B, head_y
 
     ; temporarily set the tail to old location of head (snake length of 1)
+    ld A, head_x
+    ld B, head_y
     st tail_x, A
     st tail_y, B
 
-    ; calculate the new head
-.move_up:
-    cmpi D, DIR_UP
-    bne .move_right
-    dec B
-    st head_y, B
-    jmp .move_done
-.move_right:
-    cmpi D, DIR_RIGHT
-    bne .move_down
-    inc A
+    ; the direction is in range [0 .. 3], the LSB marks the horizontal vs vertical
+    ; then the opposites are 2 places apart, we can subtract 1 or 2 to get -1 or 1
+    ld D, direction
+    ldi A, 1
+    and A, D
+    bne .move_head_x
+
+.move_head_y:
+    dec D
+    ld A, head_y
+    add A, D
+    st head_y, A
+    jmp .move_head_done
+
+.move_head_x:
+    subi D, 2
+    ld A, head_x
+    add A, D
     st head_x, A
-    jmp .move_done
-.move_down:
-    cmpi D, DIR_DOWN
-    bne .move_left
-    inc B
-    st head_y, B
-    jmp .move_done
-.move_left:
-    cmpi D, DIR_LEFT
-    bne .move_done
-    dec A
-    st head_x, A
-.move_done:
+
+.move_head_done:
 
 .draw_snake:
     ; build a sequence of ANSI codes to draw new head and erase old tail
