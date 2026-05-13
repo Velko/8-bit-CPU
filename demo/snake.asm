@@ -11,6 +11,7 @@ KEY_RIGHT = 0x43
 KEY_DOWN = 0x42
 KEY_LEFT = 0x44
 
+startup:
     lea SDP, clrscr_message
     call b_uart_puts
 
@@ -21,53 +22,100 @@ KEY_LEFT = 0x44
     ldi A, ARENA_WIDTH / 2
     st head_x, A
     st head_y, A
-    st tail_y, A
-    subi A, 4
     st tail_x, A
+    st tail_y, A
 
 
     ldi A, DIR_RIGHT
     st direction, A
     st next_direction, A
 
-    ldi C, 15
-.move_loop:
-    push C
 
+.game_loop:
+
+    in A, UART_DATA
+    bmi .move_head  ; 0xFF means no input, only then proceed to move the snake
+
+    ; check keys
+.check_up:
+    cmpi A, KEY_UP
+    bne .check_right
+    ldi B, DIR_UP
+    jmp .validate_rotation
+.check_right:
+    cmpi A, KEY_RIGHT
+    bne .check_down
+    ldi B, DIR_RIGHT
+    jmp .validate_rotation
+.check_down:
+    cmpi A, KEY_DOWN
+    bne .check_left
+    ldi B, DIR_DOWN
+    jmp .validate_rotation
+.check_left:
+    cmpi A, KEY_LEFT
+    bne .check_done
+    ldi B, DIR_LEFT
+    jmp .validate_rotation
+
+.check_done:
+    ; had an input, but no valid key, jump back to start to consume more
+    jmp .game_loop
+
+.validate_rotation:
+    st direction, B
+
+    jmp .game_loop
+
+
+.move_head:
+    ld D, direction
+    ld A, head_x
+    ld B, head_y
+
+    ; temporarily set the tail to old location of head (snake length of 1)
+    st tail_x, A
+    st tail_y, B
+
+    ; calculate the new head
+.move_up:
+    cmpi D, DIR_UP
+    bne .move_right
+    dec B
+    st head_y, B
+    jmp .move_done
+.move_right:
+    cmpi D, DIR_RIGHT
+    bne .move_down
+    inc A
+    st head_x, A
+    jmp .move_done
+.move_down:
+    cmpi D, DIR_DOWN
+    bne .move_left
+    inc B
+    st head_y, B
+    jmp .move_done
+.move_left:
+    cmpi D, DIR_LEFT
+    bne .move_done
+    dec A
+    st head_x, A
+.move_done:
+
+.draw_snake:
+    ; build a sequence of ANSI codes to draw new head and erase old tail
     lea TDP, buffer
     call draw_head
     call erase_tail
     ldi A, 0
-    st (TDP++), a
+    st (TDP++), A
+
+    ; and send it to terminal
     lea SDP, buffer
     call b_uart_puts
 
-    ld A, head_x
-    inc A
-    st head_x, A
-    ld A, tail_x
-    inc A
-    st tail_x, A
-
-    pop C
-    dec C
-    bne .move_loop
-
-    lea SDP, goto_10
-    call b_uart_puts
-
-listen:
-    in A, UART_DATA
-    bmi listen
-    call b_uart_puthex
-    ldi A, 0x20
-    call b_uart_putc
-    jmp listen
-
-
-
-    hlt
-
+    jmp .game_loop
 
 draw_h_border:
     push LR
