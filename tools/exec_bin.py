@@ -47,15 +47,19 @@ def monitor() -> None:
     cpu_helper.client.run_program()
 
     fd = sys.stdin.fileno()
-    old = termios.tcgetattr(fd)
+    interactive = sys.stdin.isatty()
+
+    if interactive:
+        old = termios.tcgetattr(fd)
+        tty.setraw(fd)
 
     try:
-        tty.setraw(fd)
         while True:
             r, _, _ = select.select([sys.stdin, cpu_helper.client.serial], [], [])
             if sys.stdin in r:
                 data = os.read(sys.stdin.fileno(), 32)
                 if b'\x03' in data:  # Ctrl-C
+                    print ("# Interrupted", flush=True, file=sys.stderr, end="\r\n")
                     return
                 cpu_helper.client.send_raw(data)
 
@@ -66,7 +70,8 @@ def monitor() -> None:
                     print ("# Halted", flush=True, file=sys.stderr, end="\r\n")
                     return
     finally:
-        termios.tcsetattr(fd, termios.TCSADRAIN, old)
+        if interactive:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old)
 
 if __name__ == "__main__":
 
