@@ -29,7 +29,6 @@ startup:
 
     ldi A, DIR_RIGHT
     st direction, A
-    st next_direction, A
 
 
 .game_loop:
@@ -52,8 +51,13 @@ startup:
     ld B, (SDP + A)
 
 .validate_rotation:
+    ; allow only 90 degree turns
+    ; the result of a XOR between opposites always produces 2
+    ld A, direction
+    xor A, B
+    cmpi A, 2
+    beq .game_loop
     st direction, B
-
     jmp .game_loop
 
 
@@ -288,9 +292,6 @@ tail_y:
     #res 1
 direction:
     #res 1
-next_direction:
-    #res 1
-
 buffer:
     ; \[00;00H@@\[00;00H@@0
     ; 1234567890123456789012
