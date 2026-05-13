@@ -53,19 +53,23 @@ def monitor() -> None:
         old = termios.tcgetattr(fd)
         tty.setraw(fd)
 
+    streams = [sys.stdin, cpu_helper.client.serial]
+
     try:
         while True:
-            r, _, _ = select.select([sys.stdin, cpu_helper.client.serial], [], [])
+            r, _, _ = select.select(streams, [], [])
             if sys.stdin in r:
-                print ("# Stdin", flush=True, file=sys.stderr, end="\r\n")
                 data = os.read(sys.stdin.fileno(), 32)
+                if not data:
+                    print ("# EOF", flush=True, file=sys.stderr, end="\r\n")
+                    streams.remove(sys.stdin)
+                    continue
                 if b'\x03' in data:  # Ctrl-C
                     print ("# Interrupted", flush=True, file=sys.stderr, end="\r\n")
                     return
                 cpu_helper.client.send_raw(data)
 
             if cpu_helper.client.serial in r:
-                print ("# Serial", flush=True, file=sys.stderr, end="\r\n")
                 text = cpu_helper.client.receive_raw()
                 print(text, flush=True, end="")
                 if text.endswith("#HLT\r\n"):
