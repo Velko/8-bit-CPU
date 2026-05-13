@@ -128,7 +128,7 @@ calc_move:
 draw_h_border:
     push LR
 
-    ldi A, 35 ; #
+    ldi A, "#"
     ldi C, ARENA_WIDTH * 2
 .loop:
     call b_uart_putc
@@ -170,7 +170,7 @@ draw_v_borders:
 draw_head:
     ld B, head_y
     ld C, head_x
-    ldi D, 0x40 ; '@'
+    ldi D, "@"
     jmp draw_block
 
 
@@ -185,7 +185,7 @@ draw_head:
 erase_tail:
     ld B, tail_y
     ld C, tail_x
-    ldi D, 0x20 ; ' '
+    ldi D, " "
     ; fallthrough to draw_block
 
 
@@ -206,20 +206,20 @@ draw_block:
 
     ldi A, 0x1B
     st (TDP++), A
-    ldi A, 0x5B ; '['
+    ldi A, "["
     st (TDP++), A
 
     mov A, B
     call buffer_putdec
 
-    ldi A, 0x3B ; ';'
+    ldi A, ";"
     st (TDP++), A
 
     mov A, C
-    add A, A ;
+    add A, A ; double the coordinate, because each block is 2 chars
     call buffer_putdec
 
-    ldi A, 0x48 ; 'H'
+    ldi A, "H"
     st (TDP++), A
 
     st (TDP++), D
