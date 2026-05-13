@@ -68,11 +68,11 @@ jobs:
     - name: Run demo in debugger
       working-directory: ./demo
       run: |
-        python ../pycontrol/tools/debugger.py -s hello.bin | grep -q "Hello, World!"
+        python ../pycontrol/tools/debugger.py -s hello.bin | tee /dev/stderr | grep -q "Hello, World!"
     - name: Run demo programs
       working-directory: ./demo
       run: |
-        python ../tools/exec_bin.py hello.bin | grep -q "Hello, World!"
-        python ../tools/exec_bin.py prime_sieve.bin | diff -u primes.txt -
-        python ../tools/exec_bin.py double_dabble.bin | grep -q "36324058"
+        python ../tools/exec_bin.py hello.bin | tee /dev/stderr | grep -q "Hello, World!"
+        python ../tools/exec_bin.py prime_sieve.bin | tee /dev/stderr | diff -u primes.txt -
+        python ../tools/exec_bin.py double_dabble.bin | tee /dev/stderr | grep -q "36324058"
         python ../tools/exec_bin.py -M uart_output.bin | tee /dev/stderr | diff -u uart_output.txt -
