@@ -58,34 +58,18 @@ startup:
 
 
 .move_head:
+    ld C, head_x
+    ld B, head_y
+    ld D, direction
 
     ; temporarily set the tail to old location of head (snake length of 1)
-    ld A, head_x
-    ld B, head_y
-    st tail_x, A
+    st tail_x, C
     st tail_y, B
 
-    ; the direction is in range [0 .. 3], the LSB marks the horizontal vs vertical
-    ; then the opposites are 2 places apart, we can subtract 1 or 2 to get -1 or 1
-    ld D, direction
-    ldi A, 1
-    and A, D
-    bne .move_head_x
+    call calc_move
 
-.move_head_y:
-    dec D
-    ld A, head_y
-    add A, D
-    st head_y, A
-    jmp .move_head_done
-
-.move_head_x:
-    subi D, 2
-    ld A, head_x
-    add A, D
-    st head_x, A
-
-.move_head_done:
+    st head_x, C
+    st head_y, B
 
 .draw_snake:
     ; build a sequence of ANSI codes to draw new head and erase old tail
@@ -101,6 +85,42 @@ startup:
 
     jmp .game_loop
 
+
+; ********************************************************************************
+; Calculate next coordinates depending on direction
+; Parameters:
+;   B - Y coordinate
+;   C - X coordinate
+;   D - direction DIR_*
+; Post state:
+;   B - updated Y coordinate
+;   C - updated X coordinate
+;   A, D - clobbered
+; ********************************************************************************
+calc_move:
+    ; the direction is in range [0 .. 3], the LSB marks the horizontal vs vertical
+    ; then the opposites are 2 places apart, we can subtract 1 or 2 to get -1 or 1
+    ldi A, 1
+    and A, D
+    bne .move_x
+
+.move_y:
+    dec D
+    add B, D
+    ret
+
+.move_x:
+    subi D, 2
+    add C, D
+    ret
+
+; ********************************************************************************
+; Send horizontal border line via UART
+; Parameters:
+;   None
+; Post state:
+;   A, C - clobbered
+; ********************************************************************************
 draw_h_border:
     push LR
 
@@ -114,7 +134,13 @@ draw_h_border:
     pop LR
     ret
 
-
+; ********************************************************************************
+; Send vertical border line via UART
+; Parameters:
+;   None
+; Post state:
+;   SDP, C - clobbered
+; ********************************************************************************
 draw_v_borders:
     push LR
 
@@ -129,18 +155,48 @@ draw_v_borders:
     ret
 
 
+; ********************************************************************************
+; Put ANSI codes and text to draw snake segment at coordinates from variables
+;   (head_x, head_y) into a text buffer
+; Parameters:
+;   TDP - text buffer to write
+; Post state:
+;   TDP - buffer, past the last character written
+; ********************************************************************************
 draw_head:
     ld B, head_y
     ld C, head_x
     ldi D, 0x40 ; '@'
     jmp draw_block
 
+
+; ********************************************************************************
+; Put ANSI codes and text to draw erase segment at coordinates from variables
+;   (tail_x, tail_y) into a text buffer
+; Parameters:
+;   TDP - text buffer to write
+; Post state:
+;   TDP - buffer, past the last character written
+; ********************************************************************************
 erase_tail:
     ld B, tail_y
     ld C, tail_x
     ldi D, 0x20 ; ' '
     ; fallthrough to draw_block
 
+
+; ********************************************************************************
+; Put ANSI codes and text to draw a block segment at given coordinates into a text
+;   buffer
+; Parameters:
+;   TDP - text buffer to write
+;   B - Y coordinate
+;   C - X coordinate
+;   D - character to write
+; Post state:
+;   A - clobbered
+;   TDP - buffer, past the last character written
+; ********************************************************************************
 draw_block:
     push LR
 
@@ -168,7 +224,15 @@ draw_block:
     pop LR
     ret
 
-
+; ********************************************************************************
+; Put decimal representation of a value into a text buffer
+; Parameters:
+;   TDP - text buffer to write
+;   A   - number
+; Post state:
+;   TDP - buffer, past the last character written
+;   A - clobbered
+; ********************************************************************************
 buffer_putdec:
     push LR
     push B
