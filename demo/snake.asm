@@ -1,10 +1,10 @@
 #include "velkocpu.def"
 
 ARENA_WIDTH = 40
-DIR_UP = 0
-DIR_RIGHT = 1
-DIR_DOWN = 2
-DIR_LEFT = 3
+DIR_UP = 0x00
+DIR_RIGHT = 0x01
+DIR_DOWN = 0x02
+DIR_LEFT = 0x03
 
 KEY_UP = 0x41
 KEY_RIGHT = 0x43
@@ -36,31 +36,19 @@ startup:
     in A, UART_DATA
     bmi .move_head  ; 0xFF means no input, only then proceed to move the snake
 
-    ; check keys
-.check_up:
-    cmpi A, KEY_UP
-    bne .check_right
-    ldi B, DIR_UP
-    jmp .validate_rotation
-.check_right:
-    cmpi A, KEY_RIGHT
-    bne .check_down
-    ldi B, DIR_RIGHT
-    jmp .validate_rotation
-.check_down:
-    cmpi A, KEY_DOWN
-    bne .check_left
-    ldi B, DIR_DOWN
-    jmp .validate_rotation
-.check_left:
-    cmpi A, KEY_LEFT
-    bne .check_done
-    ldi B, DIR_LEFT
-    jmp .validate_rotation
+    ; handle key input
+    ; the arrow keys are [0x41 .. 0x44], first get them into range [0 .. 3]
+    subi A, KEY_UP
+    bcs .game_loop ; was less than KEY_UP -> discard it
 
-.check_done:
-    ; had an input, but no valid key, jump back to start to consume more
-    jmp .game_loop
+    ; now check the upper bound
+    cmpi A, 4
+    bcc .game_loop ; was more than 3 -> discard
+
+    ; unfortunately the key indices does not match the desired direction constants
+    ; load it from mapping table
+    lea SDP, key_to_dir
+    ld B, (SDP + A)
 
 .validate_rotation:
     st direction, B
@@ -222,6 +210,9 @@ clrscr_message:
 
 vert_border:
     #d "##", 0x1B, "[76C##", 0x00 ; put ## move left 76 and put another ##
+
+key_to_dir:
+    #d DIR_UP, DIR_DOWN, DIR_RIGHT, DIR_LEFT
 
 goto_10:
     #d 0x1B, "[10;10H", 0x00
