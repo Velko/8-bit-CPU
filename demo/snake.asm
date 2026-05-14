@@ -30,6 +30,16 @@ startup:
     st head_y, A
     st tail_y, A
 
+    ; precalculate the address of the center row
+    ARENA_CENTER_ROW = arena + ARENA_HEIGHT * ARENA_ROW / 2
+    ldi A, ARENA_CENTER_ROW[7:0]
+    ldi B, ARENA_CENTER_ROW[15:8]
+
+    st head_rowptr + 0, A
+    st head_rowptr + 1, B
+
+    st tail_rowptr + 0, A
+    st tail_rowptr + 1, B
 
     ldi A, DIR_RIGHT
     st direction, A
@@ -290,10 +300,14 @@ head_x:
     #res 1
 head_y:
     #res 1
+head_rowptr:
+    #res 2
 tail_x:
     #res 1
 tail_y:
     #res 1
+tail_rowptr:
+    #res 2
 direction:
     #res 1
 buffer:
