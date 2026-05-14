@@ -84,8 +84,11 @@ class PinClient:
             raise ProtocolException(f"Expected #T from clock tick, got: /{t}/")
 
     def write_mem(self, cw: CtrlWord, addr: int, data: bytes) -> None:
-        w = ";".join(map(lambda b: str(int(b)), data))
-        self.send_cmd(f"W{cw.c_word};{addr};{w};256N")
+        # split data into chunks of 128 bytes, to avoid overrunning buffer in emulator
+        for i in range(0, len(data), 128):
+            chunk = data[i:i+128]
+            w = ";".join(map(lambda b: str(int(b)), chunk))
+            self.send_cmd(f"W{cw.c_word};{addr + i};{w};256N")
 
     def ir_get(self) -> int:
         return int(self.query("r0N"))
