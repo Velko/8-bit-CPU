@@ -9,7 +9,8 @@
 #include <sys/socket.h>
 
 #define LISTEN_PORT 8888
-#define RESPOND_PORT 9999
+
+static uint16_t last_client_port = 0;
 
 int channel_open(void)
 {
@@ -38,7 +39,7 @@ int channel_send(int fd, const void *buf, size_t len)
     memset(&dest_addr, 0, sizeof(dest_addr));
     dest_addr.sin_family = AF_INET;
     dest_addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-    dest_addr.sin_port = htons(RESPOND_PORT);
+    dest_addr.sin_port = htons(last_client_port);
 
     return sendto(fd, buf, len, 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
 }
@@ -53,6 +54,8 @@ int channel_receive(int fd, void *buf, size_t len)
         perror("recvfrom");
         exit(EXIT_FAILURE);
     }
+
+    last_client_port = ntohs(src_addr.sin_port);
 
     return r;
 }

@@ -5,7 +5,6 @@ import re
 from .messages import RunMessage, OutMessage, HaltMessage, BrkMessage
 from .ctrl_word import CtrlWord
 
-LOCAL_PORT = 9999
 TARGET_IP = "127.0.0.1"
 TARGET_PORT = 8888
 
@@ -133,7 +132,6 @@ class PinClient:
 
 def open_port() -> socket.socket:
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.bind((TARGET_IP, LOCAL_PORT))
     return sock
 
 
