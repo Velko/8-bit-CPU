@@ -102,38 +102,31 @@ startup:
 
 
 .move_head:
-    ; temporarily copy the head_rowptr to tail_rowptr
-    ;ld B, head_rowptr + 0
-    ;ld C, head_rowptr + 1
-    ;st tail_rowptr + 0, B
-    ;st tail_rowptr + 1, C
 
+    ; load row ptr and calculate next one
+    ld D, direction
+    ld B, head_rowptr + 0
+    ld C, head_rowptr + 1
+    call calc_move_ptr
+
+    st head_rowptr + 0, B
+    st head_rowptr + 1, C
+
+    ; save C:B to be picked up later
+    push C
+    push B
+
+    ; get screen coordinates
     ld C, head_x
     ld B, head_y
-    ld D, direction
-
-    ; temporarily set the tail to old location of head (snake length of 1)
-    ;st tail_x, C
-    ;st tail_y, B
 
     call calc_move
 
     st head_x, C
     st head_y, B
 
-    ld B, head_rowptr + 0
-    ld C, head_rowptr + 1
-    add A, A ; calc flags, the idx needs to be recalculated only on vertical movement
-    bne .move_ptr_done
-    call calc_move_ptr
-    st head_rowptr + 0, B
-    st head_rowptr + 1, C
-.move_ptr_done:
-
 .mark_head_in_arena:
     ; load C:B into TDP
-    push C
-    push B
     pop TDP
 
     ld C, head_x
@@ -170,39 +163,42 @@ game_over:
 ; Parameters:
 ;   B - Y coordinate
 ;   C - X coordinate
-;   D - direction DIR_*
+;   A - 0 to move vertically, 1 - horizontally
+;   D - -1 or 1, depending on direction
 ; Post state:
 ;   B - updated Y coordinate
 ;   C - updated X coordinate
-;   A - 0, if moved vertically, 1 - if horizontally
-;   D - -1 or 1, depending on direction
 ; ********************************************************************************
 calc_move:
-    ; the direction is in range [0 .. 3], the LSB marks the horizontal vs vertical
-    ; then the opposites are 2 places apart, we can subtract 1 or 2 to get -1 or 1
-    ldi A, 1
-    and A, D
+    add A, A ; just get Z flag from A
     bne .move_x
 
 .move_y:
-    dec D
     add B, D
     ret
 
 .move_x:
-    subi D, 2
     add C, D
     ret
 
 ; ********************************************************************************
-; Calculate next index address depending on direction
+; Calculate next row pointer depending on direction
 ; Parameters:
-;   B - LSB of the index
-;   C - MSB of the index
-;   D - -1 or 1, whether to increment or decrement the row
+;   B - LSB of the row pointer
+;   C - MSB of the row pointer
+;   D - direction DIR_*
+; Post state:
+;   A - 0, if moved vertically, 1 - if horizontally
+;   D - -1 or 1, whether incremented or decremented the row
 ; ********************************************************************************
 calc_move_ptr:
-    add D, D ; just to obtain flags
+    ; the direction is in range [0 .. 3], the LSB marks the horizontal vs vertical
+    ; then the opposites are 2 places apart, we can subtract 1 or 2 to get -1 or 1
+    ldi A, 1
+    and A, D
+    bne .keep_ptr
+
+    dec D
     bmi .dec_ptr
 
 .inc_ptr:
@@ -213,6 +209,11 @@ calc_move_ptr:
 .dec_ptr:
     subi B, ARENA_ROW
     sbbi C, 0
+    ret
+
+.keep_ptr:
+    ; moves horizontally: keep the ptr as-is, just adjust D
+    subi D, 2
     ret
 
 ; ********************************************************************************
