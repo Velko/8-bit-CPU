@@ -62,6 +62,9 @@ startup:
     ldi A, DIR_RIGHT
     st direction, A
 
+    inc A
+    st ARENA_CENTER_ROW + ARENA_WIDTH / 2, A
+
     ldi A, 0
     st snake_length, A
 
@@ -137,6 +140,53 @@ startup:
     inc D   ; DIR_* is 0-based, but we need to reserve 0 for EMPTY, so adding 1
     st (TDP + C), D
 
+
+.check_length:
+    ld A, snake_length
+    ld B, desired_length
+
+    cmp A, B
+
+    beq .move_tail
+
+    inc A
+    st snake_length, A
+    jmp .skip_move_tail
+
+.move_tail:
+    ; load TDP from tail ptr
+    ld B, tail_rowptr + 0
+    ld C, tail_rowptr + 1
+    push C
+    push B
+    pop TDP
+
+    ; load direction from arena
+    ld A, tail_x
+    ld D, (TDP + A)
+    dec D
+
+    ; erase tail from arena
+    push B
+    ldi B, CELL_EMPTY
+    st (TDP + A), B
+    pop B
+
+    ; move the tail and store ptr
+    call calc_move_ptr
+    st tail_rowptr + 0, B
+    st tail_rowptr + 1, C
+
+    ; get screen coordinates
+    ld C, tail_x
+    ld B, tail_y
+
+    call calc_move
+
+    st tail_x, C
+    st tail_y, B
+
+.skip_move_tail:
 
 .draw_snake:
     ; build a sequence of ANSI codes to draw new head and erase old tail
