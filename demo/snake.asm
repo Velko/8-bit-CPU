@@ -20,6 +20,9 @@ startup:
     lea SDP, clrscr_message
     call b_uart_puts
 
+    lea SDP, loading_message
+    call b_uart_puts
+
     ; clear the arena
     lea TDP, arena
     ldi A, CELL_EMPTY
@@ -58,6 +61,9 @@ startup:
 
     ldi A, DIR_RIGHT
     st direction, A
+
+    lea SDP, clear_loading
+    call b_uart_puts
 
 .game_loop:
 
@@ -355,7 +361,14 @@ buffer_putdec:
 
 
 clrscr_message:
-    #d 0x1B,"[2J", 0x1B, "[?25l", 0x1B, "[8;40;80t", 0x1B, "[0;0H", 0x00 ; clear screen, hide cursor, resize to 80x40, goto 0:0
+    #d 0x1B,"[2J", 0x1B, "[?25l", 0x1B, "[8;40;80t", 0x00 ; clear screen, hide cursor, resize to 80x40
+
+
+loading_message:
+    #d 0x1B, "[20;35HLoading...", 0x1B, "[0;0H", 0x00; show Loading... and, goto 0:0
+
+clear_loading:
+    #d 0x1B, "[20;35H          ", 0x00
 
 vert_border:
     #d "##", 0x1B, "[76C##", 0x00 ; put ## move left 76 and put another ##
