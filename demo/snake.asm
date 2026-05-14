@@ -76,6 +76,12 @@ startup:
 
 
 .move_head:
+    ; temporarily copy the head_rowptr to tail_rowptr
+    ld B, head_rowptr + 0
+    ld C, head_rowptr + 1
+    st tail_rowptr + 0, B
+    st tail_rowptr + 1, C
+
     ld C, head_x
     ld B, head_y
     ld D, direction
@@ -89,6 +95,14 @@ startup:
     st head_x, C
     st head_y, B
 
+    add A, A ; calc flags, the idx needs to be recalculated only on vertical movement
+    bne .move_ptr_done
+    ld B, head_rowptr + 0
+   ld C, head_rowptr + 1
+    call calc_move_ptr
+    st head_rowptr + 0, B
+    st head_rowptr + 1, C
+.move_ptr_done:
 .draw_snake:
     ; build a sequence of ANSI codes to draw new head and erase old tail
     lea TDP, buffer
@@ -113,7 +127,8 @@ startup:
 ; Post state:
 ;   B - updated Y coordinate
 ;   C - updated X coordinate
-;   A, D - clobbered
+;   A - 0, if moved vertically, 1 - if horizontally
+;   D - -1 or 1, depending on direction
 ; ********************************************************************************
 calc_move:
     ; the direction is in range [0 .. 3], the LSB marks the horizontal vs vertical
@@ -130,6 +145,27 @@ calc_move:
 .move_x:
     subi D, 2
     add C, D
+    ret
+
+; ********************************************************************************
+; Calculate next index address depending on direction
+; Parameters:
+;   B - LSB of the index
+;   C - MSB of the index
+;   D - -1 or 1, whether to increment or decrement the row
+; ********************************************************************************
+calc_move_ptr:
+    add D, D ; just to obtain flags
+    bmi .dec_ptr
+
+.inc_ptr:
+    addi B, ARENA_ROW
+    adci C, 0
+    ret
+
+.dec_ptr:
+    subi B, ARENA_ROW
+    sbbi B, 0
     ret
 
 ; ********************************************************************************
