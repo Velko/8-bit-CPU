@@ -9,6 +9,8 @@ DIR_LEFT = 0x01
 DIR_DOWN = 0x02
 DIR_RIGHT = 0x03
 
+CELL_EMPTY  =  0x00
+
 KEY_UP = 0x41
 KEY_RIGHT = 0x43
 KEY_DOWN = 0x42
@@ -17,6 +19,19 @@ KEY_LEFT = 0x44
 startup:
     lea SDP, clrscr_message
     call b_uart_puts
+
+    ; clear the arena
+    lea TDP, arena
+    ldi A, CELL_EMPTY
+    ldi C, 0
+    ldi D, ARENA_ROW*ARENA_HEIGHT / 256
+.zero_arena_loop:
+    st (TDP++), A
+    inc C
+    bne .zero_arena_loop
+    dec D
+    bne .zero_arena_loop
+
 
     call draw_h_border
     call draw_v_borders
@@ -43,7 +58,6 @@ startup:
 
     ldi A, DIR_RIGHT
     st direction, A
-
 
 .game_loop:
 
@@ -77,32 +91,48 @@ startup:
 
 .move_head:
     ; temporarily copy the head_rowptr to tail_rowptr
-    ld B, head_rowptr + 0
-    ld C, head_rowptr + 1
-    st tail_rowptr + 0, B
-    st tail_rowptr + 1, C
+    ;ld B, head_rowptr + 0
+    ;ld C, head_rowptr + 1
+    ;st tail_rowptr + 0, B
+    ;st tail_rowptr + 1, C
 
     ld C, head_x
     ld B, head_y
     ld D, direction
 
     ; temporarily set the tail to old location of head (snake length of 1)
-    st tail_x, C
-    st tail_y, B
+    ;st tail_x, C
+    ;st tail_y, B
 
     call calc_move
 
     st head_x, C
     st head_y, B
 
+    ld B, head_rowptr + 0
+    ld C, head_rowptr + 1
     add A, A ; calc flags, the idx needs to be recalculated only on vertical movement
     bne .move_ptr_done
-    ld B, head_rowptr + 0
-   ld C, head_rowptr + 1
     call calc_move_ptr
     st head_rowptr + 0, B
     st head_rowptr + 1, C
 .move_ptr_done:
+
+.mark_head_in_arena:
+    ; load C:B into TDP
+    push C
+    push B
+    pop TDP
+
+    ld C, head_x
+    ld A, (TDP + C)
+    bne game_over ; if anything but EMPTY=0, ran into someting
+
+    ld D, direction
+    inc D   ; DIR_* is 0-based, but we need to reserve 0 for EMPTY, so adding 1
+    st (TDP + C), D
+
+
 .draw_snake:
     ; build a sequence of ANSI codes to draw new head and erase old tail
     lea TDP, buffer
@@ -116,6 +146,11 @@ startup:
     call b_uart_puts
 
     jmp .game_loop
+
+game_over:
+    lea SDP, game_over_message
+    call b_uart_puts
+    hlt
 
 
 ; ********************************************************************************
@@ -165,7 +200,7 @@ calc_move_ptr:
 
 .dec_ptr:
     subi B, ARENA_ROW
-    sbbi B, 0
+    sbbi C, 0
     ret
 
 ; ********************************************************************************
@@ -328,8 +363,8 @@ vert_border:
 key_to_dir:
     #d DIR_UP, DIR_DOWN, DIR_RIGHT, DIR_LEFT
 
-goto_10:
-    #d 0x1B, "[10;10H", 0x00
+game_over_message:
+    #d 0x1B, "[10;10HGame over !", 0x00
 
 
 head_x:
