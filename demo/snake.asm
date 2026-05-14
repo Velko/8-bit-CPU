@@ -1,6 +1,8 @@
 #include "velkocpu.def"
 
 ARENA_WIDTH = 40
+ARENA_HEIGHT = 40
+ARENA_ROW   = 64
 
 DIR_UP = 0x00
 DIR_LEFT = 0x01
@@ -22,8 +24,10 @@ startup:
 
     ldi A, ARENA_WIDTH / 2
     st head_x, A
-    st head_y, A
     st tail_x, A
+
+    ldi A, ARENA_HEIGHT / 2
+    st head_y, A
     st tail_y, A
 
 
@@ -148,7 +152,7 @@ draw_h_border:
 draw_v_borders:
     push LR
 
-    ldi C, ARENA_WIDTH - 2
+    ldi C, ARENA_HEIGHT - 2
 .loop:
     lea SDP, vert_border
     call b_uart_puts
@@ -300,4 +304,4 @@ buffer:
 
 #align 64
 arena:
-    #res 64*40
+    #res ARENA_ROW*ARENA_HEIGHT
