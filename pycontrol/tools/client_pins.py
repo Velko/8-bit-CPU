@@ -119,6 +119,7 @@ class TesterClient(cmd.Cmd):
 
     def do_commit(self, _arg: str) -> None:
         'Send the control word to Arduino'
+        print(f"M{self.control.c_word}N")
         client.ctrl_commit(self.control)
 
     def do_pulse(self, _arg: str) -> None:
