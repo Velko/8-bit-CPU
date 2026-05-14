@@ -62,6 +62,12 @@ startup:
     ldi A, DIR_RIGHT
     st direction, A
 
+    ldi A, 0
+    st snake_length, A
+
+    ldi A, 5
+    st desired_length, A
+
     lea SDP, clear_loading
     call b_uart_puts
 
@@ -393,6 +399,10 @@ tail_y:
 tail_rowptr:
     #res 2
 direction:
+    #res 1
+snake_length:
+    #res 1
+desired_length:
     #res 1
 buffer:
     ; \[00;00H@@\[00;00H@@0
