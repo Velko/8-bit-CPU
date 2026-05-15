@@ -413,46 +413,6 @@ draw_block:
     ret
 
 ; ********************************************************************************
-; Put decimal representation of a value into a text buffer
-; Parameters:
-;   TDP - text buffer to write
-;   A   - number
-; Post state:
-;   TDP - buffer, past the last character written
-;   A - clobbered
-; ********************************************************************************
-buffer_putdec:
-    push LR
-    push B
-    push C
-
-    ; preserve argument and convert to BCD
-    mov C, A
-    call b_to_dec
-
-    ; decide on which digit to begin (optimized for only 1 or 2 digits)
-    cmpi C, 10
-    bcs .put_1s
-
-    ; pull from BCD, convert to ASCII and add to buffer
-.put_10s:
-    mov A, B
-    swap A
-    andi A, 0x0F
-    addi A, "0"
-    st (TDP++), A
-
-.put_1s:
-    andi B, 0x0F;
-    addi B, "0"
-    st (TDP++), B
-
-    pop C
-    pop B
-    pop LR
-    ret
-
-; ********************************************************************************
 ; Put BCD-encoded value into a text buffer
 ; Parameters:
 ;   TDP - text buffer to write
