@@ -436,6 +436,11 @@ game_over_message:
     #d 0x1B, "[10;10HGame over !", 0x00
 
 
+#bankdef bss
+{
+    addr = 0x1000
+}
+
 head_x:
     #res 1
 head_y:
