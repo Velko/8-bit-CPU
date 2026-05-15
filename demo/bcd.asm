@@ -33,6 +33,33 @@
 
     bne .down_loop
 
+double:
+    ldi C, 0
+.up_loop_double:
+
+    mov A, C
+    ldi B, 0x0F
+    and B, C
+    cmpi B, 5
+    bcs .skip_5adj
+    addi A, 3
+.skip_5adj:
+    add A, A
+
+    call print_bcd
+
+    ; bcd increment
+    inc C
+    ldi B, 0x0F
+    and B, C
+    cmpi B, 10
+    bcs .skip_inc6
+    addi C, 6
+.skip_inc6:
+    cmpi C, 0x21
+    bne .up_loop_double
+
+
     hlt
 
 print_bcd:
