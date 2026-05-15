@@ -62,9 +62,6 @@ startup:
     ldi A, DIR_RIGHT
     st direction, A
 
-    inc A
-    st ARENA_CENTER_ROW + ARENA_WIDTH / 2, A
-
     ldi A, 0
     st snake_length, A
 
@@ -110,8 +107,19 @@ startup:
     ld D, direction
     ld B, head_rowptr + 0
     ld C, head_rowptr + 1
-    call calc_move_ptr
 
+    ; store the direction in "old" cell, before moving
+    push C
+    push B
+    pop TDP
+    ld A, head_x
+    push D
+    inc D
+    st (TDP+A), D
+    pop D
+
+    ; move the row ptr and store it
+    call calc_move_ptr
     st head_rowptr + 0, B
     st head_rowptr + 1, C
 
@@ -119,29 +127,22 @@ startup:
     push C
     push B
 
-    ; get screen coordinates
+    ; move screen coordinates
     ld C, head_x
     ld B, head_y
-
     call calc_move
-
     st head_x, C
     st head_y, B
 
-.mark_head_in_arena:
-    ; load C:B into TDP
-    pop TDP
+.check_collision:
+    ; load C:B into SDP
+    pop SDP
 
     ld C, head_x
-    ld A, (TDP + C)
+    ld A, (SDP + C)
     bne game_over ; if anything but EMPTY=0, ran into someting
 
-    ld D, direction
-    inc D   ; DIR_* is 0-based, but we need to reserve 0 for EMPTY, so adding 1
-    st (TDP + C), D
-
-
-.check_length:
+.check_length_grow:
     ld A, snake_length
     ld B, desired_length
 
@@ -177,12 +178,10 @@ startup:
     st tail_rowptr + 0, B
     st tail_rowptr + 1, C
 
-    ; get screen coordinates
+    ; move screen coordinates
     ld C, tail_x
     ld B, tail_y
-
     call calc_move
-
     st tail_x, C
     st tail_y, B
 
