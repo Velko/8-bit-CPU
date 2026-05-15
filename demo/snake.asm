@@ -40,11 +40,11 @@ startup:
     call draw_v_borders
     call draw_h_border
 
-    ldi A, ARENA_WIDTH / 2
+    ldi A, 0x20
     st head_x, A
     st tail_x, A
 
-    ldi A, ARENA_HEIGHT / 2
+    ldi A, 0x20
     st head_y, A
     st tail_y, A
 
@@ -224,10 +224,40 @@ calc_move:
 
 .move_y:
     add B, D
+    ldi A, 0x0F
+    add D, D ; get N flag
+    bmi .y_dec
+    and A, B
+    cmpi A, 10
+    bcs .y_done
+    addi B, 6
+    ret
+.y_dec:
+    and A, B
+    cmpi A, 10
+    bcs .y_done
+    subi B, 6
+    ret
+.y_done:
     ret
 
 .move_x:
     add C, D
+    ldi A, 0x0F
+    add D, D ; get N flag
+    bmi .x_dec
+    and A, C
+    cmpi A, 10
+    bcs .x_done
+    addi C, 6
+    ret
+.x_dec:
+    and A, C
+    cmpi A, 10
+    bcs .x_done
+    subi C, 6
+    ret
+.x_done:
     ret
 
 ; ********************************************************************************
@@ -357,14 +387,21 @@ draw_block:
     st (TDP++), A
 
     mov A, B
-    call buffer_putdec
+    call buffer_put_bcd
 
     ldi A, ";"
     st (TDP++), A
 
+    ; double the coordinate (BCD encoded), because each block is 2 chars
     mov A, C
-    add A, A ; double the coordinate, because each block is 2 chars
-    call buffer_putdec
+    ldi C, 0x0F
+    and C, A
+    cmpi C, 5
+    bcs .skip_5adj
+    addi A, 3
+.skip_5adj:
+    add A, A
+    call buffer_put_bcd
 
     ldi A, "H"
     st (TDP++), A
@@ -413,6 +450,33 @@ buffer_putdec:
     pop C
     pop B
     pop LR
+    ret
+
+; ********************************************************************************
+; Put BCD-encoded value into a text buffer
+; Parameters:
+;   TDP - text buffer to write
+;   A   - BCD-encoded number
+; Post state:
+;   TDP - buffer, past the last character written
+; ********************************************************************************
+buffer_put_bcd:
+    push B
+.tens:
+    ; extract 10s
+    ldi B, 0xF0
+    and B, A
+    beq .ones
+    swap B
+    addi B, "0"
+    st (TDP++), B
+.ones:
+    ; extract 1s
+    ldi B, 0x0F
+    and B, A
+    addi B, "0"
+    st (TDP++), B
+    pop B
     ret
 
 
