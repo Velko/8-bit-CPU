@@ -72,17 +72,17 @@ b_to_dec:
 
     ; load previous carry and shift both initial number and decode result.
     ; Carry from B will roll into A on next iteration, storing the 100s place
-    popf
+    pop F
     adc A, A
     adc B, B
-    pushf
+    push F
 
     ; next bit
     dec C
     bne .bits_loop
 
     ; pull out final carry and shift into A
-    popf
+    pop F
     adc A, A
 
     ; restore helper registers

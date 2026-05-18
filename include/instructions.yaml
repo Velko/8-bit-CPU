@@ -12,7 +12,6 @@ regsets:
 
 instructions:
   - name: "nop"
-    repeat: "once"
     steps:
       - []
 
@@ -28,7 +27,7 @@ instructions:
       - []        # extra NOP to prevent microcode ROM generator from inserting steps reset
 
   - name: "ldi"
-    repeat: "gp_regs"
+    repeat: "gp_regs+f"
     args:
       - reg
       - BYTE
@@ -38,14 +37,6 @@ instructions:
         - ProgMem.out
         - reg.load
 
-  - name: "ldi_F"
-    args:
-      - BYTE
-    steps:
-      - - PC.out
-        - PC.inc
-        - ProgMem.out
-        - F.load
   - name: "hlt"
     steps:
       - - Clock.halt
@@ -548,7 +539,7 @@ instructions:
             - PC.load
 
   - name: "push"
-    repeat: "gp_regs"
+    repeat: "gp_regs+f"
     args:
       - reg
     steps:
@@ -556,14 +547,6 @@ instructions:
         - SP.dec
       - - SP.out
         - reg.out
-        - Ram.write
-
-  - name: "pushf"
-    steps:
-      - - SP.out
-        - SP.dec
-      - - SP.out
-        - F.out
         - Ram.write
 
   - name: "push"
@@ -583,20 +566,13 @@ instructions:
         - Ram.write
 
   - name: "pop"
-    repeat: "gp_regs"
+    repeat: "gp_regs+f"
     args:
       - reg
     steps:
       - - SP.out
         - SP.inc
         - reg.load
-        - Ram.out
-
-  - name: "popf"
-    steps:
-      - - SP.out
-        - SP.inc
-        - F.load
         - Ram.out
 
   - name: "pop"

@@ -220,13 +220,13 @@
 #define OP_PUSH_B              0xd7
 #define OP_PUSH_C              0xd8
 #define OP_PUSH_D              0xd9
-#define OP_PUSHF               0xda
+#define OP_PUSH_F              0xda
 #define OP_PUSH_LR             0xdb
 #define OP_POP_A               0xdc
 #define OP_POP_B               0xdd
 #define OP_POP_C               0xde
 #define OP_POP_D               0xdf
-#define OP_POPF                0xe0
+#define OP_POP_F               0xe0
 #define OP_POP_LR              0xe1
 #define OP_CALL_ADDR           0xe2
 #define OP_RET                 0xe3

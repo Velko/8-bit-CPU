@@ -952,7 +952,7 @@ const struct op_microcode microcode[] PROGMEM = {
     /* d9 push_D     */
     { .default_steps = {0x077b58ff, 0x07fb5893},},
 
-    /* da pushf      */
+    /* da push_F     */
     { .default_steps = {0x077b58ff, 0x07fb5894},},
 
     /* db push_LR    */
@@ -970,7 +970,7 @@ const struct op_microcode microcode[] PROGMEM = {
     /* df pop_D      */
     { .default_steps = {0x07bb5839},},
 
-    /* e0 popf       */
+    /* e0 pop_F      */
     { .default_steps = {0x07bb5879},},
 
     /* e1 pop_LR     */

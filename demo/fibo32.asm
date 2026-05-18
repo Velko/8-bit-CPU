@@ -65,14 +65,14 @@ add_st:
 sum_b_loop:
     ld A, (SDP + C)
     ld B, (TDP + C)
-    popf
+    pop F
     adc A, B
-    pushf
+    push F
     st (SDP + C), A
     dec C
     bpl sum_b_loop
 
-    popf
+    pop F
 
     bcc print_res
 
@@ -112,11 +112,11 @@ double_loop:
     ldi C, 3  ; index in number[]
 num_shift_loop:
     ld A, (SDP + C)
-    popf  ; load flags (initial C = 0, or one from previous iteration)
+    pop F  ; load flags (initial C = 0, or one from previous iteration)
     adc A, A
     st (SDP + C), A
 
-    pushf  ; store for next iteration
+    push F  ; store for next iteration
 
     ; next number[]
     dec C
@@ -139,11 +139,11 @@ add3_shift_loop:
 add3_skip:
 
     ; now shift
-    popf  ; load flags (one from previous iteration)
+    pop F  ; load flags (one from previous iteration)
     adc A, A
     st (TDP + C), A
 
-    pushf  ; store for next iteration
+    push F  ; store for next iteration
 
     ; next digits[]
     dec C

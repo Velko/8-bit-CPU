@@ -27,11 +27,11 @@ double_loop:
     ldi C, number_len - 1  ; index in number[]
 num_shift_loop:
     ld A, (SDP + C)
-    popf  ; load flags (initial C = 0, or one from previous iteration)
+    pop F  ; load flags (initial C = 0, or one from previous iteration)
     adc A, A
     st (SDP + C), A
 
-    pushf  ; store for next iteration
+    push F  ; store for next iteration
 
     ; next number[]
     dec C
@@ -54,11 +54,11 @@ add3_shift_loop:
 add3_skip:
 
     ; now shift
-    popf  ; load flags (one from previous iteration)
+    pop F  ; load flags (one from previous iteration)
     adc A, A
     st (TDP + C), A
 
-    pushf  ; store for next iteration
+    push F  ; store for next iteration
 
     ; next digits[]
     dec C

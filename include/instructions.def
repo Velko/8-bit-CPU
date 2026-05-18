@@ -5,7 +5,7 @@
     ldi  B, {value1: i8} => 0x02 @ value1
     ldi  C, {value1: i8} => 0x03 @ value1
     ldi  D, {value1: i8} => 0x04 @ value1
-    ldi_F  {value0: i8} => 0x05 @ value0
+    ldi  F, {value1: i8} => 0x05 @ value1
     hlt   => 0x06
     add  A, A => 0x07
     add  A, B => 0x08
@@ -218,13 +218,13 @@
     push  B => 0xd7
     push  C => 0xd8
     push  D => 0xd9
-    pushf   => 0xda
+    push  F => 0xda
     push  LR => 0xdb
     pop  A => 0xdc
     pop  B => 0xdd
     pop  C => 0xde
     pop  D => 0xdf
-    popf   => 0xe0
+    pop  F => 0xe0
     pop  LR => 0xe1
     call  {address0: u16} => 0xe2 @ address0[7:0] @ address0[15:8]
     ret   => 0xe3

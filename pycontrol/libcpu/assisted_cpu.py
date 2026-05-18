@@ -165,19 +165,13 @@ class AssistedCPU(AssistedCPUEngine):
     def hlt(self) -> None:  # no test
         self.execute_mnemonic("hlt")
 
-    def push(self, source: GPRegister | AddressRegister) -> None:
+    def push(self, source: GPRegister | AddressRegister | FlagsRegister) -> None:
         opcode = f"push_{source.name}"
         self.execute_mnemonic(opcode)
 
-    def pop(self, target: GPRegister | AddressRegister) -> None:
+    def pop(self, target: GPRegister | AddressRegister | FlagsRegister) -> None:
         opcode = f"pop_{target.name}"
         self.execute_mnemonic(opcode)
-
-    def pushf(self) -> None:
-        self.execute_mnemonic("pushf")
-
-    def popf(self) -> None:
-        self.execute_mnemonic("popf")
 
     def ret(self) -> None:
         self.execute_mnemonic("ret")
