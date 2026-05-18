@@ -5,12 +5,6 @@ from dataclasses import dataclass, field
 from typing import Any
 from enum import Enum, auto
 
-class Repeat(Enum):
-    once = auto()
-    gp_regs = auto()
-    gp_reg_pair_all = auto()
-    gp_reg_pair_different = auto()
-
 @dataclass
 class Condition:
     match: dict[str, bool]
@@ -19,7 +13,7 @@ class Condition:
 @dataclass
 class Instruction:
     name: str
-    repeat: Repeat
+    repeat: str | None
     args: list[str]
     format: str | None
     steps: list[list[str]]
@@ -29,7 +23,7 @@ class Instruction:
 
     def __init__(self, **kwargs: Any) -> None:
         self.name = kwargs['name']
-        self.repeat = Repeat[kwargs.get('repeat', 'once')]
+        self.repeat = kwargs.get('repeat')
         self.args = kwargs.get('args', [])
         self.format = kwargs.get('format', None)
         self.steps = kwargs.get('steps', [])
@@ -41,9 +35,11 @@ class Instruction:
 class InstructionConfig:
     fetch: list[list[str]]
     instructions: list[Instruction]
+    regsets: dict[str, list[str]]
 
-    def __init__(self, fetch: Any, instructions: list[Any]) -> None:
+    def __init__(self, fetch: Any, regsets: Any, instructions: list[Any]) -> None:
         self.fetch = fetch
+        self.regsets = {rs['name']: rs['regs'] for rs in regsets}
         self.instructions = [Instruction(**i) for i in instructions]
 
     @staticmethod
@@ -52,3 +48,6 @@ class InstructionConfig:
             yconf = yaml.safe_load(stream)
             return InstructionConfig(**yconf)
 
+if __name__ == "__main__":
+    cfg = InstructionConfig.load_from_yaml('../../include/instructions.yaml')
+    print(cfg.regsets)

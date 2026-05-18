@@ -4,6 +4,12 @@ fetch:
     - ProgMem.out
     - IR.load
 
+regsets:
+  - name: "gp_regs"
+    regs: [A, B, C, D]
+  - name: "gp_regs+f"
+    regs: [A, B, C, D, F]
+
 instructions:
   - name: "nop"
     repeat: "once"

@@ -1,7 +1,8 @@
 from collections.abc import Sequence, Iterator
 from typing import Tuple
+from unittest import case
 from .pin import ControlSignal
-from .instruction_cfg import InstructionConfig, Repeat, Instruction
+from .instruction_cfg import InstructionConfig, Instruction
 from .DeviceSetup import hardware
 from .opcode_builder import MicrocodeBuilder, MicroCode, OpcodeArg
 from .devices import Register, GPRegister, Flags
@@ -99,23 +100,22 @@ def build_opcodes(yaml_path: str) -> tuple[list[list[ControlSignal]], list[Micro
     fetch = [[resolve_pin(pin) for pin in step] for step in icfg.fetch]
 
     for instr in icfg.instructions:
-        if instr.opcode is not None and instr.repeat != Repeat.once:
+        if instr.opcode is not None and instr.repeat is not None:
             raise ValueError(f"Opcode should not be specified for repeated instruction: {instr.name}")
 
-        match instr.repeat:
-            case Repeat.once:
-                add_instruction(builder, instr)
-            case Repeat.gp_regs:
-                for r in gp_regs:
-                    add_instruction(builder, instr, reg=r)
-            case Repeat.gp_reg_pair_all:
+        if instr.repeat is None:
+            add_instruction(builder, instr)
+        elif instr.repeat in icfg.regsets:
+            for reg in icfg.regsets[instr.repeat]:
+                add_instruction(builder, instr, reg=hardware.get_typed_dev(reg, Register))
+        elif instr.repeat == "gp_reg_pair_all":
                 for l, r in permute_gp_regs_all():
                     add_instruction(builder, instr, left=l, right=r)
-            case Repeat.gp_reg_pair_different:
+        elif instr.repeat == "gp_reg_pair_different":
                 for l, r in permute_gp_regs_nsame():
                     add_instruction(builder, instr, left=l, right=r)
-            case _:
-                raise ValueError(f"Unsupported repeat type: {instr.repeat}")
+        else:
+            raise ValueError(f"Unsupported repeat type: {instr.repeat}")
 
     return fetch, builder.build()
 
