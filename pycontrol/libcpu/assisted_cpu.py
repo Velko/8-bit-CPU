@@ -256,3 +256,7 @@ class AssistedCPU(AssistedCPUEngine):
     def rcall(self, offset: int) -> None:
         check_pcrel(offset)
         self.execute_mnemonic("call_pcrel", offset)
+
+    def tst(self, source: GPRegister) -> None:
+        opcode = f"tst_{source.name}"
+        self.execute_mnemonic(opcode)

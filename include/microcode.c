@@ -1397,4 +1397,16 @@ const struct op_microcode microcode[] PROGMEM = {
 
     /* 14d pop_TDP    */
     { .default_steps = {0x07bb58b9, 0x07bb58c9, 0x07f058ff},},
+
+    /* 14e tst_A      */
+    { .default_steps = {0x07ff18f0},},
+
+    /* 14f tst_B      */
+    { .default_steps = {0x07ff18f1},},
+
+    /* 150 tst_C      */
+    { .default_steps = {0x07ff18f2},},
+
+    /* 151 tst_D      */
+    { .default_steps = {0x07ff18f3},},
 };

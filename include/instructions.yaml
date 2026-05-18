@@ -1146,3 +1146,11 @@ instructions:
         - Ram.out
       - - TX.out
         - TDP.load
+
+  - name: "tst"
+    repeat: "gp_regs"
+    args:
+      - reg
+    steps:
+      - - reg.out
+        - F.calc

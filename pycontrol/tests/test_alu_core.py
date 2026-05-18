@@ -349,3 +349,16 @@ def test_add_overflow_flag(cpu_helper: CPUHelper, acpu: AssistedCPU, case: ALUTw
     flags = cpu_helper.regs.F & Flags.V
     assert value == case.result
     assert flags == case.xflags
+
+# Parametrize with (value, expected_flags)
+@pytest.mark.parametrize("value,expected_flags", [
+    (0b0000_0000, Flags.Z),           # Zero, should set Z
+    (0b1000_0000, Flags.N),           # Negative (MSB set), should set N
+    (0b0000_0001, Flags.Empty),       # Neither Z nor N
+    (0b1111_1111, Flags.N),           # Negative (MSB set), not zero
+    (0b0111_1111, Flags.Empty),       # Positive, not zero
+])
+def test_tst(cpu_helper: CPUHelper, acpu: AssistedCPU, value: int, expected_flags: Flags) -> None:
+    cpu_helper.regs.A = value
+    acpu.tst(A)
+    assert cpu_helper.regs.F & (Flags.Z | Flags.N) == expected_flags
