@@ -30,13 +30,13 @@ instructions:
     repeat:
       - gp_regs+f
     args:
-      - reg
+      - r0
       - BYTE
     steps:
       - - PC.out
         - PC.inc
         - ProgMem.out
-        - reg.load
+        - r0.load
 
   - name: "hlt"
     steps:
@@ -46,12 +46,12 @@ instructions:
     repeat:
       - gp_reg_pair_all
     args:
-      - left
-      - right
+      - r0
+      - r1
     steps:
-      - - left.load
-        - left.alu_l
-        - right.alu_r
+      - - r0.load
+        - r0.alu_l
+        - r1.alu_r
         - AddSub.out
         - F.calc
 
@@ -59,21 +59,21 @@ instructions:
     repeat:
       - gp_reg_pair_all
     args:
-      - left
-      - right
+      - r0
+      - r1
     steps:
-      - - left.load
-        - left.alu_l
-        - right.alu_r
+      - - r0.load
+        - r0.alu_l
+        - r1.alu_r
         - AddSub.out
         - F.calc
     conditions:
       - match:
           C: true
         steps:
-          - - left.load
-            - left.alu_l
-            - right.alu_r
+          - - r0.load
+            - r0.alu_l
+            - r1.alu_r
             - AddSub.out
             - F.calc
             - F.carry
@@ -82,12 +82,12 @@ instructions:
     repeat:
       - gp_reg_pair_different
     args:
-      - left
-      - right
+      - r0
+      - r1
     steps:
-      - - left.load
-        - left.alu_l
-        - right.alu_r
+      - - r0.load
+        - r0.alu_l
+        - r1.alu_r
         - AddSub.out
         - AddSub.alt
         - F.calc
@@ -96,12 +96,12 @@ instructions:
     repeat:
       - gp_reg_pair_different
     args:
-      - left
-      - right
+      - r0
+      - r1
     steps:
-      - - left.load
-        - left.alu_l
-        - right.alu_r
+      - - r0.load
+        - r0.alu_l
+        - r1.alu_r
         - AddSub.out
         - AddSub.alt
         - F.calc
@@ -109,9 +109,9 @@ instructions:
       - match:
           C: true
         steps:
-          - - left.load
-            - left.alu_l
-            - right.alu_r
+          - - r0.load
+            - r0.alu_l
+            - r1.alu_r
             - AddSub.out
             - AddSub.alt
             - F.calc
@@ -121,12 +121,12 @@ instructions:
     repeat:
       - gp_reg_pair_different
     args:
-      - left
-      - right
+      - r0
+      - r1
     steps:
-      - - left.load
-        - left.alu_l
-        - right.alu_r
+      - - r0.load
+        - r0.alu_l
+        - r1.alu_r
         - AndOr.out
         - F.calc
 
@@ -134,12 +134,12 @@ instructions:
     repeat:
       - gp_reg_pair_different
     args:
-      - left
-      - right
+      - r0
+      - r1
     steps:
-      - - left.load
-        - left.alu_l
-        - right.alu_r
+      - - r0.load
+        - r0.alu_l
+        - r1.alu_r
         - AndOr.out
         - AndOr.alt
         - F.calc
@@ -148,12 +148,12 @@ instructions:
     repeat:
       - gp_reg_pair_different
     args:
-      - left
-      - right
+      - r0
+      - r1
     steps:
-      - - left.load
-        - left.alu_l
-        - right.alu_r
+      - - r0.load
+        - r0.alu_l
+        - r1.alu_r
         - XorNot.out
         - F.calc
 
@@ -161,10 +161,10 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - reg
+      - r0
     steps:
-      - - reg.load
-        - reg.alu_l
+      - - r0.load
+        - r0.alu_l
         - XorNot.out
         - XorNot.alt
         - F.calc
@@ -173,11 +173,11 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - reg
+      - r0
     steps:
-      - - reg.load
-        - reg.alu_l
-        - reg.alu_r
+      - - r0.load
+        - r0.alu_l
+        - r0.alu_r
         - XorNot.out
         - F.calc
 
@@ -185,10 +185,10 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - reg
+      - r0
     steps:
-      - - reg.load
-        - reg.alu_l
+      - - r0.load
+        - r0.alu_l
         - AddSub.out
         - F.calc
         - F.carry
@@ -197,10 +197,10 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - reg
+      - r0
     steps:
-      - - reg.load
-        - reg.alu_l
+      - - r0.load
+        - r0.alu_l
         - AddSub.out
         - AddSub.alt
         - F.calc
@@ -210,10 +210,10 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - reg
+      - r0
     steps:
-      - - reg.load
-        - reg.alu_l
+      - - r0.load
+        - r0.alu_l
         - ShiftSwap.out
         - F.calc
 
@@ -221,18 +221,18 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - reg
+      - r0
     steps:
-      - - reg.load
-        - reg.alu_l
+      - - r0.load
+        - r0.alu_l
         - ShiftSwap.out
         - F.calc
     conditions:
       - match:
           C: true
         steps:
-          - - reg.load
-            - reg.alu_l
+          - - r0.load
+            - r0.alu_l
             - ShiftSwap.out
             - F.carry
             - F.calc
@@ -241,22 +241,22 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - reg
+      - r0
     steps:
-      - - reg.out
+      - - r0.out
         - F.calc
-      - - reg.load
-        - reg.alu_l
+      - - r0.load
+        - r0.alu_l
         - ShiftSwap.out
         - F.calc
     conditions:
       - match:
           N: true
         steps:
-          - - reg.out
+          - - r0.out
             - F.calc
-          - - reg.load
-            - reg.alu_l
+          - - r0.load
+            - r0.alu_l
             - ShiftSwap.out
             - F.carry
             - F.calc
@@ -265,10 +265,10 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - reg
+      - r0
     steps:
-      - - reg.load
-        - reg.alu_l
+      - - r0.load
+        - r0.alu_l
         - ShiftSwap.out
         - ShiftSwap.alt
         - F.calc
@@ -277,11 +277,11 @@ instructions:
     repeat:
       - gp_reg_pair_different
     args:
-      - left
-      - right
+      - r0
+      - r1
     steps:
-      - - left.alu_l
-        - right.alu_r
+      - - r0.alu_l
+        - r1.alu_r
         - AddSub.out
         - AddSub.alt
         - F.calc
@@ -290,38 +290,38 @@ instructions:
     repeat:
       - gp_reg_pair_different
     args:
-      - left
-      - right
+      - r0
+      - r1
     steps:
-      - - left.load
-        - right.out
+      - - r0.load
+        - r1.out
 
   - name: "out"
     repeat:
       - gp_regs
     args:
       - BYTE
-      - reg
+      - r0
     steps:
       - - PC.out
         - PC.inc
         - ProgMem.out
         - IOCtl.laddr
-      - - reg.out
+      - - r0.out
         - IOCtl.to_dev
 
   - name: "in"
     repeat:
       - gp_regs
     args:
-      - reg
+      - r0
       - BYTE
     steps:
       - - PC.out
         - PC.inc
         - ProgMem.out
         - IOCtl.laddr
-      - - reg.load
+      - - r0.load
         - IOCtl.from_dev
         - F.calc
 
@@ -330,7 +330,7 @@ instructions:
       - gp_regs
     args:
       - ADDR
-      - reg
+      - r0
     steps:
       - - PC.out
         - PC.inc
@@ -341,7 +341,7 @@ instructions:
         - ProgMem.out
         - TH.load
       - - TX.out
-        - reg.out
+        - r0.out
         - Ram.write
 
   - name: "st"
@@ -349,22 +349,22 @@ instructions:
       - gp_reg_pair_all
     args:
       - TDP
-      - left
-      - right
+      - r0
+      - r1
     format: "({}+{}), {}"
     steps:
-      - - left.out
+      - - r0.out
         - TDP.out
         - ACalc.load
       - - ACalc.out
-        - right.out
+        - r1.out
         - Ram.write
 
   - name: "ld"
     repeat:
       - gp_regs
     args:
-      - reg
+      - r0
       - ADDR
     steps:
       - - PC.out
@@ -376,7 +376,7 @@ instructions:
         - ProgMem.out
         - TH.load
       - - TX.out
-        - reg.load
+        - r0.load
         - Ram.out
         - F.calc
 
@@ -384,16 +384,16 @@ instructions:
     repeat:
       - gp_reg_pair_all
     args:
-      - left
+      - r0
       - SDP
-      - right
+      - r1
     format: "{}, ({}+{})"
     steps:
-      - - right.out
+      - - r1.out
         - SDP.out
         - ACalc.load
       - - ACalc.out
-        - left.load
+        - r0.load
         - Ram.out
         - F.calc
 
@@ -402,10 +402,10 @@ instructions:
       - gp_regs
     args:
       - TDP
-      - reg
+      - r0
     format: "({}++), {}"
     steps:
-      - - reg.out
+      - - r0.out
         - TDP.out
         - TDP.inc
         - Ram.write
@@ -567,12 +567,12 @@ instructions:
     repeat:
       - gp_regs+f
     args:
-      - reg
+      - r0
     steps:
       - - SP.out
         - SP.dec
       - - SP.out
-        - reg.out
+        - r0.out
         - Ram.write
 
   - name: "push"
@@ -595,11 +595,11 @@ instructions:
     repeat:
       - gp_regs+f
     args:
-      - reg
+      - r0
     steps:
       - - SP.out
         - SP.inc
-        - reg.load
+        - r0.load
         - Ram.out
 
   - name: "pop"
@@ -663,7 +663,7 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - reg
+      - r0
       - SP
       - BYTE
     steps:
@@ -676,7 +676,7 @@ instructions:
         - ACalc.load
         - ACalc.signed
       - - ACalc.out
-        - reg.load
+        - r0.load
         - Ram.out
         - F.calc
 
@@ -686,7 +686,7 @@ instructions:
     args:
       - SP
       - BYTE
-      - reg
+      - r0
     steps:
       - - PC.out
         - PC.inc
@@ -697,7 +697,7 @@ instructions:
         - ACalc.load
         - ACalc.signed
       - - ACalc.out
-        - reg.out
+        - r0.out
         - Ram.write
 
   - name: "jmp"
@@ -838,12 +838,12 @@ instructions:
     repeat:
       - gp_reg_pair_different
     args:
-      - left
-      - right
+      - r0
+      - r1
     steps:
       # .add_step(l.alu_l, r.alu_r, AndOr.out, F.calc)
-      - - left.alu_l
-        - right.alu_r
+      - - r0.alu_l
+        - r1.alu_r
         - AndOr.out
         - F.calc
 
@@ -851,11 +851,11 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - reg
+      - r0
       - SDP
     format: "{}, ({}++)"
     steps:
-      - - reg.load
+      - - r0.load
         - SDP.out
         - SDP.inc
         - Ram.out
@@ -897,15 +897,15 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - reg
+      - r0
       - BYTE
     steps:
       - - PC.out
         - PC.inc
         - ProgMem.out
         - T.load
-      - - reg.load
-        - reg.alu_l
+      - - r0.load
+        - r0.alu_l
         - T.alu_r
         - AddSub.out
         - F.calc
@@ -928,15 +928,15 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - reg
+      - r0
       - BYTE
     steps:
       - - PC.out
         - PC.inc
         - ProgMem.out
         - T.load
-      - - reg.load
-        - reg.alu_l
+      - - r0.load
+        - r0.alu_l
         - T.alu_r
         - AddSub.out
         - F.calc
@@ -948,8 +948,8 @@ instructions:
             - PC.inc
             - ProgMem.out
             - T.load
-          - - reg.load
-            - reg.alu_l
+          - - r0.load
+            - r0.alu_l
             - T.alu_r
             - AddSub.out
             - F.calc
@@ -959,15 +959,15 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - reg
+      - r0
       - BYTE
     steps:
       - - PC.out
         - PC.inc
         - ProgMem.out
         - T.load
-      - - reg.load
-        - reg.alu_l
+      - - r0.load
+        - r0.alu_l
         - T.alu_r
         - AddSub.out
         - AddSub.alt
@@ -977,14 +977,14 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - reg
+      - r0
       - BYTE
     steps:
       - - PC.out
         - PC.inc
         - ProgMem.out
         - T.load
-      - - reg.alu_l
+      - - r0.alu_l
         - T.alu_r
         - AddSub.out
         - AddSub.alt
@@ -994,15 +994,15 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - reg
+      - r0
       - BYTE
     steps:
       - - PC.out
         - PC.inc
         - ProgMem.out
         - T.load
-      - - reg.load
-        - reg.alu_l
+      - - r0.load
+        - r0.alu_l
         - T.alu_r
         - AddSub.out
         - AddSub.alt
@@ -1015,8 +1015,8 @@ instructions:
             - PC.inc
             - ProgMem.out
             - T.load
-          - - reg.load
-            - reg.alu_l
+          - - r0.load
+            - r0.alu_l
             - T.alu_r
             - AddSub.out
             - AddSub.alt
@@ -1027,15 +1027,15 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - reg
+      - r0
       - BYTE
     steps:
       - - PC.out
         - PC.inc
         - ProgMem.out
         - T.load
-      - - reg.load
-        - reg.alu_l
+      - - r0.load
+        - r0.alu_l
         - T.alu_r
         - AndOr.out
         - F.calc
@@ -1044,15 +1044,15 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - reg
+      - r0
       - BYTE
     steps:
       - - PC.out
         - PC.inc
         - ProgMem.out
         - T.load
-      - - reg.load
-        - reg.alu_l
+      - - r0.load
+        - r0.alu_l
         - T.alu_r
         - AndOr.out
         - AndOr.alt
@@ -1062,15 +1062,15 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - reg
+      - r0
       - BYTE
     steps:
       - - PC.out
         - PC.inc
         - ProgMem.out
         - T.load
-      - - reg.load
-        - reg.alu_l
+      - - r0.load
+        - r0.alu_l
         - T.alu_r
         - XorNot.out
         - F.calc
@@ -1080,31 +1080,31 @@ instructions:
       - gp_reg_pair_all
     args:
       - SDP
-      - left
-      - right
+      - r0
+      - r1
     format: "({}+{}), {}"
     steps:
-      - - left.out
+      - - r0.out
         - SDP.out
         - ACalc.load
       - - ACalc.out
-        - right.out
+        - r1.out
         - Ram.write
 
   - name: "ld"
     repeat:
       - gp_reg_pair_all
     args:
-      - left
+      - r0
       - TDP
-      - right
+      - r1
     format: "{}, ({}+{})"
     steps:
-      - - right.out
+      - - r1.out
         - TDP.out
         - ACalc.load
       - - ACalc.out
-        - left.load
+        - r0.load
         - Ram.out
         - F.calc
 
@@ -1174,7 +1174,7 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - reg
+      - r0
     steps:
-      - - reg.out
+      - - r0.out
         - F.calc

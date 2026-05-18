@@ -109,13 +109,13 @@ def build_opcodes(yaml_path: str) -> tuple[list[list[ControlSignal]], list[Micro
             for rep in instr.repeat:
                 if rep in icfg.regsets:
                     for reg in icfg.regsets[rep]:
-                        add_instruction(builder, instr, reg=hardware.get_typed_dev(reg, Register))
+                        add_instruction(builder, instr, r0=hardware.get_typed_dev(reg, Register))
                 elif rep == "gp_reg_pair_all":
                     for l, r in permute_gp_regs_all():
-                        add_instruction(builder, instr, left=l, right=r)
+                        add_instruction(builder, instr, r0=l, r1=r)
                 elif rep == "gp_reg_pair_different":
                     for l, r in permute_gp_regs_nsame():
-                        add_instruction(builder, instr, left=l, right=r)
+                        add_instruction(builder, instr, r0=l, r1=r)
                 else:
                     raise ValueError(f"Unsupported repeat type: {rep}")
 
