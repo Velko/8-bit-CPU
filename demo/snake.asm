@@ -219,13 +219,13 @@ game_over:
 ;   C - updated X coordinate
 ; ********************************************************************************
 calc_move:
-    add A, A ; just get Z flag from A
+    tst A ; get Z flag from A
     bne .move_x
 
 .move_y:
     add B, D
     ldi A, 0x0F
-    add D, D ; get N flag
+    tst D ; get N flag
     bmi .y_dec
     and A, B
     cmpi A, 10
@@ -244,7 +244,7 @@ calc_move:
 .move_x:
     add C, D
     ldi A, 0x0F
-    add D, D ; get N flag
+    tst D ; get N flag
     bmi .x_dec
     and A, C
     cmpi A, 10
