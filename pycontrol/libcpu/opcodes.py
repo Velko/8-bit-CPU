@@ -100,22 +100,24 @@ def build_opcodes(yaml_path: str) -> tuple[list[list[ControlSignal]], list[Micro
     fetch = [[resolve_pin(pin) for pin in step] for step in icfg.fetch]
 
     for instr in icfg.instructions:
-        if instr.opcode is not None and instr.repeat is not None:
+        if instr.opcode is not None and len(instr.repeat) > 0:
             raise ValueError(f"Opcode should not be specified for repeated instruction: {instr.name}")
 
-        if instr.repeat is None:
+        if len(instr.repeat) == 0:
             add_instruction(builder, instr)
-        elif instr.repeat in icfg.regsets:
-            for reg in icfg.regsets[instr.repeat]:
-                add_instruction(builder, instr, reg=hardware.get_typed_dev(reg, Register))
-        elif instr.repeat == "gp_reg_pair_all":
-                for l, r in permute_gp_regs_all():
-                    add_instruction(builder, instr, left=l, right=r)
-        elif instr.repeat == "gp_reg_pair_different":
-                for l, r in permute_gp_regs_nsame():
-                    add_instruction(builder, instr, left=l, right=r)
         else:
-            raise ValueError(f"Unsupported repeat type: {instr.repeat}")
+            for rep in instr.repeat:
+                if rep in icfg.regsets:
+                    for reg in icfg.regsets[rep]:
+                        add_instruction(builder, instr, reg=hardware.get_typed_dev(reg, Register))
+                elif rep == "gp_reg_pair_all":
+                    for l, r in permute_gp_regs_all():
+                        add_instruction(builder, instr, left=l, right=r)
+                elif rep == "gp_reg_pair_different":
+                    for l, r in permute_gp_regs_nsame():
+                        add_instruction(builder, instr, left=l, right=r)
+                else:
+                    raise ValueError(f"Unsupported repeat type: {rep}")
 
     return fetch, builder.build()
 
