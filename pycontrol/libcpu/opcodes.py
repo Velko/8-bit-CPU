@@ -85,7 +85,7 @@ def map_flags(flags: dict[str, bool]) -> Tuple[Flags, Flags]:
 
 def add_instruction(builder: MicrocodeBuilder, instr: Instruction, keys: list[str], argmap: dict[str, str]) -> None:
     args = [ resolve_arg(argmap[a]) for a in keys ]
-    rdevs = dict(zip(keys, args))
+    rdevs = {k: v for k, v in zip(keys, args) if isinstance(v, Register)}
     t_instr = builder.add_instruction(instr, *args)
     for step in instr.steps:
         t_instr.add_step(*[resolve_pin(pin, **rdevs) for pin in step])
@@ -94,10 +94,9 @@ def add_instruction(builder: MicrocodeBuilder, instr: Instruction, keys: list[st
         for step in cond.steps:
             t_cond.add_step(*[resolve_pin(pin, **rdevs) for pin in step])
 
-def evaluate_args(builder: MicrocodeBuilder, instr: Instruction, keys, values, argsource, regsets):
+def evaluate_args(builder: MicrocodeBuilder, instr: Instruction, keys: list[str], values: list[str], argsource: list[str | dict[str, str]], regsets: dict[str, list[str]]) -> None:
 
         if len(argsource) == 0:
-            print (f"Arguments collected: {keys} -> {values}")
             add_instruction(builder, instr, keys, dict(zip(keys, values)))
             return
         arg = argsource[0]
@@ -136,8 +135,6 @@ def build_opcodes(yaml_path: str) -> tuple[list[list[ControlSignal]], list[Micro
     for instr in icfg.instructions:
         if instr.opcode is not None and any(isinstance(a, dict) for a in instr.args):
             raise ValueError(f"Opcode should not be specified for repeated instruction: {instr.name}")
-
-        print (f"\nProcessing instruction: {instr.name}")
 
         arglist: list[str] = []
         keys: list[str] = []
