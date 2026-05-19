@@ -5,7 +5,7 @@ from .pin import ControlSignal
 from .instruction_cfg import InstructionConfig, Instruction
 from .DeviceSetup import hardware
 from .opcode_builder import MicrocodeBuilder, MicroCode, OpcodeArg
-from .devices import Register, GPRegister, Flags
+from .devices import DeviceBase, Register, GPRegister, Flags
 import os.path
 
 #TODO: gp_regs and pairs are used by tests only. Would be a good idea to re-work them
@@ -42,11 +42,11 @@ def opcode_of(instr: str) -> int:
         _ops_by_str[instr] = microcode
     return microcode.opcode
 
-def resolve_pin(name: str, **kwargs: Register) -> ControlSignal:
+def resolve_pin(name: str, aliased_regs: dict[str, Register] = {}) -> ControlSignal:
     dev, pin = name.split('.')
-    device = hardware.get(dev)
+    device: DeviceBase | None = aliased_regs.get(dev)
     if device is None:
-        device = kwargs.get(dev)
+        device = hardware.get(dev)
     if device is None:
         raise ValueError(f"Unknown device: {dev}")
     signal = getattr(device, pin, None)
@@ -86,14 +86,14 @@ def map_flags(flags: dict[str, bool]) -> Tuple[Flags, Flags]:
 
 def add_instruction(builder: MicrocodeBuilder, instr: Instruction, keys: list[str], argmap: dict[str, str]) -> None:
     args = [ resolve_arg(argmap[a]) for a in keys ]
-    rdevs = {k: v for k, v in zip(keys, args) if isinstance(v, Register)}
+    aliased_regs = {k: v for k, v in zip(keys, args) if isinstance(v, Register)}
     t_instr = builder.add_instruction(instr, *args)
     for step in instr.steps:
-        t_instr.add_step(*[resolve_pin(pin, **rdevs) for pin in step])
+        t_instr.add_step(*[resolve_pin(pin, aliased_regs) for pin in step])
     for cond in instr.conditions:
         t_cond = t_instr.add_condition(*map_flags(cond.match))
         for step in cond.steps:
-            t_cond.add_step(*[resolve_pin(pin, **rdevs) for pin in step])
+            t_cond.add_step(*[resolve_pin(pin, aliased_regs) for pin in step])
 
 def evaluate_args(builder: MicrocodeBuilder, instr: Instruction, keys: list[str], values: list[str], argsource: list[str | dict[str, str]], regsets: dict[str, list[str]]) -> None:
 
@@ -137,10 +137,10 @@ def build_opcodes(yaml_path: str) -> tuple[list[list[ControlSignal]], list[Micro
         if instr.opcode is not None and any(isinstance(a, dict) for a in instr.args):
             raise ValueError(f"Opcode should not be specified for repeated instruction: {instr.name}")
 
-        arglist: list[str] = []
         keys: list[str] = []
+        values: list[str] = []
         argsource = instr.args
-        evaluate_args(builder, instr, keys, arglist, argsource, icfg.regsets)
+        evaluate_args(builder, instr, keys, values, argsource, icfg.regsets)
 
     return fetch, builder.build()
 
