@@ -54,7 +54,7 @@ def resolve_pin(name: str, **kwargs: Register) -> ControlSignal:
     else:
         raise ValueError(f"Unknown pin: {pin} on device: {dev}")
 
-def resolve_arg(spec: str | dict[str, str], **kwargs: Register) -> Register | OpcodeArg:
+def resolve_arg(spec: str | dict[str, str]) -> Register | OpcodeArg:
     if isinstance(spec, dict):
         if len(spec) != 1:
             raise ValueError(f"Invalid argument specification: {spec}")
@@ -67,8 +67,6 @@ def resolve_arg(spec: str | dict[str, str], **kwargs: Register) -> Register | Op
         return OpcodeArg.BYTE
     elif name == "PCREL":
         return OpcodeArg.PCREL
-    elif name in kwargs:
-        return kwargs[name]
     elif name in hardware.devices:
         return hardware.get_typed_dev(name, Register)
     else:
@@ -85,15 +83,45 @@ def map_flags(flags: dict[str, bool]) -> Tuple[Flags, Flags]:
 
     return mask, value
 
-def add_instruction(builder: MicrocodeBuilder, instr: Instruction, **kwargs: Register) -> None:
-    args = [ resolve_arg(a, **kwargs) for a in instr.args ]
+def add_instruction(builder: MicrocodeBuilder, instr: Instruction, keys: list[str], argmap: dict[str, str]) -> None:
+    args = [ resolve_arg(argmap[a]) for a in keys ]
+    rdevs = dict(zip(keys, args))
     t_instr = builder.add_instruction(instr, *args)
     for step in instr.steps:
-        t_instr.add_step(*[resolve_pin(pin, **kwargs) for pin in step])
+        t_instr.add_step(*[resolve_pin(pin, **rdevs) for pin in step])
     for cond in instr.conditions:
         t_cond = t_instr.add_condition(*map_flags(cond.match))
         for step in cond.steps:
-            t_cond.add_step(*[resolve_pin(pin, **kwargs) for pin in step])
+            t_cond.add_step(*[resolve_pin(pin, **rdevs) for pin in step])
+
+def evaluate_args(builder: MicrocodeBuilder, instr: Instruction, keys, values, argsource, regsets):
+
+        if len(argsource) == 0:
+            print (f"Arguments collected: {keys} -> {values}")
+            add_instruction(builder, instr, keys, dict(zip(keys, values)))
+            return
+        arg = argsource[0]
+        if isinstance(arg, dict):
+            if len(arg) != 1:
+                raise ValueError(f"Invalid argument specification: {arg}")
+            name, rsname = next(iter(arg.items()))
+            only_unique = rsname[0] == "^"
+            if only_unique:
+                rsname = rsname[1:]
+            rs = regsets.get(rsname)
+            if rs is None:
+                raise ValueError(f"Unknown register set: {rsname}")
+            newkeys = keys + [name]
+            for reg in rs:
+                if only_unique and reg in values:
+                    continue
+                newvalues = values + [reg]
+                evaluate_args(builder, instr, newkeys, newvalues, argsource[1:], regsets)
+        else:
+            newkeys = keys + [arg]
+            newvalues = values + [arg]
+            evaluate_args(builder, instr, newkeys, newvalues, argsource[1:], regsets)
+
 
 
 def build_opcodes(yaml_path: str) -> tuple[list[list[ControlSignal]], list[MicroCode]]:
@@ -106,24 +134,15 @@ def build_opcodes(yaml_path: str) -> tuple[list[list[ControlSignal]], list[Micro
     fetch = [[resolve_pin(pin) for pin in step] for step in icfg.fetch]
 
     for instr in icfg.instructions:
-        if instr.opcode is not None and len(instr.repeat) > 0:
+        if instr.opcode is not None and any(isinstance(a, dict) for a in instr.args):
             raise ValueError(f"Opcode should not be specified for repeated instruction: {instr.name}")
 
-        if len(instr.repeat) == 0:
-            add_instruction(builder, instr)
-        else:
-            for rep in instr.repeat:
-                if rep in icfg.regsets:
-                    for reg in icfg.regsets[rep]:
-                        add_instruction(builder, instr, r0=hardware.get_typed_dev(reg, Register))
-                elif rep == "gp_reg_pair_all":
-                    for l, r in permute_gp_regs_all():
-                        add_instruction(builder, instr, r0=l, r1=r)
-                elif rep == "gp_reg_pair_different":
-                    for l, r in permute_gp_regs_nsame():
-                        add_instruction(builder, instr, r0=l, r1=r)
-                else:
-                    raise ValueError(f"Unsupported repeat type: {rep}")
+        print (f"\nProcessing instruction: {instr.name}")
+
+        arglist: list[str] = []
+        keys: list[str] = []
+        argsource = instr.args
+        evaluate_args(builder, instr, keys, arglist, argsource, icfg.regsets)
 
     return fetch, builder.build()
 
