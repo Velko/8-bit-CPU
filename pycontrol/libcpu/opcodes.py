@@ -54,7 +54,13 @@ def resolve_pin(name: str, **kwargs: Register) -> ControlSignal:
     else:
         raise ValueError(f"Unknown pin: {pin} on device: {dev}")
 
-def resolve_arg(name: str, **kwargs: Register) -> Register | OpcodeArg:
+def resolve_arg(spec: str | dict[str, str], **kwargs: Register) -> Register | OpcodeArg:
+    if isinstance(spec, dict):
+        if len(spec) != 1:
+            raise ValueError(f"Invalid argument specification: {spec}")
+        name =  next(iter(spec))
+    else:
+        name = spec
     if name == "ADDR":
         return OpcodeArg.ADDR
     elif name == "BYTE":

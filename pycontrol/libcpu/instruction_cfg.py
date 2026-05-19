@@ -14,7 +14,7 @@ class Condition:
 class Instruction:
     name: str
     repeat: list[str]
-    args: list[str]
+    args: list[str | dict[str, str]]
     format: str | None
     steps: list[list[str]]
     conditions: list[Condition]
@@ -50,4 +50,4 @@ class InstructionConfig:
 
 if __name__ == "__main__":
     cfg = InstructionConfig.load_from_yaml('../../include/instructions.yaml')
-    print(cfg.regsets)
+    print(cfg.instructions[0:3])

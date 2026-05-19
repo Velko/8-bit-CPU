@@ -30,7 +30,7 @@ instructions:
     repeat:
       - gp_regs+f
     args:
-      - r0
+      - r0: gp_regs+f
       - BYTE
     steps:
       - - PC.out
@@ -46,8 +46,8 @@ instructions:
     repeat:
       - gp_reg_pair_all
     args:
-      - r0
-      - r1
+      - r0: gp_regs
+      - r1: gp_regs
     steps:
       - - r0.load
         - r0.alu_l
@@ -59,8 +59,8 @@ instructions:
     repeat:
       - gp_reg_pair_all
     args:
-      - r0
-      - r1
+      - r0: gp_regs
+      - r1: gp_regs
     steps:
       - - r0.load
         - r0.alu_l
@@ -82,8 +82,8 @@ instructions:
     repeat:
       - gp_reg_pair_different
     args:
-      - r0
-      - r1
+      - r0: gp_regs
+      - r1: ^gp_regs
     steps:
       - - r0.load
         - r0.alu_l
@@ -96,8 +96,8 @@ instructions:
     repeat:
       - gp_reg_pair_different
     args:
-      - r0
-      - r1
+      - r0: gp_regs
+      - r1: ^gp_regs
     steps:
       - - r0.load
         - r0.alu_l
@@ -121,8 +121,8 @@ instructions:
     repeat:
       - gp_reg_pair_different
     args:
-      - r0
-      - r1
+      - r0: gp_regs
+      - r1: ^gp_regs
     steps:
       - - r0.load
         - r0.alu_l
@@ -134,8 +134,8 @@ instructions:
     repeat:
       - gp_reg_pair_different
     args:
-      - r0
-      - r1
+      - r0: gp_regs
+      - r1: ^gp_regs
     steps:
       - - r0.load
         - r0.alu_l
@@ -148,8 +148,8 @@ instructions:
     repeat:
       - gp_reg_pair_different
     args:
-      - r0
-      - r1
+      - r0: gp_regs
+      - r1: ^gp_regs
     steps:
       - - r0.load
         - r0.alu_l
@@ -161,7 +161,7 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - r0
+      - r0: gp_regs
     steps:
       - - r0.load
         - r0.alu_l
@@ -173,7 +173,7 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - r0
+      - r0: gp_regs
     steps:
       - - r0.load
         - r0.alu_l
@@ -185,7 +185,7 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - r0
+      - r0: gp_regs
     steps:
       - - r0.load
         - r0.alu_l
@@ -197,7 +197,7 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - r0
+      - r0: gp_regs
     steps:
       - - r0.load
         - r0.alu_l
@@ -210,7 +210,7 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - r0
+      - r0: gp_regs
     steps:
       - - r0.load
         - r0.alu_l
@@ -221,7 +221,7 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - r0
+      - r0: gp_regs
     steps:
       - - r0.load
         - r0.alu_l
@@ -241,7 +241,7 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - r0
+      - r0: gp_regs
     steps:
       - - r0.out
         - F.calc
@@ -265,7 +265,7 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - r0
+      - r0: gp_regs
     steps:
       - - r0.load
         - r0.alu_l
@@ -277,8 +277,8 @@ instructions:
     repeat:
       - gp_reg_pair_different
     args:
-      - r0
-      - r1
+      - r0: gp_regs
+      - r1: ^gp_regs
     steps:
       - - r0.alu_l
         - r1.alu_r
@@ -290,8 +290,8 @@ instructions:
     repeat:
       - gp_reg_pair_different
     args:
-      - r0
-      - r1
+      - r0: gp_regs
+      - r1: ^gp_regs
     steps:
       - - r0.load
         - r1.out
@@ -301,7 +301,7 @@ instructions:
       - gp_regs
     args:
       - BYTE
-      - r0
+      - r0: gp_regs
     steps:
       - - PC.out
         - PC.inc
@@ -314,7 +314,7 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - r0
+      - r0: gp_regs
       - BYTE
     steps:
       - - PC.out
@@ -330,7 +330,7 @@ instructions:
       - gp_regs
     args:
       - ADDR
-      - r0
+      - r0: gp_regs
     steps:
       - - PC.out
         - PC.inc
@@ -349,8 +349,8 @@ instructions:
       - gp_reg_pair_all
     args:
       - TDP
-      - r0
-      - r1
+      - r0: gp_regs
+      - r1: gp_regs
     format: "({}+{}), {}"
     steps:
       - - r0.out
@@ -364,7 +364,7 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - r0
+      - r0: gp_regs
       - ADDR
     steps:
       - - PC.out
@@ -384,9 +384,9 @@ instructions:
     repeat:
       - gp_reg_pair_all
     args:
-      - r0
+      - r0: gp_regs
       - SDP
-      - r1
+      - r1: gp_regs
     format: "{}, ({}+{})"
     steps:
       - - r1.out
@@ -402,7 +402,7 @@ instructions:
       - gp_regs
     args:
       - TDP
-      - r0
+      - r0: gp_regs
     format: "({}++), {}"
     steps:
       - - r0.out
@@ -567,7 +567,7 @@ instructions:
     repeat:
       - gp_regs+f
     args:
-      - r0
+      - r0: gp_regs+f
     steps:
       - - SP.out
         - SP.dec
@@ -595,7 +595,7 @@ instructions:
     repeat:
       - gp_regs+f
     args:
-      - r0
+      - r0: gp_regs+f
     steps:
       - - SP.out
         - SP.inc
@@ -663,7 +663,7 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - r0
+      - r0: gp_regs
       - SP
       - BYTE
     steps:
@@ -686,7 +686,7 @@ instructions:
     args:
       - SP
       - BYTE
-      - r0
+      - r0: gp_regs
     steps:
       - - PC.out
         - PC.inc
@@ -838,8 +838,8 @@ instructions:
     repeat:
       - gp_reg_pair_different
     args:
-      - r0
-      - r1
+      - r0: gp_regs
+      - r1: ^gp_regs
     steps:
       # .add_step(l.alu_l, r.alu_r, AndOr.out, F.calc)
       - - r0.alu_l
@@ -851,7 +851,7 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - r0
+      - r0: gp_regs
       - SDP
     format: "{}, ({}++)"
     steps:
@@ -897,7 +897,7 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - r0
+      - r0: gp_regs
       - BYTE
     steps:
       - - PC.out
@@ -928,7 +928,7 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - r0
+      - r0: gp_regs
       - BYTE
     steps:
       - - PC.out
@@ -959,7 +959,7 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - r0
+      - r0: gp_regs
       - BYTE
     steps:
       - - PC.out
@@ -977,7 +977,7 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - r0
+      - r0: gp_regs
       - BYTE
     steps:
       - - PC.out
@@ -994,7 +994,7 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - r0
+      - r0: gp_regs
       - BYTE
     steps:
       - - PC.out
@@ -1027,7 +1027,7 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - r0
+      - r0: gp_regs
       - BYTE
     steps:
       - - PC.out
@@ -1044,7 +1044,7 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - r0
+      - r0: gp_regs
       - BYTE
     steps:
       - - PC.out
@@ -1062,7 +1062,7 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - r0
+      - r0: gp_regs
       - BYTE
     steps:
       - - PC.out
@@ -1080,8 +1080,8 @@ instructions:
       - gp_reg_pair_all
     args:
       - SDP
-      - r0
-      - r1
+      - r0: gp_regs
+      - r1: gp_regs
     format: "({}+{}), {}"
     steps:
       - - r0.out
@@ -1095,9 +1095,9 @@ instructions:
     repeat:
       - gp_reg_pair_all
     args:
-      - r0
+      - r0: gp_regs
       - TDP
-      - r1
+      - r1: gp_regs
     format: "{}, ({}+{})"
     steps:
       - - r1.out
@@ -1174,7 +1174,7 @@ instructions:
     repeat:
       - gp_regs
     args:
-      - r0
+      - r0: gp_regs
     steps:
       - - r0.out
         - F.calc
