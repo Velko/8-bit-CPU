@@ -59,6 +59,10 @@ startup:
     st tail_rowptr + 0, A
     st tail_rowptr + 1, B
 
+    ldi A, ARENA_WIDTH / 2
+    st head_xoffset, A
+    st tail_xoffset, A
+
     ldi A, DIR_RIGHT
     st direction, A
 
@@ -112,7 +116,7 @@ startup:
     push C
     push B
     pop TDP
-    ld A, head_x
+    ld A, head_xoffset
     push D
     inc D
     st (TDP+A), D
@@ -127,6 +131,10 @@ startup:
     push C
     push B
 
+    ld C, head_xoffset
+    call calc_move_offset
+    st head_xoffset, C
+
     ; move screen coordinates
     ld C, head_x
     ld B, head_y
@@ -138,7 +146,7 @@ startup:
     ; load C:B into SDP
     pop SDP
 
-    ld C, head_x
+    ld C, head_xoffset
     ld A, (SDP + C)
     bne game_over ; if anything but EMPTY=0, ran into someting
 
@@ -163,7 +171,7 @@ startup:
     pop TDP
 
     ; load direction from arena
-    ld A, tail_x
+    ld A, tail_xoffset
     ld D, (TDP + A)
     dec D
 
@@ -177,6 +185,10 @@ startup:
     call calc_move_ptr
     st tail_rowptr + 0, B
     st tail_rowptr + 1, C
+
+    ld C, tail_xoffset
+    call calc_move_offset
+    st tail_xoffset, C
 
     ; move screen coordinates
     ld C, tail_x
@@ -258,6 +270,23 @@ calc_move:
     subi C, 6
     ret
 .x_done:
+    ret
+
+; ********************************************************************************
+; Calculate next row offset depending on direction
+; Parameters:
+;   C - X coordinate
+;   A - 0 to move vertically, 1 - horizontally
+;   D - -1 or 1, depending on direction
+; Post state:
+;   C - updated X coordinate
+; ********************************************************************************
+calc_move_offset:
+    tst A ; get Z flag from A
+    bne .move_off_x
+    ret
+.move_off_x:
+    add C, D
     ret
 
 ; ********************************************************************************
@@ -471,12 +500,16 @@ head_y:
     #res 1
 head_rowptr:
     #res 2
+head_xoffset:
+    #res 1
 tail_x:
     #res 1
 tail_y:
     #res 1
 tail_rowptr:
     #res 2
+tail_xoffset:
+    #res 1
 direction:
     #res 1
 snake_length:
