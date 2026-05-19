@@ -8,6 +8,7 @@ from .opcode_builder import MicrocodeBuilder, MicroCode, OpcodeArg
 from .devices import Register, GPRegister, Flags
 import os.path
 
+#TODO: gp_regs and pairs are used by tests only. Would be a good idea to re-work them
 gp_regs: list[GPRegister] = [r for r in hardware.devices.values() if isinstance(r, GPRegister)]
 
 _ops_by_str: dict[str, MicroCode] = {}

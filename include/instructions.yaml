@@ -27,8 +27,6 @@ instructions:
       - []        # extra NOP to prevent microcode ROM generator from inserting steps reset
 
   - name: "ldi"
-    repeat:
-      - gp_regs+f
     args:
       - r0: gp_regs+f
       - BYTE
@@ -43,8 +41,6 @@ instructions:
       - - Clock.halt
 
   - name: "add"
-    repeat:
-      - gp_reg_pair_all
     args:
       - r0: gp_regs
       - r1: gp_regs
@@ -56,8 +52,6 @@ instructions:
         - F.calc
 
   - name: "adc"
-    repeat:
-      - gp_reg_pair_all
     args:
       - r0: gp_regs
       - r1: gp_regs
@@ -79,8 +73,6 @@ instructions:
             - F.carry
 
   - name: "sub"
-    repeat:
-      - gp_reg_pair_different
     args:
       - r0: gp_regs
       - r1: ^gp_regs
@@ -93,8 +85,6 @@ instructions:
         - F.calc
 
   - name: "sbb"
-    repeat:
-      - gp_reg_pair_different
     args:
       - r0: gp_regs
       - r1: ^gp_regs
@@ -118,8 +108,6 @@ instructions:
             - F.carry
 
   - name: "and"
-    repeat:
-      - gp_reg_pair_different
     args:
       - r0: gp_regs
       - r1: ^gp_regs
@@ -131,8 +119,6 @@ instructions:
         - F.calc
 
   - name: "or"
-    repeat:
-      - gp_reg_pair_different
     args:
       - r0: gp_regs
       - r1: ^gp_regs
@@ -145,8 +131,6 @@ instructions:
         - F.calc
 
   - name: "xor"
-    repeat:
-      - gp_reg_pair_different
     args:
       - r0: gp_regs
       - r1: ^gp_regs
@@ -158,8 +142,6 @@ instructions:
         - F.calc
 
   - name: "not"
-    repeat:
-      - gp_regs
     args:
       - r0: gp_regs
     steps:
@@ -170,8 +152,6 @@ instructions:
         - F.calc
 
   - name: "clr"
-    repeat:
-      - gp_regs
     args:
       - r0: gp_regs
     steps:
@@ -182,8 +162,6 @@ instructions:
         - F.calc
 
   - name: "inc"
-    repeat:
-      - gp_regs
     args:
       - r0: gp_regs
     steps:
@@ -194,8 +172,6 @@ instructions:
         - F.carry
 
   - name: "dec"
-    repeat:
-      - gp_regs
     args:
       - r0: gp_regs
     steps:
@@ -207,8 +183,6 @@ instructions:
         - F.carry
 
   - name: "shr"
-    repeat:
-      - gp_regs
     args:
       - r0: gp_regs
     steps:
@@ -218,8 +192,6 @@ instructions:
         - F.calc
 
   - name: "ror"
-    repeat:
-      - gp_regs
     args:
       - r0: gp_regs
     steps:
@@ -238,8 +210,6 @@ instructions:
             - F.calc
 
   - name: "asr"
-    repeat:
-      - gp_regs
     args:
       - r0: gp_regs
     steps:
@@ -262,8 +232,6 @@ instructions:
             - F.calc
 
   - name: "swap"
-    repeat:
-      - gp_regs
     args:
       - r0: gp_regs
     steps:
@@ -274,8 +242,6 @@ instructions:
         - F.calc
 
   - name: "cmp"
-    repeat:
-      - gp_reg_pair_different
     args:
       - r0: gp_regs
       - r1: ^gp_regs
@@ -287,8 +253,6 @@ instructions:
         - F.calc
 
   - name: "mov"
-    repeat:
-      - gp_reg_pair_different
     args:
       - r0: gp_regs
       - r1: ^gp_regs
@@ -297,8 +261,6 @@ instructions:
         - r1.out
 
   - name: "out"
-    repeat:
-      - gp_regs
     args:
       - BYTE
       - r0: gp_regs
@@ -311,8 +273,6 @@ instructions:
         - IOCtl.to_dev
 
   - name: "in"
-    repeat:
-      - gp_regs
     args:
       - r0: gp_regs
       - BYTE
@@ -326,8 +286,6 @@ instructions:
         - F.calc
 
   - name: "st"
-    repeat:
-      - gp_regs
     args:
       - ADDR
       - r0: gp_regs
@@ -345,8 +303,6 @@ instructions:
         - Ram.write
 
   - name: "st"
-    repeat:
-      - gp_reg_pair_all
     args:
       - TDP
       - r0: gp_regs
@@ -361,8 +317,6 @@ instructions:
         - Ram.write
 
   - name: "ld"
-    repeat:
-      - gp_regs
     args:
       - r0: gp_regs
       - ADDR
@@ -381,8 +335,6 @@ instructions:
         - F.calc
 
   - name: "ld"
-    repeat:
-      - gp_reg_pair_all
     args:
       - r0: gp_regs
       - SDP
@@ -398,8 +350,6 @@ instructions:
         - F.calc
 
   - name: "st"
-    repeat:
-      - gp_regs
     args:
       - TDP
       - r0: gp_regs
@@ -564,8 +514,6 @@ instructions:
             - PC.load
 
   - name: "push"
-    repeat:
-      - gp_regs+f
     args:
       - r0: gp_regs+f
     steps:
@@ -592,8 +540,6 @@ instructions:
         - Ram.write
 
   - name: "pop"
-    repeat:
-      - gp_regs+f
     args:
       - r0: gp_regs+f
     steps:
@@ -660,8 +606,6 @@ instructions:
         - SP.load
 
   - name: "ld"
-    repeat:
-      - gp_regs
     args:
       - r0: gp_regs
       - SP
@@ -681,8 +625,6 @@ instructions:
         - F.calc
 
   - name: "str"
-    repeat:
-      - gp_regs
     args:
       - SP
       - BYTE
@@ -835,8 +777,6 @@ instructions:
         - PC.load
 
   - name: "lcmp"
-    repeat:
-      - gp_reg_pair_different
     args:
       - r0: gp_regs
       - r1: ^gp_regs
@@ -848,8 +788,6 @@ instructions:
         - F.calc
 
   - name: "ld"
-    repeat:
-      - gp_regs
     args:
       - r0: gp_regs
       - SDP
@@ -894,8 +832,6 @@ instructions:
         - TDP.load
 
   - name: "addi"
-    repeat:
-      - gp_regs
     args:
       - r0: gp_regs
       - BYTE
@@ -925,8 +861,6 @@ instructions:
         - A.load
 
   - name: "adci"
-    repeat:
-      - gp_regs
     args:
       - r0: gp_regs
       - BYTE
@@ -956,8 +890,6 @@ instructions:
             - F.carry
 
   - name: "subi"
-    repeat:
-      - gp_regs
     args:
       - r0: gp_regs
       - BYTE
@@ -974,8 +906,6 @@ instructions:
         - F.calc
 
   - name: "cmpi"
-    repeat:
-      - gp_regs
     args:
       - r0: gp_regs
       - BYTE
@@ -991,8 +921,6 @@ instructions:
         - F.calc
 
   - name: "sbbi"
-    repeat:
-      - gp_regs
     args:
       - r0: gp_regs
       - BYTE
@@ -1024,8 +952,6 @@ instructions:
             - F.carry
 
   - name: "andi"
-    repeat:
-      - gp_regs
     args:
       - r0: gp_regs
       - BYTE
@@ -1041,8 +967,6 @@ instructions:
         - F.calc
 
   - name: "ori"
-    repeat:
-      - gp_regs
     args:
       - r0: gp_regs
       - BYTE
@@ -1059,8 +983,6 @@ instructions:
         - F.calc
 
   - name: "xori"
-    repeat:
-      - gp_regs
     args:
       - r0: gp_regs
       - BYTE
@@ -1076,8 +998,6 @@ instructions:
         - F.calc
 
   - name: "st"
-    repeat:
-      - gp_reg_pair_all
     args:
       - SDP
       - r0: gp_regs
@@ -1092,8 +1012,6 @@ instructions:
         - Ram.write
 
   - name: "ld"
-    repeat:
-      - gp_reg_pair_all
     args:
       - r0: gp_regs
       - TDP
@@ -1171,8 +1089,6 @@ instructions:
         - TDP.load
 
   - name: "tst"
-    repeat:
-      - gp_regs
     args:
       - r0: gp_regs
     steps:

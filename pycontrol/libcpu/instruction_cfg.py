@@ -13,7 +13,6 @@ class Condition:
 @dataclass
 class Instruction:
     name: str
-    repeat: list[str]
     args: list[str | dict[str, str]]
     format: str | None
     steps: list[list[str]]
@@ -23,7 +22,6 @@ class Instruction:
 
     def __init__(self, **kwargs: Any) -> None:
         self.name = kwargs['name']
-        self.repeat = kwargs.get('repeat', [])
         self.args = kwargs.get('args', [])
         self.format = kwargs.get('format', None)
         self.steps = kwargs.get('steps', [])
