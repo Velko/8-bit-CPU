@@ -1000,16 +1000,16 @@ const struct op_microcode microcode[] PROGMEM = {
     /* e9 ld_D_SP_imm */
     { .default_steps = {0x07bd58b9, 0x17d358fb, 0x07fa1839},},
 
-    /* ea str_SP_imm_A */
+    /* ea st_SP_imm_A */
     { .default_steps = {0x07bd58b9, 0x17d358fb, 0x07fa5890},},
 
-    /* eb str_SP_imm_B */
+    /* eb st_SP_imm_B */
     { .default_steps = {0x07bd58b9, 0x17d358fb, 0x07fa5891},},
 
-    /* ec str_SP_imm_C */
+    /* ec st_SP_imm_C */
     { .default_steps = {0x07bd58b9, 0x17d358fb, 0x07fa5892},},
 
-    /* ed str_SP_imm_D */
+    /* ed st_SP_imm_D */
     { .default_steps = {0x07bd58b9, 0x17d358fb, 0x07fa5893},},
 
     /* ee xprefix    */
@@ -1409,4 +1409,64 @@ const struct op_microcode microcode[] PROGMEM = {
 
     /* 151 tst_D      */
     { .default_steps = {0x07ff18f3},},
+
+    /* 152 st_SDP_A   */
+    { .default_steps = {0x07b95890},},
+
+    /* 153 st_SDP_B   */
+    { .default_steps = {0x07b95891},},
+
+    /* 154 st_SDP_C   */
+    { .default_steps = {0x07b95892},},
+
+    /* 155 st_SDP_D   */
+    { .default_steps = {0x07b95893},},
+
+    /* 156 ld_A_TDP_imm */
+    { .default_steps = {0x07bd58b9, 0x17d658fb, 0x07fa1809},},
+
+    /* 157 ld_A_SDP_imm */
+    { .default_steps = {0x07bd58b9, 0x17d158fb, 0x07fa1809},},
+
+    /* 158 ld_B_TDP_imm */
+    { .default_steps = {0x07bd58b9, 0x17d658fb, 0x07fa1819},},
+
+    /* 159 ld_B_SDP_imm */
+    { .default_steps = {0x07bd58b9, 0x17d158fb, 0x07fa1819},},
+
+    /* 15a ld_C_TDP_imm */
+    { .default_steps = {0x07bd58b9, 0x17d658fb, 0x07fa1829},},
+
+    /* 15b ld_C_SDP_imm */
+    { .default_steps = {0x07bd58b9, 0x17d158fb, 0x07fa1829},},
+
+    /* 15c ld_D_TDP_imm */
+    { .default_steps = {0x07bd58b9, 0x17d658fb, 0x07fa1839},},
+
+    /* 15d ld_D_SDP_imm */
+    { .default_steps = {0x07bd58b9, 0x17d158fb, 0x07fa1839},},
+
+    /* 15e st_TDP_imm_A */
+    { .default_steps = {0x07bd58b9, 0x17d658fb, 0x07fa5890},},
+
+    /* 15f st_TDP_imm_B */
+    { .default_steps = {0x07bd58b9, 0x17d658fb, 0x07fa5891},},
+
+    /* 160 st_TDP_imm_C */
+    { .default_steps = {0x07bd58b9, 0x17d658fb, 0x07fa5892},},
+
+    /* 161 st_TDP_imm_D */
+    { .default_steps = {0x07bd58b9, 0x17d658fb, 0x07fa5893},},
+
+    /* 162 st_SDP_imm_A */
+    { .default_steps = {0x07bd58b9, 0x17d158fb, 0x07fa5890},},
+
+    /* 163 st_SDP_imm_B */
+    { .default_steps = {0x07bd58b9, 0x17d158fb, 0x07fa5891},},
+
+    /* 164 st_SDP_imm_C */
+    { .default_steps = {0x07bd58b9, 0x17d158fb, 0x07fa5892},},
+
+    /* 165 st_SDP_imm_D */
+    { .default_steps = {0x07bd58b9, 0x17d158fb, 0x07fa5893},},
 };

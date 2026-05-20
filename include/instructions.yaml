@@ -9,6 +9,8 @@ regsets:
     regs: [A, B, C, D]
   - name: "gp_regs+f"
     regs: [A, B, C, D, F]
+  - name: "stdp_regs"
+    regs: [TDP, SDP]
 
 instructions:
   - name: "nop"
@@ -624,7 +626,7 @@ instructions:
         - Ram.out
         - F.calc
 
-  - name: "str"
+  - name: "st"
     args:
       - SP
       - BYTE
@@ -1094,3 +1096,51 @@ instructions:
     steps:
       - - r0.out
         - F.calc
+
+  - name: "st"
+    args:
+      - SDP
+      - r0: gp_regs
+    format: "({}++), {}"
+    steps:
+      - - r0.out
+        - SDP.out
+        - SDP.inc
+        - Ram.write
+
+  - name: "ld"
+    args:
+      - r0: gp_regs
+      - a0: stdp_regs
+      - BYTE
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TL.load
+      - - a0.out
+        - TL.out
+        - ACalc.load
+        - ACalc.signed
+      - - ACalc.out
+        - r0.load
+        - Ram.out
+        - F.calc
+
+  - name: "st"
+    args:
+      - a0: stdp_regs
+      - BYTE
+      - r0: gp_regs
+    steps:
+      - - PC.out
+        - PC.inc
+        - ProgMem.out
+        - TL.load
+      - - a0.out
+        - TL.out
+        - ACalc.load
+        - ACalc.signed
+      - - ACalc.out
+        - r0.out
+        - Ram.write

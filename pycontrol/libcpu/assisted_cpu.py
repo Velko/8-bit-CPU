@@ -184,7 +184,7 @@ class AssistedCPU(AssistedCPUEngine):
         self.execute_mnemonic(opcode, offset)
 
     def strel(self, base: AddressRegister, offset: int, source: GPRegister) -> None:
-        opcode = f"str_{base.name}_imm_{source.name}"
+        opcode = f"st_{base.name}_imm_{source.name}"
         self.execute_mnemonic(opcode, offset)
 
     def out(self, port: int, source: GPRegister) -> RunMessage | None:
