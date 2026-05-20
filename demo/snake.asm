@@ -40,13 +40,13 @@ startup:
     call draw_v_borders
     call draw_h_border
 
-    ldi A, 0x20
-    st head_x, A
-    st tail_x, A
+    ldi A, 0x21
+    st head_xscreen, A
+    st tail_xscreen, A
 
-    ldi A, 0x20
-    st head_y, A
-    st tail_y, A
+    ldi A, 0x21
+    st head_yscreen, A
+    st tail_yscreen, A
 
     ; precalculate the address of the center row
     ARENA_CENTER_ROW = arena + ARENA_HEIGHT * ARENA_ROW / 2
@@ -60,8 +60,8 @@ startup:
     st tail_rowptr + 1, B
 
     ldi A, ARENA_WIDTH / 2
-    st head_xoffset, A
-    st tail_xoffset, A
+    st head_xscreenoffset, A
+    st tail_xscreenoffset, A
 
     ldi A, DIR_RIGHT
     st direction, A
@@ -116,7 +116,7 @@ startup:
     push C
     push B
     pop TDP
-    ld A, head_xoffset
+    ld A, head_xscreenoffset
     push D
     inc D
     st (TDP+A), D
@@ -131,22 +131,22 @@ startup:
     push C
     push B
 
-    ld C, head_xoffset
+    ld C, head_xscreenoffset
     call calc_move_offset
-    st head_xoffset, C
+    st head_xscreenoffset, C
 
     ; move screen coordinates
-    ld C, head_x
-    ld B, head_y
-    call calc_move
-    st head_x, C
-    st head_y, B
+    ld C, head_xscreen
+    ld B, head_yscreen
+    call calc_move_screen
+    st head_xscreen, C
+    st head_yscreen, B
 
 .check_collision:
     ; load C:B into SDP
     pop SDP
 
-    ld C, head_xoffset
+    ld C, head_xscreenoffset
     ld A, (SDP + C)
     bne game_over ; if anything but EMPTY=0, ran into someting
 
@@ -171,7 +171,7 @@ startup:
     pop TDP
 
     ; load direction from arena
-    ld A, tail_xoffset
+    ld A, tail_xscreenoffset
     ld D, (TDP + A)
     dec D
 
@@ -186,16 +186,16 @@ startup:
     st tail_rowptr + 0, B
     st tail_rowptr + 1, C
 
-    ld C, tail_xoffset
+    ld C, tail_xscreenoffset
     call calc_move_offset
-    st tail_xoffset, C
+    st tail_xscreenoffset, C
 
     ; move screen coordinates
-    ld C, tail_x
-    ld B, tail_y
-    call calc_move
-    st tail_x, C
-    st tail_y, B
+    ld C, tail_xscreen
+    ld B, tail_yscreen
+    call calc_move_screen
+    st tail_xscreen, C
+    st tail_yscreen, B
 
 .skip_move_tail:
 
@@ -220,17 +220,17 @@ game_over:
 
 
 ; ********************************************************************************
-; Calculate next coordinates depending on direction
+; Calculate next screen coordinates depending on direction
 ; Parameters:
-;   B - Y coordinate
-;   C - X coordinate
+;   B - BCD encoded Y coordinate
+;   C - BCD encoded X coordinate
 ;   A - 0 to move vertically, 1 - horizontally
 ;   D - -1 or 1, depending on direction
 ; Post state:
 ;   B - updated Y coordinate
 ;   C - updated X coordinate
 ; ********************************************************************************
-calc_move:
+calc_move_screen:
     tst A ; get Z flag from A
     bne .move_x
 
@@ -254,6 +254,7 @@ calc_move:
     ret
 
 .move_x:
+    add C, D
     add C, D
     ldi A, 0x0F
     tst D ; get N flag
@@ -367,30 +368,30 @@ draw_v_borders:
 
 ; ********************************************************************************
 ; Put ANSI codes and text to draw snake segment at coordinates from variables
-;   (head_x, head_y) into a text buffer
+;   (head_xscreen, head_yscreen) into a text buffer
 ; Parameters:
 ;   TDP - text buffer to write
 ; Post state:
 ;   TDP - buffer, past the last character written
 ; ********************************************************************************
 draw_head:
-    ld B, head_y
-    ld C, head_x
+    ld B, head_yscreen
+    ld C, head_xscreen
     ldi D, "@"
     jmp draw_block
 
 
 ; ********************************************************************************
 ; Put ANSI codes and text to draw erase segment at coordinates from variables
-;   (tail_x, tail_y) into a text buffer
+;   (tail_xscreen, tail_yscreen) into a text buffer
 ; Parameters:
 ;   TDP - text buffer to write
 ; Post state:
 ;   TDP - buffer, past the last character written
 ; ********************************************************************************
 erase_tail:
-    ld B, tail_y
-    ld C, tail_x
+    ld B, tail_yscreen
+    ld C, tail_xscreen
     ldi D, " "
     ; fallthrough to draw_block
 
@@ -421,15 +422,7 @@ draw_block:
     ldi A, ";"
     st (TDP++), A
 
-    ; double the coordinate (BCD encoded), because each block is 2 chars
     mov A, C
-    ldi C, 0x0F
-    and C, A
-    cmpi C, 5
-    bcs .skip_5adj
-    addi A, 3
-.skip_5adj:
-    add A, A
     call buffer_put_bcd
 
     ldi A, "H"
@@ -474,7 +467,7 @@ clrscr_message:
 
 
 loading_message:
-    #d 0x1B, "[20;35HLoading...", 0x1B, "[0;0H", 0x00; show Loading... and, goto 0:0
+    #d 0x1B, "[20;35HLoading...", 0x1B, "[1;1H", 0x00; show Loading... and, goto 1:1
 
 clear_loading:
     #d 0x1B, "[20;35H          ", 0x00
@@ -494,21 +487,21 @@ game_over_message:
     addr = 0x1000
 }
 
-head_x:
+head_xscreen:
     #res 1
-head_y:
+head_yscreen:
     #res 1
 head_rowptr:
     #res 2
-head_xoffset:
+head_xscreenoffset:
     #res 1
-tail_x:
+tail_xscreen:
     #res 1
-tail_y:
+tail_yscreen:
     #res 1
 tail_rowptr:
     #res 2
-tail_xoffset:
+tail_xscreenoffset:
     #res 1
 direction:
     #res 1
