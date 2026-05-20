@@ -17,12 +17,7 @@ class ProtocolException(Exception):
 class PinClient:
 
     def __init__(self) -> None:
-
         self.serial = open_port()
-
-        # Arduino is not ready directly after connecting
-        # try a single operation before proceeding
-        self.identify()
 
     def close(self) -> None:
         self.serial.close()
@@ -142,5 +137,8 @@ def get_client_instance() -> PinClient:
 
     if single_inst is None:
         single_inst = PinClient()
+        # Arduino is not ready directly after connecting
+        # try a single operation before proceeding
+        single_inst.identify()
 
     return single_inst

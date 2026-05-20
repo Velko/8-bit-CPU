@@ -76,3 +76,7 @@ jobs:
         python ../tools/exec_bin.py prime_sieve.bin | tee /dev/stderr | diff -u primes.txt -
         python ../tools/exec_bin.py double_dabble.bin | tee /dev/stderr | grep -q "36324058"
         python ../tools/exec_bin.py -M uart_output.bin | tee /dev/stderr | diff -u uart_output.txt -
+    - name: Shutdown hardware emulator
+      working-directory: ./tools
+      run: |
+        python ./shutdown.py

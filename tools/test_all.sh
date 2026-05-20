@@ -21,4 +21,4 @@ cd ../demo
 ../tools/exec_bin.py -M uart_output.bin | diff -u uart_output.txt - || echo "FAILED: uart_output.bin"
 
 
-kill -- -$$
+../tools/shutdown.py
