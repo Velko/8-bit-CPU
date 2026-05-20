@@ -17,15 +17,18 @@ KEY_DOWN = 0x42
 KEY_LEFT = 0x44
 
 startup:
+    ; prepare and clear the screen
     lea SDP, clrscr_message
     call b_uart_puts
 
+    ; preparing takes some time, so put a "Loading..." message on the screen
     lea SDP, loading_message
     call b_uart_puts
 
     ; clear the arena
     lea TDP, arena
     ldi A, CELL_EMPTY
+    ; arena is 2560 bytes, so we need a double loop to count the bytes
     ldi C, 0
     ldi D, ARENA_ROW*ARENA_HEIGHT / 256
 .zero_arena_loop:
@@ -35,12 +38,13 @@ startup:
     dec D
     bne .zero_arena_loop
 
-
+    ; draw the frame
     call draw_h_border
     call draw_v_borders
     call draw_h_border
 
-    ldi A, 0x21
+    ; BCD encoded center of the screen, coordinates are 1-based
+    ldi A, 0x41
     st head_xscreen, A
     st tail_xscreen, A
 
@@ -59,19 +63,24 @@ startup:
     st tail_rowptr + 0, A
     st tail_rowptr + 1, B
 
+    ; binary encoded X offset into the row
     ldi A, ARENA_WIDTH / 2
     st head_xscreenoffset, A
     st tail_xscreenoffset, A
 
+    ; initial direction
     ldi A, DIR_RIGHT
     st direction, A
 
+    ; initial length
     ldi A, 0
     st snake_length, A
 
+    ; initial desired length
     ldi A, 5
     st desired_length, A
 
+    ; erase the "Loading..."
     lea SDP, clear_loading
     call b_uart_puts
 
@@ -122,6 +131,8 @@ startup:
     st (TDP+A), D
     pop D
 
+    call decode_direction
+
     ; move the row ptr and store it
     call calc_move_ptr
     st head_rowptr + 0, B
@@ -131,6 +142,7 @@ startup:
     push C
     push B
 
+    ; move the x offset
     ld C, head_xscreenoffset
     call calc_move_offset
     st head_xscreenoffset, C
@@ -143,7 +155,7 @@ startup:
     st head_yscreen, B
 
 .check_collision:
-    ; load C:B into SDP
+    ; load C:B into SDP (was pushed earlier)
     pop SDP
 
     ld C, head_xscreenoffset
@@ -181,6 +193,8 @@ startup:
     st (TDP + A), B
     pop B
 
+    call decode_direction
+
     ; move the tail and store ptr
     call calc_move_ptr
     st tail_rowptr + 0, B
@@ -204,7 +218,7 @@ startup:
     lea TDP, buffer
     call draw_head
     call erase_tail
-    ldi A, 0
+    ldi A, 0 ; 0-terminate
     st (TDP++), A
 
     ; and send it to terminal
@@ -229,6 +243,7 @@ game_over:
 ; Post state:
 ;   B - updated Y coordinate
 ;   C - updated X coordinate
+;   A - clobbered
 ; ********************************************************************************
 calc_move_screen:
     tst A ; get Z flag from A
@@ -281,6 +296,7 @@ calc_move_screen:
 ;   D - -1 or 1, depending on direction
 ; Post state:
 ;   C - updated X coordinate
+;   A, D - unchanged
 ; ********************************************************************************
 calc_move_offset:
     tst A ; get Z flag from A
@@ -295,19 +311,18 @@ calc_move_offset:
 ; Parameters:
 ;   B - LSB of the row pointer
 ;   C - MSB of the row pointer
-;   D - direction DIR_*
+;   A - 0 to move vertically, 1 - horizontally
+;   D - -1 or 1, depending on direction
 ; Post state:
-;   A - 0, if moved vertically, 1 - if horizontally
-;   D - -1 or 1, whether incremented or decremented the row
+;   B - adjusted LSB of the row pointer
+;   C - adjusted MSB of the row pointer
+;   A, D - unchanged
 ; ********************************************************************************
 calc_move_ptr:
-    ; the direction is in range [0 .. 3], the LSB marks the horizontal vs vertical
-    ; then the opposites are 2 places apart, we can subtract 1 or 2 to get -1 or 1
-    ldi A, 1
-    and A, D
+    tst A
     bne .keep_ptr
 
-    dec D
+    tst D
     bmi .dec_ptr
 
 .inc_ptr:
@@ -321,7 +336,31 @@ calc_move_ptr:
     ret
 
 .keep_ptr:
-    ; moves horizontally: keep the ptr as-is, just adjust D
+    ; moves horizontally: keep the ptr as-is
+    ret
+
+
+; ********************************************************************************
+; Decode direction into vertical/horizontal and offset
+; Parameters:
+;   D - direction DIR_*
+; Post state:
+;   A - 0 - vertically, 1 - horizontally
+;   D - -1 or 1, whether to increment or decrement
+; ********************************************************************************
+decode_direction:
+    ; the direction is in range [0 .. 3], the LSB marks the horizontal vs vertical
+    ; then the opposites are 2 places apart, we can subtract 1 or 2 to get -1 or 1
+    ldi A, 1
+    and A, D
+    bne .horizontal
+
+.vertical:
+    dec D
+    ret
+
+.horizontal:
+    ; adjust D to the expected range
     subi D, 2
     ret
 
