@@ -10,6 +10,11 @@ DIR_DOWN = 0x04
 DIR_RIGHT = 0x05
 
 CELL_EMPTY  =  0x00
+CELL_WALL   =  0x01
+CELL_SNAKE_UP    = DIR_UP
+CELL_SNAKE_LEFT  = DIR_LEFT
+CELL_SNAKE_DOWN  = DIR_DOWN
+CELL_SNAKE_RIGHT = DIR_RIGHT
 
 KEY_UP = 0x41
 KEY_RIGHT = 0x43
@@ -37,6 +42,34 @@ startup:
     bne .zero_arena_loop
     dec D
     bne .zero_arena_loop
+
+    ; fill horizontal walls
+    ldi C, ARENA_WIDTH
+    lea SDP, arena
+    lea TDP, arena + (ARENA_HEIGHT - 1) * ARENA_ROW
+    ldi A, CELL_WALL
+.fill_h_loop:
+    st (SDP++), A
+    st (TDP++), A
+    dec C
+    bne .fill_h_loop
+
+    ; fill vertical walls
+    ldi C, ARENA_HEIGHT
+    ldi B, arena[7:0]
+    ldi D, arena[15:8]
+.fill_v_loop:
+    push D
+    push B
+    pop TDP
+
+    st TDP, 0, A
+    st TDP, ARENA_WIDTH-1, A
+
+    addi B, ARENA_ROW
+    adci D, 0
+    dec C
+    bne .fill_v_loop
 
     ; draw the frame
     call draw_h_border
