@@ -4,10 +4,10 @@ ARENA_WIDTH = 40
 ARENA_HEIGHT = 40
 ARENA_ROW   = 64
 
-DIR_UP = 0x00
-DIR_LEFT = 0x01
-DIR_DOWN = 0x02
-DIR_RIGHT = 0x03
+DIR_UP = 0x02
+DIR_LEFT = 0x03
+DIR_DOWN = 0x04
+DIR_RIGHT = 0x05
 
 CELL_EMPTY  =  0x00
 
@@ -105,10 +105,10 @@ startup:
 
 .validate_rotation:
     ; allow only 90 degree turns
-    ; the result of a XOR between opposites always produces 2
+    ; the result of a XOR between opposites always produces 6
     ld A, direction
     xor A, B
-    cmpi A, 2
+    cmpi A, 6
     beq .game_loop
     st direction, B
     jmp .game_loop
@@ -126,10 +126,7 @@ startup:
     push B
     pop TDP
     ld A, head_xscreenoffset
-    push D
-    inc D
     st (TDP+A), D
-    pop D
 
     call decode_direction
 
@@ -185,7 +182,6 @@ startup:
     ; load direction from arena
     ld A, tail_xscreenoffset
     ld D, (TDP + A)
-    dec D
 
     ; erase tail from arena
     push B
@@ -349,19 +345,19 @@ calc_move_ptr:
 ;   D - -1 or 1, whether to increment or decrement
 ; ********************************************************************************
 decode_direction:
-    ; the direction is in range [0 .. 3], the LSB marks the horizontal vs vertical
-    ; then the opposites are 2 places apart, we can subtract 1 or 2 to get -1 or 1
+    ; the direction is in range [2 .. 5], the LSB marks the horizontal vs vertical
+    ; then the opposites are 2 places apart, we can subtract 3 or 4 to get -1 or 1
     ldi A, 1
     and A, D
     bne .horizontal
 
 .vertical:
-    dec D
+    subi D, 3
     ret
 
 .horizontal:
     ; adjust D to the expected range
-    subi D, 2
+    subi D, 4
     ret
 
 ; ********************************************************************************
