@@ -25,7 +25,6 @@ init_rand:
 .loop:
     push A
     call rnd8
-    mov A, C
     call reduce_to_38
     out DISPLAY_NUM_DATA, A
     pop A
@@ -38,33 +37,33 @@ init_rand:
 ; Generate pseudo-random number
 ;   rand_a, rand_b, rand_c, rand_x - RNG` state
 ; Post state:
-;   C - random number
-;   A, B, D - clobbered
+;   A - random number
+;   B, C, D - clobbered
 ;   rand_a, rand_b, rand_c, rand_x - updated RNG state
 ; ********************************************************************************
 rnd8:
-    ld A, rand_a
+    ld C, rand_a
     ld B, rand_b
-    ld C, rand_c
+    ld A, rand_c
     ld D, rand_x
 
     inc D
     st rand_x, D
 
-    xor A, C
-    xor A, D
-    st rand_a, A
+    xor C, A
+    xor C, D
+    st rand_a, C
 
-    add B, A
+    add B, C
     st rand_b, B
 
     mov D, B
     shr D
     ror B
-    add C, B
-    xor C, A
+    add A, B
+    xor A, C
 
-    st rand_c, C
+    st rand_c, A
 
     ret
 
