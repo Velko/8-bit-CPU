@@ -15,6 +15,7 @@ CELL_SNAKE_UP    = DIR_UP
 CELL_SNAKE_LEFT  = DIR_LEFT
 CELL_SNAKE_DOWN  = DIR_DOWN
 CELL_SNAKE_RIGHT = DIR_RIGHT
+CELL_FOOD   =  0x06
 
 KEY_UP = 0x41
 KEY_RIGHT = 0x43
@@ -113,11 +114,31 @@ startup:
     ldi A, 5
     st desired_length, A
 
+    ; init PRNG (fixed values, will add entropy from user input)
+    ldi A, 0x01
+    st rand_a, A
+    ldi A, 0x02
+    st rand_b, A
+    ldi A, 0x03
+    st rand_c, A
+    clr A
+    st rand_x, A
+    st seed_counter, A
+    call rnd8
+
+    ; put initial piece of food somewhere (is there a risk that erasing the Loading will hide it visually?)
+    call place_food
+
     ; erase the "Loading..."
     lea SDP, clear_loading
     call b_uart_puts
 
 .game_loop:
+
+    ; run counter for PRNG entropy
+    ld A, seed_counter
+    inc A
+    st seed_counter, A
 
     in A, UART_DATA
     bmi .move_head  ; 0xFF means no input, only then proceed to move the snake
@@ -144,8 +165,14 @@ startup:
     cmpi A, 6
     beq .game_loop
     st direction, B
-    jmp .game_loop
 
+    ; direction was updated, mix in the entropy
+    ld A, rand_a
+    ld B, seed_counter
+    xor A, B
+    st rand_a, A
+
+    jmp .game_loop
 
 .move_head:
 
@@ -190,7 +217,19 @@ startup:
 
     ld C, head_xscreenoffset
     ld A, (SDP + C)
-    bne game_over ; if anything but EMPTY=0, ran into someting
+    beq .collision_avoided ; if anything but EMPTY=0, ran into something
+    cmpi A, CELL_FOOD      ; was that FOOD?
+    bne game_over          ; something else
+
+    ; food makes snake grow
+    ld A, desired_length
+    inc A
+    st desired_length, A
+
+    ; place a new piece of food and let snake to move on, consuming one it just found
+    call place_food
+
+.collision_avoided:
 
 .check_length_grow:
     ld A, snake_length
@@ -530,6 +569,162 @@ buffer_put_bcd:
     ret
 
 
+; ********************************************************************************
+; Place a piece of food in random non-occupied cell
+; Parameters:
+;   None
+; Post state:
+;   A, B, C, D - clobbered
+;   random EMPTY cell in Arena set to FOOD
+;   food drawn on the screen
+; ********************************************************************************
+place_food:
+    push LR
+
+    ; get random row in [1 .. 38] range
+    call rnd8
+    call reduce_to_38
+    inc A
+
+    ; store for later, will need for screen coordinate calculation
+    push A
+
+    ; multiply by 64 (C:A << 6), offset for row pointer
+    ;  40  =           1 0   1 0 0 0
+    ; from         7 6 5 4   3 2 1 0
+    add A, A
+    add A, A     ; 5 4 3 2   1 0 * *
+    swap A       ; 1 0 * *   5 4 3 2
+    mov C, A
+    andi C, 0x0F ; * * * *   5 4 3 2
+    andi A, 0xC0 ; 0 1 * *   * * * *
+
+    ; D:B - row pointer
+    ldi B, arena[7:0]
+    ldi D, arena[15:8]
+    add B, A
+    adc D, C
+
+    ; load into SDP
+    push D
+    push B
+    pop SDP
+
+    ; get random column in [1 .. 38] range
+    call rnd8
+    call reduce_to_38
+    inc A
+
+    ; check if EMPTY
+    ld B, (SDP + A)
+    beq .cell_empty
+
+    ; cell not empty, balance out the stack and try again
+    pop A
+    jmp place_food
+
+.cell_empty:
+
+    ; place food
+    ldi B, CELL_FOOD
+    st (SDP + A), B
+
+    ; convert to screen coordinates, put into C
+    ; x2 + 1 -> BCD
+    add A, A
+    inc A
+    call b_to_dec
+    mov C, B
+
+    ; get row, convert to screen, keep in B
+    pop A
+    inc A
+    call b_to_dec
+
+    lea TDP, buffer
+    ldi D, "*"
+    call draw_block
+
+    clr A
+    st (TDP++), A
+
+    ; send it to terminal
+    lea SDP, buffer
+    call b_uart_puts
+
+    pop LR
+    ret
+
+; ********************************************************************************
+; Generate pseudo-random number
+;   rand_a, rand_b, rand_c, rand_x - RNG` state
+; Post state:
+;   A - random number
+;   B, C, D - clobbered
+;   rand_a, rand_b, rand_c, rand_x - updated RNG state
+; ********************************************************************************
+rnd8:
+    ld C, rand_a
+    ld B, rand_b
+    ld A, rand_c
+    ld D, rand_x
+
+    inc D
+    st rand_x, D
+
+    xor C, A
+    xor C, D
+    st rand_a, C
+
+    add B, C
+    st rand_b, B
+
+    mov D, B
+    shr D
+    ror B
+    add A, B
+    xor A, C
+
+    st rand_c, A
+
+    ret
+
+
+; ********************************************************************************
+; Reduce to modulo-38
+; Parameters:
+;   A - input number
+; Post state:
+;   A - number reduced to [0 .. 38) range
+; ********************************************************************************
+reduce_to_38:
+    ; calculate (A >> 3) + (A >> 6) + (A >> 7)
+    ; 256/8 + 256/64 + 256/128 -> 32 + 4 + 2 = 38
+
+    ; 4-bit shifted baseline
+    mov B, A
+    swap B       ; original_bit_3 -> bit 7
+    mov C, B
+    andi C, 0x0F ; x >> 4
+
+    ; x >> 6 and x >> 7
+    mov D, C
+    shr D
+    shr D
+    mov A, D
+    shr D
+    add A, D
+
+    ; x >> 3 ==  ((x >> 4) << 1) | (original_bit_3)
+    add B, B
+    adc C, C
+
+    ; final assembly
+    add A, c
+
+    ret
+
+
 clrscr_message:
     #d 0x1B,"[2J", 0x1B, "[?25l", 0x1B, "[8;40;80t", 0x00 ; clear screen, hide cursor, resize to 80x40
 
@@ -576,6 +771,16 @@ direction:
 snake_length:
     #res 1
 desired_length:
+    #res 1
+seed_counter:
+    #res 1
+rand_a:
+    #res 1
+rand_b:
+    #res 1
+rand_c:
+    #res 1
+rand_x:
     #res 1
 buffer:
     ; \[00;00H@@\[00;00H@@0
