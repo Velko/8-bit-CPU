@@ -581,6 +581,7 @@ buffer_put_bcd:
 place_food:
     push LR
 
+.retry:
     ; get random row in [1 .. 38] range
     call rnd8
     call reduce_to_38
@@ -621,7 +622,7 @@ place_food:
 
     ; cell not empty, balance out the stack and try again
     pop A
-    jmp place_food
+    jmp .retry
 
 .cell_empty:
 
