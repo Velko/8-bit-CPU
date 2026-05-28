@@ -103,7 +103,7 @@ class PinClient:
     def send_raw(self, data: bytes) -> None:
         self.serial.sendto(data, (TARGET_IP, TARGET_PORT))
 
-    FOUT_RE = re.compile(r"#FOUT#(\d+)#(.*)")
+    OUT_RE = re.compile(r"#OUT#([0-9A-Fa-f]+)#(.*)")
 
     def receive_message(self) -> RunMessage:
         packet, src = self.serial.recvfrom(1024)
@@ -114,8 +114,8 @@ class PinClient:
                 return HaltMessage()
             case "#BRK":
                 return BrkMessage()
-            case _ if m := self.FOUT_RE.match(line):
-                target = int(m.group(1))
+            case _ if m := self.OUT_RE.match(line):
+                target = int(m.group(1), 16)
                 payload = m.group(2).replace("\\n", "\n")
                 return OutMessage(target, payload)
 
