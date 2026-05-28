@@ -5,6 +5,7 @@ import cmd
 import argparse
 
 from libcpu.debug import Debugger
+from libcpu.pretty import format_message
 
 class DebugCmd(cmd.Cmd):
     prompt="(dbg) "
@@ -69,6 +70,13 @@ class DebugCmd(cmd.Cmd):
 
 debugger = Debugger()
 
+def handle_output(target: int, msg: str) -> None:
+    if sys.stdout.isatty():
+        print(format_message(target, msg), end="", flush=True)
+    else:
+        print(msg, end="", flush=True)
+
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
@@ -87,6 +95,8 @@ if __name__ == "__main__":
         debugger.upload(args.filename)
 
     interactive = args.interactive
+
+    debugger.on_output = handle_output
 
     if args.steprun:
         print ("# Step-running ...", flush=True, file=sys.stderr)

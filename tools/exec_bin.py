@@ -6,6 +6,7 @@ import argparse
 from libcpu.messages import OutMessage, HaltMessage, BrkMessage
 from libcpu.pinclient import get_client_instance
 from libcpu.cpu_helper import CPUHelper
+from libcpu.pretty import format_message
 
 cpu_helper: CPUHelper = CPUHelper(get_client_instance())
 
@@ -40,7 +41,10 @@ def run() -> None:
                 break
 
             case OutMessage(target, payload):
-                print(msg.formatted(), end="", flush=True)
+                if sys.stdout.isatty():
+                    print(format_message(target, payload), end="", flush=True)
+                else:
+                    print(payload, end="", flush=True)
 
 def monitor() -> None:
     print ("# Running (raw)...", flush=True, file=sys.stderr)

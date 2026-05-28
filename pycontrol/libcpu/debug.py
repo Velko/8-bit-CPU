@@ -201,7 +201,7 @@ class Debugger:
                 print (f"# Hardcoded breakpoint @ {addr:04x}")
 
     def output_event(self, target: int, msg: str) -> None:
-        print(msg, end="", flush=True)
+        raise NotImplementedError
 
     def get_registers(self) -> Mapping[str, str]:
         registers: dict[str, str] = {}
