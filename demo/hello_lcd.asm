@@ -6,9 +6,9 @@
     lea SDP, message
 print_loop:
     ; wait for busy flag to clear
-    ;in C, DISPLAY_LCD_CMD
-    ;and C, D
-    ;bne print_loop
+    in C, DISPLAY_LCD_CMD
+    and C, D
+    bne print_loop
 
     ; load and output next char from message, \0 terminates the string
     ld A, (SDP++)

@@ -62,5 +62,7 @@ class IOMonitor:
                 return OutMessage(self.selected_port, f"o{value:>o}\n")
         elif self.selected_port == 4:
             return OutMessage(self.selected_port, chr(value))
+        elif self.selected_port == 0x10:
+            return OutMessage(self.selected_port, chr(value))
 
         return None
