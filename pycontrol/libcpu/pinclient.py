@@ -39,32 +39,32 @@ class PinClient:
         # Add NOP command at the end, so that
         # Serial.parseInt() in Arduino does not
         # have to wait for timeout
-        self.send_cmd(f"O{cw.c_word}N")
+        self.send_cmd(f"O{cw.c_word:x}N")
 
     def bus_set(self, arg: int | str) -> None:
         if isinstance(arg, str):
             arg = int(arg, 0)
-        self.send_cmd(f"B{arg}N")
+        self.send_cmd(f"B{arg:x}N")
 
     def bus_get(self) -> int:
-        return int(self.query("b"))
+        return int(self.query("b"), 16)
 
     def addr_set(self, arg: int | str) -> None:
         if isinstance(arg, str):
             arg = int(arg, 0)
-        self.send_cmd(f"A{arg}N")
+        self.send_cmd(f"A{arg:x}N")
 
     def addr_get(self) -> int:
-        return int(self.query("a"))
+        return int(self.query("a"), 16)
 
     def flags_get(self) -> int:
-        return int(self.query("s"))
+        return int(self.query("s"), 16)
 
     def bus_free(self) -> None:
         self.send_cmd("f")
 
     def ctrl_commit(self, cw: CtrlWord) -> None:
-        self.send_cmd(f"M{cw.c_word}N")
+        self.send_cmd(f"M{cw.c_word:x}N")
 
     def clock_pulse(self) -> None:
         self.send_cmd('c')
@@ -81,11 +81,11 @@ class PinClient:
         # split data into chunks of 128 bytes, to avoid overrunning buffer in emulator
         for i in range(0, len(data), 128):
             chunk = data[i:i+128]
-            w = ";".join(map(lambda b: str(int(b)), chunk))
-            self.send_cmd(f"W{cw.c_word};{addr + i};{w};256N")
+            w = ";".join(map(lambda b: f"{int(b):x}", chunk))
+            self.send_cmd(f"W{cw.c_word:x};{addr + i:x};{w};100N")
 
     def ir_get(self) -> int:
-        return int(self.query("r0N"))
+        return int(self.query("r0N"), 16)
 
     def run_program(self) -> None:
         self.send_cmd('R')

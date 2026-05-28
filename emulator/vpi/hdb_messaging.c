@@ -83,7 +83,7 @@ void hdb_send_int(int value)
     char buffer[20];
     int channel = get_channel();
 
-    int nbytes = snprintf(buffer, sizeof(buffer), "%d\n", value);
+    int nbytes = snprintf(buffer, sizeof(buffer), "%x\n", value);
 
     if (nbytes < 0) {
         perror("hdb_send_int: snprintf");
@@ -91,7 +91,7 @@ void hdb_send_int(int value)
     }
 
     if (nbytes > (int)sizeof(buffer)) {
-        fprintf(stderr, "hdb_send_int: integer too large: %d\n", value);
+        fprintf(stderr, "hdb_send_int: integer too large: %x\n", value);
         exit(EXIT_FAILURE);
     }
 
@@ -110,7 +110,7 @@ void hdb_send_str(const char *value)
     int nbytes = snprintf(buffer, sizeof(buffer), "%s\r\n", value);
 
     if (nbytes < 0) {
-        perror("hdb_send_int: snprintf");
+        perror("hdb_send_str: snprintf");
         exit(EXIT_FAILURE);
     }
 
