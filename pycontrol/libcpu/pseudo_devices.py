@@ -47,22 +47,23 @@ class IOMonitor:
         self.selected_port = port
 
     def format_value(self, value: int) -> OutMessage | None:
-        if self.selected_port == 1:
-            self.numeric_mode = value
-            return None
-
-        if self.selected_port == 0:
-            if self.numeric_mode == 0:
-                return OutMessage(self.selected_port, f"{value:>4}\n")
-            if self.numeric_mode == 1:
-                return OutMessage(self.selected_port, f"{to_i8(value):>4}\n")
-            if self.numeric_mode == 2:
-                return OutMessage(self.selected_port, f"h {value:02x}\n")
-            if self.numeric_mode == 3:
-                return OutMessage(self.selected_port, f"o{value:>o}\n")
-        elif self.selected_port == 4:
-            return OutMessage(self.selected_port, chr(value))
-        elif self.selected_port == 0x10:
-            return OutMessage(self.selected_port, chr(value))
+        match self.selected_port:
+            case 0:
+                match self.numeric_mode:
+                    case 0:
+                        return OutMessage(self.selected_port, f"{value:>4}\n")
+                    case 1:
+                        return OutMessage(self.selected_port, f"{to_i8(value):>4}\n")
+                    case 2:
+                        return OutMessage(self.selected_port, f"h {value:02x}\n")
+                    case 3:
+                        return OutMessage(self.selected_port, f"o{value:>03o}\n")
+            case 1:
+                self.numeric_mode = value
+                return None
+            case 4:
+                return OutMessage(self.selected_port, chr(value))
+            case 0x10:
+                return OutMessage(self.selected_port, chr(value))
 
         return None
