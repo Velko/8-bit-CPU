@@ -82,7 +82,9 @@ class PinClient:
         for i in range(0, len(data), 128):
             chunk = data[i:i+128]
             w = ";".join(map(lambda b: f"{int(b):x}", chunk))
-            self.send_cmd(f"W{cw.c_word:x};{addr + i:x};{w};100N")
+            resp = self.query(f"W{cw.c_word:x};{addr + i:x};{w};100N")
+            if resp != "#W":
+                raise ProtocolException(f"Expected #W from write memory, got: /{resp}/")
 
     def ir_get(self) -> int:
         return int(self.query("r0N"), 16)

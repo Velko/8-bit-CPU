@@ -190,6 +190,7 @@ module debug (
 
                     "W": begin
                         write_ram();
+                        $hdb_send_str("#W");
                     end
 
                     "Q": begin
