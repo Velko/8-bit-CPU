@@ -119,7 +119,11 @@ class CPUHelper:
 
         captured_output = StringIO()
 
-        self.client.run_program(input)
+        self.client.run_program()
+
+        if input:
+            self.client.send_raw(input)
+
         for msg in self.client.receive_messages():
             match msg:
                 case BrkMessage():
