@@ -1,6 +1,6 @@
 import pytest
 import random
-import os
+import os, tempfile, shutil
 from dataclasses import dataclass
 
 from libcpu.cpu_helper import CPUHelper
@@ -75,3 +75,35 @@ class ALUOneRegTestCase:
 
     def __str__(self) -> str:
         return f"{self.name}: ({self.val}) -> ({self.result}, {self.xflags}) "
+
+class Compiler:
+    def __init__(self, build_directory: str) -> None:
+        self.build_directory = build_directory
+
+    def compile(self, asm: str) -> bytes:
+        sourcefd, sourcepath = tempfile.mkstemp(prefix="test_", suffix=".asm", dir=self.build_directory, text=True)
+
+        with os.fdopen(sourcefd, "w") as f:
+            f.write('#include "velkocpu.def"\n')
+            f.write(asm)
+
+        binarypath  = sourcepath[:-4] + ".bin"
+
+        res = os.system(f"customasm -q -f binary {sourcepath} -o {binarypath}")
+        if res != 0:
+            raise RuntimeError("Failed to compile test program.")
+        with open(binarypath, "rb") as f:
+            return f.read()
+
+@pytest.fixture(scope="session")
+def asm_compiler() -> Iterator[Compiler]:
+    dir = tempfile.mkdtemp(prefix="8bitcpu_test_build_")
+    try:
+        include_dir = os.path.join(os.path.dirname(__file__), "../../include")
+        for f in os.listdir(include_dir):
+            if f.endswith(".def"):
+                os.symlink(os.path.join(include_dir, f), os.path.join(dir, f))
+        yield Compiler(dir)
+    finally:
+        shutil.rmtree(dir, ignore_errors=True)
+        pass

@@ -1,19 +1,18 @@
 #!/usr/bin/python3
 
 import pytest
+from conftest import Compiler
 
 pytestmark = pytest.mark.hardware
 
 from libcpu.cpu_helper import CPUHelper
-from libcpu.opcodes import opcode_of
 
 @pytest.mark.hardware
-def test_ldi_on_hw(cpu_helper: CPUHelper) -> None:
+def test_ldi_on_hw(cpu_helper: CPUHelper, asm_compiler: Compiler) -> None:
 
-    # prepare binary of:
-    #   ldi A, 123
-    ldi_test_prog = bytes([opcode_of("ldi_A_imm"),
-                           123])
+    ldi_test_prog = asm_compiler.compile(f"""
+        ldi A, 123
+    """)
 
     # reset A, to see if changed
     cpu_helper.regs.A = 0
@@ -26,15 +25,13 @@ def test_ldi_on_hw(cpu_helper: CPUHelper) -> None:
     assert val == 123
 
 @pytest.mark.hardware
-def test_rjmp_on_hw(cpu_helper: CPUHelper) -> None:
+def test_rjmp_on_hw(cpu_helper: CPUHelper, asm_compiler: Compiler) -> None:
 
-    # prepary binary of:
-    #   rjmp next
-    #   hlt       ; hlt is unexpected exit from snippet
-    # next:
-    #   brk       ; appended by run_snippet
-    jmp_test_prog = bytes([opcode_of("jmp_pcrel"), 2,
-                            opcode_of("hlt")])
+    jmp_test_prog = asm_compiler.compile(f"""
+        jmp next
+        hlt
+    next:
+    """)
 
     cpu_helper.run_snippet(0x8, jmp_test_prog)
 

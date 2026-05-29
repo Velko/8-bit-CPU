@@ -3,11 +3,9 @@ import pytest
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.devmap import A, B
-from libcpu.opcodes import opcode_of
 from libcpu.messages import OutMessage
 
-
-from collections.abc import Iterator
+from conftest import Compiler
 
 def test_outa_emu_char(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.regs.A = 120
@@ -40,19 +38,15 @@ def test_outa_emu_num(cpu_helper: CPUHelper, acpu: AssistedCPU, _desc: str, mode
 
 @pytest.mark.emulator
 @pytest.mark.parametrize("_desc,mode,val,expected", outb_args)
-def test_outb_int_hw(cpu_helper: CPUHelper, _desc: str, mode: int, val: int, expected: str) -> None:
+def test_outb_int_hw(cpu_helper: CPUHelper, _desc: str, mode: int, val: int, expected: str, asm_compiler: Compiler) -> None:
 
     cpu_helper.regs.D = mode
-
     cpu_helper.regs.B = val
 
-    # prepare binary of:
-    #   out 1, D
-    #   out 0, B
-    out_test_prog = bytes([
-        opcode_of("out_imm_D"), 1,
-        opcode_of("out_imm_B"), 0
-        ])
+    out_test_prog = asm_compiler.compile(f"""
+        out 1, D
+        out 0, B
+    """)
 
     # run program on hardware
     res = cpu_helper.run_snippet(0x14, out_test_prog)
@@ -61,13 +55,13 @@ def test_outb_int_hw(cpu_helper: CPUHelper, _desc: str, mode: int, val: int, exp
     assert res == expected
 
 @pytest.mark.emulator
-def test_outc_char_hw(cpu_helper: CPUHelper) -> None:
+def test_outc_char_hw(cpu_helper: CPUHelper, asm_compiler: Compiler) -> None:
 
     cpu_helper.regs.C = 102
 
-    # prepare binary of:
-    #   out 4, C
-    out_test_prog = bytes([opcode_of("out_imm_C"), 4])
+    out_test_prog = asm_compiler.compile(f"""
+        out 4, C
+    """)
 
     # run program on hardware
     val = cpu_helper.run_snippet(0x33, out_test_prog)
@@ -76,13 +70,13 @@ def test_outc_char_hw(cpu_helper: CPUHelper) -> None:
     assert val == 'f'
 
 @pytest.mark.emulator
-def test_outc_newline_hw(cpu_helper: CPUHelper) -> None:
+def test_outc_newline_hw(cpu_helper: CPUHelper, asm_compiler: Compiler) -> None:
 
     cpu_helper.regs.C = 10
 
-    # prepare binary of:
-    #   out 4, C
-    out_test_prog = bytes([opcode_of("out_imm_C"), 4])
+    out_test_prog = asm_compiler.compile(f"""
+        out 4, C
+    """)
 
     # run program on hardware
     val = cpu_helper.run_snippet(0x33, out_test_prog)

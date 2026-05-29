@@ -2,15 +2,14 @@
 
 import pytest
 import random
-from itertools import repeat
 
-from libcpu.opcodes import opcode_of
-from libcpu.pinclient import PinClient
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.devmap import A, B, SDP, TDP
 from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
 from collections.abc import Sequence
+
+from conftest import Compiler
 
 pytestmark = pytest.mark.hardware
 
@@ -48,17 +47,15 @@ def test_store(cpu_helper: CPUHelper, acpu: AssistedCPU, addr: int) -> None:
 
     assert cpu_helper.ram[addr] == test_val
 
-def test_ldx_hw(cpu_helper: CPUHelper) -> None:
+def test_ldx_hw(cpu_helper: CPUHelper, asm_compiler: Compiler) -> None:
 
     cpu_helper.ram[0x2203] = 0x33
     cpu_helper.regs.B = 3
     cpu_helper.regs.SDP = 0x2200
 
-    # prepare binary of:
-    #   ld A, (SDP + B)
-    out_test_prog = bytes([
-        opcode_of("ld_A_SDP_B"),
-        ])
+    out_test_prog = asm_compiler.compile(f"""
+        ld A, (SDP + B)
+    """)
 
     cpu_helper.run_snippet(0x0, out_test_prog)
 
@@ -114,18 +111,16 @@ def test_store_idx(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     assert cpu_helper.ram[0x45] == 0xB5
 
-def test_stx_hw(cpu_helper: CPUHelper) -> None:
+def test_stx_hw(cpu_helper: CPUHelper, asm_compiler: Compiler) -> None:
 
     cpu_helper.ram[0x2203] = 0
     cpu_helper.regs.A = 0x33
     cpu_helper.regs.B = 3
     cpu_helper.regs.TDP = 0x2200
 
-    # prepare binary of:
-    #   st (TDP + B), A
-    out_test_prog = bytes([
-        opcode_of("st_TDP_B_A"),
-        ])
+    out_test_prog = asm_compiler.compile(f"""
+        st (TDP + B), A
+    """)
 
     cpu_helper.run_snippet(0x0, out_test_prog)
 

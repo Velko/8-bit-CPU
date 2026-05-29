@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import pytest
+from conftest import Compiler
 
 pytestmark = pytest.mark.hardware
 
@@ -22,11 +23,13 @@ def test_dummy_local(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 # if it works fine, it will load opcode of HLT into A. The opcode index
 # is approx. 0x10D, if ext bit fails, it will execute a 1 byte ADD instruction
 # instead and then hit HLT as next instruction
-fetch_test_prog = bytes([opcode_of("xprefix"),
-                         opcode_of("dummyext_imm") & 0xFF,
-                         opcode_of("hlt")])
+@pytest.fixture(scope="session")
+def fetch_test_prog(asm_compiler: Compiler) -> bytes:
+    return asm_compiler.compile(f"""
+        dummyext 0x{opcode_of("hlt"):02x}
+    """)
 
-def test_dummy_fetch(acpu: AssistedCPU) -> None:
+def test_dummy_fetch(acpu: AssistedCPU, fetch_test_prog: bytes) -> None:
     cpu_helper = CPUHelper(acpu.client)
 
     # when acpu is enabled, loading from ProgMem does not work at all,
@@ -44,7 +47,7 @@ def test_dummy_fetch(acpu: AssistedCPU) -> None:
     assert val == opcode_of("hlt")
 
 #@pytest.mark.skip("Not supported by current emulator")
-def test_dummy_fetch_on_hw(cpu_helper: CPUHelper) -> None:
+def test_dummy_fetch_on_hw(cpu_helper: CPUHelper, fetch_test_prog: bytes) -> None:
     # reset A, to see if changed
     cpu_helper.regs.A = 0
 
