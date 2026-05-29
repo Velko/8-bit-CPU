@@ -1,10 +1,12 @@
 #!/usr/bin/python3
 
 
+from dataclasses import dataclass
 import sys, termios, tty, select, os
 import argparse
-from libcpu.messages import OutMessage, HaltMessage, BrkMessage
-from libcpu.pinclient import get_client_instance
+from typing import Generator
+from libcpu.messages import OutMessage, HaltMessage, BrkMessage, RunMessage
+from libcpu.pinclient import PinClient, get_client_instance
 from libcpu.cpu_helper import CPUHelper
 from libcpu.pretty import format_message
 
@@ -28,9 +30,8 @@ def run() -> None:
     print ("# Running ...", flush=True, file=sys.stderr)
 
     cpu_helper.client.run_program()
-    out = cpu_helper.client.receive_messages()
 
-    for msg in out:
+    for msg in io_stream(cpu_helper.client):
         match msg:
             case HaltMessage():
                 print ("# Halted", flush=True, file=sys.stderr)
@@ -45,6 +46,31 @@ def run() -> None:
                     print(format_message(target, payload), end="", flush=True)
                 else:
                     print(payload, end="", flush=True)
+
+            case UserInputMessage(data):
+                cpu_helper.client.send_raw(data)
+
+@dataclass
+class UserInputMessage:
+    data: bytes
+
+def io_stream(client: PinClient) -> Generator[RunMessage | UserInputMessage]:
+    streams = [sys.stdin, client.serial]
+    while True:
+        try:
+            r, _, _ = select.select(streams, [], [])
+            if sys.stdin in r:
+                data = os.read(sys.stdin.fileno(), 32)
+                if not data:
+                    print ("# EOF", flush=True, file=sys.stderr, end="\r\n")
+                    streams.remove(sys.stdin)
+                    continue
+                yield UserInputMessage(data)
+            if client.serial in r:
+                yield client.receive_message()
+        except KeyboardInterrupt:
+            print ("# Interrupted", flush=True, file=sys.stderr, end="\r\n")
+            return
 
 def monitor() -> None:
     print ("# Running (raw)...", flush=True, file=sys.stderr)
