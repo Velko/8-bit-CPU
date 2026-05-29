@@ -38,6 +38,6 @@ module uart(
     end
 
     wire [7:0] read_outp = sel_data ? in_data : status;
-    assign io_bus = rnw ? read_outp : 8'bZ;
+    assign io_bus = rnw && (sel_data || sel_status) ? read_outp : 8'bZ;
 
 endmodule
