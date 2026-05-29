@@ -83,7 +83,7 @@ int ringbuffer_read_blocking(struct ringbuffer *buffer)
     while (ringbuffer_isempty(buffer))
         pthread_cond_wait(&buffer->empty_cond, &buffer->indices_mutex);
 
-    int result = buffer->data[WRAP(buffer->read_index++)];
+    int result = (unsigned char)buffer->data[WRAP(buffer->read_index++)];
 
     /* signal that buffer is not full anymore */
     pthread_cond_signal(&buffer->full_cond);
@@ -98,7 +98,7 @@ int ringbuffer_peek(struct ringbuffer *buffer)
 
     int result = -1; /* return -1 if empty */
     if (!ringbuffer_isempty(buffer))
-        result = buffer->data[WRAP(buffer->read_index)];
+        result = (unsigned char)buffer->data[WRAP(buffer->read_index)];
 
     pthread_mutex_unlock(&buffer->indices_mutex);
     return result;
@@ -127,7 +127,7 @@ static int ringbuffer_peek_blocking(struct ringbuffer *buffer)
     while (ringbuffer_isempty(buffer))
         pthread_cond_wait(&buffer->empty_cond, &buffer->indices_mutex);
 
-    int result = buffer->data[WRAP(buffer->read_index)];
+    int result = (unsigned char)buffer->data[WRAP(buffer->read_index)];
 
     pthread_mutex_unlock(&buffer->indices_mutex);
     return result;
@@ -150,7 +150,7 @@ static int ringbuffer_discard_and_peek_next_blocking(struct ringbuffer *buffer)
     while (ringbuffer_isempty(buffer))
         pthread_cond_wait(&buffer->empty_cond, &buffer->indices_mutex);
 
-    int result = buffer->data[WRAP(buffer->read_index)];
+    int result = (unsigned char)buffer->data[WRAP(buffer->read_index)];
 
     pthread_mutex_unlock(&buffer->indices_mutex);
     return result;
