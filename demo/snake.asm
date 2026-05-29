@@ -140,8 +140,10 @@ startup:
     inc A
     st seed_counter, A
 
+    in A, UART_STATUS
+    beq .move_head  ; 0 means no input, only then proceed to move the snake
+
     in A, UART_DATA
-    bmi .move_head  ; 0xFF means no input, only then proceed to move the snake
 
     ; handle key input
     ; the arrow keys are [0x41 .. 0x44], first get them into range [0 .. 3]
