@@ -28,3 +28,20 @@ def test_uart_input(cpu_helper: CPUHelper, asm_compiler: Compiler, value: int) -
     # assert
     val = cpu_helper.regs.A
     assert val == value
+
+
+# A bug in UART module caused IO Bus contention by LCD_STATUS and UART_DATA
+def test_lcd_status_and_uart_data_read(cpu_helper: CPUHelper, asm_compiler: Compiler) -> None:
+    # LCD_STATUS and UART_DATA share the same address, but should return different values
+    prog = asm_compiler.compile("""
+        in A, DISPLAY_LCD_CMD
+        in B, UART_DATA
+    """)
+
+    cpu_helper.run_snippet(0x32, prog)
+
+    lcd_status = cpu_helper.regs.A
+    uart_data = cpu_helper.regs.B
+
+    assert lcd_status == 0x80  # LCD is ready
+    assert uart_data == 0xFF  # no input available (technically have to check UART_STATUS to distinguish from actual 0xFF input)
