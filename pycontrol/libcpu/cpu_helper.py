@@ -95,13 +95,14 @@ class CPUHelper:
         self._write_ram_bytes(addr, code)
         self.load_reg16(hardware.PC, addr)
 
-    def run_snippet(self, addr: int, code: bytes) -> str:
+    def run_snippet(self, addr: int, code: bytes, input: bytes=b"") -> str:
         """Run pre-compiled binary snippet. BRK instruction is appended automatically
            and execution terminates when it is reached.
 
            Args:
                 addr: where code is loaded and PC is pointed to.
                 code: byte array of binary code to execute.
+                input: optional input bytes, that are sent to the program, if it reads from input.
 
            Returns:
                 if there was port output from the program, it is returned as string
@@ -118,7 +119,7 @@ class CPUHelper:
 
         captured_output = StringIO()
 
-        self.client.run_program()
+        self.client.run_program(input)
         for msg in self.client.receive_messages():
             match msg:
                 case BrkMessage():

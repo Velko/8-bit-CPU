@@ -89,8 +89,10 @@ class PinClient:
     def ir_get(self) -> int:
         return int(self.query("r0N"), 16)
 
-    def run_program(self) -> None:
+    def run_program(self, input: bytes=b"") -> None:
         self.send_cmd('R')
+        if input:
+            self.send_raw(input)
 
     def receive_messages(self) -> Iterator[RunMessage]:
         while True:
