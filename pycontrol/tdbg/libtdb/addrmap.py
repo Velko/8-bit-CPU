@@ -31,7 +31,8 @@ class AddressLineItem:
 
 class AddressMapping:
     def __init__(self, file_paths: list[str]) -> None:
-        self.mappings = []
+        self.by_file_line: dict[str, dict[int, AddressLineItem]] = {}
+        self.by_logical_address: dict[int, AddressLineItem] = {}
         for file_path in file_paths:
             logging.getLogger().info(f"Processing address to source mapping file: {file_path}")
             with open(file_path, 'r') as f:
@@ -44,10 +45,16 @@ class AddressMapping:
                     if line:
                         try:
                             mapping = AddressLineItem(line)
-                            self.mappings.append(mapping)
+                            if mapping.file not in self.by_file_line:
+                                self.by_file_line[mapping.file] = {}
+                            self.by_file_line[mapping.file][mapping.line_start] = mapping
+                            self.by_logical_address[mapping.logical_address] = mapping
                         except ValueError as e:
                             logging.getLogger().warning(f"Warning: {e}")
-        self.unique_files = list(set(mapping.file for mapping in self.mappings))
+
+    @property
+    def unique_files(self) -> list[str]:
+        return list(self.by_file_line.keys())
 
     @property
     def get_common_file_prefix(self) -> str:
