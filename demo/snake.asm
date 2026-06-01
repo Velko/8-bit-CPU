@@ -110,6 +110,9 @@ startup:
     ldi A, 0
     st snake_length, A
 
+    ; paused
+    st is_paused, A
+
     ; initial desired length
     ldi A, 5
     st desired_length, A
@@ -146,6 +149,12 @@ startup:
     in A, UART_DATA
 
     ; handle key input
+    cmpi A, "p"
+    bne .check_cursor_keys
+    st is_paused, A
+    jmp .game_loop
+
+.check_cursor_keys:
     ; the arrow keys are [0x41 .. 0x44], first get them into range [0 .. 3]
     subi A, KEY_UP
     bcs .game_loop ; was less than KEY_UP -> discard it
@@ -174,9 +183,17 @@ startup:
     xor A, B
     st rand_a, A
 
+    ; unpause
+    clr A
+    st is_paused, A
+
     jmp .game_loop
 
 .move_head:
+
+    ; check if paused
+    ld A, is_paused
+    bne .game_loop
 
     ; load row ptr and calculate next one
     ld D, direction
@@ -770,6 +787,8 @@ tail_rowptr:
 tail_xscreenoffset:
     #res 1
 direction:
+    #res 1
+is_paused:
     #res 1
 snake_length:
     #res 1
