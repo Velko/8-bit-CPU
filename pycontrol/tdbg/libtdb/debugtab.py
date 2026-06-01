@@ -19,5 +19,4 @@ class DebugTab(TabPane):
         yield self.debug_view
 
     def on_mount(self) -> None:
-        self.debug_view.current_line = 10  # Example: set the current line to 10
         self.debug_view.debug_gutter.filename = self.filename

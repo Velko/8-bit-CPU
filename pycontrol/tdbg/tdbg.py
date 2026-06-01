@@ -14,18 +14,21 @@ from libtdb.debugtab import DebugTab
 
 import argparse, sys
 
-from libtdb.addrmap import AddressMapping, load_address_mappings
+from libtdb.addrmap import load_address_mappings
 from libtdb.messages import ToggleBreakpoint
 
 class TextDebuggerApp(App[None]):
 
-    BINDINGS = [("q", "quit", "Quit the IDE")]
+    BINDINGS = [("q", "quit", "Quit the IDE"),
+                ("s", "step", "Step instruction"),
+                ("c", "continue", "Continue execution")]
 
     def __init__(self, files: list[str] = [], common_prefix: str = "", **kwargs: Any) -> None:
         super().__init__(**kwargs)
         self.files = files or []
         self.common_prefix = common_prefix
         self.theme = "textual-light"  # Default theme
+        self.tabs: dict[str, DebugTab] = {}
 
 
     def compose(self) -> ComposeResult:
@@ -33,7 +36,9 @@ class TextDebuggerApp(App[None]):
         yield Footer()
         with TabbedContent():
             for file in self.files:
-                yield DebugTab(file, common_prefix=self.common_prefix)
+                tab = DebugTab(file, common_prefix=self.common_prefix)
+                self.tabs[file] = tab
+                yield tab
             with TabPane("Log"):
                 yield RichLog()
 
@@ -41,6 +46,26 @@ class TextDebuggerApp(App[None]):
     async def action_quit(self) -> None:
         """An action to quit the IDE."""
         self.exit()
+
+    async def action_step(self) -> None:
+        """An action to step through the code."""
+        logging.getLogger().info("Step action triggered")
+
+        filename = "/home/jurgis/work/8-bit-CPU/demo/snake.asm"
+        tab = self.tabs.get(filename)
+
+        tabbed = self.query_one(TabbedContent)
+        tabbed.active = tab.id
+
+        current_line = tab.debug_view.current_line
+        if current_line is None:
+            tab.debug_view.step_to_line(26)
+        else:
+            tab.debug_view.step_to_line(current_line + 1)
+
+    async def action_continue(self) -> None:
+        """An action to continue execution."""
+        logging.getLogger().info("Continue action triggered")
 
     def on_mount(self) -> None:
         rich_log_widget = self.query_one(RichLog)

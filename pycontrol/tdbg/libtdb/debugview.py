@@ -18,7 +18,7 @@ class DebugView(Horizontal):
     def __init__(self, content: str, **kwargs: Any) -> None:
         super().__init__(**kwargs)
         self.breakpoints: set[int] = set()
-        self.current_line: int | None = 10
+        self.current_line: int | None = None
 
         self.debug_gutter = Gutter()
         self.code_editor = DebugTextArea(content)
@@ -46,6 +46,11 @@ class DebugView(Horizontal):
             self.breakpoints.add(line)
             logging.getLogger().info(f"Added breakpoint at line {line+1}")
 
+        self._sync_views()
+
+    def step_to_line(self, line: int) -> None:
+        self.current_line = line
+        self.code_editor.cursor_location = (line, 0)
         self._sync_views()
 
     def _sync_views(self) -> None:
