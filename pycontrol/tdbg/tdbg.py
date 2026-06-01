@@ -14,7 +14,7 @@ from libtdb.debugtab import DebugTab
 
 import argparse, sys
 
-from libtdb.addrmap import load_address_mappings
+from libtdb.addrmap import AddressMapping
 from libtdb.messages import ToggleBreakpoint
 
 class TextDebuggerApp(App[None]):
@@ -53,8 +53,12 @@ class TextDebuggerApp(App[None]):
 
         filename = "/home/jurgis/work/8-bit-CPU/demo/snake.asm"
         tab = self.tabs.get(filename)
+        if tab is None:
+            logging.getLogger().error(f"No tab found for file: {filename}")
+            return
 
         tabbed = self.query_one(TabbedContent)
+
         tabbed.active = tab.id
 
         current_line = tab.debug_view.current_line
@@ -103,16 +107,7 @@ class LogRedirector(Console):
             return
         self.rich_log.write(args[0])
 
-def find_common_prefix(strings: list[str]) -> str:
-    if not strings:
-        return ""
-    prefix = strings[0]
-    for s in strings[1:]:
-        while not s.startswith(prefix):
-            prefix = prefix[:-1]
-            if not prefix:
-                return ""
-    return prefix
+
 
 
 if __name__ == "__main__":
@@ -122,18 +117,14 @@ if __name__ == "__main__":
     parser.add_argument("-i", "--addr-span", nargs='+', help="Address to source mapping file(s)")
     args = parser.parse_args()
 
-    unique_files: set[str] = set()
-    for addr_span_file in args.addr_span:
-        print(f"Processing address to source mapping file: {addr_span_file}")
-        mappings = load_address_mappings(addr_span_file)
+    mappings = AddressMapping(args.addr_span)
 
-        unique_files.update(mapping.file for mapping in mappings)
-        print(f"Unique source files found in mappings: {unique_files}")
-        common_prefix = find_common_prefix(list(unique_files))
-        print(f"Common prefix for source files: {common_prefix}")
-        # Here you would add code to integrate the loaded mappings into your IDE as needed.
+    print(f"Unique source files found in mappings: {mappings.unique_files}")
+    common_prefix = mappings.get_common_file_prefix
+    print(f"Common prefix for source files: {common_prefix}")
+    # Here you would add code to integrate the loaded mappings into your IDE as needed.
 
-    app = TextDebuggerApp(list(unique_files), common_prefix)
+    app = TextDebuggerApp(mappings.unique_files, common_prefix)
     if args.theme:
         app.theme = args.theme
     app.run()
