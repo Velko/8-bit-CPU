@@ -21,12 +21,12 @@ class TextDebuggerApp(App[None]):
 
     BINDINGS = [("q", "quit", "Quit the IDE"),
                 ("s", "step", "Step instruction"),
-                ("c", "continue", "Continue execution")]
+                ("c", "continue", "Continue execution"),
+                ("b", "toggle_breakpoint", "Toggle breakpoint")]
 
-    def __init__(self, files: list[str] = [], common_prefix: str = "", **kwargs: Any) -> None:
+    def __init__(self, address_mapping: AddressMapping, **kwargs: Any) -> None:
         super().__init__(**kwargs)
-        self.files = files or []
-        self.common_prefix = common_prefix
+        self.address_mapping = address_mapping
         self.theme = "textual-light"  # Default theme
         self.tabs: dict[str, DebugTab] = {}
 
@@ -35,8 +35,8 @@ class TextDebuggerApp(App[None]):
         yield Header()
         yield Footer()
         with TabbedContent():
-            for file in self.files:
-                tab = DebugTab(file, common_prefix=self.common_prefix)
+            for file in self.address_mapping.unique_files:
+                tab = DebugTab(file, common_prefix=self.address_mapping.get_common_file_prefix)
                 self.tabs[file] = tab
                 yield tab
             with TabPane("Log"):
@@ -71,6 +71,17 @@ class TextDebuggerApp(App[None]):
         """An action to continue execution."""
         logging.getLogger().info("Continue action triggered")
 
+    async def action_toggle_breakpoint(self) -> None:
+        """An action to toggle a breakpoint."""
+        tabbed = self.query_one(TabbedContent)
+        active_tab = tabbed.active
+        if active_tab is None:
+            logging.getLogger().error("No active tab found")
+            return
+        tab = tabbed.get_pane(active_tab)
+
+        tab.debug_view.post_message(ToggleBreakpoint(self, filename=tab.filename, line=tab.debug_view.code_editor.cursor_location[0]))
+
     def on_mount(self) -> None:
         rich_log_widget = self.query_one(RichLog)
 
@@ -88,7 +99,16 @@ class TextDebuggerApp(App[None]):
         logging.getLogger().debug("This is a debug message.")
 
     def on_toggle_breakpoint(self, message: ToggleBreakpoint) -> None:
-        logging.getLogger().info(f"Toggle breakpoint at line {message.line+1} in {message.filename}")
+        file_mapping = self.address_mapping.by_file_line.get(message.filename)
+        if not file_mapping:
+            logging.getLogger().error(f"No mapping found for file: {message.filename}")
+            return
+        line_mapping = file_mapping.get(message.line)
+        if not line_mapping:
+            logging.getLogger().error(f"No mapping found for line {message.line} in file: {message.filename}")
+            return
+        logging.getLogger().info(f"Toggle breakpoint at line {message.line+1} in {message.filename} -> address: {line_mapping.logical_address:#04x}")
+
 
 
 
@@ -124,7 +144,7 @@ if __name__ == "__main__":
     print(f"Common prefix for source files: {common_prefix}")
     # Here you would add code to integrate the loaded mappings into your IDE as needed.
 
-    app = TextDebuggerApp(mappings.unique_files, common_prefix)
+    app = TextDebuggerApp(mappings)
     if args.theme:
         app.theme = args.theme
     app.run()
