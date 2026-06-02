@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import logging
+import os
 import re
 
 #; physical address : bit offset | logical address | file : line start : column start : line end : column end
@@ -60,6 +61,10 @@ class AddressMapping:
     def get_common_file_prefix(self) -> str:
         if not self.unique_files:
             return ""
+        # in case there is only one file, return its directory as the common prefix,
+        # UI will strip it off for tab title
+        if len(self.unique_files) == 1:
+            return os.path.dirname(self.unique_files[0]) + os.sep
         prefix = self.unique_files[0]
         for s in self.unique_files[1:]:
             while not s.startswith(prefix):
