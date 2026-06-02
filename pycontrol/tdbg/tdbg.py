@@ -8,6 +8,7 @@ from rich.logging import RichHandler
 from rich.console import Console
 from textual.app import App, ComposeResult
 from textual.widgets import Footer, Header, RichLog, TabbedContent, TabPane
+from textual.containers import Horizontal
 
 
 from libtdb.debugtab import DebugTab
@@ -17,6 +18,7 @@ import argparse, sys
 
 from libtdb.addrmap import AddressMapping
 from libtdb.messages import ToggleBreakpoint
+from libtdb.regs import RegistersView
 
 class TextDebuggerApp(App[None]):
 
@@ -39,13 +41,15 @@ class TextDebuggerApp(App[None]):
     def compose(self) -> ComposeResult:
         yield Header()
         yield Footer()
-        with TabbedContent():
-            for file in self.address_mapping.unique_files:
-                tab = DebugTab(file, common_prefix=self.address_mapping.get_common_file_prefix)
-                self.tabs[file] = tab
-                yield tab
-            with TabPane("Log"):
-                yield RichLog()
+        with Horizontal(id="main-horizontal"):
+            with TabbedContent(id="main-tabs"):
+                for file in self.address_mapping.unique_files:
+                    tab = DebugTab(file, common_prefix=self.address_mapping.get_common_file_prefix)
+                    self.tabs[file] = tab
+                    yield tab
+                with TabPane("Log"):
+                    yield RichLog()
+            yield RegistersView(id="sidebar-registers")
 
 
     async def action_quit(self) -> None:
@@ -77,6 +81,8 @@ class TextDebuggerApp(App[None]):
 
         tab.debug_view.step_to_line(code_location.line_start)
 
+        self.backend.get_registers()  # Update registers view on stop
+
 
     async def action_continue(self) -> None:
         """An action to continue execution."""
@@ -84,8 +90,8 @@ class TextDebuggerApp(App[None]):
         logging.getLogger().info("Continue action triggered")
 
     async def on_registers_message(self, message: RegistersMessage) -> None:
-        logging.getLogger().info(f"Received registers: {message.registers}")
-        # Here you would update your UI with the new register values as needed.
+        registers_view = self.query_one(RegistersView)
+        registers_view.update_table(message.registers)
 
     async def action_toggle_breakpoint(self) -> None:
         """An action to toggle a breakpoint."""
@@ -113,6 +119,8 @@ class TextDebuggerApp(App[None]):
         logging.getLogger().info("Connected Textual logger to RichLog!")
         logging.getLogger().info(f"Running on Textual version: {textual.__version__}")
         logging.getLogger().debug("This is a debug message.")
+
+        self.backend.get_registers()  # Initial fetch of registers to populate the view
 
     def on_toggle_breakpoint(self, message: ToggleBreakpoint) -> None:
 
