@@ -10,6 +10,7 @@ $(PROJECTS): $(BIN) $$@.bin
 %.bin: %.asm
 	customasm -f binary $< -o $@
 	customasm -f addrspan $< -o $@.addrmap
+	../tools/addrmap-abspaths.py $@.addrmap
 
 clean:
-	rm -rf *.bin
+	rm -rf *.bin *.addrmap
