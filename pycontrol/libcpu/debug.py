@@ -217,3 +217,6 @@ class Debugger:
             registers["PC"] = f"{self.current_break.addr:04x}"
 
         return registers
+
+    def get_pc(self) -> None:
+        self.on_stop(StopReason.STEP, self.cpu_helper.regs.PC)

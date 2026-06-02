@@ -53,3 +53,9 @@ class TDBGWrapper:
 
     async def _reset(self) -> None:
         self.debugger.reset()
+
+    def get_pc(self) -> None:
+        self.owner.run_worker(self._get_pc)
+
+    async def _get_pc(self) -> None:
+        self.debugger.get_pc()

@@ -104,6 +104,7 @@ class TextDebuggerApp(App[None]):
         output_area = self.query_one("#output-area", TextArea)
         output_area.clear()
         self.backend.reset()
+        self.backend.get_pc()
         self.backend.get_registers()  # Update registers view after reset
 
     async def on_registers_message(self, message: RegistersMessage) -> None:
@@ -137,6 +138,7 @@ class TextDebuggerApp(App[None]):
         logging.getLogger().info(f"Running on Textual version: {textual.__version__}")
         logging.getLogger().debug("This is a debug message.")
 
+        self.backend.get_pc()
         self.backend.get_registers()  # Initial fetch of registers to populate the view
 
     def on_toggle_breakpoint(self, message: ToggleBreakpoint) -> None:
