@@ -11,6 +11,7 @@ from textual.widgets import Footer, Header, RichLog, TabbedContent, TabPane
 
 
 from libtdb.debugtab import DebugTab
+from libtdb.tdbgwrapper import RegistersMessage, StopMessage, TDBGWrapper
 
 import argparse, sys
 
@@ -31,6 +32,7 @@ class TextDebuggerApp(App[None]):
         self.tabs: dict[str, DebugTab] = {}
 
         self.pc_address: int | None = None
+        self.backend = TDBGWrapper(self)
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -51,17 +53,16 @@ class TextDebuggerApp(App[None]):
     async def action_step(self) -> None:
         """An action to step through the code."""
         logging.getLogger().info("Step action triggered")
+        self.backend.step()
 
-        code_location = None
-        while code_location is None:
+    async def on_stop_message(self, message: StopMessage) -> None:
+        logging.getLogger().info(f"Execution stopped: reason={message.reason}, addr={message.addr}")
 
-            if self.pc_address is None:
-                self.pc_address = 0x0000  # Starting address, adjust as needed
-            else:
-                self.pc_address += 1  # Increment PC, adjust as needed for instruction size
+        code_location = self.address_mapping.by_logical_address.get(message.addr)
 
-            code_location = self.address_mapping.by_logical_address.get(self.pc_address)
-
+        if code_location is None:
+            logging.getLogger().warning(f"No code location found for address: {message.addr:04x}")
+            return
 
         tab = self.tabs.get(code_location.file)
         if tab is None:
@@ -74,9 +75,15 @@ class TextDebuggerApp(App[None]):
 
         tab.debug_view.step_to_line(code_location.line_start)
 
+
     async def action_continue(self) -> None:
         """An action to continue execution."""
+        self.backend.get_registers()  # Ensure we have the latest registers before continuing
         logging.getLogger().info("Continue action triggered")
+
+    async def on_registers_message(self, message: RegistersMessage) -> None:
+        logging.getLogger().info(f"Received registers: {message.registers}")
+        # Here you would update your UI with the new register values as needed.
 
     async def action_toggle_breakpoint(self) -> None:
         """An action to toggle a breakpoint."""
