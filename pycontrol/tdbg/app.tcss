@@ -34,3 +34,8 @@ RegistersView {
     width: auto;
     height: auto;
 }
+
+#output-area {
+    border: none;
+    padding: 0;
+}

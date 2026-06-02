@@ -7,12 +7,12 @@ from datetime import datetime
 from rich.logging import RichHandler
 from rich.console import Console
 from textual.app import App, ComposeResult
-from textual.widgets import Footer, Header, RichLog, TabbedContent, TabPane
+from textual.widgets import Footer, Header, RichLog, TabbedContent, TabPane, TextArea
 from textual.containers import Horizontal
 
 
 from libtdb.debugtab import DebugTab
-from libtdb.tdbgwrapper import RegistersMessage, StopMessage, TDBGWrapper
+from libtdb.tdbgwrapper import RegistersMessage, StopMessage, TDBGWrapper, OutputMessage
 
 import argparse, sys
 
@@ -50,6 +50,8 @@ class TextDebuggerApp(App[None]):
                     yield tab
                 with TabPane("Log"):
                     yield RichLog()
+                with TabPane("Output"):
+                    yield TextArea("", id="output-area")
             yield RegistersView(id="sidebar-registers")
 
 
@@ -64,6 +66,8 @@ class TextDebuggerApp(App[None]):
 
     async def on_stop_message(self, message: StopMessage) -> None:
         logging.getLogger().info(f"Execution stopped: reason={message.reason}, addr={message.addr}")
+
+        self.backend.get_registers()  # Update registers view on stop
 
         code_location = self.address_mapping.by_logical_address.get(message.addr)
 
@@ -82,7 +86,10 @@ class TextDebuggerApp(App[None]):
 
         tab.debug_view.step_to_line(code_location.line_start)
 
-        self.backend.get_registers()  # Update registers view on stop
+
+    async def on_output_message(self, message: OutputMessage) -> None:
+        output_area = self.query_one("#output-area", TextArea)
+        output_area.insert(message.data)
 
 
     async def action_continue(self) -> None:
@@ -94,6 +101,8 @@ class TextDebuggerApp(App[None]):
     async def action_reset(self) -> None:
         """An action to reset the CPU."""
         logging.getLogger().info("Reset action triggered")
+        output_area = self.query_one("#output-area", TextArea)
+        output_area.clear()
         self.backend.reset()
         self.backend.get_registers()  # Update registers view after reset
 
