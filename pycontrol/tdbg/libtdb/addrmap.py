@@ -68,3 +68,14 @@ class AddressMapping:
                     return ""
         return prefix
 
+    def to_address_and_back(self, filename: str, line: int) -> AddressLineItem | None:
+        file_mapping = self.by_file_line.get(filename)
+        if not file_mapping:
+            logging.getLogger().error(f"No mapping found for file: {filename}")
+            return None
+        line_mapping = file_mapping.get(line)
+        if not line_mapping:
+            logging.getLogger().error(f"No mapping found for line {line} in file: {filename}")
+            return None
+
+        return self.by_logical_address.get(line_mapping.logical_address)

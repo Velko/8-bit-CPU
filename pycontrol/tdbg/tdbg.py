@@ -30,6 +30,7 @@ class TextDebuggerApp(App[None]):
         self.theme = "textual-light"  # Default theme
         self.tabs: dict[str, DebugTab] = {}
 
+        self.pc_address: int | None = None
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -51,21 +52,27 @@ class TextDebuggerApp(App[None]):
         """An action to step through the code."""
         logging.getLogger().info("Step action triggered")
 
-        filename = "/home/jurgis/work/8-bit-CPU/demo/snake.asm"
-        tab = self.tabs.get(filename)
+        code_location = None
+        while code_location is None:
+
+            if self.pc_address is None:
+                self.pc_address = 0x0000  # Starting address, adjust as needed
+            else:
+                self.pc_address += 1  # Increment PC, adjust as needed for instruction size
+
+            code_location = self.address_mapping.by_logical_address.get(self.pc_address)
+
+
+        tab = self.tabs.get(code_location.file)
         if tab is None:
-            logging.getLogger().error(f"No tab found for file: {filename}")
+            logging.getLogger().error(f"No tab found for file: {code_location.file}")
             return
 
         tabbed = self.query_one(TabbedContent)
 
         tabbed.active = tab.id
 
-        current_line = tab.debug_view.current_line
-        if current_line is None:
-            tab.debug_view.step_to_line(26)
-        else:
-            tab.debug_view.step_to_line(current_line + 1)
+        tab.debug_view.step_to_line(code_location.line_start)
 
     async def action_continue(self) -> None:
         """An action to continue execution."""
@@ -99,16 +106,11 @@ class TextDebuggerApp(App[None]):
         logging.getLogger().debug("This is a debug message.")
 
     def on_toggle_breakpoint(self, message: ToggleBreakpoint) -> None:
-        file_mapping = self.address_mapping.by_file_line.get(message.filename)
-        if not file_mapping:
-            logging.getLogger().error(f"No mapping found for file: {message.filename}")
-            return
-        line_mapping = file_mapping.get(message.line)
-        if not line_mapping:
-            logging.getLogger().error(f"No mapping found for line {message.line} in file: {message.filename}")
-            return
-        logging.getLogger().info(f"Toggle breakpoint at line {message.line+1} in {message.filename} -> address: {line_mapping.logical_address:#04x}")
 
+        code_location = self.address_mapping.to_address_and_back(message.filename, message.line)
+        if not code_location:
+            return
+        self.tabs[code_location.file].debug_view.toggle_breakpoint(code_location.line_start)
 
 
 

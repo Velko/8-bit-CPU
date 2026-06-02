@@ -37,8 +37,7 @@ class DebugView(Horizontal):
         self.scroll_dy = int(new_value)
         self._sync_views()
 
-    def on_toggle_breakpoint(self, message: ToggleBreakpoint) -> None:
-        line = message.line
+    def toggle_breakpoint(self, line: int) -> None:
         if line in self.breakpoints:
             self.breakpoints.remove(line)
             logging.getLogger().info(f"Removed breakpoint at line {line+1}")
