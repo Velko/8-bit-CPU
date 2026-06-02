@@ -1,6 +1,0 @@
-#!/usr/bin/python3
-
-
-def require_version(name: str, version: str) -> None: ...
-
-class repository: ...

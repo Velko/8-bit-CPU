@@ -1,6 +1,0 @@
-#!/usr/bin/python3
-
-class RGBA:
-    def __init__(self, r: float, g: float, b: float, alpha: float) -> None: ...
-
-class Event: ...
