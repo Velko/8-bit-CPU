@@ -30,11 +30,12 @@ class TextDebuggerApp(App[None]):
 
     CSS_PATH = "app.tcss"
 
-    def __init__(self, address_mapping: AddressMapping, **kwargs: Any) -> None:
+    def __init__(self, address_mapping: AddressMapping, binary: str | None = None, **kwargs: Any) -> None:
         super().__init__(**kwargs)
         self.address_mapping = address_mapping
         self.theme = "textual-light"  # Default theme
         self.tabs: dict[str, DebugTab] = {}
+        self.binary = binary
 
         self.pc_address: int | None = None
         self.backend = TDBGWrapper(self)
@@ -138,6 +139,11 @@ class TextDebuggerApp(App[None]):
         logging.getLogger().info(f"Running on Textual version: {textual.__version__}")
         logging.getLogger().debug("This is a debug message.")
 
+
+        if self.binary:
+            logging.getLogger().info(f"Uploading binary: {self.binary}")
+            self.backend.upload_binary(self.binary)
+
         self.backend.get_pc()
         self.backend.get_registers()  # Initial fetch of registers to populate the view
 
@@ -171,18 +177,14 @@ class LogRedirector(Console):
 if __name__ == "__main__":
     print(textual.__version__)
     parser = argparse.ArgumentParser(description="Custom IDE")
+    parser.add_argument("-b", "--binary", nargs="?", help="Binary file to upload on startup")
     parser.add_argument("--theme", help="Set the theme for the IDE")
     parser.add_argument("-i", "--addr-span", nargs='+', help="Address to source mapping file(s)")
     args = parser.parse_args()
 
     mappings = AddressMapping(args.addr_span)
 
-    print(f"Unique source files found in mappings: {mappings.unique_files}")
-    common_prefix = mappings.get_common_file_prefix
-    print(f"Common prefix for source files: {common_prefix}")
-    # Here you would add code to integrate the loaded mappings into your IDE as needed.
-
-    app = TextDebuggerApp(mappings)
+    app = TextDebuggerApp(mappings, args.binary)
     if args.theme:
         app.theme = args.theme
     app.run()

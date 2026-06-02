@@ -59,3 +59,9 @@ class TDBGWrapper:
 
     async def _get_pc(self) -> None:
         self.debugger.get_pc()
+
+    def upload_binary(self, binary: str) -> None:
+        self.owner.run_worker(self._upload_binary(binary))
+
+    async def _upload_binary(self, binary: str) -> None:
+        self.debugger.upload(binary)
