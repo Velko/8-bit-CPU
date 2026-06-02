@@ -25,7 +25,8 @@ class TextDebuggerApp(App[None]):
     BINDINGS = [("q", "quit", "Quit the IDE"),
                 ("s", "step", "Step instruction"),
                 ("c", "continue", "Continue execution"),
-                ("b", "toggle_breakpoint", "Toggle breakpoint")]
+                ("b", "toggle_breakpoint", "Toggle breakpoint"),
+                ("r", "reset", "Reset the CPU")]
 
     CSS_PATH = "app.tcss"
 
@@ -88,6 +89,13 @@ class TextDebuggerApp(App[None]):
         """An action to continue execution."""
         self.backend.get_registers()  # Ensure we have the latest registers before continuing
         logging.getLogger().info("Continue action triggered")
+
+
+    async def action_reset(self) -> None:
+        """An action to reset the CPU."""
+        logging.getLogger().info("Reset action triggered")
+        self.backend.reset()
+        self.backend.get_registers()  # Update registers view after reset
 
     async def on_registers_message(self, message: RegistersMessage) -> None:
         registers_view = self.query_one(RegistersView)

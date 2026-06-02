@@ -47,3 +47,9 @@ class TDBGWrapper:
 
     async def _step(self) -> None:
         self.debugger.step()
+
+    def reset(self) -> None:
+        self.owner.run_worker(self._reset)
+
+    async def _reset(self) -> None:
+        self.debugger.reset()
