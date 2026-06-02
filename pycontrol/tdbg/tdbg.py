@@ -25,6 +25,8 @@ class TextDebuggerApp(App[None]):
                 ("c", "continue", "Continue execution"),
                 ("b", "toggle_breakpoint", "Toggle breakpoint")]
 
+    CSS_PATH = "app.tcss"
+
     def __init__(self, address_mapping: AddressMapping, **kwargs: Any) -> None:
         super().__init__(**kwargs)
         self.address_mapping = address_mapping

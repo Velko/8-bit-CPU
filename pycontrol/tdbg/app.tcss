@@ -1,0 +1,36 @@
+/* app.tcss */
+#main-horizontal {
+    width: 100%;
+    height: 100%;
+}
+
+#main-tabs {
+    width: 4fr;
+}
+
+#sidebar-registers {
+    width: 1fr;
+    background: $surface; /* Optional: adds a visual background tint */
+    border-left: solid $primary; /* Optional: adds a vertical divider line */
+}
+
+DebugTextArea {
+    border: none;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+
+    &:focus {
+        border: none;
+    }
+}
+
+Gutter {
+    width: 5;
+    color: $text-muted;
+}
+
+RegistersView {
+    width: auto;
+    height: auto;
+}

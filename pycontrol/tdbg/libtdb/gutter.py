@@ -6,13 +6,6 @@ from rich.text import Text
 from .messages import ToggleBreakpoint
 
 class Gutter(Widget):
-    DEFAULT_CSS = """
-    Gutter {
-        width: 5;
-        color: $text-muted;
-    }
-    """
-
     breakpoints: set[int] = set()
     current_line: int | None = None
     line_count: int = 0

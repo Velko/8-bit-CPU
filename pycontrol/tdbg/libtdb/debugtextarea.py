@@ -7,17 +7,6 @@ from rich.style import Style
 from rich.segment import Segment
 
 class DebugTextArea(TextArea):
-    DEFAULT_CSS = """
-    DebugTextArea {
-        border: none;
-        padding: 0;
-
-        &:focus {
-            border: none;
-        }
-    }
-    """
-
     def __init__(self, text: str, *args: Any, **kwargs: Any) -> None:
         super().__init__(text, theme="css", show_line_numbers=False, read_only=True, *args, **kwargs)
 
