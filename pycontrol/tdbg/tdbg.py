@@ -22,7 +22,7 @@ from libtdb.regs import RegistersView
 
 class TextDebuggerApp(App[None]):
 
-    BINDINGS = [("q", "quit", "Quit the IDE"),
+    BINDINGS = [("q", "quit", "Quit application"),
                 ("s", "step", "Step instruction"),
                 ("c", "continue", "Continue execution"),
                 ("b", "toggle_breakpoint", "Toggle breakpoint"),
@@ -57,7 +57,7 @@ class TextDebuggerApp(App[None]):
 
 
     async def action_quit(self) -> None:
-        """An action to quit the IDE."""
+        """An action to quit the app."""
         self.exit()
 
     async def action_step(self) -> None:
@@ -125,6 +125,7 @@ class TextDebuggerApp(App[None]):
         self.post_message(ToggleBreakpoint(self, filename=tab.filename, line=tab.debug_view.code_editor.cursor_location[0]))
 
     def on_mount(self) -> None:
+        self.title = "8-bit CPU TUI debugger"
         rich_log_widget = self.query_one(RichLog)
 
         # 3. Configure the RichHandler to use our redirector
@@ -184,9 +185,9 @@ class LogRedirector(Console):
 
 if __name__ == "__main__":
     print(textual.__version__)
-    parser = argparse.ArgumentParser(description="Custom IDE")
+    parser = argparse.ArgumentParser(description="8-bit CPU TUI debugger")
     parser.add_argument("-b", "--binary", nargs="?", help="Binary file to upload on startup")
-    parser.add_argument("--theme", help="Set the theme for the IDE")
+    parser.add_argument("--theme", help="Set the theme for the app")
     parser.add_argument("-i", "--addr-span", nargs='+', help="Address to source mapping file(s)")
     args = parser.parse_args()
 
