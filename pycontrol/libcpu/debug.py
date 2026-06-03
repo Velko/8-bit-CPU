@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 import sys
-from collections.abc import Mapping
 from enum import Enum
 from dataclasses import dataclass
 
@@ -203,7 +202,7 @@ class Debugger:
     def output_event(self, target: int, msg: str) -> None:
         raise NotImplementedError
 
-    def get_registers(self) -> Mapping[str, str]:
+    def get_registers(self) -> dict[str, str]:
         registers: dict[str, str] = {}
         for gpr in [r for r in hardware.devices.values() if isinstance(r, GPRegister)]:
             registers[gpr.name] = f"{self.cpu_helper.read_reg8(gpr):02x}"

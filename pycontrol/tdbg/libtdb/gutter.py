@@ -37,4 +37,4 @@ class Gutter(Widget):
     def on_mouse_down(self, event: MouseDown) -> None:
         line = self.scroll_dy + event.y
         if 0 <= line < self.line_count:
-            self.post_message(ToggleBreakpoint(self, self.filename, int(line)))
+            self.post_message(ToggleBreakpoint(self.filename, int(line)))

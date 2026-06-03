@@ -26,7 +26,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install mypy pytest pyyaml
+        pip install mypy pytest pyyaml textual
     - name: Install PTH
       working-directory: ./pycontrol/tools
       run: |
@@ -50,10 +50,8 @@ jobs:
         make run &
     - name: Check typing with MyPy
       working-directory: ./pycontrol
-      env:
-        MYPYPATH: stubs
       run: |
-        python -m mypy --strict libcpu tests tools ../tools
+        python -m mypy --strict libcpu tests tools ../tools tdbg
     - name: Run tests
       working-directory: ./pycontrol
       run: |

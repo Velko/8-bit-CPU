@@ -83,7 +83,7 @@ class TextDebuggerApp(App[None]):
 
         tabbed = self.query_one(TabbedContent)
 
-        tabbed.active = tab.id
+        tabbed.active = tab.id or ""
 
         tab.debug_view.step_to_line(code_location.line_start)
 
@@ -122,7 +122,9 @@ class TextDebuggerApp(App[None]):
             return
         tab = tabbed.get_pane(active_tab)
 
-        self.post_message(ToggleBreakpoint(self, filename=tab.filename, line=tab.debug_view.code_editor.cursor_location[0]))
+        if not isinstance(tab, DebugTab):
+            return
+        self.post_message(ToggleBreakpoint(filename=tab.filename, line=tab.debug_view.code_editor.cursor_location[0]))
 
     def on_mount(self) -> None:
         self.title = "8-bit CPU TUI debugger"
