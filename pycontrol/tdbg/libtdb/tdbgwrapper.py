@@ -65,3 +65,21 @@ class TDBGWrapper:
 
     async def _upload_binary(self, binary: str) -> None:
         self.debugger.upload(binary)
+
+    def cont(self) -> None:
+        self.owner.run_worker(self._cont)
+
+    async def _cont(self) -> None:
+        self.debugger.cont()
+
+    def set_breakpoint(self, addr: int) -> None:
+        self.owner.run_worker(self._set_breakpoint(addr))
+
+    async def _set_breakpoint(self, addr: int) -> None:
+        self.debugger.set_breakpoint(addr)
+
+    def clear_breakpoint(self, addr: int) -> None:
+        self.owner.run_worker(self._clear_breakpoint(addr))
+
+    async def _clear_breakpoint(self, addr: int) -> None:
+        self.debugger.clear_breakpoint(addr)

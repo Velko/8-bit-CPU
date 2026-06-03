@@ -8,7 +8,6 @@ from textual.app import ComposeResult
 
 from .gutter import Gutter
 from .debugtextarea import DebugTextArea
-from .messages import ToggleBreakpoint
 
 
 
@@ -37,13 +36,13 @@ class DebugView(Horizontal):
         self.scroll_dy = int(new_value)
         self._sync_views()
 
-    def toggle_breakpoint(self, line: int) -> None:
-        if line in self.breakpoints:
-            self.breakpoints.remove(line)
-            logging.getLogger().info(f"Removed breakpoint at line {line+1}")
-        else:
-            self.breakpoints.add(line)
-            logging.getLogger().info(f"Added breakpoint at line {line+1}")
+    def set_breakpoint(self, line: int) -> None:
+        self.breakpoints.add(line)
+
+        self._sync_views()
+
+    def clear_breakpoint(self, line: int) -> None:
+        self.breakpoints.remove(line)
 
         self._sync_views()
 

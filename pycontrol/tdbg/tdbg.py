@@ -37,7 +37,7 @@ class TextDebuggerApp(App[None]):
         self.tabs: dict[str, DebugTab] = {}
         self.binary = binary
 
-        self.pc_address: int | None = None
+        self.breakpoints: set[int] = set()
         self.backend = TDBGWrapper(self)
 
     def compose(self) -> ComposeResult:
@@ -95,8 +95,7 @@ class TextDebuggerApp(App[None]):
 
     async def action_continue(self) -> None:
         """An action to continue execution."""
-        self.backend.get_registers()  # Ensure we have the latest registers before continuing
-        logging.getLogger().info("Continue action triggered")
+        self.backend.cont()
 
 
     async def action_reset(self) -> None:
@@ -121,7 +120,7 @@ class TextDebuggerApp(App[None]):
             return
         tab = tabbed.get_pane(active_tab)
 
-        tab.debug_view.post_message(ToggleBreakpoint(self, filename=tab.filename, line=tab.debug_view.code_editor.cursor_location[0]))
+        self.post_message(ToggleBreakpoint(self, filename=tab.filename, line=tab.debug_view.code_editor.cursor_location[0]))
 
     def on_mount(self) -> None:
         rich_log_widget = self.query_one(RichLog)
@@ -152,8 +151,15 @@ class TextDebuggerApp(App[None]):
         code_location = self.address_mapping.to_address_and_back(message.filename, message.line)
         if not code_location:
             return
-        self.tabs[code_location.file].debug_view.toggle_breakpoint(code_location.line_start)
 
+        if code_location.logical_address in self.breakpoints:
+            self.breakpoints.remove(code_location.logical_address)
+            self.tabs[code_location.file].debug_view.clear_breakpoint(code_location.line_start)
+            self.backend.clear_breakpoint(code_location.logical_address)
+        else:
+            self.breakpoints.add(code_location.logical_address)
+            self.tabs[code_location.file].debug_view.set_breakpoint(code_location.line_start)
+            self.backend.set_breakpoint(code_location.logical_address)
 
 
 class LogRedirector(Console):
