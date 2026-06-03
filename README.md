@@ -394,6 +394,19 @@ Progress
 * Developed a simple IDE / GUI debugger. Probably I should've created a VSCode extension, but it I feel
   more comfortable in creating a whole app in PyGTK.
 * Designing "universal" I/O controller, up to 64 (or 256) ports for external devices.
+* Extracted the device pinout and instruction set definitions from Python code into separate yaml files.
+  This way they can be used by an alternative implementations, for example - a high-performance emulator
+  in C or Rust.
+* Switched from virtual serial connection to UDP. It is more flexible and also allows to "hot-reconnect"
+  with a different tool. It also appears that performance is better, especially when running in GitHub
+  Actions. To use with an Arduino-based control board, I may try it using Socat or implement an
+  UDP-to-Serial bridge myself, but I'll do that in due time.
+* Implemented classic Snake game. It listens for input on UART and sends back ANSI-escaped output.
+  Fixed a lot of issues and added new features to make it possible.
+* Reimplemented the GUI debugger as TUI, using [Textual][textual] library. It is more convenient to
+  run it in SSH session. No code editing nor compilation features, focused on debugger because it was
+  fiddly to run the GTK version in remote session. It was quite hard to develop the Snake game demo
+  without usable debugger UI. I had only a cmd-based one, which was not very convenient.
 
 
 [eater-net-8bit]: https://eater.net/8bit
@@ -407,3 +420,4 @@ Progress
 [verilog]: https://en.wikipedia.org/wiki/Verilog
 [vpi]: https://en.wikipedia.org/wiki/Verilog_Procedural_Interface
 [avr-libc]: https://www.nongnu.org/avr-libc/user-manual/index.html
+[textual]: https://textual.textualize.io/
