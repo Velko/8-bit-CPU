@@ -106,6 +106,8 @@ class TextDebuggerApp(App[None]):
         self.backend.reset()
         self.backend.get_pc()
         self.backend.get_registers()  # Update registers view after reset
+        registers_view = self.query_one(RegistersView)
+        registers_view.reset_old_values()
 
     async def on_registers_message(self, message: RegistersMessage) -> None:
         registers_view = self.query_one(RegistersView)

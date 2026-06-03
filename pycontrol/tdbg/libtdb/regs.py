@@ -12,9 +12,21 @@ class RegistersView(Static):
     def on_mount(self) -> None:
         self.update(self.table)
 
+    def reset_old_values(self) -> None:
+        self.old_values = {}
+
     def update_table(self, registers: dict[str, str]) -> None:
-        if len(self.old_values) == 0:
-            self.old_values = registers
+        # only update if there are changes
+        changed = False
+        for reg, val in registers.items():
+            old_val = self.old_values.get(reg)
+            if old_val != val:
+                changed = True
+
+        if not changed:
+            return
+
+        # Rebuild the table with updated values, highlighting changes
         self.table = Table("Register", "Value")
         for reg, val in registers.items():
             old_val = self.old_values.get(reg)
@@ -22,5 +34,6 @@ class RegistersView(Static):
                 self.table.add_row(reg, f"[bold dark_red]{val}[/bold dark_red]")
             else:
                 self.table.add_row(reg, val)
-            self.old_values[reg] = val
         self.update(self.table)
+
+        self.old_values = registers
