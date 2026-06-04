@@ -15,7 +15,7 @@ module uart(
 
     always @(posedge clk) begin
         if (sel_data && !rnw) begin
-            $hdb_send_char(io_bus);
+            $hdb_send_char(2, io_bus);
         end
     end
 

@@ -19,7 +19,7 @@ module display_num(
             3: $sformat(out_fmt, "#OUT#0#o%o\\n", main_bus);
             default: $swrite(out_fmt, "#OUT#0#x\\n");
             endcase
-            $hdb_send_str(out_fmt);
+            $hdb_send_str(0, out_fmt);
         end
 
         if (load_mode) begin

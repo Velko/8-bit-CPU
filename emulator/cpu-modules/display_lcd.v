@@ -29,7 +29,7 @@ module display_lcd(
             else begin
                 $sformat(out_fmt, "#OUT#10#%c", io_bus);
             end
-            $hdb_send_str(out_fmt);
+            $hdb_send_str(1, out_fmt);
             busy_val <= 8'h80;
         end
 

@@ -67,18 +67,18 @@ int hdb_get_int(void)
     return val;
 }
 
-void hdb_send_char(int value)
+void hdb_send_char(int endpoint, int value)
 {
     int channel = get_channel();
 
-    int res = channel_send(channel, &value, 1);
+    int res = channel_send(channel, endpoint, &value, 1);
     if (res < 0) {
         perror("hdb_send_char");
         exit(EXIT_FAILURE);
     }
 }
 
-void hdb_send_int(int value)
+void hdb_send_int(int endpoint, int value)
 {
     char buffer[20];
     int channel = get_channel();
@@ -95,14 +95,14 @@ void hdb_send_int(int value)
         exit(EXIT_FAILURE);
     }
 
-    int res = channel_send(channel, buffer, nbytes);
+    int res = channel_send(channel, endpoint, buffer, nbytes);
     if (res < 0) {
         perror("hdb_send_int");
         exit(EXIT_FAILURE);
     }
 }
 
-void hdb_send_str(const char *value)
+void hdb_send_str(int endpoint, const char *value)
 {
     char buffer[1024];
     int channel = get_channel();
@@ -119,7 +119,7 @@ void hdb_send_str(const char *value)
         exit(EXIT_FAILURE);
     }
 
-    int res = channel_send(channel, buffer, nbytes);
+    int res = channel_send(channel, endpoint, buffer, nbytes);
     if (res < 0) {
         perror("hdb_send_str");
         exit(EXIT_FAILURE);

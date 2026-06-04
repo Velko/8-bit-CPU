@@ -88,10 +88,10 @@ module debug (
     always @(negedge iclk or posedge power_on) begin
         if (brk || !hlt || power_on) begin
             if (brk) begin
-                $hdb_send_str("#BRK");
+                $hdb_send_str(0, "#BRK");
             end
             if (!hlt) begin
-                $hdb_send_str("#HLT");
+                $hdb_send_str(0, "#HLT");
             end
 
             ctrlen <= 1;
@@ -102,7 +102,7 @@ module debug (
                 case (cmd)
                     "I": begin
                         // Identify
-                        $hdb_send_str("VerilogVM");
+                        $hdb_send_str(0, "VerilogVM");
                     end
 
                     "A": begin
@@ -113,7 +113,7 @@ module debug (
 
                     "a": begin
                         // Read address
-                        $hdb_send_int(addr_bus);
+                        $hdb_send_int(0, addr_bus);
                     end
 
                     "B": begin
@@ -124,12 +124,12 @@ module debug (
 
                     "b": begin
                         // Read bus
-                        $hdb_send_int(main_bus);
+                        $hdb_send_int(0, main_bus);
                     end
 
                     "s": begin
                         // Flags
-                        $hdb_send_int(fout);
+                        $hdb_send_int(0, fout);
                     end
 
                     "f": begin
@@ -170,14 +170,14 @@ module debug (
 
                     "T": begin
                         // clock_tick
-                        $hdb_send_str("#T"); // send response immediately, as executing the tick may produce additional output
+                        $hdb_send_str(0, "#T"); // send response immediately, as executing the tick may produce additional output
                         tick();
                     end
 
                     "r": begin
                         // read current_opcode
                         $hdb_get_int(temp); // client sends control word for IRFetch, discard it
-                        $hdb_send_int(iout);
+                        $hdb_send_int(0, iout);
                     end
 
                     "R": begin
@@ -191,7 +191,7 @@ module debug (
 
                     "W": begin
                         write_ram();
-                        $hdb_send_str("#W");
+                        $hdb_send_str(0, "#W");
                     end
 
                     "Q": begin
