@@ -17,17 +17,17 @@ class ProtocolException(Exception):
 class PinClient:
 
     def __init__(self) -> None:
-        self.serial = open_port()
+        self.transport = open_port()
 
     def close(self) -> None:
-        self.serial.close()
+        self.transport.close()
 
     def send_cmd(self, cmd: str) -> None:
-        self.serial.sendto(cmd.encode("ascii"), (TARGET_IP, TARGET_PORT))
+        self.transport.sendto(cmd.encode("ascii"), (TARGET_IP, TARGET_PORT))
 
     def query(self, cmd: str) -> str:
         self.send_cmd(cmd)
-        packet, src = self.serial.recvfrom(1024)
+        packet, src = self.transport.recvfrom(1024)
         return packet.decode('ascii').strip()
 
     def identify(self) -> str:
@@ -97,16 +97,16 @@ class PinClient:
             yield self.receive_message()
 
     def receive_raw(self) -> str:
-        packet, _ = self.serial.recvfrom(1024)
+        packet, _ = self.transport.recvfrom(1024)
         return packet.decode('ascii')
 
     def send_raw(self, data: bytes) -> None:
-        self.serial.sendto(data, (TARGET_IP, TARGET_PORT))
+        self.transport.sendto(data, (TARGET_IP, TARGET_PORT))
 
     OUT_RE = re.compile(r"#OUT#([0-9A-Fa-f]+)#(.*)")
 
     def receive_message(self) -> RunMessage:
-        packet, src = self.serial.recvfrom(1024)
+        packet, src = self.transport.recvfrom(1024)
         line = packet.decode('ascii').strip('\r\n')
 
         match line:

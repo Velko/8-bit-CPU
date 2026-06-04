@@ -55,7 +55,7 @@ class UserInputMessage:
     data: bytes
 
 def io_stream(client: PinClient) -> Generator[RunMessage | UserInputMessage]:
-    streams = [sys.stdin, client.serial]
+    streams = [sys.stdin, client.transport]
     while True:
         try:
             r, _, _ = select.select(streams, [], [])
@@ -66,7 +66,7 @@ def io_stream(client: PinClient) -> Generator[RunMessage | UserInputMessage]:
                     streams.remove(sys.stdin)
                     continue
                 yield UserInputMessage(data)
-            if client.serial in r:
+            if client.transport in r:
                 yield client.receive_message()
         except KeyboardInterrupt:
             print ("# Interrupted", flush=True, file=sys.stderr, end="\r\n")
@@ -83,7 +83,7 @@ def monitor() -> None:
         old = termios.tcgetattr(fd)
         tty.setraw(fd)
 
-    streams = [sys.stdin, cpu_helper.client.serial]
+    streams = [sys.stdin, cpu_helper.client.transport]
 
     try:
         while True:
@@ -99,7 +99,7 @@ def monitor() -> None:
                     return
                 cpu_helper.client.send_raw(data)
 
-            if cpu_helper.client.serial in r:
+            if cpu_helper.client.transport in r:
                 text = cpu_helper.client.receive_raw()
                 print(text, flush=True, end="")
                 if text.endswith("#HLT\r\n"):
