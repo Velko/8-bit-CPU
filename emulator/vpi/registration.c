@@ -11,5 +11,6 @@ void (*vlog_startup_routines[])(void) = {
     register_hdb_send_str,
     register_hdb_check_input,
     register_hdb_discard_char,
+    register_hdb_register_endpoint,
     0
 };

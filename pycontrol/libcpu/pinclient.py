@@ -127,8 +127,13 @@ class PinClient:
     def shutdown(self) -> None:
         self.send_cmd('Q')
 
+    def register_endpoint(self, channel: int) -> None:
+        port = self.transport.getsockname()[1]
+        self.send_cmd(f"E{channel:x};{port:x}N")
+
 def open_port() -> socket.socket:
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.bind(("", 0))
     return sock
 
 
@@ -139,8 +144,7 @@ def get_client_instance() -> PinClient:
 
     if single_inst is None:
         single_inst = PinClient()
-        # Arduino is not ready directly after connecting
-        # try a single operation before proceeding
-        single_inst.identify()
+        # Register self as an endpoint 0, so that we can receive output messages from the emulator
+        single_inst.register_endpoint(0)
 
     return single_inst

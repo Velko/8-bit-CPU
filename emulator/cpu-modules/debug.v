@@ -28,6 +28,7 @@ module debug (
 
     reg [7:0] cmd;
     reg [31:0] temp;
+    reg [31:0] temp2;
 
     task tick();
         begin
@@ -196,6 +197,12 @@ module debug (
                     "Q": begin
                         $display("\nRemote shutdown requested.");
                         $finish;
+                    end
+
+                    "E": begin
+                        $hdb_get_int(temp);
+                        $hdb_get_int(temp2);
+                        $hdb_register_endpoint(temp, temp2);
                     end
 
                     default:

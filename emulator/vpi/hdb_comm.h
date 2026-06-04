@@ -2,6 +2,9 @@
 #define SERIAL_HOST_H
 
 #include <stdio.h>
+#include <stdint.h>
+
+#define NUM_CHANNELS 16
 
 void hdb_setup_comm_lazy(void);
 int hdb_get_char(void);
@@ -12,6 +15,8 @@ void hdb_send_int(int value);
 void hdb_send_str(const char *value);
 int hdb_check_input(void);
 void hdb_discard_char(void);
+
+void hdb_register_endpoint(int endpoint, uint16_t port);
 
 int channel_open(void);
 int channel_send(int fd, const void *buf, size_t len);

@@ -143,6 +143,31 @@ static int hdb_discard_char_handler(char *user_data)
     return 0;
 }
 
+static int hdb_register_endpoint_handler(char *user_data)
+{
+    (void)user_data; // suppress [-Wunused-parameter]
+
+    vpiHandle systfref = vpi_handle(vpiSysTfCall, NULL);
+    vpiHandle args_iter = vpi_iterate(vpiArgument, systfref);
+
+    vpiHandle channel_arg = vpi_scan(args_iter);
+    vpiHandle port_arg = vpi_scan(args_iter);
+
+    struct t_vpi_value channel_val;
+    channel_val.format = vpiIntVal;
+    vpi_get_value(channel_arg, &channel_val);
+
+    struct t_vpi_value port_val;
+    port_val.format = vpiIntVal;
+    vpi_get_value(port_arg, &port_val);
+
+    hdb_register_endpoint(channel_val.value.integer, (uint16_t)port_val.value.integer);
+
+    vpi_free_object(args_iter);
+
+    return 0;
+}
+
 void register_hdb_get_char(void)
 {
       s_vpi_systf_data tf_data;
@@ -242,6 +267,19 @@ void register_hdb_discard_char(void)
       tf_data.type      = vpiSysTask;
       tf_data.tfname    = "$hdb_discard_char";
       tf_data.calltf    = hdb_discard_char_handler;
+      tf_data.compiletf = 0;
+      tf_data.sizetf    = 0;
+      tf_data.user_data = 0;
+      vpi_register_systf(&tf_data);
+}
+
+void register_hdb_register_endpoint(void)
+{
+      s_vpi_systf_data tf_data;
+
+      tf_data.type      = vpiSysTask;
+      tf_data.tfname    = "$hdb_register_endpoint";
+      tf_data.calltf    = hdb_register_endpoint_handler;
       tf_data.compiletf = 0;
       tf_data.sizetf    = 0;
       tf_data.user_data = 0;

@@ -40,6 +40,8 @@ class Debugger:
         self.on_stop = self.stop_event
         self.on_output = self.output_event
 
+        self.client.register_endpoint(0)
+
     def disconnect(self) -> None:
         self.client.close()
 

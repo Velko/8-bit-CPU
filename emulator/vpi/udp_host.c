@@ -10,7 +10,7 @@
 
 #define LISTEN_PORT 8888
 
-static uint16_t last_client_port = 0;
+static uint16_t endpoint_ports[NUM_CHANNELS] = {0};
 
 int channel_open(void)
 {
@@ -39,7 +39,7 @@ int channel_send(int fd, const void *buf, size_t len)
     memset(&dest_addr, 0, sizeof(dest_addr));
     dest_addr.sin_family = AF_INET;
     dest_addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-    dest_addr.sin_port = htons(last_client_port);
+    dest_addr.sin_port = htons(endpoint_ports[0]);
 
     return sendto(fd, buf, len, 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
 }
@@ -55,12 +55,19 @@ int channel_receive(int fd, void *buf, size_t len)
         exit(EXIT_FAILURE);
     }
 
-    last_client_port = ntohs(src_addr.sin_port);
-
     return r;
 }
 
 void channel_close(int fd)
 {
     close(fd);
+}
+
+void hdb_register_endpoint(int endpoint, uint16_t port)
+{
+    if (endpoint < 0 || endpoint >= NUM_CHANNELS) {
+        fprintf(stderr, "hdb_register_endpoint: invalid endpoint number: %d\n", endpoint);
+        exit(EXIT_FAILURE);
+    }
+    endpoint_ports[endpoint] = port;
 }
