@@ -1,31 +1,27 @@
+#![allow(dead_code)]
 use std::fs::File;
 use serde::Deserialize;
 use std::collections::HashMap;
 
-/*
-devices:
-  - name: "A"
-    type: "GPRegister"
-    pins:
-      out:
-        mux: "OutMux"
-        pin: 0
-      load:
-        mux: "LoadMux"
-        pin: 0
-      alu_l:
-        mux: "AluArgL"
-        pin: 0
-      alu_r:
-        mux: "AluArgR"
-        pin: 0
-  - name: "B"
-    ...
-*/
-
 #[derive(Debug, Deserialize)]
 pub struct PinConfig {
+    muxes: Vec<MuxConfig>,
+    shared_pins: Vec<SharedPinConfig>,
     devices: Vec<DeviceConfig>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct MuxConfig {
+    name: String,
+    pins: Vec<u8>,
+    default: u8,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(untagged)]
+pub enum SharedPinConfig {
+    MuxPin { name: String, mux: String, pin: u8 },
+    DirectPin { name: String, pin: u8, level: Level },
 }
 
 #[derive(Debug, Deserialize)]
