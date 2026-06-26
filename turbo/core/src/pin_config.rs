@@ -4,16 +4,16 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 pub struct PinConfig {
-    muxes: Vec<MuxConfig>,
-    shared_pins: Vec<SharedPinConfig>,
-    devices: Vec<DeviceConfig>,
+    pub muxes: Vec<MuxConfig>,
+    pub shared_pins: Vec<SharedPinConfig>,
+    pub devices: Vec<DeviceConfig>,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct MuxConfig {
-    name: String,
-    pins: Vec<u8>,
-    default: u8,
+    pub name: String,
+    pub pins: Vec<usize>,
+    pub default: u8,
 }
 
 #[derive(Debug, Deserialize)]
