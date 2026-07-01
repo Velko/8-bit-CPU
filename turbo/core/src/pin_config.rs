@@ -1,6 +1,7 @@
 #![allow(dead_code)]
 use std::fs::File;
 use serde::Deserialize;
+use std::collections::HashMap;
 
 #[derive(Debug, Deserialize)]
 pub struct PinConfig {
@@ -28,11 +29,11 @@ pub enum SharedPinConfig {
 pub enum DeviceConfig {
     GPRegister {
         name: String,
-        pins: GPRegisterPins,
+        pins: HashMap<GPRegisterPin, PinConfigEntry>,
     },
     ALU {
         name: String,
-        pins: ALUPins,
+        pins: HashMap<ALUPin, PinConfigEntry>,
     },
     FlagsRegister {
         name: String,
@@ -88,18 +89,20 @@ pub enum DeviceConfig {
     },
 }
 
-#[derive(Debug, Deserialize)]
-pub struct GPRegisterPins {
-    out: PinConfigEntry,
-    load: PinConfigEntry,
-    alu_l: PinConfigEntry,
-    alu_r: PinConfigEntry,
+#[derive(Debug, Deserialize, Hash, Eq, PartialEq)]
+#[serde(rename_all = "snake_case")]
+pub enum GPRegisterPin {
+    Out,
+    Load,
+    AluL,
+    AluR,
 }
 
-#[derive(Debug, Deserialize)]
-pub struct ALUPins {
-    out: PinConfigEntry,
-    alt: PinConfigEntry,
+#[derive(Debug, Deserialize, Hash, Eq, PartialEq)]
+#[serde(rename_all = "snake_case")]
+pub enum ALUPin {
+    Out,
+    Alt,
 }
 
 #[derive(Debug, Deserialize)]
