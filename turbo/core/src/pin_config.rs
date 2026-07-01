@@ -29,163 +29,64 @@ pub enum SharedPinConfig {
 pub enum DeviceConfig {
     GPRegister {
         name: String,
-        pins: HashMap<GPRegisterPin, PinConfigEntry>,
+        pins: HashMap<String, PinConfigEntry>,
     },
     ALU {
         name: String,
-        pins: HashMap<ALUPin, PinConfigEntry>,
+        pins: HashMap<String, PinConfigEntry>,
     },
     FlagsRegister {
         name: String,
-        pins: FlagsRegisterPins,
+        pins: HashMap<String, PinConfigEntry>,
     },
     RAM {
         name: String,
-        pins: RAMPins,
+        pins: HashMap<String, PinConfigEntry>,
     },
     ROM {
         name: String,
-        pins: ROMPins,
+        pins: HashMap<String, PinConfigEntry>,
     },
     TempRegister {
         name: String,
-        pins: TempRegisterPins,
+        pins: HashMap<String, PinConfigEntry>,
     },
     WORegister {
         name: String,
-        pins: WORegisterPins,
+        pins: HashMap<String, PinConfigEntry>,
     },
     Clock {
         name: String,
-        pins: ClockPins,
+        pins: HashMap<String, PinConfigEntry>,
     },
     StepCounter {
         name: String,
-        pins: StepCounterPins,
+        pins: HashMap<String, PinConfigEntry>,
     },
     ProgramCounter {
         name: String,
-        pins: ProgramCounterPins,
+        pins: HashMap<String, PinConfigEntry>,
     },
     TransferRegister {
         name: String,
-        pins: TransferRegisterPins,
+        pins: HashMap<String, PinConfigEntry>,
     },
     StackPointer {
         name: String,
-        pins: StackPointerPins,
+        pins: HashMap<String, PinConfigEntry>,
     },
     AddressRegister {
         name: String,
-        pins: AddressRegisterPins,
+        pins: HashMap<String, PinConfigEntry>,
     },
     AddressCalculator {
         name: String,
-        pins: AddressCalculatorPins,
+        pins: HashMap<String, PinConfigEntry>,
     },
     IOController {
         name: String,
-        pins: IOControllerPins,
+        pins: HashMap<String, PinConfigEntry>,
     },
-}
-
-#[derive(Debug, Deserialize, Hash, Eq, PartialEq)]
-#[serde(rename_all = "snake_case")]
-pub enum GPRegisterPin {
-    Out,
-    Load,
-    AluL,
-    AluR,
-}
-
-#[derive(Debug, Deserialize, Hash, Eq, PartialEq)]
-#[serde(rename_all = "snake_case")]
-pub enum ALUPin {
-    Out,
-    Alt,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct FlagsRegisterPins {
-    out: PinConfigEntry,
-    load: PinConfigEntry,
-    calc: PinConfigEntry,
-    carry: PinConfigEntry,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct RAMPins {
-    out: PinConfigEntry,
-    write: PinConfigEntry,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct ROMPins {
-    out: PinConfigEntry,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct TempRegisterPins {
-    load: PinConfigEntry,
-    alu_r: PinConfigEntry,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct WORegisterPins {
-    load: PinConfigEntry,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct ClockPins {
-    halt: PinConfigEntry,
-    brk: PinConfigEntry,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct StepCounterPins {
-    reset: PinConfigEntry,
-    extended: PinConfigEntry,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct ProgramCounterPins {
-    out: PinConfigEntry,
-    load: PinConfigEntry,
-    inc: PinConfigEntry,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct TransferRegisterPins {
-    out: PinConfigEntry,
-    load: PinConfigEntry,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct StackPointerPins {
-    out: PinConfigEntry,
-    load: PinConfigEntry,
-    inc: PinConfigEntry,
-    dec: PinConfigEntry,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct AddressRegisterPins {
-    out: PinConfigEntry,
-    load: PinConfigEntry,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct AddressCalculatorPins {
-    out: PinConfigEntry,
-    load: PinConfigEntry,
-    signed: PinConfigEntry,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct IOControllerPins {
-    laddr: PinConfigEntry,
-    to_dev: PinConfigEntry,
-    from_dev: PinConfigEntry,
 }
 
 #[derive(Debug, Deserialize)]
@@ -206,15 +107,5 @@ impl PinConfig {
     pub fn from_file(file_path: &str) -> Self {
         let f = File::open(file_path).expect("Failed to open pins file");
         serde_yaml::from_reader(f).expect("Failed to parse pins file")
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        hello();
     }
 }
