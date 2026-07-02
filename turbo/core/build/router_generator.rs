@@ -91,6 +91,18 @@ impl DeviceMapPart {
         }
         writeln!(writer, "}}")?;
         writeln!(writer)?;
+
+
+        writeln!(writer, "impl DeviceMap {{")?;
+        writeln!(writer, "    pub fn new() -> Self {{")?;
+        writeln!(writer, "        DeviceMap {{")?;
+        for device in self.devices.iter() {
+            writeln!(writer, "            {}: {} {{ }},", device.name, device.dev_type)?;
+        }
+        writeln!(writer, "        }}")?;
+        writeln!(writer, "    }}")?;
+        writeln!(writer, "}}")?;
+
         Ok(())
     }
 }
@@ -135,4 +147,24 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) {
     for m in muxes.values() {
          m.emit(&mut f).expect("Failed to emit mux");
     }
+
+    emit_router_fn(&mut f, &muxes).expect("Failed to emit router");
+}
+
+
+fn emit_router_fn(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPart>) -> std::io::Result<()> {
+    writeln!(writer, "impl DeviceMap {{")?;
+    writeln!(writer, "    pub fn route_word(&self, old_cw: ControlWord, new_cw: ControlWord) {{")?;
+
+
+    for (name, mux) in muxes.iter() {
+        writeln!(writer, "        if old_cw & {}::MASK != new_cw & {}::MASK {{", name, name)?;
+        writeln!(writer, "            {}::dispatch(self, old_cw, false);", name)?;
+        writeln!(writer, "            {}::dispatch(self, new_cw, true);", name)?;
+        writeln!(writer, "        }}")?;
+    }
+    writeln!(writer, "    }}")?;
+    writeln!(writer, "}}")?;
+
+    Ok(())
 }
