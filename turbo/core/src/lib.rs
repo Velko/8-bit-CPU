@@ -1,4 +1,5 @@
 mod router;
+mod devices;
 
 // pub fn load_pins(file_path: &str) -> pin_config::PinConfig {
 
