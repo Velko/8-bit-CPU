@@ -125,6 +125,13 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) {
         muxes.insert(mux.name.clone(), MuxPart::from(mux));
     }
 
+    let shared: HashMap<String, pin_config::SharedPinConfig> = pins.shared_pins.into_iter()
+        .map(|sp| (match sp {
+            pin_config::SharedPinConfig::DirectPin { ref name, .. } => name.clone(),
+            pin_config::SharedPinConfig::MuxPin { ref name, .. } => name.clone(),
+        }, sp.clone()))
+        .collect();
+
     let mut device_map = DeviceMapPart { devices: Vec::new() };
 
     let mut direct_pins: Vec<DirectPinRef> = Vec::new();
@@ -137,20 +144,28 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) {
         for (pin_name, pin_entry) in device.pins.iter() {
             match pin_entry {
                 pin_config::PinConfigEntry::MuxPin { mux, pin } => {
-                    if let Some(mux_part) = muxes.get_mut(mux) {
-                        mux_part.add_device_bit(&device.name, pin_name, *pin);
-                    } else {
-                        eprintln!("Warning: Mux {} not found for device {} pin {}", mux, device.name, pin_name);
-                    }
+                    // Add the device pin to the corresponding mux
+                    let mux_part = muxes.get_mut(mux).unwrap();
+                    mux_part.add_device_bit(&device.name, pin_name, *pin);
                 },
                 pin_config::PinConfigEntry::DirectPin { pin, level } => {
-                    // Direct pins are not part of a mux, so we don't need to add them to the muxes
+                    // Direct pins are not part of a mux, we will handle them separately
                     let mask = 1 << pin;
                     let value = if *level == pin_config::Level::HIGH { mask } else { 0 };
                     direct_pins.push(DirectPinRef { device: device.name.clone(), pin: pin_name.clone(), mask, value });
                 },
-                pin_config::PinConfigEntry::Alias {pin }  => {
-                    // Unused pins are ignored
+                pin_config::PinConfigEntry::Alias { pin }  => {
+                    match shared.get(pin).unwrap() {
+                        pin_config::SharedPinConfig::MuxPin { mux, pin: mux_pin, .. } => {
+                            let mux_part = muxes.get_mut(mux).unwrap();
+                            mux_part.add_device_bit(&device.name, pin_name, *mux_pin);
+                        },
+                        pin_config::SharedPinConfig::DirectPin { pin: direct_pin, level, .. } => {
+                            let mask = 1 << direct_pin;
+                            let value = if *level == pin_config::Level::HIGH { mask } else { 0 };
+                            direct_pins.push(DirectPinRef { device: device.name.clone(), pin: pin_name.clone(), mask, value });
+                        },
+                    }
                 },
             }
         }

@@ -17,7 +17,12 @@ trait OutReceiver {
 trait LoadReceiver {
     fn on_load_change(&self, _new_state: bool) {}
 }
-
+trait IncReceiver {
+    fn on_inc_change(&self, _new_state: bool) {}
+}
+trait DecReceiver {
+    fn on_dec_change(&self, _new_state: bool) {}
+}
 
 
 struct GPRegister {
@@ -51,6 +56,11 @@ struct ALU {
 impl OutReceiver for ALU {
     fn on_out_change(&self, new_state: bool) {
         println!("ALU {} Out changed to: {}", self.name, new_state);
+    }
+}
+impl ALU {
+    fn on_alt_change(&self, new_state: bool) {
+        println!("ALU {} Alt changed to: {}", self.name, new_state);
     }
 }
 
@@ -117,6 +127,7 @@ struct ProgramCounter {
 }
 impl OutReceiver for ProgramCounter {}
 impl LoadReceiver for ProgramCounter {}
+impl IncReceiver for ProgramCounter {}
 
 struct TransferRegister {
     name: &'static str,
@@ -129,6 +140,8 @@ struct StackPointer {
 }
 impl OutReceiver for StackPointer {}
 impl LoadReceiver for StackPointer {}
+impl IncReceiver for StackPointer {}
+impl DecReceiver for StackPointer {}
 
 struct AddressRegister {
     name: &'static str,

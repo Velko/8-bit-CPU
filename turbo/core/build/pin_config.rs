@@ -17,7 +17,7 @@ pub struct MuxConfig {
     pub default: u8,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 #[serde(untagged)]
 pub enum SharedPinConfig {
     MuxPin { name: String, mux: String, pin: u8 },
@@ -32,7 +32,7 @@ pub struct DeviceConfig {
     pub pins: HashMap<String, PinConfigEntry>,
 }
 
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Deserialize, PartialEq, Clone, Copy)]
 pub enum Level {
     LOW,
     HIGH,
