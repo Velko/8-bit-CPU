@@ -32,7 +32,7 @@ pub struct DeviceConfig {
     pub pins: HashMap<String, PinConfigEntry>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub enum Level {
     LOW,
     HIGH,

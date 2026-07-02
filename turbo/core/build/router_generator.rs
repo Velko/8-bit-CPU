@@ -16,6 +16,13 @@ pub struct MuxPinRef {
     value: u32,
 }
 
+pub struct DirectPinRef {
+    device: String,
+    pin: String,
+    mask: u32,
+    value: u32,
+}
+
 impl MuxPart {
     fn val_to_mask(pins: &[usize], val: u8) -> u32 {
         let mut mask: u32 = 0;
@@ -120,6 +127,7 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) {
 
     let mut device_map = DeviceMapPart { devices: Vec::new() };
 
+    let mut direct_pins: Vec<DirectPinRef> = Vec::new();
 
     for device in pins.devices.iter() {
         device_map.devices.push(DevicePart {
@@ -135,7 +143,15 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) {
                         eprintln!("Warning: Mux {} not found for device {} pin {}", mux, device.name, pin_name);
                     }
                 },
-                _ => {}
+                pin_config::PinConfigEntry::DirectPin { pin, level } => {
+                    // Direct pins are not part of a mux, so we don't need to add them to the muxes
+                    let mask = 1 << pin;
+                    let value = if *level == pin_config::Level::HIGH { mask } else { 0 };
+                    direct_pins.push(DirectPinRef { device: device.name.clone(), pin: pin_name.clone(), mask, value });
+                },
+                pin_config::PinConfigEntry::Alias {pin }  => {
+                    // Unused pins are ignored
+                },
             }
         }
     }
@@ -148,11 +164,11 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) {
          m.emit(&mut f).expect("Failed to emit mux");
     }
 
-    emit_router_fn(&mut f, &muxes).expect("Failed to emit router");
+    emit_router_fn(&mut f, &muxes, &direct_pins).expect("Failed to emit router");
 }
 
 
-fn emit_router_fn(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPart>) -> std::io::Result<()> {
+fn emit_router_fn(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPart>, direct_pins: &[DirectPinRef]) -> std::io::Result<()> {
     writeln!(writer, "impl DeviceMap {{")?;
     writeln!(writer, "    pub fn route_word(&self, old_cw: ControlWord, new_cw: ControlWord) {{")?;
 
@@ -163,8 +179,13 @@ fn emit_router_fn(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPa
         writeln!(writer, "            {}::dispatch(self, new_cw, true);", name)?;
         writeln!(writer, "        }}")?;
     }
+
+    for direct_pin in direct_pins {
+        writeln!(writer, "        if old_cw & 0b{:032b} != new_cw & 0b{:032b} {{", direct_pin.mask, direct_pin.mask)?;
+        writeln!(writer, "            self.{}.on_{}_change(new_cw & 0b{:032b} == 0b{:032b});", direct_pin.device, direct_pin.pin, direct_pin.mask, direct_pin.value)?;
+        writeln!(writer, "        }}")?;
+    }
     writeln!(writer, "    }}")?;
     writeln!(writer, "}}")?;
-
     Ok(())
 }

@@ -59,6 +59,14 @@ struct FlagsRegister {
 }
 impl OutReceiver for FlagsRegister {}
 impl LoadReceiver for FlagsRegister {}
+impl FlagsRegister {
+    fn on_calc_change(&self, new_state: bool) {
+        println!("FlagsRegister {} Calc changed to: {}", self.name, new_state);
+    }
+    fn on_carry_change(&self, new_state: bool) {
+        println!("FlagsRegister {} Carry changed to: {}", self.name, new_state);
+    }
+}
 
 struct RAM {
     name: &'static str,
@@ -90,9 +98,18 @@ impl LoadReceiver for WORegister {}
 struct Clock {
     name: &'static str,
 }
+impl Clock {
+    fn on_halt_change(&self, _new_state: bool) {}
+    fn on_brk_change(&self, _new_state: bool) {}
+}
 
 struct StepCounter {
     name: &'static str,
+}
+
+impl StepCounter {
+    fn on_reset_change(&self, _new_state: bool) {}
+    fn on_extended_change(&self, _new_state: bool) {}
 }
 
 struct ProgramCounter {
@@ -124,6 +141,9 @@ struct AddressCalculator {
 }
 impl OutReceiver for AddressCalculator {}
 impl LoadReceiver for AddressCalculator {}
+impl AddressCalculator {
+    fn on_signed_change(&self, _new_state: bool) {}
+}
 
 struct IOController {
     name: &'static str,
