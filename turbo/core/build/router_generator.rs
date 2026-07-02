@@ -7,7 +7,7 @@ struct MuxPart {
     mask: u32,
     default: u32,
     pins: Vec<usize>,
-    device_bits: Vec<MuxPinRef>,
+    device_bits: HashMap<u32, Vec<MuxPinRef>>,
 }
 
 pub struct MuxPinRef {
@@ -41,8 +41,17 @@ impl MuxPart {
         writeln!(writer, "    const DEFAULT: ControlWord = 0b{:032b};", self.default)?;
         writeln!(writer, "    fn dispatch(dev: &DeviceMap, word: ControlWord, new_state: bool) {{")?;
         writeln!(writer, "        match word & Self::MASK {{")?;
-        for dev_ref in self.device_bits.iter() {
-            writeln!(writer, "            0b{:032b} => dev.{}.on_{}_change(new_state),", dev_ref.value, dev_ref.device, dev_ref.pin)?;
+        for (value, dev_refs) in self.device_bits.iter() {
+            if dev_refs.len() == 1 {
+                let dev_ref = &dev_refs[0];
+                writeln!(writer, "            0b{:032b} => dev.{}.on_{}_change(new_state),", value, dev_ref.device, dev_ref.pin)?;
+            } else {
+                writeln!(writer, "            0b{:032b} => {{", value)?;
+                for dev_ref in dev_refs {
+                    writeln!(writer, "                dev.{}.on_{}_change(new_state);", dev_ref.device, dev_ref.pin)?;
+                }
+                writeln!(writer, "            }},")?;
+            }
         }
         writeln!(writer, "            _ => {{}},")?;
         writeln!(writer, "        }}")?;
@@ -54,7 +63,7 @@ impl MuxPart {
 
     fn add_device_bit(&mut self, device: &str, pin: &str, value: u8) {
         let mask = MuxPart::val_to_mask(&self.pins, value);
-        self.device_bits.push(MuxPinRef {
+        self.device_bits.entry(mask).or_insert_with(Vec::new).push(MuxPinRef {
             device: device.to_string(),
             pin: pin.to_string(),
             value: mask,
@@ -75,7 +84,7 @@ impl From<&pin_config::MuxConfig> for MuxPart {
             pins: mux.pins.clone(),
             mask,
             default: MuxPart::val_to_mask(&mux.pins, mux.default),
-            device_bits: Vec::new(),
+            device_bits: HashMap::new(),
         }
     }
 }
@@ -188,7 +197,7 @@ fn emit_router_fn(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPa
     writeln!(writer, "    pub fn route_word(&self, old_cw: ControlWord, new_cw: ControlWord) {{")?;
 
 
-    for (name, mux) in muxes.iter() {
+    for (name, _) in muxes.iter() {
         writeln!(writer, "        if old_cw & {}::MASK != new_cw & {}::MASK {{", name, name)?;
         writeln!(writer, "            {}::dispatch(self, old_cw, false);", name)?;
         writeln!(writer, "            {}::dispatch(self, new_cw, true);", name)?;
