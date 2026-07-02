@@ -97,7 +97,7 @@ impl DeviceMapPart {
         writeln!(writer, "    pub fn new() -> Self {{")?;
         writeln!(writer, "        DeviceMap {{")?;
         for device in self.devices.iter() {
-            writeln!(writer, "            {}: {} {{ }},", device.name, device.dev_type)?;
+            writeln!(writer, "            {}: {} {{ name: \"{}\" }},", device.name, device.dev_type, device.name)?;
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
