@@ -1,7 +1,5 @@
-mod pin_config;
+pub mod pin_config;
 use std::collections::HashMap;
-use std::rc::Rc;
-use std::cell::RefCell;
 
 pub fn load_pins(file_path: &str) -> pin_config::PinConfig {
 

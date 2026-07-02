@@ -25,68 +25,11 @@ pub enum SharedPinConfig {
 }
 
 #[derive(Debug, Deserialize)]
-#[serde(tag = "type")]
-pub enum DeviceConfig {
-    GPRegister {
-        name: String,
-        pins: HashMap<String, PinConfigEntry>,
-    },
-    ALU {
-        name: String,
-        pins: HashMap<String, PinConfigEntry>,
-    },
-    FlagsRegister {
-        name: String,
-        pins: HashMap<String, PinConfigEntry>,
-    },
-    RAM {
-        name: String,
-        pins: HashMap<String, PinConfigEntry>,
-    },
-    ROM {
-        name: String,
-        pins: HashMap<String, PinConfigEntry>,
-    },
-    TempRegister {
-        name: String,
-        pins: HashMap<String, PinConfigEntry>,
-    },
-    WORegister {
-        name: String,
-        pins: HashMap<String, PinConfigEntry>,
-    },
-    Clock {
-        name: String,
-        pins: HashMap<String, PinConfigEntry>,
-    },
-    StepCounter {
-        name: String,
-        pins: HashMap<String, PinConfigEntry>,
-    },
-    ProgramCounter {
-        name: String,
-        pins: HashMap<String, PinConfigEntry>,
-    },
-    TransferRegister {
-        name: String,
-        pins: HashMap<String, PinConfigEntry>,
-    },
-    StackPointer {
-        name: String,
-        pins: HashMap<String, PinConfigEntry>,
-    },
-    AddressRegister {
-        name: String,
-        pins: HashMap<String, PinConfigEntry>,
-    },
-    AddressCalculator {
-        name: String,
-        pins: HashMap<String, PinConfigEntry>,
-    },
-    IOController {
-        name: String,
-        pins: HashMap<String, PinConfigEntry>,
-    },
+pub struct DeviceConfig {
+    pub name: String,
+    #[serde(rename = "type")]
+    pub dev_type: String,
+    pub pins: HashMap<String, PinConfigEntry>,
 }
 
 #[derive(Debug, Deserialize)]
