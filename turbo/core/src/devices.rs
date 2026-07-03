@@ -28,6 +28,10 @@ pub trait IncReceiver {
 pub trait DecReceiver {
     fn on_dec_change(&self, _buses: &mut Buses, _new_state: bool) {}
 }
+pub trait ClockReceiver {
+    fn on_clock_tick_primary(&self, _buses: &Buses) {}
+    fn on_clock_tick_secondary(&self, _buses: &Buses) {}
+}
 
 
 pub struct GPRegister {
@@ -43,6 +47,15 @@ impl OutReceiver for GPRegister {
 impl LoadReceiver for GPRegister {
     fn on_load_change(&self, _buses: &mut Buses, new_state: bool) {
         println!("GPRegister {} Load changed to: {}", self.name, new_state);
+    }
+}
+
+impl ClockReceiver for GPRegister {
+    fn on_clock_tick_primary(&self, _buses: &Buses) {
+        println!("GPRegister {} Clock tick primary", self.name);
+    }
+    fn on_clock_tick_secondary(&self, _buses: &Buses) {
+        println!("GPRegister {} Clock tick secondary", self.name);
     }
 }
 
@@ -76,6 +89,7 @@ impl ALU {
         println!("ALU {} Alt changed to: {}", self.name, new_state);
     }
 }
+impl ClockReceiver for ALU {}
 
 pub struct FlagsRegister {
     pub name: &'static str,
@@ -93,6 +107,7 @@ impl FlagsRegister {
         println!("FlagsRegister {} Carry changed to: {}", self.name, new_state);
     }
 }
+impl ClockReceiver for FlagsRegister {}
 
 pub struct RAM {
     pub name: &'static str,
@@ -104,6 +119,7 @@ impl RAM {
     }
     pub fn on_write_change(&self, _buses: &mut Buses, _new_state: bool) {}
 }
+impl ClockReceiver for RAM {}
 
 pub struct ROM {
     pub name: &'static str,
@@ -114,6 +130,7 @@ impl ROM {
         Self { name }
     }
 }
+impl ClockReceiver for ROM {}
 
 pub struct TempRegister {
     pub name: &'static str,
@@ -125,7 +142,7 @@ impl TempRegister {
     }
     pub fn on_alu_r_change(&self, _buses: &mut Buses, _new_state: bool) {}
 }
-
+impl ClockReceiver for TempRegister {}
 
 pub struct WORegister {
     pub name: &'static str,
@@ -136,6 +153,7 @@ impl WORegister {
     }
 }
 impl LoadReceiver for WORegister {}
+impl ClockReceiver for WORegister {}
 
 pub struct Clock {
     pub name: &'static str,
@@ -147,6 +165,7 @@ impl Clock {
     pub fn on_halt_change(&self, _buses: &mut Buses, _new_state: bool) {}
     pub fn on_brk_change(&self, _buses: &mut Buses, _new_state: bool) {}
 }
+impl ClockReceiver for Clock {}
 
 pub struct StepCounter {
     pub name: &'static str,
@@ -159,6 +178,7 @@ impl StepCounter {
     pub fn on_reset_change(&self, _buses: &mut Buses, _new_state: bool) {}
     pub fn on_extended_change(&self, _buses: &mut Buses, _new_state: bool) {}
 }
+impl ClockReceiver for StepCounter {}
 
 pub struct ProgramCounter {
     pub name: &'static str,
@@ -172,6 +192,7 @@ impl ProgramCounter {
 impl OutReceiver for ProgramCounter {}
 impl LoadReceiver for ProgramCounter {}
 impl IncReceiver for ProgramCounter {}
+impl ClockReceiver for ProgramCounter {}
 
 pub struct TransferRegister {
     pub name: &'static str,
@@ -183,6 +204,7 @@ impl TransferRegister {
 }
 impl OutReceiver for TransferRegister {}
 impl LoadReceiver for TransferRegister {}
+impl ClockReceiver for TransferRegister {}
 
 pub struct StackPointer {
     pub name: &'static str,
@@ -196,6 +218,7 @@ impl OutReceiver for StackPointer {}
 impl LoadReceiver for StackPointer {}
 impl IncReceiver for StackPointer {}
 impl DecReceiver for StackPointer {}
+impl ClockReceiver for StackPointer {}
 
 pub struct AddressRegister {
     pub name: &'static str,
@@ -207,6 +230,7 @@ impl AddressRegister {
 }
 impl OutReceiver for AddressRegister {}
 impl LoadReceiver for AddressRegister {}
+impl ClockReceiver for AddressRegister {}
 
 pub struct AddressCalculator {
     pub name: &'static str,
@@ -219,6 +243,7 @@ impl AddressCalculator {
     }
     pub fn on_signed_change(&self, _buses: &mut Buses, _new_state: bool) {}
 }
+impl ClockReceiver for AddressCalculator {}
 
 pub struct IOController {
     pub name: &'static str,
@@ -231,3 +256,4 @@ impl IOController {
     pub fn on_to_dev_change(&self, _buses: &mut Buses, _new_state: bool) {}
     pub fn on_from_dev_change(&self, _buses: &mut Buses, _new_state: bool) {}
 }
+impl ClockReceiver for IOController {}
