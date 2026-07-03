@@ -39,16 +39,16 @@ impl MuxPart {
         writeln!(writer, "impl MuxDispatcher for {} {{", self.name)?;
         writeln!(writer, "    const MASK:    ControlWord = 0b{:032b};", self.mask)?;
         writeln!(writer, "    const DEFAULT: ControlWord = 0b{:032b};", self.default)?;
-        writeln!(writer, "    fn dispatch(dev: &DeviceMap, word: ControlWord, new_state: bool) {{")?;
+        writeln!(writer, "    fn dispatch(dev: &DeviceMap, buses: &mut Buses, word: ControlWord, new_state: bool) {{")?;
         writeln!(writer, "        match word & Self::MASK {{")?;
         for (value, dev_refs) in self.device_bits.iter() {
             if dev_refs.len() == 1 {
                 let dev_ref = &dev_refs[0];
-                writeln!(writer, "            0b{:032b} => dev.{}.on_{}_change(new_state),", value, dev_ref.device, dev_ref.pin)?;
+                writeln!(writer, "            0b{:032b} => dev.{}.on_{}_change(buses, new_state),", value, dev_ref.device, dev_ref.pin)?;
             } else {
                 writeln!(writer, "            0b{:032b} => {{", value)?;
                 for dev_ref in dev_refs {
-                    writeln!(writer, "                dev.{}.on_{}_change(new_state);", dev_ref.device, dev_ref.pin)?;
+                    writeln!(writer, "                dev.{}.on_{}_change(buses, new_state);", dev_ref.device, dev_ref.pin)?;
                 }
                 writeln!(writer, "            }},")?;
             }
@@ -113,7 +113,7 @@ impl DeviceMapPart {
         writeln!(writer, "    pub fn new() -> Self {{")?;
         writeln!(writer, "        DeviceMap {{")?;
         for device in self.devices.iter() {
-            writeln!(writer, "            {}: {} {{ name: \"{}\" }},", device.name, device.dev_type, device.name)?;
+            writeln!(writer, "            {}: {}::new(\"{}\"),", device.name, device.dev_type, device.name)?;
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
@@ -194,20 +194,20 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) {
 
 fn emit_router_fn(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPart>, direct_pins: &HashMap<u32, Vec<DirectPinRef>>) -> std::io::Result<()> {
     writeln!(writer, "impl DeviceMap {{")?;
-    writeln!(writer, "    pub fn route_word(&self, old_cw: ControlWord, new_cw: ControlWord) {{")?;
+    writeln!(writer, "    pub fn route_word(&self, buses: &mut Buses, old_cw: ControlWord, new_cw: ControlWord) {{")?;
 
 
     for (name, _) in muxes.iter() {
         writeln!(writer, "        if old_cw & {}::MASK != new_cw & {}::MASK {{", name, name)?;
-        writeln!(writer, "            {}::dispatch(self, old_cw, false);", name)?;
-        writeln!(writer, "            {}::dispatch(self, new_cw, true);", name)?;
+        writeln!(writer, "            {}::dispatch(self, buses, old_cw, false);", name)?;
+        writeln!(writer, "            {}::dispatch(self, buses, new_cw, true);", name)?;
         writeln!(writer, "        }}")?;
     }
 
     for (mask, direct_pins) in direct_pins {
         writeln!(writer, "        if old_cw & 0b{:032b} != new_cw & 0b{:032b} {{", mask, mask)?;
         for direct_pin in direct_pins {
-            writeln!(writer, "            self.{}.on_{}_change(new_cw & 0b{:032b} == 0b{:032b});", direct_pin.device, direct_pin.pin, direct_pin.mask, direct_pin.value)?;
+            writeln!(writer, "            self.{}.on_{}_change(buses, new_cw & 0b{:032b} == 0b{:032b});", direct_pin.device, direct_pin.pin, direct_pin.mask, direct_pin.value)?;
         }
         writeln!(writer, "        }}")?;
     }

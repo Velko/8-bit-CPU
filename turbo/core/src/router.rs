@@ -9,7 +9,7 @@ include!(concat!(env!("OUT_DIR"), "/router_generated.rs"));
 trait MuxDispatcher {
     const MASK: ControlWord;
     const DEFAULT: ControlWord;
-    fn dispatch(dev: &DeviceMap, word: ControlWord, new_state: bool);
+    fn dispatch(dev: &DeviceMap, buses: &mut Buses, word: ControlWord, new_state: bool);
 }
 
 
@@ -24,15 +24,16 @@ mod tests {
         let default_cw = 0x07ff58ff; // default
         let add_bc_cw = 0x07ff0915; // add_B_C
         println!("add_B_C");
-        device_map.route_word(default_cw, add_bc_cw);
+        let mut buses = Buses::new();
+        device_map.route_word(&mut buses, default_cw, add_bc_cw);
 
         let inc_a_cw = 0x07ff9805; // inc A
         println!("inc_A");
-        device_map.route_word(add_bc_cw, inc_a_cw);
+        device_map.route_word(&mut buses, add_bc_cw, inc_a_cw);
 
 
         println!("Off");
-        device_map.route_word(inc_a_cw, default_cw);
+        device_map.route_word(&mut buses, inc_a_cw, default_cw);
 
         assert_eq!(default_cw, inc_a_cw); // always fails, just to demonstrate the test
     }
