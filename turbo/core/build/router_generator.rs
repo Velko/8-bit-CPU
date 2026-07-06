@@ -101,9 +101,9 @@ pub struct DeviceMapPart {
 
 impl DeviceMapPart {
     fn emit(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
-        writeln!(writer, "struct DeviceMap {{")?;
+        writeln!(writer, "pub struct DeviceMap {{")?;
         for device in self.devices.iter() {
-            writeln!(writer, "    {}: {},", device.name, device.dev_type)?;
+            writeln!(writer, "    pub {}: {},", device.name, device.dev_type)?;
         }
         writeln!(writer, "}}")?;
         writeln!(writer)?;
