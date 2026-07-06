@@ -1,7 +1,13 @@
 use std::cell::RefCell;
 
+pub enum MainBusValue {
+    None,
+    Const(u8),
+    Add,
+}
+
 pub struct Buses {
-    pub main_bus: Option<u8>,
+    pub main_bus: MainBusValue,
     pub address_bus: Option<u16>,
     pub alu_l_bus: Option<u8>,
     pub alu_r_bus: Option<u8>,
@@ -10,10 +16,23 @@ pub struct Buses {
 impl Buses {
     pub fn new() -> Self {
         Buses {
-            main_bus: None,
+            main_bus: MainBusValue::None,
             address_bus: None,
             alu_l_bus: None,
             alu_r_bus: None,
+        }
+    }
+
+    pub fn resolve_main_bus(&self) -> u8 {
+
+        match self.main_bus {
+            MainBusValue::None => panic!("Bus value is None"),
+            MainBusValue::Const(value) => value,
+            MainBusValue::Add => {
+                let l = self.alu_l_bus.unwrap_or(0);
+                let r = self.alu_r_bus.unwrap_or(0);
+                l.wrapping_add(r)
+            }
         }
     }
 }
@@ -59,7 +78,7 @@ impl LoadReceiver for GPRegister {
 impl ClockReceiver for GPRegister {
     fn on_clock_tick_primary(&mut self, buses: &Buses) {
         if *self.load_enabled.borrow() {
-            self.value_primary = buses.main_bus.unwrap();
+            self.value_primary = buses.resolve_main_bus();
         }
     }
     fn on_clock_tick_secondary(&mut self, _buses: &Buses) {
@@ -77,11 +96,21 @@ impl GPRegister {
         }
     }
 
-    pub fn on_alu_l_change(&self, _buses: &mut Buses, new_state: bool) {
+    pub fn on_alu_l_change(&self, buses: &mut Buses, new_state: bool) {
         println!("GPRegister {} ALU L changed to: {}", self.name, new_state);
+        buses.alu_l_bus = if new_state {
+            Some(self.value_secondary)
+        } else {
+            None
+        };
     }
-    pub fn on_alu_r_change(&self, _buses: &mut Buses, new_state: bool) {
+    pub fn on_alu_r_change(&self, buses: &mut Buses, new_state: bool) {
         println!("GPRegister {} ALU R changed to: {}", self.name, new_state);
+        buses.alu_r_bus = if new_state {
+            Some(self.value_secondary)
+        } else {
+            None
+        };
     }
 }
 
@@ -90,8 +119,16 @@ pub struct ALU {
     pub name: &'static str,
 }
 impl OutReceiver for ALU {
-    fn on_out_change(&self, _buses: &mut Buses, new_state: bool) {
+    fn on_out_change(&self, buses: &mut Buses, new_state: bool) {
         println!("ALU {} Out changed to: {}", self.name, new_state);
+        buses.main_bus = if new_state {
+            match self.name {
+                "AddSub" => MainBusValue::Add,
+                _ => panic!("Unknown ALU module name: {}", self.name),
+            }
+        } else {
+            MainBusValue::None
+        };
     }
 }
 impl ALU {
@@ -283,7 +320,7 @@ mod tests {
 
         // Simulate loading a value into the register
         *gp_reg.load_enabled.borrow_mut() = true;
-        buses.main_bus = Some(42);
+        buses.main_bus = MainBusValue::Const(42);
         gp_reg.on_clock_tick_primary(&buses);
         assert_eq!(gp_reg.value_primary, 42);
 
@@ -300,10 +337,27 @@ mod tests {
 
         let mut buses = Buses::new();
         device_map.route_word(&mut buses, default_cw, load_a_cw);
-        buses.main_bus = Some(42); // Simulate loading 42 into A
+        buses.main_bus = MainBusValue::Const(42); // Simulate loading 42 into A
 
         device_map.broadcast_clock_tick_primary(&mut buses);
 
         assert_eq!(42, device_map.A.value_primary); // Check if A has the value 42 after clock tick
+    }
+
+    #[test]
+    fn test_alu_add() {
+        let mut device_map = DeviceMap::new();
+        let default_cw = 0x07ff58ff; // default
+
+
+        device_map.A.value_secondary = 24;
+        device_map.B.value_secondary = 18;
+
+        let add_ab_cw = 0x07ff0405; // add_A_B
+        let mut buses = Buses::new();
+        device_map.A.on_alu_l_change(&mut buses, true); //TODO: it is connected in the default state, but that also means that routing won't detect change
+        device_map.route_word(&mut buses, default_cw, add_ab_cw);
+
+        assert_eq!(42, buses.resolve_main_bus()); // Check if the main bus calculates the sum of A and B correctly
     }
 }
