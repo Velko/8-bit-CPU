@@ -12,6 +12,7 @@ pub struct Buses {
     pub address_bus: Option<u16>,
     pub alu_l_bus: Option<u8>,
     pub alu_r_bus: Option<u8>,
+    pub carry_in: bool,
 }
 
 impl Buses {
@@ -21,6 +22,7 @@ impl Buses {
             address_bus: None,
             alu_l_bus: None,
             alu_r_bus: None,
+            carry_in: false,
         }
     }
 
@@ -32,12 +34,14 @@ impl Buses {
             MainBusValue::Add => {
                 let l = self.alu_l_bus.unwrap_or(0);
                 let r = self.alu_r_bus.unwrap_or(0);
-                l.wrapping_add(r)
+                let carry = if self.carry_in { 1 } else { 0 };
+                l.wrapping_add(r).wrapping_add(carry)
             }
             MainBusValue::Subtract => {
                 let l = self.alu_l_bus.unwrap_or(0);
                 let r = self.alu_r_bus.unwrap_or(0);
-                l.wrapping_sub(r)
+                let carry = if self.carry_in { 1 } else { 0 };
+                l.wrapping_sub(r).wrapping_sub(carry)
             }
         }
     }
@@ -206,8 +210,9 @@ impl FlagsRegister {
     pub fn on_calc_change(&self, _buses: &mut Buses, new_state: bool) {
         println!("FlagsRegister {} Calc changed to: {}", self.name, new_state);
     }
-    pub fn on_carry_change(&self, _buses: &mut Buses, new_state: bool) {
+    pub fn on_carry_change(&self, buses: &mut Buses, new_state: bool) {
         println!("FlagsRegister {} Carry changed to: {}", self.name, new_state);
+        buses.carry_in = new_state;
     }
 }
 impl ClockReceiver for FlagsRegister {}
@@ -443,7 +448,7 @@ mod tests {
         assert_eq!(100, buses.resolve_main_bus()); // Check if the main bus reflects the new value of A, since out_A is still active
     }
 
-        #[test]
+    #[test]
     fn test_alu_sub() {
         let mut device_map = DeviceMap::new();
         let mut buses = Buses::new();
@@ -469,5 +474,39 @@ mod tests {
 
         assert_eq!(6, buses.alu_l_bus.unwrap()); // Check if ALU L bus has the updated value 6
         assert_eq!(18, buses.alu_r_bus.unwrap()); // Check if ALU R bus has the original value 18
+    }
+
+    #[test]
+    fn test_alu_adc() {
+        let mut device_map = DeviceMap::new();
+        let mut buses = Buses::new();
+        let default_cw = 0x07ff58ff; // default
+        device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
+
+
+        device_map.A.set_value(&mut buses, 24);
+        device_map.B.set_value(&mut buses, 18);
+
+        let adc_ab_cw = 0x07ff8405; // adc_A_B
+        device_map.route_word(&mut buses, default_cw, adc_ab_cw);
+
+        assert_eq!(43, buses.resolve_main_bus()); // Check if the main bus calculates the sum of A and B + carry correctly
+    }
+
+    #[test]
+    fn test_alu_sbb() {
+        let mut device_map = DeviceMap::new();
+        let mut buses = Buses::new();
+        let default_cw = 0x07ff58ff; // default
+        device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
+
+
+        device_map.B.set_value(&mut buses, 24);
+        device_map.C.set_value(&mut buses, 18);
+
+        let sbb_bc_cw = 0x07ffa915; // sbb_B_C
+        device_map.route_word(&mut buses, default_cw, sbb_bc_cw);
+
+        assert_eq!(5, buses.resolve_main_bus()); // Check if the main bus calculates the difference of B and C correctly
     }
 }
