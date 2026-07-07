@@ -58,10 +58,9 @@ impl Buses {
                 (Some(carry_out), Some(overflow))
             }
             MainBusValue::Subtract => {
-                //TODO: not sure if this is correct
-                let sum = l.wrapping_add(!r).wrapping_add(1 - carry);
-                let overflow = ((l ^ sum) & (r ^ sum) & 0x80) != 0;
-                let carry_out = (l + r + carry) > 0xFF;
+                let diff = l.wrapping_sub(r).wrapping_sub(carry);
+                let overflow = ((l ^ r) & (l ^ diff) & 0x80) != 0;
+                let carry_out = l < r + carry;
                 (Some(carry_out), Some(overflow))
             }
             _ => (None, None),
@@ -220,6 +219,10 @@ impl ALU {
     }
 }
 impl ClockReceiver for ALU {}
+
+pub struct Flags {
+    value: u8,
+}
 
 pub struct FlagsRegister {
     pub name: &'static str,
@@ -544,32 +547,43 @@ mod tests {
         assert_eq!(100, buses.resolve_main_bus()); // Check if the main bus reflects the new value of A, since out_A is still active
     }
 
-    #[test]
-    fn test_alu_sub() {
+    #[rstest]
+    #[case(4, 3, 1, FlagsRegister::Empty)]
+    #[case(-128, 0, -128, FlagsRegister::N)]
+    #[case(4, 4, 0, FlagsRegister::Z)]
+    #[case(0, -127, 127, FlagsRegister::C)]
+    #[case(3, 5, -2, FlagsRegister::C | FlagsRegister::N)]
+    #[case(-128, 1, 127, FlagsRegister::V)]
+    #[case(120, -126, -10, FlagsRegister::V | FlagsRegister::C | FlagsRegister::N)]
+    fn test_alu_sub(#[case] a: i16, #[case] b: i16, #[case] expected_result: i16, #[case] expected_flags: u8) {
         let mut device_map = DeviceMap::new();
         let mut buses = Buses::new();
         let default_cw = 0x07ff58ff; // default
         device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
 
+        let a = i16tou8(a);
+        let b = i16tou8(b);
+        let expected_result = i16tou8(expected_result);
 
-        device_map.B.set_value(&mut buses, 24);
-        device_map.C.set_value(&mut buses, 18);
+        device_map.B.set_value(&mut buses, a);
+        device_map.C.set_value(&mut buses, b);
 
         let sub_bc_cw = 0x07ff2915; // sub_B_C
         device_map.route_word(&mut buses, default_cw, sub_bc_cw);
 
-        assert_eq!(6, buses.resolve_main_bus()); // Check if the main bus calculates the difference of B and C correctly
+        assert_eq!(expected_result, buses.resolve_main_bus()); // Check if the main bus calculates the difference of B and C correctly
 
         device_map.broadcast_clock_tick_primary(&mut buses);
         device_map.broadcast_clock_tick_secondary(&mut buses);
 
-        assert_eq!(6, device_map.B.value_primary); // Check if B has the value 6 after clock tick
-        assert_eq!(6, device_map.B.value_secondary); // Check if B has the value
-        assert_eq!(18, device_map.C.value_primary); // Check if C remains unchanged
-        assert_eq!(18, device_map.C.value_secondary); // Check if C remains unchanged
+        assert_eq!(expected_result, device_map.B.value_primary); // Check if B has the value 6 after clock tick
+        assert_eq!(expected_result, device_map.B.value_secondary); // Check if B has the value
+        assert_eq!(b, device_map.C.value_primary); // Check if C remains unchanged
+        assert_eq!(b, device_map.C.value_secondary); // Check if C remains unchanged
+        assert_eq!(expected_flags, device_map.F.value_secondary); // Check if the flags register has the expected flags set after the operation
 
-        assert_eq!(6, buses.alu_l_bus.unwrap()); // Check if ALU L bus has the updated value 6
-        assert_eq!(18, buses.alu_r_bus.unwrap()); // Check if ALU R bus has the original value 18
+        assert_eq!(expected_result, buses.alu_l_bus.unwrap()); // Check if ALU L bus has the updated value 6
+        assert_eq!(b, buses.alu_r_bus.unwrap()); // Check if ALU R bus has the original value 18
     }
 
     #[test]
