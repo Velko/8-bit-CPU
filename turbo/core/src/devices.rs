@@ -59,14 +59,21 @@ pub struct GPRegister {
     pub name: &'static str,
     value_primary: u8,
     value_secondary: u8,
+    out_enabled: Cell<bool>,
     load_enabled: Cell<bool>,
     arg_l_enabled: Cell<bool>,
     arg_r_enabled: Cell<bool>,
 }
 
 impl OutReceiver for GPRegister {
-    fn on_out_change(&self, _buses: &mut Buses, new_state: bool) {
+    fn on_out_change(&self, buses: &mut Buses, new_state: bool) {
         println!("GPRegister {} Out changed to: {}", self.name, new_state);
+        buses.main_bus = if new_state {
+            MainBusValue::Const(self.value_secondary)
+        } else {
+            MainBusValue::None
+        };
+        self.out_enabled.set(new_state);
     }
 }
 
@@ -85,6 +92,9 @@ impl ClockReceiver for GPRegister {
     }
     fn on_clock_tick_secondary(&mut self, buses: &mut Buses) {
         if self.value_primary != self.value_secondary {
+            if self.out_enabled.get() {
+                buses.main_bus = MainBusValue::Const(self.value_primary);
+            }
             if self.arg_l_enabled.get() {
                 buses.alu_l_bus = Some(self.value_primary);
             }
@@ -102,6 +112,7 @@ impl GPRegister {
             name,
             value_primary: 0,
             value_secondary: 0,
+            out_enabled: Cell::new(false),
             load_enabled: Cell::new(false),
             arg_l_enabled: Cell::new(false),
             arg_r_enabled: Cell::new(false),
@@ -391,5 +402,23 @@ mod tests {
 
         assert_eq!(42, buses.alu_l_bus.unwrap()); // Check if ALU L bus has the updated value 42
         assert_eq!(18, buses.alu_r_bus.unwrap()); // Check if ALU R bus has the original value 18
+    }
+
+    #[test]
+    fn test_output_reg_value() {
+        let mut device_map = DeviceMap::new();
+        let mut buses = Buses::new();
+        let default_cw = 0x07ff58ff; // default
+        device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
+
+        device_map.A.set_value(&mut buses, 42);
+
+        let out_a_cw = 0x07ff58f0; // out_A
+        device_map.route_word(&mut buses, default_cw, out_a_cw);
+
+        assert_eq!(42, buses.resolve_main_bus()); // Check if the main bus has the value 42 after out_A
+
+        device_map.A.set_value(&mut buses, 100); // Change A's value to 100
+        assert_eq!(100, buses.resolve_main_bus()); // Check if the main bus reflects the new value of A, since out_A is still active
     }
 }
