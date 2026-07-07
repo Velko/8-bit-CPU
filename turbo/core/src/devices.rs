@@ -1,4 +1,5 @@
 use std::cell::Cell;
+use std::ops::{BitOr, BitAnd, BitOrAssign};
 
 pub enum MainBusValue {
     None,
@@ -220,31 +221,56 @@ impl ALU {
 }
 impl ClockReceiver for ALU {}
 
+#[derive(Clone, Copy, PartialEq, Default, Debug)]
 pub struct Flags {
     value: u8,
 }
 
+impl Flags {
+    pub const Empty: Flags = Flags { value: 0b0000 };
+    pub const V: Flags = Flags { value: 0b1000 };
+    pub const C: Flags = Flags { value: 0b0100 };
+    pub const Z: Flags = Flags { value: 0b0010 };
+    pub const N: Flags = Flags { value: 0b0001 };
+}
+
+impl BitOr for Flags {
+    type Output = Self;
+
+    fn bitor(self, rhs: Self) -> Self::Output {
+        Flags { value: self.value | rhs.value }
+    }
+}
+
+impl BitAnd for Flags {
+    type Output = Self;
+
+    fn bitand(self, rhs: Self) -> Self::Output {
+        Flags { value: self.value & rhs.value }
+    }
+}
+
+impl BitOrAssign for Flags {
+    fn bitor_assign(&mut self, rhs: Self) {
+        self.value |= rhs.value;
+    }
+}
+
+
 pub struct FlagsRegister {
     pub name: &'static str,
-    value_primary: u8,
-    value_secondary: u8,
+    value_primary: Flags,
+    value_secondary: Flags,
     calc_enabled: Cell<bool>,
 }
 impl OutReceiver for FlagsRegister {}
 impl LoadReceiver for FlagsRegister {}
 impl FlagsRegister {
-
-    const Empty: u8 = 0b0000;
-    const V: u8 = 0b1000;
-    const C: u8 = 0b0100;
-    const Z: u8 = 0b0010;
-    const N: u8 = 0b0001;
-
     pub fn new(name: &'static str) -> Self {
         Self {
             name,
-            value_primary: Self::Empty,
-            value_secondary: Self::Empty,
+            value_primary: Flags::Empty,
+            value_secondary: Flags::Empty,
             calc_enabled: Cell::new(false)
         }
     }
@@ -262,28 +288,28 @@ impl ClockReceiver for FlagsRegister {
         if self.calc_enabled.get() {
             // Perform Z and N calculations based on the main bus value
             let result = buses.resolve_main_bus();
-            let mut new_value = Self::Empty;
+            let mut new_value = Flags::Empty;
             if result == 0 {
-                new_value |= Self::Z;
+                new_value |= Flags::Z;
             }
             if (result & 0x80) != 0 {
-                new_value |= Self::N;
+                new_value |= Flags::N;
             }
 
             let (carry, overflow) = buses.resolve_alu_flags();
             if let Some(carry) = carry {
                 if carry {
-                    new_value |= Self::C;
+                    new_value |= Flags::C;
                 }
             } else {
-                new_value |= self.value_primary & Self::C; // Preserve previous carry if not calculated
+                new_value |= self.value_primary & Flags::C; // Preserve previous carry if not calculated
             }
             if let Some(overflow) = overflow {
                 if overflow {
-                    new_value |= Self::V;
+                    new_value |= Flags::V;
                 }
             } else {
-                new_value |= self.value_primary & Self::V; // Preserve previous overflow if not calculated
+                new_value |= self.value_primary & Flags::V; // Preserve previous overflow if not calculated
             }
             self.value_primary = new_value;
         }
@@ -488,16 +514,16 @@ mod tests {
     }
 
     #[rstest]
-    #[case(24, 18, 42, FlagsRegister::Empty)] // 24 + 18 = 42, no flags set
-    #[case(0, 0, 0, FlagsRegister::Z)] // 0 + 0 = 0, Z flag set
-    #[case(0, -128, -128, FlagsRegister::N)]
-    #[case(245, 18, 7, FlagsRegister::C)]
-    #[case(126, 4, -126, FlagsRegister::N | FlagsRegister::V)] // 126 + 4 = -126 (overflow), N flag set
-    #[case(246, 10, 0, FlagsRegister::C | FlagsRegister::Z)] // 246 + 10 = 0 (carry and zero), C and Z flags set
-    #[case(200, 200, -112, FlagsRegister::C | FlagsRegister::N)]
-    #[case(-30, -111, 115, FlagsRegister::V | FlagsRegister::C)]
-    #[case(-128, -128, 0, FlagsRegister::C | FlagsRegister::Z | FlagsRegister::V)]
-    fn test_alu_add(#[case] a: i16, #[case] b: i16, #[case] expected_sum: i16, #[case] expected_flags: u8) {
+    #[case(24, 18, 42, Flags::Empty)] // 24 + 18 = 42, no flags set
+    #[case(0, 0, 0, Flags::Z)] // 0 + 0 = 0, Z flag set
+    #[case(0, -128, -128, Flags::N)]
+    #[case(245, 18, 7, Flags::C)]
+    #[case(126, 4, -126, Flags::N | Flags::V)] // 126 + 4 = -126 (overflow), N flag set
+    #[case(246, 10, 0, Flags::C | Flags::Z)] // 246 + 10 = 0 (carry and zero), C and Z flags set
+    #[case(200, 200, -112, Flags::C | Flags::N)]
+    #[case(-30, -111, 115, Flags::V | Flags::C)]
+    #[case(-128, -128, 0, Flags::C | Flags::Z | Flags::V)]
+    fn test_alu_add(#[case] a: i16, #[case] b: i16, #[case] expected_sum: i16, #[case] expected_flags: Flags) {
         let mut device_map = DeviceMap::new();
         let mut buses = Buses::new();
         let default_cw = 0x07ff58ff; // default
@@ -548,14 +574,14 @@ mod tests {
     }
 
     #[rstest]
-    #[case(4, 3, 1, FlagsRegister::Empty)]
-    #[case(-128, 0, -128, FlagsRegister::N)]
-    #[case(4, 4, 0, FlagsRegister::Z)]
-    #[case(0, -127, 127, FlagsRegister::C)]
-    #[case(3, 5, -2, FlagsRegister::C | FlagsRegister::N)]
-    #[case(-128, 1, 127, FlagsRegister::V)]
-    #[case(120, -126, -10, FlagsRegister::V | FlagsRegister::C | FlagsRegister::N)]
-    fn test_alu_sub(#[case] a: i16, #[case] b: i16, #[case] expected_result: i16, #[case] expected_flags: u8) {
+    #[case(4, 3, 1, Flags::Empty)]
+    #[case(-128, 0, -128, Flags::N)]
+    #[case(4, 4, 0, Flags::Z)]
+    #[case(0, -127, 127, Flags::C)]
+    #[case(3, 5, -2, Flags::C | Flags::N)]
+    #[case(-128, 1, 127, Flags::V)]
+    #[case(120, -126, -10, Flags::V | Flags::C | Flags::N)]
+    fn test_alu_sub(#[case] a: i16, #[case] b: i16, #[case] expected_result: i16, #[case] expected_flags: Flags) {
         let mut device_map = DeviceMap::new();
         let mut buses = Buses::new();
         let default_cw = 0x07ff58ff; // default
