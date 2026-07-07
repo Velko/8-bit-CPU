@@ -176,16 +176,20 @@ impl ALU {
     pub fn on_alt_change(&self, buses: &mut Buses, new_state: bool) {
         println!("ALU {} Alt changed to: {}", self.name, new_state);
         self.alt_enabled.set(new_state);
-        self.publish_output(buses);
+        if self.out_enabled.get() {
+            self.publish_output(buses);
+        }
     }
     fn publish_output(&self, buses: &mut Buses) {
-        if self.out_enabled.get() {
-            buses.main_bus = match (self.name, self.alt_enabled.get()) {
+        buses.main_bus = if self.out_enabled.get() {
+            match (self.name, self.alt_enabled.get()) {
                 ("AddSub", false) => MainBusValue::Add,
                 ("AddSub", true) => MainBusValue::Subtract,
                 (_, _) => panic!("Unknown ALU module name: {}", self.name),
-            };
-        }
+            }
+        } else {
+            MainBusValue::None
+        };
     }
 }
 impl ClockReceiver for ALU {}
