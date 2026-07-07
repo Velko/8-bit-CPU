@@ -1,5 +1,6 @@
 use std::cell::Cell;
 use std::ops::{BitOr, BitAnd, BitOrAssign};
+use std::fmt::Debug;
 
 pub enum MainBusValue {
     None,
@@ -221,7 +222,7 @@ impl ALU {
 }
 impl ClockReceiver for ALU {}
 
-#[derive(Clone, Copy, PartialEq, Default, Debug)]
+#[derive(Clone, Copy, PartialEq, Default)]
 pub struct Flags {
     value: u8,
 }
@@ -232,6 +233,17 @@ impl Flags {
     pub const C: Flags = Flags { value: 0b0100 };
     pub const Z: Flags = Flags { value: 0b0010 };
     pub const N: Flags = Flags { value: 0b0001 };
+}
+
+impl Debug for Flags {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut flags = String::with_capacity(4);
+        flags.push(if *self & Self::V != Self::Empty { 'V' } else { '-' });
+        flags.push(if *self & Self::C != Self::Empty { 'C' } else { '-' });
+        flags.push(if *self & Self::Z != Self::Empty { 'Z' } else { '-' });
+        flags.push(if *self & Self::N != Self::Empty { 'N' } else { '-' });
+        write!(f, "Flags({})", flags)
+    }
 }
 
 impl BitOr for Flags {
