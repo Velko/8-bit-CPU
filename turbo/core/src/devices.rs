@@ -45,6 +45,29 @@ impl Buses {
             }
         }
     }
+
+    pub fn resolve_alu_flags(&self) -> (Option<bool>, Option<bool>) {
+        let l = self.alu_l_bus.unwrap_or(0) as u16;
+        let r = self.alu_r_bus.unwrap_or(0) as u16;
+        let carry = if self.carry_in { 1 } else { 0 };
+        match self.main_bus {
+            MainBusValue::Add => {
+                let sum = l.wrapping_add(r).wrapping_add(carry);
+                let overflow = ((l ^ sum) & (r ^ sum) & 0x80) != 0;
+                let carry_out = (l + r + carry) > 0xFF;
+                (Some(carry_out), Some(overflow))
+            }
+            MainBusValue::Subtract => {
+                //TODO: not sure if this is correct
+                let sum = l.wrapping_add(!r).wrapping_add(1 - carry);
+                let overflow = ((l ^ sum) & (r ^ sum) & 0x80) != 0;
+                let carry_out = (l + r + carry) > 0xFF;
+                (Some(carry_out), Some(overflow))
+            }
+            _ => (None, None),
+        }
+    }
+
 }
 
 pub trait OutReceiver {
@@ -200,22 +223,72 @@ impl ClockReceiver for ALU {}
 
 pub struct FlagsRegister {
     pub name: &'static str,
+    value_primary: u8,
+    value_secondary: u8,
+    calc_enabled: Cell<bool>,
 }
 impl OutReceiver for FlagsRegister {}
 impl LoadReceiver for FlagsRegister {}
 impl FlagsRegister {
+
+    const Empty: u8 = 0b0000;
+    const V: u8 = 0b1000;
+    const C: u8 = 0b0100;
+    const Z: u8 = 0b0010;
+    const N: u8 = 0b0001;
+
     pub fn new(name: &'static str) -> Self {
-        Self { name }
+        Self {
+            name,
+            value_primary: Self::Empty,
+            value_secondary: Self::Empty,
+            calc_enabled: Cell::new(false)
+        }
     }
     pub fn on_calc_change(&self, _buses: &mut Buses, new_state: bool) {
         println!("FlagsRegister {} Calc changed to: {}", self.name, new_state);
+        self.calc_enabled.set(new_state);
     }
     pub fn on_carry_change(&self, buses: &mut Buses, new_state: bool) {
         println!("FlagsRegister {} Carry changed to: {}", self.name, new_state);
         buses.carry_in = new_state;
     }
 }
-impl ClockReceiver for FlagsRegister {}
+impl ClockReceiver for FlagsRegister {
+    fn on_clock_tick_primary(&mut self, buses: &mut Buses) {
+        if self.calc_enabled.get() {
+            // Perform Z and N calculations based on the main bus value
+            let result = buses.resolve_main_bus();
+            let mut new_value = Self::Empty;
+            if result == 0 {
+                new_value |= Self::Z;
+            }
+            if (result & 0x80) != 0 {
+                new_value |= Self::N;
+            }
+
+            let (carry, overflow) = buses.resolve_alu_flags();
+            if let Some(carry) = carry {
+                if carry {
+                    new_value |= Self::C;
+                }
+            } else {
+                new_value |= self.value_primary & Self::C; // Preserve previous carry if not calculated
+            }
+            if let Some(overflow) = overflow {
+                if overflow {
+                    new_value |= Self::V;
+                }
+            } else {
+                new_value |= self.value_primary & Self::V; // Preserve previous overflow if not calculated
+            }
+            self.value_primary = new_value;
+        }
+    }
+    fn on_clock_tick_secondary(&mut self, _buses: &mut Buses) {
+        self.value_secondary = self.value_primary;
+    }
+}
 
 pub struct RAM {
     pub name: &'static str,
