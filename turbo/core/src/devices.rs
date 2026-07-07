@@ -48,21 +48,21 @@ impl Buses {
         }
     }
 
-    pub fn resolve_alu_flags(&self) -> (Option<bool>, Option<bool>) {
+    pub fn resolve_alu_flags(&self) -> (Option<Flags>, Option<Flags>) {
         let l = self.alu_l_bus.unwrap_or(0) as u16;
         let r = self.alu_r_bus.unwrap_or(0) as u16;
         let carry = if self.carry_in { 1 } else { 0 };
         match self.main_bus {
             MainBusValue::Add => {
                 let sum = l.wrapping_add(r).wrapping_add(carry);
-                let overflow = ((l ^ sum) & (r ^ sum) & 0x80) != 0;
-                let carry_out = (l + r + carry) > 0xFF;
+                let overflow = if ((l ^ sum) & (r ^ sum) & 0x80) != 0  { Flags::V } else { Flags::Empty };
+                let carry_out = if (l + r + carry) > 0xFF { Flags::C } else { Flags::Empty };
                 (Some(carry_out), Some(overflow))
             }
             MainBusValue::Subtract => {
                 let diff = l.wrapping_sub(r).wrapping_sub(carry);
-                let overflow = ((l ^ r) & (l ^ diff) & 0x80) != 0;
-                let carry_out = l < r + carry;
+                let overflow = if ((l ^ r) & (l ^ diff) & 0x80) != 0 { Flags::V } else { Flags::Empty };
+                let carry_out = if l < r + carry { Flags::C } else { Flags::Empty };
                 (Some(carry_out), Some(overflow))
             }
             _ => (None, None),
@@ -309,20 +309,8 @@ impl ClockReceiver for FlagsRegister {
             }
 
             let (carry, overflow) = buses.resolve_alu_flags();
-            if let Some(carry) = carry {
-                if carry {
-                    new_value |= Flags::C;
-                }
-            } else {
-                new_value |= self.value_primary & Flags::C; // Preserve previous carry if not calculated
-            }
-            if let Some(overflow) = overflow {
-                if overflow {
-                    new_value |= Flags::V;
-                }
-            } else {
-                new_value |= self.value_primary & Flags::V; // Preserve previous overflow if not calculated
-            }
+            new_value |= carry.unwrap_or(self.value_primary & Flags::C); // Apply new or preserve previous carry if not calculated
+            new_value |= overflow.unwrap_or(self.value_primary & Flags::V); // Apply new or preserve previous overflow if not calculated
             self.value_primary = new_value;
         }
     }
