@@ -1,4 +1,4 @@
-use std::cell::RefCell;
+use std::cell::Cell;
 
 pub enum MainBusValue {
     None,
@@ -50,8 +50,8 @@ pub trait DecReceiver {
     fn on_dec_change(&self, _buses: &mut Buses, _new_state: bool) {}
 }
 pub trait ClockReceiver {
-    fn on_clock_tick_primary(&mut self, _buses: &Buses) {}
-    fn on_clock_tick_secondary(&mut self, _buses: &Buses) {}
+    fn on_clock_tick_primary(&mut self, _buses: &mut Buses) {}
+    fn on_clock_tick_secondary(&mut self, _buses: &mut Buses) {}
 }
 
 
@@ -59,7 +59,9 @@ pub struct GPRegister {
     pub name: &'static str,
     value_primary: u8,
     value_secondary: u8,
-    load_enabled: RefCell<bool>,
+    load_enabled: Cell<bool>,
+    arg_l_enabled: Cell<bool>,
+    arg_r_enabled: Cell<bool>,
 }
 
 impl OutReceiver for GPRegister {
@@ -71,18 +73,26 @@ impl OutReceiver for GPRegister {
 impl LoadReceiver for GPRegister {
     fn on_load_change(&self, _buses: &mut Buses, new_state: bool) {
         println!("GPRegister {} Load changed to: {}", self.name, new_state);
-        self.load_enabled.replace(new_state);
+        self.load_enabled.set(new_state);
     }
 }
 
 impl ClockReceiver for GPRegister {
-    fn on_clock_tick_primary(&mut self, buses: &Buses) {
-        if *self.load_enabled.borrow() {
+    fn on_clock_tick_primary(&mut self, buses: &mut Buses) {
+        if self.load_enabled.get() {
             self.value_primary = buses.resolve_main_bus();
         }
     }
-    fn on_clock_tick_secondary(&mut self, _buses: &Buses) {
-        self.value_secondary = self.value_primary;
+    fn on_clock_tick_secondary(&mut self, buses: &mut Buses) {
+        if self.value_primary != self.value_secondary {
+            if self.arg_l_enabled.get() {
+                buses.alu_l_bus = Some(self.value_primary);
+            }
+            if self.arg_r_enabled.get() {
+                buses.alu_r_bus = Some(self.value_primary);
+            }
+            self.value_secondary = self.value_primary;
+        }
     }
 }
 
@@ -92,12 +102,15 @@ impl GPRegister {
             name,
             value_primary: 0,
             value_secondary: 0,
-            load_enabled: RefCell::new(false)
+            load_enabled: Cell::new(false),
+            arg_l_enabled: Cell::new(false),
+            arg_r_enabled: Cell::new(false),
         }
     }
 
     pub fn on_alu_l_change(&self, buses: &mut Buses, new_state: bool) {
         println!("GPRegister {} ALU L changed to: {}", self.name, new_state);
+        self.arg_l_enabled.set(new_state);
         buses.alu_l_bus = if new_state {
             Some(self.value_secondary)
         } else {
@@ -106,6 +119,7 @@ impl GPRegister {
     }
     pub fn on_alu_r_change(&self, buses: &mut Buses, new_state: bool) {
         println!("GPRegister {} ALU R changed to: {}", self.name, new_state);
+        self.arg_r_enabled.set(new_state);
         buses.alu_r_bus = if new_state {
             Some(self.value_secondary)
         } else {
@@ -319,13 +333,13 @@ mod tests {
         let mut gp_reg = GPRegister::new("GP1");
 
         // Simulate loading a value into the register
-        *gp_reg.load_enabled.borrow_mut() = true;
+        gp_reg.load_enabled.set(true);
         buses.main_bus = MainBusValue::Const(42);
-        gp_reg.on_clock_tick_primary(&buses);
+        gp_reg.on_clock_tick_primary(&mut buses);
         assert_eq!(gp_reg.value_primary, 42);
 
         // Simulate clock tick secondary
-        gp_reg.on_clock_tick_secondary(&buses);
+        gp_reg.on_clock_tick_secondary(&mut buses);
         assert_eq!(gp_reg.value_secondary, 42);
     }
 

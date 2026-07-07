@@ -118,13 +118,13 @@ impl DeviceMapPart {
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
 
-        writeln!(writer, "    pub fn broadcast_clock_tick_primary(&mut self, buses: &Buses) {{")?;
+        writeln!(writer, "    pub fn broadcast_clock_tick_primary(&mut self, buses: &mut Buses) {{")?;
         for device in self.devices.iter() {
             writeln!(writer, "        self.{}.on_clock_tick_primary(buses);", device.name)?;
         }
         writeln!(writer, "    }}")?;
 
-        writeln!(writer, "    pub fn broadcast_clock_tick_secondary(&mut self, buses: &Buses) {{")?;
+        writeln!(writer, "    pub fn broadcast_clock_tick_secondary(&mut self, buses: &mut Buses) {{")?;
         for device in self.devices.iter() {
             writeln!(writer, "        self.{}.on_clock_tick_secondary(buses);", device.name)?;
         }
