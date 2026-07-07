@@ -107,9 +107,7 @@ impl GPRegister {
 
 #[cfg(test)]
 mod tests {
-    use rstest::rstest;
     use super::*;
-
 
     #[test]
     fn test_gp_register() {
@@ -128,7 +126,7 @@ mod tests {
     }
 
     #[test]
-    fn test_load_A() {
+    fn test_load_a() {
         let mut device_map = DeviceMap::new();
         let default_cw = 0x07ff58ff; // default
         let load_a_cw = 0x07ff580f; // load_A

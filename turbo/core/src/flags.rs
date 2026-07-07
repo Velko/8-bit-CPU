@@ -18,7 +18,7 @@ pub struct Flags {
 }
 
 impl Flags {
-    pub const Empty: Flags = Flags { value: 0b0000 };
+    pub const EMPTY: Flags = Flags { value: 0b0000 };
     pub const V: Flags = Flags { value: 0b1000 };
     pub const C: Flags = Flags { value: 0b0100 };
     pub const Z: Flags = Flags { value: 0b0010 };
@@ -28,10 +28,10 @@ impl Flags {
 impl Debug for Flags {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut flags = String::with_capacity(4);
-        flags.push(if *self & Self::V != Self::Empty { 'V' } else { '-' });
-        flags.push(if *self & Self::C != Self::Empty { 'C' } else { '-' });
-        flags.push(if *self & Self::Z != Self::Empty { 'Z' } else { '-' });
-        flags.push(if *self & Self::N != Self::Empty { 'N' } else { '-' });
+        flags.push(if *self & Self::V != Self::EMPTY { 'V' } else { '-' });
+        flags.push(if *self & Self::C != Self::EMPTY { 'C' } else { '-' });
+        flags.push(if *self & Self::Z != Self::EMPTY { 'Z' } else { '-' });
+        flags.push(if *self & Self::N != Self::EMPTY { 'N' } else { '-' });
         write!(f, "Flags({})", flags)
     }
 }
@@ -71,8 +71,8 @@ impl FlagsRegister {
     pub fn new(name: &'static str) -> Self {
         Self {
             name,
-            value_primary: Flags::Empty,
-            value_secondary: Flags::Empty,
+            value_primary: Flags::EMPTY,
+            value_secondary: Flags::EMPTY,
             calc_enabled: Cell::new(false)
         }
     }
@@ -90,7 +90,7 @@ impl ClockReceiver for FlagsRegister {
         if self.calc_enabled.get() {
             // Perform Z and N calculations based on the main bus value
             let result = buses.resolve_main_bus();
-            let mut new_value = Flags::Empty;
+            let mut new_value = Flags::EMPTY;
             if result == 0 {
                 new_value |= Flags::Z;
             }

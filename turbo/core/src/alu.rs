@@ -69,7 +69,7 @@ mod tests {
     }
 
     #[rstest]
-    #[case(24, 18, 42, Flags::Empty)] // 24 + 18 = 42, no flags set
+    #[case(24, 18, 42, Flags::EMPTY)] // 24 + 18 = 42, no flags set
     #[case(0, 0, 0, Flags::Z)] // 0 + 0 = 0, Z flag set
     #[case(0, -128, -128, Flags::N)]
     #[case(245, 18, 7, Flags::C)]
@@ -127,7 +127,7 @@ mod tests {
     }
 
     #[rstest]
-    #[case(4, 3, 1, Flags::Empty)]
+    #[case(4, 3, 1, Flags::EMPTY)]
     #[case(-128, 0, -128, Flags::N)]
     #[case(4, 4, 0, Flags::Z)]
     #[case(0, -127, 127, Flags::C)]
@@ -199,8 +199,8 @@ mod tests {
 
 
     #[rstest]
-    #[case(1, 1, 1, Flags::Empty)]
-    #[case(0xff, 0x01, 0x01, Flags::Empty)]
+    #[case(1, 1, 1, Flags::EMPTY)]
+    #[case(0xff, 0x01, 0x01, Flags::EMPTY)]
     #[case(128, 128, 128, Flags::N)]
     #[case(255, 255, 255, Flags::N)]
     #[case(0, 0, 0, Flags::Z)]
@@ -224,8 +224,8 @@ mod tests {
     }
 
     #[rstest]
-    #[case(0, 1, 1, Flags::Empty)]
-    #[case(0x7f, 0x01, 0x7f, Flags::Empty)]
+    #[case(0, 1, 1, Flags::EMPTY)]
+    #[case(0x7f, 0x01, 0x7f, Flags::EMPTY)]
     #[case(0, 128, 128, Flags::N)]
     #[case(0x80, 0x7f, 0xff, Flags::N)]
     #[case(0, 0, 0, Flags::Z)]
@@ -248,8 +248,8 @@ mod tests {
     }
 
     #[rstest]
-    #[case(0x55, 0x01, 0x54, Flags::Empty)]
-    #[case(0x55, 0x0f, 0x5a, Flags::Empty)]
+    #[case(0x55, 0x01, 0x54, Flags::EMPTY)]
+    #[case(0x55, 0x0f, 0x5a, Flags::EMPTY)]
     #[case(230, 92, 186, Flags::N)]
     #[case(0xa5, 0x5a, 0xff, Flags::N)]
     #[case(0x42, 0x42, 0, Flags::Z)]
@@ -273,7 +273,7 @@ mod tests {
     }
 
     #[rstest]
-    #[case(0x80, 0x7f, Flags::Empty)]
+    #[case(0x80, 0x7f, Flags::EMPTY)]
     #[case(25, 230, Flags::N)]
     #[case(0x00, 0xff, Flags::N)]
     #[case(0xFF, 0, Flags::Z)]
@@ -296,8 +296,8 @@ mod tests {
 
     #[rstest]
     #[case(25, 12, Flags::C)]
-    #[case(122, 61, Flags::Empty)]
-    #[case(128, 64, Flags::Empty)]
+    #[case(122, 61, Flags::EMPTY)]
+    #[case(128, 64, Flags::EMPTY)]
     #[case(0, 0, Flags::Z)]
     #[case(1, 0, Flags::C | Flags::Z)]
     fn test_alu_shr(#[case] a: u8, #[case] expected_result: u8, #[case] expected_flags: Flags) {
@@ -318,14 +318,14 @@ mod tests {
     }
 
     #[rstest]
-    #[case(0xa2, 0x2a, Flags::Empty)]
+    #[case(0xa2, 0x2a, Flags::EMPTY)]
     #[case(0x58, 0x85, Flags::N)]
     #[case(0x00, 0x00, Flags::Z)]
     #[case(0xff, 0xff, Flags::N)]
     #[case(0x0f, 0xf0, Flags::N)]
-    #[case(0xf0, 0x0f, Flags::Empty)]
+    #[case(0xf0, 0x0f, Flags::EMPTY)]
     #[case(0x3c, 0xc3, Flags::N)]
-    #[case(0xc3, 0x3c, Flags::Empty)]
+    #[case(0xc3, 0x3c, Flags::EMPTY)]
     fn test_alu_swap(#[case] a: u8, #[case] expected_result: u8, #[case] expected_flags: Flags) {
         let mut device_map = DeviceMap::new();
         let mut buses = Buses::new();

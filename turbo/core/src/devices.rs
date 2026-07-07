@@ -90,18 +90,18 @@ impl Buses {
         match self.main_bus {
             MainBusValue::Add => {
                 let sum = l.wrapping_add(r).wrapping_add(carry);
-                let overflow = if ((l ^ sum) & (r ^ sum) & 0x80) != 0  { Flags::V } else { Flags::Empty };
-                let carry_out = if (l + r + carry) > 0xFF { Flags::C } else { Flags::Empty };
+                let overflow = if ((l ^ sum) & (r ^ sum) & 0x80) != 0  { Flags::V } else { Flags::EMPTY };
+                let carry_out = if (l + r + carry) > 0xFF { Flags::C } else { Flags::EMPTY };
                 (Some(carry_out), Some(overflow))
             }
             MainBusValue::Subtract => {
                 let diff = l.wrapping_sub(r).wrapping_sub(carry);
-                let overflow = if ((l ^ r) & (l ^ diff) & 0x80) != 0 { Flags::V } else { Flags::Empty };
-                let carry_out = if l < r + carry { Flags::C } else { Flags::Empty };
+                let overflow = if ((l ^ r) & (l ^ diff) & 0x80) != 0 { Flags::V } else { Flags::EMPTY };
+                let carry_out = if l < r + carry { Flags::C } else { Flags::EMPTY };
                 (Some(carry_out), Some(overflow))
             },
             MainBusValue::Shr => {
-                let carry_out = if (l & 0x01) != 0 { Flags::C } else { Flags::Empty };
+                let carry_out = if (l & 0x01) != 0 { Flags::C } else { Flags::EMPTY };
                 (Some(carry_out), None)
             },
             _ => (None, None),
