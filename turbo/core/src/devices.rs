@@ -441,6 +441,7 @@ impl ClockReceiver for IOController {}
 
 #[cfg(test)]
 mod tests {
+    use rstest::rstest;
     use super::*;
     use crate::router::DeviceMap;
 
@@ -475,32 +476,54 @@ mod tests {
         assert_eq!(42, device_map.A.value_primary); // Check if A has the value 42 after clock tick
     }
 
-    #[test]
-    fn test_alu_add() {
+    fn i16tou8(value: i16) -> u8 {
+        if value < 0 {
+            (256 + value) as u8
+        } else {
+            value as u8
+        }
+    }
+
+    #[rstest]
+    #[case(24, 18, 42, FlagsRegister::Empty)] // 24 + 18 = 42, no flags set
+    #[case(0, 0, 0, FlagsRegister::Z)] // 0 + 0 = 0, Z flag set
+    #[case(0, -128, -128, FlagsRegister::N)]
+    #[case(245, 18, 7, FlagsRegister::C)]
+    #[case(126, 4, -126, FlagsRegister::N | FlagsRegister::V)] // 126 + 4 = -126 (overflow), N flag set
+    #[case(246, 10, 0, FlagsRegister::C | FlagsRegister::Z)] // 246 + 10 = 0 (carry and zero), C and Z flags set
+    #[case(200, 200, -112, FlagsRegister::C | FlagsRegister::N)]
+    #[case(-30, -111, 115, FlagsRegister::V | FlagsRegister::C)]
+    #[case(-128, -128, 0, FlagsRegister::C | FlagsRegister::Z | FlagsRegister::V)]
+    fn test_alu_add(#[case] a: i16, #[case] b: i16, #[case] expected_sum: i16, #[case] expected_flags: u8) {
         let mut device_map = DeviceMap::new();
         let mut buses = Buses::new();
         let default_cw = 0x07ff58ff; // default
         device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
 
+        let a = i16tou8(a);
+        let b = i16tou8(b);
+        let expected_sum = i16tou8(expected_sum);
 
-        device_map.A.set_value(&mut buses, 24);
-        device_map.B.set_value(&mut buses, 18);
+        device_map.A.set_value(&mut buses, a);
+        device_map.B.set_value(&mut buses, b);
 
         let add_ab_cw = 0x07ff0405; // add_A_B
         device_map.route_word(&mut buses, default_cw, add_ab_cw);
 
-        assert_eq!(42, buses.resolve_main_bus()); // Check if the main bus calculates the sum of A and B correctly
+        assert_eq!(expected_sum, buses.resolve_main_bus()); // Check if the main bus calculates the sum of A and B correctly
 
         device_map.broadcast_clock_tick_primary(&mut buses);
         device_map.broadcast_clock_tick_secondary(&mut buses);
 
-        assert_eq!(42, device_map.A.value_primary); // Check if A has the value 42 after clock tick
-        assert_eq!(42, device_map.A.value_secondary); // Check if A has the value
-        assert_eq!(18, device_map.B.value_primary); // Check if B remains unchanged
-        assert_eq!(18, device_map.B.value_secondary); // Check if B remains unchanged
+        assert_eq!(expected_sum, device_map.A.value_primary); // Check if A has the value expected_sum after clock tick
+        assert_eq!(expected_sum, device_map.A.value_secondary); // Check if A has the value
+        assert_eq!(b, device_map.B.value_primary); // Check if B remains unchanged
+        assert_eq!(b, device_map.B.value_secondary); // Check if B remains unchanged
+        assert_eq!(expected_flags, device_map.F.value_secondary); // Check if the flags register has the expected flags set after the operation
 
-        assert_eq!(42, buses.alu_l_bus.unwrap()); // Check if ALU L bus has the updated value 42
-        assert_eq!(18, buses.alu_r_bus.unwrap()); // Check if ALU R bus has the original value 18
+        assert_eq!(expected_sum, buses.alu_l_bus.unwrap()); // Check if ALU L bus has the updated value expected_sum
+        assert_eq!(b, buses.alu_r_bus.unwrap()); // Check if ALU R bus has the original value b
+
     }
 
     #[test]
