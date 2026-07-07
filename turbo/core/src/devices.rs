@@ -380,5 +380,16 @@ mod tests {
         device_map.route_word(&mut buses, default_cw, add_ab_cw);
 
         assert_eq!(42, buses.resolve_main_bus()); // Check if the main bus calculates the sum of A and B correctly
+
+        device_map.broadcast_clock_tick_primary(&mut buses);
+        device_map.broadcast_clock_tick_secondary(&mut buses);
+
+        assert_eq!(42, device_map.A.value_primary); // Check if A has the value 42 after clock tick
+        assert_eq!(42, device_map.A.value_secondary); // Check if A has the value
+        assert_eq!(18, device_map.B.value_primary); // Check if B remains unchanged
+        assert_eq!(18, device_map.B.value_secondary); // Check if B remains unchanged
+
+        assert_eq!(42, buses.alu_l_bus.unwrap()); // Check if ALU L bus has the updated value 42
+        assert_eq!(18, buses.alu_r_bus.unwrap()); // Check if ALU R bus has the original value 18
     }
 }
