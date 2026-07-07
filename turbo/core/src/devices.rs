@@ -126,6 +126,13 @@ impl GPRegister {
             None
         };
     }
+
+    pub fn set_value(&mut self, buses: &mut Buses, value: u8) {
+        self.value_primary = value;
+        self.value_secondary = !value;
+        self.on_clock_tick_primary(buses);
+        self.on_clock_tick_secondary(buses);
+    }
 }
 
 
@@ -361,15 +368,15 @@ mod tests {
     #[test]
     fn test_alu_add() {
         let mut device_map = DeviceMap::new();
+        let mut buses = Buses::new();
         let default_cw = 0x07ff58ff; // default
+        device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
 
 
-        device_map.A.value_secondary = 24;
-        device_map.B.value_secondary = 18;
+        device_map.A.set_value(&mut buses, 24);
+        device_map.B.set_value(&mut buses, 18);
 
         let add_ab_cw = 0x07ff0405; // add_A_B
-        let mut buses = Buses::new();
-        device_map.A.on_alu_l_change(&mut buses, true); //TODO: it is connected in the default state, but that also means that routing won't detect change
         device_map.route_word(&mut buses, default_cw, add_ab_cw);
 
         assert_eq!(42, buses.resolve_main_bus()); // Check if the main bus calculates the sum of A and B correctly
