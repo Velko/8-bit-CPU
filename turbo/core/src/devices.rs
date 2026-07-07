@@ -4,6 +4,7 @@ pub enum MainBusValue {
     None,
     Const(u8),
     Add,
+    Subtract,
 }
 
 pub struct Buses {
@@ -32,6 +33,11 @@ impl Buses {
                 let l = self.alu_l_bus.unwrap_or(0);
                 let r = self.alu_r_bus.unwrap_or(0);
                 l.wrapping_add(r)
+            }
+            MainBusValue::Subtract => {
+                let l = self.alu_l_bus.unwrap_or(0);
+                let r = self.alu_r_bus.unwrap_or(0);
+                l.wrapping_sub(r)
             }
         }
     }
@@ -149,26 +155,37 @@ impl GPRegister {
 
 pub struct ALU {
     pub name: &'static str,
+    out_enabled: Cell<bool>,
+    alt_enabled: Cell<bool>,
 }
 impl OutReceiver for ALU {
     fn on_out_change(&self, buses: &mut Buses, new_state: bool) {
         println!("ALU {} Out changed to: {}", self.name, new_state);
-        buses.main_bus = if new_state {
-            match self.name {
-                "AddSub" => MainBusValue::Add,
-                _ => panic!("Unknown ALU module name: {}", self.name),
-            }
-        } else {
-            MainBusValue::None
-        };
+        self.out_enabled.set(new_state);
+        self.publish_output(buses);
     }
 }
 impl ALU {
     pub fn new(name: &'static str) -> Self {
-        Self { name }
+        Self {
+            name,
+            out_enabled: Cell::new(false),
+            alt_enabled: Cell::new(false)
+        }
     }
-    pub fn on_alt_change(&self, _buses: &mut Buses, new_state: bool) {
+    pub fn on_alt_change(&self, buses: &mut Buses, new_state: bool) {
         println!("ALU {} Alt changed to: {}", self.name, new_state);
+        self.alt_enabled.set(new_state);
+        self.publish_output(buses);
+    }
+    fn publish_output(&self, buses: &mut Buses) {
+        if self.out_enabled.get() {
+            buses.main_bus = match (self.name, self.alt_enabled.get()) {
+                ("AddSub", false) => MainBusValue::Add,
+                ("AddSub", true) => MainBusValue::Subtract,
+                (_, _) => panic!("Unknown ALU module name: {}", self.name),
+            };
+        }
     }
 }
 impl ClockReceiver for ALU {}
@@ -420,5 +437,33 @@ mod tests {
 
         device_map.A.set_value(&mut buses, 100); // Change A's value to 100
         assert_eq!(100, buses.resolve_main_bus()); // Check if the main bus reflects the new value of A, since out_A is still active
+    }
+
+        #[test]
+    fn test_alu_sub() {
+        let mut device_map = DeviceMap::new();
+        let mut buses = Buses::new();
+        let default_cw = 0x07ff58ff; // default
+        device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
+
+
+        device_map.B.set_value(&mut buses, 24);
+        device_map.C.set_value(&mut buses, 18);
+
+        let sub_bc_cw = 0x07ff2915; // sub_B_C
+        device_map.route_word(&mut buses, default_cw, sub_bc_cw);
+
+        assert_eq!(6, buses.resolve_main_bus()); // Check if the main bus calculates the difference of B and C correctly
+
+        device_map.broadcast_clock_tick_primary(&mut buses);
+        device_map.broadcast_clock_tick_secondary(&mut buses);
+
+        assert_eq!(6, device_map.B.value_primary); // Check if B has the value 6 after clock tick
+        assert_eq!(6, device_map.B.value_secondary); // Check if B has the value
+        assert_eq!(18, device_map.C.value_primary); // Check if C remains unchanged
+        assert_eq!(18, device_map.C.value_secondary); // Check if C remains unchanged
+
+        assert_eq!(6, buses.alu_l_bus.unwrap()); // Check if ALU L bus has the updated value 6
+        assert_eq!(18, buses.alu_r_bus.unwrap()); // Check if ALU R bus has the original value 18
     }
 }
