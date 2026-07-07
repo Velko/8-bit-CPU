@@ -7,6 +7,12 @@ pub enum MainBusValue {
     Const(u8),
     Add,
     Subtract,
+    And,
+    Or,
+    Xor,
+    Not,
+    Shr,
+    Swap,
 }
 
 pub struct Buses {
@@ -44,6 +50,33 @@ impl Buses {
                 let r = self.alu_r_bus.unwrap_or(0);
                 let carry = if self.carry_in { 1 } else { 0 };
                 l.wrapping_sub(r).wrapping_sub(carry)
+            },
+            MainBusValue::And => {
+                let l = self.alu_l_bus.unwrap_or(0);
+                let r = self.alu_r_bus.unwrap_or(0);
+                l & r
+            },
+            MainBusValue::Or => {
+                let l = self.alu_l_bus.unwrap_or(0);
+                let r = self.alu_r_bus.unwrap_or(0);
+                l | r
+            },
+            MainBusValue::Xor => {
+                let l = self.alu_l_bus.unwrap_or(0);
+                let r = self.alu_r_bus.unwrap_or(0);
+                l ^ r
+            },
+            MainBusValue::Not => {
+                let l = self.alu_l_bus.unwrap_or(0);
+                !l
+            },
+            MainBusValue::Shr => {
+                let l = self.alu_l_bus.unwrap_or(0);
+                l >> 1
+            },
+            MainBusValue::Swap => {
+                let l = self.alu_l_bus.unwrap_or(0);
+                (l << 4) | (l >> 4)
             }
         }
     }
@@ -64,11 +97,14 @@ impl Buses {
                 let overflow = if ((l ^ r) & (l ^ diff) & 0x80) != 0 { Flags::V } else { Flags::Empty };
                 let carry_out = if l < r + carry { Flags::C } else { Flags::Empty };
                 (Some(carry_out), Some(overflow))
-            }
+            },
+            MainBusValue::Shr => {
+                let carry_out = if (l & 0x01) != 0 { Flags::C } else { Flags::Empty };
+                (Some(carry_out), None)
+            },
             _ => (None, None),
         }
     }
-
 }
 
 pub trait OutReceiver {
@@ -213,6 +249,12 @@ impl ALU {
             match (self.name, self.alt_enabled.get()) {
                 ("AddSub", false) => MainBusValue::Add,
                 ("AddSub", true) => MainBusValue::Subtract,
+                ("AndOr", false) => MainBusValue::And,
+                ("AndOr", true) => MainBusValue::Or,
+                ("XorNot", false) => MainBusValue::Xor,
+                ("XorNot", true) => MainBusValue::Not,
+                ("ShiftSwap", false) => MainBusValue::Shr,
+                ("ShiftSwap", true) => MainBusValue::Swap,
                 (_, _) => panic!("Unknown ALU module name: {}", self.name),
             }
         } else {
@@ -644,5 +686,151 @@ mod tests {
         device_map.route_word(&mut buses, default_cw, sbb_bc_cw);
 
         assert_eq!(5, buses.resolve_main_bus()); // Check if the main bus calculates the difference of B and C correctly
+    }
+
+
+    #[rstest]
+    #[case(1, 1, 1, Flags::Empty)]
+    #[case(0xff, 0x01, 0x01, Flags::Empty)]
+    #[case(128, 128, 128, Flags::N)]
+    #[case(255, 255, 255, Flags::N)]
+    #[case(0, 0, 0, Flags::Z)]
+    #[case(128, 127, 0, Flags::Z)]
+    fn test_alu_and(#[case] a: u8, #[case] b: u8, #[case] expected_result: u8, #[case] expected_flags: Flags) {
+        let mut device_map = DeviceMap::new();
+        let mut buses = Buses::new();
+        let default_cw = 0x07ff58ff; // default
+        device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
+
+        device_map.A.set_value(&mut buses, a);
+        device_map.B.set_value(&mut buses, b);
+
+        let and_ab = 0x07ff0406; // and_A_B
+        device_map.route_word(&mut buses, default_cw, and_ab);
+        device_map.broadcast_clock_tick_primary(&mut buses);
+        device_map.broadcast_clock_tick_secondary(&mut buses);
+
+        assert_eq!(expected_result, device_map.A.value_secondary); // Check if A has the value
+        assert_eq!(expected_flags, device_map.F.value_secondary); // Check if the flags register has the expected flags set after the operation
+    }
+
+    #[rstest]
+    #[case(0, 1, 1, Flags::Empty)]
+    #[case(0x7f, 0x01, 0x7f, Flags::Empty)]
+    #[case(0, 128, 128, Flags::N)]
+    #[case(0x80, 0x7f, 0xff, Flags::N)]
+    #[case(0, 0, 0, Flags::Z)]
+    fn test_alu_or(#[case] a: u8, #[case] b: u8, #[case] expected_result: u8, #[case] expected_flags: Flags) {
+        let mut device_map = DeviceMap::new();
+        let mut buses = Buses::new();
+        let default_cw = 0x07ff58ff; // default
+        device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
+
+        device_map.A.set_value(&mut buses, a);
+        device_map.B.set_value(&mut buses, b);
+
+        let or_ab = 0x07ff2406; // or_A_B
+        device_map.route_word(&mut buses, default_cw, or_ab);
+        device_map.broadcast_clock_tick_primary(&mut buses);
+        device_map.broadcast_clock_tick_secondary(&mut buses);
+
+        assert_eq!(expected_result, device_map.A.value_secondary); // Check if A has the value
+        assert_eq!(expected_flags, device_map.F.value_secondary); // Check if the flags register has the expected flags set after the operation
+    }
+
+    #[rstest]
+    #[case(0x55, 0x01, 0x54, Flags::Empty)]
+    #[case(0x55, 0x0f, 0x5a, Flags::Empty)]
+    #[case(230, 92, 186, Flags::N)]
+    #[case(0xa5, 0x5a, 0xff, Flags::N)]
+    #[case(0x42, 0x42, 0, Flags::Z)]
+    #[case(0x00, 0x00, 0, Flags::Z)]
+    fn test_alu_xor(#[case] a: u8, #[case] b: u8, #[case] expected_result: u8, #[case] expected_flags: Flags) {
+        let mut device_map = DeviceMap::new();
+        let mut buses = Buses::new();
+        let default_cw = 0x07ff58ff; // default
+        device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
+
+        device_map.A.set_value(&mut buses, a);
+        device_map.B.set_value(&mut buses, b);
+
+        let xor_ab = 0x07ff040a; // xor_A_B
+        device_map.route_word(&mut buses, default_cw, xor_ab);
+        device_map.broadcast_clock_tick_primary(&mut buses);
+        device_map.broadcast_clock_tick_secondary(&mut buses);
+
+        assert_eq!(expected_result, device_map.A.value_secondary); // Check if A has the value
+        assert_eq!(expected_flags, device_map.F.value_secondary); // Check if the flags register has the expected flags set after the operation
+    }
+
+    #[rstest]
+    #[case(0x80, 0x7f, Flags::Empty)]
+    #[case(25, 230, Flags::N)]
+    #[case(0x00, 0xff, Flags::N)]
+    #[case(0xFF, 0, Flags::Z)]
+    fn test_alu_not(#[case] a: u8, #[case] expected_result: u8, #[case] expected_flags: Flags) {
+        let mut device_map = DeviceMap::new();
+        let mut buses = Buses::new();
+        let default_cw = 0x07ff58ff; // default
+        device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
+
+        device_map.A.set_value(&mut buses, a);
+
+        let not_a = 0x07ff380a; // not_A
+        device_map.route_word(&mut buses, default_cw, not_a);
+        device_map.broadcast_clock_tick_primary(&mut buses);
+        device_map.broadcast_clock_tick_secondary(&mut buses);
+
+        assert_eq!(expected_result, device_map.A.value_secondary); // Check if A has the value
+        assert_eq!(expected_flags, device_map.F.value_secondary); // Check if the flags register has the expected flags set after the operation
+    }
+
+    #[rstest]
+    #[case(25, 12, Flags::C)]
+    #[case(122, 61, Flags::Empty)]
+    #[case(128, 64, Flags::Empty)]
+    #[case(0, 0, Flags::Z)]
+    #[case(1, 0, Flags::C | Flags::Z)]
+    fn test_alu_shr(#[case] a: u8, #[case] expected_result: u8, #[case] expected_flags: Flags) {
+        let mut device_map = DeviceMap::new();
+        let mut buses = Buses::new();
+        let default_cw = 0x07ff58ff; // default
+        device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
+
+        device_map.A.set_value(&mut buses, a);
+
+        let shr_a = 0x07ff1807; // shr_A
+        device_map.route_word(&mut buses, default_cw, shr_a);
+        device_map.broadcast_clock_tick_primary(&mut buses);
+        device_map.broadcast_clock_tick_secondary(&mut buses);
+
+        assert_eq!(expected_result, device_map.A.value_secondary); // Check if A has the value
+        assert_eq!(expected_flags, device_map.F.value_secondary); // Check if the flags register has the expected flags set after the operation
+    }
+
+    #[rstest]
+    #[case(0xa2, 0x2a, Flags::Empty)]
+    #[case(0x58, 0x85, Flags::N)]
+    #[case(0x00, 0x00, Flags::Z)]
+    #[case(0xff, 0xff, Flags::N)]
+    #[case(0x0f, 0xf0, Flags::N)]
+    #[case(0xf0, 0x0f, Flags::Empty)]
+    #[case(0x3c, 0xc3, Flags::N)]
+    #[case(0xc3, 0x3c, Flags::Empty)]
+    fn test_alu_swap(#[case] a: u8, #[case] expected_result: u8, #[case] expected_flags: Flags) {
+        let mut device_map = DeviceMap::new();
+        let mut buses = Buses::new();
+        let default_cw = 0x07ff58ff; // default
+        device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
+
+        device_map.A.set_value(&mut buses, a);
+
+        let swap_a = 0x07ff3807; // swap_A
+        device_map.route_word(&mut buses, default_cw, swap_a);
+        device_map.broadcast_clock_tick_primary(&mut buses);
+        device_map.broadcast_clock_tick_secondary(&mut buses);
+
+        assert_eq!(expected_result, device_map.A.value_secondary); // Check if A has the value
+        assert_eq!(expected_flags, device_map.F.value_secondary); // Check if the flags register has the expected flags set after the operation
     }
 }
