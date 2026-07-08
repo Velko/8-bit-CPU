@@ -8,7 +8,7 @@ include!(concat!(env!("OUT_DIR"), "/router_generated.rs"));
 
 trait MuxDispatcher {
     const MASK: ControlWord;
-    const DEFAULT: ControlWord;
+    const VALUE_DEFAULT: ControlWord;
     fn dispatch(dev: &DeviceMap, buses: &mut Buses, word: ControlWord, new_state: bool);
 }
 

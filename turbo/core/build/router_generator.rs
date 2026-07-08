@@ -37,16 +37,16 @@ impl MuxPart {
     pub fn emit(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
         writeln!(writer, "struct {};", self.name)?;
         writeln!(writer, "impl MuxDispatcher for {} {{", self.name)?;
-        writeln!(writer, "    const MASK:    ControlWord = 0b{:032b};", self.mask)?;
-        writeln!(writer, "    const DEFAULT: ControlWord = 0b{:032b};", self.default)?;
+        writeln!(writer, "    const MASK: ControlWord = 0b{:032b};", self.mask)?;
+        writeln!(writer, "    const VALUE_DEFAULT: ControlWord = 0b{:032b};", self.default)?;
         writeln!(writer, "    fn dispatch(dev: &DeviceMap, buses: &mut Buses, word: ControlWord, new_state: bool) {{")?;
         writeln!(writer, "        match word & Self::MASK {{")?;
         for (value, dev_refs) in self.device_bits.iter() {
             if dev_refs.len() == 1 {
                 let dev_ref = &dev_refs[0];
-                writeln!(writer, "            0b{:032b} => dev.{}.on_{}_change(buses, new_state),", value, dev_ref.device, dev_ref.pin)?;
+                writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.on_{}_change(buses, new_state),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin)?;
             } else {
-                writeln!(writer, "            0b{:032b} => {{", value)?;
+                writeln!(writer, "            Self::VALUE_{}_{} => {{", value, value)?;
                 for dev_ref in dev_refs {
                     writeln!(writer, "                dev.{}.on_{}_change(buses, new_state);", dev_ref.device, dev_ref.pin)?;
                 }
@@ -56,6 +56,16 @@ impl MuxPart {
         writeln!(writer, "            _ => {{}},")?;
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
+        writeln!(writer, "}}")?;
+        writeln!(writer, "impl {} {{", self.name)?;
+        for (value, dev_refs) in self.device_bits.iter() {
+            if dev_refs.len() == 1 {
+                let dev_ref = &dev_refs[0];
+                writeln!(writer, "    pub const VALUE_{}_{}: ControlWord = 0b{:032b};", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), value)?;
+            } else {
+                writeln!(writer, "    pub const VALUE_{}_{}: ControlWord = 0b{:032b};", value, value, value)?;
+            }
+        }
         writeln!(writer, "}}")?;
         writeln!(writer)?;
         Ok(())
