@@ -7,7 +7,7 @@ struct MuxPart {
     mask: u32,
     default: u32,
     pins: Vec<usize>,
-    device_bits: HashMap<u32, Vec<MuxPinRef>>,
+    device_bits: HashMap<u32, (String, Vec<MuxPinRef>)>,
 }
 
 pub struct MuxPinRef {
@@ -41,12 +41,12 @@ impl MuxPart {
         writeln!(writer, "    const VALUE_DEFAULT: ControlWord = 0b{:032b};", self.default)?;
         writeln!(writer, "    fn dispatch(dev: &DeviceMap, buses: &mut Buses, word: ControlWord, new_state: bool) {{")?;
         writeln!(writer, "        match word & Self::MASK {{")?;
-        for (value, dev_refs) in self.device_bits.iter() {
+        for (value, (alias, dev_refs)) in self.device_bits.iter() {
             if dev_refs.len() == 1 {
                 let dev_ref = &dev_refs[0];
                 writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.on_{}_change(buses, new_state),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin)?;
             } else {
-                writeln!(writer, "            Self::VALUE_{}_{} => {{", value, value)?;
+                writeln!(writer, "            Self::VALUE_{} => {{", sanitize_name(&alias.to_uppercase()))?;
                 for dev_ref in dev_refs {
                     writeln!(writer, "                dev.{}.on_{}_change(buses, new_state);", dev_ref.device, dev_ref.pin)?;
                 }
@@ -58,12 +58,12 @@ impl MuxPart {
         writeln!(writer, "    }}")?;
         writeln!(writer, "}}")?;
         writeln!(writer, "impl {} {{", self.name)?;
-        for (value, dev_refs) in self.device_bits.iter() {
+        for (value, (alias, dev_refs)) in self.device_bits.iter() {
             if dev_refs.len() == 1 {
                 let dev_ref = &dev_refs[0];
                 writeln!(writer, "    pub const VALUE_{}_{}: ControlWord = 0b{:032b};", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), value)?;
             } else {
-                writeln!(writer, "    pub const VALUE_{}_{}: ControlWord = 0b{:032b};", value, value, value)?;
+                writeln!(writer, "    pub const VALUE_{}: ControlWord = 0b{:032b};", sanitize_name(&alias.to_uppercase()), value)?;
             }
         }
         writeln!(writer, "}}")?;
@@ -71,9 +71,9 @@ impl MuxPart {
         Ok(())
     }
 
-    fn add_device_bit(&mut self, device: &str, pin: &str, value: u8) {
+    fn add_device_bit(&mut self, device: &str, pin: &str, alias: &str, value: u8) {
         let mask = MuxPart::val_to_mask(&self.pins, value);
-        self.device_bits.entry(mask).or_insert_with(Vec::new).push(MuxPinRef {
+        self.device_bits.entry(mask).or_insert_with(|| (alias.to_string(), Vec::new())).1.push(MuxPinRef {
             device: device.to_string(),
             pin: pin.to_string(),
             value: mask,
@@ -177,7 +177,7 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) {
                 pin_config::PinConfigEntry::MuxPin { mux, pin } => {
                     // Add the device pin to the corresponding mux
                     let mux_part = muxes.get_mut(mux).unwrap();
-                    mux_part.add_device_bit(&device.name, pin_name, *pin);
+                    mux_part.add_device_bit(&device.name, pin_name, &format!("{}_{}", device.name, pin_name), *pin);
                 },
                 pin_config::PinConfigEntry::DirectPin { pin, level } => {
                     // Direct pins are not part of a mux, we will handle them separately
@@ -185,11 +185,11 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) {
                     let value = if *level == pin_config::Level::HIGH { mask } else { 0 };
                     direct_pins.entry(mask).or_insert_with(Vec::new).push(DirectPinRef { device: device.name.clone(), pin: pin_name.clone(), mask, value });
                 },
-                pin_config::PinConfigEntry::Alias { pin }  => {
-                    match shared.get(pin).unwrap() {
+                pin_config::PinConfigEntry::Alias { pin: apin }  => {
+                    match shared.get(apin).unwrap() {
                         pin_config::SharedPinConfig::MuxPin { mux, pin: mux_pin, .. } => {
                             let mux_part = muxes.get_mut(mux).unwrap();
-                            mux_part.add_device_bit(&device.name, pin_name, *mux_pin);
+                            mux_part.add_device_bit(&device.name, pin_name, apin, *mux_pin);
                         },
                         pin_config::SharedPinConfig::DirectPin { pin: direct_pin, level, .. } => {
                             let mask = 1 << direct_pin;
@@ -250,4 +250,8 @@ fn emit_direct_pins(writer: &mut dyn std::io::Write, direct_pins: &HashMap<u32, 
         }
     }
     Ok(())
+}
+
+fn sanitize_name(name: &str) -> String {
+    name.chars().map(|c| if c.is_alphanumeric() { c } else { '_' }).collect()
 }
