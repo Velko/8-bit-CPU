@@ -3,7 +3,7 @@ use crate::devices::Buses;
 use crate::devices::MainBusValue;
 use crate::devices::ClockReceiver;
 use crate::devices::OutReceiver;
-use crate::router::DeviceMap;
+use crate::router::DEFAULT_CW;
 
 pub struct ALU {
     pub name: &'static str,
@@ -56,7 +56,7 @@ impl ClockReceiver for ALU {}
 mod tests {
     use rstest::rstest;
     use super::*;
-    use crate::router::{DeviceMap, MuxDispatcher, BitDispatcher, OutMux, AluArgL, AluArgR, LoadMux, FCalc, AluAlt, FCarry};
+    use crate::router::{OutMux, AluArgL, AluArgR, LoadMux, FCalc, AluAlt, FCarry};
     use crate::devices::Peek;
     use crate::devices::Flags;
     use crate::test_helpers::{TestBench, i16tou8};
@@ -90,7 +90,7 @@ mod tests {
             .apply_mux::<AluArgR>(AluArgR::VALUE_B_ALU_R)
             .apply_bit::<FCalc>()
             .build();
-        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, add_ab_cw);
+        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, add_ab_cw);
 
         assert_eq!(expected_sum, bench.buses.resolve_main_bus()); // Check if the main bus calculates the sum of A and B correctly
 
@@ -133,7 +133,7 @@ mod tests {
             .apply_bit::<AluAlt>()
             .apply_bit::<FCalc>()
             .build();
-        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, sub_bc_cw);
+        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, sub_bc_cw);
 
         assert_eq!(expected_result, bench.buses.resolve_main_bus()); // Check if the main bus calculates the difference of B and C correctly
 
@@ -164,7 +164,7 @@ mod tests {
             .apply_bit::<FCalc>()
             .apply_bit::<FCarry>()
             .build();
-        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, adc_ab_cw);
+        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, adc_ab_cw);
 
         assert_eq!(43, bench.buses.resolve_main_bus()); // Check if the main bus calculates the sum of A and B + carry correctly
     }
@@ -186,7 +186,7 @@ mod tests {
             .apply_bit::<FCalc>()
             .apply_bit::<FCarry>()
             .build();
-        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, sbb_bc_cw);
+        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, sbb_bc_cw);
 
         assert_eq!(5, bench.buses.resolve_main_bus()); // Check if the main bus calculates the difference of B and C correctly
     }
@@ -214,7 +214,7 @@ mod tests {
             .apply_bit::<FCalc>()
             .build();
 
-        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, and_ab);
+        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, and_ab);
         bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
         bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
 
@@ -244,7 +244,7 @@ mod tests {
             .apply_bit::<AluAlt>()
             .build();
 
-        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, or_ab);
+        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, or_ab);
         bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
         bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
 
@@ -274,7 +274,7 @@ mod tests {
             .apply_bit::<FCalc>()
             .build();
 
-        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, xor_ab);
+        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, xor_ab);
         bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
         bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
 
@@ -300,7 +300,7 @@ mod tests {
             .apply_bit::<FCalc>()
             .apply_bit::<AluAlt>()
             .build();
-        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, not_a);
+        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, not_a);
         bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
         bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
 
@@ -327,7 +327,7 @@ mod tests {
             .apply_bit::<FCalc>()
             .build();
 
-        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, shr_a);
+        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, shr_a);
         bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
         bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
 
@@ -358,7 +358,7 @@ mod tests {
             .apply_bit::<AluAlt>()
             .build();
 
-        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, swap_a);
+        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, swap_a);
         bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
         bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
 

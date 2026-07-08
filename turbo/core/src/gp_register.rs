@@ -111,6 +111,7 @@ mod tests {
     use crate::test_helpers::TestBench;
     use crate::router::{MuxDispatcher, LoadMux, OutMux};
     use crate::control_word::ControlWordBuilder;
+    use crate::router::DEFAULT_CW;
 
     #[test]
     fn test_gp_register() {
@@ -135,7 +136,7 @@ mod tests {
             .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
             .build(); // load_A
 
-        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, load_a_cw);
+        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, load_a_cw);
         bench.buses.main_bus = MainBusValue::Const(42); // Simulate loading 42 into A
 
         bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
@@ -152,7 +153,7 @@ mod tests {
         let out_a_cw =  ControlWordBuilder::default()
             .apply_mux::<OutMux>(OutMux::VALUE_A_OUT)
             .build(); // out_A
-        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, out_a_cw);
+        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, out_a_cw);
 
         assert_eq!(42, bench.buses.resolve_main_bus()); // Check if the main bus has the value 42 after out_A
 

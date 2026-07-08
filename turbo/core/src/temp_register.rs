@@ -4,7 +4,6 @@ use crate::devices::MainBusValue;
 use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
 use crate::devices::Peek;
-use crate::router::DeviceMap;
 
 pub struct TempRegister {
     pub name: &'static str,
@@ -76,6 +75,7 @@ mod tests {
     use crate::test_helpers::TestBench;
     use crate::router::{MuxDispatcher, LoadMux};
     use crate::control_word::ControlWordBuilder;
+    use crate::router::DEFAULT_CW;
 
 
     #[test]
@@ -85,7 +85,7 @@ mod tests {
             .apply_mux::<LoadMux>(LoadMux::VALUE_T_LOAD)
             .build(); // Enable T Load
 
-        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, load_t_cw);
+        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, load_t_cw);
         bench.buses.main_bus = MainBusValue::Const(42); // Simulate loading 42 into T
 
         bench.devices.broadcast_clock_tick_primary(&mut bench.buses);

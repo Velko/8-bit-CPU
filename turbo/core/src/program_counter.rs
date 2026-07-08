@@ -1,12 +1,10 @@
 use std::cell::Cell;
 use crate::devices::Buses;
-use crate::devices::MainBusValue;
 use crate::devices::OutReceiver;
 use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
- use crate::devices::IncReceiver;
+use crate::devices::IncReceiver;
 use crate::devices::Peek;
-use crate::router::DeviceMap;
 
 pub struct ProgramCounter {
     pub name: &'static str,
@@ -90,6 +88,7 @@ mod tests {
     use crate::router::AddrInc;
     use crate::router::AddrOutMux;
     use crate::control_word::ControlWordBuilder;
+    use crate::router::DEFAULT_CW;
 
     #[test]
     fn test_program_counter_out_inc() {
@@ -100,7 +99,7 @@ mod tests {
             .apply_mux::<AddrOutMux>(AddrOutMux::VALUE_PC_OUT)
             .apply_bit::<AddrInc>()
             .build(); // Enable PC Out and Inc
-        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, pc_out_inc_cw);
+        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, pc_out_inc_cw);
 
         assert_eq!(Some(0x1234), bench.buses.address_bus);
 
@@ -117,7 +116,7 @@ mod tests {
         let pc_load_cw = ControlWordBuilder::default()
             .apply_mux::<AddrLoadMux>(AddrLoadMux::VALUE_PC_LOAD)
             .build(); // Enable PC Load
-        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, pc_load_cw);
+        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, pc_load_cw);
         bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
 
         assert_eq!(0x5678, bench.devices.PC.value_primary);
