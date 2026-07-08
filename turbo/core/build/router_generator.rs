@@ -46,7 +46,7 @@ impl MuxPart {
                 let dev_ref = &dev_refs[0];
                 writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.on_{}_change(buses, new_state),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin)?;
             } else {
-                writeln!(writer, "            Self::VALUE_{} => {{", sanitize_name(&alias.to_uppercase()))?;
+                writeln!(writer, "            Self::VALUE_{} => {{", format_const_name(alias))?;
                 for dev_ref in dev_refs {
                     writeln!(writer, "                dev.{}.on_{}_change(buses, new_state);", dev_ref.device, dev_ref.pin)?;
                 }
@@ -63,7 +63,7 @@ impl MuxPart {
                 let dev_ref = &dev_refs[0];
                 writeln!(writer, "    pub const VALUE_{}_{}: ControlWord = 0b{:032b};", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), value)?;
             } else {
-                writeln!(writer, "    pub const VALUE_{}: ControlWord = 0b{:032b};", sanitize_name(&alias.to_uppercase()), value)?;
+                writeln!(writer, "    pub const VALUE_{}: ControlWord = 0b{:032b};", format_const_name(alias), value)?;
             }
         }
         writeln!(writer, "}}")?;
@@ -183,7 +183,7 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) {
                     // Direct pins are not part of a mux, we will handle them separately
                     let mask = 1 << pin;
                     let value = if *level == pin_config::Level::HIGH { mask } else { 0 };
-                    direct_pins.entry(mask).or_insert_with(|| (format!("{}{}", device.name, pin_name), Vec::new())).1.push(DirectPinRef { device: device.name.clone(), pin: pin_name.clone(), mask, value });
+                    direct_pins.entry(mask).or_insert_with(|| (format_type_name(&format!("{}.{}", device.name, pin_name)), Vec::new())).1.push(DirectPinRef { device: device.name.clone(), pin: pin_name.clone(), mask, value });
                 },
                 pin_config::PinConfigEntry::Alias { pin: apin }  => {
                     match shared.get(apin).unwrap() {
@@ -194,7 +194,7 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) {
                         pin_config::SharedPinConfig::DirectPin { pin: direct_pin, level, .. } => {
                             let mask = 1 << direct_pin;
                             let value = if *level == pin_config::Level::HIGH { mask } else { 0 };
-                            direct_pins.entry(mask).or_insert_with(|| (sanitize_name(apin), Vec::new())).1.push(DirectPinRef { device: device.name.clone(), pin: pin_name.clone(), mask, value });
+                            direct_pins.entry(mask).or_insert_with(|| (format_type_name(apin), Vec::new())).1.push(DirectPinRef { device: device.name.clone(), pin: pin_name.clone(), mask, value });
                         },
                     }
                 },
@@ -243,15 +243,16 @@ fn emit_direct_pins(writer: &mut dyn std::io::Write, direct_pins: &HashMap<u32, 
     for (mask, (device_name, direct_pins)) in direct_pins {
         if direct_pins.len() == 1 {
             let direct_pin = &direct_pins[0];
-            writeln!(writer, "pub struct {}{};", direct_pin.device, direct_pin.pin)?;
-            writeln!(writer, "impl BitDispatcher for {}{} {{", direct_pin.device, direct_pin.pin)?;
+            let struct_name = format_type_name(&format!("{}.{}", direct_pin.device, direct_pin.pin));
+            writeln!(writer, "pub struct {};",  struct_name)?;
+            writeln!(writer, "impl BitDispatcher for {} {{", struct_name)?;
             writeln!(writer, "    const MASK: ControlWord = 0b{:032b};", direct_pin.mask)?;
             writeln!(writer, "    const VALUE: ControlWord = 0b{:032b};", direct_pin.value)?;
             writeln!(writer, "}}")?;
         } else {
             let direct_pin = &direct_pins[0];
-            writeln!(writer, "pub struct {};", sanitize_name(&device_name))?;
-            writeln!(writer, "impl BitDispatcher for {} {{", sanitize_name(&device_name))?;
+            writeln!(writer, "pub struct {};", format_type_name(&device_name))?;
+            writeln!(writer, "impl BitDispatcher for {} {{", format_type_name(&device_name))?;
             writeln!(writer, "    const MASK: ControlWord = 0b{:032b};", mask)?;
             writeln!(writer, "    const VALUE: ControlWord = 0b{:032b};", direct_pin.value)?;
             writeln!(writer, "}}")?;
@@ -261,6 +262,21 @@ fn emit_direct_pins(writer: &mut dyn std::io::Write, direct_pins: &HashMap<u32, 
     Ok(())
 }
 
-fn sanitize_name(name: &str) -> String {
-    name.chars().map(|c| if c.is_alphanumeric() { c } else { '_' }).collect()
+fn format_const_name(name: &str) -> String {
+    name.chars().map(|c| if c.is_alphanumeric() { c.to_ascii_uppercase() } else { '_' }).collect()
+}
+
+fn format_type_name(name: &str) -> String {
+    // Split the name into words based on non-alphanumeric characters and capitalize each word
+    name.split(|c: char| !c.is_alphanumeric())
+        .filter(|s| !s.is_empty())
+        .map(|s| {
+            let mut chars = s.chars();
+            match chars.next() {
+                Some(first) => first.to_ascii_uppercase().to_string() + chars.as_str(),
+                None => String::new(),
+            }
+        })
+        .collect::<Vec<String>>()
+        .join("")
 }
