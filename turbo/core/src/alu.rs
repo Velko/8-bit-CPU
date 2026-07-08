@@ -59,15 +59,7 @@ mod tests {
     use crate::router::DeviceMap;
     use crate::devices::Peek;
     use crate::devices::Flags;
-    use crate::test_helpers::TestBench;
-
-    fn i16tou8(value: i16) -> u8 {
-        if value < 0 {
-            (256 + value) as u8
-        } else {
-            value as u8
-        }
-    }
+    use crate::test_helpers::{TestBench, i16tou8};
 
     #[rstest]
     #[case(24, 18, 42, Flags::EMPTY)] // 24 + 18 = 42, no flags set
