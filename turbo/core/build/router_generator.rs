@@ -156,11 +156,11 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) {
         muxes.insert(mux.name.clone(), MuxPart::from(mux));
     }
 
-    let shared: HashMap<String, pin_config::SharedPinConfig> = pins.shared_pins.into_iter()
+    let shared: HashMap<String, &pin_config::SharedPinConfig> = pins.shared_pins.iter()
         .map(|sp| (match sp {
-            pin_config::SharedPinConfig::DirectPin { ref name, .. } => name.clone(),
-            pin_config::SharedPinConfig::MuxPin { ref name, .. } => name.clone(),
-        }, sp.clone()))
+            pin_config::SharedPinConfig::DirectPin { name, .. } => name.clone(),
+            pin_config::SharedPinConfig::MuxPin { name, .. } => name.clone(),
+        }, sp))
         .collect();
 
     let mut device_map = DeviceMapPart { devices: Vec::new() };
