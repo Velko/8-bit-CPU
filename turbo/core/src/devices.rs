@@ -1,4 +1,5 @@
 pub use crate::gp_register::GPRegister;
+pub use crate::temp_register::TempRegister;
 pub use crate::alu::ALU;
 pub use crate::flags::{Flags, FlagsRegister};
 
@@ -151,18 +152,6 @@ impl ROM {
     }
 }
 impl ClockReceiver for ROM {}
-
-pub struct TempRegister {
-    pub name: &'static str,
-}
-impl LoadReceiver for TempRegister {}
-impl TempRegister {
-    pub fn new(name: &'static str) -> Self {
-        Self { name }
-    }
-    pub fn on_alu_r_change(&self, _buses: &mut Buses, _new_state: bool) {}
-}
-impl ClockReceiver for TempRegister {}
 
 pub struct WORegister {
     pub name: &'static str,
