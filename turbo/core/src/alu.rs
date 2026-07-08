@@ -60,6 +60,7 @@ mod tests {
     use crate::devices::Peek;
     use crate::devices::Flags;
     use crate::test_helpers::{TestBench, i16tou8};
+    use crate::control_word::ControlWordBuilder;
 
     #[rstest]
     #[case(24, 18, 42, Flags::EMPTY)] // 24 + 18 = 42, no flags set
@@ -82,11 +83,13 @@ mod tests {
         bench.devices.B.set_value(&mut bench.buses, b);
 
         // add_A_B
-        let mut add_ab_cw =  LoadMux::apply(TestBench::DEFAULT_CW, LoadMux::VALUE_A_LOAD);
-        add_ab_cw = OutMux::apply(add_ab_cw, OutMux::VALUE_ADDSUB_OUT);
-        add_ab_cw = AluArgL::apply(add_ab_cw, AluArgL::VALUE_A_ALU_L);
-        add_ab_cw = AluArgR::apply(add_ab_cw, AluArgR::VALUE_B_ALU_R);
-        add_ab_cw = FCalc::apply(add_ab_cw);
+        let add_ab_cw = ControlWordBuilder::new()
+            .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
+            .apply_mux::<OutMux>(OutMux::VALUE_ADDSUB_OUT)
+            .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
+            .apply_mux::<AluArgR>(AluArgR::VALUE_B_ALU_R)
+            .apply_bit::<FCalc>()
+            .build();
         bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, add_ab_cw);
 
         assert_eq!(expected_sum, bench.buses.resolve_main_bus()); // Check if the main bus calculates the sum of A and B correctly

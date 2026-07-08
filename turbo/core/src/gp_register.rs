@@ -110,6 +110,7 @@ mod tests {
     use super::*;
     use crate::test_helpers::TestBench;
     use crate::router::{MuxDispatcher, LoadMux, OutMux};
+    use crate::control_word::ControlWordBuilder;
 
     #[test]
     fn test_gp_register() {
@@ -130,7 +131,9 @@ mod tests {
     #[test]
     fn test_load_a() {
         let mut bench = TestBench::new();
-        let load_a_cw = LoadMux::apply(TestBench::DEFAULT_CW, LoadMux::VALUE_A_LOAD); // load_A
+        let load_a_cw = ControlWordBuilder::new()
+            .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
+            .build(); // load_A
 
         bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, load_a_cw);
         bench.buses.main_bus = MainBusValue::Const(42); // Simulate loading 42 into A
@@ -146,7 +149,9 @@ mod tests {
 
         bench.devices.A.set_value(&mut bench.buses, 42);
 
-        let out_a_cw = OutMux::apply(TestBench::DEFAULT_CW, OutMux::VALUE_A_OUT); // out_A
+        let out_a_cw =  ControlWordBuilder::new()
+            .apply_mux::<OutMux>(OutMux::VALUE_A_OUT)
+            .build(); // out_A
         bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, out_a_cw);
 
         assert_eq!(42, bench.buses.resolve_main_bus()); // Check if the main bus has the value 42 after out_A

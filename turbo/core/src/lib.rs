@@ -5,8 +5,10 @@ mod temp_register;
 mod alu;
 mod flags;
 mod program_counter;
+mod control_word;
+
+pub use control_word::ControlWord;
 
 #[cfg(test)]
 mod test_helpers;
 
-type ControlWord = u32;

@@ -10,18 +10,11 @@ pub trait MuxDispatcher {
     const MASK: ControlWord;
     const VALUE_DEFAULT: ControlWord;
     fn dispatch(dev: &DeviceMap, buses: &mut Buses, word: ControlWord, new_state: bool);
-
-    fn apply(word: ControlWord, new_state: ControlWord) -> ControlWord {
-        (word & !Self::MASK) | (new_state & Self::MASK)
-    }
 }
 
 pub trait BitDispatcher {
     const MASK: ControlWord;
     const VALUE: ControlWord;
-    fn apply(word: ControlWord) -> ControlWord {
-        (word & !Self::MASK) | Self::VALUE
-    }
 }
 
 
