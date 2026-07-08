@@ -74,11 +74,16 @@ impl Peek<u8> for TempRegister {
 mod tests {
     use super::*;
     use crate::test_helpers::TestBench;
+    use crate::router::{MuxDispatcher, LoadMux};
+    use crate::control_word::ControlWordBuilder;
+
 
     #[test]
     fn test_load_t() {
         let mut bench = TestBench::new();
-        let load_t_cw = 0x07ff586f; // load_T
+        let load_t_cw = ControlWordBuilder::new()
+            .apply_mux::<LoadMux>(LoadMux::VALUE_T_LOAD)
+            .build(); // Enable T Load
 
         bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, load_t_cw);
         bench.buses.main_bus = MainBusValue::Const(42); // Simulate loading 42 into T

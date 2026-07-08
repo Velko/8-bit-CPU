@@ -56,7 +56,7 @@ impl ClockReceiver for ALU {}
 mod tests {
     use rstest::rstest;
     use super::*;
-    use crate::router::{DeviceMap, MuxDispatcher, BitDispatcher, OutMux, AluArgL, AluArgR, LoadMux, FCalc};
+    use crate::router::{DeviceMap, MuxDispatcher, BitDispatcher, OutMux, AluArgL, AluArgR, LoadMux, FCalc, AluAlt, FCarry};
     use crate::devices::Peek;
     use crate::devices::Flags;
     use crate::test_helpers::{TestBench, i16tou8};
@@ -124,7 +124,15 @@ mod tests {
         bench.devices.B.set_value(&mut bench.buses, a);
         bench.devices.C.set_value(&mut bench.buses, b);
 
-        let sub_bc_cw = 0x07ff2915; // sub_B_C
+        // sub_B_C
+        let sub_bc_cw = ControlWordBuilder::new()
+            .apply_mux::<LoadMux>(LoadMux::VALUE_B_LOAD)
+            .apply_mux::<OutMux>(OutMux::VALUE_ADDSUB_OUT)
+            .apply_mux::<AluArgL>(AluArgL::VALUE_B_ALU_L)
+            .apply_mux::<AluArgR>(AluArgR::VALUE_C_ALU_R)
+            .apply_bit::<AluAlt>()
+            .apply_bit::<FCalc>()
+            .build();
         bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, sub_bc_cw);
 
         assert_eq!(expected_result, bench.buses.resolve_main_bus()); // Check if the main bus calculates the difference of B and C correctly
@@ -147,7 +155,15 @@ mod tests {
         bench.devices.A.set_value(&mut bench.buses, 24);
         bench.devices.B.set_value(&mut bench.buses, 18);
 
-        let adc_ab_cw = 0x07ff8405; // adc_A_B
+        // adc_A_B
+        let adc_ab_cw = ControlWordBuilder::new()
+            .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
+            .apply_mux::<OutMux>(OutMux::VALUE_ADDSUB_OUT)
+            .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
+            .apply_mux::<AluArgR>(AluArgR::VALUE_B_ALU_R)
+            .apply_bit::<FCalc>()
+            .apply_bit::<FCarry>()
+            .build();
         bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, adc_ab_cw);
 
         assert_eq!(43, bench.buses.resolve_main_bus()); // Check if the main bus calculates the sum of A and B + carry correctly
@@ -156,15 +172,21 @@ mod tests {
     #[test]
     fn test_alu_sbb() {
         let mut bench = TestBench::new();
-        let default_cw = 0x07ff58ff; // default
-        bench.devices.route_word(&mut bench.buses, !default_cw, default_cw); // Ensure we start from the default state
-
 
         bench.devices.B.set_value(&mut bench.buses, 24);
         bench.devices.C.set_value(&mut bench.buses, 18);
 
-        let sbb_bc_cw = 0x07ffa915; // sbb_B_C
-        bench.devices.route_word(&mut bench.buses, default_cw, sbb_bc_cw);
+        // sbb_B_C
+        let sbb_bc_cw = ControlWordBuilder::new()
+            .apply_mux::<LoadMux>(LoadMux::VALUE_B_LOAD)
+            .apply_mux::<OutMux>(OutMux::VALUE_ADDSUB_OUT)
+            .apply_mux::<AluArgL>(AluArgL::VALUE_B_ALU_L)
+            .apply_mux::<AluArgR>(AluArgR::VALUE_C_ALU_R)
+            .apply_bit::<AluAlt>()
+            .apply_bit::<FCalc>()
+            .apply_bit::<FCarry>()
+            .build();
+        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, sbb_bc_cw);
 
         assert_eq!(5, bench.buses.resolve_main_bus()); // Check if the main bus calculates the difference of B and C correctly
     }
@@ -183,7 +205,15 @@ mod tests {
         bench.devices.A.set_value(&mut bench.buses, a);
         bench.devices.B.set_value(&mut bench.buses, b);
 
-        let and_ab = 0x07ff0406; // and_A_B
+         // and_A_B
+        let and_ab = ControlWordBuilder::new()
+            .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
+            .apply_mux::<OutMux>(OutMux::VALUE_ANDOR_OUT)
+            .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
+            .apply_mux::<AluArgR>(AluArgR::VALUE_B_ALU_R)
+            .apply_bit::<FCalc>()
+            .build();
+
         bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, and_ab);
         bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
         bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
@@ -204,7 +234,16 @@ mod tests {
         bench.devices.A.set_value(&mut bench.buses, a);
         bench.devices.B.set_value(&mut bench.buses, b);
 
-        let or_ab = 0x07ff2406; // or_A_B
+        // or_A_B
+        let or_ab = ControlWordBuilder::new()
+            .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
+            .apply_mux::<OutMux>(OutMux::VALUE_ANDOR_OUT)
+            .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
+            .apply_mux::<AluArgR>(AluArgR::VALUE_B_ALU_R)
+            .apply_bit::<FCalc>()
+            .apply_bit::<AluAlt>()
+            .build();
+
         bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, or_ab);
         bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
         bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
@@ -226,7 +265,15 @@ mod tests {
         bench.devices.A.set_value(&mut bench.buses, a);
         bench.devices.B.set_value(&mut bench.buses, b);
 
-        let xor_ab = 0x07ff040a; // xor_A_B
+        // xor_A_B
+        let xor_ab = ControlWordBuilder::new()
+            .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
+            .apply_mux::<OutMux>(OutMux::VALUE_XORNOT_OUT)
+            .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
+            .apply_mux::<AluArgR>(AluArgR::VALUE_B_ALU_R)
+            .apply_bit::<FCalc>()
+            .build();
+
         bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, xor_ab);
         bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
         bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
@@ -245,7 +292,14 @@ mod tests {
 
         bench.devices.A.set_value(&mut bench.buses, a);
 
-        let not_a = 0x07ff380a; // not_A
+        // not_A
+        let not_a = ControlWordBuilder::new()
+            .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
+            .apply_mux::<OutMux>(OutMux::VALUE_XORNOT_OUT)
+            .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
+            .apply_bit::<FCalc>()
+            .apply_bit::<AluAlt>()
+            .build();
         bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, not_a);
         bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
         bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
@@ -265,7 +319,14 @@ mod tests {
 
         bench.devices.A.set_value(&mut bench.buses, a);
 
-        let shr_a = 0x07ff1807; // shr_A
+        // shr_A
+        let shr_a = ControlWordBuilder::new()
+            .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
+            .apply_mux::<OutMux>(OutMux::VALUE_SHIFTSWAP_OUT)
+            .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
+            .apply_bit::<FCalc>()
+            .build();
+
         bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, shr_a);
         bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
         bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
@@ -288,7 +349,15 @@ mod tests {
 
         bench.devices.A.set_value(&mut bench.buses, a);
 
-        let swap_a = 0x07ff3807; // swap_A
+        // swap_A
+        let swap_a = ControlWordBuilder::new()
+            .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
+            .apply_mux::<OutMux>(OutMux::VALUE_SHIFTSWAP_OUT)
+            .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
+            .apply_bit::<FCalc>()
+            .apply_bit::<AluAlt>()
+            .build();
+
         bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, swap_a);
         bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
         bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
