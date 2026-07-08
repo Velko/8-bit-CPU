@@ -45,7 +45,5 @@ mod tests {
 
         println!("Off");
         device_map.route_word(&mut buses, inc_a_cw, default_cw);
-
-        assert_eq!(default_cw, inc_a_cw); // always fails, just to demonstrate the test
     }
 }
