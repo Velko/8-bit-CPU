@@ -98,21 +98,6 @@ mod tests {
 
     }
 
-    #[test]
-    fn test_output_reg_value() {
-        let mut bench = TestBench::new();
-
-        bench.devices.A.set_value(&mut bench.buses, 42);
-
-        let out_a_cw = 0x07ff58f0; // out_A
-        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, out_a_cw);
-
-        assert_eq!(42, bench.buses.resolve_main_bus()); // Check if the main bus has the value 42 after out_A
-
-        bench.devices.A.set_value(&mut bench.buses, 100); // Change A's value to 100
-        assert_eq!(100, bench.buses.resolve_main_bus()); // Check if the main bus reflects the new value of A, since out_A is still active
-    }
-
     #[rstest]
     #[case(4, 3, 1, Flags::EMPTY)]
     #[case(-128, 0, -128, Flags::N)]

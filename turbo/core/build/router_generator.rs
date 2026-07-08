@@ -35,7 +35,7 @@ impl MuxPart {
     }
 
     pub fn emit(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
-        writeln!(writer, "struct {};", self.name)?;
+        writeln!(writer, "pub struct {};", self.name)?;
         writeln!(writer, "impl MuxDispatcher for {} {{", self.name)?;
         writeln!(writer, "    const MASK: ControlWord = 0b{:032b};", self.mask)?;
         writeln!(writer, "    const VALUE_DEFAULT: ControlWord = 0b{:032b};", self.default)?;

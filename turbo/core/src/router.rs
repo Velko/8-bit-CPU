@@ -6,10 +6,14 @@ use crate::devices::*;
 
 include!(concat!(env!("OUT_DIR"), "/router_generated.rs"));
 
-trait MuxDispatcher {
+pub trait MuxDispatcher {
     const MASK: ControlWord;
     const VALUE_DEFAULT: ControlWord;
     fn dispatch(dev: &DeviceMap, buses: &mut Buses, word: ControlWord, new_state: bool);
+
+    fn apply(word: ControlWord, new_state: ControlWord) -> ControlWord {
+        (word & !Self::MASK) | (new_state & Self::MASK)
+    }
 }
 
 
