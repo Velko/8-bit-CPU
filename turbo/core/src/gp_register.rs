@@ -131,7 +131,7 @@ mod tests {
     #[test]
     fn test_load_a() {
         let mut bench = TestBench::new();
-        let load_a_cw = ControlWordBuilder::new()
+        let load_a_cw = ControlWordBuilder::default()
             .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
             .build(); // load_A
 
@@ -149,7 +149,7 @@ mod tests {
 
         bench.devices.A.set_value(&mut bench.buses, 42);
 
-        let out_a_cw =  ControlWordBuilder::new()
+        let out_a_cw =  ControlWordBuilder::default()
             .apply_mux::<OutMux>(OutMux::VALUE_A_OUT)
             .build(); // out_A
         bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, out_a_cw);

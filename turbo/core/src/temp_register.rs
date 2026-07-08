@@ -81,7 +81,7 @@ mod tests {
     #[test]
     fn test_load_t() {
         let mut bench = TestBench::new();
-        let load_t_cw = ControlWordBuilder::new()
+        let load_t_cw = ControlWordBuilder::default()
             .apply_mux::<LoadMux>(LoadMux::VALUE_T_LOAD)
             .build(); // Enable T Load
 

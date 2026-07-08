@@ -1,4 +1,4 @@
-use crate::router::{MuxDispatcher, BitDispatcher};
+use crate::router::{MuxDispatcher, BitDispatcher, DEFAULT_CW};
 
 pub type ControlWord = u32;
 
@@ -10,10 +10,6 @@ pub struct ControlWordBuilder {
 impl ControlWordBuilder {
     pub const fn bootstrap() -> Self {
         ControlWordBuilder { word: 0 }
-    }
-
-    pub const fn new() -> Self {
-        ControlWordBuilder { word: 0x07ff58ff } //TODO: calculate it from the disabled state of all devices, instead of hardcoding
     }
 
     pub const fn apply_mux<D: MuxDispatcher>(self, new_state: ControlWord) -> Self {
@@ -36,5 +32,11 @@ impl ControlWordBuilder {
 
     pub const fn build(self) -> ControlWord {
         self.word
+    }
+}
+
+impl Default for ControlWordBuilder {
+    fn default() -> Self {
+        Self { word: DEFAULT_CW }
     }
 }

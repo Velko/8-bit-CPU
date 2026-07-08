@@ -96,7 +96,7 @@ mod tests {
         let mut bench = TestBench::new();
         bench.devices.PC.set_value(&mut bench.buses, 0x1234);
 
-        let pc_out_inc_cw = ControlWordBuilder::new()
+        let pc_out_inc_cw = ControlWordBuilder::default()
             .apply_mux::<AddrOutMux>(AddrOutMux::VALUE_PC_OUT)
             .apply_bit::<AddrInc>()
             .build(); // Enable PC Out and Inc
@@ -114,7 +114,7 @@ mod tests {
         let mut bench = TestBench::new();
         bench.buses.address_bus = Some(0x5678);
 
-        let pc_load_cw = ControlWordBuilder::new()
+        let pc_load_cw = ControlWordBuilder::default()
             .apply_mux::<AddrLoadMux>(AddrLoadMux::VALUE_PC_LOAD)
             .build(); // Enable PC Load
         bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, pc_load_cw);

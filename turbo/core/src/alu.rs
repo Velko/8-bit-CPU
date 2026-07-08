@@ -83,7 +83,7 @@ mod tests {
         bench.devices.B.set_value(&mut bench.buses, b);
 
         // add_A_B
-        let add_ab_cw = ControlWordBuilder::new()
+        let add_ab_cw = ControlWordBuilder::default()
             .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
             .apply_mux::<OutMux>(OutMux::VALUE_ADDSUB_OUT)
             .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
@@ -125,7 +125,7 @@ mod tests {
         bench.devices.C.set_value(&mut bench.buses, b);
 
         // sub_B_C
-        let sub_bc_cw = ControlWordBuilder::new()
+        let sub_bc_cw = ControlWordBuilder::default()
             .apply_mux::<LoadMux>(LoadMux::VALUE_B_LOAD)
             .apply_mux::<OutMux>(OutMux::VALUE_ADDSUB_OUT)
             .apply_mux::<AluArgL>(AluArgL::VALUE_B_ALU_L)
@@ -156,7 +156,7 @@ mod tests {
         bench.devices.B.set_value(&mut bench.buses, 18);
 
         // adc_A_B
-        let adc_ab_cw = ControlWordBuilder::new()
+        let adc_ab_cw = ControlWordBuilder::default()
             .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
             .apply_mux::<OutMux>(OutMux::VALUE_ADDSUB_OUT)
             .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
@@ -177,7 +177,7 @@ mod tests {
         bench.devices.C.set_value(&mut bench.buses, 18);
 
         // sbb_B_C
-        let sbb_bc_cw = ControlWordBuilder::new()
+        let sbb_bc_cw = ControlWordBuilder::default()
             .apply_mux::<LoadMux>(LoadMux::VALUE_B_LOAD)
             .apply_mux::<OutMux>(OutMux::VALUE_ADDSUB_OUT)
             .apply_mux::<AluArgL>(AluArgL::VALUE_B_ALU_L)
@@ -206,7 +206,7 @@ mod tests {
         bench.devices.B.set_value(&mut bench.buses, b);
 
          // and_A_B
-        let and_ab = ControlWordBuilder::new()
+        let and_ab = ControlWordBuilder::default()
             .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
             .apply_mux::<OutMux>(OutMux::VALUE_ANDOR_OUT)
             .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
@@ -235,7 +235,7 @@ mod tests {
         bench.devices.B.set_value(&mut bench.buses, b);
 
         // or_A_B
-        let or_ab = ControlWordBuilder::new()
+        let or_ab = ControlWordBuilder::default()
             .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
             .apply_mux::<OutMux>(OutMux::VALUE_ANDOR_OUT)
             .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
@@ -266,7 +266,7 @@ mod tests {
         bench.devices.B.set_value(&mut bench.buses, b);
 
         // xor_A_B
-        let xor_ab = ControlWordBuilder::new()
+        let xor_ab = ControlWordBuilder::default()
             .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
             .apply_mux::<OutMux>(OutMux::VALUE_XORNOT_OUT)
             .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
@@ -293,7 +293,7 @@ mod tests {
         bench.devices.A.set_value(&mut bench.buses, a);
 
         // not_A
-        let not_a = ControlWordBuilder::new()
+        let not_a = ControlWordBuilder::default()
             .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
             .apply_mux::<OutMux>(OutMux::VALUE_XORNOT_OUT)
             .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
@@ -320,7 +320,7 @@ mod tests {
         bench.devices.A.set_value(&mut bench.buses, a);
 
         // shr_A
-        let shr_a = ControlWordBuilder::new()
+        let shr_a = ControlWordBuilder::default()
             .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
             .apply_mux::<OutMux>(OutMux::VALUE_SHIFTSWAP_OUT)
             .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
@@ -350,7 +350,7 @@ mod tests {
         bench.devices.A.set_value(&mut bench.buses, a);
 
         // swap_A
-        let swap_a = ControlWordBuilder::new()
+        let swap_a = ControlWordBuilder::default()
             .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
             .apply_mux::<OutMux>(OutMux::VALUE_SHIFTSWAP_OUT)
             .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
