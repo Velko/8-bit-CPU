@@ -108,6 +108,7 @@ impl GPRegister {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::test_helpers::TestBench;
 
     #[test]
     fn test_gp_register() {
@@ -127,16 +128,14 @@ mod tests {
 
     #[test]
     fn test_load_a() {
-        let mut device_map = DeviceMap::new();
-        let default_cw = 0x07ff58ff; // default
+        let mut bench = TestBench::new();
         let load_a_cw = 0x07ff580f; // load_A
 
-        let mut buses = Buses::new();
-        device_map.route_word(&mut buses, default_cw, load_a_cw);
-        buses.main_bus = MainBusValue::Const(42); // Simulate loading 42 into A
+        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, load_a_cw);
+        bench.buses.main_bus = MainBusValue::Const(42); // Simulate loading 42 into A
 
-        device_map.broadcast_clock_tick_primary(&mut buses);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
 
-        assert_eq!(42, device_map.A.value_primary); // Check if A has the value 42 after clock tick
+        assert_eq!(42, bench.devices.A.value_primary); // Check if A has the value 42 after clock tick
     }
 }

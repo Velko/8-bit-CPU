@@ -59,6 +59,7 @@ mod tests {
     use crate::router::DeviceMap;
     use crate::devices::Peek;
     use crate::devices::Flags;
+    use crate::test_helpers::TestBench;
 
     fn i16tou8(value: i16) -> u8 {
         if value < 0 {
@@ -79,51 +80,45 @@ mod tests {
     #[case(-30, -111, 115, Flags::V | Flags::C)]
     #[case(-128, -128, 0, Flags::C | Flags::Z | Flags::V)]
     fn test_alu_add(#[case] a: i16, #[case] b: i16, #[case] expected_sum: i16, #[case] expected_flags: Flags) {
-        let mut device_map = DeviceMap::new();
-        let mut buses = Buses::new();
-        let default_cw = 0x07ff58ff; // default
-        device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
+        let mut bench = TestBench::new();
 
         let a = i16tou8(a);
         let b = i16tou8(b);
         let expected_sum = i16tou8(expected_sum);
 
-        device_map.A.set_value(&mut buses, a);
-        device_map.B.set_value(&mut buses, b);
+        bench.devices.A.set_value(&mut bench.buses, a);
+        bench.devices.B.set_value(&mut bench.buses, b);
 
         let add_ab_cw = 0x07ff0405; // add_A_B
-        device_map.route_word(&mut buses, default_cw, add_ab_cw);
+        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, add_ab_cw);
 
-        assert_eq!(expected_sum, buses.resolve_main_bus()); // Check if the main bus calculates the sum of A and B correctly
+        assert_eq!(expected_sum, bench.buses.resolve_main_bus()); // Check if the main bus calculates the sum of A and B correctly
 
-        device_map.broadcast_clock_tick_primary(&mut buses);
-        device_map.broadcast_clock_tick_secondary(&mut buses);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
+        bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
 
-        assert_eq!(expected_sum, device_map.A.peek()); // Check if A has the value
-        assert_eq!(b, device_map.B.peek()); // Check if B remains unchanged
-        assert_eq!(expected_flags, device_map.F.peek()); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_sum, bench.devices.A.peek()); // Check if A has the value
+        assert_eq!(b, bench.devices.B.peek()); // Check if B remains unchanged
+        assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation
 
-        assert_eq!(expected_sum, buses.alu_l_bus.unwrap()); // Check if ALU L bus has the updated value expected_sum
-        assert_eq!(b, buses.alu_r_bus.unwrap()); // Check if ALU R bus has the original value b
+        assert_eq!(expected_sum, bench.buses.alu_l_bus.unwrap()); // Check if ALU L bus has the updated value expected_sum
+        assert_eq!(b, bench.buses.alu_r_bus.unwrap()); // Check if ALU R bus has the original value b
 
     }
 
     #[test]
     fn test_output_reg_value() {
-        let mut device_map = DeviceMap::new();
-        let mut buses = Buses::new();
-        let default_cw = 0x07ff58ff; // default
-        device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
+        let mut bench = TestBench::new();
 
-        device_map.A.set_value(&mut buses, 42);
+        bench.devices.A.set_value(&mut bench.buses, 42);
 
         let out_a_cw = 0x07ff58f0; // out_A
-        device_map.route_word(&mut buses, default_cw, out_a_cw);
+        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, out_a_cw);
 
-        assert_eq!(42, buses.resolve_main_bus()); // Check if the main bus has the value 42 after out_A
+        assert_eq!(42, bench.buses.resolve_main_bus()); // Check if the main bus has the value 42 after out_A
 
-        device_map.A.set_value(&mut buses, 100); // Change A's value to 100
-        assert_eq!(100, buses.resolve_main_bus()); // Check if the main bus reflects the new value of A, since out_A is still active
+        bench.devices.A.set_value(&mut bench.buses, 100); // Change A's value to 100
+        assert_eq!(100, bench.buses.resolve_main_bus()); // Check if the main bus reflects the new value of A, since out_A is still active
     }
 
     #[rstest]
@@ -135,66 +130,58 @@ mod tests {
     #[case(-128, 1, 127, Flags::V)]
     #[case(120, -126, -10, Flags::V | Flags::C | Flags::N)]
     fn test_alu_sub(#[case] a: i16, #[case] b: i16, #[case] expected_result: i16, #[case] expected_flags: Flags) {
-        let mut device_map = DeviceMap::new();
-        let mut buses = Buses::new();
-        let default_cw = 0x07ff58ff; // default
-        device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
+        let mut bench = TestBench::new();
 
         let a = i16tou8(a);
         let b = i16tou8(b);
         let expected_result = i16tou8(expected_result);
 
-        device_map.B.set_value(&mut buses, a);
-        device_map.C.set_value(&mut buses, b);
+        bench.devices.B.set_value(&mut bench.buses, a);
+        bench.devices.C.set_value(&mut bench.buses, b);
 
         let sub_bc_cw = 0x07ff2915; // sub_B_C
-        device_map.route_word(&mut buses, default_cw, sub_bc_cw);
+        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, sub_bc_cw);
 
-        assert_eq!(expected_result, buses.resolve_main_bus()); // Check if the main bus calculates the difference of B and C correctly
+        assert_eq!(expected_result, bench.buses.resolve_main_bus()); // Check if the main bus calculates the difference of B and C correctly
 
-        device_map.broadcast_clock_tick_primary(&mut buses);
-        device_map.broadcast_clock_tick_secondary(&mut buses);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
+        bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
 
-        assert_eq!(expected_result, device_map.B.peek()); // Check if B has the value
-        assert_eq!(b, device_map.C.peek()); // Check if C remains unchanged
-        assert_eq!(expected_flags, device_map.F.peek()); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.B.peek()); // Check if B has the value
+        assert_eq!(b, bench.devices.C.peek()); // Check if C remains unchanged
+        assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation
 
-        assert_eq!(expected_result, buses.alu_l_bus.unwrap()); // Check if ALU L bus has the updated value 6
-        assert_eq!(b, buses.alu_r_bus.unwrap()); // Check if ALU R bus has the original value 18
+        assert_eq!(expected_result, bench.buses.alu_l_bus.unwrap()); // Check if ALU L bus has the updated value 6
+        assert_eq!(b, bench.buses.alu_r_bus.unwrap()); // Check if ALU R bus has the original value 18
     }
 
     #[test]
     fn test_alu_adc() {
-        let mut device_map = DeviceMap::new();
-        let mut buses = Buses::new();
-        let default_cw = 0x07ff58ff; // default
-        device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
+        let mut bench = TestBench::new();
 
-
-        device_map.A.set_value(&mut buses, 24);
-        device_map.B.set_value(&mut buses, 18);
+        bench.devices.A.set_value(&mut bench.buses, 24);
+        bench.devices.B.set_value(&mut bench.buses, 18);
 
         let adc_ab_cw = 0x07ff8405; // adc_A_B
-        device_map.route_word(&mut buses, default_cw, adc_ab_cw);
+        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, adc_ab_cw);
 
-        assert_eq!(43, buses.resolve_main_bus()); // Check if the main bus calculates the sum of A and B + carry correctly
+        assert_eq!(43, bench.buses.resolve_main_bus()); // Check if the main bus calculates the sum of A and B + carry correctly
     }
 
     #[test]
     fn test_alu_sbb() {
-        let mut device_map = DeviceMap::new();
-        let mut buses = Buses::new();
+        let mut bench = TestBench::new();
         let default_cw = 0x07ff58ff; // default
-        device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
+        bench.devices.route_word(&mut bench.buses, !default_cw, default_cw); // Ensure we start from the default state
 
 
-        device_map.B.set_value(&mut buses, 24);
-        device_map.C.set_value(&mut buses, 18);
+        bench.devices.B.set_value(&mut bench.buses, 24);
+        bench.devices.C.set_value(&mut bench.buses, 18);
 
         let sbb_bc_cw = 0x07ffa915; // sbb_B_C
-        device_map.route_word(&mut buses, default_cw, sbb_bc_cw);
+        bench.devices.route_word(&mut bench.buses, default_cw, sbb_bc_cw);
 
-        assert_eq!(5, buses.resolve_main_bus()); // Check if the main bus calculates the difference of B and C correctly
+        assert_eq!(5, bench.buses.resolve_main_bus()); // Check if the main bus calculates the difference of B and C correctly
     }
 
 
@@ -206,21 +193,18 @@ mod tests {
     #[case(0, 0, 0, Flags::Z)]
     #[case(128, 127, 0, Flags::Z)]
     fn test_alu_and(#[case] a: u8, #[case] b: u8, #[case] expected_result: u8, #[case] expected_flags: Flags) {
-        let mut device_map = DeviceMap::new();
-        let mut buses = Buses::new();
-        let default_cw = 0x07ff58ff; // default
-        device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
+        let mut bench = TestBench::new();
 
-        device_map.A.set_value(&mut buses, a);
-        device_map.B.set_value(&mut buses, b);
+        bench.devices.A.set_value(&mut bench.buses, a);
+        bench.devices.B.set_value(&mut bench.buses, b);
 
         let and_ab = 0x07ff0406; // and_A_B
-        device_map.route_word(&mut buses, default_cw, and_ab);
-        device_map.broadcast_clock_tick_primary(&mut buses);
-        device_map.broadcast_clock_tick_secondary(&mut buses);
+        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, and_ab);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
+        bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
 
-        assert_eq!(expected_result, device_map.A.peek()); // Check if A has the value
-        assert_eq!(expected_flags, device_map.F.peek()); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.peek()); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation
     }
 
     #[rstest]
@@ -230,21 +214,18 @@ mod tests {
     #[case(0x80, 0x7f, 0xff, Flags::N)]
     #[case(0, 0, 0, Flags::Z)]
     fn test_alu_or(#[case] a: u8, #[case] b: u8, #[case] expected_result: u8, #[case] expected_flags: Flags) {
-        let mut device_map = DeviceMap::new();
-        let mut buses = Buses::new();
-        let default_cw = 0x07ff58ff; // default
-        device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
+        let mut bench = TestBench::new();
 
-        device_map.A.set_value(&mut buses, a);
-        device_map.B.set_value(&mut buses, b);
+        bench.devices.A.set_value(&mut bench.buses, a);
+        bench.devices.B.set_value(&mut bench.buses, b);
 
         let or_ab = 0x07ff2406; // or_A_B
-        device_map.route_word(&mut buses, default_cw, or_ab);
-        device_map.broadcast_clock_tick_primary(&mut buses);
-        device_map.broadcast_clock_tick_secondary(&mut buses);
+        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, or_ab);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
+        bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
 
-        assert_eq!(expected_result, device_map.A.peek()); // Check if A has the value
-        assert_eq!(expected_flags, device_map.F.peek()); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.peek()); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation
     }
 
     #[rstest]
@@ -255,21 +236,18 @@ mod tests {
     #[case(0x42, 0x42, 0, Flags::Z)]
     #[case(0x00, 0x00, 0, Flags::Z)]
     fn test_alu_xor(#[case] a: u8, #[case] b: u8, #[case] expected_result: u8, #[case] expected_flags: Flags) {
-        let mut device_map = DeviceMap::new();
-        let mut buses = Buses::new();
-        let default_cw = 0x07ff58ff; // default
-        device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
+        let mut bench = TestBench::new();
 
-        device_map.A.set_value(&mut buses, a);
-        device_map.B.set_value(&mut buses, b);
+        bench.devices.A.set_value(&mut bench.buses, a);
+        bench.devices.B.set_value(&mut bench.buses, b);
 
         let xor_ab = 0x07ff040a; // xor_A_B
-        device_map.route_word(&mut buses, default_cw, xor_ab);
-        device_map.broadcast_clock_tick_primary(&mut buses);
-        device_map.broadcast_clock_tick_secondary(&mut buses);
+        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, xor_ab);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
+        bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
 
-        assert_eq!(expected_result, device_map.A.peek()); // Check if A has the value
-        assert_eq!(expected_flags, device_map.F.peek()); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.peek()); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation
     }
 
     #[rstest]
@@ -278,20 +256,17 @@ mod tests {
     #[case(0x00, 0xff, Flags::N)]
     #[case(0xFF, 0, Flags::Z)]
     fn test_alu_not(#[case] a: u8, #[case] expected_result: u8, #[case] expected_flags: Flags) {
-        let mut device_map = DeviceMap::new();
-        let mut buses = Buses::new();
-        let default_cw = 0x07ff58ff; // default
-        device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
+        let mut bench = TestBench::new();
 
-        device_map.A.set_value(&mut buses, a);
+        bench.devices.A.set_value(&mut bench.buses, a);
 
         let not_a = 0x07ff380a; // not_A
-        device_map.route_word(&mut buses, default_cw, not_a);
-        device_map.broadcast_clock_tick_primary(&mut buses);
-        device_map.broadcast_clock_tick_secondary(&mut buses);
+        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, not_a);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
+        bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
 
-        assert_eq!(expected_result, device_map.A.peek()); // Check if A has the value
-        assert_eq!(expected_flags, device_map.F.peek()); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.peek()); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation
     }
 
     #[rstest]
@@ -301,20 +276,17 @@ mod tests {
     #[case(0, 0, Flags::Z)]
     #[case(1, 0, Flags::C | Flags::Z)]
     fn test_alu_shr(#[case] a: u8, #[case] expected_result: u8, #[case] expected_flags: Flags) {
-        let mut device_map = DeviceMap::new();
-        let mut buses = Buses::new();
-        let default_cw = 0x07ff58ff; // default
-        device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
+        let mut bench = TestBench::new();
 
-        device_map.A.set_value(&mut buses, a);
+        bench.devices.A.set_value(&mut bench.buses, a);
 
         let shr_a = 0x07ff1807; // shr_A
-        device_map.route_word(&mut buses, default_cw, shr_a);
-        device_map.broadcast_clock_tick_primary(&mut buses);
-        device_map.broadcast_clock_tick_secondary(&mut buses);
+        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, shr_a);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
+        bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
 
-        assert_eq!(expected_result, device_map.A.peek()); // Check if A has the value
-        assert_eq!(expected_flags, device_map.F.peek()); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.peek()); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation
     }
 
     #[rstest]
@@ -327,19 +299,16 @@ mod tests {
     #[case(0x3c, 0xc3, Flags::N)]
     #[case(0xc3, 0x3c, Flags::EMPTY)]
     fn test_alu_swap(#[case] a: u8, #[case] expected_result: u8, #[case] expected_flags: Flags) {
-        let mut device_map = DeviceMap::new();
-        let mut buses = Buses::new();
-        let default_cw = 0x07ff58ff; // default
-        device_map.route_word(&mut buses, !default_cw, default_cw); // Ensure we start from the default state
+        let mut bench = TestBench::new();
 
-        device_map.A.set_value(&mut buses, a);
+        bench.devices.A.set_value(&mut bench.buses, a);
 
         let swap_a = 0x07ff3807; // swap_A
-        device_map.route_word(&mut buses, default_cw, swap_a);
-        device_map.broadcast_clock_tick_primary(&mut buses);
-        device_map.broadcast_clock_tick_secondary(&mut buses);
+        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, swap_a);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
+        bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
 
-        assert_eq!(expected_result, device_map.A.peek()); // Check if A has the value
-        assert_eq!(expected_flags, device_map.F.peek()); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.peek()); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation
     }
 }

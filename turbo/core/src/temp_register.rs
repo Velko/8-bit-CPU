@@ -73,19 +73,18 @@ impl Peek<u8> for TempRegister {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::test_helpers::TestBench;
 
     #[test]
     fn test_load_t() {
-        let mut device_map = DeviceMap::new();
-        let default_cw = 0x07ff58ff; // default
+        let mut bench = TestBench::new();
         let load_t_cw = 0x07ff586f; // load_T
 
-        let mut buses = Buses::new();
-        device_map.route_word(&mut buses, default_cw, load_t_cw);
-        buses.main_bus = MainBusValue::Const(42); // Simulate loading 42 into T
+        bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, load_t_cw);
+        bench.buses.main_bus = MainBusValue::Const(42); // Simulate loading 42 into T
 
-        device_map.broadcast_clock_tick_primary(&mut buses);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
 
-        assert_eq!(42, device_map.T.value_primary); // Check if T has the value 42 after clock tick
+        assert_eq!(42, bench.devices.T.value_primary); // Check if T has the value 42 after clock tick
     }
 }
