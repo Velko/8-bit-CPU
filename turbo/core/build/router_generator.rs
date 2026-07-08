@@ -210,6 +210,7 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) {
          m.emit(&mut f).expect("Failed to emit mux");
     }
 
+    emit_direct_pins(&mut f, &direct_pins).expect("Failed to emit direct pins");
     emit_router_fn(&mut f, &muxes, &direct_pins).expect("Failed to emit router");
 }
 
@@ -235,5 +236,18 @@ fn emit_router_fn(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPa
     }
     writeln!(writer, "    }}")?;
     writeln!(writer, "}}")?;
+    Ok(())
+}
+
+fn emit_direct_pins(writer: &mut dyn std::io::Write, direct_pins: &HashMap<u32, Vec<DirectPinRef>>) -> std::io::Result<()> {
+    for (mask, direct_pins) in direct_pins {
+        for direct_pin in direct_pins {
+            writeln!(writer, "pub struct {}{};", direct_pin.device, direct_pin.pin)?;
+            writeln!(writer, "impl BitDispatcher for {}{} {{", direct_pin.device, direct_pin.pin)?;
+            writeln!(writer, "    const MASK: ControlWord = 0b{:032b};", direct_pin.mask)?;
+            writeln!(writer, "    const VALUE: ControlWord = 0b{:032b};", direct_pin.value)?;
+            writeln!(writer, "}}")?;
+        }
+    }
     Ok(())
 }

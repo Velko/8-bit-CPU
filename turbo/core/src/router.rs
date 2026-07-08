@@ -16,6 +16,13 @@ pub trait MuxDispatcher {
     }
 }
 
+pub trait BitDispatcher {
+    const MASK: ControlWord;
+    const VALUE: ControlWord;
+    fn apply(word: ControlWord) -> ControlWord {
+        (word & !Self::MASK) | Self::VALUE
+    }
+}
 
 
 #[cfg(test)]

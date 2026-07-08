@@ -56,7 +56,7 @@ impl ClockReceiver for ALU {}
 mod tests {
     use rstest::rstest;
     use super::*;
-    use crate::router::{DeviceMap, MuxDispatcher, OutMux, AluArgL, AluArgR, LoadMux};
+    use crate::router::{DeviceMap, MuxDispatcher, BitDispatcher, OutMux, AluArgL, AluArgR, LoadMux, Fcalc};
     use crate::devices::Peek;
     use crate::devices::Flags;
     use crate::test_helpers::{TestBench, i16tou8};
@@ -86,7 +86,7 @@ mod tests {
         add_ab_cw = OutMux::apply(add_ab_cw, OutMux::VALUE_ADDSUB_OUT);
         add_ab_cw = AluArgL::apply(add_ab_cw, AluArgL::VALUE_A_ALU_L);
         add_ab_cw = AluArgR::apply(add_ab_cw, AluArgR::VALUE_B_ALU_R);
-        add_ab_cw &= !0b00000000000000000100000000000000; // enable F.calc (active low)
+        add_ab_cw = Fcalc::apply(add_ab_cw);
         bench.devices.route_word(&mut bench.buses, TestBench::DEFAULT_CW, add_ab_cw);
 
         assert_eq!(expected_sum, bench.buses.resolve_main_bus()); // Check if the main bus calculates the sum of A and B correctly
