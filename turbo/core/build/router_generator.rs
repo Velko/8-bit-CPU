@@ -212,6 +212,7 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) {
 
     emit_direct_pins(&mut f, &direct_pins).expect("Failed to emit direct pins");
     emit_router_fn(&mut f, &muxes, &direct_pins).expect("Failed to emit router");
+    emit_default_control_word(&mut f, &muxes, &direct_pins).expect("Failed to emit default control word");
 }
 
 
@@ -279,4 +280,21 @@ fn format_type_name(name: &str) -> String {
         })
         .collect::<Vec<String>>()
         .join("")
+}
+
+fn emit_default_control_word(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPart>, direct_pins: &HashMap<u32, (String, Vec<DirectPinRef>)>) -> std::io::Result<()> {
+    writeln!(writer, "pub const DEFAULT_CW: ControlWord = ControlWordBuilder::bootstrap()")?;
+    for (name, mux) in muxes.iter() {
+        writeln!(writer, "        .apply_mux::<{}>({}::VALUE_DEFAULT)", name, name)?;
+    }
+    for (mask, (device_name, direct_pins)) in direct_pins {
+        if direct_pins.len() == 1 {
+            let direct_pin = &direct_pins[0];
+            writeln!(writer, "        .remove_bit::<{}>()", format_type_name(&format!("{}.{}", direct_pin.device, direct_pin.pin)))?;
+        } else {
+            writeln!(writer, "        .remove_bit::<{}>()", format_type_name(&device_name))?;
+        }
+    }
+    writeln!(writer, "        .build();")?;
+    Ok(())
 }

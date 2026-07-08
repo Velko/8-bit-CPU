@@ -3,6 +3,7 @@
 
 use crate::ControlWord;
 use crate::devices::*;
+use crate::control_word::ControlWordBuilder;
 
 include!(concat!(env!("OUT_DIR"), "/router_generated.rs"));
 
@@ -16,7 +17,6 @@ pub trait BitDispatcher {
     const MASK: ControlWord;
     const VALUE: ControlWord;
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -38,5 +38,11 @@ mod tests {
 
         println!("Off");
         device_map.route_word(&mut buses, inc_a_cw, default_cw);
+    }
+
+    #[test]
+    fn test_default_cw() {
+        println!("DEFAULT_CW: 0x{:08x}", DEFAULT_CW);
+        assert_eq!(DEFAULT_CW, 0x07ff58ff);
     }
 }
