@@ -1,5 +1,6 @@
 pub use crate::gp_register::GPRegister;
 pub use crate::temp_register::TempRegister;
+pub use crate::program_counter::ProgramCounter;
 pub use crate::alu::ALU;
 pub use crate::flags::{Flags, FlagsRegister};
 
@@ -188,20 +189,6 @@ impl StepCounter {
     pub fn on_extended_change(&self, _buses: &mut Buses, _new_state: bool) {}
 }
 impl ClockReceiver for StepCounter {}
-
-pub struct ProgramCounter {
-    pub name: &'static str,
-}
-impl ProgramCounter {
-    pub fn new(name: &'static str) -> Self {
-        Self { name }
-    }
-}
-
-impl OutReceiver for ProgramCounter {}
-impl LoadReceiver for ProgramCounter {}
-impl IncReceiver for ProgramCounter {}
-impl ClockReceiver for ProgramCounter {}
 
 pub struct TransferRegister {
     pub name: &'static str,
