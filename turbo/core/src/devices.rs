@@ -3,6 +3,7 @@ pub use crate::temp_register::TempRegister;
 pub use crate::program_counter::ProgramCounter;
 pub use crate::alu::ALU;
 pub use crate::flags::{Flags, FlagsRegister};
+pub use crate::wo_register::WORegister;
 
 use std::cell::Cell;
 
@@ -153,17 +154,6 @@ impl ROM {
     }
 }
 impl ClockReceiver for ROM {}
-
-pub struct WORegister {
-    pub name: &'static str,
-}
-impl WORegister {
-    pub fn new(name: &'static str) -> Self {
-        Self { name }
-    }
-}
-impl LoadReceiver for WORegister {}
-impl ClockReceiver for WORegister {}
 
 pub struct Clock {
     pub name: &'static str,

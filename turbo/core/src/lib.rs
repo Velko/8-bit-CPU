@@ -6,6 +6,7 @@ mod alu;
 mod flags;
 mod program_counter;
 mod control_word;
+mod wo_register;
 
 pub use control_word::ControlWord;
 
