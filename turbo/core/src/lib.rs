@@ -8,6 +8,7 @@ mod program_counter;
 mod control_word;
 mod wo_register;
 mod memory;
+mod runtime_state;
 
 pub use control_word::ControlWord;
 
