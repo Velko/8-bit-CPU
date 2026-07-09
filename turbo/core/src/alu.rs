@@ -11,9 +11,9 @@ pub struct ALU {
     alt_enabled: Cell<bool>,
 }
 impl OutReceiver for ALU {
-    fn on_out_change(&self, state: &mut RuntimeState, new_state: bool) {
-        println!("ALU {} Out changed to: {}", self.name, new_state);
-        self.out_enabled.set(new_state);
+    fn on_out_change(&self, state: &mut RuntimeState, enable: bool) {
+        println!("ALU {} Out changed to: {}", self.name, enable);
+        self.out_enabled.set(enable);
         self.publish_output(state);
     }
 }
@@ -25,9 +25,9 @@ impl ALU {
             alt_enabled: Cell::new(false)
         }
     }
-    pub fn on_alt_change(&self, state: &mut RuntimeState, new_state: bool) {
-        println!("ALU {} Alt changed to: {}", self.name, new_state);
-        self.alt_enabled.set(new_state);
+    pub fn on_alt_change(&self, state: &mut RuntimeState, enable: bool) {
+        println!("ALU {} Alt changed to: {}", self.name, enable);
+        self.alt_enabled.set(enable);
         if self.out_enabled.get() {
             self.publish_output(state);
         }

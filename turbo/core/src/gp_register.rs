@@ -18,21 +18,21 @@ pub struct GPRegister {
 }
 
 impl OutReceiver for GPRegister {
-    fn on_out_change(&self, state: &mut RuntimeState, new_state: bool) {
-        println!("GPRegister {} Out changed to: {}", self.name, new_state);
-        state.main_bus = if new_state {
+    fn on_out_change(&self, state: &mut RuntimeState, enable: bool) {
+        println!("GPRegister {} Out changed to: {}", self.name, enable);
+        state.main_bus = if enable {
             MainBusValue::Const(self.value_secondary)
         } else {
             MainBusValue::None
         };
-        self.out_enabled.set(new_state);
+        self.out_enabled.set(enable);
     }
 }
 
 impl LoadReceiver for GPRegister {
-    fn on_load_change(&self, _state: &mut RuntimeState, new_state: bool) {
-        println!("GPRegister {} Load changed to: {}", self.name, new_state);
-        self.load_enabled.set(new_state);
+    fn on_load_change(&self, _state: &mut RuntimeState, enable: bool) {
+        println!("GPRegister {} Load changed to: {}", self.name, enable);
+        self.load_enabled.set(enable);
     }
 }
 
@@ -77,19 +77,19 @@ impl GPRegister {
         }
     }
 
-    pub fn on_alu_l_change(&self, state: &mut RuntimeState, new_state: bool) {
-        println!("GPRegister {} ALU L changed to: {}", self.name, new_state);
-        self.arg_l_enabled.set(new_state);
-        state.alu_l_bus = if new_state {
+    pub fn on_alu_l_change(&self, state: &mut RuntimeState, enable: bool) {
+        println!("GPRegister {} ALU L changed to: {}", self.name, enable);
+        self.arg_l_enabled.set(enable);
+        state.alu_l_bus = if enable {
             Some(self.value_secondary)
         } else {
             None
         };
     }
-    pub fn on_alu_r_change(&self, state: &mut RuntimeState, new_state: bool) {
-        println!("GPRegister {} ALU R changed to: {}", self.name, new_state);
-        self.arg_r_enabled.set(new_state);
-        state.alu_r_bus = if new_state {
+    pub fn on_alu_r_change(&self, state: &mut RuntimeState, enable: bool) {
+        println!("GPRegister {} ALU R changed to: {}", self.name, enable);
+        self.arg_r_enabled.set(enable);
+        state.alu_r_bus = if enable {
             Some(self.value_secondary)
         } else {
             None

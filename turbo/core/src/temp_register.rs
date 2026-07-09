@@ -14,9 +14,9 @@ pub struct TempRegister {
 
 }
 impl LoadReceiver for TempRegister {
-    fn on_load_change(&self, _state: &mut RuntimeState, new_state: bool) {
-        println!("TempRegister {} Load changed to: {}", self.name, new_state);
-        self.load_enabled.set(new_state);
+    fn on_load_change(&self, _state: &mut RuntimeState, enable: bool) {
+        println!("TempRegister {} Load changed to: {}", self.name, enable);
+        self.load_enabled.set(enable);
     }
 }
 impl TempRegister {
@@ -29,10 +29,10 @@ impl TempRegister {
             arg_r_enabled: Cell::new(false)
         }
     }
-    pub fn on_alu_r_change(&self, state: &mut RuntimeState, new_state: bool) {
-        println!("TempRegister {} ALU R changed to: {}", self.name, new_state);
-        self.arg_r_enabled.set(new_state);
-        state.alu_r_bus = if new_state {
+    pub fn on_alu_r_change(&self, state: &mut RuntimeState, enable: bool) {
+        println!("TempRegister {} ALU R changed to: {}", self.name, enable);
+        self.arg_r_enabled.set(enable);
+        state.alu_r_bus = if enable {
             Some(self.value_secondary)
         } else {
             None

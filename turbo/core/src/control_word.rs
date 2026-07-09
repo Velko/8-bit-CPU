@@ -12,9 +12,9 @@ impl ControlWordBuilder {
         ControlWordBuilder { word: 0 }
     }
 
-    pub const fn apply_mux<D: MuxDispatcher>(self, new_state: ControlWord) -> Self {
+    pub const fn apply_mux<D: MuxDispatcher>(self, enable: ControlWord) -> Self {
         ControlWordBuilder {
-            word: (self.word & !D::MASK) | (new_state & D::MASK),
+            word: (self.word & !D::MASK) | (enable & D::MASK),
         }
     }
 

@@ -36,28 +36,28 @@ impl ProgramCounter {
 }
 
 impl OutReceiver for ProgramCounter {
-    fn on_out_change(&self, state: &mut RuntimeState, new_state: bool) {
-        println!("ProgramCounter {} Out changed to: {}", self.name, new_state);
-        state.address_bus = if new_state {
+    fn on_out_change(&self, state: &mut RuntimeState, enable: bool) {
+        println!("ProgramCounter {} Out changed to: {}", self.name, enable);
+        state.address_bus = if enable {
             Some(self.value_secondary)
         } else {
             None
         };
-        self.out_enabled.set(new_state);
+        self.out_enabled.set(enable);
     }
 }
 
 impl LoadReceiver for ProgramCounter {
-    fn on_load_change(&self, _state: &mut RuntimeState, new_state: bool) {
-        println!("ProgramCounter {} Load changed to: {}", self.name, new_state);
-        self.load_enabled.set(new_state);
+    fn on_load_change(&self, _state: &mut RuntimeState, enable: bool) {
+        println!("ProgramCounter {} Load changed to: {}", self.name, enable);
+        self.load_enabled.set(enable);
     }
 }
 
 impl IncReceiver for ProgramCounter {
-    fn on_inc_change(&self, _state: &mut RuntimeState, new_state: bool) {
-        println!("ProgramCounter {} Inc changed to: {}", self.name, new_state);
-        self.inc_enabled.set(new_state);
+    fn on_inc_change(&self, _state: &mut RuntimeState, enable: bool) {
+        println!("ProgramCounter {} Inc changed to: {}", self.name, enable);
+        self.inc_enabled.set(enable);
     }
 }
 

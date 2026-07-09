@@ -13,7 +13,7 @@ impl RAM {
     pub fn new(name: &'static str) -> Self {
         Self { name }
     }
-    pub fn on_write_change(&self, _state: &mut RuntimeState, _new_state: bool) {}
+    pub fn on_write_change(&self, _state: &mut RuntimeState, _enable: bool) {}
 }
 impl ClockReceiver for RAM {}
 

@@ -24,8 +24,8 @@ impl WORegister {
 }
 
 impl LoadReceiver for WORegister {
-    fn on_load_change(&self, _state: &mut RuntimeState, new_state: bool) {
-        self.load_enabled.set(new_state);
+    fn on_load_change(&self, _state: &mut RuntimeState, enable: bool) {
+        self.load_enabled.set(enable);
     }
 }
 

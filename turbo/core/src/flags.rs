@@ -72,13 +72,13 @@ impl FlagsRegister {
             calc_enabled: Cell::new(false)
         }
     }
-    pub fn on_calc_change(&self, _state: &mut RuntimeState, new_state: bool) {
-        println!("FlagsRegister {} Calc changed to: {}", self.name, new_state);
-        self.calc_enabled.set(new_state);
+    pub fn on_calc_change(&self, _state: &mut RuntimeState, enable: bool) {
+        println!("FlagsRegister {} Calc changed to: {}", self.name, enable);
+        self.calc_enabled.set(enable);
     }
-    pub fn on_carry_change(&self, state: &mut RuntimeState, new_state: bool) {
-        println!("FlagsRegister {} Carry changed to: {}", self.name, new_state);
-        state.carry_in = new_state;
+    pub fn on_carry_change(&self, state: &mut RuntimeState, enable: bool) {
+        println!("FlagsRegister {} Carry changed to: {}", self.name, enable);
+        state.carry_in = enable;
     }
 }
 impl ClockReceiver for FlagsRegister {
