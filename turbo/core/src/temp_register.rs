@@ -4,6 +4,7 @@ use crate::devices::MainBusValue;
 use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
 use crate::devices::Peek;
+use crate::router::ALURSource;
 
 pub struct TempRegister {
     pub name: &'static str,
@@ -20,7 +21,7 @@ impl LoadReceiver for TempRegister {
     }
 }
 impl TempRegister {
-    pub fn new(name: &'static str) -> Self {
+    pub fn new(name: &'static str, _alu_r_id: ALURSource) -> Self {
         Self {
             name,
             value_primary: 0,

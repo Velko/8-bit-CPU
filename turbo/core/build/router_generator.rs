@@ -128,9 +128,34 @@ impl BusSourcesPart {
         }
     }
 
+    pub fn is_alu_l_source(dev_type: &str) -> bool {
+        match dev_type {
+            "GPRegister" => true,
+            _ => false,
+        }
+    }
+
+    pub fn is_alu_r_source(dev_type: &str) -> bool {
+        match dev_type {
+            "GPRegister" |
+            "TempRegister" => true,
+            _ => false,
+        }
+    }
+
     pub fn emit(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
         writeln!(writer, "pub enum MainBusSource {{")?;
         for source in self.main_bus_sources.iter() {
+            writeln!(writer, "    {},", source)?;
+        }
+        writeln!(writer, "}}")?;
+        writeln!(writer, "pub enum ALULSource {{")?;
+        for source in self.alu_l_sources.iter() {
+            writeln!(writer, "    {},", source)?;
+        }
+        writeln!(writer, "}}")?;
+        writeln!(writer, "pub enum ALURSource {{")?;
+        for source in self.alu_r_sources.iter() {
             writeln!(writer, "    {},", source)?;
         }
         writeln!(writer, "}}")?;
@@ -167,6 +192,14 @@ impl DeviceMapPart {
             if BusSourcesPart::is_main_bus_source(&device.dev_type, &device.name) {
                 ids.push(format!("MainBusSource::{}", device.name));
                 self.bus_sources.main_bus_sources.push(device.name.clone());
+            }
+            if BusSourcesPart::is_alu_l_source(&device.dev_type) {
+                ids.push(format!("ALULSource::{}", device.name));
+                self.bus_sources.alu_l_sources.push(device.name.clone());
+            }
+            if BusSourcesPart::is_alu_r_source(&device.dev_type) {
+                ids.push(format!("ALURSource::{}", device.name));
+                self.bus_sources.alu_r_sources.push(device.name.clone());
             }
             writeln!(writer, "            {}: {}::new({}),", device.name, device.dev_type, ids.join(", "))?;
         }
