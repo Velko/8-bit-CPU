@@ -28,8 +28,8 @@ pub trait ClockReceiver {
     fn on_clock_tick_primary(&mut self, _state: &mut RuntimeState) {}
     fn on_clock_tick_secondary(&mut self, _state: &mut RuntimeState) {}
 }
-pub trait Peek<T> {
-    fn peek(&self) -> T;
+pub trait ValueSource<T> {
+    fn get_value(&self) -> T;
 }
 
 pub struct Clock {

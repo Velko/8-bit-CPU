@@ -57,7 +57,7 @@ mod tests {
     use rstest::rstest;
     use super::*;
     use crate::router::{OutMux, AluArgL, AluArgR, LoadMux, FCalc, AluAlt, FCarry};
-    use crate::devices::Peek;
+    use crate::devices::ValueSource;
     use crate::devices::Flags;
     use crate::test_helpers::{TestBench, i16tou8};
     use crate::control_word::ControlWordBuilder;
@@ -97,9 +97,9 @@ mod tests {
         bench.devices.broadcast_clock_tick_primary(&mut bench.state);
         bench.devices.broadcast_clock_tick_secondary(&mut bench.state);
 
-        assert_eq!(expected_sum, bench.devices.A.peek()); // Check if A has the value
-        assert_eq!(b, bench.devices.B.peek()); // Check if B remains unchanged
-        assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_sum, bench.devices.A.get_value()); // Check if A has the value
+        assert_eq!(b, bench.devices.B.get_value()); // Check if B remains unchanged
+        assert_eq!(expected_flags, bench.devices.F.get_value()); // Check if the flags register has the expected flags set after the operation
 
         assert_eq!(expected_sum, bench.state.alu_l_bus.unwrap()); // Check if ALU L bus has the updated value expected_sum
         assert_eq!(b, bench.state.alu_r_bus.unwrap()); // Check if ALU R bus has the original value b
@@ -140,9 +140,9 @@ mod tests {
         bench.devices.broadcast_clock_tick_primary(&mut bench.state);
         bench.devices.broadcast_clock_tick_secondary(&mut bench.state);
 
-        assert_eq!(expected_result, bench.devices.B.peek()); // Check if B has the value
-        assert_eq!(b, bench.devices.C.peek()); // Check if C remains unchanged
-        assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.B.get_value()); // Check if B has the value
+        assert_eq!(b, bench.devices.C.get_value()); // Check if C remains unchanged
+        assert_eq!(expected_flags, bench.devices.F.get_value()); // Check if the flags register has the expected flags set after the operation
 
         assert_eq!(expected_result, bench.state.alu_l_bus.unwrap()); // Check if ALU L bus has the updated value 6
         assert_eq!(b, bench.state.alu_r_bus.unwrap()); // Check if ALU R bus has the original value 18
@@ -218,8 +218,8 @@ mod tests {
         bench.devices.broadcast_clock_tick_primary(&mut bench.state);
         bench.devices.broadcast_clock_tick_secondary(&mut bench.state);
 
-        assert_eq!(expected_result, bench.devices.A.peek()); // Check if A has the value
-        assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.get_value()); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.get_value()); // Check if the flags register has the expected flags set after the operation
     }
 
     #[rstest]
@@ -248,8 +248,8 @@ mod tests {
         bench.devices.broadcast_clock_tick_primary(&mut bench.state);
         bench.devices.broadcast_clock_tick_secondary(&mut bench.state);
 
-        assert_eq!(expected_result, bench.devices.A.peek()); // Check if A has the value
-        assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.get_value()); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.get_value()); // Check if the flags register has the expected flags set after the operation
     }
 
     #[rstest]
@@ -278,8 +278,8 @@ mod tests {
         bench.devices.broadcast_clock_tick_primary(&mut bench.state);
         bench.devices.broadcast_clock_tick_secondary(&mut bench.state);
 
-        assert_eq!(expected_result, bench.devices.A.peek()); // Check if A has the value
-        assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.get_value()); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.get_value()); // Check if the flags register has the expected flags set after the operation
     }
 
     #[rstest]
@@ -304,8 +304,8 @@ mod tests {
         bench.devices.broadcast_clock_tick_primary(&mut bench.state);
         bench.devices.broadcast_clock_tick_secondary(&mut bench.state);
 
-        assert_eq!(expected_result, bench.devices.A.peek()); // Check if A has the value
-        assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.get_value()); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.get_value()); // Check if the flags register has the expected flags set after the operation
     }
 
     #[rstest]
@@ -331,8 +331,8 @@ mod tests {
         bench.devices.broadcast_clock_tick_primary(&mut bench.state);
         bench.devices.broadcast_clock_tick_secondary(&mut bench.state);
 
-        assert_eq!(expected_result, bench.devices.A.peek()); // Check if A has the value
-        assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.get_value()); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.get_value()); // Check if the flags register has the expected flags set after the operation
     }
 
     #[rstest]
@@ -362,7 +362,7 @@ mod tests {
         bench.devices.broadcast_clock_tick_primary(&mut bench.state);
         bench.devices.broadcast_clock_tick_secondary(&mut bench.state);
 
-        assert_eq!(expected_result, bench.devices.A.peek()); // Check if A has the value
-        assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.get_value()); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.get_value()); // Check if the flags register has the expected flags set after the operation
     }
 }

@@ -3,7 +3,7 @@ use crate::devices::MainBusValue;
 use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
 use crate::devices::RuntimeState;
-use crate::devices::Peek;
+use crate::devices::ValueSource;
 
 pub struct WORegister {
     pub name: &'static str,
@@ -43,8 +43,8 @@ impl ClockReceiver for WORegister {
     }
 }
 
-impl Peek<u8> for WORegister {
-    fn peek(&self) -> u8 {
+impl ValueSource<u8> for WORegister {
+    fn get_value(&self) -> u8 {
         self.value_secondary
     }
 }

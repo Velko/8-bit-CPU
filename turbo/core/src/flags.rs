@@ -6,7 +6,7 @@ use crate::devices::MainBusValue;
 use crate::devices::OutReceiver;
 use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
-use crate::devices::Peek;
+use crate::devices::ValueSource;
 
 #[derive(Clone, Copy, PartialEq, Default)]
 pub struct Flags {
@@ -105,8 +105,8 @@ impl ClockReceiver for FlagsRegister {
     }
 }
 
-impl Peek<Flags> for FlagsRegister {
-    fn peek(&self) -> Flags {
+impl ValueSource<Flags> for FlagsRegister {
+    fn get_value(&self) -> Flags {
         self.value_secondary
     }
 }

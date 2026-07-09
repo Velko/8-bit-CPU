@@ -4,7 +4,7 @@ use crate::devices::OutReceiver;
 use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
 use crate::devices::IncReceiver;
-use crate::devices::Peek;
+use crate::devices::ValueSource;
 use crate::router::AddressBusSource;
 
 pub struct ProgramCounter {

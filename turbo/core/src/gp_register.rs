@@ -5,7 +5,7 @@ use crate::devices::MainBusValue;
 use crate::devices::OutReceiver;
 use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
-use crate::devices::Peek;
+use crate::devices::ValueSource;
 use crate::router::DeviceMap;
 
 pub struct GPRegister {
@@ -59,8 +59,8 @@ impl ClockReceiver for GPRegister {
     }
 }
 
-impl Peek<u8> for GPRegister {
-    fn peek(&self) -> u8 {
+impl ValueSource<u8> for GPRegister {
+    fn get_value(&self) -> u8 {
         self.value_secondary
     }
 }

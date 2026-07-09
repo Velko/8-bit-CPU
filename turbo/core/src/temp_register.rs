@@ -3,7 +3,7 @@ use crate::devices::RuntimeState;
 use crate::devices::MainBusValue;
 use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
-use crate::devices::Peek;
+use crate::devices::ValueSource;
 use crate::router::ALURSource;
 
 pub struct TempRegister {
@@ -64,8 +64,8 @@ impl ClockReceiver for TempRegister {
     }
 }
 
-impl Peek<u8> for TempRegister {
-    fn peek(&self) -> u8 {
+impl ValueSource<u8> for TempRegister {
+    fn get_value(&self) -> u8 {
         self.value_secondary
     }
 }
