@@ -5,6 +5,7 @@ pub use crate::alu::ALU;
 pub use crate::flags::{Flags, FlagsRegister};
 pub use crate::wo_register::WORegister;
 pub use crate::memory::{RAM, ROM};
+use crate::router::{MainBusSource, ALULSource, ALURSource, AddressBusSource};
 
 pub use crate::runtime_state::{RuntimeState, MainBusValue};
 
@@ -86,7 +87,7 @@ pub struct AddressRegister {
     pub name: &'static str,
 }
 impl AddressRegister {
-    pub fn new(name: &'static str) -> Self {
+    pub fn new(name: &'static str, _address_bus_id: AddressBusSource) -> Self {
         Self { name }
     }
 }

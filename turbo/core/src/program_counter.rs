@@ -5,6 +5,7 @@ use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
 use crate::devices::IncReceiver;
 use crate::devices::Peek;
+use crate::router::AddressBusSource;
 
 pub struct ProgramCounter {
     pub name: &'static str,
@@ -16,7 +17,7 @@ pub struct ProgramCounter {
 }
 
 impl ProgramCounter {
-    pub fn new(name: &'static str) -> Self {
+    pub fn new(name: &'static str, _address_bus_id: AddressBusSource) -> Self {
         Self {
             name,
             value_primary: 0,

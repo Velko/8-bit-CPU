@@ -143,6 +143,14 @@ impl BusSourcesPart {
         }
     }
 
+    pub fn is_address_bus_source(dev_type: &str) -> bool {
+        match dev_type {
+            "ProgramCounter" |
+            "AddressRegister" => true,
+            _ => false,
+        }
+    }
+
     pub fn emit(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
         writeln!(writer, "pub enum MainBusSource {{")?;
         for source in self.main_bus_sources.iter() {
@@ -156,6 +164,11 @@ impl BusSourcesPart {
         writeln!(writer, "}}")?;
         writeln!(writer, "pub enum ALURSource {{")?;
         for source in self.alu_r_sources.iter() {
+            writeln!(writer, "    {},", source)?;
+        }
+        writeln!(writer, "}}")?;
+        writeln!(writer, "pub enum AddressBusSource {{")?;
+        for source in self.address_bus_sources.iter() {
             writeln!(writer, "    {},", source)?;
         }
         writeln!(writer, "}}")?;
@@ -200,6 +213,10 @@ impl DeviceMapPart {
             if BusSourcesPart::is_alu_r_source(&device.dev_type) {
                 ids.push(format!("ALURSource::{}", device.name));
                 self.bus_sources.alu_r_sources.push(device.name.clone());
+            }
+            if BusSourcesPart::is_address_bus_source(&device.dev_type) {
+                ids.push(format!("AddressBusSource::{}", device.name));
+                self.bus_sources.address_bus_sources.push(device.name.clone());
             }
             writeln!(writer, "            {}: {}::new({}),", device.name, device.dev_type, ids.join(", "))?;
         }
