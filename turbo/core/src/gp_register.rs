@@ -60,7 +60,7 @@ impl ClockReceiver for GPRegister {
 }
 
 impl ValueSource<u8> for GPRegister {
-    fn get_value(&self) -> u8 {
+    fn get_value(&self, state: &RuntimeState) -> u8 {
         self.value_secondary
     }
 }

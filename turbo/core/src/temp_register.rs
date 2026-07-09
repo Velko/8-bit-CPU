@@ -65,7 +65,7 @@ impl ClockReceiver for TempRegister {
 }
 
 impl ValueSource<u8> for TempRegister {
-    fn get_value(&self) -> u8 {
+    fn get_value(&self, state: &RuntimeState) -> u8 {
         self.value_secondary
     }
 }
@@ -90,7 +90,8 @@ mod tests {
         bench.state.main_bus = MainBusValue::Const(42); // Simulate loading 42 into T
 
         bench.devices.broadcast_clock_tick_primary(&mut bench.state);
+        bench.devices.broadcast_clock_tick_secondary(&mut bench.state);
 
-        assert_eq!(42, bench.devices.T.value_primary); // Check if T has the value 42 after clock tick
+        assert_eq!(42, bench.devices.T.get_value(&bench.state)); // Check if T has the value 42 after clock tick
     }
 }

@@ -29,7 +29,7 @@ pub trait ClockReceiver {
     fn on_clock_tick_secondary(&mut self, _state: &mut RuntimeState) {}
 }
 pub trait ValueSource<T> {
-    fn get_value(&self) -> T;
+    fn get_value(&self, state: &RuntimeState) -> T;
 }
 
 pub struct Clock {

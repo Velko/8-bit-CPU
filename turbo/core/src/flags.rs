@@ -106,7 +106,7 @@ impl ClockReceiver for FlagsRegister {
 }
 
 impl ValueSource<Flags> for FlagsRegister {
-    fn get_value(&self) -> Flags {
+    fn get_value(&self, state: &RuntimeState) -> Flags {
         self.value_secondary
     }
 }

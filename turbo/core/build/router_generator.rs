@@ -234,6 +234,15 @@ impl DeviceMapPart {
             writeln!(writer, "        self.{}.on_clock_tick_secondary(state);", device.name)?;
         }
         writeln!(writer, "    }}")?;
+
+        writeln!(writer, "    pub fn get_main_bus_value(&self, source: MainBusSource, state: &RuntimeState) -> u8 {{")?;
+        writeln!(writer, "        match source {{")?;
+        for device in self.bus_sources.main_bus_sources.iter() {
+            writeln!(writer, "            MainBusSource::{} => self.{}.get_value(state),", device, device)?;
+        }
+        writeln!(writer, "        }}")?;
+        writeln!(writer, "    }}")?;
+
         writeln!(writer, "}}")?;
 
         self.bus_sources.emit(writer).expect("Failed to emit bus sources");
