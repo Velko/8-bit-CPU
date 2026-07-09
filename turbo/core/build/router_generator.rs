@@ -243,6 +243,30 @@ impl DeviceMapPart {
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
 
+        writeln!(writer, "    pub fn get_alu_l_value(&self, source: ALULSource, state: &RuntimeState) -> u8 {{")?;
+        writeln!(writer, "        match source {{")?;
+        for device in self.bus_sources.alu_l_sources.iter() {
+            writeln!(writer, "            ALULSource::{} => self.{}.get_value(state),", device, device)?;
+        }
+        writeln!(writer, "        }}")?;
+        writeln!(writer, "    }}")?;
+
+        writeln!(writer, "    pub fn get_alu_r_value(&self, source: ALURSource, state: &RuntimeState) -> u8 {{")?;
+        writeln!(writer, "        match source {{")?;
+        for device in self.bus_sources.alu_r_sources.iter() {
+            writeln!(writer, "            ALURSource::{} => self.{}.get_value(state),", device, device)?;
+        }
+        writeln!(writer, "        }}")?;
+        writeln!(writer, "    }}")?;
+
+        writeln!(writer, "    pub fn get_address_bus_value(&self, source: AddressBusSource, state: &RuntimeState) -> u16 {{")?;
+        writeln!(writer, "        match source {{")?;
+        for device in self.bus_sources.address_bus_sources.iter() {
+            writeln!(writer, "            AddressBusSource::{} => self.{}.get_value(state),", device, device)?;
+        }
+        writeln!(writer, "        }}")?;
+        writeln!(writer, "    }}")?;
+
         writeln!(writer, "}}")?;
 
         self.bus_sources.emit(writer).expect("Failed to emit bus sources");

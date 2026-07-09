@@ -81,6 +81,12 @@ impl ClockReceiver for ProgramCounter {
     }
 }
 
+impl ValueSource<u16> for ProgramCounter {
+    fn get_value(&self, state: &RuntimeState) -> u16 {
+        self.value_secondary
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

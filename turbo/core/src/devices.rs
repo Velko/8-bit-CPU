@@ -94,6 +94,11 @@ impl AddressRegister {
 impl OutReceiver for AddressRegister {}
 impl LoadReceiver for AddressRegister {}
 impl ClockReceiver for AddressRegister {}
+impl ValueSource<u16> for AddressRegister {
+    fn get_value(&self, state: &RuntimeState) -> u16 {
+        todo!()
+    }
+}
 
 pub struct AddressCalculator {
     pub name: &'static str,
