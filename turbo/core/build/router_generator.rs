@@ -99,6 +99,45 @@ impl From<&pin_config::MuxConfig> for MuxPart {
     }
 }
 
+pub struct BusSourcesPart {
+    main_bus_sources: Vec<String>,
+    address_bus_sources: Vec<String>,
+    alu_l_sources: Vec<String>,
+    alu_r_sources: Vec<String>,
+}
+
+impl BusSourcesPart {
+    pub fn new() -> Self {
+        BusSourcesPart {
+            main_bus_sources: Vec::new(),
+            address_bus_sources: Vec::new(),
+            alu_l_sources: Vec::new(),
+            alu_r_sources: Vec::new(),
+        }
+    }
+
+    pub fn is_main_bus_source(dev_type: &str, name: &str) -> bool {
+        match dev_type {
+            "GPRegister" => true,
+            // "FlagsRegister" |
+            // "RAM" |
+            // "ROM" |
+            // "IOController"=> true,
+//            "TransferRegister" if name != "TX" => true,
+            _ => false,
+        }
+    }
+
+    pub fn emit(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
+        writeln!(writer, "pub enum MainBusSource {{")?;
+        for source in self.main_bus_sources.iter() {
+            writeln!(writer, "    {},", source)?;
+        }
+        writeln!(writer, "}}")?;
+        Ok(())
+    }
+}
+
 
 pub struct DevicePart {
     name: String,
@@ -107,10 +146,11 @@ pub struct DevicePart {
 
 pub struct DeviceMapPart {
     devices: Vec<DevicePart>,
+    bus_sources: BusSourcesPart,
 }
 
 impl DeviceMapPart {
-    fn emit(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
+    fn emit(&mut self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
         writeln!(writer, "pub struct DeviceMap {{")?;
         for device in self.devices.iter() {
             writeln!(writer, "    pub {}: {},", device.name, device.dev_type)?;
@@ -123,7 +163,12 @@ impl DeviceMapPart {
         writeln!(writer, "    pub fn new() -> Self {{")?;
         writeln!(writer, "        DeviceMap {{")?;
         for device in self.devices.iter() {
-            writeln!(writer, "            {}: {}::new(\"{}\"),", device.name, device.dev_type, device.name)?;
+            let mut ids: Vec<String> = vec![format!("\"{}\"", device.name)];
+            if BusSourcesPart::is_main_bus_source(&device.dev_type, &device.name) {
+                ids.push(format!("MainBusSource::{}", device.name));
+                self.bus_sources.main_bus_sources.push(device.name.clone());
+            }
+            writeln!(writer, "            {}: {}::new({}),", device.name, device.dev_type, ids.join(", "))?;
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
@@ -140,6 +185,8 @@ impl DeviceMapPart {
         }
         writeln!(writer, "    }}")?;
         writeln!(writer, "}}")?;
+
+        self.bus_sources.emit(writer).expect("Failed to emit bus sources");
 
         Ok(())
     }
@@ -163,7 +210,7 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) {
         }, sp))
         .collect();
 
-    let mut device_map = DeviceMapPart { devices: Vec::new() };
+    let mut device_map = DeviceMapPart { devices: Vec::new(), bus_sources: BusSourcesPart::new() };
 
     let mut direct_pins: HashMap<u32, (String, Vec<DirectPinRef>)> = HashMap::new();
 
@@ -212,6 +259,8 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) {
 
     emit_direct_pins(&mut f, &direct_pins).expect("Failed to emit direct pins");
     emit_router_fn(&mut f, &muxes, &direct_pins).expect("Failed to emit router");
+
+
     emit_default_control_word(&mut f, &muxes, &direct_pins).expect("Failed to emit default control word");
 }
 

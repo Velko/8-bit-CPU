@@ -1,4 +1,5 @@
 use std::cell::Cell;
+use crate::router::MainBusSource;
 use crate::devices::RuntimeState;
 use crate::devices::MainBusValue;
 use crate::devices::OutReceiver;
@@ -65,7 +66,7 @@ impl Peek<u8> for GPRegister {
 }
 
 impl GPRegister {
-    pub fn new(name: &'static str) -> Self {
+    pub fn new(name: &'static str, _main_id: MainBusSource) -> Self {
         Self {
             name,
             value_primary: 0,
@@ -116,7 +117,7 @@ mod tests {
     #[test]
     fn test_gp_register() {
         let mut state = RuntimeState::new();
-        let mut gp_reg = GPRegister::new("GP1");
+        let mut gp_reg = GPRegister::new("GP1", MainBusSource::A);
 
         // Simulate loading a value into the register
         gp_reg.load_enabled.set(true);
