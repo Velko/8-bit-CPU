@@ -14,7 +14,7 @@ pub enum MainBusValue {
     MemRead,
 }
 
-pub struct Buses {
+pub struct RuntimeState {
     pub main_bus: MainBusValue,
     pub address_bus: Option<u16>,
     pub alu_l_bus: Option<u8>,
@@ -22,9 +22,9 @@ pub struct Buses {
     pub carry_in: bool,
 }
 
-impl Buses {
+impl RuntimeState {
     pub fn new() -> Self {
-        Buses {
+        Self {
             main_bus: MainBusValue::None,
             address_bus: None,
             alu_l_bus: None,

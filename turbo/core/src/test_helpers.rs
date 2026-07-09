@@ -1,21 +1,21 @@
-use crate::devices::Buses;
+use crate::devices::RuntimeState;
 use crate::router::{DeviceMap, DEFAULT_CW};
 
 pub struct TestBench {
     pub devices: DeviceMap,
-    pub buses: Buses,
+    pub state: RuntimeState,
 }
 
 
 impl TestBench {
     pub fn new() -> Self {
         let devices = DeviceMap::new();
-        let mut buses = Buses::new();
-        devices.route_word(&mut buses, !DEFAULT_CW, DEFAULT_CW); // Ensure we start from the default state
+        let mut state = RuntimeState::new();
+        devices.route_word(&mut state, !DEFAULT_CW, DEFAULT_CW); // Ensure we start from the default state
 
         Self {
             devices,
-            buses
+            state
         }
     }
 }

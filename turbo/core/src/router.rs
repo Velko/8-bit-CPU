@@ -10,7 +10,7 @@ include!(concat!(env!("OUT_DIR"), "/router_generated.rs"));
 pub trait MuxDispatcher {
     const MASK: ControlWord;
     const VALUE_DEFAULT: ControlWord;
-    fn dispatch(dev: &DeviceMap, buses: &mut Buses, word: ControlWord, new_state: bool);
+    fn dispatch(dev: &DeviceMap, state: &mut RuntimeState, word: ControlWord, new_state: bool);
 }
 
 pub trait BitDispatcher {
@@ -28,16 +28,16 @@ mod tests {
         let default_cw = 0x07ff58ff; // default
         let add_bc_cw = 0x07ff0915; // add_B_C
         println!("add_B_C");
-        let mut buses = Buses::new();
-        device_map.route_word(&mut buses, default_cw, add_bc_cw);
+        let mut state = RuntimeState::new();
+        device_map.route_word(&mut state, default_cw, add_bc_cw);
 
         let inc_a_cw = 0x07ff9805; // inc A
         println!("inc_A");
-        device_map.route_word(&mut buses, add_bc_cw, inc_a_cw);
+        device_map.route_word(&mut state, add_bc_cw, inc_a_cw);
 
 
         println!("Off");
-        device_map.route_word(&mut buses, inc_a_cw, default_cw);
+        device_map.route_word(&mut state, inc_a_cw, default_cw);
     }
 
     #[test]

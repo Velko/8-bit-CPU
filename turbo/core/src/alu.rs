@@ -1,5 +1,5 @@
 use std::cell::Cell;
-use crate::devices::Buses;
+use crate::devices::RuntimeState;
 use crate::devices::MainBusValue;
 use crate::devices::ClockReceiver;
 use crate::devices::OutReceiver;
@@ -11,10 +11,10 @@ pub struct ALU {
     alt_enabled: Cell<bool>,
 }
 impl OutReceiver for ALU {
-    fn on_out_change(&self, buses: &mut Buses, new_state: bool) {
+    fn on_out_change(&self, state: &mut RuntimeState, new_state: bool) {
         println!("ALU {} Out changed to: {}", self.name, new_state);
         self.out_enabled.set(new_state);
-        self.publish_output(buses);
+        self.publish_output(state);
     }
 }
 impl ALU {
@@ -25,15 +25,15 @@ impl ALU {
             alt_enabled: Cell::new(false)
         }
     }
-    pub fn on_alt_change(&self, buses: &mut Buses, new_state: bool) {
+    pub fn on_alt_change(&self, state: &mut RuntimeState, new_state: bool) {
         println!("ALU {} Alt changed to: {}", self.name, new_state);
         self.alt_enabled.set(new_state);
         if self.out_enabled.get() {
-            self.publish_output(buses);
+            self.publish_output(state);
         }
     }
-    fn publish_output(&self, buses: &mut Buses) {
-        buses.main_bus = if self.out_enabled.get() {
+    fn publish_output(&self, state: &mut RuntimeState) {
+        state.main_bus = if self.out_enabled.get() {
             match (self.name, self.alt_enabled.get()) {
                 ("AddSub", false) => MainBusValue::Add,
                 ("AddSub", true) => MainBusValue::Subtract,
@@ -79,8 +79,8 @@ mod tests {
         let b = i16tou8(b);
         let expected_sum = i16tou8(expected_sum);
 
-        bench.devices.A.set_value(&mut bench.buses, a);
-        bench.devices.B.set_value(&mut bench.buses, b);
+        bench.devices.A.set_value(&mut bench.state, a);
+        bench.devices.B.set_value(&mut bench.state, b);
 
         // add_A_B
         let add_ab_cw = ControlWordBuilder::default()
@@ -90,19 +90,19 @@ mod tests {
             .apply_mux::<AluArgR>(AluArgR::VALUE_B_ALU_R)
             .apply_bit::<FCalc>()
             .build();
-        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, add_ab_cw);
+        bench.devices.route_word(&mut bench.state, DEFAULT_CW, add_ab_cw);
 
-        assert_eq!(expected_sum, bench.buses.resolve_main_bus()); // Check if the main bus calculates the sum of A and B correctly
+        assert_eq!(expected_sum, bench.state.resolve_main_bus()); // Check if the main bus calculates the sum of A and B correctly
 
-        bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
-        bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.state);
+        bench.devices.broadcast_clock_tick_secondary(&mut bench.state);
 
         assert_eq!(expected_sum, bench.devices.A.peek()); // Check if A has the value
         assert_eq!(b, bench.devices.B.peek()); // Check if B remains unchanged
         assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation
 
-        assert_eq!(expected_sum, bench.buses.alu_l_bus.unwrap()); // Check if ALU L bus has the updated value expected_sum
-        assert_eq!(b, bench.buses.alu_r_bus.unwrap()); // Check if ALU R bus has the original value b
+        assert_eq!(expected_sum, bench.state.alu_l_bus.unwrap()); // Check if ALU L bus has the updated value expected_sum
+        assert_eq!(b, bench.state.alu_r_bus.unwrap()); // Check if ALU R bus has the original value b
 
     }
 
@@ -121,8 +121,8 @@ mod tests {
         let b = i16tou8(b);
         let expected_result = i16tou8(expected_result);
 
-        bench.devices.B.set_value(&mut bench.buses, a);
-        bench.devices.C.set_value(&mut bench.buses, b);
+        bench.devices.B.set_value(&mut bench.state, a);
+        bench.devices.C.set_value(&mut bench.state, b);
 
         // sub_B_C
         let sub_bc_cw = ControlWordBuilder::default()
@@ -133,27 +133,27 @@ mod tests {
             .apply_bit::<AluAlt>()
             .apply_bit::<FCalc>()
             .build();
-        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, sub_bc_cw);
+        bench.devices.route_word(&mut bench.state, DEFAULT_CW, sub_bc_cw);
 
-        assert_eq!(expected_result, bench.buses.resolve_main_bus()); // Check if the main bus calculates the difference of B and C correctly
+        assert_eq!(expected_result, bench.state.resolve_main_bus()); // Check if the main bus calculates the difference of B and C correctly
 
-        bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
-        bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.state);
+        bench.devices.broadcast_clock_tick_secondary(&mut bench.state);
 
         assert_eq!(expected_result, bench.devices.B.peek()); // Check if B has the value
         assert_eq!(b, bench.devices.C.peek()); // Check if C remains unchanged
         assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation
 
-        assert_eq!(expected_result, bench.buses.alu_l_bus.unwrap()); // Check if ALU L bus has the updated value 6
-        assert_eq!(b, bench.buses.alu_r_bus.unwrap()); // Check if ALU R bus has the original value 18
+        assert_eq!(expected_result, bench.state.alu_l_bus.unwrap()); // Check if ALU L bus has the updated value 6
+        assert_eq!(b, bench.state.alu_r_bus.unwrap()); // Check if ALU R bus has the original value 18
     }
 
     #[test]
     fn test_alu_adc() {
         let mut bench = TestBench::new();
 
-        bench.devices.A.set_value(&mut bench.buses, 24);
-        bench.devices.B.set_value(&mut bench.buses, 18);
+        bench.devices.A.set_value(&mut bench.state, 24);
+        bench.devices.B.set_value(&mut bench.state, 18);
 
         // adc_A_B
         let adc_ab_cw = ControlWordBuilder::default()
@@ -164,17 +164,17 @@ mod tests {
             .apply_bit::<FCalc>()
             .apply_bit::<FCarry>()
             .build();
-        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, adc_ab_cw);
+        bench.devices.route_word(&mut bench.state, DEFAULT_CW, adc_ab_cw);
 
-        assert_eq!(43, bench.buses.resolve_main_bus()); // Check if the main bus calculates the sum of A and B + carry correctly
+        assert_eq!(43, bench.state.resolve_main_bus()); // Check if the main bus calculates the sum of A and B + carry correctly
     }
 
     #[test]
     fn test_alu_sbb() {
         let mut bench = TestBench::new();
 
-        bench.devices.B.set_value(&mut bench.buses, 24);
-        bench.devices.C.set_value(&mut bench.buses, 18);
+        bench.devices.B.set_value(&mut bench.state, 24);
+        bench.devices.C.set_value(&mut bench.state, 18);
 
         // sbb_B_C
         let sbb_bc_cw = ControlWordBuilder::default()
@@ -186,9 +186,9 @@ mod tests {
             .apply_bit::<FCalc>()
             .apply_bit::<FCarry>()
             .build();
-        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, sbb_bc_cw);
+        bench.devices.route_word(&mut bench.state, DEFAULT_CW, sbb_bc_cw);
 
-        assert_eq!(5, bench.buses.resolve_main_bus()); // Check if the main bus calculates the difference of B and C correctly
+        assert_eq!(5, bench.state.resolve_main_bus()); // Check if the main bus calculates the difference of B and C correctly
     }
 
 
@@ -202,8 +202,8 @@ mod tests {
     fn test_alu_and(#[case] a: u8, #[case] b: u8, #[case] expected_result: u8, #[case] expected_flags: Flags) {
         let mut bench = TestBench::new();
 
-        bench.devices.A.set_value(&mut bench.buses, a);
-        bench.devices.B.set_value(&mut bench.buses, b);
+        bench.devices.A.set_value(&mut bench.state, a);
+        bench.devices.B.set_value(&mut bench.state, b);
 
          // and_A_B
         let and_ab = ControlWordBuilder::default()
@@ -214,9 +214,9 @@ mod tests {
             .apply_bit::<FCalc>()
             .build();
 
-        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, and_ab);
-        bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
-        bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
+        bench.devices.route_word(&mut bench.state, DEFAULT_CW, and_ab);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.state);
+        bench.devices.broadcast_clock_tick_secondary(&mut bench.state);
 
         assert_eq!(expected_result, bench.devices.A.peek()); // Check if A has the value
         assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation
@@ -231,8 +231,8 @@ mod tests {
     fn test_alu_or(#[case] a: u8, #[case] b: u8, #[case] expected_result: u8, #[case] expected_flags: Flags) {
         let mut bench = TestBench::new();
 
-        bench.devices.A.set_value(&mut bench.buses, a);
-        bench.devices.B.set_value(&mut bench.buses, b);
+        bench.devices.A.set_value(&mut bench.state, a);
+        bench.devices.B.set_value(&mut bench.state, b);
 
         // or_A_B
         let or_ab = ControlWordBuilder::default()
@@ -244,9 +244,9 @@ mod tests {
             .apply_bit::<AluAlt>()
             .build();
 
-        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, or_ab);
-        bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
-        bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
+        bench.devices.route_word(&mut bench.state, DEFAULT_CW, or_ab);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.state);
+        bench.devices.broadcast_clock_tick_secondary(&mut bench.state);
 
         assert_eq!(expected_result, bench.devices.A.peek()); // Check if A has the value
         assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation
@@ -262,8 +262,8 @@ mod tests {
     fn test_alu_xor(#[case] a: u8, #[case] b: u8, #[case] expected_result: u8, #[case] expected_flags: Flags) {
         let mut bench = TestBench::new();
 
-        bench.devices.A.set_value(&mut bench.buses, a);
-        bench.devices.B.set_value(&mut bench.buses, b);
+        bench.devices.A.set_value(&mut bench.state, a);
+        bench.devices.B.set_value(&mut bench.state, b);
 
         // xor_A_B
         let xor_ab = ControlWordBuilder::default()
@@ -274,9 +274,9 @@ mod tests {
             .apply_bit::<FCalc>()
             .build();
 
-        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, xor_ab);
-        bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
-        bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
+        bench.devices.route_word(&mut bench.state, DEFAULT_CW, xor_ab);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.state);
+        bench.devices.broadcast_clock_tick_secondary(&mut bench.state);
 
         assert_eq!(expected_result, bench.devices.A.peek()); // Check if A has the value
         assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation
@@ -290,7 +290,7 @@ mod tests {
     fn test_alu_not(#[case] a: u8, #[case] expected_result: u8, #[case] expected_flags: Flags) {
         let mut bench = TestBench::new();
 
-        bench.devices.A.set_value(&mut bench.buses, a);
+        bench.devices.A.set_value(&mut bench.state, a);
 
         // not_A
         let not_a = ControlWordBuilder::default()
@@ -300,9 +300,9 @@ mod tests {
             .apply_bit::<FCalc>()
             .apply_bit::<AluAlt>()
             .build();
-        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, not_a);
-        bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
-        bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
+        bench.devices.route_word(&mut bench.state, DEFAULT_CW, not_a);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.state);
+        bench.devices.broadcast_clock_tick_secondary(&mut bench.state);
 
         assert_eq!(expected_result, bench.devices.A.peek()); // Check if A has the value
         assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation
@@ -317,7 +317,7 @@ mod tests {
     fn test_alu_shr(#[case] a: u8, #[case] expected_result: u8, #[case] expected_flags: Flags) {
         let mut bench = TestBench::new();
 
-        bench.devices.A.set_value(&mut bench.buses, a);
+        bench.devices.A.set_value(&mut bench.state, a);
 
         // shr_A
         let shr_a = ControlWordBuilder::default()
@@ -327,9 +327,9 @@ mod tests {
             .apply_bit::<FCalc>()
             .build();
 
-        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, shr_a);
-        bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
-        bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
+        bench.devices.route_word(&mut bench.state, DEFAULT_CW, shr_a);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.state);
+        bench.devices.broadcast_clock_tick_secondary(&mut bench.state);
 
         assert_eq!(expected_result, bench.devices.A.peek()); // Check if A has the value
         assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation
@@ -347,7 +347,7 @@ mod tests {
     fn test_alu_swap(#[case] a: u8, #[case] expected_result: u8, #[case] expected_flags: Flags) {
         let mut bench = TestBench::new();
 
-        bench.devices.A.set_value(&mut bench.buses, a);
+        bench.devices.A.set_value(&mut bench.state, a);
 
         // swap_A
         let swap_a = ControlWordBuilder::default()
@@ -358,9 +358,9 @@ mod tests {
             .apply_bit::<AluAlt>()
             .build();
 
-        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, swap_a);
-        bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
-        bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
+        bench.devices.route_word(&mut bench.state, DEFAULT_CW, swap_a);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.state);
+        bench.devices.broadcast_clock_tick_secondary(&mut bench.state);
 
         assert_eq!(expected_result, bench.devices.A.peek()); // Check if A has the value
         assert_eq!(expected_flags, bench.devices.F.peek()); // Check if the flags register has the expected flags set after the operation

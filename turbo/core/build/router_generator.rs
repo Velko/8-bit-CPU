@@ -39,16 +39,16 @@ impl MuxPart {
         writeln!(writer, "impl MuxDispatcher for {} {{", self.name)?;
         writeln!(writer, "    const MASK: ControlWord = 0b{:032b};", self.mask)?;
         writeln!(writer, "    const VALUE_DEFAULT: ControlWord = 0b{:032b};", self.default)?;
-        writeln!(writer, "    fn dispatch(dev: &DeviceMap, buses: &mut Buses, word: ControlWord, new_state: bool) {{")?;
+        writeln!(writer, "    fn dispatch(dev: &DeviceMap, state: &mut RuntimeState, word: ControlWord, new_state: bool) {{")?;
         writeln!(writer, "        match word & Self::MASK {{")?;
         for (value, (alias, dev_refs)) in self.device_bits.iter() {
             if dev_refs.len() == 1 {
                 let dev_ref = &dev_refs[0];
-                writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.on_{}_change(buses, new_state),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin)?;
+                writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.on_{}_change(state, new_state),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin)?;
             } else {
                 writeln!(writer, "            Self::VALUE_{} => {{", format_const_name(alias))?;
                 for dev_ref in dev_refs {
-                    writeln!(writer, "                dev.{}.on_{}_change(buses, new_state);", dev_ref.device, dev_ref.pin)?;
+                    writeln!(writer, "                dev.{}.on_{}_change(state, new_state);", dev_ref.device, dev_ref.pin)?;
                 }
                 writeln!(writer, "            }},")?;
             }
@@ -128,15 +128,15 @@ impl DeviceMapPart {
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
 
-        writeln!(writer, "    pub fn broadcast_clock_tick_primary(&mut self, buses: &mut Buses) {{")?;
+        writeln!(writer, "    pub fn broadcast_clock_tick_primary(&mut self, state: &mut RuntimeState) {{")?;
         for device in self.devices.iter() {
-            writeln!(writer, "        self.{}.on_clock_tick_primary(buses);", device.name)?;
+            writeln!(writer, "        self.{}.on_clock_tick_primary(state);", device.name)?;
         }
         writeln!(writer, "    }}")?;
 
-        writeln!(writer, "    pub fn broadcast_clock_tick_secondary(&mut self, buses: &mut Buses) {{")?;
+        writeln!(writer, "    pub fn broadcast_clock_tick_secondary(&mut self, state: &mut RuntimeState) {{")?;
         for device in self.devices.iter() {
-            writeln!(writer, "        self.{}.on_clock_tick_secondary(buses);", device.name)?;
+            writeln!(writer, "        self.{}.on_clock_tick_secondary(state);", device.name)?;
         }
         writeln!(writer, "    }}")?;
         writeln!(writer, "}}")?;
@@ -218,20 +218,20 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) {
 
 fn emit_router_fn(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPart>, direct_pins: &HashMap<u32, (String, Vec<DirectPinRef>)>) -> std::io::Result<()> {
     writeln!(writer, "impl DeviceMap {{")?;
-    writeln!(writer, "    pub fn route_word(&self, buses: &mut Buses, old_cw: ControlWord, new_cw: ControlWord) {{")?;
+    writeln!(writer, "    pub fn route_word(&self, state: &mut RuntimeState, old_cw: ControlWord, new_cw: ControlWord) {{")?;
 
 
     for (name, _) in muxes.iter() {
         writeln!(writer, "        if old_cw & {}::MASK != new_cw & {}::MASK {{", name, name)?;
-        writeln!(writer, "            {}::dispatch(self, buses, old_cw, false);", name)?;
-        writeln!(writer, "            {}::dispatch(self, buses, new_cw, true);", name)?;
+        writeln!(writer, "            {}::dispatch(self, state, old_cw, false);", name)?;
+        writeln!(writer, "            {}::dispatch(self, state, new_cw, true);", name)?;
         writeln!(writer, "        }}")?;
     }
 
     for (mask, (alias, direct_pins)) in direct_pins {
         writeln!(writer, "        if old_cw & {}::MASK != new_cw & {}::MASK {{", alias, alias)?;
         for direct_pin in direct_pins {
-            writeln!(writer, "            self.{}.on_{}_change(buses, new_cw & {}::MASK == {}::VALUE);", direct_pin.device, direct_pin.pin, alias, alias)?;
+            writeln!(writer, "            self.{}.on_{}_change(state, new_cw & {}::MASK == {}::VALUE);", direct_pin.device, direct_pin.pin, alias, alias)?;
         }
         writeln!(writer, "        }}")?;
     }

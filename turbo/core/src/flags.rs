@@ -1,7 +1,7 @@
 use std::cell::Cell;
 use std::ops::{BitOr, BitAnd, BitOrAssign};
 use std::fmt::Debug;
-use crate::devices::Buses;
+use crate::devices::RuntimeState;
 use crate::devices::MainBusValue;
 use crate::devices::OutReceiver;
 use crate::devices::LoadReceiver;
@@ -72,20 +72,20 @@ impl FlagsRegister {
             calc_enabled: Cell::new(false)
         }
     }
-    pub fn on_calc_change(&self, _buses: &mut Buses, new_state: bool) {
+    pub fn on_calc_change(&self, _state: &mut RuntimeState, new_state: bool) {
         println!("FlagsRegister {} Calc changed to: {}", self.name, new_state);
         self.calc_enabled.set(new_state);
     }
-    pub fn on_carry_change(&self, buses: &mut Buses, new_state: bool) {
+    pub fn on_carry_change(&self, state: &mut RuntimeState, new_state: bool) {
         println!("FlagsRegister {} Carry changed to: {}", self.name, new_state);
-        buses.carry_in = new_state;
+        state.carry_in = new_state;
     }
 }
 impl ClockReceiver for FlagsRegister {
-    fn on_clock_tick_primary(&mut self, buses: &mut Buses) {
+    fn on_clock_tick_primary(&mut self, state: &mut RuntimeState) {
         if self.calc_enabled.get() {
             // Perform Z and N calculations based on the main bus value
-            let result = buses.resolve_main_bus();
+            let result = state.resolve_main_bus();
             let mut new_value = Flags::EMPTY;
             if result == 0 {
                 new_value |= Flags::Z;
@@ -94,13 +94,13 @@ impl ClockReceiver for FlagsRegister {
                 new_value |= Flags::N;
             }
 
-            let (carry, overflow) = buses.resolve_alu_flags();
+            let (carry, overflow) = state.resolve_alu_flags();
             new_value |= carry.unwrap_or(self.value_primary & Flags::C); // Apply new or preserve previous carry if not calculated
             new_value |= overflow.unwrap_or(self.value_primary & Flags::V); // Apply new or preserve previous overflow if not calculated
             self.value_primary = new_value;
         }
     }
-    fn on_clock_tick_secondary(&mut self, _buses: &mut Buses) {
+    fn on_clock_tick_secondary(&mut self, _state: &mut RuntimeState) {
         self.value_secondary = self.value_primary;
     }
 }

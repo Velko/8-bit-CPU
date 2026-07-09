@@ -1,5 +1,5 @@
 use std::cell::Cell;
-use crate::devices::Buses;
+use crate::devices::RuntimeState;
 use crate::devices::MainBusValue;
 use crate::devices::OutReceiver;
 use crate::devices::LoadReceiver;
@@ -13,7 +13,7 @@ impl RAM {
     pub fn new(name: &'static str) -> Self {
         Self { name }
     }
-    pub fn on_write_change(&self, _buses: &mut Buses, _new_state: bool) {}
+    pub fn on_write_change(&self, _state: &mut RuntimeState, _new_state: bool) {}
 }
 impl ClockReceiver for RAM {}
 

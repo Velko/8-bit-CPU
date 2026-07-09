@@ -1,5 +1,5 @@
 use std::cell::Cell;
-use crate::devices::Buses;
+use crate::devices::RuntimeState;
 use crate::devices::MainBusValue;
 use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
@@ -14,7 +14,7 @@ pub struct TempRegister {
 
 }
 impl LoadReceiver for TempRegister {
-    fn on_load_change(&self, _buses: &mut Buses, new_state: bool) {
+    fn on_load_change(&self, _state: &mut RuntimeState, new_state: bool) {
         println!("TempRegister {} Load changed to: {}", self.name, new_state);
         self.load_enabled.set(new_state);
     }
@@ -29,34 +29,34 @@ impl TempRegister {
             arg_r_enabled: Cell::new(false)
         }
     }
-    pub fn on_alu_r_change(&self, buses: &mut Buses, new_state: bool) {
+    pub fn on_alu_r_change(&self, state: &mut RuntimeState, new_state: bool) {
         println!("TempRegister {} ALU R changed to: {}", self.name, new_state);
         self.arg_r_enabled.set(new_state);
-        buses.alu_r_bus = if new_state {
+        state.alu_r_bus = if new_state {
             Some(self.value_secondary)
         } else {
             None
         };
     }
 
-    pub fn set_value(&mut self, buses: &mut Buses, value: u8) {
+    pub fn set_value(&mut self, state: &mut RuntimeState, value: u8) {
         self.value_primary = value;
         self.value_secondary = !value;
-        self.on_clock_tick_primary(buses);
-        self.on_clock_tick_secondary(buses);
+        self.on_clock_tick_primary(state);
+        self.on_clock_tick_secondary(state);
     }
 }
 
 impl ClockReceiver for TempRegister {
-    fn on_clock_tick_primary(&mut self, buses: &mut Buses) {
+    fn on_clock_tick_primary(&mut self, state: &mut RuntimeState) {
         if self.load_enabled.get() {
-            self.value_primary = buses.resolve_main_bus();
+            self.value_primary = state.resolve_main_bus();
         }
     }
-    fn on_clock_tick_secondary(&mut self, buses: &mut Buses) {
+    fn on_clock_tick_secondary(&mut self, state: &mut RuntimeState) {
         if self.value_primary != self.value_secondary {
             if self.arg_r_enabled.get() {
-                buses.alu_r_bus = Some(self.value_primary);
+                state.alu_r_bus = Some(self.value_primary);
             }
             self.value_secondary = self.value_primary;
         }
@@ -85,10 +85,10 @@ mod tests {
             .apply_mux::<LoadMux>(LoadMux::VALUE_T_LOAD)
             .build(); // Enable T Load
 
-        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, load_t_cw);
-        bench.buses.main_bus = MainBusValue::Const(42); // Simulate loading 42 into T
+        bench.devices.route_word(&mut bench.state, DEFAULT_CW, load_t_cw);
+        bench.state.main_bus = MainBusValue::Const(42); // Simulate loading 42 into T
 
-        bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.state);
 
         assert_eq!(42, bench.devices.T.value_primary); // Check if T has the value 42 after clock tick
     }

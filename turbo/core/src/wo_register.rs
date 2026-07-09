@@ -2,7 +2,7 @@ use std::cell::Cell;
 use crate::devices::MainBusValue;
 use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
-use crate::devices::Buses;
+use crate::devices::RuntimeState;
 use crate::devices::Peek;
 
 pub struct WORegister {
@@ -24,19 +24,19 @@ impl WORegister {
 }
 
 impl LoadReceiver for WORegister {
-    fn on_load_change(&self, _buses: &mut Buses, new_state: bool) {
+    fn on_load_change(&self, _state: &mut RuntimeState, new_state: bool) {
         self.load_enabled.set(new_state);
     }
 }
 
 impl ClockReceiver for WORegister {
-        fn on_clock_tick_primary(&mut self, buses: &mut Buses) {
+        fn on_clock_tick_primary(&mut self, state: &mut RuntimeState) {
         if self.load_enabled.get() {
-            self.value_primary = buses.resolve_main_bus();
+            self.value_primary = state.resolve_main_bus();
         }
     }
 
-    fn on_clock_tick_secondary(&mut self, buses: &mut Buses) {
+    fn on_clock_tick_secondary(&mut self, state: &mut RuntimeState) {
         if self.value_primary != self.value_secondary {
             self.value_secondary = self.value_primary;
         }
@@ -65,15 +65,15 @@ mod tests {
             .apply_mux::<LoadMux>(LoadMux::VALUE_IR_LOAD)
             .build(); // load_IR
 
-        bench.devices.route_word(&mut bench.buses, DEFAULT_CW, load_ir_cw);
-        bench.buses.main_bus = MainBusValue::Const(42); // Simulate loading 42 into IR
+        bench.devices.route_word(&mut bench.state, DEFAULT_CW, load_ir_cw);
+        bench.state.main_bus = MainBusValue::Const(42); // Simulate loading 42 into IR
 
-        bench.devices.broadcast_clock_tick_primary(&mut bench.buses);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.state);
 
         assert_eq!(42, bench.devices.IR.value_primary); // Check if IR has the value 42 after clock tick
         assert_eq!(0, bench.devices.IR.value_secondary); // Secondary value should still be 0
 
-        bench.devices.broadcast_clock_tick_secondary(&mut bench.buses);
+        bench.devices.broadcast_clock_tick_secondary(&mut bench.state);
 
         assert_eq!(42, bench.devices.IR.value_secondary); // After secondary clock tick, secondary value should be updated to 42
     }
