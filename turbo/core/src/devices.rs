@@ -4,6 +4,7 @@ pub use crate::program_counter::ProgramCounter;
 pub use crate::alu::ALU;
 pub use crate::flags::{Flags, FlagsRegister};
 pub use crate::wo_register::WORegister;
+pub use crate::memory::{RAM, ROM};
 
 use std::cell::Cell;
 
@@ -131,29 +132,6 @@ pub trait ClockReceiver {
 pub trait Peek<T> {
     fn peek(&self) -> T;
 }
-
-pub struct RAM {
-    pub name: &'static str,
-}
-impl OutReceiver for RAM {}
-impl RAM {
-    pub fn new(name: &'static str) -> Self {
-        Self { name }
-    }
-    pub fn on_write_change(&self, _buses: &mut Buses, _new_state: bool) {}
-}
-impl ClockReceiver for RAM {}
-
-pub struct ROM {
-    pub name: &'static str,
-}
-impl OutReceiver for ROM {}
-impl ROM {
-    pub fn new(name: &'static str) -> Self {
-        Self { name }
-    }
-}
-impl ClockReceiver for ROM {}
 
 pub struct Clock {
     pub name: &'static str,

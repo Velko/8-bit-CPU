@@ -7,6 +7,7 @@ mod flags;
 mod program_counter;
 mod control_word;
 mod wo_register;
+mod memory;
 
 pub use control_word::ControlWord;
 
