@@ -19,7 +19,7 @@ pub trait BitDispatcher {
     const VALUE: ControlWord;
 }
 
-#[cfg(false)]
+#[cfg(test)]
 mod tests {
     use super::*;
 
@@ -29,7 +29,7 @@ mod tests {
         let default_cw = 0x07ff58ff; // default
         let add_bc_cw = 0x07ff0915; // add_B_C
         println!("add_B_C");
-        let mut state = RuntimeState::new();
+        let mut state = ArgSources::new();
         device_map.route_word(&mut state, default_cw, add_bc_cw);
 
         let inc_a_cw = 0x07ff9805; // inc A
