@@ -48,9 +48,9 @@ impl TempRegister {
 
 impl ClockReceiver for TempRegister {
     fn on_clock_tick_primary(&mut self, args: &ArgValues) {
-        // if self.load_enabled.get() {
-        //     self.value_primary = state.resolve_main_bus(devices);
-        // }
+        if self.load_enabled.get() {
+            self.value_primary = args.main_bus_value.unwrap();
+        }
     }
     fn on_clock_tick_secondary(&mut self) {
         if self.value_primary != self.value_secondary {
@@ -65,7 +65,7 @@ impl ValueSource<u8> for TempRegister {
     }
 }
 
-#[cfg(false)]
+#[cfg(test)]
 mod tests {
     use super::*;
     use crate::test_helpers::TestBench;
@@ -81,12 +81,15 @@ mod tests {
             .apply_mux::<LoadMux>(LoadMux::VALUE_T_LOAD)
             .build(); // Enable T Load
 
-        bench.devices.route_word(&mut bench.state, DEFAULT_CW, load_t_cw);
-        bench.state.main_bus = MainBusValue::Const(42); // Simulate loading 42 into T
+        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, load_t_cw);
+        let args = ArgValues {
+            main_bus_value: Some(42),
+            address_bus_value: None,
+        }; // Simulate loading 42 into T
 
-        bench.devices.broadcast_clock_tick_primary(&bench.state);
+        bench.devices.broadcast_clock_tick_primary(&args);
         bench.devices.broadcast_clock_tick_secondary();
 
-        assert_eq!(42, bench.devices.T.get_value(&bench.state)); // Check if T has the value 42 after clock tick
+        assert_eq!(42, bench.devices.T.value_secondary); // Check if T has the value 42 after clock tick
     }
 }

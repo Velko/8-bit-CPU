@@ -112,6 +112,7 @@ mod tests {
         gp_reg.load_enabled.set(true);
         gp_reg.on_clock_tick_primary(&args);
         assert_eq!(gp_reg.value_primary, 42);
+        assert_eq!(gp_reg.value_secondary, 0); // value_secondary should not change yet
 
         // Simulate clock tick secondary
         gp_reg.on_clock_tick_secondary();
@@ -132,8 +133,9 @@ mod tests {
         }; // Simulate loading 42 into A
 
         bench.devices.broadcast_clock_tick_primary(&args);
+        bench.devices.broadcast_clock_tick_secondary();
 
-        assert_eq!(42, bench.devices.A.value_primary); // Check if A has the value 42 after clock tick
+        assert_eq!(42, bench.devices.A.value_secondary); // Check if A has the value 42 after clock tick
     }
 
     #[test]
@@ -169,7 +171,8 @@ mod tests {
         // Simulate clock tick
         let values = bench.sources.resolve(&bench.devices);
         bench.devices.broadcast_clock_tick_primary(&values);
+        bench.devices.broadcast_clock_tick_secondary();
 
-        assert_eq!(42, bench.devices.B.value_primary); // Check if B has the value 42 after clock tick
+        assert_eq!(42, bench.devices.B.value_secondary); // Check if B has the value 42 after clock tick
     }
 }
