@@ -85,6 +85,7 @@ mod tests {
         let args = ArgValues {
             main_bus_value: Some(42),
             address_bus_value: None,
+            alu_flags_value: None,
         }; // Simulate loading 42 into T
 
         bench.devices.broadcast_clock_tick_primary(&args);

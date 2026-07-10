@@ -104,6 +104,7 @@ pub struct BusSourcesPart {
     address_bus_sources: Vec<String>,
     alu_l_sources: Vec<String>,
     alu_r_sources: Vec<String>,
+    flags_sources: Vec<String>,
 }
 
 impl BusSourcesPart {
@@ -113,6 +114,7 @@ impl BusSourcesPart {
             address_bus_sources: Vec::new(),
             alu_l_sources: Vec::new(),
             alu_r_sources: Vec::new(),
+            flags_sources: Vec::new(),
         }
     }
 
@@ -152,6 +154,13 @@ impl BusSourcesPart {
         }
     }
 
+    pub fn is_flags_source(dev_type: &str) -> bool {
+        match dev_type {
+            "ALU" => true,
+            _ => false,
+        }
+    }
+
     pub fn emit(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
         writeln!(writer, "#[derive(Debug, Clone, Copy, PartialEq)]")?;
         writeln!(writer, "pub enum MainBusSource {{")?;
@@ -177,6 +186,13 @@ impl BusSourcesPart {
             writeln!(writer, "    {},", source)?;
         }
         writeln!(writer, "}}")?;
+        writeln!(writer, "#[derive(Debug, Clone, Copy, PartialEq)]")?;
+        writeln!(writer, "pub enum FlagsSource {{")?;
+        for source in self.flags_sources.iter() {
+            writeln!(writer, "    {},", source)?;
+        }
+        writeln!(writer, "}}")?;
+
         Ok(())
     }
 }
@@ -223,6 +239,10 @@ impl DeviceMapPart {
                 ids.push(format!("AddressBusSource::{}", device.name));
                 self.bus_sources.address_bus_sources.push(device.name.clone());
             }
+            if BusSourcesPart::is_flags_source(&device.dev_type) {
+                ids.push(format!("FlagsSource::{}", device.name));
+                self.bus_sources.flags_sources.push(device.name.clone());
+            }
             writeln!(writer, "            {}: {}::new({}),", device.name, device.dev_type, ids.join(", "))?;
         }
         writeln!(writer, "        }}")?;
@@ -268,6 +288,14 @@ impl DeviceMapPart {
         writeln!(writer, "        match source {{")?;
         for device in self.bus_sources.address_bus_sources.iter() {
             writeln!(writer, "            AddressBusSource::{} => self.{}.get_value(self, args),", device, device)?;
+        }
+        writeln!(writer, "        }}")?;
+        writeln!(writer, "    }}")?;
+
+        writeln!(writer, "    pub fn get_flags_value(&self, source: FlagsSource, args: &ArgSources) -> ALUFlags {{")?;
+        writeln!(writer, "        match source {{")?;
+        for device in self.bus_sources.flags_sources.iter() {
+            writeln!(writer, "            FlagsSource::{} => self.{}.get_value(self, args),", device, device)?;
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;

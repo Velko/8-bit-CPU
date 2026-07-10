@@ -84,22 +84,22 @@ impl FlagsRegister {
 }
 impl ClockReceiver for FlagsRegister {
     fn on_clock_tick_primary(&mut self, args: &ArgValues) {
-        // if self.calc_enabled.get() {
-        //     // Perform Z and N calculations based on the main bus value
-        //     let result = state.resolve_main_bus(devices);
-        //     let mut new_value = Flags::EMPTY;
-        //     if result == 0 {
-        //         new_value |= Flags::Z;
-        //     }
-        //     if (result & 0x80) != 0 {
-        //         new_value |= Flags::N;
-        //     }
+        if self.calc_enabled.get() {
+            // Perform Z and N calculations based on the main bus value
+            let result = args.main_bus_value.unwrap();
+            let mut new_value = Flags::EMPTY;
+            if result == 0 {
+                new_value |= Flags::Z;
+            }
+            if (result & 0x80) != 0 {
+                new_value |= Flags::N;
+            }
 
-        //     let (carry, overflow) = state.resolve_alu_flags(devices);
-        //     new_value |= carry.unwrap_or(self.value_primary & Flags::C); // Apply new or preserve previous carry if not calculated
-        //     new_value |= overflow.unwrap_or(self.value_primary & Flags::V); // Apply new or preserve previous overflow if not calculated
-        //     self.value_primary = new_value;
-        // }
+            let alu_flags = args.alu_flags_value.as_ref().unwrap();
+            new_value |= alu_flags.carry.unwrap_or(self.value_primary & Flags::C); // Apply new or preserve previous carry if not calculated
+            new_value |= alu_flags.overflow.unwrap_or(self.value_primary & Flags::V); // Apply new or preserve previous overflow if not calculated
+            self.value_primary = new_value;
+        }
     }
     fn on_clock_tick_secondary(&mut self) {
         self.value_secondary = self.value_primary;

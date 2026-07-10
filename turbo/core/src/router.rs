@@ -4,7 +4,7 @@
 use crate::ControlWord;
 use crate::devices::*;
 use crate::control_word::ControlWordBuilder;
-
+use crate::runtime_state::ALUFlags;
 
 include!(concat!(env!("OUT_DIR"), "/router_generated.rs"));
 
