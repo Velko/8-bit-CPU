@@ -113,18 +113,18 @@ mod tests {
     fn test_ram_write() {
         let mut bench = TestBench::new();
         bench.devices.PC.set_value(2);
+        bench.devices.A.set_value(42);
 
         // a bit unusual combination to write @ PC, but for now that is my only
         // working Address register
         let write_at_pc_cw = ControlWordBuilder::default()
+            .apply_mux::<OutMux>(OutMux::VALUE_A_OUT)
             .apply_mux::<AddrOutMux>(AddrOutMux::VALUE_PC_OUT)
             .apply_mux::<LoadMux>(LoadMux::VALUE_RAM_WRITE)
             .build();
 
         bench.devices.route_word(&mut bench.sources, DEFAULT_CW, write_at_pc_cw);
-
         let mut values = bench.sources.resolve(&bench.devices);
-        values.main_bus_value = Some(42);
 
         bench.devices.broadcast_clock_tick_primary(&values);
         bench.devices.broadcast_clock_tick_secondary();
