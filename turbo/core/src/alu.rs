@@ -1,12 +1,10 @@
 use std::cell::Cell;
-use std::mem::MaybeUninit;
 use crate::devices::ClockReceiver;
 use crate::devices::OutReceiver;
 use crate::devices::ValueSource;
-use crate::router::DEFAULT_CW;
 use crate::router::DeviceMap;
 use crate::router::{MainBusSource, FlagsSource};
-use crate::runtime_state::{ArgSources, ArgValues, ALUFlags};
+use crate::runtime_state::{ArgSources, ALUFlags};
 use crate::flags::Flags;
 
 pub struct ALU {
@@ -32,7 +30,7 @@ impl ALU {
         }
     }
 
-    pub fn on_alt_change(&self, args: &mut ArgSources, enable: bool) {
+    pub fn on_alt_change(&self, _args: &mut ArgSources, enable: bool) {
         println!("ALU {} Alt changed to: {}", self.name, enable);
         self.alt_enabled.set(enable);
     }
@@ -165,12 +163,12 @@ impl ValueSource<ALUFlags> for ALU {
 #[cfg(test)]
 mod tests {
     use rstest::rstest;
-    use super::*;
     use crate::router::{OutMux, AluArgL, AluArgR, LoadMux, FCalc, AluAlt, FCarry};
     use crate::devices::ValueSource;
-    use crate::devices::Flags;
+    use crate::flags::Flags;
     use crate::test_helpers::{TestBench, i16tou8};
     use crate::control_word::ControlWordBuilder;
+    use crate::DEFAULT_CW;
 
     #[rstest]
     #[case(24, 18, 42, Flags::EMPTY)] // 24 + 18 = 42, no flags set

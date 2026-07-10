@@ -2,19 +2,16 @@ pub use crate::gp_register::GPRegister;
 pub use crate::temp_register::TempRegister;
 pub use crate::program_counter::ProgramCounter;
 pub use crate::alu::ALU;
-pub use crate::flags::{Flags, FlagsRegister};
+pub use crate::flags::{FlagsRegister};
 pub use crate::wo_register::WORegister;
 pub use crate::memory::{RAM, ROM};
-use crate::router::{MainBusSource, ALULSource, ALURSource, AddressBusSource};
+use crate::router::{AddressBusSource};
 
 pub use crate::runtime_state::{ArgSources, ArgValues};
 use crate::router::DeviceMap;
 
-use std::cell::Cell;
-
-
 pub trait OutReceiver {
-    fn on_out_change(&self, _args: &mut ArgSources, enable: bool) {}
+    fn on_out_change(&self, _args: &mut ArgSources, _enable: bool) {}
 }
 pub trait LoadReceiver {
     fn on_load_change(&self, _args: &mut ArgSources, _enable: bool) {}
@@ -26,7 +23,7 @@ pub trait DecReceiver {
     fn on_dec_change(&self, _args: &mut ArgSources, _enable: bool) {}
 }
 pub trait ClockReceiver {
-    fn on_clock_tick_primary(&mut self, args: &ArgValues) {}
+    fn on_clock_tick_primary(&mut self, _args: &ArgValues) {}
     fn on_clock_tick_secondary(&mut self) {}
 }
 pub trait ValueSource<T> {
@@ -129,7 +126,4 @@ impl ClockReceiver for IOController {}
 
 #[cfg(test)]
 mod tests {
-    use rstest::rstest;
-    use super::*;
-    use crate::router::DeviceMap;
 }

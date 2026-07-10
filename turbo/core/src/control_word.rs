@@ -18,6 +18,7 @@ impl ControlWordBuilder {
         }
     }
 
+    #[cfg(test)]
     pub const fn apply_bit<D: BitDispatcher>(self) -> Self {
         ControlWordBuilder {
             word: (self.word & !D::MASK) | D::VALUE,

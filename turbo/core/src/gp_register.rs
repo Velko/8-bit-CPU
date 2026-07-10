@@ -95,7 +95,7 @@ impl GPRegister {
 mod tests {
     use super::*;
     use crate::test_helpers::TestBench;
-    use crate::router::{MuxDispatcher, LoadMux, OutMux};
+    use crate::router::{LoadMux, OutMux};
     use crate::control_word::ControlWordBuilder;
     use crate::router::DEFAULT_CW;
 

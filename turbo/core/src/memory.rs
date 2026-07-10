@@ -1,6 +1,5 @@
 use std::cell::Cell;
 use crate::devices::OutReceiver;
-use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
 use crate::devices::ValueSource;
 use crate::router::DeviceMap;
@@ -82,7 +81,7 @@ impl ClockReceiver for ROM {}
 #[cfg(test)]
 mod tests {
     use crate::{
-        control_word::ControlWordBuilder, devices::{ArgValues, ValueSource}, router::{AddrOutMux, DEFAULT_CW, LoadMux, OutMux}, test_helpers::TestBench
+        control_word::ControlWordBuilder, devices::{ValueSource}, router::{AddrOutMux, DEFAULT_CW, LoadMux, OutMux}, test_helpers::TestBench
     };
 
     #[test]
@@ -124,7 +123,7 @@ mod tests {
             .build();
 
         bench.devices.route_word(&mut bench.sources, DEFAULT_CW, write_at_pc_cw);
-        let mut values = bench.sources.resolve(&bench.devices);
+        let values = bench.sources.resolve(&bench.devices);
 
         bench.devices.broadcast_clock_tick_primary(&values);
         bench.devices.broadcast_clock_tick_secondary();

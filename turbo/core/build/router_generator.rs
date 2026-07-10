@@ -13,7 +13,6 @@ struct MuxPart {
 pub struct MuxPinRef {
     device: String,
     pin: String,
-    value: u32,
 }
 
 pub struct DirectPinRef {
@@ -41,7 +40,7 @@ impl MuxPart {
         writeln!(writer, "    const VALUE_DEFAULT: ControlWord = 0b{:032b};", self.default)?;
         writeln!(writer, "    fn dispatch(dev: &DeviceMap, args: &mut ArgSources, word: ControlWord, enable: bool) {{")?;
         writeln!(writer, "        match word & Self::MASK {{")?;
-        for (value, (alias, dev_refs)) in self.device_bits.iter() {
+        for (_value, (alias, dev_refs)) in self.device_bits.iter() {
             if dev_refs.len() == 1 {
                 let dev_ref = &dev_refs[0];
                 writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.on_{}_change(args, enable),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin)?;
@@ -76,7 +75,6 @@ impl MuxPart {
         self.device_bits.entry(mask).or_insert_with(|| (alias.to_string(), Vec::new())).1.push(MuxPinRef {
             device: device.to_string(),
             pin: pin.to_string(),
-            value: mask,
         });
     }
 }
@@ -118,7 +116,7 @@ impl BusSourcesPart {
         }
     }
 
-    pub fn is_main_bus_source(dev_type: &str, name: &str) -> bool {
+    pub fn is_main_bus_source(dev_type: &str, _name: &str) -> bool {
         match dev_type {
             "GPRegister" |
             "ALU" |
@@ -393,7 +391,7 @@ fn emit_router_fn(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPa
         writeln!(writer, "        }}")?;
     }
 
-    for (mask, (alias, direct_pins)) in direct_pins {
+    for (_, (alias, direct_pins)) in direct_pins {
         writeln!(writer, "        if old_cw & {}::MASK != new_cw & {}::MASK {{", alias, alias)?;
         for direct_pin in direct_pins {
             writeln!(writer, "            self.{}.on_{}_change(args, new_cw & {}::MASK == {}::VALUE);", direct_pin.device, direct_pin.pin, alias, alias)?;
@@ -449,10 +447,10 @@ fn format_type_name(name: &str) -> String {
 
 fn emit_default_control_word(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPart>, direct_pins: &HashMap<u32, (String, Vec<DirectPinRef>)>) -> std::io::Result<()> {
     writeln!(writer, "pub const DEFAULT_CW: ControlWord = ControlWordBuilder::bootstrap()")?;
-    for (name, mux) in muxes.iter() {
+    for (name, _) in muxes.iter() {
         writeln!(writer, "        .apply_mux::<{}>({}::VALUE_DEFAULT)", name, name)?;
     }
-    for (mask, (device_name, direct_pins)) in direct_pins {
+    for (_, (device_name, direct_pins)) in direct_pins {
         if direct_pins.len() == 1 {
             let direct_pin = &direct_pins[0];
             writeln!(writer, "        .remove_bit::<{}>()", format_type_name(&format!("{}.{}", direct_pin.device, direct_pin.pin)))?;

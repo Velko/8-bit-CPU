@@ -13,7 +13,6 @@ pub struct ProgramCounter {
     value_primary: u16,
     value_secondary: u16,
     address_bus_id: AddressBusSource,
-    out_enabled: Cell<bool>,
     load_enabled: Cell<bool>,
     inc_enabled: Cell<bool>,
 }
@@ -25,7 +24,6 @@ impl ProgramCounter {
             value_primary: 0,
             value_secondary: 0,
             address_bus_id,
-            out_enabled: Cell::new(false),
             load_enabled: Cell::new(false),
             inc_enabled: Cell::new(false),
         }
@@ -45,19 +43,18 @@ impl OutReceiver for ProgramCounter {
         } else {
             None
         };
-        //self.out_enabled.set(enable);
     }
 }
 
 impl LoadReceiver for ProgramCounter {
-    fn on_load_change(&self, args: &mut ArgSources, enable: bool) {
+    fn on_load_change(&self, _args: &mut ArgSources, enable: bool) {
         println!("ProgramCounter {} Load changed to: {}", self.name, enable);
         self.load_enabled.set(enable);
     }
 }
 
 impl IncReceiver for ProgramCounter {
-    fn on_inc_change(&self, args: &mut ArgSources, enable: bool) {
+    fn on_inc_change(&self, _args: &mut ArgSources, enable: bool) {
         println!("ProgramCounter {} Inc changed to: {}", self.name, enable);
         self.inc_enabled.set(enable);
     }

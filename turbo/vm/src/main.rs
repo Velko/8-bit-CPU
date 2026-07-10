@@ -1,4 +1,4 @@
-use std::{io::{BufReader, ErrorKind::QuotaExceeded}, net::{SocketAddr, UdpSocket}, sync::mpsc::{self, Receiver, SendError, Sender}, thread};
+use std::{net::{SocketAddr, UdpSocket}, sync::mpsc::{self, Receiver, Sender}, thread};
 
 const BUFFER_SIZE: usize = 1024;
 
@@ -14,7 +14,7 @@ fn main() -> std::io::Result<()> {
         let mut buf = [0; BUFFER_SIZE];
 
         loop {
-            let (amt, src) = r_socket.recv_from(&mut buf).expect("Couldn't receive");
+            let (amt, _src) = r_socket.recv_from(&mut buf).expect("Couldn't receive");
             for byte in &buf[..amt] {
                 tx.send(*byte as char).expect("Couldn't send to main");
             }
