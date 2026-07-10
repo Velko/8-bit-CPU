@@ -121,9 +121,9 @@ impl BusSourcesPart {
     pub fn is_main_bus_source(dev_type: &str, name: &str) -> bool {
         match dev_type {
             "GPRegister" |
-            "ALU" => true,
+            "ALU" |
             // "FlagsRegister" |
-            // "RAM" |
+            "RAM" => true,
             // "ROM" |
             // "IOController"=> true,
 //            "TransferRegister" if name != "TX" => true,
