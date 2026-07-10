@@ -27,8 +27,6 @@ impl ArgSources {
         let main_bus_value = self.main_bus_source.map(|source| devices.get_main_bus_value(source, self));
         ArgValues {
             main_bus_value,
-            alu_l_value,
-            alu_r_value,
             address_bus_value: Some(0),
         }
     }
@@ -36,8 +34,6 @@ impl ArgSources {
 
 pub struct ArgValues {
     pub main_bus_value: Option<u8>,
-    pub alu_l_value: Option<u8>,
-    pub alu_r_value: Option<u8>,
     pub address_bus_value: Option<u16>,
 }
 

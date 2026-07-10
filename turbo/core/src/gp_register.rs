@@ -104,8 +104,6 @@ mod tests {
     fn test_gp_register() {
         let args = ArgValues {
             main_bus_value: Some(42),
-            alu_l_value: None,
-            alu_r_value: None,
             address_bus_value: None,
         };
         let mut gp_reg = GPRegister::new("GP1", MainBusSource::A, ALULSource::A, ALURSource::A);
@@ -130,8 +128,6 @@ mod tests {
         bench.devices.route_word(&mut bench.sources, DEFAULT_CW, load_a_cw);
         let args = ArgValues {
             main_bus_value: Some(42),
-            alu_l_value: None,
-            alu_r_value: None,
             address_bus_value: None,
         }; // Simulate loading 42 into A
 
