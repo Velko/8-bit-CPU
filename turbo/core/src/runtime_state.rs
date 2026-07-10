@@ -27,9 +27,10 @@ impl ArgSources {
     pub fn resolve(&self, devices: &DeviceMap) -> ArgValues {
         let main_bus_value = self.main_bus_source.map(|source| devices.get_main_bus_value(source, self));
         let alu_flags_value = self.flags_source.map(|source| devices.get_flags_value(source, self));
+        let address_bus_value = self.address_bus_source.map(|source| devices.get_address_bus_value(source, self));
         ArgValues {
             main_bus_value,
-            address_bus_value: Some(0),
+            address_bus_value,
             alu_flags_value,
         }
     }

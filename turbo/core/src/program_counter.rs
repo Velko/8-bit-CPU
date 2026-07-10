@@ -65,11 +65,11 @@ impl IncReceiver for ProgramCounter {
 
 impl ClockReceiver for ProgramCounter {
     fn on_clock_tick_primary(&mut self, args: &ArgValues) {
-        // if self.load_enabled.get() {
-        //     self.value_primary = args.resolve_address_bus().unwrap_or(0);
-        // } else if self.inc_enabled.get() {
-        //     self.value_primary = self.value_primary.wrapping_add(1);
-        // }
+        if self.load_enabled.get() {
+            self.value_primary = args.address_bus_value.unwrap();
+        } else if self.inc_enabled.get() {
+            self.value_primary = self.value_primary.wrapping_add(1);
+        }
     }
 
     fn on_clock_tick_secondary(&mut self) {
@@ -85,7 +85,7 @@ impl ValueSource<u16> for ProgramCounter {
     }
 }
 
-#[cfg(false)]
+#[cfg(test)]
 mod tests {
     use super::*;
     use crate::test_helpers::TestBench;
@@ -98,31 +98,42 @@ mod tests {
     #[test]
     fn test_program_counter_out_inc() {
         let mut bench = TestBench::new();
-        bench.devices.PC.set_value(&mut bench.state, 0x1234);
+        bench.devices.PC.set_value(0x1234);
 
         let pc_out_inc_cw = ControlWordBuilder::default()
             .apply_mux::<AddrOutMux>(AddrOutMux::VALUE_PC_OUT)
             .apply_bit::<AddrInc>()
             .build(); // Enable PC Out and Inc
-        bench.devices.route_word(&mut bench.state, DEFAULT_CW, pc_out_inc_cw);
+        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, pc_out_inc_cw);
 
-        assert_eq!(Some(0x1234), bench.state.address_bus);
+        // broadcasts the original value
+        let values = bench.sources.resolve(&bench.devices);
+        assert_eq!(Some(0x1234), values.address_bus_value);
 
-        bench.devices.broadcast_clock_tick_primary(&bench.state);
+        // incrementing the value should only affect the internal storage
+        bench.devices.broadcast_clock_tick_primary(&values);
         assert_eq!(0x1235, bench.devices.PC.value_primary);
-        assert_eq!(Some(0x1234), bench.state.address_bus);
+
+        // check if still broadcasts the original value
+        let values2 = bench.sources.resolve(&bench.devices);
+        assert_eq!(Some(0x1234), values2.address_bus_value);
     }
 
     #[test]
     fn test_program_counter_load() {
         let mut bench = TestBench::new();
-        bench.state.address_bus = Some(0x5678);
+        let args = ArgValues {
+            main_bus_value: None,
+            address_bus_value: Some(0x5678),
+            alu_flags_value: None,
+        }; // Simulate loading 42 into A
 
         let pc_load_cw = ControlWordBuilder::default()
             .apply_mux::<AddrLoadMux>(AddrLoadMux::VALUE_PC_LOAD)
             .build(); // Enable PC Load
-        bench.devices.route_word(&mut bench.state, DEFAULT_CW, pc_load_cw);
-        bench.devices.broadcast_clock_tick_primary(&bench.state);
+        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, pc_load_cw);
+
+        bench.devices.broadcast_clock_tick_primary(&args);
 
         assert_eq!(0x5678, bench.devices.PC.value_primary);
         assert_eq!(0, bench.devices.PC.value_secondary);
