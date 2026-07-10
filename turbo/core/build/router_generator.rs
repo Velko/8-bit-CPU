@@ -35,6 +35,7 @@ impl MuxPart {
 
     pub fn emit(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
         writeln!(writer, "pub struct {};", self.name)?;
+        writeln!(writer)?;
         writeln!(writer, "impl MuxDispatcher for {} {{", self.name)?;
         writeln!(writer, "    const MASK: ControlWord = 0b{:032b};", self.mask)?;
         writeln!(writer, "    const VALUE_DEFAULT: ControlWord = 0b{:032b};", self.default)?;
@@ -56,6 +57,7 @@ impl MuxPart {
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
         writeln!(writer, "}}")?;
+        writeln!(writer)?;
         writeln!(writer, "impl {} {{", self.name)?;
         for (value, (alias, dev_refs)) in self.device_bits.iter() {
             if dev_refs.len() == 1 {
@@ -166,30 +168,39 @@ impl BusSourcesPart {
             writeln!(writer, "    {},", source)?;
         }
         writeln!(writer, "}}")?;
+        writeln!(writer)?;
+
         writeln!(writer, "#[derive(Debug, Clone, Copy, PartialEq)]")?;
         writeln!(writer, "pub enum ALULSource {{")?;
         for source in self.alu_l_sources.iter() {
             writeln!(writer, "    {},", source)?;
         }
         writeln!(writer, "}}")?;
+        writeln!(writer)?;
+
         writeln!(writer, "#[derive(Debug, Clone, Copy, PartialEq)]")?;
         writeln!(writer, "pub enum ALURSource {{")?;
         for source in self.alu_r_sources.iter() {
             writeln!(writer, "    {},", source)?;
         }
         writeln!(writer, "}}")?;
+        writeln!(writer)?;
+
         writeln!(writer, "#[derive(Debug, Clone, Copy, PartialEq)]")?;
         writeln!(writer, "pub enum AddressBusSource {{")?;
         for source in self.address_bus_sources.iter() {
             writeln!(writer, "    {},", source)?;
         }
         writeln!(writer, "}}")?;
+        writeln!(writer)?;
+
         writeln!(writer, "#[derive(Debug, Clone, Copy, PartialEq)]")?;
         writeln!(writer, "pub enum FlagsSource {{")?;
         for source in self.flags_sources.iter() {
             writeln!(writer, "    {},", source)?;
         }
         writeln!(writer, "}}")?;
+        writeln!(writer)?;
 
         Ok(())
     }
@@ -245,18 +256,21 @@ impl DeviceMapPart {
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
+        writeln!(writer)?;
 
         writeln!(writer, "    pub fn broadcast_clock_tick_primary(&mut self, args: &ArgValues) {{")?;
         for device in self.devices.iter() {
             writeln!(writer, "        self.{}.on_clock_tick_primary(args);", device.name)?;
         }
         writeln!(writer, "    }}")?;
+        writeln!(writer)?;
 
         writeln!(writer, "    pub fn broadcast_clock_tick_secondary(&mut self) {{")?;
         for device in self.devices.iter() {
             writeln!(writer, "        self.{}.on_clock_tick_secondary();", device.name)?;
         }
         writeln!(writer, "    }}")?;
+        writeln!(writer)?;
 
         writeln!(writer, "    pub fn get_main_bus_value(&self, source: MainBusSource, args: &ArgSources) -> u8 {{")?;
         writeln!(writer, "        match source {{")?;
@@ -265,6 +279,7 @@ impl DeviceMapPart {
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
+        writeln!(writer)?;
 
         writeln!(writer, "    pub fn get_alu_l_value(&self, source: ALULSource, args: &ArgSources) -> u8 {{")?;
         writeln!(writer, "        match source {{")?;
@@ -273,6 +288,7 @@ impl DeviceMapPart {
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
+        writeln!(writer)?;
 
         writeln!(writer, "    pub fn get_alu_r_value(&self, source: ALURSource, args: &ArgSources) -> u8 {{")?;
         writeln!(writer, "        match source {{")?;
@@ -281,6 +297,7 @@ impl DeviceMapPart {
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
+        writeln!(writer)?;
 
         writeln!(writer, "    pub fn get_address_bus_value(&self, source: AddressBusSource, args: &ArgSources) -> u16 {{")?;
         writeln!(writer, "        match source {{")?;
@@ -289,6 +306,7 @@ impl DeviceMapPart {
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
+        writeln!(writer)?;
 
         writeln!(writer, "    pub fn get_flags_value(&self, source: FlagsSource, args: &ArgSources) -> ALUFlags {{")?;
         writeln!(writer, "        match source {{")?;
@@ -297,8 +315,8 @@ impl DeviceMapPart {
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
-
         writeln!(writer, "}}")?;
+        writeln!(writer)?;
 
         self.bus_sources.emit(writer).expect("Failed to emit bus sources");
 
@@ -400,6 +418,7 @@ fn emit_router_fn(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPa
     }
     writeln!(writer, "    }}")?;
     writeln!(writer, "}}")?;
+    writeln!(writer)?;
     Ok(())
 }
 
@@ -409,6 +428,7 @@ fn emit_direct_pins(writer: &mut dyn std::io::Write, direct_pins: &HashMap<u32, 
             let direct_pin = &direct_pins[0];
             let struct_name = format_type_name(&format!("{}.{}", direct_pin.device, direct_pin.pin));
             writeln!(writer, "pub struct {};",  struct_name)?;
+            writeln!(writer)?;
             writeln!(writer, "impl BitDispatcher for {} {{", struct_name)?;
             writeln!(writer, "    const MASK: ControlWord = 0b{:032b};", direct_pin.mask)?;
             writeln!(writer, "    const VALUE: ControlWord = 0b{:032b};", direct_pin.value)?;
@@ -416,6 +436,7 @@ fn emit_direct_pins(writer: &mut dyn std::io::Write, direct_pins: &HashMap<u32, 
         } else {
             let direct_pin = &direct_pins[0];
             writeln!(writer, "pub struct {};", format_type_name(&device_name))?;
+            writeln!(writer)?;
             writeln!(writer, "impl BitDispatcher for {} {{", format_type_name(&device_name))?;
             writeln!(writer, "    const MASK: ControlWord = 0b{:032b};", mask)?;
             writeln!(writer, "    const VALUE: ControlWord = 0b{:032b};", direct_pin.value)?;
@@ -459,5 +480,6 @@ fn emit_default_control_word(writer: &mut dyn std::io::Write, muxes: &HashMap<St
         }
     }
     writeln!(writer, "        .build();")?;
+    writeln!(writer)?;
     Ok(())
 }
