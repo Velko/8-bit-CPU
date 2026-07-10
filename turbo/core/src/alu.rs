@@ -1,6 +1,5 @@
 use std::cell::Cell;
 use std::mem::MaybeUninit;
-use crate::devices::MainBusValue;
 use crate::devices::ClockReceiver;
 use crate::devices::OutReceiver;
 use crate::devices::ValueSource;
@@ -160,13 +159,6 @@ impl ValueSource<ALUFlags> for ALU {
                 overflow: None,
             },
         }
-        // match self.main_id {
-        //     MainBusSource::AddSub => self.solve_add_sub(devices, args),
-        //     MainBusSource::AndOr => self.solve_and_or(devices, args),
-        //     MainBusSource::XorNot => self.solve_xor_not(devices, args),
-        //     MainBusSource::ShiftSwap => self.solve_shift_swap(devices, args),
-        //     _ => panic!("Unknown ALU main bus source: {:?}", self.main_id),
-        // }
     }
 }
 

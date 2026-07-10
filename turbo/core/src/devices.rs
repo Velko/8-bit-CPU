@@ -7,7 +7,7 @@ pub use crate::wo_register::WORegister;
 pub use crate::memory::{RAM, ROM};
 use crate::router::{MainBusSource, ALULSource, ALURSource, AddressBusSource};
 
-pub use crate::runtime_state::{MainBusValue, ArgSources, ArgValues};
+pub use crate::runtime_state::{ArgSources, ArgValues};
 use crate::router::DeviceMap;
 
 use std::cell::Cell;
