@@ -1,11 +1,12 @@
 use crate::flags::Flags;
-use crate::router::{MainBusSource, ALULSource, ALURSource};
+use crate::router::{MainBusSource, ALULSource, ALURSource, AddressBusSource};
 use crate::router::DeviceMap;
 
 pub struct ArgSources {
     pub main_bus_source: Option<MainBusSource>,
     pub alu_l_source: Option<ALULSource>,
     pub alu_r_source: Option<ALURSource>,
+    pub address_bus_source: Option<AddressBusSource>,
 }
 
 impl ArgSources {
@@ -14,6 +15,7 @@ impl ArgSources {
             main_bus_source: None,
             alu_l_source: None,
             alu_r_source: None,
+            address_bus_source: None,
         }
     }
 
@@ -25,6 +27,7 @@ impl ArgSources {
             main_bus_value,
             alu_l_value,
             alu_r_value,
+            address_bus_value: Some(0),
         }
     }
 }
@@ -33,7 +36,9 @@ pub struct ArgValues {
     pub main_bus_value: Option<u8>,
     pub alu_l_value: Option<u8>,
     pub alu_r_value: Option<u8>,
+    pub address_bus_value: Option<u16>,
 }
+
 
 
 pub enum MainBusValue {
@@ -50,7 +55,7 @@ pub enum MainBusValue {
     MemRead,
 }
 
-pub struct RuntimeState {
+pub struct RuntimeStateOld {
     pub main_bus: MainBusValue,
     pub address_bus: Option<u16>,
     pub alu_l_bus: Option<ALULSource>,
@@ -58,7 +63,7 @@ pub struct RuntimeState {
     pub carry_in: bool,
 }
 
-impl RuntimeState {
+impl RuntimeStateOld {
     pub fn new() -> Self {
         Self {
             main_bus: MainBusValue::None,

@@ -1,12 +1,11 @@
 use std::cell::Cell;
-use crate::devices::RuntimeState;
 use crate::devices::MainBusValue;
 use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
 use crate::devices::ValueSource;
 use crate::router::ALURSource;
 use crate::router::DeviceMap;
-use crate::runtime_state::ArgValues;
+use crate::runtime_state::{ArgValues, ArgSources};
 
 pub struct TempRegister {
     pub name: &'static str,
@@ -17,7 +16,7 @@ pub struct TempRegister {
 
 }
 impl LoadReceiver for TempRegister {
-    fn on_load_change(&self, _state: &mut RuntimeState, enable: bool) {
+    fn on_load_change(&self, _args: &mut ArgSources, enable: bool) {
         println!("TempRegister {} Load changed to: {}", self.name, enable);
         self.load_enabled.set(enable);
     }
@@ -32,16 +31,16 @@ impl TempRegister {
             alu_r_id,
         }
     }
-    pub fn on_alu_r_change(&self, state: &mut RuntimeState, enable: bool) {
+    pub fn on_alu_r_change(&self, args: &mut ArgSources, enable: bool) {
         println!("TempRegister {} ALU R changed to: {}", self.name, enable);
-        state.alu_r_bus = if enable {
+        args.alu_r_source = if enable {
             Some(self.alu_r_id)
         } else {
             None
         };
     }
 
-    pub fn set_value(&mut self, state: &mut RuntimeState, value: u8) {
+    pub fn set_value(&mut self, value: u8) {
         self.value_primary = value;
         self.value_secondary = !value;
     }

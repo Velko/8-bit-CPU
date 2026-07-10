@@ -1,9 +1,9 @@
 use std::cell::Cell;
-use crate::devices::RuntimeState;
-use crate::devices::MainBusValue;
+    use crate::devices::MainBusValue;
 use crate::devices::ClockReceiver;
 use crate::devices::OutReceiver;
 use crate::router::DEFAULT_CW;
+use crate::runtime_state::{ArgSources, ArgValues};
 
 pub struct ALU {
     pub name: &'static str,
@@ -11,10 +11,10 @@ pub struct ALU {
     alt_enabled: Cell<bool>,
 }
 impl OutReceiver for ALU {
-    fn on_out_change(&self, state: &mut RuntimeState, enable: bool) {
+    fn on_out_change(&self, args: &mut ArgSources, enable: bool) {
         println!("ALU {} Out changed to: {}", self.name, enable);
         self.out_enabled.set(enable);
-        self.publish_output(state);
+        //self.publish_output(state);
     }
 }
 impl ALU {
@@ -25,29 +25,29 @@ impl ALU {
             alt_enabled: Cell::new(false)
         }
     }
-    pub fn on_alt_change(&self, state: &mut RuntimeState, enable: bool) {
+    pub fn on_alt_change(&self, args: &mut ArgSources, enable: bool) {
         println!("ALU {} Alt changed to: {}", self.name, enable);
         self.alt_enabled.set(enable);
         if self.out_enabled.get() {
-            self.publish_output(state);
+            self.publish_output(args);
         }
     }
-    fn publish_output(&self, state: &mut RuntimeState) {
-        state.main_bus = if self.out_enabled.get() {
-            match (self.name, self.alt_enabled.get()) {
-                ("AddSub", false) => MainBusValue::Add,
-                ("AddSub", true) => MainBusValue::Subtract,
-                ("AndOr", false) => MainBusValue::And,
-                ("AndOr", true) => MainBusValue::Or,
-                ("XorNot", false) => MainBusValue::Xor,
-                ("XorNot", true) => MainBusValue::Not,
-                ("ShiftSwap", false) => MainBusValue::Shr,
-                ("ShiftSwap", true) => MainBusValue::Swap,
-                (_, _) => panic!("Unknown ALU module name: {}", self.name),
-            }
-        } else {
-            MainBusValue::None
-        };
+    fn publish_output(&self, args: &mut ArgSources) {
+        // state.main_bus = if self.out_enabled.get() {
+        //     match (self.name, self.alt_enabled.get()) {
+        //         ("AddSub", false) => MainBusValue::Add,
+        //         ("AddSub", true) => MainBusValue::Subtract,
+        //         ("AndOr", false) => MainBusValue::And,
+        //         ("AndOr", true) => MainBusValue::Or,
+        //         ("XorNot", false) => MainBusValue::Xor,
+        //         ("XorNot", true) => MainBusValue::Not,
+        //         ("ShiftSwap", false) => MainBusValue::Shr,
+        //         ("ShiftSwap", true) => MainBusValue::Swap,
+        //         (_, _) => panic!("Unknown ALU module name: {}", self.name),
+        //     }
+        // } else {
+        //     MainBusValue::None
+        // };
     }
 }
 impl ClockReceiver for ALU {}

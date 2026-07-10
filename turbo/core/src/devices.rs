@@ -7,23 +7,23 @@ pub use crate::wo_register::WORegister;
 pub use crate::memory::{RAM, ROM};
 use crate::router::{MainBusSource, ALULSource, ALURSource, AddressBusSource};
 
-pub use crate::runtime_state::{RuntimeState, MainBusValue, ArgSources, ArgValues};
+pub use crate::runtime_state::{MainBusValue, ArgSources, ArgValues};
 use crate::router::DeviceMap;
 
 use std::cell::Cell;
 
 
 pub trait OutReceiver {
-    fn on_out_change(&self, _state: &mut RuntimeState, enable: bool) {}
+    fn on_out_change(&self, _args: &mut ArgSources, enable: bool) {}
 }
 pub trait LoadReceiver {
-    fn on_load_change(&self, _state: &mut RuntimeState, _enable: bool) {}
+    fn on_load_change(&self, _args: &mut ArgSources, _enable: bool) {}
 }
 pub trait IncReceiver {
-    fn on_inc_change(&self, _state: &mut RuntimeState, _enable: bool) {}
+    fn on_inc_change(&self, _args: &mut ArgSources, _enable: bool) {}
 }
 pub trait DecReceiver {
-    fn on_dec_change(&self, _state: &mut RuntimeState, _enable: bool) {}
+    fn on_dec_change(&self, _args: &mut ArgSources, _enable: bool) {}
 }
 pub trait ClockReceiver {
     fn on_clock_tick_primary(&mut self, args: &ArgValues) {}
@@ -40,8 +40,8 @@ impl Clock {
     pub fn new(name: &'static str) -> Self {
         Self { name }
     }
-    pub fn on_halt_change(&self, _state: &mut RuntimeState, _enable: bool) {}
-    pub fn on_brk_change(&self, _state: &mut RuntimeState, _enable: bool) {}
+    pub fn on_halt_change(&self, _args: &mut ArgSources, _enable: bool) {}
+    pub fn on_brk_change(&self, _args: &mut ArgSources, _enable: bool) {}
 }
 impl ClockReceiver for Clock {}
 
@@ -53,8 +53,8 @@ impl StepCounter {
     pub fn new(name: &'static str) -> Self {
         Self { name }
     }
-    pub fn on_reset_change(&self, _state: &mut RuntimeState, _enable: bool) {}
-    pub fn on_extended_change(&self, _state: &mut RuntimeState, _enable: bool) {}
+    pub fn on_reset_change(&self, _args: &mut ArgSources, _enable: bool) {}
+    pub fn on_extended_change(&self, _args: &mut ArgSources, _enable: bool) {}
 }
 impl ClockReceiver for StepCounter {}
 
@@ -110,7 +110,7 @@ impl AddressCalculator {
     pub fn new(name: &'static str) -> Self {
         Self { name }
     }
-    pub fn on_signed_change(&self, _state: &mut RuntimeState, _enable: bool) {}
+    pub fn on_signed_change(&self, _args: &mut ArgSources, _enable: bool) {}
 }
 impl ClockReceiver for AddressCalculator {}
 
@@ -121,9 +121,9 @@ impl IOController {
     pub fn new(name: &'static str) -> Self {
         Self { name }
     }
-    pub fn on_laddr_change(&self, _state: &mut RuntimeState, _enable: bool) {}
-    pub fn on_to_dev_change(&self, _state: &mut RuntimeState, _enable: bool) {}
-    pub fn on_from_dev_change(&self, _state: &mut RuntimeState, _enable: bool) {}
+    pub fn on_laddr_change(&self, _args: &mut ArgSources, _enable: bool) {}
+    pub fn on_to_dev_change(&self, _args: &mut ArgSources, _enable: bool) {}
+    pub fn on_from_dev_change(&self, _args: &mut ArgSources, _enable: bool) {}
 }
 impl ClockReceiver for IOController {}
 

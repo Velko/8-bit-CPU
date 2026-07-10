@@ -1,14 +1,13 @@
 use std::cell::Cell;
 use std::ops::{BitOr, BitAnd, BitOrAssign};
 use std::fmt::Debug;
-use crate::devices::RuntimeState;
-use crate::devices::MainBusValue;
+    use crate::devices::MainBusValue;
 use crate::devices::OutReceiver;
 use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
 use crate::devices::ValueSource;
 use crate::router::DeviceMap;
-use crate::runtime_state::ArgValues;
+use crate::runtime_state::{ArgValues, ArgSources};
 
 #[derive(Clone, Copy, PartialEq, Default)]
 pub struct Flags {
@@ -74,13 +73,13 @@ impl FlagsRegister {
             calc_enabled: Cell::new(false)
         }
     }
-    pub fn on_calc_change(&self, _state: &mut RuntimeState, enable: bool) {
+    pub fn on_calc_change(&self, _args: &mut ArgSources, enable: bool) {
         println!("FlagsRegister {} Calc changed to: {}", self.name, enable);
         self.calc_enabled.set(enable);
     }
-    pub fn on_carry_change(&self, state: &mut RuntimeState, enable: bool) {
+    pub fn on_carry_change(&self, _args: &mut ArgSources, enable: bool) {
         println!("FlagsRegister {} Carry changed to: {}", self.name, enable);
-        state.carry_in = enable;
+        //state.carry_in = enable;
     }
 }
 impl ClockReceiver for FlagsRegister {

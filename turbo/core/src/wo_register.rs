@@ -2,10 +2,9 @@ use std::cell::Cell;
 use crate::devices::MainBusValue;
 use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
-use crate::devices::RuntimeState;
 use crate::devices::ValueSource;
 use crate::router::DeviceMap;
-use crate::runtime_state::ArgValues;
+use crate::runtime_state::{ArgValues, ArgSources};
 
 pub struct WORegister {
     pub name: &'static str,
@@ -26,7 +25,7 @@ impl WORegister {
 }
 
 impl LoadReceiver for WORegister {
-    fn on_load_change(&self, _state: &mut RuntimeState, enable: bool) {
+    fn on_load_change(&self, _args: &mut ArgSources, enable: bool) {
         self.load_enabled.set(enable);
     }
 }

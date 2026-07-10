@@ -1,38 +1,36 @@
 use std::cell::Cell;
 use crate::router::{MainBusSource, ALULSource, ALURSource};
-use crate::devices::RuntimeState;
 use crate::devices::MainBusValue;
 use crate::devices::OutReceiver;
 use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
 use crate::devices::ValueSource;
 use crate::router::DeviceMap;
-use crate::runtime_state::ArgValues;
+use crate::runtime_state::{ArgSources, ArgValues};
 
 pub struct GPRegister {
     pub name: &'static str,
     value_primary: u8,
     value_secondary: u8,
-    out_enabled: Cell<bool>,
-    load_enabled: Cell<bool>,
+        load_enabled: Cell<bool>,
+    main_id: MainBusSource,
     alu_l_id: ALULSource,
     alu_r_id: ALURSource
 }
 
 impl OutReceiver for GPRegister {
-    fn on_out_change(&self, state: &mut RuntimeState, enable: bool) {
+    fn on_out_change(&self, args: &mut ArgSources, enable: bool) {
         println!("GPRegister {} Out changed to: {}", self.name, enable);
-        state.main_bus = if enable {
-            MainBusValue::Const(self.value_secondary)
+        args.main_bus_source = if enable {
+            Some(self.main_id)
         } else {
-            MainBusValue::None
+            None
         };
-        self.out_enabled.set(enable);
     }
 }
 
 impl LoadReceiver for GPRegister {
-    fn on_load_change(&self, _state: &mut RuntimeState, enable: bool) {
+    fn on_load_change(&self, _args: &mut ArgSources, enable: bool) {
         println!("GPRegister {} Load changed to: {}", self.name, enable);
         self.load_enabled.set(enable);
     }
@@ -58,43 +56,43 @@ impl ValueSource<u8> for GPRegister {
 }
 
 impl GPRegister {
-    pub fn new(name: &'static str, _main_id: MainBusSource, alu_l_id: ALULSource, alu_r_id: ALURSource) -> Self {
+    pub fn new(name: &'static str, main_id: MainBusSource, alu_l_id: ALULSource, alu_r_id: ALURSource) -> Self {
         Self {
             name,
             value_primary: 0,
             value_secondary: 0,
-            out_enabled: Cell::new(false),
             load_enabled: Cell::new(false),
+            main_id,
             alu_l_id,
             alu_r_id,
         }
     }
 
-    pub fn on_alu_l_change(&self, state: &mut RuntimeState, enable: bool) {
+    pub fn on_alu_l_change(&self, args: &mut ArgSources, enable: bool) {
         println!("GPRegister {} ALU L changed to: {}", self.name, enable);
-        state.alu_l_bus = if enable {
+        args.alu_l_source = if enable {
             Some(self.alu_l_id)
         } else {
             None
         };
     }
-    pub fn on_alu_r_change(&self, state: &mut RuntimeState, enable: bool) {
+    pub fn on_alu_r_change(&self, args: &mut ArgSources, enable: bool) {
         println!("GPRegister {} ALU R changed to: {}", self.name, enable);
-        state.alu_r_bus = if enable {
+        args.alu_r_source = if enable {
             Some(self.alu_r_id)
         } else {
             None
         };
     }
 
-    pub fn set_value(&mut self, state: &mut RuntimeState, value: u8) {
+    pub fn set_value(&mut self, value: u8) {
         self.value_primary = value;
         self.value_secondary = value;
     }
 }
 
 
-#[cfg(false)]
+#[cfg(test)]
 mod tests {
     use super::*;
     use crate::test_helpers::TestBench;
@@ -104,13 +102,16 @@ mod tests {
 
     #[test]
     fn test_gp_register() {
-        let mut state = RuntimeState::new();
-        let mut args = ArgValues::new();
+        let args = ArgValues {
+            main_bus_value: Some(42),
+            alu_l_value: None,
+            alu_r_value: None,
+            address_bus_value: None,
+        };
         let mut gp_reg = GPRegister::new("GP1", MainBusSource::A, ALULSource::A, ALURSource::A);
 
         // Simulate loading a value into the register
         gp_reg.load_enabled.set(true);
-        state.main_bus = MainBusValue::Const(42);
         gp_reg.on_clock_tick_primary(&args);
         assert_eq!(gp_reg.value_primary, 42);
 
@@ -126,10 +127,15 @@ mod tests {
             .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
             .build(); // load_A
 
-        bench.devices.route_word(&mut bench.state, DEFAULT_CW, load_a_cw);
-        bench.state.main_bus = MainBusValue::Const(42); // Simulate loading 42 into A
+        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, load_a_cw);
+        let args = ArgValues {
+            main_bus_value: Some(42),
+            alu_l_value: None,
+            alu_r_value: None,
+            address_bus_value: None,
+        }; // Simulate loading 42 into A
 
-        bench.devices.broadcast_clock_tick_primary(&mut bench.state);
+        bench.devices.broadcast_clock_tick_primary(&args);
 
         assert_eq!(42, bench.devices.A.value_primary); // Check if A has the value 42 after clock tick
     }
@@ -138,16 +144,36 @@ mod tests {
     fn test_output_reg_value() {
         let mut bench = TestBench::new();
 
-        bench.devices.A.set_value(&mut bench.state, 42);
+        bench.devices.A.set_value(42);
 
         let out_a_cw =  ControlWordBuilder::default()
             .apply_mux::<OutMux>(OutMux::VALUE_A_OUT)
             .build(); // out_A
-        bench.devices.route_word(&mut bench.state, DEFAULT_CW, out_a_cw);
+        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, out_a_cw);
 
-        assert_eq!(42, bench.state.resolve_main_bus(&bench.devices)); // Check if the main bus has the value 42 after out_A
+        let values = bench.sources.resolve(&bench.devices);
 
-        bench.devices.A.set_value(&mut bench.state, 100); // Change A's value to 100
-        assert_eq!(100, bench.state.resolve_main_bus(&bench.devices)); // Check if the main bus reflects the new value of A, since out_A is still active
+        assert_eq!(Some(42), values.main_bus_value); // Check if the main bus has the value 42 after out_A
+    }
+
+    #[test]
+    fn test_copy_a_to_b() {
+        let mut bench = TestBench::new();
+
+        // Load 42 into A
+        bench.devices.A.set_value(42);
+
+        // Enable A Out and B Load
+        let copy_a_to_b_cw = ControlWordBuilder::default()
+            .apply_mux::<OutMux>(OutMux::VALUE_A_OUT)
+            .apply_mux::<LoadMux>(LoadMux::VALUE_B_LOAD)
+            .build();
+        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, copy_a_to_b_cw);
+
+        // Simulate clock tick
+        let values = bench.sources.resolve(&bench.devices);
+        bench.devices.broadcast_clock_tick_primary(&values);
+
+        assert_eq!(42, bench.devices.B.value_primary); // Check if B has the value 42 after clock tick
     }
 }

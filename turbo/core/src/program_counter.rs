@@ -1,5 +1,4 @@
 use std::cell::Cell;
-use crate::devices::RuntimeState;
 use crate::devices::OutReceiver;
 use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
@@ -7,56 +6,58 @@ use crate::devices::IncReceiver;
 use crate::devices::ValueSource;
 use crate::router::AddressBusSource;
 use crate::router::DeviceMap;
-use crate::runtime_state::ArgValues;
+use crate::runtime_state::{ArgSources, ArgValues};
 
 pub struct ProgramCounter {
     pub name: &'static str,
     value_primary: u16,
     value_secondary: u16,
+    address_bus_id: AddressBusSource,
     out_enabled: Cell<bool>,
     load_enabled: Cell<bool>,
     inc_enabled: Cell<bool>,
 }
 
 impl ProgramCounter {
-    pub fn new(name: &'static str, _address_bus_id: AddressBusSource) -> Self {
+    pub fn new(name: &'static str, address_bus_id: AddressBusSource) -> Self {
         Self {
             name,
             value_primary: 0,
             value_secondary: 0,
+            address_bus_id,
             out_enabled: Cell::new(false),
             load_enabled: Cell::new(false),
             inc_enabled: Cell::new(false),
         }
     }
 
-    pub fn set_value(&mut self, state: &mut RuntimeState, value: u16) {
+    pub fn set_value(&mut self, value: u16) {
         self.value_primary = value;
         self.value_secondary = value;
     }
 }
 
 impl OutReceiver for ProgramCounter {
-    fn on_out_change(&self, state: &mut RuntimeState, enable: bool) {
+    fn on_out_change(&self, args: &mut ArgSources, enable: bool) {
         println!("ProgramCounter {} Out changed to: {}", self.name, enable);
-        state.address_bus = if enable {
-            Some(self.value_secondary)
+        args.address_bus_source = if enable {
+            Some(self.address_bus_id)
         } else {
             None
         };
-        self.out_enabled.set(enable);
+        //self.out_enabled.set(enable);
     }
 }
 
 impl LoadReceiver for ProgramCounter {
-    fn on_load_change(&self, _state: &mut RuntimeState, enable: bool) {
+    fn on_load_change(&self, args: &mut ArgSources, enable: bool) {
         println!("ProgramCounter {} Load changed to: {}", self.name, enable);
         self.load_enabled.set(enable);
     }
 }
 
 impl IncReceiver for ProgramCounter {
-    fn on_inc_change(&self, _state: &mut RuntimeState, enable: bool) {
+    fn on_inc_change(&self, args: &mut ArgSources, enable: bool) {
         println!("ProgramCounter {} Inc changed to: {}", self.name, enable);
         self.inc_enabled.set(enable);
     }
