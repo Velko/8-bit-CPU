@@ -7,6 +7,7 @@ pub struct ArgSources {
     pub alu_l_source: Option<ALULSource>,
     pub alu_r_source: Option<ALURSource>,
     pub address_bus_source: Option<AddressBusSource>,
+    pub carry_in: bool,
 }
 
 impl ArgSources {
@@ -16,13 +17,14 @@ impl ArgSources {
             alu_l_source: None,
             alu_r_source: None,
             address_bus_source: None,
+            carry_in: false,
         }
     }
 
     pub fn resolve(&self, devices: &DeviceMap) -> ArgValues {
-        let alu_l_value = self.alu_l_source.map(|source| devices.get_alu_l_value(source));
-        let alu_r_value = self.alu_r_source.map(|source| devices.get_alu_r_value(source));
-        let main_bus_value = self.main_bus_source.map(|source| devices.get_main_bus_value(source));
+        let alu_l_value = self.alu_l_source.map(|source| devices.get_alu_l_value(source, self));
+        let alu_r_value = self.alu_r_source.map(|source| devices.get_alu_r_value(source, self));
+        let main_bus_value = self.main_bus_source.map(|source| devices.get_main_bus_value(source, self));
         ArgValues {
             main_bus_value,
             alu_l_value,
@@ -76,52 +78,52 @@ impl RuntimeStateOld {
 
     pub fn resolve_main_bus(&self, devices: &DeviceMap) -> u8 {
 
-        match self.main_bus {
-            MainBusValue::None => panic!("Bus value is None"),
-            MainBusValue::Const(value) => value,
-            MainBusValue::Add => {
-                let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
-                let r = devices.get_alu_r_value(self.alu_r_bus.unwrap());
-                let carry = if self.carry_in { 1 } else { 0 };
-                l.wrapping_add(r).wrapping_add(carry)
-            }
-            MainBusValue::Subtract => {
-                let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
-                let r = devices.get_alu_r_value(self.alu_r_bus.unwrap());
-                let carry = if self.carry_in { 1 } else { 0 };
-                l.wrapping_sub(r).wrapping_sub(carry)
-            },
-            MainBusValue::And => {
-                let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
-                let r = devices.get_alu_r_value(self.alu_r_bus.unwrap());
-                l & r
-            },
-            MainBusValue::Or => {
-                let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
-                let r = devices.get_alu_r_value(self.alu_r_bus.unwrap());
-                l | r
-            },
-            MainBusValue::Xor => {
-                let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
-                let r = devices.get_alu_r_value(self.alu_r_bus.unwrap());
-                l ^ r
-            },
-            MainBusValue::Not => {
-                let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
-                !l
-            },
-            MainBusValue::Shr => {
-                let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
-                l >> 1
-            },
-            MainBusValue::Swap => {
-                let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
-                (l << 4) | (l >> 4)
-            },
-            MainBusValue::MemRead => {
-                todo!("Memory read not implemented in resolve_main_bus");
-            },
-        }
+        // match self.main_bus {
+        //     MainBusValue::None => panic!("Bus value is None"),
+        //     MainBusValue::Const(value) => value,
+        //     MainBusValue::Add => {
+        //         let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
+        //         let r = devices.get_alu_r_value(self.alu_r_bus.unwrap());
+        //         let carry = if self.carry_in { 1 } else { 0 };
+        //         l.wrapping_add(r).wrapping_add(carry)
+        //     }
+        //     MainBusValue::Subtract => {
+        //         let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
+        //         let r = devices.get_alu_r_value(self.alu_r_bus.unwrap());
+        //         let carry = if self.carry_in { 1 } else { 0 };
+        //         l.wrapping_sub(r).wrapping_sub(carry)
+        //     },
+        //     MainBusValue::And => {
+        //         let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
+        //         let r = devices.get_alu_r_value(self.alu_r_bus.unwrap());
+        //         l & r
+        //     },
+        //     MainBusValue::Or => {
+        //         let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
+        //         let r = devices.get_alu_r_value(self.alu_r_bus.unwrap());
+        //         l | r
+        //     },
+        //     MainBusValue::Xor => {
+        //         let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
+        //         let r = devices.get_alu_r_value(self.alu_r_bus.unwrap());
+        //         l ^ r
+        //     },
+        //     MainBusValue::Not => {
+        //         let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
+        //         !l
+        //     },
+        //     MainBusValue::Shr => {
+        //         let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
+        //         l >> 1
+        //     },
+        //     MainBusValue::Swap => {
+        //         let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
+        //         (l << 4) | (l >> 4)
+        //     },
+        //     MainBusValue::MemRead => {
+        //         todo!("Memory read not implemented in resolve_main_bus");
+        //     },
+        todo!()
     }
 
     pub fn resolve_alu_flags(&self, devices: &DeviceMap) -> (Option<Flags>, Option<Flags>) {

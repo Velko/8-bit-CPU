@@ -30,7 +30,7 @@ pub trait ClockReceiver {
     fn on_clock_tick_secondary(&mut self) {}
 }
 pub trait ValueSource<T> {
-    fn get_value(&self, devices: &DeviceMap) -> T;
+    fn get_value(&self, devices: &DeviceMap, args: &ArgSources) -> T;
 }
 
 pub struct Clock {
@@ -96,7 +96,7 @@ impl OutReceiver for AddressRegister {}
 impl LoadReceiver for AddressRegister {}
 impl ClockReceiver for AddressRegister {}
 impl ValueSource<u16> for AddressRegister {
-    fn get_value(&self, _devices: &DeviceMap) -> u16 {
+    fn get_value(&self, _devices: &DeviceMap, _args: &ArgSources) -> u16 {
         todo!()
     }
 }

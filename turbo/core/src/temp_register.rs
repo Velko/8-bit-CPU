@@ -60,7 +60,7 @@ impl ClockReceiver for TempRegister {
 }
 
 impl ValueSource<u8> for TempRegister {
-    fn get_value(&self, _devices: &DeviceMap) -> u8 {
+    fn get_value(&self, _devices: &DeviceMap, _args: &ArgSources) -> u8 {
         self.value_secondary
     }
 }

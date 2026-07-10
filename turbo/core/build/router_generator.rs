@@ -118,7 +118,8 @@ impl BusSourcesPart {
 
     pub fn is_main_bus_source(dev_type: &str, name: &str) -> bool {
         match dev_type {
-            "GPRegister" => true,
+            "GPRegister" |
+            "ALU" => true,
             // "FlagsRegister" |
             // "RAM" |
             // "ROM" |
@@ -239,34 +240,34 @@ impl DeviceMapPart {
         }
         writeln!(writer, "    }}")?;
 
-        writeln!(writer, "    pub fn get_main_bus_value(&self, source: MainBusSource) -> u8 {{")?;
+        writeln!(writer, "    pub fn get_main_bus_value(&self, source: MainBusSource, args: &ArgSources) -> u8 {{")?;
         writeln!(writer, "        match source {{")?;
         for device in self.bus_sources.main_bus_sources.iter() {
-            writeln!(writer, "            MainBusSource::{} => self.{}.get_value(self),", device, device)?;
+            writeln!(writer, "            MainBusSource::{} => self.{}.get_value(self, args),", device, device)?;
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
 
-        writeln!(writer, "    pub fn get_alu_l_value(&self, source: ALULSource) -> u8 {{")?;
+        writeln!(writer, "    pub fn get_alu_l_value(&self, source: ALULSource, args: &ArgSources) -> u8 {{")?;
         writeln!(writer, "        match source {{")?;
         for device in self.bus_sources.alu_l_sources.iter() {
-            writeln!(writer, "            ALULSource::{} => self.{}.get_value(self),", device, device)?;
+            writeln!(writer, "            ALULSource::{} => self.{}.get_value(self, args),", device, device)?;
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
 
-        writeln!(writer, "    pub fn get_alu_r_value(&self, source: ALURSource) -> u8 {{")?;
+        writeln!(writer, "    pub fn get_alu_r_value(&self, source: ALURSource, args: &ArgSources) -> u8 {{")?;
         writeln!(writer, "        match source {{")?;
         for device in self.bus_sources.alu_r_sources.iter() {
-            writeln!(writer, "            ALURSource::{} => self.{}.get_value(self),", device, device)?;
+            writeln!(writer, "            ALURSource::{} => self.{}.get_value(self, args),", device, device)?;
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
 
-        writeln!(writer, "    pub fn get_address_bus_value(&self, source: AddressBusSource) -> u16 {{")?;
+        writeln!(writer, "    pub fn get_address_bus_value(&self, source: AddressBusSource, args: &ArgSources) -> u16 {{")?;
         writeln!(writer, "        match source {{")?;
         for device in self.bus_sources.address_bus_sources.iter() {
-            writeln!(writer, "            AddressBusSource::{} => self.{}.get_value(self),", device, device)?;
+            writeln!(writer, "            AddressBusSource::{} => self.{}.get_value(self, args),", device, device)?;
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;

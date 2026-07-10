@@ -77,9 +77,9 @@ impl FlagsRegister {
         println!("FlagsRegister {} Calc changed to: {}", self.name, enable);
         self.calc_enabled.set(enable);
     }
-    pub fn on_carry_change(&self, _args: &mut ArgSources, enable: bool) {
+    pub fn on_carry_change(&self, args: &mut ArgSources, enable: bool) {
         println!("FlagsRegister {} Carry changed to: {}", self.name, enable);
-        //state.carry_in = enable;
+        args.carry_in = enable;
     }
 }
 impl ClockReceiver for FlagsRegister {
@@ -107,7 +107,7 @@ impl ClockReceiver for FlagsRegister {
 }
 
 impl ValueSource<Flags> for FlagsRegister {
-    fn get_value(&self, _devices: &DeviceMap) -> Flags {
+    fn get_value(&self, _devices: &DeviceMap, _args: &ArgSources) -> Flags {
         self.value_secondary
     }
 }

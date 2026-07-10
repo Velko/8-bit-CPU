@@ -80,7 +80,7 @@ impl ClockReceiver for ProgramCounter {
 }
 
 impl ValueSource<u16> for ProgramCounter {
-    fn get_value(&self, _devices: &DeviceMap) -> u16 {
+    fn get_value(&self, _devices: &DeviceMap, _args: &ArgSources) -> u16 {
         self.value_secondary
     }
 }
