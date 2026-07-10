@@ -1,3 +1,5 @@
+#![allow(warnings)]
+
 mod router;
 mod devices;
 mod gp_register;

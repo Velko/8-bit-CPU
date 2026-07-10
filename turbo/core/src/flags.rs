@@ -7,6 +7,8 @@ use crate::devices::OutReceiver;
 use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
 use crate::devices::ValueSource;
+use crate::router::DeviceMap;
+use crate::runtime_state::ArgValues;
 
 #[derive(Clone, Copy, PartialEq, Default)]
 pub struct Flags {
@@ -82,31 +84,31 @@ impl FlagsRegister {
     }
 }
 impl ClockReceiver for FlagsRegister {
-    fn on_clock_tick_primary(&mut self, state: &mut RuntimeState) {
-        if self.calc_enabled.get() {
-            // Perform Z and N calculations based on the main bus value
-            let result = state.resolve_main_bus();
-            let mut new_value = Flags::EMPTY;
-            if result == 0 {
-                new_value |= Flags::Z;
-            }
-            if (result & 0x80) != 0 {
-                new_value |= Flags::N;
-            }
+    fn on_clock_tick_primary(&mut self, args: &ArgValues) {
+        // if self.calc_enabled.get() {
+        //     // Perform Z and N calculations based on the main bus value
+        //     let result = state.resolve_main_bus(devices);
+        //     let mut new_value = Flags::EMPTY;
+        //     if result == 0 {
+        //         new_value |= Flags::Z;
+        //     }
+        //     if (result & 0x80) != 0 {
+        //         new_value |= Flags::N;
+        //     }
 
-            let (carry, overflow) = state.resolve_alu_flags();
-            new_value |= carry.unwrap_or(self.value_primary & Flags::C); // Apply new or preserve previous carry if not calculated
-            new_value |= overflow.unwrap_or(self.value_primary & Flags::V); // Apply new or preserve previous overflow if not calculated
-            self.value_primary = new_value;
-        }
+        //     let (carry, overflow) = state.resolve_alu_flags(devices);
+        //     new_value |= carry.unwrap_or(self.value_primary & Flags::C); // Apply new or preserve previous carry if not calculated
+        //     new_value |= overflow.unwrap_or(self.value_primary & Flags::V); // Apply new or preserve previous overflow if not calculated
+        //     self.value_primary = new_value;
+        // }
     }
-    fn on_clock_tick_secondary(&mut self, _state: &mut RuntimeState) {
+    fn on_clock_tick_secondary(&mut self) {
         self.value_secondary = self.value_primary;
     }
 }
 
 impl ValueSource<Flags> for FlagsRegister {
-    fn get_value(&self, state: &RuntimeState) -> Flags {
+    fn get_value(&self, _devices: &DeviceMap) -> Flags {
         self.value_secondary
     }
 }

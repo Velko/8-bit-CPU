@@ -1,4 +1,40 @@
 use crate::flags::Flags;
+use crate::router::{MainBusSource, ALULSource, ALURSource};
+use crate::router::DeviceMap;
+
+pub struct ArgSources {
+    pub main_bus_source: Option<MainBusSource>,
+    pub alu_l_source: Option<ALULSource>,
+    pub alu_r_source: Option<ALURSource>,
+}
+
+impl ArgSources {
+    pub fn new() -> Self {
+        Self {
+            main_bus_source: None,
+            alu_l_source: None,
+            alu_r_source: None,
+        }
+    }
+
+    pub fn resolve(&self, devices: &DeviceMap) -> ArgValues {
+        let alu_l_value = self.alu_l_source.map(|source| devices.get_alu_l_value(source));
+        let alu_r_value = self.alu_r_source.map(|source| devices.get_alu_r_value(source));
+        let main_bus_value = self.main_bus_source.map(|source| devices.get_main_bus_value(source));
+        ArgValues {
+            main_bus_value,
+            alu_l_value,
+            alu_r_value,
+        }
+    }
+}
+
+pub struct ArgValues {
+    pub main_bus_value: Option<u8>,
+    pub alu_l_value: Option<u8>,
+    pub alu_r_value: Option<u8>,
+}
+
 
 pub enum MainBusValue {
     None,
@@ -17,8 +53,8 @@ pub enum MainBusValue {
 pub struct RuntimeState {
     pub main_bus: MainBusValue,
     pub address_bus: Option<u16>,
-    pub alu_l_bus: Option<u8>,
-    pub alu_r_bus: Option<u8>,
+    pub alu_l_bus: Option<ALULSource>,
+    pub alu_r_bus: Option<ALURSource>,
     pub carry_in: bool,
 }
 
@@ -33,48 +69,48 @@ impl RuntimeState {
         }
     }
 
-    pub fn resolve_main_bus(&self) -> u8 {
+    pub fn resolve_main_bus(&self, devices: &DeviceMap) -> u8 {
 
         match self.main_bus {
             MainBusValue::None => panic!("Bus value is None"),
             MainBusValue::Const(value) => value,
             MainBusValue::Add => {
-                let l = self.alu_l_bus.unwrap_or(0);
-                let r = self.alu_r_bus.unwrap_or(0);
+                let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
+                let r = devices.get_alu_r_value(self.alu_r_bus.unwrap());
                 let carry = if self.carry_in { 1 } else { 0 };
                 l.wrapping_add(r).wrapping_add(carry)
             }
             MainBusValue::Subtract => {
-                let l = self.alu_l_bus.unwrap_or(0);
-                let r = self.alu_r_bus.unwrap_or(0);
+                let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
+                let r = devices.get_alu_r_value(self.alu_r_bus.unwrap());
                 let carry = if self.carry_in { 1 } else { 0 };
                 l.wrapping_sub(r).wrapping_sub(carry)
             },
             MainBusValue::And => {
-                let l = self.alu_l_bus.unwrap_or(0);
-                let r = self.alu_r_bus.unwrap_or(0);
+                let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
+                let r = devices.get_alu_r_value(self.alu_r_bus.unwrap());
                 l & r
             },
             MainBusValue::Or => {
-                let l = self.alu_l_bus.unwrap_or(0);
-                let r = self.alu_r_bus.unwrap_or(0);
+                let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
+                let r = devices.get_alu_r_value(self.alu_r_bus.unwrap());
                 l | r
             },
             MainBusValue::Xor => {
-                let l = self.alu_l_bus.unwrap_or(0);
-                let r = self.alu_r_bus.unwrap_or(0);
+                let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
+                let r = devices.get_alu_r_value(self.alu_r_bus.unwrap());
                 l ^ r
             },
             MainBusValue::Not => {
-                let l = self.alu_l_bus.unwrap_or(0);
+                let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
                 !l
             },
             MainBusValue::Shr => {
-                let l = self.alu_l_bus.unwrap_or(0);
+                let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
                 l >> 1
             },
             MainBusValue::Swap => {
-                let l = self.alu_l_bus.unwrap_or(0);
+                let l = devices.get_alu_l_value(self.alu_l_bus.unwrap());
                 (l << 4) | (l >> 4)
             },
             MainBusValue::MemRead => {
@@ -83,9 +119,9 @@ impl RuntimeState {
         }
     }
 
-    pub fn resolve_alu_flags(&self) -> (Option<Flags>, Option<Flags>) {
-        let l = self.alu_l_bus.unwrap_or(0) as u16;
-        let r = self.alu_r_bus.unwrap_or(0) as u16;
+    pub fn resolve_alu_flags(&self, devices: &DeviceMap) -> (Option<Flags>, Option<Flags>) {
+        /*let l = devices.get_alu_l_value.map(|source|  self.alu_l_bus.unwrap(), self) as u16;
+        let r = devices.get_alu_r_value(self.alu_r_bus.unwrap(), self) as u16;
         let carry = if self.carry_in { 1 } else { 0 };
         match self.main_bus {
             MainBusValue::Add => {
@@ -105,6 +141,7 @@ impl RuntimeState {
                 (Some(carry_out), None)
             },
             _ => (None, None),
-        }
+        }*/
+        (None, None)
     }
 }

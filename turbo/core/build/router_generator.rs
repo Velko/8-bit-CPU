@@ -152,21 +152,25 @@ impl BusSourcesPart {
     }
 
     pub fn emit(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
+        writeln!(writer, "#[derive(Debug, Clone, Copy, PartialEq)]")?;
         writeln!(writer, "pub enum MainBusSource {{")?;
         for source in self.main_bus_sources.iter() {
             writeln!(writer, "    {},", source)?;
         }
         writeln!(writer, "}}")?;
+        writeln!(writer, "#[derive(Debug, Clone, Copy, PartialEq)]")?;
         writeln!(writer, "pub enum ALULSource {{")?;
         for source in self.alu_l_sources.iter() {
             writeln!(writer, "    {},", source)?;
         }
         writeln!(writer, "}}")?;
+        writeln!(writer, "#[derive(Debug, Clone, Copy, PartialEq)]")?;
         writeln!(writer, "pub enum ALURSource {{")?;
         for source in self.alu_r_sources.iter() {
             writeln!(writer, "    {},", source)?;
         }
         writeln!(writer, "}}")?;
+        writeln!(writer, "#[derive(Debug, Clone, Copy, PartialEq)]")?;
         writeln!(writer, "pub enum AddressBusSource {{")?;
         for source in self.address_bus_sources.iter() {
             writeln!(writer, "    {},", source)?;
@@ -223,46 +227,46 @@ impl DeviceMapPart {
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
 
-        writeln!(writer, "    pub fn broadcast_clock_tick_primary(&mut self, state: &mut RuntimeState) {{")?;
+        writeln!(writer, "    pub fn broadcast_clock_tick_primary(&mut self, args: &ArgValues) {{")?;
         for device in self.devices.iter() {
-            writeln!(writer, "        self.{}.on_clock_tick_primary(state);", device.name)?;
+            writeln!(writer, "        self.{}.on_clock_tick_primary(args);", device.name)?;
         }
         writeln!(writer, "    }}")?;
 
-        writeln!(writer, "    pub fn broadcast_clock_tick_secondary(&mut self, state: &mut RuntimeState) {{")?;
+        writeln!(writer, "    pub fn broadcast_clock_tick_secondary(&mut self) {{")?;
         for device in self.devices.iter() {
-            writeln!(writer, "        self.{}.on_clock_tick_secondary(state);", device.name)?;
+            writeln!(writer, "        self.{}.on_clock_tick_secondary();", device.name)?;
         }
         writeln!(writer, "    }}")?;
 
-        writeln!(writer, "    pub fn get_main_bus_value(&self, source: MainBusSource, state: &RuntimeState) -> u8 {{")?;
+        writeln!(writer, "    pub fn get_main_bus_value(&self, source: MainBusSource) -> u8 {{")?;
         writeln!(writer, "        match source {{")?;
         for device in self.bus_sources.main_bus_sources.iter() {
-            writeln!(writer, "            MainBusSource::{} => self.{}.get_value(state),", device, device)?;
+            writeln!(writer, "            MainBusSource::{} => self.{}.get_value(self),", device, device)?;
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
 
-        writeln!(writer, "    pub fn get_alu_l_value(&self, source: ALULSource, state: &RuntimeState) -> u8 {{")?;
+        writeln!(writer, "    pub fn get_alu_l_value(&self, source: ALULSource) -> u8 {{")?;
         writeln!(writer, "        match source {{")?;
         for device in self.bus_sources.alu_l_sources.iter() {
-            writeln!(writer, "            ALULSource::{} => self.{}.get_value(state),", device, device)?;
+            writeln!(writer, "            ALULSource::{} => self.{}.get_value(self),", device, device)?;
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
 
-        writeln!(writer, "    pub fn get_alu_r_value(&self, source: ALURSource, state: &RuntimeState) -> u8 {{")?;
+        writeln!(writer, "    pub fn get_alu_r_value(&self, source: ALURSource) -> u8 {{")?;
         writeln!(writer, "        match source {{")?;
         for device in self.bus_sources.alu_r_sources.iter() {
-            writeln!(writer, "            ALURSource::{} => self.{}.get_value(state),", device, device)?;
+            writeln!(writer, "            ALURSource::{} => self.{}.get_value(self),", device, device)?;
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
 
-        writeln!(writer, "    pub fn get_address_bus_value(&self, source: AddressBusSource, state: &RuntimeState) -> u16 {{")?;
+        writeln!(writer, "    pub fn get_address_bus_value(&self, source: AddressBusSource) -> u16 {{")?;
         writeln!(writer, "        match source {{")?;
         for device in self.bus_sources.address_bus_sources.iter() {
-            writeln!(writer, "            AddressBusSource::{} => self.{}.get_value(state),", device, device)?;
+            writeln!(writer, "            AddressBusSource::{} => self.{}.get_value(self),", device, device)?;
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;

@@ -5,6 +5,7 @@ use crate::ControlWord;
 use crate::devices::*;
 use crate::control_word::ControlWordBuilder;
 
+
 include!(concat!(env!("OUT_DIR"), "/router_generated.rs"));
 
 pub trait MuxDispatcher {
