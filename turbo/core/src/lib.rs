@@ -13,6 +13,9 @@ mod memory;
 mod runtime_state;
 
 pub use control_word::ControlWord;
+pub use router::DeviceMap;
+pub use router::DEFAULT_CW;
+pub use runtime_state::ArgSources;
 
 #[cfg(test)]
 mod test_helpers;

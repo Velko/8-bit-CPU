@@ -21,6 +21,10 @@ fn main() -> std::io::Result<()> {
         }
     });
 
+    let devices = turbo_core::DeviceMap::new();
+    let mut sources = turbo_core::ArgSources::new();
+    let mut current_cw = turbo_core::DEFAULT_CW;
+
     let mut ch0_dest: SocketAddr = "127.0.0.1:8888".parse().expect("Invalid address");
 
     loop {
@@ -39,6 +43,11 @@ fn main() -> std::io::Result<()> {
                 let _port = recv_int(&rx);
                 println!("Received: E command with channel {} and port {}", _chan, _port);
                 ch0_dest = format!("127.0.0.1:{}", _port).parse().expect("Invalid address");
+            },
+            'M' => {
+                let cw = recv_int(&rx);
+                devices.route_word(&mut sources, current_cw, cw);
+                current_cw = cw;
             },
             _ => {
                 println!("Received: unknown {}", c);
