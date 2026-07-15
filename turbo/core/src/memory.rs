@@ -4,7 +4,7 @@ use crate::devices::ClockReceiver;
 use crate::devices::ValueSource;
 use crate::router::DeviceMap;
 use crate::router::MainBusSource;
-use crate::runtime_state::{ArgValues, ArgSources};
+use crate::runtime_state::BusValues;
 
 const ADDRESS_SPACE_SIZE: usize = 0x10000; // 64KB
 const ROM_SIZE: usize = 0x2000; // 8KB
@@ -18,8 +18,8 @@ pub struct RAM {
 }
 
 impl OutReceiver for RAM {
-    fn on_out_change(&self, args: &mut ArgSources, enable: bool) {
-        args.main_bus_source = if enable { Some(self.main_id) } else { None };
+    fn on_out_change(&self, bus_values: &mut BusValues, enable: bool) {
+        bus_values.main_bus.source = if enable { Some(self.main_id) } else { None };
     }
 }
 
@@ -32,7 +32,7 @@ impl RAM {
             data: [0; RAM_SIZE]
         }
     }
-    pub fn on_write_change(&self, _args: &mut ArgSources, enable: bool) {
+    pub fn on_write_change(&self, _bus_values: &mut BusValues, enable: bool) {
         self.write_enable.set(enable);
     }
 
@@ -45,12 +45,12 @@ impl RAM {
     }
 }
 impl ClockReceiver for RAM {
-        fn on_clock_tick_primary(&mut self, args: &ArgValues) {
+        fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
         if self.write_enable.get() {
-            if let Some(address) = args.address_bus_value {
+            if let Some(address) = bus_values.address_bus.value {
                 let address = address as usize;
                 if address < RAM_SIZE {
-                    if let Some(value) = args.main_bus_value {
+                    if let Some(value) = bus_values.main_bus.value {
                         self.data[address] = value;
                     }
                 }
@@ -60,8 +60,8 @@ impl ClockReceiver for RAM {
 }
 
 impl ValueSource<u8> for RAM {
-    fn get_value(&self, devices: &DeviceMap, args: &ArgSources) -> u8 {
-        let address = args.address_bus_source.map(|source| devices.get_address_bus_value(source, args)).unwrap() as usize;
+    fn get_value(&self, devices: &DeviceMap, bus_values: &BusValues) -> u8 {
+        let address = bus_values.address_bus.value.unwrap() as usize;
         self.data[address]
     }
 }
@@ -98,11 +98,11 @@ mod tests {
 
         bench.devices.route_word(&mut bench.sources, DEFAULT_CW, fetch_cw);
 
-        let values = bench.sources.resolve(&bench.devices);
+        bench.sources.resolve(&bench.devices);
 
-        assert_eq!(values.main_bus_value, Some(3));
+        assert_eq!(bench.sources.main_bus.value, Some(3));
 
-        bench.devices.broadcast_clock_tick_primary(&values);
+        bench.devices.broadcast_clock_tick_primary(&bench.sources);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(bench.devices.IR.get_value(&bench.devices, &bench.sources), 3);
@@ -123,9 +123,9 @@ mod tests {
             .build();
 
         bench.devices.route_word(&mut bench.sources, DEFAULT_CW, write_at_pc_cw);
-        let values = bench.sources.resolve(&bench.devices);
+        bench.sources.resolve(&bench.devices);
 
-        bench.devices.broadcast_clock_tick_primary(&values);
+        bench.devices.broadcast_clock_tick_primary(&bench.sources);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(bench.devices.Ram.data[2], 42);

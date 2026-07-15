@@ -4,7 +4,8 @@ use crate::devices::OutReceiver;
 use crate::devices::ValueSource;
 use crate::router::DeviceMap;
 use crate::router::{MainBusSource, FlagsSource};
-use crate::runtime_state::{ArgSources, ALUFlags};
+use crate::runtime_state::BusValues;
+use crate::runtime_state::{ALUFlags};
 use crate::flags::Flags;
 
 pub struct ALU {
@@ -14,10 +15,10 @@ pub struct ALU {
     alt_enabled: Cell<bool>,
 }
 impl OutReceiver for ALU {
-    fn on_out_change(&self, args: &mut ArgSources, enable: bool) {
+    fn on_out_change(&self, bus_values: &mut BusValues, enable: bool) {
         println!("ALU {} Out changed to: {}", self.name, enable);
-        args.main_bus_source = if enable { Some(self.main_id) } else { None };
-        args.flags_source = if enable { Some(self.flags_id) } else { None };
+        bus_values.main_bus.source = if enable { Some(self.main_id) } else { None };
+        bus_values.flags.source = if enable { Some(self.flags_id) } else { None };
     }
 }
 impl ALU {
@@ -30,15 +31,15 @@ impl ALU {
         }
     }
 
-    pub fn on_alt_change(&self, _args: &mut ArgSources, enable: bool) {
+    pub fn on_alt_change(&self, _bus_values: &mut BusValues, enable: bool) {
         println!("ALU {} Alt changed to: {}", self.name, enable);
         self.alt_enabled.set(enable);
     }
 
-    fn solve_add_sub(&self, devices: &DeviceMap, args: &ArgSources) -> u8 {
-        let alu_l_value = args.alu_l_source.map(|source| devices.get_alu_l_value(source, args)).unwrap_or(0);
-        let alu_r_value = args.alu_r_source.map(|source| devices.get_alu_r_value(source, args)).unwrap_or(0);
-        let carry_in = if args.carry_in { 1 } else { 0 };
+    fn solve_add_sub(&self, devices: &DeviceMap, bus_values: &BusValues) -> u8 {
+        let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
+        let alu_r_value = bus_values.alu_r.value.unwrap_or(0);
+        let carry_in = if bus_values.carry_in { 1 } else { 0 };
 
         if self.alt_enabled.get() {
             // Subtract
@@ -49,10 +50,10 @@ impl ALU {
         }
     }
 
-    fn solve_add_sub_flags(&self, devices: &DeviceMap, args: &ArgSources) -> ALUFlags {
-        let alu_l_value = args.alu_l_source.map(|source| devices.get_alu_l_value(source, args)).unwrap_or(0);
-        let alu_r_value = args.alu_r_source.map(|source| devices.get_alu_r_value(source, args)).unwrap_or(0);
-        let carry_in = if args.carry_in { 1 } else { 0 };
+    fn solve_add_sub_flags(&self, devices: &DeviceMap, bus_values: &BusValues) -> ALUFlags {
+        let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
+        let alu_r_value = bus_values.alu_r.value.unwrap_or(0);
+        let carry_in = if bus_values.flags.value.as_ref().map_or(false, |flags| flags.carry == Some(Flags::C)) { 1 } else { 0 };
 
         if self.alt_enabled.get() {
             // Subtract
@@ -75,9 +76,9 @@ impl ALU {
         }
     }
 
-    fn solve_and_or(&self, devices: &DeviceMap, args: &ArgSources) -> u8 {
-        let alu_l_value = args.alu_l_source.map(|source| devices.get_alu_l_value(source, args)).unwrap_or(0);
-        let alu_r_value = args.alu_r_source.map(|source| devices.get_alu_r_value(source, args)).unwrap_or(0);
+    fn solve_and_or(&self, devices: &DeviceMap, bus_values: &BusValues) -> u8 {
+        let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
+        let alu_r_value = bus_values.alu_r.value.unwrap_or(0);
 
         if self.alt_enabled.get() {
             // Or
@@ -88,32 +89,32 @@ impl ALU {
         }
     }
 
-    fn solve_xor_not(&self, devices: &DeviceMap, args: &ArgSources) -> u8 {
-        let alu_l_value = args.alu_l_source.map(|source| devices.get_alu_l_value(source, args)).unwrap_or(0);
+    fn solve_xor_not(&self, devices: &DeviceMap, bus_values: &BusValues) -> u8 {
+        let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
         if self.alt_enabled.get() {
             // Not
             !alu_l_value
         } else {
             // Xor
-            let alu_r_value = args.alu_r_source.map(|source| devices.get_alu_r_value(source, args)).unwrap_or(0);
+            let alu_r_value = bus_values.alu_r.value.unwrap_or(0);
             alu_l_value ^ alu_r_value
         }
     }
 
-    fn solve_shift_swap(&self, devices: &DeviceMap, args: &ArgSources) -> u8 {
-        let alu_l_value = args.alu_l_source.map(|source| devices.get_alu_l_value(source, args)).unwrap_or(0);
+    fn solve_shift_swap(&self, devices: &DeviceMap, bus_values: &BusValues) -> u8 {
+        let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
         if self.alt_enabled.get() {
             // Swap
             (alu_l_value << 4) | (alu_l_value >> 4)
         } else {
             // Shift right
-            let carry_in = if args.carry_in { 0x80 } else { 0 };
+            let carry_in = if bus_values.carry_in { 0x80 } else { 0 };
             alu_l_value >> 1 | carry_in
         }
     }
 
-    fn solve_shift_swap_flags(&self, devices: &DeviceMap, args: &ArgSources) -> ALUFlags {
-        let alu_l_value = args.alu_l_source.map(|source| devices.get_alu_l_value(source, args)).unwrap_or(0);
+    fn solve_shift_swap_flags(&self, devices: &DeviceMap, bus_values: &BusValues) -> ALUFlags {
+        let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
         if self.alt_enabled.get() {
             // Swap
             ALUFlags {
@@ -135,12 +136,12 @@ impl ALU {
 impl ClockReceiver for ALU {}
 
 impl ValueSource<u8> for ALU {
-    fn get_value(&self, devices: &DeviceMap, args: &ArgSources) -> u8 {
+    fn get_value(&self, devices: &DeviceMap, bus_values: &BusValues) -> u8 {
         match self.main_id {
-            MainBusSource::AddSub => self.solve_add_sub(devices, args),
-            MainBusSource::AndOr => self.solve_and_or(devices, args),
-            MainBusSource::XorNot => self.solve_xor_not(devices, args),
-            MainBusSource::ShiftSwap => self.solve_shift_swap(devices, args),
+            MainBusSource::AddSub => self.solve_add_sub(devices, bus_values),
+            MainBusSource::AndOr => self.solve_and_or(devices, bus_values),
+            MainBusSource::XorNot => self.solve_xor_not(devices, bus_values),
+            MainBusSource::ShiftSwap => self.solve_shift_swap(devices, bus_values),
             _ => panic!("Unknown ALU main bus source: {:?}", self.main_id),
         }
     }
@@ -148,10 +149,10 @@ impl ValueSource<u8> for ALU {
 
 
 impl ValueSource<ALUFlags> for ALU {
-    fn get_value(&self, devices: &DeviceMap, args: &ArgSources) -> ALUFlags {
+    fn get_value(&self, devices: &DeviceMap, bus_values: &BusValues) -> ALUFlags {
         match self.flags_id {
-            FlagsSource::AddSub => self.solve_add_sub_flags(devices, args),
-            FlagsSource::ShiftSwap => self.solve_shift_swap_flags(devices, args),
+            FlagsSource::AddSub => self.solve_add_sub_flags(devices, bus_values),
+            FlagsSource::ShiftSwap => self.solve_shift_swap_flags(devices, bus_values),
             _ => ALUFlags {
                 carry: None,
                 overflow: None,
@@ -200,10 +201,10 @@ mod tests {
             .build();
         bench.devices.route_word(&mut bench.sources, DEFAULT_CW, add_ab_cw);
 
-        let values = bench.sources.resolve(&bench.devices);
-        assert_eq!(Some(expected_sum), values.main_bus_value); // Check if the ALU calculates the sum of A and B correctly
+        bench.sources.resolve(&bench.devices);
+        assert_eq!(Some(expected_sum), bench.sources.main_bus.value); // Check if the ALU calculates the sum of A and B correctly
 
-        bench.devices.broadcast_clock_tick_primary(&values);
+        bench.devices.broadcast_clock_tick_primary(&bench.sources);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(expected_sum, bench.devices.A.get_value(&bench.devices, &bench.sources)); // Check if A has the value
@@ -242,9 +243,9 @@ mod tests {
 
         let values = bench.sources.resolve(&bench.devices);
 
-        assert_eq!(Some(expected_result), values.main_bus_value); // Check if the ALU calculates the difference of B and C correctly
+        assert_eq!(Some(expected_result), bench.sources.main_bus.value); // Check if the ALU calculates the difference of B and C correctly
 
-        bench.devices.broadcast_clock_tick_primary(&values);
+        bench.devices.broadcast_clock_tick_primary(&bench.sources);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(expected_result, bench.devices.B.get_value(&bench.devices, &bench.sources)); // Check if B has the value
@@ -269,9 +270,9 @@ mod tests {
             .apply_bit::<FCarry>()
             .build();
         bench.devices.route_word(&mut bench.sources, DEFAULT_CW, adc_ab_cw);
-        let values = bench.sources.resolve(&bench.devices);
+        bench.sources.resolve(&bench.devices);
 
-        assert_eq!(Some(43), values.main_bus_value); // Check if the ALU calculates the sum of A and B + carry correctly
+        assert_eq!(Some(43), bench.sources.main_bus.value); // Check if the ALU calculates the sum of A and B + carry correctly
     }
 
     #[test]
@@ -293,10 +294,10 @@ mod tests {
             .build();
 
         bench.devices.route_word(&mut bench.sources, DEFAULT_CW, sbb_bc_cw);
-        let values = bench.sources.resolve(&bench.devices);
+        bench.sources.resolve(&bench.devices);
 
 
-        assert_eq!(Some(5), values.main_bus_value); // Check if the ALU calculates the difference of B and C correctly
+        assert_eq!(Some(5), bench.sources.main_bus.value); // Check if the ALU calculates the difference of B and C correctly
     }
 
 
@@ -323,11 +324,11 @@ mod tests {
             .build();
 
         bench.devices.route_word(&mut bench.sources, DEFAULT_CW, and_ab);
-        let values = bench.sources.resolve(&bench.devices);
+        bench.sources.resolve(&bench.devices);
 
-        assert_eq!(Some(expected_result), values.main_bus_value); // Check if the ALU calculates the AND of A and B correctly
+        assert_eq!(Some(expected_result), bench.sources.main_bus.value); // Check if the ALU calculates the AND of A and B correctly
 
-        bench.devices.broadcast_clock_tick_primary(&values);
+        bench.devices.broadcast_clock_tick_primary(&bench.sources);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(expected_result, bench.devices.A.get_value(&bench.devices, &bench.sources)); // Check if A has the value
@@ -357,11 +358,11 @@ mod tests {
             .build();
 
         bench.devices.route_word(&mut bench.sources, DEFAULT_CW, or_ab);
-        let values = bench.sources.resolve(&bench.devices);
+        bench.sources.resolve(&bench.devices);
 
-        assert_eq!(Some(expected_result), values.main_bus_value); // Check if the ALU calculates the OR of A and B correctly
+        assert_eq!(Some(expected_result), bench.sources.main_bus.value); // Check if the ALU calculates the OR of A and B correctly
 
-        bench.devices.broadcast_clock_tick_primary(&values);
+        bench.devices.broadcast_clock_tick_primary(&bench.sources);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(expected_result, bench.devices.A.get_value(&bench.devices, &bench.sources)); // Check if A has the value
@@ -391,11 +392,11 @@ mod tests {
             .build();
 
         bench.devices.route_word(&mut bench.sources, DEFAULT_CW, xor_ab);
-        let values = bench.sources.resolve(&bench.devices);
+        bench.sources.resolve(&bench.devices);
 
-        assert_eq!(Some(expected_result), values.main_bus_value); // Check if the ALU calculates the XOR of A and B correctly
+        assert_eq!(Some(expected_result), bench.sources.main_bus.value); // Check if the ALU calculates the XOR of A and B correctly
 
-        bench.devices.broadcast_clock_tick_primary(&values);
+        bench.devices.broadcast_clock_tick_primary(&bench.sources);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(expected_result, bench.devices.A.get_value(&bench.devices, &bench.sources)); // Check if A has the value
@@ -421,11 +422,11 @@ mod tests {
             .apply_bit::<AluAlt>()
             .build();
         bench.devices.route_word(&mut bench.sources, DEFAULT_CW, not_a);
-        let values = bench.sources.resolve(&bench.devices);
+        bench.sources.resolve(&bench.devices);
 
-        assert_eq!(Some(expected_result), values.main_bus_value); // Check if the ALU calculates the NOT of A correctly
+        assert_eq!(Some(expected_result), bench.sources.main_bus.value); // Check if the ALU calculates the NOT of A correctly
 
-        bench.devices.broadcast_clock_tick_primary(&values);
+        bench.devices.broadcast_clock_tick_primary(&bench.sources);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(expected_result, bench.devices.A.get_value(&bench.devices, &bench.sources)); // Check if A has the value
@@ -452,15 +453,41 @@ mod tests {
             .build();
 
         bench.devices.route_word(&mut bench.sources, DEFAULT_CW, shr_a);
-        let values = bench.sources.resolve(&bench.devices);
+        bench.sources.resolve(&bench.devices);
 
-        assert_eq!(Some(expected_result), values.main_bus_value); // Check if the ALU calculates the SHR of A correctly
+        assert_eq!(Some(expected_result), bench.sources.main_bus.value); // Check if the ALU calculates the SHR of A correctly
 
-        bench.devices.broadcast_clock_tick_primary(&values);
+        bench.devices.broadcast_clock_tick_primary(&bench.sources);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(expected_result, bench.devices.A.get_value(&bench.devices, &bench.sources)); // Check if A has the value
         assert_eq!(expected_flags, bench.devices.F.get_value(&bench.devices, &bench.sources)); // Check if the flags register has the expected flags set after the operation
+    }
+
+    #[test]
+    fn test_alu_shr_carry_in() {
+        let mut bench = TestBench::new();
+
+        bench.devices.A.set_value(0x00);
+
+        // shr_A
+        let shr_a = ControlWordBuilder::default()
+            .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
+            .apply_mux::<OutMux>(OutMux::VALUE_SHIFTSWAP_OUT)
+            .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
+            .apply_bit::<FCalc>()
+            .apply_bit::<FCarry>()
+            .build();
+
+        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, shr_a);
+        bench.sources.resolve(&bench.devices);
+
+        assert_eq!(Some(0x80), bench.sources.main_bus.value); // Check if the ALU calculates the SHR of A correctly with carry in
+
+        bench.devices.broadcast_clock_tick_primary(&bench.sources);
+        bench.devices.broadcast_clock_tick_secondary();
+
+        assert_eq!(0x80, bench.devices.A.get_value(&bench.devices, &bench.sources)); // Check if A has the value
     }
 
     #[rstest]
@@ -487,11 +514,11 @@ mod tests {
             .build();
 
         bench.devices.route_word(&mut bench.sources, DEFAULT_CW, swap_a);
-        let values = bench.sources.resolve(&bench.devices);
+        bench.sources.resolve(&bench.devices);
 
-        assert_eq!(Some(expected_result), values.main_bus_value); // Check if the ALU calculates the SWAP of A correctly
+        assert_eq!(Some(expected_result), bench.sources.main_bus.value); // Check if the ALU calculates the SWAP of A correctly
 
-        bench.devices.broadcast_clock_tick_primary(&values);
+        bench.devices.broadcast_clock_tick_primary(&bench.sources);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(expected_result, bench.devices.A.get_value(&bench.devices, &bench.sources)); // Check if A has the value

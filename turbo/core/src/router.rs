@@ -5,13 +5,14 @@ use crate::ControlWord;
 use crate::devices::*;
 use crate::control_word::ControlWordBuilder;
 use crate::runtime_state::ALUFlags;
+use crate::runtime_state::BusValues;
 
 include!(concat!(env!("OUT_DIR"), "/router_generated.rs"));
 
 pub trait MuxDispatcher {
     const MASK: ControlWord;
     const VALUE_DEFAULT: ControlWord;
-    fn dispatch(dev: &DeviceMap, args: &mut ArgSources, word: ControlWord, enable: bool);
+    fn dispatch(dev: &DeviceMap, bus_values: &mut BusValues, word: ControlWord, enable: bool);
 }
 
 pub trait BitDispatcher {
@@ -29,7 +30,7 @@ mod tests {
         let default_cw = 0x07ff58ff; // default
         let add_bc_cw = 0x07ff0915; // add_B_C
         println!("add_B_C");
-        let mut state = ArgSources::new();
+        let mut state = BusValues::new();
         device_map.route_word(&mut state, default_cw, add_bc_cw);
 
         let inc_a_cw = 0x07ff9805; // inc A

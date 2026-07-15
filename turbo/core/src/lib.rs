@@ -13,7 +13,7 @@ mod runtime_state;
 pub use control_word::ControlWord;
 pub use router::DeviceMap;
 pub use router::DEFAULT_CW;
-pub use runtime_state::ArgSources;
+pub use runtime_state::BusValues;
 
 #[cfg(test)]
 mod test_helpers;

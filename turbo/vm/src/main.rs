@@ -22,7 +22,7 @@ fn main() -> std::io::Result<()> {
     });
 
     let devices = turbo_core::DeviceMap::new();
-    let mut sources = turbo_core::ArgSources::new();
+    let mut sources = turbo_core::BusValues::new();
     let mut current_cw = turbo_core::DEFAULT_CW;
 
     let mut ch0_dest: SocketAddr = "127.0.0.1:8888".parse().expect("Invalid address");

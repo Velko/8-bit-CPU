@@ -6,7 +6,7 @@ use crate::devices::IncReceiver;
 use crate::devices::ValueSource;
 use crate::router::AddressBusSource;
 use crate::router::DeviceMap;
-use crate::runtime_state::{ArgSources, ArgValues};
+use crate::runtime_state::BusValues;
 
 pub struct ProgramCounter {
     pub name: &'static str,
@@ -36,9 +36,9 @@ impl ProgramCounter {
 }
 
 impl OutReceiver for ProgramCounter {
-    fn on_out_change(&self, args: &mut ArgSources, enable: bool) {
+    fn on_out_change(&self, bus_values: &mut BusValues, enable: bool) {
         println!("ProgramCounter {} Out changed to: {}", self.name, enable);
-        args.address_bus_source = if enable {
+        bus_values.address_bus.source = if enable {
             Some(self.address_bus_id)
         } else {
             None
@@ -47,23 +47,23 @@ impl OutReceiver for ProgramCounter {
 }
 
 impl LoadReceiver for ProgramCounter {
-    fn on_load_change(&self, _args: &mut ArgSources, enable: bool) {
+    fn on_load_change(&self, _bus_values: &mut BusValues, enable: bool) {
         println!("ProgramCounter {} Load changed to: {}", self.name, enable);
         self.load_enabled.set(enable);
     }
 }
 
 impl IncReceiver for ProgramCounter {
-    fn on_inc_change(&self, _args: &mut ArgSources, enable: bool) {
+    fn on_inc_change(&self, _bus_values: &mut BusValues, enable: bool) {
         println!("ProgramCounter {} Inc changed to: {}", self.name, enable);
         self.inc_enabled.set(enable);
     }
 }
 
 impl ClockReceiver for ProgramCounter {
-    fn on_clock_tick_primary(&mut self, args: &ArgValues) {
+    fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
         if self.load_enabled.get() {
-            self.value_primary = args.address_bus_value.unwrap();
+            self.value_primary = bus_values.address_bus.value.unwrap();
         } else if self.inc_enabled.get() {
             self.value_primary = self.value_primary.wrapping_add(1);
         }
@@ -77,7 +77,7 @@ impl ClockReceiver for ProgramCounter {
 }
 
 impl ValueSource<u16> for ProgramCounter {
-    fn get_value(&self, _devices: &DeviceMap, _args: &ArgSources) -> u16 {
+    fn get_value(&self, _devices: &DeviceMap, _bus_values: &BusValues) -> u16 {
         self.value_secondary
     }
 }
@@ -104,33 +104,29 @@ mod tests {
         bench.devices.route_word(&mut bench.sources, DEFAULT_CW, pc_out_inc_cw);
 
         // broadcasts the original value
-        let values = bench.sources.resolve(&bench.devices);
-        assert_eq!(Some(0x1234), values.address_bus_value);
+        bench.sources.resolve(&bench.devices);
+        assert_eq!(Some(0x1234), bench.sources.address_bus.value);
 
         // incrementing the value should only affect the internal storage
-        bench.devices.broadcast_clock_tick_primary(&values);
+        bench.devices.broadcast_clock_tick_primary(&bench.sources);
         assert_eq!(0x1235, bench.devices.PC.value_primary);
 
         // check if still broadcasts the original value
-        let values2 = bench.sources.resolve(&bench.devices);
-        assert_eq!(Some(0x1234), values2.address_bus_value);
+        bench.sources.resolve(&bench.devices);
+        assert_eq!(Some(0x1234), bench.sources.address_bus.value);
     }
 
     #[test]
     fn test_program_counter_load() {
         let mut bench = TestBench::new();
-        let args = ArgValues {
-            main_bus_value: None,
-            address_bus_value: Some(0x5678),
-            alu_flags_value: None,
-        }; // Simulate loading 42 into A
+        bench.sources.address_bus.value = Some(0x5678); // Simulate loading 42 into A
 
         let pc_load_cw = ControlWordBuilder::default()
             .apply_mux::<AddrLoadMux>(AddrLoadMux::VALUE_PC_LOAD)
             .build(); // Enable PC Load
         bench.devices.route_word(&mut bench.sources, DEFAULT_CW, pc_load_cw);
 
-        bench.devices.broadcast_clock_tick_primary(&args);
+        bench.devices.broadcast_clock_tick_primary(&bench.sources);
 
         assert_eq!(0x5678, bench.devices.PC.value_primary);
         assert_eq!(0, bench.devices.PC.value_secondary);

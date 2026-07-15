@@ -3,7 +3,7 @@ use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
 use crate::devices::ValueSource;
 use crate::router::DeviceMap;
-use crate::runtime_state::{ArgValues, ArgSources};
+use crate::runtime_state::BusValues;
 
 pub struct WORegister {
     pub name: &'static str,
@@ -24,15 +24,15 @@ impl WORegister {
 }
 
 impl LoadReceiver for WORegister {
-    fn on_load_change(&self, _args: &mut ArgSources, enable: bool) {
+    fn on_load_change(&self, _bus_values: &mut BusValues, enable: bool) {
         self.load_enabled.set(enable);
     }
 }
 
 impl ClockReceiver for WORegister {
-        fn on_clock_tick_primary(&mut self, args: &ArgValues) {
+        fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
         if self.load_enabled.get() {
-            self.value_primary = args.main_bus_value.unwrap();
+            self.value_primary = bus_values.main_bus.value.unwrap();
         }
     }
 
@@ -44,7 +44,7 @@ impl ClockReceiver for WORegister {
 }
 
 impl ValueSource<u8> for WORegister {
-    fn get_value(&self, _devices: &DeviceMap, _args: &ArgSources) -> u8 {
+    fn get_value(&self, _devices: &DeviceMap, _bus_values: &BusValues) -> u8 {
         self.value_secondary
     }
 }
@@ -66,13 +66,9 @@ mod tests {
             .build(); // load_IR
 
         bench.devices.route_word(&mut bench.sources, DEFAULT_CW, load_ir_cw);
-        let args = ArgValues {
-            main_bus_value: Some(42),
-            address_bus_value: None,
-            alu_flags_value: None,
-        }; // Simulate loading 42 into IR
+        bench.sources.main_bus.value = Some(42); // Simulate loading 42 into IR
 
-        bench.devices.broadcast_clock_tick_primary(&args);
+        bench.devices.broadcast_clock_tick_primary(&bench.sources);
 
         assert_eq!(42, bench.devices.IR.value_primary); // Check if IR has the value 42 after clock tick
         assert_eq!(0, bench.devices.IR.value_secondary); // Secondary value should still be 0

@@ -39,16 +39,16 @@ impl MuxPart {
         writeln!(writer, "impl MuxDispatcher for {} {{", self.name)?;
         writeln!(writer, "    const MASK: ControlWord = 0b{:032b};", self.mask)?;
         writeln!(writer, "    const VALUE_DEFAULT: ControlWord = 0b{:032b};", self.default)?;
-        writeln!(writer, "    fn dispatch(dev: &DeviceMap, args: &mut ArgSources, word: ControlWord, enable: bool) {{")?;
+        writeln!(writer, "    fn dispatch(dev: &DeviceMap, bus_values: &mut BusValues, word: ControlWord, enable: bool) {{")?;
         writeln!(writer, "        match word & Self::MASK {{")?;
         for (_value, (alias, dev_refs)) in self.device_bits.iter() {
             if dev_refs.len() == 1 {
                 let dev_ref = &dev_refs[0];
-                writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.on_{}_change(args, enable),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin)?;
+                writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.on_{}_change(bus_values, enable),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin)?;
             } else {
                 writeln!(writer, "            Self::VALUE_{} => {{", format_const_name(alias))?;
                 for dev_ref in dev_refs {
-                    writeln!(writer, "                dev.{}.on_{}_change(args, enable);", dev_ref.device, dev_ref.pin)?;
+                    writeln!(writer, "                dev.{}.on_{}_change(bus_values, enable);", dev_ref.device, dev_ref.pin)?;
                 }
                 writeln!(writer, "            }},")?;
             }
@@ -258,9 +258,9 @@ impl DeviceMapPart {
         writeln!(writer, "    }}")?;
         writeln!(writer)?;
 
-        writeln!(writer, "    pub fn broadcast_clock_tick_primary(&mut self, args: &ArgValues) {{")?;
+        writeln!(writer, "    pub fn broadcast_clock_tick_primary(&mut self, bus_values: &BusValues) {{")?;
         for device in self.devices.iter() {
-            writeln!(writer, "        self.{}.on_clock_tick_primary(args);", device.name)?;
+            writeln!(writer, "        self.{}.on_clock_tick_primary(bus_values);", device.name)?;
         }
         writeln!(writer, "    }}")?;
         writeln!(writer)?;
@@ -272,46 +272,46 @@ impl DeviceMapPart {
         writeln!(writer, "    }}")?;
         writeln!(writer)?;
 
-        writeln!(writer, "    pub fn get_main_bus_value(&self, source: MainBusSource, args: &ArgSources) -> u8 {{")?;
+        writeln!(writer, "    pub fn get_main_bus_value(&self, source: MainBusSource, bus_values: &BusValues) -> u8 {{")?;
         writeln!(writer, "        match source {{")?;
         for device in self.bus_sources.main_bus_sources.iter() {
-            writeln!(writer, "            MainBusSource::{} => self.{}.get_value(self, args),", device, device)?;
+            writeln!(writer, "            MainBusSource::{} => self.{}.get_value(self, bus_values),", device, device)?;
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
         writeln!(writer)?;
 
-        writeln!(writer, "    pub fn get_alu_l_value(&self, source: ALULSource, args: &ArgSources) -> u8 {{")?;
+        writeln!(writer, "    pub fn get_alu_l_value(&self, source: ALULSource, bus_values: &BusValues) -> u8 {{")?;
         writeln!(writer, "        match source {{")?;
         for device in self.bus_sources.alu_l_sources.iter() {
-            writeln!(writer, "            ALULSource::{} => self.{}.get_value(self, args),", device, device)?;
+            writeln!(writer, "            ALULSource::{} => self.{}.get_value(self, bus_values),", device, device)?;
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
         writeln!(writer)?;
 
-        writeln!(writer, "    pub fn get_alu_r_value(&self, source: ALURSource, args: &ArgSources) -> u8 {{")?;
+        writeln!(writer, "    pub fn get_alu_r_value(&self, source: ALURSource, bus_values: &BusValues) -> u8 {{")?;
         writeln!(writer, "        match source {{")?;
         for device in self.bus_sources.alu_r_sources.iter() {
-            writeln!(writer, "            ALURSource::{} => self.{}.get_value(self, args),", device, device)?;
+            writeln!(writer, "            ALURSource::{} => self.{}.get_value(self, bus_values),", device, device)?;
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
         writeln!(writer)?;
 
-        writeln!(writer, "    pub fn get_address_bus_value(&self, source: AddressBusSource, args: &ArgSources) -> u16 {{")?;
+        writeln!(writer, "    pub fn get_address_bus_value(&self, source: AddressBusSource, bus_values: &BusValues) -> u16 {{")?;
         writeln!(writer, "        match source {{")?;
         for device in self.bus_sources.address_bus_sources.iter() {
-            writeln!(writer, "            AddressBusSource::{} => self.{}.get_value(self, args),", device, device)?;
+            writeln!(writer, "            AddressBusSource::{} => self.{}.get_value(self, bus_values),", device, device)?;
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
         writeln!(writer)?;
 
-        writeln!(writer, "    pub fn get_flags_value(&self, source: FlagsSource, args: &ArgSources) -> ALUFlags {{")?;
+        writeln!(writer, "    pub fn get_flags_value(&self, source: FlagsSource, bus_values: &BusValues) -> ALUFlags {{")?;
         writeln!(writer, "        match source {{")?;
         for device in self.bus_sources.flags_sources.iter() {
-            writeln!(writer, "            FlagsSource::{} => self.{}.get_value(self, args),", device, device)?;
+            writeln!(writer, "            FlagsSource::{} => self.{}.get_value(self, bus_values),", device, device)?;
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
@@ -399,20 +399,19 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) {
 
 fn emit_router_fn(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPart>, direct_pins: &HashMap<u32, (String, Vec<DirectPinRef>)>) -> std::io::Result<()> {
     writeln!(writer, "impl DeviceMap {{")?;
-    writeln!(writer, "    pub fn route_word(&self, args: &mut ArgSources, old_cw: ControlWord, new_cw: ControlWord) {{")?;
-
+    writeln!(writer, "    pub fn route_word(&self, bus_values: &mut BusValues, old_cw: ControlWord, new_cw: ControlWord) {{")?;
 
     for (name, _) in muxes.iter() {
         writeln!(writer, "        if old_cw & {}::MASK != new_cw & {}::MASK {{", name, name)?;
-        writeln!(writer, "            {}::dispatch(self, args, old_cw, false);", name)?;
-        writeln!(writer, "            {}::dispatch(self, args, new_cw, true);", name)?;
+        writeln!(writer, "            {}::dispatch(self, bus_values, old_cw, false);", name)?;
+        writeln!(writer, "            {}::dispatch(self, bus_values, new_cw, true);", name)?;
         writeln!(writer, "        }}")?;
     }
 
     for (_, (alias, direct_pins)) in direct_pins {
         writeln!(writer, "        if old_cw & {}::MASK != new_cw & {}::MASK {{", alias, alias)?;
         for direct_pin in direct_pins {
-            writeln!(writer, "            self.{}.on_{}_change(args, new_cw & {}::MASK == {}::VALUE);", direct_pin.device, direct_pin.pin, alias, alias)?;
+            writeln!(writer, "            self.{}.on_{}_change(bus_values, new_cw & {}::MASK == {}::VALUE);", direct_pin.device, direct_pin.pin, alias, alias)?;
         }
         writeln!(writer, "        }}")?;
     }

@@ -4,7 +4,8 @@ use crate::devices::ClockReceiver;
 use crate::devices::ValueSource;
 use crate::router::ALURSource;
 use crate::router::DeviceMap;
-use crate::runtime_state::{ArgValues, ArgSources};
+use crate::runtime_state::BusValues;
+use crate::runtime_state::{ArgValues};
 
 pub struct TempRegister {
     pub name: &'static str,
@@ -15,7 +16,7 @@ pub struct TempRegister {
 
 }
 impl LoadReceiver for TempRegister {
-    fn on_load_change(&self, _args: &mut ArgSources, enable: bool) {
+    fn on_load_change(&self, _bus_values: &mut BusValues, enable: bool) {
         println!("TempRegister {} Load changed to: {}", self.name, enable);
         self.load_enabled.set(enable);
     }
@@ -30,9 +31,9 @@ impl TempRegister {
             alu_r_id,
         }
     }
-    pub fn on_alu_r_change(&self, args: &mut ArgSources, enable: bool) {
+    pub fn on_alu_r_change(&self, bus_values: &mut BusValues, enable: bool) {
         println!("TempRegister {} ALU R changed to: {}", self.name, enable);
-        args.alu_r_source = if enable {
+        bus_values.alu_r.source = if enable {
             Some(self.alu_r_id)
         } else {
             None
@@ -46,9 +47,9 @@ impl TempRegister {
 }
 
 impl ClockReceiver for TempRegister {
-    fn on_clock_tick_primary(&mut self, args: &ArgValues) {
+    fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
         if self.load_enabled.get() {
-            self.value_primary = args.main_bus_value.unwrap();
+            self.value_primary = bus_values.main_bus.value.unwrap();
         }
     }
     fn on_clock_tick_secondary(&mut self) {
@@ -59,7 +60,7 @@ impl ClockReceiver for TempRegister {
 }
 
 impl ValueSource<u8> for TempRegister {
-    fn get_value(&self, _devices: &DeviceMap, _args: &ArgSources) -> u8 {
+    fn get_value(&self, _devices: &DeviceMap, _bus_values: &BusValues) -> u8 {
         self.value_secondary
     }
 }
@@ -81,13 +82,9 @@ mod tests {
             .build(); // Enable T Load
 
         bench.devices.route_word(&mut bench.sources, DEFAULT_CW, load_t_cw);
-        let args = ArgValues {
-            main_bus_value: Some(42),
-            address_bus_value: None,
-            alu_flags_value: None,
-        }; // Simulate loading 42 into T
+        bench.sources.main_bus.value = Some(42); // Simulate loading 42 into T
 
-        bench.devices.broadcast_clock_tick_primary(&args);
+        bench.devices.broadcast_clock_tick_primary(&bench.sources);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(42, bench.devices.T.value_secondary); // Check if T has the value 42 after clock tick

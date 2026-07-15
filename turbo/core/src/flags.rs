@@ -6,7 +6,7 @@ use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
 use crate::devices::ValueSource;
 use crate::router::DeviceMap;
-use crate::runtime_state::{ArgValues, ArgSources};
+use crate::runtime_state::BusValues;
 
 #[derive(Clone, Copy, PartialEq, Default)]
 pub struct Flags {
@@ -72,20 +72,20 @@ impl FlagsRegister {
             calc_enabled: Cell::new(false)
         }
     }
-    pub fn on_calc_change(&self, _args: &mut ArgSources, enable: bool) {
+    pub fn on_calc_change(&self, _bus_values: &mut BusValues, enable: bool) {
         println!("FlagsRegister {} Calc changed to: {}", self.name, enable);
         self.calc_enabled.set(enable);
     }
-    pub fn on_carry_change(&self, args: &mut ArgSources, enable: bool) {
+    pub fn on_carry_change(&self, bus_values: &mut BusValues, enable: bool) {
         println!("FlagsRegister {} Carry changed to: {}", self.name, enable);
-        args.carry_in = enable;
+        bus_values.carry_in = enable;
     }
 }
 impl ClockReceiver for FlagsRegister {
-    fn on_clock_tick_primary(&mut self, args: &ArgValues) {
+    fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
         if self.calc_enabled.get() {
             // Perform Z and N calculations based on the main bus value
-            let result = args.main_bus_value.unwrap();
+            let result = bus_values.main_bus.value.unwrap();
             let mut new_value = Flags::EMPTY;
             if result == 0 {
                 new_value |= Flags::Z;
@@ -94,7 +94,7 @@ impl ClockReceiver for FlagsRegister {
                 new_value |= Flags::N;
             }
 
-            let alu_flags = args.alu_flags_value.as_ref().unwrap();
+            let alu_flags = bus_values.flags.value.as_ref().unwrap();
             new_value |= alu_flags.carry.unwrap_or(self.value_primary & Flags::C); // Apply new or preserve previous carry if not calculated
             new_value |= alu_flags.overflow.unwrap_or(self.value_primary & Flags::V); // Apply new or preserve previous overflow if not calculated
             self.value_primary = new_value;
@@ -106,7 +106,7 @@ impl ClockReceiver for FlagsRegister {
 }
 
 impl ValueSource<Flags> for FlagsRegister {
-    fn get_value(&self, _devices: &DeviceMap, _args: &ArgSources) -> Flags {
+    fn get_value(&self, _devices: &DeviceMap, _bus_values: &BusValues) -> Flags {
         self.value_secondary
     }
 }
