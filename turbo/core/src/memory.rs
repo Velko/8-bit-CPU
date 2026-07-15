@@ -60,7 +60,7 @@ impl ClockReceiver for RAM {
 }
 
 impl ValueSource<u8> for RAM {
-    fn get_value(&self, devices: &DeviceMap, bus_values: &BusValues) -> u8 {
+    fn get_value(&self, bus_values: &BusValues) -> u8 {
         let address = bus_values.address_bus.value.unwrap() as usize;
         self.data[address]
     }
@@ -105,7 +105,7 @@ mod tests {
         bench.devices.broadcast_clock_tick_primary(&bench.sources);
         bench.devices.broadcast_clock_tick_secondary();
 
-        assert_eq!(bench.devices.IR.get_value(&bench.devices, &bench.sources), 3);
+        assert_eq!(bench.devices.IR.get_value(&bench.sources), 3);
     }
 
     #[test]

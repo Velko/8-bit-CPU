@@ -44,7 +44,7 @@ impl ClockReceiver for WORegister {
 }
 
 impl ValueSource<u8> for WORegister {
-    fn get_value(&self, _devices: &DeviceMap, _bus_values: &BusValues) -> u8 {
+    fn get_value(&self, _bus_values: &BusValues) -> u8 {
         self.value_secondary
     }
 }

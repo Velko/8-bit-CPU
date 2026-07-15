@@ -49,7 +49,7 @@ impl ClockReceiver for GPRegister {
 }
 
 impl ValueSource<u8> for GPRegister {
-    fn get_value(&self, _devices: &DeviceMap, _bus_values: &BusValues) -> u8 {
+    fn get_value(&self, _bus_values: &BusValues) -> u8 {
         self.value_secondary
     }
 }

@@ -36,7 +36,7 @@ impl ALU {
         self.alt_enabled.set(enable);
     }
 
-    fn solve_add_sub(&self, devices: &DeviceMap, bus_values: &BusValues) -> u8 {
+    fn solve_add_sub(&self, bus_values: &BusValues) -> u8 {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
         let alu_r_value = bus_values.alu_r.value.unwrap_or(0);
         let carry_in = if bus_values.carry_in { 1 } else { 0 };
@@ -50,7 +50,7 @@ impl ALU {
         }
     }
 
-    fn solve_add_sub_flags(&self, devices: &DeviceMap, bus_values: &BusValues) -> ALUFlags {
+    fn solve_add_sub_flags(&self, bus_values: &BusValues) -> ALUFlags {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
         let alu_r_value = bus_values.alu_r.value.unwrap_or(0);
         let carry_in = if bus_values.flags.value.as_ref().map_or(false, |flags| flags.carry == Some(Flags::C)) { 1 } else { 0 };
@@ -76,7 +76,7 @@ impl ALU {
         }
     }
 
-    fn solve_and_or(&self, devices: &DeviceMap, bus_values: &BusValues) -> u8 {
+    fn solve_and_or(&self, bus_values: &BusValues) -> u8 {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
         let alu_r_value = bus_values.alu_r.value.unwrap_or(0);
 
@@ -89,7 +89,7 @@ impl ALU {
         }
     }
 
-    fn solve_xor_not(&self, devices: &DeviceMap, bus_values: &BusValues) -> u8 {
+    fn solve_xor_not(&self, bus_values: &BusValues) -> u8 {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
         if self.alt_enabled.get() {
             // Not
@@ -101,7 +101,7 @@ impl ALU {
         }
     }
 
-    fn solve_shift_swap(&self, devices: &DeviceMap, bus_values: &BusValues) -> u8 {
+    fn solve_shift_swap(&self, bus_values: &BusValues) -> u8 {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
         if self.alt_enabled.get() {
             // Swap
@@ -113,7 +113,7 @@ impl ALU {
         }
     }
 
-    fn solve_shift_swap_flags(&self, devices: &DeviceMap, bus_values: &BusValues) -> ALUFlags {
+    fn solve_shift_swap_flags(&self, bus_values: &BusValues) -> ALUFlags {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
         if self.alt_enabled.get() {
             // Swap
@@ -136,12 +136,12 @@ impl ALU {
 impl ClockReceiver for ALU {}
 
 impl ValueSource<u8> for ALU {
-    fn get_value(&self, devices: &DeviceMap, bus_values: &BusValues) -> u8 {
+    fn get_value(&self, bus_values: &BusValues) -> u8 {
         match self.main_id {
-            MainBusSource::AddSub => self.solve_add_sub(devices, bus_values),
-            MainBusSource::AndOr => self.solve_and_or(devices, bus_values),
-            MainBusSource::XorNot => self.solve_xor_not(devices, bus_values),
-            MainBusSource::ShiftSwap => self.solve_shift_swap(devices, bus_values),
+            MainBusSource::AddSub => self.solve_add_sub(bus_values),
+            MainBusSource::AndOr => self.solve_and_or(bus_values),
+            MainBusSource::XorNot => self.solve_xor_not(bus_values),
+            MainBusSource::ShiftSwap => self.solve_shift_swap(bus_values),
             _ => panic!("Unknown ALU main bus source: {:?}", self.main_id),
         }
     }
@@ -149,10 +149,10 @@ impl ValueSource<u8> for ALU {
 
 
 impl ValueSource<ALUFlags> for ALU {
-    fn get_value(&self, devices: &DeviceMap, bus_values: &BusValues) -> ALUFlags {
+    fn get_value(&self, bus_values: &BusValues) -> ALUFlags {
         match self.flags_id {
-            FlagsSource::AddSub => self.solve_add_sub_flags(devices, bus_values),
-            FlagsSource::ShiftSwap => self.solve_shift_swap_flags(devices, bus_values),
+            FlagsSource::AddSub => self.solve_add_sub_flags(bus_values),
+            FlagsSource::ShiftSwap => self.solve_shift_swap_flags(bus_values),
             _ => ALUFlags {
                 carry: None,
                 overflow: None,
@@ -207,9 +207,9 @@ mod tests {
         bench.devices.broadcast_clock_tick_primary(&bench.sources);
         bench.devices.broadcast_clock_tick_secondary();
 
-        assert_eq!(expected_sum, bench.devices.A.get_value(&bench.devices, &bench.sources)); // Check if A has the value
-        assert_eq!(b, bench.devices.B.get_value(&bench.devices, &bench.sources)); // Check if B remains unchanged
-        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.devices, &bench.sources)); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_sum, bench.devices.A.get_value(&bench.sources)); // Check if A has the value
+        assert_eq!(b, bench.devices.B.get_value(&bench.sources)); // Check if B remains unchanged
+        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.sources)); // Check if the flags register has the expected flags set after the operation
     }
 
     #[rstest]
@@ -248,9 +248,9 @@ mod tests {
         bench.devices.broadcast_clock_tick_primary(&bench.sources);
         bench.devices.broadcast_clock_tick_secondary();
 
-        assert_eq!(expected_result, bench.devices.B.get_value(&bench.devices, &bench.sources)); // Check if B has the value
-        assert_eq!(b, bench.devices.C.get_value(&bench.devices, &bench.sources)); // Check if C remains unchanged
-        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.devices, &bench.sources)); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.B.get_value(&bench.sources)); // Check if B has the value
+        assert_eq!(b, bench.devices.C.get_value(&bench.sources)); // Check if C remains unchanged
+        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.sources)); // Check if the flags register has the expected flags set after the operation
     }
 
     #[test]
@@ -331,8 +331,8 @@ mod tests {
         bench.devices.broadcast_clock_tick_primary(&bench.sources);
         bench.devices.broadcast_clock_tick_secondary();
 
-        assert_eq!(expected_result, bench.devices.A.get_value(&bench.devices, &bench.sources)); // Check if A has the value
-        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.devices, &bench.sources)); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.get_value(&bench.sources)); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.sources)); // Check if the flags register has the expected flags set after the operation
     }
 
     #[rstest]
@@ -365,8 +365,8 @@ mod tests {
         bench.devices.broadcast_clock_tick_primary(&bench.sources);
         bench.devices.broadcast_clock_tick_secondary();
 
-        assert_eq!(expected_result, bench.devices.A.get_value(&bench.devices, &bench.sources)); // Check if A has the value
-        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.devices, &bench.sources)); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.get_value(&bench.sources)); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.sources)); // Check if the flags register has the expected flags set after the operation
     }
 
     #[rstest]
@@ -399,8 +399,8 @@ mod tests {
         bench.devices.broadcast_clock_tick_primary(&bench.sources);
         bench.devices.broadcast_clock_tick_secondary();
 
-        assert_eq!(expected_result, bench.devices.A.get_value(&bench.devices, &bench.sources)); // Check if A has the value
-        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.devices, &bench.sources)); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.get_value(&bench.sources)); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.sources)); // Check if the flags register has the expected flags set after the operation
     }
 
     #[rstest]
@@ -429,8 +429,8 @@ mod tests {
         bench.devices.broadcast_clock_tick_primary(&bench.sources);
         bench.devices.broadcast_clock_tick_secondary();
 
-        assert_eq!(expected_result, bench.devices.A.get_value(&bench.devices, &bench.sources)); // Check if A has the value
-        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.devices, &bench.sources)); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.get_value(&bench.sources)); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.sources)); // Check if the flags register has the expected flags set after the operation
     }
 
     #[rstest]
@@ -460,8 +460,8 @@ mod tests {
         bench.devices.broadcast_clock_tick_primary(&bench.sources);
         bench.devices.broadcast_clock_tick_secondary();
 
-        assert_eq!(expected_result, bench.devices.A.get_value(&bench.devices, &bench.sources)); // Check if A has the value
-        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.devices, &bench.sources)); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.get_value(&bench.sources)); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.sources)); // Check if the flags register has the expected flags set after the operation
     }
 
     #[test]
@@ -487,7 +487,7 @@ mod tests {
         bench.devices.broadcast_clock_tick_primary(&bench.sources);
         bench.devices.broadcast_clock_tick_secondary();
 
-        assert_eq!(0x80, bench.devices.A.get_value(&bench.devices, &bench.sources)); // Check if A has the value
+        assert_eq!(0x80, bench.devices.A.get_value(&bench.sources)); // Check if A has the value
     }
 
     #[rstest]
@@ -521,7 +521,7 @@ mod tests {
         bench.devices.broadcast_clock_tick_primary(&bench.sources);
         bench.devices.broadcast_clock_tick_secondary();
 
-        assert_eq!(expected_result, bench.devices.A.get_value(&bench.devices, &bench.sources)); // Check if A has the value
-        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.devices, &bench.sources)); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.get_value(&bench.sources)); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.sources)); // Check if the flags register has the expected flags set after the operation
     }
 }

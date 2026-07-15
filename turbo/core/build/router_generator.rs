@@ -275,7 +275,7 @@ impl DeviceMapPart {
         writeln!(writer, "    pub fn get_main_bus_value(&self, source: MainBusSource, bus_values: &BusValues) -> u8 {{")?;
         writeln!(writer, "        match source {{")?;
         for device in self.bus_sources.main_bus_sources.iter() {
-            writeln!(writer, "            MainBusSource::{} => self.{}.get_value(self, bus_values),", device, device)?;
+            writeln!(writer, "            MainBusSource::{} => self.{}.get_value(bus_values),", device, device)?;
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
@@ -284,7 +284,7 @@ impl DeviceMapPart {
         writeln!(writer, "    pub fn get_alu_l_value(&self, source: ALULSource, bus_values: &BusValues) -> u8 {{")?;
         writeln!(writer, "        match source {{")?;
         for device in self.bus_sources.alu_l_sources.iter() {
-            writeln!(writer, "            ALULSource::{} => self.{}.get_value(self, bus_values),", device, device)?;
+            writeln!(writer, "            ALULSource::{} => self.{}.get_value(bus_values),", device, device)?;
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
@@ -293,7 +293,7 @@ impl DeviceMapPart {
         writeln!(writer, "    pub fn get_alu_r_value(&self, source: ALURSource, bus_values: &BusValues) -> u8 {{")?;
         writeln!(writer, "        match source {{")?;
         for device in self.bus_sources.alu_r_sources.iter() {
-            writeln!(writer, "            ALURSource::{} => self.{}.get_value(self, bus_values),", device, device)?;
+            writeln!(writer, "            ALURSource::{} => self.{}.get_value(bus_values),", device, device)?;
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
@@ -302,7 +302,7 @@ impl DeviceMapPart {
         writeln!(writer, "    pub fn get_address_bus_value(&self, source: AddressBusSource, bus_values: &BusValues) -> u16 {{")?;
         writeln!(writer, "        match source {{")?;
         for device in self.bus_sources.address_bus_sources.iter() {
-            writeln!(writer, "            AddressBusSource::{} => self.{}.get_value(self, bus_values),", device, device)?;
+            writeln!(writer, "            AddressBusSource::{} => self.{}.get_value(bus_values),", device, device)?;
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
@@ -311,7 +311,7 @@ impl DeviceMapPart {
         writeln!(writer, "    pub fn get_flags_value(&self, source: FlagsSource, bus_values: &BusValues) -> ALUFlags {{")?;
         writeln!(writer, "        match source {{")?;
         for device in self.bus_sources.flags_sources.iter() {
-            writeln!(writer, "            FlagsSource::{} => self.{}.get_value(self, bus_values),", device, device)?;
+            writeln!(writer, "            FlagsSource::{} => self.{}.get_value(bus_values),", device, device)?;
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
