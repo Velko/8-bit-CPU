@@ -99,32 +99,32 @@ mod tests {
             .apply_mux::<AddrOutMux>(AddrOutMux::VALUE_PC_OUT)
             .apply_bit::<AddrInc>()
             .build(); // Enable PC Out and Inc
-        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, pc_out_inc_cw);
+        bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, pc_out_inc_cw);
 
         // broadcasts the original value
-        bench.sources.resolve(&bench.devices);
-        assert_eq!(Some(0x1234), bench.sources.address_bus.value);
+        bench.bus_values.resolve(&bench.devices);
+        assert_eq!(Some(0x1234), bench.bus_values.address_bus.value);
 
         // incrementing the value should only affect the internal storage
-        bench.devices.broadcast_clock_tick_primary(&bench.sources);
+        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
         assert_eq!(0x1235, bench.devices.PC.value_primary);
 
         // check if still broadcasts the original value
-        bench.sources.resolve(&bench.devices);
-        assert_eq!(Some(0x1234), bench.sources.address_bus.value);
+        bench.bus_values.resolve(&bench.devices);
+        assert_eq!(Some(0x1234), bench.bus_values.address_bus.value);
     }
 
     #[test]
     fn test_program_counter_load() {
         let mut bench = TestBench::new();
-        bench.sources.address_bus.value = Some(0x5678); // Simulate loading 42 into A
+        bench.bus_values.address_bus.value = Some(0x5678); // Simulate loading 42 into A
 
         let pc_load_cw = ControlWordBuilder::default()
             .apply_mux::<AddrLoadMux>(AddrLoadMux::VALUE_PC_LOAD)
             .build(); // Enable PC Load
-        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, pc_load_cw);
+        bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, pc_load_cw);
 
-        bench.devices.broadcast_clock_tick_primary(&bench.sources);
+        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
 
         assert_eq!(0x5678, bench.devices.PC.value_primary);
         assert_eq!(0, bench.devices.PC.value_secondary);

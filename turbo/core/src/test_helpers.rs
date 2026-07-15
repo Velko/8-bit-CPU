@@ -3,19 +3,19 @@ use crate::runtime_state::{BusValues};
 
 pub struct TestBench {
     pub devices: DeviceMap,
-    pub sources: BusValues,
+    pub bus_values: BusValues,
 }
 
 
 impl TestBench {
     pub fn new() -> Self {
         let devices = DeviceMap::new();
-        let mut args = BusValues::new();
-        devices.route_word(&mut args, !DEFAULT_CW, DEFAULT_CW); // Ensure we start from the default state
+        let mut bus_values = BusValues::new();
+        devices.route_word(&mut bus_values, !DEFAULT_CW, DEFAULT_CW); // Ensure we start from the default state
 
         Self {
             devices,
-            sources: args,
+            bus_values,
         }
     }
 }

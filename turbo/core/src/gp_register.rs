@@ -122,7 +122,7 @@ mod tests {
             .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
             .build(); // load_A
 
-        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, load_a_cw);
+        bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, load_a_cw);
         let mut args = BusValues::new();
         args.main_bus.value = Some(42); // Simulate loading 42 into A
 
@@ -141,11 +141,11 @@ mod tests {
         let out_a_cw =  ControlWordBuilder::default()
             .apply_mux::<OutMux>(OutMux::VALUE_A_OUT)
             .build(); // out_A
-        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, out_a_cw);
+        bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, out_a_cw);
 
-        bench.sources.resolve(&bench.devices);
+        bench.bus_values.resolve(&bench.devices);
 
-        assert_eq!(Some(42), bench.sources.main_bus.value); // Check if the main bus has the value 42 after out_A
+        assert_eq!(Some(42), bench.bus_values.main_bus.value); // Check if the main bus has the value 42 after out_A
     }
 
     #[test]
@@ -160,11 +160,11 @@ mod tests {
             .apply_mux::<OutMux>(OutMux::VALUE_A_OUT)
             .apply_mux::<LoadMux>(LoadMux::VALUE_B_LOAD)
             .build();
-        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, copy_a_to_b_cw);
+        bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, copy_a_to_b_cw);
 
         // Simulate clock tick
-        bench.sources.resolve(&bench.devices);
-        bench.devices.broadcast_clock_tick_primary(&bench.sources);
+        bench.bus_values.resolve(&bench.devices);
+        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(42, bench.devices.B.value_secondary); // Check if B has the value 42 after clock tick

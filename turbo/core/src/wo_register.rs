@@ -63,10 +63,10 @@ mod tests {
             .apply_mux::<LoadMux>(LoadMux::VALUE_IR_LOAD)
             .build(); // load_IR
 
-        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, load_ir_cw);
-        bench.sources.main_bus.value = Some(42); // Simulate loading 42 into IR
+        bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, load_ir_cw);
+        bench.bus_values.main_bus.value = Some(42); // Simulate loading 42 into IR
 
-        bench.devices.broadcast_clock_tick_primary(&bench.sources);
+        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
 
         assert_eq!(42, bench.devices.IR.value_primary); // Check if IR has the value 42 after clock tick
         assert_eq!(0, bench.devices.IR.value_secondary); // Secondary value should still be 0

@@ -78,10 +78,10 @@ mod tests {
             .apply_mux::<LoadMux>(LoadMux::VALUE_T_LOAD)
             .build(); // Enable T Load
 
-        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, load_t_cw);
-        bench.sources.main_bus.value = Some(42); // Simulate loading 42 into T
+        bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, load_t_cw);
+        bench.bus_values.main_bus.value = Some(42); // Simulate loading 42 into T
 
-        bench.devices.broadcast_clock_tick_primary(&bench.sources);
+        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(42, bench.devices.T.value_secondary); // Check if T has the value 42 after clock tick

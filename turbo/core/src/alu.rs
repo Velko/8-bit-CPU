@@ -198,17 +198,17 @@ mod tests {
             .apply_mux::<AluArgR>(AluArgR::VALUE_B_ALU_R)
             .apply_bit::<FCalc>()
             .build();
-        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, add_ab_cw);
+        bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, add_ab_cw);
 
-        bench.sources.resolve(&bench.devices);
-        assert_eq!(Some(expected_sum), bench.sources.main_bus.value); // Check if the ALU calculates the sum of A and B correctly
+        bench.bus_values.resolve(&bench.devices);
+        assert_eq!(Some(expected_sum), bench.bus_values.main_bus.value); // Check if the ALU calculates the sum of A and B correctly
 
-        bench.devices.broadcast_clock_tick_primary(&bench.sources);
+        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
-        assert_eq!(expected_sum, bench.devices.A.get_value(&bench.sources)); // Check if A has the value
-        assert_eq!(b, bench.devices.B.get_value(&bench.sources)); // Check if B remains unchanged
-        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.sources)); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_sum, bench.devices.A.get_value(&bench.bus_values)); // Check if A has the value
+        assert_eq!(b, bench.devices.B.get_value(&bench.bus_values)); // Check if B remains unchanged
+        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.bus_values)); // Check if the flags register has the expected flags set after the operation
     }
 
     #[rstest]
@@ -238,18 +238,18 @@ mod tests {
             .apply_bit::<AluAlt>()
             .apply_bit::<FCalc>()
             .build();
-        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, sub_bc_cw);
+        bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, sub_bc_cw);
 
-        let values = bench.sources.resolve(&bench.devices);
+        bench.bus_values.resolve(&bench.devices);
 
-        assert_eq!(Some(expected_result), bench.sources.main_bus.value); // Check if the ALU calculates the difference of B and C correctly
+        assert_eq!(Some(expected_result), bench.bus_values.main_bus.value); // Check if the ALU calculates the difference of B and C correctly
 
-        bench.devices.broadcast_clock_tick_primary(&bench.sources);
+        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
-        assert_eq!(expected_result, bench.devices.B.get_value(&bench.sources)); // Check if B has the value
-        assert_eq!(b, bench.devices.C.get_value(&bench.sources)); // Check if C remains unchanged
-        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.sources)); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.B.get_value(&bench.bus_values)); // Check if B has the value
+        assert_eq!(b, bench.devices.C.get_value(&bench.bus_values)); // Check if C remains unchanged
+        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.bus_values)); // Check if the flags register has the expected flags set after the operation
     }
 
     #[test]
@@ -268,10 +268,10 @@ mod tests {
             .apply_bit::<FCalc>()
             .apply_bit::<FCarry>()
             .build();
-        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, adc_ab_cw);
-        bench.sources.resolve(&bench.devices);
+        bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, adc_ab_cw);
+        bench.bus_values.resolve(&bench.devices);
 
-        assert_eq!(Some(43), bench.sources.main_bus.value); // Check if the ALU calculates the sum of A and B + carry correctly
+        assert_eq!(Some(43), bench.bus_values.main_bus.value); // Check if the ALU calculates the sum of A and B + carry correctly
     }
 
     #[test]
@@ -292,11 +292,11 @@ mod tests {
             .apply_bit::<FCarry>()
             .build();
 
-        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, sbb_bc_cw);
-        bench.sources.resolve(&bench.devices);
+        bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, sbb_bc_cw);
+        bench.bus_values.resolve(&bench.devices);
 
 
-        assert_eq!(Some(5), bench.sources.main_bus.value); // Check if the ALU calculates the difference of B and C correctly
+        assert_eq!(Some(5), bench.bus_values.main_bus.value); // Check if the ALU calculates the difference of B and C correctly
     }
 
 
@@ -322,16 +322,16 @@ mod tests {
             .apply_bit::<FCalc>()
             .build();
 
-        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, and_ab);
-        bench.sources.resolve(&bench.devices);
+        bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, and_ab);
+        bench.bus_values.resolve(&bench.devices);
 
-        assert_eq!(Some(expected_result), bench.sources.main_bus.value); // Check if the ALU calculates the AND of A and B correctly
+        assert_eq!(Some(expected_result), bench.bus_values.main_bus.value); // Check if the ALU calculates the AND of A and B correctly
 
-        bench.devices.broadcast_clock_tick_primary(&bench.sources);
+        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
-        assert_eq!(expected_result, bench.devices.A.get_value(&bench.sources)); // Check if A has the value
-        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.sources)); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.get_value(&bench.bus_values)); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.bus_values)); // Check if the flags register has the expected flags set after the operation
     }
 
     #[rstest]
@@ -356,16 +356,16 @@ mod tests {
             .apply_bit::<AluAlt>()
             .build();
 
-        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, or_ab);
-        bench.sources.resolve(&bench.devices);
+        bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, or_ab);
+        bench.bus_values.resolve(&bench.devices);
 
-        assert_eq!(Some(expected_result), bench.sources.main_bus.value); // Check if the ALU calculates the OR of A and B correctly
+        assert_eq!(Some(expected_result), bench.bus_values.main_bus.value); // Check if the ALU calculates the OR of A and B correctly
 
-        bench.devices.broadcast_clock_tick_primary(&bench.sources);
+        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
-        assert_eq!(expected_result, bench.devices.A.get_value(&bench.sources)); // Check if A has the value
-        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.sources)); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.get_value(&bench.bus_values)); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.bus_values)); // Check if the flags register has the expected flags set after the operation
     }
 
     #[rstest]
@@ -390,16 +390,16 @@ mod tests {
             .apply_bit::<FCalc>()
             .build();
 
-        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, xor_ab);
-        bench.sources.resolve(&bench.devices);
+        bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, xor_ab);
+        bench.bus_values.resolve(&bench.devices);
 
-        assert_eq!(Some(expected_result), bench.sources.main_bus.value); // Check if the ALU calculates the XOR of A and B correctly
+        assert_eq!(Some(expected_result), bench.bus_values.main_bus.value); // Check if the ALU calculates the XOR of A and B correctly
 
-        bench.devices.broadcast_clock_tick_primary(&bench.sources);
+        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
-        assert_eq!(expected_result, bench.devices.A.get_value(&bench.sources)); // Check if A has the value
-        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.sources)); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.get_value(&bench.bus_values)); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.bus_values)); // Check if the flags register has the expected flags set after the operation
     }
 
     #[rstest]
@@ -420,16 +420,16 @@ mod tests {
             .apply_bit::<FCalc>()
             .apply_bit::<AluAlt>()
             .build();
-        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, not_a);
-        bench.sources.resolve(&bench.devices);
+        bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, not_a);
+        bench.bus_values.resolve(&bench.devices);
 
-        assert_eq!(Some(expected_result), bench.sources.main_bus.value); // Check if the ALU calculates the NOT of A correctly
+        assert_eq!(Some(expected_result), bench.bus_values.main_bus.value); // Check if the ALU calculates the NOT of A correctly
 
-        bench.devices.broadcast_clock_tick_primary(&bench.sources);
+        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
-        assert_eq!(expected_result, bench.devices.A.get_value(&bench.sources)); // Check if A has the value
-        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.sources)); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.get_value(&bench.bus_values)); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.bus_values)); // Check if the flags register has the expected flags set after the operation
     }
 
     #[rstest]
@@ -451,16 +451,16 @@ mod tests {
             .apply_bit::<FCalc>()
             .build();
 
-        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, shr_a);
-        bench.sources.resolve(&bench.devices);
+        bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, shr_a);
+        bench.bus_values.resolve(&bench.devices);
 
-        assert_eq!(Some(expected_result), bench.sources.main_bus.value); // Check if the ALU calculates the SHR of A correctly
+        assert_eq!(Some(expected_result), bench.bus_values.main_bus.value); // Check if the ALU calculates the SHR of A correctly
 
-        bench.devices.broadcast_clock_tick_primary(&bench.sources);
+        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
-        assert_eq!(expected_result, bench.devices.A.get_value(&bench.sources)); // Check if A has the value
-        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.sources)); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.get_value(&bench.bus_values)); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.bus_values)); // Check if the flags register has the expected flags set after the operation
     }
 
     #[test]
@@ -478,15 +478,15 @@ mod tests {
             .apply_bit::<FCarry>()
             .build();
 
-        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, shr_a);
-        bench.sources.resolve(&bench.devices);
+        bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, shr_a);
+        bench.bus_values.resolve(&bench.devices);
 
-        assert_eq!(Some(0x80), bench.sources.main_bus.value); // Check if the ALU calculates the SHR of A correctly with carry in
+        assert_eq!(Some(0x80), bench.bus_values.main_bus.value); // Check if the ALU calculates the SHR of A correctly with carry in
 
-        bench.devices.broadcast_clock_tick_primary(&bench.sources);
+        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
-        assert_eq!(0x80, bench.devices.A.get_value(&bench.sources)); // Check if A has the value
+        assert_eq!(0x80, bench.devices.A.get_value(&bench.bus_values)); // Check if A has the value
     }
 
     #[rstest]
@@ -512,15 +512,15 @@ mod tests {
             .apply_bit::<AluAlt>()
             .build();
 
-        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, swap_a);
-        bench.sources.resolve(&bench.devices);
+        bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, swap_a);
+        bench.bus_values.resolve(&bench.devices);
 
-        assert_eq!(Some(expected_result), bench.sources.main_bus.value); // Check if the ALU calculates the SWAP of A correctly
+        assert_eq!(Some(expected_result), bench.bus_values.main_bus.value); // Check if the ALU calculates the SWAP of A correctly
 
-        bench.devices.broadcast_clock_tick_primary(&bench.sources);
+        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
-        assert_eq!(expected_result, bench.devices.A.get_value(&bench.sources)); // Check if A has the value
-        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.sources)); // Check if the flags register has the expected flags set after the operation
+        assert_eq!(expected_result, bench.devices.A.get_value(&bench.bus_values)); // Check if A has the value
+        assert_eq!(expected_flags, bench.devices.F.get_value(&bench.bus_values)); // Check if the flags register has the expected flags set after the operation
     }
 }

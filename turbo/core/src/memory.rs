@@ -95,16 +95,16 @@ mod tests {
             .apply_mux::<LoadMux>(LoadMux::VALUE_IR_LOAD)
             .build();
 
-        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, fetch_cw);
+        bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, fetch_cw);
 
-        bench.sources.resolve(&bench.devices);
+        bench.bus_values.resolve(&bench.devices);
 
-        assert_eq!(bench.sources.main_bus.value, Some(3));
+        assert_eq!(bench.bus_values.main_bus.value, Some(3));
 
-        bench.devices.broadcast_clock_tick_primary(&bench.sources);
+        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
-        assert_eq!(bench.devices.IR.get_value(&bench.sources), 3);
+        assert_eq!(bench.devices.IR.get_value(&bench.bus_values), 3);
     }
 
     #[test]
@@ -121,10 +121,10 @@ mod tests {
             .apply_mux::<LoadMux>(LoadMux::VALUE_RAM_WRITE)
             .build();
 
-        bench.devices.route_word(&mut bench.sources, DEFAULT_CW, write_at_pc_cw);
-        bench.sources.resolve(&bench.devices);
+        bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, write_at_pc_cw);
+        bench.bus_values.resolve(&bench.devices);
 
-        bench.devices.broadcast_clock_tick_primary(&bench.sources);
+        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(bench.devices.Ram.data[2], 42);
