@@ -8,9 +8,6 @@ pub use crate::wo_register::WORegister;
 pub use crate::memory::{RAM, ROM};
 use crate::router::{AddressBusSource};
 
-pub use crate::runtime_state::{ArgValues};
-use crate::router::DeviceMap;
-
 pub trait OutReceiver {
     fn on_out_change(&self, _bus_values: &mut BusValues, _enable: bool) {}
 }

@@ -3,9 +3,7 @@ use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
 use crate::devices::ValueSource;
 use crate::router::ALURSource;
-use crate::router::DeviceMap;
 use crate::runtime_state::BusValues;
-use crate::runtime_state::{ArgValues};
 
 pub struct TempRegister {
     pub name: &'static str,
