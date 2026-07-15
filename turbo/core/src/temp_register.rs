@@ -65,7 +65,6 @@ impl ValueSource<u8> for TempRegister {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use crate::test_helpers::TestBench;
     use crate::router::LoadMux;
     use crate::control_word::ControlWordBuilder;

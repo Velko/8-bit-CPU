@@ -2,7 +2,6 @@ use std::cell::Cell;
 use crate::devices::ClockReceiver;
 use crate::devices::OutReceiver;
 use crate::devices::ValueSource;
-use crate::router::DeviceMap;
 use crate::router::{MainBusSource, FlagsSource};
 use crate::runtime_state::BusValues;
 use crate::runtime_state::{ALUFlags};

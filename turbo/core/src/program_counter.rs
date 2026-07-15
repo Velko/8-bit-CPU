@@ -5,7 +5,6 @@ use crate::devices::ClockReceiver;
 use crate::devices::IncReceiver;
 use crate::devices::ValueSource;
 use crate::router::AddressBusSource;
-use crate::router::DeviceMap;
 use crate::runtime_state::BusValues;
 
 pub struct ProgramCounter {
@@ -84,7 +83,6 @@ impl ValueSource<u16> for ProgramCounter {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use crate::test_helpers::TestBench;
     use crate::router::AddrLoadMux;
     use crate::router::AddrInc;

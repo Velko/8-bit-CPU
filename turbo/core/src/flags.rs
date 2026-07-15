@@ -5,7 +5,6 @@ use crate::devices::OutReceiver;
 use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
 use crate::devices::ValueSource;
-use crate::router::DeviceMap;
 use crate::runtime_state::BusValues;
 
 #[derive(Clone, Copy, PartialEq, Default)]
