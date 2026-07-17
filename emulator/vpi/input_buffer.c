@@ -165,7 +165,7 @@ int ringbuffer_read_int_blocking(struct ringbuffer *buffer)
     int cidx = 0;
 
     int c = ringbuffer_peek_blocking(buffer);
-    while (((c >= '0' && c <= '9') || c == '-' || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f')) && cidx < NUMBUF_SIZE-1)
+    while (((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f')) && cidx < NUMBUF_SIZE-1)
     {
         numbuf[cidx++] = c;
         c = ringbuffer_discard_and_peek_next_blocking(buffer);

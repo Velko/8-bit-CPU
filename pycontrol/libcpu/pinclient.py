@@ -44,6 +44,8 @@ class PinClient:
     def bus_set(self, arg: int | str) -> None:
         if isinstance(arg, str):
             arg = int(arg, 0)
+        if arg < 0:
+            arg = 0x100 + arg
         self.send_cmd(f"B{arg:x}N")
 
     def bus_get(self) -> int:
