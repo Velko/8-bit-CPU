@@ -122,7 +122,7 @@ impl BusSourcesPart {
         match dev_type {
             "GPRegister" |
             "ALU" |
-            // "FlagsRegister" |
+            "FlagsRegister" |
             "RAM" => true,
             // "ROM" |
             // "IOController"=> true,

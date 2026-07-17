@@ -5,6 +5,7 @@ use crate::devices::OutReceiver;
 use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
 use crate::devices::ValueSource;
+use crate::router::MainBusSource;
 use crate::runtime_state::BusValues;
 
 #[derive(Clone, Copy, PartialEq, Default)]
@@ -56,18 +57,38 @@ impl BitOrAssign for Flags {
 
 pub struct FlagsRegister {
     pub name: &'static str,
+    main_id: MainBusSource,
     value_primary: Flags,
     value_secondary: Flags,
+    load_enabled: Cell<bool>,
     calc_enabled: Cell<bool>,
 }
-impl OutReceiver for FlagsRegister {}
-impl LoadReceiver for FlagsRegister {}
+impl OutReceiver for FlagsRegister {
+    fn on_out_change(&self, bus_values: &mut BusValues, enable: bool) {
+        println!("FlagsRegister {} Out changed to: {}", self.name, enable);
+        bus_values.main_bus.source = if enable {
+            Some(self.main_id)
+        } else {
+            None
+        };
+    }
+}
+
+impl LoadReceiver for FlagsRegister {
+    fn on_load_change(&self, _bus_values: &mut BusValues, enable: bool) {
+        println!("FlagsRegister Load changed to: {}", enable);
+        self.load_enabled.set(enable);
+    }
+}
+
 impl FlagsRegister {
-    pub fn new(name: &'static str) -> Self {
+    pub fn new(name: &'static str, main_id: MainBusSource) -> Self {
         Self {
             name,
+            main_id,
             value_primary: Flags::EMPTY,
             value_secondary: Flags::EMPTY,
+            load_enabled: Cell::new(false),
             calc_enabled: Cell::new(false)
         }
     }
@@ -97,6 +118,10 @@ impl ClockReceiver for FlagsRegister {
             new_value |= alu_flags.carry.unwrap_or(self.value_primary & Flags::C); // Apply new or preserve previous carry if not calculated
             new_value |= alu_flags.overflow.unwrap_or(self.value_primary & Flags::V); // Apply new or preserve previous overflow if not calculated
             self.value_primary = new_value;
+        } else if self.load_enabled.get() {
+            // Load flags from the main bus value
+            let result = bus_values.main_bus.value.unwrap();
+            self.value_primary = Flags { value: result };
         }
     }
     fn on_clock_tick_secondary(&mut self) {
@@ -107,5 +132,11 @@ impl ClockReceiver for FlagsRegister {
 impl ValueSource<Flags> for FlagsRegister {
     fn get_value(&self, _bus_values: &BusValues) -> Flags {
         self.value_secondary
+    }
+}
+
+impl ValueSource<u8> for FlagsRegister {
+    fn get_value(&self, _bus_values: &BusValues) -> u8 {
+        self.value_secondary.value
     }
 }
