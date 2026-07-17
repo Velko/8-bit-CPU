@@ -21,9 +21,7 @@ fn main() -> std::io::Result<()> {
         }
     });
 
-    let devices = turbo_core::DeviceMap::new();
-    let mut sources = turbo_core::BusValues::new();
-    let mut current_cw = turbo_core::DEFAULT_CW;
+    let mut cpu = turbo_core::Cpu::new();
 
     let mut ch0_dest: SocketAddr = "127.0.0.1:8888".parse().expect("Invalid address");
 
@@ -31,23 +29,77 @@ fn main() -> std::io::Result<()> {
 
         let c = rx.recv().expect("Couldn't receive from channel");
         match c {
+            'I' => {
+                println!("Received: I command");
+                socket.send_to(b"Turbo VM", ch0_dest).expect("Couldn't send response");
+            },
+            'A' => {
+                todo!("Set Address Bus");
+            },
+            'a' => {
+                todo!("Read Address Bus");
+            },
+            'B' => {
+                cpu.inject_main_bus_value(recv_int(&rx) as u8);
+            },
+            'b' => {
+                let value = cpu.read_main_bus_value();
+                let response = format!("{:02X}", value);
+                socket.send_to(response.as_bytes(), ch0_dest).expect("Couldn't send response");
+            },
+            's' => {
+                let value = 0;
+                let response = format!("{:02X}", value);
+                socket.send_to(response.as_bytes(), ch0_dest).expect("Couldn't send response");
+            },
+            'f' => {
+                // is this ever used?
+                //todo!("Release Buses");
+            },
+            'O' => {
+                let _cw = recv_int(&rx);
+                cpu.apply_control_word(turbo_core::DEFAULT_CW);
+            },
+            'M' => {
+                let cw = recv_int(&rx);
+                cpu.apply_control_word(cw);
+            },
+            'N' => {
+                // NOP
+            },
+            'c' => {
+                cpu.clock_pulse_primary();
+            },
+            'C' => {
+                cpu.clock_pulse_secondary();
+            },
+            'T' => {
+                // send response immediately, as executing the tick may produce additional output
+                socket.send_to(b"#T", ch0_dest).expect("Couldn't send response");
+                cpu.clock_tick();
+            },
+            'r' => {
+                todo!("Read current Opcode from IR");
+            },
+            'R' => {
+                todo!("Run program until event occurs");
+            },
+            'Z' => {
+                //todo!("Reset CPU");
+            },
+            'W' => {
+                todo!("Write to memory");
+                socket.send_to(b"#W", ch0_dest).expect("Couldn't send response");
+            },
             'Q' => {
                 println!("Received 'Q', exiting.");
                 break;
-            },
-            'I' => {
-                socket.send_to(b"Turbo VM", ch0_dest).expect("Couldn't send response");
             },
             'E' => {
                 let _chan = recv_int(&rx);
                 let _port = recv_int(&rx);
                 println!("Received: E command with channel {} and port {}", _chan, _port);
                 ch0_dest = format!("127.0.0.1:{}", _port).parse().expect("Invalid address");
-            },
-            'M' => {
-                let cw = recv_int(&rx);
-                devices.route_word(&mut sources, current_cw, cw);
-                current_cw = cw;
             },
             _ => {
                 println!("Received: unknown {}", c);

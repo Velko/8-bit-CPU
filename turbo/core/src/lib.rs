@@ -9,11 +9,13 @@ mod control_word;
 mod wo_register;
 mod memory;
 mod runtime_state;
+mod cpu;
 
 pub use control_word::ControlWord;
 pub use router::DeviceMap;
 pub use router::DEFAULT_CW;
 pub use runtime_state::BusValues;
+pub use cpu::Cpu;
 
 #[cfg(test)]
 mod test_helpers;
