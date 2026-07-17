@@ -52,6 +52,17 @@ def test_add_ab(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: 
     assert value == to_u8(case.result)
     assert flags == case.xflags
 
+def test_add_ab_simple(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
+    cpu_helper.regs.A = 10
+    cpu_helper.regs.B = 20
+
+    acpu.add(A, B)
+
+    value = cpu_helper.regs.A
+    flags = cpu_helper.regs.F
+    assert value == 30
+    assert flags == Flags.Empty
+
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("case", add_aa_test_args, ids=str)
 def test_add_aa(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: ALUOneRegTestCase) -> None:
@@ -171,6 +182,18 @@ def test_adc_ab_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister,
     flags = cpu_helper.regs.F
     assert value == to_u8(case.result)
     assert flags == case.xflags
+
+def test_adc_ab_c_set_simple(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
+    cpu_helper.regs.F = Flags.C
+    cpu_helper.regs.A = 246
+    cpu_helper.regs.B = 9
+
+    acpu.adc(A, B)
+
+    value = cpu_helper.regs.A
+    flags = cpu_helper.regs.F
+    assert value == 0
+    assert flags == Flags.C | Flags.Z
 
 @pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
 @pytest.mark.parametrize("case", add_ab_test_args, ids=str)
