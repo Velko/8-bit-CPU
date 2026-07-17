@@ -37,6 +37,7 @@ class TempRegister(WORegister):
 class ALU(DeviceBase):
     out: Pin
     alt: Pin
+    carry_in: Pin = None
 
 
 class Flags(enum.Flag):
@@ -63,7 +64,6 @@ class Flags(enum.Flag):
 @dataclass
 class FlagsRegister(Register):
     calc: Pin
-    carry: Pin
 
 @dataclass
 class RAM(DeviceBase):

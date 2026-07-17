@@ -49,6 +49,9 @@ shared_pins:
   - name: "Memory.out"
     mux: "OutMux"
     pin: 9
+  - name: "Alu.carry_in"
+    pin: 15
+    level: "HIGH"
 devices:
   - name: "A"
     type: "GPRegister"
@@ -118,6 +121,8 @@ devices:
         pin: 5
       alt:
         pin: "Alu.alt"
+      carry_in:
+        pin: "Alu.carry_in"
   - name: "AndOr"
     type: "ALU"
     pins:
@@ -142,6 +147,8 @@ devices:
         pin: 7
       alt:
         pin: "Alu.alt"
+      carry_in:
+        pin: "Alu.carry_in"
   - name: "F"
     type: "FlagsRegister"
     pins:
@@ -154,9 +161,6 @@ devices:
       calc:
         pin: 14
         level: "LOW"
-      carry:
-        pin: 15
-        level: "HIGH"
   - name: "Ram"
     type: "RAM"
     pins:

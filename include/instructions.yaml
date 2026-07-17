@@ -71,8 +71,8 @@ instructions:
             - r0.alu_l
             - r1.alu_r
             - AddSub.out
+            - AddSub.carry_in
             - F.calc
-            - F.carry
 
   - name: "sub"
     args:
@@ -106,8 +106,8 @@ instructions:
             - r1.alu_r
             - AddSub.out
             - AddSub.alt
+            - AddSub.carry_in
             - F.calc
-            - F.carry
 
   - name: "and"
     args:
@@ -170,8 +170,8 @@ instructions:
       - - r0.load
         - r0.alu_l
         - AddSub.out
+        - AddSub.carry_in
         - F.calc
-        - F.carry
 
   - name: "dec"
     args:
@@ -181,8 +181,8 @@ instructions:
         - r0.alu_l
         - AddSub.out
         - AddSub.alt
+        - AddSub.carry_in
         - F.calc
-        - F.carry
 
   - name: "shr"
     args:
@@ -208,7 +208,7 @@ instructions:
           - - r0.load
             - r0.alu_l
             - ShiftSwap.out
-            - F.carry
+            - ShiftSwap.carry_in
             - F.calc
 
   - name: "asr"
@@ -230,7 +230,7 @@ instructions:
           - - r0.load
             - r0.alu_l
             - ShiftSwap.out
-            - F.carry
+            - ShiftSwap.carry_in
             - F.calc
 
   - name: "swap"
@@ -888,8 +888,8 @@ instructions:
             - r0.alu_l
             - T.alu_r
             - AddSub.out
+            - AddSub.carry_in
             - F.calc
-            - F.carry
 
   - name: "subi"
     args:
@@ -950,8 +950,8 @@ instructions:
             - T.alu_r
             - AddSub.out
             - AddSub.alt
+            - AddSub.carry_in
             - F.calc
-            - F.carry
 
   - name: "andi"
     args:
