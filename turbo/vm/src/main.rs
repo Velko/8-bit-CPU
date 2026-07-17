@@ -48,7 +48,7 @@ fn main() -> std::io::Result<()> {
                 socket.send_to(response.as_bytes(), ch0_dest).expect("Couldn't send response");
             },
             's' => {
-                let value = 0;
+                let value = cpu.read_flags_value();
                 let response = format!("{:02X}", value);
                 socket.send_to(response.as_bytes(), ch0_dest).expect("Couldn't send response");
             },
@@ -58,10 +58,12 @@ fn main() -> std::io::Result<()> {
             },
             'O' => {
                 let _cw = recv_int(&rx);
+                println!("Received: O command with control word 0x{:08X}", _cw);
                 cpu.apply_control_word(turbo_core::DEFAULT_CW);
             },
             'M' => {
                 let cw = recv_int(&rx);
+                println!("Received: M command with control word 0x{:08X}", cw);
                 cpu.apply_control_word(cw);
             },
             'N' => {
@@ -75,6 +77,7 @@ fn main() -> std::io::Result<()> {
             },
             'T' => {
                 // send response immediately, as executing the tick may produce additional output
+                println!("Received: T command, executing clock tick");
                 socket.send_to(b"#T", ch0_dest).expect("Couldn't send response");
                 cpu.clock_tick();
             },
