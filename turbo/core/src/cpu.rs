@@ -1,5 +1,7 @@
 
+use crate::DEFAULT_CW;
 use crate::control_word::ControlWord;
+use crate::devices::ValueSource;
 use crate::runtime_state::BusValues;
 use crate::router::DeviceMap;
 
@@ -12,10 +14,13 @@ pub struct Cpu {
 
 impl Cpu {
     pub fn new() -> Self {
+        let devices = DeviceMap::new();
+        let mut bus_values = BusValues::new();
+        devices.route_word(&mut bus_values, !DEFAULT_CW, DEFAULT_CW); // Ensure we start from the default state
         Cpu {
-            devices: DeviceMap::new(),
-            control_word: ControlWord::default(),
-            bus_values: BusValues::new(),
+            devices,
+            control_word: DEFAULT_CW,
+            bus_values,
         }
     }
 
@@ -44,5 +49,9 @@ impl Cpu {
 
     pub fn read_main_bus_value(&self) -> u8 {
         self.bus_values.main_bus.value.unwrap()
+    }
+
+    pub fn read_flags_value(&self) -> u8 {
+        self.devices.F.get_value(&self.bus_values)
     }
 }
