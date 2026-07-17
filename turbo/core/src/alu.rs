@@ -12,6 +12,7 @@ pub struct ALU {
     main_id: MainBusSource,
     flags_id: FlagsSource,
     alt_enabled: Cell<bool>,
+    carry_in: Cell<bool>,
 }
 impl OutReceiver for ALU {
     fn on_out_change(&self, bus_values: &mut BusValues, enable: bool) {
@@ -26,7 +27,8 @@ impl ALU {
             name,
             main_id,
             flags_id,
-            alt_enabled: Cell::new(false)
+            alt_enabled: Cell::new(false),
+            carry_in: Cell::new(false),
         }
     }
 
@@ -35,10 +37,15 @@ impl ALU {
         self.alt_enabled.set(enable);
     }
 
+    pub fn on_carry_in_change(&self, _bus_values: &mut BusValues, enable: bool) {
+        println!("ALU {} Carry In changed to: {}", self.name, enable);
+        self.carry_in.set(enable);
+    }
+
     fn solve_add_sub(&self, bus_values: &BusValues) -> u8 {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
         let alu_r_value = bus_values.alu_r.value.unwrap_or(0);
-        let carry_in = if bus_values.carry_in { 1 } else { 0 };
+        let carry_in = if self.carry_in.get() { 1 } else { 0 };
 
         if self.alt_enabled.get() {
             // Subtract
@@ -52,7 +59,7 @@ impl ALU {
     fn solve_add_sub_flags(&self, bus_values: &BusValues) -> ALUFlags {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
         let alu_r_value = bus_values.alu_r.value.unwrap_or(0);
-        let carry_in = if bus_values.carry_in { 1 } else { 0 };
+        let carry_in = if self.carry_in.get() { 1 } else { 0 };
 
         if self.alt_enabled.get() {
             // Subtract
@@ -107,7 +114,7 @@ impl ALU {
             (alu_l_value << 4) | (alu_l_value >> 4)
         } else {
             // Shift right
-            let carry_in = if bus_values.carry_in { 0x80 } else { 0 };
+            let carry_in = if self.carry_in.get() { 0x80 } else { 0 };
             alu_l_value >> 1 | carry_in
         }
     }
@@ -163,7 +170,7 @@ impl ValueSource<ALUFlags> for ALU {
 #[cfg(test)]
 mod tests {
     use rstest::rstest;
-    use crate::router::{OutMux, AluArgL, AluArgR, LoadMux, FCalc, AluAlt, FCarry};
+    use crate::router::{OutMux, AluArgL, AluArgR, LoadMux, FCalc, AluAlt, AluCarryIn};
     use crate::devices::ValueSource;
     use crate::flags::Flags;
     use crate::test_helpers::{TestBench, i16tou8};
@@ -266,7 +273,7 @@ mod tests {
             .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
             .apply_mux::<AluArgR>(AluArgR::VALUE_B_ALU_R)
             .apply_bit::<FCalc>()
-            .apply_bit::<FCarry>()
+            .apply_bit::<AluCarryIn>()
             .build();
         bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, adc_ab_cw);
         bench.bus_values.resolve(&bench.devices);
@@ -289,7 +296,7 @@ mod tests {
             .apply_mux::<AluArgR>(AluArgR::VALUE_C_ALU_R)
             .apply_bit::<AluAlt>()
             .apply_bit::<FCalc>()
-            .apply_bit::<FCarry>()
+            .apply_bit::<AluCarryIn>()
             .build();
 
         bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, sbb_bc_cw);
@@ -475,7 +482,7 @@ mod tests {
             .apply_mux::<OutMux>(OutMux::VALUE_SHIFTSWAP_OUT)
             .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
             .apply_bit::<FCalc>()
-            .apply_bit::<FCarry>()
+            .apply_bit::<AluCarryIn>()
             .build();
 
         bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, shr_a);

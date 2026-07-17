@@ -13,7 +13,6 @@ pub struct BusValues {
     pub alu_r: BusValue<ALURSource, u8>,
     pub address_bus: BusValue<AddressBusSource, u16>,
     pub flags: BusValue<FlagsSource, ALUFlags>,
-    pub carry_in: bool,
 }
 
 impl BusValues {
@@ -24,7 +23,6 @@ impl BusValues {
             alu_r: BusValue { source: None, value: None },
             address_bus: BusValue { source: None, value: None },
             flags: BusValue { source: None, value: None },
-            carry_in: false,
         }
     }
 

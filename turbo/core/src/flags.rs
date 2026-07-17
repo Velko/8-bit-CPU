@@ -96,11 +96,8 @@ impl FlagsRegister {
         println!("FlagsRegister {} Calc changed to: {}", self.name, enable);
         self.calc_enabled.set(enable);
     }
-    pub fn on_carry_change(&self, bus_values: &mut BusValues, enable: bool) {
-        println!("FlagsRegister {} Carry changed to: {}", self.name, enable);
-        bus_values.carry_in = enable;
-    }
 }
+
 impl ClockReceiver for FlagsRegister {
     fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
         if self.calc_enabled.get() {
