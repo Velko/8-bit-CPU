@@ -52,7 +52,7 @@ impl ALU {
     fn solve_add_sub_flags(&self, bus_values: &BusValues) -> ALUFlags {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
         let alu_r_value = bus_values.alu_r.value.unwrap_or(0);
-        let carry_in = if bus_values.flags.value.as_ref().map_or(false, |flags| flags.carry == Some(Flags::C)) { 1 } else { 0 };
+        let carry_in = if bus_values.carry_in { 1 } else { 0 };
 
         if self.alt_enabled.get() {
             // Subtract
