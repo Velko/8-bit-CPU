@@ -111,9 +111,8 @@ impl ClockReceiver for FlagsRegister {
                 new_value |= Flags::N;
             }
 
-            let alu_flags = bus_values.flags.value.as_ref().unwrap();
-            new_value |= alu_flags.carry.unwrap_or(self.value_primary & Flags::C); // Apply new or preserve previous carry if not calculated
-            new_value |= alu_flags.overflow.unwrap_or(self.value_primary & Flags::V); // Apply new or preserve previous overflow if not calculated
+            new_value |= bus_values.flags.value.carry.unwrap_or(self.value_primary & Flags::C); // Apply new or preserve previous carry if not calculated
+            new_value |= bus_values.flags.value.overflow.unwrap_or(self.value_primary & Flags::V); // Apply new or preserve previous overflow if not calculated
             self.value_primary = new_value;
         } else if self.load_enabled.get() {
             // Load flags from the main bus value
