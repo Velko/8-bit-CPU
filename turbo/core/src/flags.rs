@@ -1,7 +1,7 @@
 use std::cell::Cell;
 use std::ops::{BitOr, BitAnd, BitOrAssign};
 use std::fmt::Debug;
-use crate::devices::OutReceiver;
+use crate::devices::{OutReceiver, ResetReceiver};
 use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
 use crate::devices::ValueSource;
@@ -123,6 +123,13 @@ impl ClockReceiver for FlagsRegister {
     }
     fn on_clock_tick_secondary(&mut self) {
         self.value_secondary = self.value_primary;
+    }
+}
+
+impl ResetReceiver for FlagsRegister {
+    fn on_reset(&mut self) {
+        self.value_primary = Flags::EMPTY;
+        self.value_secondary = Flags::EMPTY;
     }
 }
 

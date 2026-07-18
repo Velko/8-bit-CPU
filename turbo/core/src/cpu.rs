@@ -54,4 +54,8 @@ impl Cpu {
     pub fn read_flags_value(&self) -> u8 {
         self.devices.F.get_value(&self.bus_values)
     }
+
+    pub fn reset(&mut self) {
+        self.devices.broadcast_reset();
+    }
 }

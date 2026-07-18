@@ -1,6 +1,7 @@
 use std::cell::Cell;
 use crate::devices::OutReceiver;
 use crate::devices::ClockReceiver;
+use crate::devices::ResetReceiver;
 use crate::devices::ValueSource;
 use crate::router::MainBusSource;
 use crate::runtime_state::BusValues;
@@ -58,6 +59,8 @@ impl ClockReceiver for RAM {
     }
 }
 
+impl ResetReceiver for RAM {}
+
 impl ValueSource<u8> for RAM {
     fn get_value(&self, bus_values: &BusValues) -> u8 {
         let address = bus_values.address_bus.value.unwrap() as usize;
@@ -75,6 +78,7 @@ impl ROM {
     }
 }
 impl ClockReceiver for ROM {}
+impl ResetReceiver for ROM {}
 
 
 #[cfg(test)]

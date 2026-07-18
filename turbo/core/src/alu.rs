@@ -1,6 +1,7 @@
 use std::cell::Cell;
 use crate::devices::ClockReceiver;
 use crate::devices::OutReceiver;
+use crate::devices::ResetReceiver;
 use crate::devices::ValueSource;
 use crate::router::{MainBusSource, FlagsSource};
 use crate::runtime_state::BusValues;
@@ -140,6 +141,7 @@ impl ALU {
 }
 
 impl ClockReceiver for ALU {}
+impl ResetReceiver for ALU {}
 
 impl ValueSource<u8> for ALU {
     fn get_value(&self, bus_values: &BusValues) -> u8 {

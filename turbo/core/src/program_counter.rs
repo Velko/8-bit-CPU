@@ -3,6 +3,7 @@ use crate::devices::OutReceiver;
 use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
 use crate::devices::IncReceiver;
+use crate::devices::ResetReceiver;
 use crate::devices::ValueSource;
 use crate::router::AddressBusSource;
 use crate::runtime_state::BusValues;
@@ -72,6 +73,13 @@ impl ClockReceiver for ProgramCounter {
         if self.value_primary != self.value_secondary {
             self.value_secondary = self.value_primary;
         }
+    }
+}
+
+impl ResetReceiver for ProgramCounter {
+    fn on_reset(&mut self) {
+        self.value_primary = 0;
+        self.value_secondary = 0;
     }
 }
 

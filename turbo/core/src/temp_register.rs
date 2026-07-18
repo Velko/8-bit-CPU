@@ -1,6 +1,7 @@
 use std::cell::Cell;
 use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
+use crate::devices::ResetReceiver;
 use crate::devices::ValueSource;
 use crate::router::ALURSource;
 use crate::runtime_state::BusValues;
@@ -54,6 +55,13 @@ impl ClockReceiver for TempRegister {
         if self.value_primary != self.value_secondary {
             self.value_secondary = self.value_primary;
         }
+    }
+}
+
+impl ResetReceiver for TempRegister {
+    fn on_reset(&mut self) {
+        self.value_primary = 0;
+        self.value_secondary = 0;
     }
 }
 

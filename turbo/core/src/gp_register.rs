@@ -1,6 +1,6 @@
 use std::cell::Cell;
 use crate::router::{MainBusSource, ALULSource, ALURSource};
-use crate::devices::OutReceiver;
+use crate::devices::{OutReceiver, ResetReceiver};
 use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
 use crate::devices::ValueSource;
@@ -44,6 +44,13 @@ impl ClockReceiver for GPRegister {
         if self.value_primary != self.value_secondary {
             self.value_secondary = self.value_primary;
         }
+    }
+}
+
+impl ResetReceiver for GPRegister {
+    fn on_reset(&mut self) {
+        self.value_primary = 0;
+        self.value_secondary = 0;
     }
 }
 

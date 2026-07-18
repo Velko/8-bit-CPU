@@ -88,7 +88,7 @@ fn main() -> std::io::Result<()> {
                 todo!("Run program until event occurs");
             },
             'Z' => {
-                //todo!("Reset CPU");
+                cpu.reset();
             },
             'W' => {
                 todo!("Write to memory");

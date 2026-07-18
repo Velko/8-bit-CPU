@@ -315,6 +315,14 @@ impl DeviceMapPart {
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
+        writeln!(writer)?;
+
+        writeln!(writer, "    pub fn broadcast_reset(&mut self) {{")?;
+        for device in self.devices.iter() {
+            writeln!(writer, "        self.{}.on_reset();", device.name)?;
+        }
+        writeln!(writer, "    }}")?;
+
         writeln!(writer, "}}")?;
         writeln!(writer)?;
 
