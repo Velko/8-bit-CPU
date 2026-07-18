@@ -51,6 +51,12 @@ impl Cpu {
         self.bus_values.main_bus.value = Some(value);
     }
 
+    pub fn inject_address_bus_value(&mut self, value: u16) {
+        // Same logic for the timing of the injection as for the main bus value.
+        self.bus_values.injected_address_bus_value = Some(value);
+        self.bus_values.address_bus.value = Some(value);
+    }
+
     pub fn read_main_bus_value(&self) -> u8 {
         self.bus_values.main_bus.value.unwrap()
     }

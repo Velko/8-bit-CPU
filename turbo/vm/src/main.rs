@@ -34,7 +34,9 @@ fn main() -> std::io::Result<()> {
                 socket.send_to(b"Turbo VM", ch0_dest).expect("Couldn't send response");
             },
             'A' => {
-                todo!("Set Address Bus");
+                let addr = recv_int(&rx);
+                cpu.inject_address_bus_value(addr as u16);
+                println!("Received: A command with address 0x{:04X}", addr);
             },
             'a' => {
                 todo!("Read Address Bus");
@@ -94,7 +96,18 @@ fn main() -> std::io::Result<()> {
                 cpu.reset();
             },
             'W' => {
-                todo!("Write to memory");
+                let cw = recv_int(&rx);
+                let mut addr = recv_int(&rx);
+                println!("Received: W command with control word 0x{:08X} and address 0x{:04X}", cw, addr);
+                let mut data = recv_int(&rx);
+                while data < 0x100 {
+                    cpu.inject_main_bus_value(data as u8);
+                    cpu.inject_address_bus_value(addr as u16);
+                    cpu.apply_control_word(cw);
+                    cpu.clock_tick();
+                    addr += 1;
+                    data = recv_int(&rx);
+                }
                 socket.send_to(b"#W", ch0_dest).expect("Couldn't send response");
             },
             'Q' => {
