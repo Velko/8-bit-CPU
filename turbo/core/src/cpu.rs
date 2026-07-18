@@ -44,6 +44,10 @@ impl Cpu {
     }
 
     pub fn inject_main_bus_value(&mut self, value: u8) {
+        // The injection can come either before or after the control word is applied.
+        // Meaning that the bus value might or might not be resolved yet. So we set
+        // a value to use for the resolver and also the value directly.
+        self.bus_values.injected_main_bus_value = Some(value);
         self.bus_values.main_bus.value = Some(value);
     }
 
@@ -57,5 +61,10 @@ impl Cpu {
 
     pub fn reset(&mut self) {
         self.devices.broadcast_reset();
+    }
+
+    pub fn clear_injected_values(&mut self) {
+        self.bus_values.injected_main_bus_value = None;
+        self.bus_values.injected_address_bus_value = None;
     }
 }

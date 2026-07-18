@@ -40,7 +40,9 @@ fn main() -> std::io::Result<()> {
                 todo!("Read Address Bus");
             },
             'B' => {
-                cpu.inject_main_bus_value(recv_int(&rx) as u8);
+                let value = recv_int(&rx);
+                println!("Received: B command with value 0x{:02X}", value);
+                cpu.inject_main_bus_value(value as u8);
             },
             'b' => {
                 let value = cpu.read_main_bus_value();
@@ -54,11 +56,12 @@ fn main() -> std::io::Result<()> {
             },
             'f' => {
                 // is this ever used?
-                //todo!("Release Buses");
+                cpu.clear_injected_values();
             },
             'O' => {
                 let _cw = recv_int(&rx);
                 println!("Received: O command with control word 0x{:08X}", _cw);
+                cpu.clear_injected_values();
                 cpu.apply_control_word(turbo_core::DEFAULT_CW);
             },
             'M' => {

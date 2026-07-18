@@ -13,6 +13,8 @@ pub struct BusValues {
     pub alu_r: BusValue<ALURSource, u8>,
     pub address_bus: BusValue<AddressBusSource, u16>,
     pub flags: BusValue<FlagsSource, ALUFlags>,
+    pub injected_main_bus_value: Option<u8>,
+    pub injected_address_bus_value: Option<u16>,
 }
 
 impl BusValues {
@@ -23,25 +25,17 @@ impl BusValues {
             alu_r: BusValue { source: None, value: None },
             address_bus: BusValue { source: None, value: None },
             flags: BusValue { source: None, value: None },
+            injected_main_bus_value: None,
+            injected_address_bus_value: None,
         }
     }
 
     pub fn resolve(&mut self, devices: &DeviceMap) {
-        if let Some(source) = self.alu_l.source {
-            self.alu_l.value = Some(devices.get_alu_l_value(source, self));
-        }
-        if let Some(source) = self.alu_r.source {
-            self.alu_r.value = Some(devices.get_alu_r_value(source, self));
-        }
-        if let Some(source) = self.address_bus.source {
-            self.address_bus.value = Some(devices.get_address_bus_value(source, self));
-        }
-        if let Some(source) = self.main_bus.source {
-            self.main_bus.value = Some(devices.get_main_bus_value(source, self));
-        }
-        if let Some(source) = self.flags.source {
-            self.flags.value = Some(devices.get_flags_value(source, self));
-        }
+        self.alu_l.value = self.alu_l.source.map(|source| devices.get_alu_l_value(source, self));
+        self.alu_r.value = self.alu_r.source.map(|source| devices.get_alu_r_value(source, self));
+        self.address_bus.value = self.injected_address_bus_value.or_else(|| self.address_bus.source.map(|source| devices.get_address_bus_value(source, self)));
+        self.main_bus.value = self.injected_main_bus_value.or_else(|| self.main_bus.source.map(|source| devices.get_main_bus_value(source, self)));
+        self.flags.value = self.flags.source.map(|source| devices.get_flags_value(source, self));
     }
 }
 
