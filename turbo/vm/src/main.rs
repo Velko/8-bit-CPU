@@ -39,7 +39,9 @@ fn main() -> std::io::Result<()> {
                 println!("Received: A command with address 0x{:04X}", addr);
             },
             'a' => {
-                todo!("Read Address Bus");
+                let value = cpu.read_address_bus_value();
+                let response = format!("{:04X}", value);
+                socket.send_to(response.as_bytes(), ch0_dest).expect("Couldn't send response");
             },
             'B' => {
                 let value = recv_int(&rx);
@@ -87,7 +89,10 @@ fn main() -> std::io::Result<()> {
                 cpu.clock_tick();
             },
             'r' => {
-                todo!("Read current Opcode from IR");
+                _ = recv_int(&rx); // client sends control word for IRFetch, discard it
+                let value = cpu.read_instruction_register();
+                let response = format!("{:02X}", value);
+                socket.send_to(response.as_bytes(), ch0_dest).expect("Couldn't send response");
             },
             'R' => {
                 todo!("Run program until event occurs");

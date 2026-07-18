@@ -61,8 +61,16 @@ impl Cpu {
         self.bus_values.main_bus.value.unwrap()
     }
 
+    pub fn read_address_bus_value(&self) -> u16 {
+        self.bus_values.address_bus.value.unwrap()
+    }
+
     pub fn read_flags_value(&self) -> u8 {
         self.devices.F.get_value(&self.bus_values)
+    }
+
+    pub fn read_instruction_register(&self) -> u8 {
+        self.devices.IR.get_value(&self.bus_values)
     }
 
     pub fn reset(&mut self) {
