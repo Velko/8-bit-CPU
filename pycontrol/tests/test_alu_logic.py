@@ -12,6 +12,10 @@ from conftest import ALUTwoRegTestCase, ALUOneRegTestCase, Compiler, devname
 
 pytestmark = pytest.mark.hardware
 
+full_exec_supported = True
+full_exec_reason = "code execution is not yet supported"
+
+
 NZ_MASK = Flags.N | Flags.Z
 
 and_test_args = [
@@ -216,6 +220,7 @@ def shr_test_prog(asm_compiler: Compiler) -> dict[str, bytes]:
 
     return progs
 
+@pytest.mark.skipif(not full_exec_supported, reason=full_exec_reason)
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("case", shr_args)
 @pytest.mark.parametrize("carry_in", [Flags.Empty, Flags.C])
@@ -314,6 +319,7 @@ def asr_test_prog(asm_compiler: Compiler) -> dict[str, bytes]:
         """)
     return progs
 
+@pytest.mark.skipif(not full_exec_supported, reason=full_exec_reason)
 @pytest.mark.parametrize("reg", gp_regs, ids=devname)
 @pytest.mark.parametrize("_desc,val,result,xflags", asr_args)
 @pytest.mark.parametrize("carry_in", [Flags.Empty, Flags.C])
