@@ -84,7 +84,7 @@ fn main() -> std::io::Result<()> {
             },
             'T' => {
                 // send response immediately, as executing the tick may produce additional output
-                println!("Received: T command, executing clock tick");
+                println!("Received: T command, executing clock tick\n");
                 socket.send_to(b"#T", ch0_dest).expect("Couldn't send response");
                 cpu.clock_tick();
             },

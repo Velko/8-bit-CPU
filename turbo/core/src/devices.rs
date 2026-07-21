@@ -6,6 +6,7 @@ pub use crate::alu::ALU;
 pub use crate::flags::{FlagsRegister};
 pub use crate::wo_register::WORegister;
 pub use crate::memory::{RAM, ROM};
+pub use crate::transfer_register::TransferRegister;
 use crate::router::{AddressBusSource};
 
 pub trait OutReceiver {
@@ -59,19 +60,6 @@ impl StepCounter {
 }
 impl ClockReceiver for StepCounter {}
 impl ResetReceiver for StepCounter {}
-
-pub struct TransferRegister {
-    pub name: &'static str,
-}
-impl TransferRegister {
-    pub fn new(name: &'static str) -> Self {
-        Self { name }
-    }
-}
-impl OutReceiver for TransferRegister {}
-impl LoadReceiver for TransferRegister {}
-impl ClockReceiver for TransferRegister {}
-impl ResetReceiver for TransferRegister {}
 
 pub struct StackPointer {
     pub name: &'static str,

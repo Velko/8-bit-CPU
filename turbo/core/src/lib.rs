@@ -10,6 +10,7 @@ mod wo_register;
 mod memory;
 mod runtime_state;
 mod cpu;
+mod transfer_register;
 
 pub use control_word::ControlWord;
 pub use router::DeviceMap;

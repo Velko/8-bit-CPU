@@ -118,7 +118,7 @@ impl BusSourcesPart {
         }
     }
 
-    pub fn is_main_bus_source(dev_type: &str, _name: &str) -> bool {
+    pub fn is_main_bus_source(dev_type: &str, name: &str) -> bool {
         match dev_type {
             "GPRegister" |
             "ALU" |
@@ -126,7 +126,7 @@ impl BusSourcesPart {
             "RAM" => true,
             // "ROM" |
             // "IOController"=> true,
-//            "TransferRegister" if name != "TX" => true,
+            "TransferRegister" if name != "TX" => true,
             _ => false,
         }
     }
@@ -146,10 +146,11 @@ impl BusSourcesPart {
         }
     }
 
-    pub fn is_address_bus_source(dev_type: &str) -> bool {
+    pub fn is_address_bus_source(dev_type: &str, name: &str) -> bool {
         match dev_type {
             "ProgramCounter" |
             "AddressRegister" => true,
+            "TransferRegister" if name == "TX" => true,
             _ => false,
         }
     }
@@ -221,7 +222,7 @@ impl DeviceMapPart {
     fn emit(&mut self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
         writeln!(writer, "pub struct DeviceMap {{")?;
         for device in self.devices.iter() {
-            writeln!(writer, "    pub {}: {},", device.name, device.dev_type)?;
+            writeln!(writer, "    pub {}: {},", device.name, map_device_type(&device.dev_type, &device.name))?;
         }
         writeln!(writer, "}}")?;
         writeln!(writer)?;
@@ -244,7 +245,7 @@ impl DeviceMapPart {
                 ids.push(format!("ALURSource::{}", device.name));
                 self.bus_sources.alu_r_sources.push(device.name.clone());
             }
-            if BusSourcesPart::is_address_bus_source(&device.dev_type) {
+            if BusSourcesPart::is_address_bus_source(&device.dev_type, &device.name) {
                 ids.push(format!("AddressBusSource::{}", device.name));
                 self.bus_sources.address_bus_sources.push(device.name.clone());
             }
@@ -489,4 +490,12 @@ fn emit_default_control_word(writer: &mut dyn std::io::Write, muxes: &HashMap<St
     writeln!(writer, "        .build();")?;
     writeln!(writer)?;
     Ok(())
+}
+
+fn map_device_type<'a>(dev_type: &'a str, name: &str) -> &'a str {
+    match dev_type {
+        "TransferRegister" if name == "TX" => "TransferRegister<AddressBusSource>",
+        "TransferRegister" => "TransferRegister<MainBusSource>",
+        _ => dev_type,
+    }
 }
