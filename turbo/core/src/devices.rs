@@ -1,3 +1,5 @@
+use std::cell::Cell;
+
 pub use crate::gp_register::GPRegister;
 use crate::runtime_state::BusValues;
 pub use crate::temp_register::TempRegister;
@@ -15,12 +17,26 @@ pub trait OutReceiver {
 pub trait LoadReceiver {
     fn on_load_change(&self, _bus_values: &mut BusValues, _enable: bool) {}
 }
-pub trait IncReceiver {
-    fn on_inc_change(&self, _bus_values: &mut BusValues, _enable: bool) {}
+pub struct DelayedPin{
+    enabled: Cell<bool>,
 }
-pub trait DecReceiver {
-    fn on_dec_change(&self, _bus_values: &mut BusValues, _enable: bool) {}
+
+impl DelayedPin {
+    pub fn new() -> Self {
+        Self {
+            enabled: Cell::new(false),
+        }
+    }
+
+    pub fn change<D>(&self, _device: &D, _bus_values: &mut BusValues, enable: bool) {
+        self.enabled.set(enable);
+    }
+
+    pub fn is_enabled(&self) -> bool {
+        self.enabled.get()
+    }
 }
+
 pub trait ClockReceiver {
     fn on_clock_tick_primary(&mut self, _bus_values: &BusValues) {}
     fn on_clock_tick_secondary(&mut self) {}
@@ -63,16 +79,20 @@ impl ResetReceiver for StepCounter {}
 
 pub struct StackPointer {
     pub name: &'static str,
+    pub inc: DelayedPin,
+    pub dec: DelayedPin,
 }
 impl StackPointer {
     pub fn new(name: &'static str) -> Self {
-        Self { name }
+        Self {
+            name,
+            inc: DelayedPin::new(),
+            dec: DelayedPin::new(),
+        }
     }
 }
 impl OutReceiver for StackPointer {}
 impl LoadReceiver for StackPointer {}
-impl IncReceiver for StackPointer {}
-impl DecReceiver for StackPointer {}
 impl ClockReceiver for StackPointer {}
 impl ResetReceiver for StackPointer {}
 

@@ -44,11 +44,18 @@ impl MuxPart {
         for (_value, (alias, dev_refs)) in self.device_bits.iter() {
             if dev_refs.len() == 1 {
                 let dev_ref = &dev_refs[0];
-                writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.on_{}_change(bus_values, enable),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin)?;
+                match dev_ref.pin.as_str() {
+                    "inc" => writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.{}.change(bus_values, enable),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin)?,
+                    _ => writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.on_{}_change(bus_values, enable),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin)?,
+                }
+
             } else {
                 writeln!(writer, "            Self::VALUE_{} => {{", format_const_name(alias))?;
                 for dev_ref in dev_refs {
-                    writeln!(writer, "                dev.{}.on_{}_change(bus_values, enable);", dev_ref.device, dev_ref.pin)?;
+                    match dev_ref.pin.as_str() {
+                        "inc" => writeln!(writer, "                dev.{}.{}.change(bus_values, enable);", dev_ref.device, dev_ref.pin)?,
+                        _ => writeln!(writer, "                dev.{}.on_{}_change(bus_values, enable);", dev_ref.device, dev_ref.pin)?,
+                    }
                 }
                 writeln!(writer, "            }},")?;
             }
@@ -420,7 +427,10 @@ fn emit_router_fn(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPa
     for (_, (alias, direct_pins)) in direct_pins {
         writeln!(writer, "        if old_cw & {}::MASK != new_cw & {}::MASK {{", alias, alias)?;
         for direct_pin in direct_pins {
-            writeln!(writer, "            self.{}.on_{}_change(bus_values, new_cw & {}::MASK == {}::VALUE);", direct_pin.device, direct_pin.pin, alias, alias)?;
+            match direct_pin.pin.as_str() {
+                "inc" | "dec" => writeln!(writer, "            self.{}.{}.change(&self.{}, bus_values, new_cw & {}::MASK == {}::VALUE);", direct_pin.device, direct_pin.pin, direct_pin.device, alias, alias)?,
+                _ => writeln!(writer, "            self.{}.on_{}_change(bus_values, new_cw & {}::MASK == {}::VALUE);", direct_pin.device, direct_pin.pin, alias, alias)?,
+            }
         }
         writeln!(writer, "        }}")?;
     }
