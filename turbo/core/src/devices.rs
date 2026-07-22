@@ -119,29 +119,33 @@ impl ValueSource<u16> for AddressRegister {
 pub struct AddressCalculator {
     pub name: &'static str,
     pub load: DelayedPin,
+    pub signed: DelayedPin,
 }
 impl OutReceiver for AddressCalculator {}
 impl AddressCalculator {
     pub fn new(name: &'static str) -> Self {
         Self {
             name,
-            load: DelayedPin::new()
+            load: DelayedPin::new(),
+            signed: DelayedPin::new()
         }
     }
-    pub fn on_signed_change(&self, _bus_values: &mut BusValues, _enable: bool) {}
 }
 impl ClockReceiver for AddressCalculator {}
 impl ResetReceiver for AddressCalculator {}
 
 pub struct IOController {
     pub name: &'static str,
+    pub to_dev: DelayedPin,
+    pub laddr: DelayedPin,
 }
 impl IOController {
     pub fn new(name: &'static str) -> Self {
-        Self { name }
+        Self { name,
+            to_dev: DelayedPin::new(),
+            laddr: DelayedPin::new()
+        }
     }
-    pub fn on_laddr_change(&self, _bus_values: &mut BusValues, _enable: bool) {}
-    pub fn on_to_dev_change(&self, _bus_values: &mut BusValues, _enable: bool) {}
     pub fn on_from_dev_change(&self, _bus_values: &mut BusValues, _enable: bool) {}
 }
 impl ClockReceiver for IOController {}

@@ -1,4 +1,4 @@
-use std::cell::Cell;
+use crate::devices::DelayedPin;
 use crate::devices::OutReceiver;
 use crate::devices::ClockReceiver;
 use crate::devices::ResetReceiver;
@@ -12,7 +12,7 @@ const RAM_SIZE: usize = ADDRESS_SPACE_SIZE - ROM_SIZE; // 56KB
 
 pub struct RAM {
     pub name: &'static str,
-    write_enable: Cell<bool>,
+    pub write: DelayedPin,
     main_id: MainBusSource,
     data: [u8; RAM_SIZE],
 }
@@ -27,13 +27,10 @@ impl RAM {
     pub fn new(name: &'static str, main_id: MainBusSource) -> Self {
         Self {
             name,
-            write_enable: Cell::new(false),
+            write: DelayedPin::new(),
             main_id,
             data: [0; RAM_SIZE]
         }
-    }
-    pub fn on_write_change(&self, _bus_values: &mut BusValues, enable: bool) {
-        self.write_enable.set(enable);
     }
 
     pub fn set_data(&mut self, address: usize, value: &[u8]) {
@@ -46,7 +43,7 @@ impl RAM {
 }
 impl ClockReceiver for RAM {
         fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
-        if self.write_enable.get() {
+        if self.write.is_enabled() {
             if let Some(address) = bus_values.address_bus.value {
                 let address = address as usize;
                 if address < RAM_SIZE {
