@@ -49,7 +49,7 @@ impl MuxPart {
                     "laddr" |
                     "write" |
                     "to_dev" => writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.{}.change(&dev.{}, bus_values, enable),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin, dev_ref.device)?,
-                    "alu_l" | "alu_r" =>  writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.{}.change(bus_values, enable),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin)?,
+                    "alu_l" | "alu_r" | "out" =>  writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.{}.change(bus_values, enable),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin)?,
                     _ => writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.on_{}_change(bus_values, enable),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin)?,
                 }
 
@@ -61,8 +61,8 @@ impl MuxPart {
                         "laddr" |
                         "write" |
                         "to_dev" => writeln!(writer, "                dev.{}.{}.change(&dev.{}, bus_values, enable);", dev_ref.device, dev_ref.pin, dev_ref.device)?,
-                        //"out" =>  writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.{}.change(&dev.{}, bus_values, enable),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin, dev_ref.device)?,
-                        _ => writeln!(writer, "                dev.{}.on_{}_change(bus_values, enable);", dev_ref.device, dev_ref.pin)?,
+                        "out" =>    writeln!(writer, "                dev.{}.{}.change(bus_values, enable);", dev_ref.device, dev_ref.pin)?,
+                        _ =>        writeln!(writer, "                dev.{}.on_{}_change(bus_values, enable);", dev_ref.device, dev_ref.pin)?,
                     }
                 }
                 writeln!(writer, "            }},")?;
@@ -138,8 +138,8 @@ impl BusSourcesPart {
             "GPRegister" |
             "ALU" |
             "FlagsRegister" |
-            "RAM" => true,
-            // "ROM" |
+            "RAM" |
+            "ROM"  => true,
             // "IOController"=> true,
             "TransferRegister" if name != "TX" => true,
             _ => false,
@@ -164,7 +164,9 @@ impl BusSourcesPart {
     pub fn is_address_bus_source(dev_type: &str, name: &str) -> bool {
         match dev_type {
             "ProgramCounter" |
-            "AddressRegister" => true,
+            "AddressRegister" |
+            "StackPointer" |
+            "AddressCalculator" => true,
             "TransferRegister" if name == "TX" => true,
             _ => false,
         }

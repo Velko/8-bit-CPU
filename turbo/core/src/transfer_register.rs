@@ -1,8 +1,8 @@
-use crate::devices::{GlobalSignalsReceiver, DelayedPin, OutReceiver, ValueSource};
+use crate::devices::{BusOutputPin, DelayedPin, GlobalSignalsReceiver, ValueSource};
 
 pub struct TransferRegister<TBusSource> {
     pub name: &'static str,
-    bus_id: TBusSource,
+    pub out: BusOutputPin<TBusSource>,
     pub load: DelayedPin,
 }
 
@@ -10,15 +10,9 @@ impl<TBusSource> TransferRegister<TBusSource> {
     pub fn new(name: &'static str, bus_id: TBusSource) -> Self {
         Self {
             name,
-            bus_id,
+            out: BusOutputPin::new(bus_id),
             load: DelayedPin::new(),
         }
-    }
-}
-
-impl<TBusSource> OutReceiver for TransferRegister<TBusSource> {
-    fn on_out_change(&self, _bus_values: &mut crate::BusValues, _enable: bool) {
-        println!("TransferRegister {}: Out change detected, enable={}", self.name, _enable);
     }
 }
 

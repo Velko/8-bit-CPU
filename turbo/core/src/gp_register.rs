@@ -1,5 +1,5 @@
 use crate::router::{MainBusSource, ALULSource, ALURSource};
-use crate::devices::{BusOutputPin, DelayedPin, OutReceiver};
+use crate::devices::{BusOutputPin, DelayedPin};
 use crate::devices::GlobalSignalsReceiver;
 use crate::devices::ValueSource;
 use crate::runtime_state::BusValues;
@@ -8,24 +8,13 @@ pub struct GPRegister {
     pub name: &'static str,
     value_primary: u8,
     value_secondary: u8,
+    pub out: BusOutputPin<MainBusSource>,
     pub load: DelayedPin,
-    main_id: MainBusSource,
     pub alu_l: BusOutputPin<ALULSource>,
     pub alu_r: BusOutputPin<ALURSource>,
 }
 
-impl OutReceiver for GPRegister {
-    fn on_out_change(&self, bus_values: &mut BusValues, enable: bool) {
-        println!("GPRegister {} Out changed to: {}", self.name, enable);
-        bus_values.main_bus.source = if enable {
-            Some(self.main_id)
-        } else {
-            None
-        };
-    }
-}
-
-    impl GlobalSignalsReceiver for GPRegister {
+impl GlobalSignalsReceiver for GPRegister {
     fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
         if self.load.is_enabled() {
             self.value_primary = bus_values.main_bus.value.unwrap();
@@ -54,8 +43,8 @@ impl GPRegister {
             name,
             value_primary: 0,
             value_secondary: 0,
+            out: BusOutputPin::new(main_id),
             load: DelayedPin::new(),
-            main_id,
             alu_l: BusOutputPin::new(alu_l_id),
             alu_r: BusOutputPin::new(alu_r_id),
         }

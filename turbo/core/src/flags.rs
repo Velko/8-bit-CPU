@@ -1,6 +1,6 @@
 use std::ops::{BitOr, BitAnd, BitOrAssign};
 use std::fmt::Debug;
-use crate::devices::{DelayedPin, OutReceiver};
+use crate::devices::{BusOutputPin, DelayedPin};
 use crate::devices::GlobalSignalsReceiver;
 use crate::devices::ValueSource;
 use crate::router::MainBusSource;
@@ -55,28 +55,19 @@ impl BitOrAssign for Flags {
 
 pub struct FlagsRegister {
     pub name: &'static str,
-    main_id: MainBusSource,
+    pub out: BusOutputPin<MainBusSource>,
     value_primary: Flags,
     value_secondary: Flags,
     pub load: DelayedPin,
     pub calc: DelayedPin,
 }
-impl OutReceiver for FlagsRegister {
-    fn on_out_change(&self, bus_values: &mut BusValues, enable: bool) {
-        println!("FlagsRegister {} Out changed to: {}", self.name, enable);
-        bus_values.main_bus.source = if enable {
-            Some(self.main_id)
-        } else {
-            None
-        };
-    }
-}
+
 
 impl FlagsRegister {
     pub fn new(name: &'static str, main_id: MainBusSource) -> Self {
         Self {
             name,
-            main_id,
+            out: BusOutputPin::new(main_id),
             value_primary: Flags::EMPTY,
             value_secondary: Flags::EMPTY,
             load: DelayedPin::new(),

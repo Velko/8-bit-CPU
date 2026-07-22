@@ -9,11 +9,7 @@ pub use crate::flags::{FlagsRegister};
 pub use crate::wo_register::WORegister;
 pub use crate::memory::{RAM, ROM};
 pub use crate::transfer_register::TransferRegister;
-use crate::router::{ALULSource, ALURSource, AddressBusSource};
-
-pub trait OutReceiver {
-    fn on_out_change(&self, _bus_values: &mut BusValues, _enable: bool) {}
-}
+use crate::router::{ALULSource, ALURSource, AddressBusSource, MainBusSource};
 
 pub struct DelayedPin{
     enabled: Cell<bool>,
@@ -40,7 +36,7 @@ pub trait BusOutputPinChange {
 }
 
 pub struct BusOutputPin<BusSource> {
-    source: BusSource,
+    pub source: BusSource,
 }
 
 impl<BusSource> BusOutputPin<BusSource> {
@@ -48,6 +44,26 @@ impl<BusSource> BusOutputPin<BusSource> {
         Self {
             source
         }
+    }
+}
+
+impl BusOutputPinChange for BusOutputPin<MainBusSource> {
+    fn change(&self, bus_values: &mut BusValues, enable: bool) {
+        bus_values.main_bus.source = if enable {
+            Some(self.source)
+        } else {
+            None
+        };
+    }
+}
+
+impl BusOutputPinChange for BusOutputPin<AddressBusSource> {
+    fn change(&self, bus_values: &mut BusValues, enable: bool) {
+        bus_values.address_bus.source = if enable {
+            Some(self.source)
+        } else {
+            None
+        };
     }
 }
 
@@ -109,59 +125,79 @@ impl GlobalSignalsReceiver for StepCounter {}
 
 pub struct StackPointer {
     pub name: &'static str,
+    pub out: BusOutputPin<AddressBusSource>,
     pub load: DelayedPin,
     pub inc: DelayedPin,
     pub dec: DelayedPin,
 }
 impl StackPointer {
-    pub fn new(name: &'static str) -> Self {
+    pub fn new(name: &'static str, address_bus_id: AddressBusSource) -> Self {
         Self {
             name,
+            out: BusOutputPin::new(address_bus_id),
             load: DelayedPin::new(),
             inc: DelayedPin::new(),
             dec: DelayedPin::new(),
         }
     }
 }
-impl OutReceiver for StackPointer {}
+
 impl GlobalSignalsReceiver for StackPointer {}
+
+impl ValueSource<u16> for StackPointer {
+    fn get_value(&self, _bus_values: &BusValues) -> u16 {
+        todo!()
+    }
+}
 
 pub struct AddressRegister {
     pub name: &'static str,
+    pub out: BusOutputPin<AddressBusSource>,
     pub load: DelayedPin,
 }
 impl AddressRegister {
-    pub fn new(name: &'static str, _address_bus_id: AddressBusSource) -> Self {
+    pub fn new(name: &'static str, address_bus_id: AddressBusSource) -> Self {
         Self {
             name,
+            out: BusOutputPin::new(address_bus_id),
             load: DelayedPin::new()
         }
     }
 }
-impl OutReceiver for AddressRegister {}
-impl GlobalSignalsReceiver for AddressRegister {}
+
 impl ValueSource<u16> for AddressRegister {
     fn get_value(&self, _bus_values: &BusValues) -> u16 {
         todo!()
     }
 }
 
+
+impl GlobalSignalsReceiver for AddressRegister {}
+
 pub struct AddressCalculator {
     pub name: &'static str,
+    pub out: BusOutputPin<AddressBusSource>,
     pub load: DelayedPin,
     pub signed: DelayedPin,
 }
-impl OutReceiver for AddressCalculator {}
+
 impl AddressCalculator {
-    pub fn new(name: &'static str) -> Self {
+    pub fn new(name: &'static str, address_bus_id: AddressBusSource) -> Self {
         Self {
             name,
+            out: BusOutputPin::new(address_bus_id),
             load: DelayedPin::new(),
             signed: DelayedPin::new()
         }
     }
 }
 impl GlobalSignalsReceiver for AddressCalculator {}
+impl ValueSource<u16> for AddressCalculator {
+    fn get_value(&self, _bus_values: &BusValues) -> u16 {
+        todo!()
+    }
+}
+
 
 pub struct IOController {
     pub name: &'static str,

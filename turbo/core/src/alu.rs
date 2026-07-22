@@ -1,6 +1,7 @@
+use crate::devices::BusOutputPin;
+use crate::devices::BusOutputPinChange;
 use crate::devices::GlobalSignalsReceiver;
 use crate::devices::DelayedPin;
-use crate::devices::OutReceiver;
 use crate::devices::ValueSource;
 use crate::router::{MainBusSource, FlagsSource};
 use crate::runtime_state::BusValues;
@@ -9,24 +10,32 @@ use crate::flags::Flags;
 
 pub struct ALU {
     pub name: &'static str,
-    main_id: MainBusSource,
-    flags_id: FlagsSource,
+    pub out: BusOutputPin<(MainBusSource, FlagsSource)>,
     pub alt: DelayedPin,
     pub carry_in: DelayedPin,
 }
-impl OutReceiver for ALU {
-    fn on_out_change(&self, bus_values: &mut BusValues, enable: bool) {
-        println!("ALU {} Out changed to: {}", self.name, enable);
-        bus_values.main_bus.source = if enable { Some(self.main_id) } else { None };
-        bus_values.flags.source = if enable { Some(self.flags_id) } else { None };
+
+
+impl BusOutputPinChange for BusOutputPin<(MainBusSource, FlagsSource)> {
+    fn change(&self, bus_values: &mut BusValues, enable: bool) {
+        bus_values.main_bus.source = if enable {
+            Some(self.source.0)
+        } else {
+            None
+        };
+        bus_values.flags.source = if enable {
+            Some(self.source.1)
+        } else {
+            None
+        };
     }
 }
+
 impl ALU {
     pub fn new(name: &'static str, main_id: MainBusSource, flags_id: FlagsSource) -> Self {
         Self {
             name,
-            main_id,
-            flags_id,
+            out: BusOutputPin::new((main_id, flags_id)),
             alt: DelayedPin::new(),
             carry_in: DelayedPin::new(),
         }
@@ -133,12 +142,12 @@ impl GlobalSignalsReceiver for ALU {}
 
 impl ValueSource<u8> for ALU {
     fn get_value(&self, bus_values: &BusValues) -> u8 {
-        match self.main_id {
+        match self.out.source.0 {
             MainBusSource::AddSub => self.solve_add_sub(bus_values),
             MainBusSource::AndOr => self.solve_and_or(bus_values),
             MainBusSource::XorNot => self.solve_xor_not(bus_values),
             MainBusSource::ShiftSwap => self.solve_shift_swap(bus_values),
-            _ => panic!("Unknown ALU main bus source: {:?}", self.main_id),
+            _ => panic!("Unknown ALU main bus source: {:?}", self.out.source.0),
         }
     }
 }
@@ -146,7 +155,7 @@ impl ValueSource<u8> for ALU {
 
 impl ValueSource<ALUFlags> for ALU {
     fn get_value(&self, bus_values: &BusValues) -> ALUFlags {
-        match self.flags_id {
+        match self.out.source.1 {
             FlagsSource::AddSub => self.solve_add_sub_flags(bus_values),
             FlagsSource::ShiftSwap => self.solve_shift_swap_flags(bus_values),
             _ => ALUFlags {

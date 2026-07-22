@@ -1,5 +1,5 @@
+use crate::devices::BusOutputPin;
 use crate::devices::DelayedPin;
-use crate::devices::OutReceiver;
 use crate::devices::GlobalSignalsReceiver;
 use crate::devices::ValueSource;
 use crate::router::AddressBusSource;
@@ -9,7 +9,7 @@ pub struct ProgramCounter {
     pub name: &'static str,
     value_primary: u16,
     value_secondary: u16,
-    address_bus_id: AddressBusSource,
+    pub out: BusOutputPin<AddressBusSource>,
     pub load: DelayedPin,
     pub inc: DelayedPin,
 }
@@ -20,7 +20,7 @@ impl ProgramCounter {
             name,
             value_primary: 0,
             value_secondary: 0,
-            address_bus_id,
+            out: BusOutputPin::new(address_bus_id),
             load: DelayedPin::new(),
             inc: DelayedPin::new(),
         }
@@ -32,18 +32,7 @@ impl ProgramCounter {
     }
 }
 
-impl OutReceiver for ProgramCounter {
-    fn on_out_change(&self, bus_values: &mut BusValues, enable: bool) {
-        println!("ProgramCounter {} Out changed to: {}", self.name, enable);
-        bus_values.address_bus.source = if enable {
-            Some(self.address_bus_id)
-        } else {
-            None
-        };
-    }
-}
-
-    impl GlobalSignalsReceiver for ProgramCounter {
+impl GlobalSignalsReceiver for ProgramCounter {
     fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
         if self.load.is_enabled() {
             self.value_primary = bus_values.address_bus.value.unwrap();
