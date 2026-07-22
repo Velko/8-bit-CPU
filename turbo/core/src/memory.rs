@@ -1,4 +1,4 @@
-use crate::devices::BusOutputPin;
+use crate::devices::BusOutputPinChange;
 use crate::devices::DelayedPin;
 use crate::devices::GlobalSignalsReceiver;
 use crate::devices::ValueSource;
@@ -12,7 +12,7 @@ const RAM_SIZE: usize = ADDRESS_SPACE_SIZE - ROM_SIZE; // 56KB
 pub struct RAM {
     pub name: &'static str,
     pub write: DelayedPin,
-    pub out: BusOutputPin<MainBusSource>,
+    pub out: MemoryOutputPin,
     data: [u8; RAM_SIZE],
 }
 
@@ -21,7 +21,7 @@ impl RAM {
         Self {
             name,
             write: DelayedPin::new(),
-            out: BusOutputPin::new(main_id),
+            out: MemoryOutputPin::new(main_id, true),
             data: [0; RAM_SIZE]
         }
     }
@@ -58,14 +58,14 @@ impl ValueSource<u8> for RAM {
 
 pub struct ROM {
     pub name: &'static str,
-    pub out: BusOutputPin<MainBusSource>,
+    pub out: MemoryOutputPin,
 }
 
 impl ROM {
     pub fn new(name: &'static str, main_id: MainBusSource) -> Self {
         Self {
             name,
-            out: BusOutputPin::new(main_id),
+            out: MemoryOutputPin::new(main_id, false),
         }
     }
 }
@@ -73,6 +73,33 @@ impl GlobalSignalsReceiver for ROM {}
 impl ValueSource<u8> for ROM {
     fn get_value(&self, bus_values: &BusValues) -> u8 {
         todo!()
+    }
+}
+
+
+pub struct MemoryOutputPin {
+    source: MainBusSource,
+    connected: bool,
+}
+
+impl MemoryOutputPin {
+    pub fn new(source: MainBusSource, connected: bool) -> Self {
+        Self {
+            source,
+            connected
+        }
+    }
+}
+
+impl BusOutputPinChange for MemoryOutputPin {
+    fn change(&self, bus_values: &mut BusValues, enable: bool) {
+        if self.connected {
+            bus_values.main_bus.source = if enable {
+                Some(self.source)
+            } else {
+                None
+            };
+        }
     }
 }
 
