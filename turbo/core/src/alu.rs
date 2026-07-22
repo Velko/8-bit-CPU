@@ -1,5 +1,5 @@
-use std::cell::Cell;
 use crate::devices::ClockReceiver;
+use crate::devices::DelayedPin;
 use crate::devices::OutReceiver;
 use crate::devices::ResetReceiver;
 use crate::devices::ValueSource;
@@ -12,8 +12,8 @@ pub struct ALU {
     pub name: &'static str,
     main_id: MainBusSource,
     flags_id: FlagsSource,
-    alt_enabled: Cell<bool>,
-    carry_in: Cell<bool>,
+    pub alt: DelayedPin,
+    pub carry_in: DelayedPin,
 }
 impl OutReceiver for ALU {
     fn on_out_change(&self, bus_values: &mut BusValues, enable: bool) {
@@ -28,27 +28,17 @@ impl ALU {
             name,
             main_id,
             flags_id,
-            alt_enabled: Cell::new(false),
-            carry_in: Cell::new(false),
+            alt: DelayedPin::new(),
+            carry_in: DelayedPin::new(),
         }
-    }
-
-    pub fn on_alt_change(&self, _bus_values: &mut BusValues, enable: bool) {
-        println!("ALU {} Alt changed to: {}", self.name, enable);
-        self.alt_enabled.set(enable);
-    }
-
-    pub fn on_carry_in_change(&self, _bus_values: &mut BusValues, enable: bool) {
-        println!("ALU {} Carry In changed to: {}", self.name, enable);
-        self.carry_in.set(enable);
     }
 
     fn solve_add_sub(&self, bus_values: &BusValues) -> u8 {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
         let alu_r_value = bus_values.alu_r.value.unwrap_or(0);
-        let carry_in = if self.carry_in.get() { 1 } else { 0 };
+        let carry_in = if self.carry_in.is_enabled() { 1 } else { 0 };
 
-        if self.alt_enabled.get() {
+        if self.alt.is_enabled() {
             // Subtract
             alu_l_value.wrapping_sub(alu_r_value).wrapping_sub(carry_in)
         } else {
@@ -60,9 +50,9 @@ impl ALU {
     fn solve_add_sub_flags(&self, bus_values: &BusValues) -> ALUFlags {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
         let alu_r_value = bus_values.alu_r.value.unwrap_or(0);
-        let carry_in = if self.carry_in.get() { 1 } else { 0 };
+        let carry_in = if self.carry_in.is_enabled() { 1 } else { 0 };
 
-        if self.alt_enabled.get() {
+        if self.alt.is_enabled() {
             // Subtract
             let result = alu_l_value.wrapping_sub(alu_r_value).wrapping_sub(carry_in);
             let carry = (alu_l_value as i16 - alu_r_value as i16 - carry_in as i16) < 0;
@@ -87,7 +77,7 @@ impl ALU {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
         let alu_r_value = bus_values.alu_r.value.unwrap_or(0);
 
-        if self.alt_enabled.get() {
+        if self.alt.is_enabled() {
             // Or
             alu_l_value | alu_r_value
         } else {
@@ -98,7 +88,7 @@ impl ALU {
 
     fn solve_xor_not(&self, bus_values: &BusValues) -> u8 {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
-        if self.alt_enabled.get() {
+        if self.alt.is_enabled() {
             // Not
             !alu_l_value
         } else {
@@ -110,19 +100,19 @@ impl ALU {
 
     fn solve_shift_swap(&self, bus_values: &BusValues) -> u8 {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
-        if self.alt_enabled.get() {
+        if self.alt.is_enabled() {
             // Swap
             (alu_l_value << 4) | (alu_l_value >> 4)
         } else {
             // Shift right
-            let carry_in = if self.carry_in.get() { 0x80 } else { 0 };
+            let carry_in = if self.carry_in.is_enabled() { 0x80 } else { 0 };
             alu_l_value >> 1 | carry_in
         }
     }
 
     fn solve_shift_swap_flags(&self, bus_values: &BusValues) -> ALUFlags {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
-        if self.alt_enabled.get() {
+        if self.alt.is_enabled() {
             // Swap
             ALUFlags {
                 carry: None,

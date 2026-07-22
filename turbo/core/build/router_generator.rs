@@ -428,7 +428,11 @@ fn emit_router_fn(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPa
         writeln!(writer, "        if old_cw & {}::MASK != new_cw & {}::MASK {{", alias, alias)?;
         for direct_pin in direct_pins {
             match direct_pin.pin.as_str() {
-                "inc" | "dec" => writeln!(writer, "            self.{}.{}.change(&self.{}, bus_values, new_cw & {}::MASK == {}::VALUE);", direct_pin.device, direct_pin.pin, direct_pin.device, alias, alias)?,
+                "inc" |
+                "dec" |
+                "calc"|
+                "alt" |
+                "carry_in" => writeln!(writer, "            self.{}.{}.change(&self.{}, bus_values, new_cw & {}::MASK == {}::VALUE);", direct_pin.device, direct_pin.pin, direct_pin.device, alias, alias)?,
                 _ => writeln!(writer, "            self.{}.on_{}_change(bus_values, new_cw & {}::MASK == {}::VALUE);", direct_pin.device, direct_pin.pin, alias, alias)?,
             }
         }

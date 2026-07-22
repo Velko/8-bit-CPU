@@ -1,7 +1,7 @@
 use std::cell::Cell;
 use std::ops::{BitOr, BitAnd, BitOrAssign};
 use std::fmt::Debug;
-use crate::devices::{OutReceiver, ResetReceiver};
+use crate::devices::{DelayedPin, OutReceiver, ResetReceiver};
 use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
 use crate::devices::ValueSource;
@@ -61,7 +61,7 @@ pub struct FlagsRegister {
     value_primary: Flags,
     value_secondary: Flags,
     load_enabled: Cell<bool>,
-    calc_enabled: Cell<bool>,
+    pub calc: DelayedPin,
 }
 impl OutReceiver for FlagsRegister {
     fn on_out_change(&self, bus_values: &mut BusValues, enable: bool) {
@@ -89,18 +89,14 @@ impl FlagsRegister {
             value_primary: Flags::EMPTY,
             value_secondary: Flags::EMPTY,
             load_enabled: Cell::new(false),
-            calc_enabled: Cell::new(false)
+            calc: DelayedPin::new()
         }
-    }
-    pub fn on_calc_change(&self, _bus_values: &mut BusValues, enable: bool) {
-        println!("FlagsRegister {} Calc changed to: {}", self.name, enable);
-        self.calc_enabled.set(enable);
     }
 }
 
 impl ClockReceiver for FlagsRegister {
     fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
-        if self.calc_enabled.get() {
+        if self.calc.is_enabled() {
             // Perform Z and N calculations based on the main bus value
             let result = bus_values.main_bus.value.unwrap();
             let mut new_value = Flags::EMPTY;
