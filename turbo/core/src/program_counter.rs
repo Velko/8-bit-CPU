@@ -1,7 +1,6 @@
 use crate::devices::DelayedPin;
 use crate::devices::OutReceiver;
-use crate::devices::ClockReceiver;
-use crate::devices::ResetReceiver;
+use crate::devices::GlobalSignalsReceiver;
 use crate::devices::ValueSource;
 use crate::router::AddressBusSource;
 use crate::runtime_state::BusValues;
@@ -44,7 +43,7 @@ impl OutReceiver for ProgramCounter {
     }
 }
 
-    impl ClockReceiver for ProgramCounter {
+    impl GlobalSignalsReceiver for ProgramCounter {
     fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
         if self.load.is_enabled() {
             self.value_primary = bus_values.address_bus.value.unwrap();
@@ -58,9 +57,6 @@ impl OutReceiver for ProgramCounter {
             self.value_secondary = self.value_primary;
         }
     }
-}
-
-impl ResetReceiver for ProgramCounter {
     fn on_reset(&mut self) {
         self.value_primary = 0;
         self.value_secondary = 0;

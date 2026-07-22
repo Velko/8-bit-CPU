@@ -1,7 +1,7 @@
 use std::ops::{BitOr, BitAnd, BitOrAssign};
 use std::fmt::Debug;
-use crate::devices::{DelayedPin, OutReceiver, ResetReceiver};
-use crate::devices::ClockReceiver;
+use crate::devices::{DelayedPin, OutReceiver};
+use crate::devices::GlobalSignalsReceiver;
 use crate::devices::ValueSource;
 use crate::router::MainBusSource;
 use crate::runtime_state::BusValues;
@@ -85,7 +85,7 @@ impl FlagsRegister {
     }
 }
 
-impl ClockReceiver for FlagsRegister {
+impl GlobalSignalsReceiver for FlagsRegister {
     fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
         if self.calc.is_enabled() {
             // Perform Z and N calculations based on the main bus value
@@ -110,14 +110,12 @@ impl ClockReceiver for FlagsRegister {
     fn on_clock_tick_secondary(&mut self) {
         self.value_secondary = self.value_primary;
     }
-}
-
-impl ResetReceiver for FlagsRegister {
     fn on_reset(&mut self) {
         self.value_primary = Flags::EMPTY;
         self.value_secondary = Flags::EMPTY;
     }
 }
+
 
 impl ValueSource<Flags> for FlagsRegister {
     fn get_value(&self, _bus_values: &BusValues) -> Flags {

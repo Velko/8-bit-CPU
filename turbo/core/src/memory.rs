@@ -1,7 +1,6 @@
 use crate::devices::DelayedPin;
 use crate::devices::OutReceiver;
-use crate::devices::ClockReceiver;
-use crate::devices::ResetReceiver;
+use crate::devices::GlobalSignalsReceiver;
 use crate::devices::ValueSource;
 use crate::router::MainBusSource;
 use crate::runtime_state::BusValues;
@@ -41,7 +40,7 @@ impl RAM {
         self.data[address..end_address].copy_from_slice(value);
     }
 }
-impl ClockReceiver for RAM {
+impl GlobalSignalsReceiver for RAM {
         fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
         if self.write.is_enabled() {
             if let Some(address) = bus_values.address_bus.value {
@@ -55,8 +54,6 @@ impl ClockReceiver for RAM {
         }
     }
 }
-
-impl ResetReceiver for RAM {}
 
 impl ValueSource<u8> for RAM {
     fn get_value(&self, bus_values: &BusValues) -> u8 {
@@ -74,8 +71,7 @@ impl ROM {
         Self { name }
     }
 }
-impl ClockReceiver for ROM {}
-impl ResetReceiver for ROM {}
+impl GlobalSignalsReceiver for ROM {}
 
 
 #[cfg(test)]

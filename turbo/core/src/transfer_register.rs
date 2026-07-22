@@ -1,4 +1,4 @@
-use crate::devices::{ClockReceiver, DelayedPin, OutReceiver, ResetReceiver, ValueSource};
+use crate::devices::{GlobalSignalsReceiver, DelayedPin, OutReceiver, ValueSource};
 
 pub struct TransferRegister<TBusSource> {
     pub name: &'static str,
@@ -22,8 +22,7 @@ impl<TBusSource> OutReceiver for TransferRegister<TBusSource> {
     }
 }
 
-impl<TBusSource> ClockReceiver for TransferRegister<TBusSource> {}
-impl<TBusSource> ResetReceiver for TransferRegister<TBusSource> {}
+impl<TBusSource> GlobalSignalsReceiver for TransferRegister<TBusSource> {}
 
 impl<TBusSource> ValueSource<u8> for TransferRegister<TBusSource> {
     fn get_value(&self, _bus_values: &crate::BusValues) -> u8 {

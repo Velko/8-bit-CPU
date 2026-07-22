@@ -1,6 +1,6 @@
 use crate::router::{MainBusSource, ALULSource, ALURSource};
 use crate::devices::{DelayedPin, OutReceiver, ResetReceiver};
-use crate::devices::ClockReceiver;
+use crate::devices::GlobalSignalsReceiver;
 use crate::devices::ValueSource;
 use crate::runtime_state::BusValues;
 
@@ -25,7 +25,7 @@ impl OutReceiver for GPRegister {
     }
 }
 
-    impl ClockReceiver for GPRegister {
+    impl GlobalSignalsReceiver for GPRegister {
     fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
         if self.load.is_enabled() {
             self.value_primary = bus_values.main_bus.value.unwrap();

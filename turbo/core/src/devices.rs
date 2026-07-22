@@ -35,12 +35,9 @@ impl DelayedPin {
     }
 }
 
-pub trait ClockReceiver {
+pub trait GlobalSignalsReceiver {
     fn on_clock_tick_primary(&mut self, _bus_values: &BusValues) {}
     fn on_clock_tick_secondary(&mut self) {}
-}
-
-pub trait ResetReceiver {
     fn on_reset(&mut self) {}
 }
 
@@ -58,8 +55,7 @@ impl Clock {
     pub fn on_halt_change(&self, _bus_values: &mut BusValues, _enable: bool) {}
     pub fn on_brk_change(&self, _bus_values: &mut BusValues, _enable: bool) {}
 }
-impl ClockReceiver for Clock {}
-impl ResetReceiver for Clock {}
+impl GlobalSignalsReceiver for Clock {}
 
 pub struct StepCounter {
     pub name: &'static str,
@@ -72,8 +68,7 @@ impl StepCounter {
     pub fn on_reset_change(&self, _bus_values: &mut BusValues, _enable: bool) {}
     pub fn on_extended_change(&self, _bus_values: &mut BusValues, _enable: bool) {}
 }
-impl ClockReceiver for StepCounter {}
-impl ResetReceiver for StepCounter {}
+impl GlobalSignalsReceiver for StepCounter {}
 
 pub struct StackPointer {
     pub name: &'static str,
@@ -92,8 +87,7 @@ impl StackPointer {
     }
 }
 impl OutReceiver for StackPointer {}
-impl ClockReceiver for StackPointer {}
-impl ResetReceiver for StackPointer {}
+impl GlobalSignalsReceiver for StackPointer {}
 
 pub struct AddressRegister {
     pub name: &'static str,
@@ -108,8 +102,7 @@ impl AddressRegister {
     }
 }
 impl OutReceiver for AddressRegister {}
-impl ClockReceiver for AddressRegister {}
-impl ResetReceiver for AddressRegister {}
+impl GlobalSignalsReceiver for AddressRegister {}
 impl ValueSource<u16> for AddressRegister {
     fn get_value(&self, _bus_values: &BusValues) -> u16 {
         todo!()
@@ -131,8 +124,7 @@ impl AddressCalculator {
         }
     }
 }
-impl ClockReceiver for AddressCalculator {}
-impl ResetReceiver for AddressCalculator {}
+impl GlobalSignalsReceiver for AddressCalculator {}
 
 pub struct IOController {
     pub name: &'static str,
@@ -148,8 +140,7 @@ impl IOController {
     }
     pub fn on_from_dev_change(&self, _bus_values: &mut BusValues, _enable: bool) {}
 }
-impl ClockReceiver for IOController {}
-impl ResetReceiver for IOController {}
+impl GlobalSignalsReceiver for IOController {}
 
 #[cfg(test)]
 mod tests {

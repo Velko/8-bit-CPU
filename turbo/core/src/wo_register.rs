@@ -1,6 +1,5 @@
 use crate::devices::DelayedPin;
-use crate::devices::ClockReceiver;
-use crate::devices::ResetReceiver;
+use crate::devices::GlobalSignalsReceiver;
 use crate::devices::ValueSource;
 use crate::runtime_state::BusValues;
 
@@ -22,7 +21,7 @@ impl WORegister {
     }
 }
 
-impl ClockReceiver for WORegister {
+impl GlobalSignalsReceiver for WORegister {
         fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
         if self.load.is_enabled() {
             self.value_primary = bus_values.main_bus.value.unwrap();
@@ -34,9 +33,6 @@ impl ClockReceiver for WORegister {
             self.value_secondary = self.value_primary;
         }
     }
-}
-
-impl ResetReceiver for WORegister {
     fn on_reset(&mut self) {
         self.value_primary = 0;
         self.value_secondary = 0;
