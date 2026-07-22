@@ -1,3 +1,4 @@
+use crate::devices::BusOutputPin;
 use crate::devices::DelayedPin;
 use crate::devices::GlobalSignalsReceiver;
 use crate::devices::ValueSource;
@@ -9,7 +10,7 @@ pub struct TempRegister {
     value_primary: u8,
     value_secondary: u8,
     pub load: DelayedPin,
-    alu_r_id: ALURSource,
+    pub alu_r: BusOutputPin<ALURSource>,
 
 }
 
@@ -20,16 +21,8 @@ impl TempRegister {
             value_primary: 0,
             value_secondary: 0,
             load: DelayedPin::new(),
-            alu_r_id,
+            alu_r: BusOutputPin::new(alu_r_id),
         }
-    }
-    pub fn on_alu_r_change(&self, bus_values: &mut BusValues, enable: bool) {
-        println!("TempRegister {} ALU R changed to: {}", self.name, enable);
-        bus_values.alu_r.source = if enable {
-            Some(self.alu_r_id)
-        } else {
-            None
-        };
     }
 
     pub fn set_value(&mut self, value: u8) {

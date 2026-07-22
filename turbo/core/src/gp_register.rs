@@ -1,5 +1,5 @@
 use crate::router::{MainBusSource, ALULSource, ALURSource};
-use crate::devices::{DelayedPin, OutReceiver, ResetReceiver};
+use crate::devices::{BusOutputPin, DelayedPin, OutReceiver};
 use crate::devices::GlobalSignalsReceiver;
 use crate::devices::ValueSource;
 use crate::runtime_state::BusValues;
@@ -10,8 +10,8 @@ pub struct GPRegister {
     value_secondary: u8,
     pub load: DelayedPin,
     main_id: MainBusSource,
-    alu_l_id: ALULSource,
-    alu_r_id: ALURSource
+    pub alu_l: BusOutputPin<ALULSource>,
+    pub alu_r: BusOutputPin<ALURSource>,
 }
 
 impl OutReceiver for GPRegister {
@@ -36,9 +36,6 @@ impl OutReceiver for GPRegister {
             self.value_secondary = self.value_primary;
         }
     }
-}
-
-impl ResetReceiver for GPRegister {
     fn on_reset(&mut self) {
         self.value_primary = 0;
         self.value_secondary = 0;
@@ -59,26 +56,9 @@ impl GPRegister {
             value_secondary: 0,
             load: DelayedPin::new(),
             main_id,
-            alu_l_id,
-            alu_r_id,
+            alu_l: BusOutputPin::new(alu_l_id),
+            alu_r: BusOutputPin::new(alu_r_id),
         }
-    }
-
-    pub fn on_alu_l_change(&self, bus_values: &mut BusValues, enable: bool) {
-        println!("GPRegister {} ALU L changed to: {}", self.name, enable);
-        bus_values.alu_l.source = if enable {
-            Some(self.alu_l_id)
-        } else {
-            None
-        };
-    }
-    pub fn on_alu_r_change(&self, bus_values: &mut BusValues, enable: bool) {
-        println!("GPRegister {} ALU R changed to: {}", self.name, enable);
-        bus_values.alu_r.source = if enable {
-            Some(self.alu_r_id)
-        } else {
-            None
-        };
     }
 
     pub fn set_value(&mut self, value: u8) {

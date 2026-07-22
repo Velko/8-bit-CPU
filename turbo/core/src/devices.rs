@@ -9,7 +9,7 @@ pub use crate::flags::{FlagsRegister};
 pub use crate::wo_register::WORegister;
 pub use crate::memory::{RAM, ROM};
 pub use crate::transfer_register::TransferRegister;
-use crate::router::{AddressBusSource};
+use crate::router::{ALULSource, ALURSource, AddressBusSource};
 
 pub trait OutReceiver {
     fn on_out_change(&self, _bus_values: &mut BusValues, _enable: bool) {}
@@ -34,6 +34,43 @@ impl DelayedPin {
         self.enabled.get()
     }
 }
+
+pub trait BusOutputPinChange {
+    fn change(&self, bus_values: &mut BusValues, enable: bool);
+}
+
+pub struct BusOutputPin<BusSource> {
+    source: BusSource,
+}
+
+impl<BusSource> BusOutputPin<BusSource> {
+    pub fn new(source: BusSource) -> Self {
+        Self {
+            source
+        }
+    }
+}
+
+impl BusOutputPinChange for BusOutputPin<ALULSource> {
+    fn change(&self, bus_values: &mut BusValues, enable: bool) {
+        bus_values.alu_l.source = if enable {
+            Some(self.source)
+        } else {
+            None
+        };
+    }
+}
+
+impl BusOutputPinChange for BusOutputPin<ALURSource> {
+    fn change(&self, bus_values: &mut BusValues, enable: bool) {
+        bus_values.alu_r.source = if enable {
+            Some(self.source)
+        } else {
+            None
+        };
+    }
+}
+
 
 pub trait GlobalSignalsReceiver {
     fn on_clock_tick_primary(&mut self, _bus_values: &BusValues) {}
