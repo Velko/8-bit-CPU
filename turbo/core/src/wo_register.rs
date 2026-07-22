@@ -1,5 +1,4 @@
-use std::cell::Cell;
-use crate::devices::LoadReceiver;
+use crate::devices::DelayedPin;
 use crate::devices::ClockReceiver;
 use crate::devices::ResetReceiver;
 use crate::devices::ValueSource;
@@ -9,7 +8,7 @@ pub struct WORegister {
     pub name: &'static str,
     value_primary: u8,
     value_secondary: u8,
-    load_enabled: Cell<bool>,
+    pub load: DelayedPin,
 }
 
 impl WORegister {
@@ -18,20 +17,14 @@ impl WORegister {
             name,
             value_primary: 0,
             value_secondary: 0,
-            load_enabled: Cell::new(false)
+            load: DelayedPin::new()
         }
-    }
-}
-
-impl LoadReceiver for WORegister {
-    fn on_load_change(&self, _bus_values: &mut BusValues, enable: bool) {
-        self.load_enabled.set(enable);
     }
 }
 
 impl ClockReceiver for WORegister {
         fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
-        if self.load_enabled.get() {
+        if self.load.is_enabled() {
             self.value_primary = bus_values.main_bus.value.unwrap();
         }
     }

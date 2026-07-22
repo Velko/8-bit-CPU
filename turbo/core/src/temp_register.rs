@@ -1,5 +1,4 @@
-use std::cell::Cell;
-use crate::devices::LoadReceiver;
+use crate::devices::DelayedPin;
 use crate::devices::ClockReceiver;
 use crate::devices::ResetReceiver;
 use crate::devices::ValueSource;
@@ -10,23 +9,18 @@ pub struct TempRegister {
     pub name: &'static str,
     value_primary: u8,
     value_secondary: u8,
-    load_enabled: Cell<bool>,
+    pub load: DelayedPin,
     alu_r_id: ALURSource,
 
 }
-impl LoadReceiver for TempRegister {
-    fn on_load_change(&self, _bus_values: &mut BusValues, enable: bool) {
-        println!("TempRegister {} Load changed to: {}", self.name, enable);
-        self.load_enabled.set(enable);
-    }
-}
+
 impl TempRegister {
     pub fn new(name: &'static str, alu_r_id: ALURSource) -> Self {
         Self {
             name,
             value_primary: 0,
             value_secondary: 0,
-            load_enabled: Cell::new(false),
+            load: DelayedPin::new(),
             alu_r_id,
         }
     }
@@ -47,7 +41,7 @@ impl TempRegister {
 
 impl ClockReceiver for TempRegister {
     fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
-        if self.load_enabled.get() {
+        if self.load.is_enabled() {
             self.value_primary = bus_values.main_bus.value.unwrap();
         }
     }

@@ -14,9 +14,7 @@ use crate::router::{AddressBusSource};
 pub trait OutReceiver {
     fn on_out_change(&self, _bus_values: &mut BusValues, _enable: bool) {}
 }
-pub trait LoadReceiver {
-    fn on_load_change(&self, _bus_values: &mut BusValues, _enable: bool) {}
-}
+
 pub struct DelayedPin{
     enabled: Cell<bool>,
 }
@@ -79,6 +77,7 @@ impl ResetReceiver for StepCounter {}
 
 pub struct StackPointer {
     pub name: &'static str,
+    pub load: DelayedPin,
     pub inc: DelayedPin,
     pub dec: DelayedPin,
 }
@@ -86,26 +85,29 @@ impl StackPointer {
     pub fn new(name: &'static str) -> Self {
         Self {
             name,
+            load: DelayedPin::new(),
             inc: DelayedPin::new(),
             dec: DelayedPin::new(),
         }
     }
 }
 impl OutReceiver for StackPointer {}
-impl LoadReceiver for StackPointer {}
 impl ClockReceiver for StackPointer {}
 impl ResetReceiver for StackPointer {}
 
 pub struct AddressRegister {
     pub name: &'static str,
+    pub load: DelayedPin,
 }
 impl AddressRegister {
     pub fn new(name: &'static str, _address_bus_id: AddressBusSource) -> Self {
-        Self { name }
+        Self {
+            name,
+            load: DelayedPin::new()
+        }
     }
 }
 impl OutReceiver for AddressRegister {}
-impl LoadReceiver for AddressRegister {}
 impl ClockReceiver for AddressRegister {}
 impl ResetReceiver for AddressRegister {}
 impl ValueSource<u16> for AddressRegister {
@@ -116,12 +118,15 @@ impl ValueSource<u16> for AddressRegister {
 
 pub struct AddressCalculator {
     pub name: &'static str,
+    pub load: DelayedPin,
 }
 impl OutReceiver for AddressCalculator {}
-impl LoadReceiver for AddressCalculator {}
 impl AddressCalculator {
     pub fn new(name: &'static str) -> Self {
-        Self { name }
+        Self {
+            name,
+            load: DelayedPin::new()
+        }
     }
     pub fn on_signed_change(&self, _bus_values: &mut BusValues, _enable: bool) {}
 }

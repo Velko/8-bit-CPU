@@ -1,15 +1,17 @@
-use crate::devices::{ClockReceiver, LoadReceiver, OutReceiver, ResetReceiver, ValueSource};
+use crate::devices::{ClockReceiver, DelayedPin, OutReceiver, ResetReceiver, ValueSource};
 
 pub struct TransferRegister<TBusSource> {
     pub name: &'static str,
     bus_id: TBusSource,
+    pub load: DelayedPin,
 }
 
 impl<TBusSource> TransferRegister<TBusSource> {
     pub fn new(name: &'static str, bus_id: TBusSource) -> Self {
         Self {
             name,
-            bus_id
+            bus_id,
+            load: DelayedPin::new(),
         }
     }
 }
@@ -17,12 +19,6 @@ impl<TBusSource> TransferRegister<TBusSource> {
 impl<TBusSource> OutReceiver for TransferRegister<TBusSource> {
     fn on_out_change(&self, _bus_values: &mut crate::BusValues, _enable: bool) {
         println!("TransferRegister {}: Out change detected, enable={}", self.name, _enable);
-    }
-}
-
-impl<TBusSource> LoadReceiver for TransferRegister<TBusSource> {
-    fn on_load_change(&self, _bus_values: &mut crate::BusValues, _enable: bool) {
-        println!("TransferRegister {}: Load change detected, enable={}", self.name, _enable);
     }
 }
 

@@ -1,7 +1,5 @@
-use std::cell::Cell;
 use crate::devices::DelayedPin;
 use crate::devices::OutReceiver;
-use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
 use crate::devices::ResetReceiver;
 use crate::devices::ValueSource;
@@ -13,7 +11,7 @@ pub struct ProgramCounter {
     value_primary: u16,
     value_secondary: u16,
     address_bus_id: AddressBusSource,
-    load_enabled: Cell<bool>,
+    pub load: DelayedPin,
     pub inc: DelayedPin,
 }
 
@@ -24,7 +22,7 @@ impl ProgramCounter {
             value_primary: 0,
             value_secondary: 0,
             address_bus_id,
-            load_enabled: Cell::new(false),
+            load: DelayedPin::new(),
             inc: DelayedPin::new(),
         }
     }
@@ -46,16 +44,9 @@ impl OutReceiver for ProgramCounter {
     }
 }
 
-impl LoadReceiver for ProgramCounter {
-    fn on_load_change(&self, _bus_values: &mut BusValues, enable: bool) {
-        println!("ProgramCounter {} Load changed to: {}", self.name, enable);
-        self.load_enabled.set(enable);
-    }
-}
-
-impl ClockReceiver for ProgramCounter {
+    impl ClockReceiver for ProgramCounter {
     fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
-        if self.load_enabled.get() {
+        if self.load.is_enabled() {
             self.value_primary = bus_values.address_bus.value.unwrap();
         } else if self.inc.is_enabled() {
             self.value_primary = self.value_primary.wrapping_add(1);

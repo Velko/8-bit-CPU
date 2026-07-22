@@ -1,7 +1,5 @@
-use std::cell::Cell;
 use crate::router::{MainBusSource, ALULSource, ALURSource};
-use crate::devices::{OutReceiver, ResetReceiver};
-use crate::devices::LoadReceiver;
+use crate::devices::{DelayedPin, OutReceiver, ResetReceiver};
 use crate::devices::ClockReceiver;
 use crate::devices::ValueSource;
 use crate::runtime_state::BusValues;
@@ -10,7 +8,7 @@ pub struct GPRegister {
     pub name: &'static str,
     value_primary: u8,
     value_secondary: u8,
-        load_enabled: Cell<bool>,
+    pub load: DelayedPin,
     main_id: MainBusSource,
     alu_l_id: ALULSource,
     alu_r_id: ALURSource
@@ -27,16 +25,9 @@ impl OutReceiver for GPRegister {
     }
 }
 
-impl LoadReceiver for GPRegister {
-    fn on_load_change(&self, _bus_values: &mut BusValues, enable: bool) {
-        println!("GPRegister {} Load changed to: {}", self.name, enable);
-        self.load_enabled.set(enable);
-    }
-}
-
-impl ClockReceiver for GPRegister {
+    impl ClockReceiver for GPRegister {
     fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
-        if self.load_enabled.get() {
+        if self.load.is_enabled() {
             self.value_primary = bus_values.main_bus.value.unwrap();
         }
     }
@@ -66,7 +57,7 @@ impl GPRegister {
             name,
             value_primary: 0,
             value_secondary: 0,
-            load_enabled: Cell::new(false),
+            load: DelayedPin::new(),
             main_id,
             alu_l_id,
             alu_r_id,
@@ -112,7 +103,7 @@ mod tests {
         let mut gp_reg = GPRegister::new("GP1", MainBusSource::A, ALULSource::A, ALURSource::A);
 
         // Simulate loading a value into the register
-        gp_reg.load_enabled.set(true);
+        gp_reg.load.change(&gp_reg, &mut args, true);
         gp_reg.on_clock_tick_primary(&args);
         assert_eq!(gp_reg.value_primary, 42);
         assert_eq!(gp_reg.value_secondary, 0); // value_secondary should not change yet

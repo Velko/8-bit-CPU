@@ -1,8 +1,6 @@
-use std::cell::Cell;
 use std::ops::{BitOr, BitAnd, BitOrAssign};
 use std::fmt::Debug;
 use crate::devices::{DelayedPin, OutReceiver, ResetReceiver};
-use crate::devices::LoadReceiver;
 use crate::devices::ClockReceiver;
 use crate::devices::ValueSource;
 use crate::router::MainBusSource;
@@ -60,7 +58,7 @@ pub struct FlagsRegister {
     main_id: MainBusSource,
     value_primary: Flags,
     value_secondary: Flags,
-    load_enabled: Cell<bool>,
+    pub load: DelayedPin,
     pub calc: DelayedPin,
 }
 impl OutReceiver for FlagsRegister {
@@ -74,13 +72,6 @@ impl OutReceiver for FlagsRegister {
     }
 }
 
-impl LoadReceiver for FlagsRegister {
-    fn on_load_change(&self, _bus_values: &mut BusValues, enable: bool) {
-        println!("FlagsRegister Load changed to: {}", enable);
-        self.load_enabled.set(enable);
-    }
-}
-
 impl FlagsRegister {
     pub fn new(name: &'static str, main_id: MainBusSource) -> Self {
         Self {
@@ -88,7 +79,7 @@ impl FlagsRegister {
             main_id,
             value_primary: Flags::EMPTY,
             value_secondary: Flags::EMPTY,
-            load_enabled: Cell::new(false),
+            load: DelayedPin::new(),
             calc: DelayedPin::new()
         }
     }
@@ -110,7 +101,7 @@ impl ClockReceiver for FlagsRegister {
             new_value |= bus_values.flags.value.carry.unwrap_or(self.value_primary & Flags::C); // Apply new or preserve previous carry if not calculated
             new_value |= bus_values.flags.value.overflow.unwrap_or(self.value_primary & Flags::V); // Apply new or preserve previous overflow if not calculated
             self.value_primary = new_value;
-        } else if self.load_enabled.get() {
+        } else if self.load.is_enabled() {
             // Load flags from the main bus value
             let result = bus_values.main_bus.value.unwrap();
             self.value_primary = Flags { value: result };
