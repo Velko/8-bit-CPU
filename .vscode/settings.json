@@ -27,5 +27,6 @@
     "chat.tools.terminal.autoApprove": {
         "./emu_check.sh": true,
         "./mypy_check.sh": true
-    }
+    },
+    "python.terminal.activateEnvInCurrentTerminal": false
 }
