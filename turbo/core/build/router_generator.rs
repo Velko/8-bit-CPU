@@ -520,8 +520,8 @@ fn emit_default_control_word(writer: &mut dyn std::io::Write, muxes: &HashMap<St
 
 fn map_device_type<'a>(dev_type: &'a str, name: &str) -> &'a str {
     match dev_type {
-        "TransferRegister" if name == "TX" => "TransferRegister<AddressBusSource>",
-        "TransferRegister" => "TransferRegister<MainBusSource>",
+        "TransferRegister" if name == "TX" => "TransferRegister<AddressBusBehavior>",
+        "TransferRegister" => "TransferRegister<MainBusBehavior>",
         "ALU" => Box::leak(format!("ALU<{}>", name).into_boxed_str()),
         _ => dev_type,
     }

@@ -8,7 +8,7 @@ pub use crate::alu::{ALU, AddSub, AndOr, XorNot, ShiftSwap};
 pub use crate::flags::{FlagsRegister};
 pub use crate::wo_register::WORegister;
 pub use crate::memory::{RAM, ROM};
-pub use crate::transfer_register::TransferRegister;
+pub use crate::transfer_register::{TransferRegister, TransferRegisterBehavior, MainBusBehavior, AddressBusBehavior};
 use crate::router::{ALULSource, ALURSource, AddressBusSource, MainBusSource};
 
 pub struct DelayedPin{
