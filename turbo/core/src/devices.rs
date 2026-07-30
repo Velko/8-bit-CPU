@@ -8,6 +8,7 @@ pub use crate::alu::{ALU, AddSub, AndOr, XorNot, ShiftSwap};
 pub use crate::flags::{FlagsRegister};
 pub use crate::wo_register::WORegister;
 pub use crate::memory::{RAM, ROM};
+pub use crate::stack_pointer::StackPointer;
 pub use crate::transfer_register::{TransferRegister, TransferRegisterBehavior, MainBusBehavior, AddressBusBehavior};
 use crate::router::{ALULSource, ALURSource, AddressBusSource, MainBusSource};
 
@@ -123,32 +124,6 @@ impl StepCounter {
 }
 impl GlobalSignalsReceiver for StepCounter {}
 
-pub struct StackPointer {
-    pub name: &'static str,
-    pub out: BusOutputPin<AddressBusSource>,
-    pub load: DelayedPin,
-    pub inc: DelayedPin,
-    pub dec: DelayedPin,
-}
-impl StackPointer {
-    pub fn new(name: &'static str, address_bus_id: AddressBusSource) -> Self {
-        Self {
-            name,
-            out: BusOutputPin::new(address_bus_id),
-            load: DelayedPin::new(),
-            inc: DelayedPin::new(),
-            dec: DelayedPin::new(),
-        }
-    }
-}
-
-impl GlobalSignalsReceiver for StackPointer {}
-
-impl ValueSource<u16> for StackPointer {
-    fn get_value(&self, _bus_values: &BusValues) -> u16 {
-        todo!()
-    }
-}
 
 pub struct AddressRegister {
     pub name: &'static str,

@@ -11,6 +11,7 @@ mod memory;
 mod runtime_state;
 mod cpu;
 mod transfer_register;
+mod stack_pointer;
 
 pub use control_word::ControlWord;
 pub use router::DeviceMap;
