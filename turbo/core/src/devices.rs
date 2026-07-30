@@ -4,7 +4,7 @@ pub use crate::gp_register::GPRegister;
 use crate::runtime_state::BusValues;
 pub use crate::temp_register::TempRegister;
 pub use crate::program_counter::ProgramCounter;
-pub use crate::alu::ALU;
+pub use crate::alu::{ALU, AddSub, AndOr, XorNot, ShiftSwap};
 pub use crate::flags::{FlagsRegister};
 pub use crate::wo_register::WORegister;
 pub use crate::memory::{RAM, ROM};

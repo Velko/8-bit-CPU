@@ -1,3 +1,5 @@
+use std::marker::PhantomData;
+
 use crate::devices::BusOutputPin;
 use crate::devices::BusOutputPinChange;
 use crate::devices::GlobalSignalsReceiver;
@@ -8,11 +10,22 @@ use crate::runtime_state::BusValues;
 use crate::runtime_state::{ALUFlags};
 use crate::flags::Flags;
 
-pub struct ALU {
+pub trait ALUOperation {
+    fn solve(alu: &ALU<Self>, bus_values: &BusValues) -> u8 where Self: Sized;
+    fn solve_flags(_alu: &ALU<Self>, _bus_values: &BusValues) -> ALUFlags where Self: Sized {
+        ALUFlags {
+            carry: None,
+            overflow: None,
+        }
+    }
+}
+
+pub struct ALU<Operation: ALUOperation> {
     pub name: &'static str,
     pub out: BusOutputPin<(MainBusSource, FlagsSource)>,
     pub alt: DelayedPin,
     pub carry_in: DelayedPin,
+    phantom: PhantomData<Operation>,
 }
 
 
@@ -31,22 +44,19 @@ impl BusOutputPinChange for BusOutputPin<(MainBusSource, FlagsSource)> {
     }
 }
 
-impl ALU {
-    pub fn new(name: &'static str, main_id: MainBusSource, flags_id: FlagsSource) -> Self {
-        Self {
-            name,
-            out: BusOutputPin::new((main_id, flags_id)),
-            alt: DelayedPin::new(),
-            carry_in: DelayedPin::new(),
-        }
-    }
 
-    fn solve_add_sub(&self, bus_values: &BusValues) -> u8 {
+pub struct AddSub;
+pub struct AndOr;
+pub struct XorNot;
+pub struct ShiftSwap;
+
+impl ALUOperation for AddSub {
+    fn solve(alu: &ALU<Self>, bus_values: &BusValues) -> u8 {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
         let alu_r_value = bus_values.alu_r.value.unwrap_or(0);
-        let carry_in = if self.carry_in.is_enabled() { 1 } else { 0 };
+        let carry_in = if alu.carry_in.is_enabled() { 1 } else { 0 };
 
-        if self.alt.is_enabled() {
+        if alu.alt.is_enabled() {
             // Subtract
             alu_l_value.wrapping_sub(alu_r_value).wrapping_sub(carry_in)
         } else {
@@ -55,12 +65,12 @@ impl ALU {
         }
     }
 
-    fn solve_add_sub_flags(&self, bus_values: &BusValues) -> ALUFlags {
+    fn solve_flags(alu: &ALU<Self>, bus_values: &BusValues) -> ALUFlags {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
         let alu_r_value = bus_values.alu_r.value.unwrap_or(0);
-        let carry_in = if self.carry_in.is_enabled() { 1 } else { 0 };
+        let carry_in = if alu.carry_in.is_enabled() { 1 } else { 0 };
 
-        if self.alt.is_enabled() {
+        if alu.alt.is_enabled() {
             // Subtract
             let result = alu_l_value.wrapping_sub(alu_r_value).wrapping_sub(carry_in);
             let carry = (alu_l_value as i16 - alu_r_value as i16 - carry_in as i16) < 0;
@@ -80,12 +90,15 @@ impl ALU {
             }
         }
     }
+}
 
-    fn solve_and_or(&self, bus_values: &BusValues) -> u8 {
+
+impl ALUOperation for AndOr {
+    fn solve(alu: &ALU<Self>, bus_values: &BusValues) -> u8 {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
         let alu_r_value = bus_values.alu_r.value.unwrap_or(0);
 
-        if self.alt.is_enabled() {
+        if alu.alt.is_enabled() {
             // Or
             alu_l_value | alu_r_value
         } else {
@@ -93,10 +106,12 @@ impl ALU {
             alu_l_value & alu_r_value
         }
     }
+}
 
-    fn solve_xor_not(&self, bus_values: &BusValues) -> u8 {
+impl ALUOperation for XorNot {
+    fn solve(alu: &ALU<Self>, bus_values: &BusValues) -> u8 {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
-        if self.alt.is_enabled() {
+        if alu.alt.is_enabled() {
             // Not
             !alu_l_value
         } else {
@@ -105,22 +120,24 @@ impl ALU {
             alu_l_value ^ alu_r_value
         }
     }
+}
 
-    fn solve_shift_swap(&self, bus_values: &BusValues) -> u8 {
+impl ALUOperation for ShiftSwap {
+    fn solve(alu: &ALU<Self>, bus_values: &BusValues) -> u8 {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
-        if self.alt.is_enabled() {
+        if alu.alt.is_enabled() {
             // Swap
             (alu_l_value << 4) | (alu_l_value >> 4)
         } else {
             // Shift right
-            let carry_in = if self.carry_in.is_enabled() { 0x80 } else { 0 };
+            let carry_in = if alu.carry_in.is_enabled() { 0x80 } else { 0 };
             alu_l_value >> 1 | carry_in
         }
     }
 
-    fn solve_shift_swap_flags(&self, bus_values: &BusValues) -> ALUFlags {
+    fn solve_flags(alu: &ALU<Self>, bus_values: &BusValues) -> ALUFlags {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
-        if self.alt.is_enabled() {
+        if alu.alt.is_enabled() {
             // Swap
             ALUFlags {
                 carry: None,
@@ -134,35 +151,34 @@ impl ALU {
                 overflow: None,
             }
         }
-    }
 
+    }
 }
 
-impl GlobalSignalsReceiver for ALU {}
 
-impl ValueSource<u8> for ALU {
+impl<Operation: ALUOperation> ALU<Operation> {
+    pub fn new(name: &'static str, main_id: MainBusSource, flags_id: FlagsSource) -> Self {
+        Self {
+            name,
+            out: BusOutputPin::new((main_id, flags_id)),
+            alt: DelayedPin::new(),
+            carry_in: DelayedPin::new(),
+            phantom: PhantomData,
+        }
+    }
+}
+
+impl<Operation: ALUOperation> GlobalSignalsReceiver for ALU<Operation> {}
+
+impl<Operation: ALUOperation> ValueSource<u8> for ALU<Operation> {
     fn get_value(&self, bus_values: &BusValues) -> u8 {
-        match self.out.source.0 {
-            MainBusSource::AddSub => self.solve_add_sub(bus_values),
-            MainBusSource::AndOr => self.solve_and_or(bus_values),
-            MainBusSource::XorNot => self.solve_xor_not(bus_values),
-            MainBusSource::ShiftSwap => self.solve_shift_swap(bus_values),
-            _ => panic!("Unknown ALU main bus source: {:?}", self.out.source.0),
-        }
+        Operation::solve(self, bus_values)
     }
 }
 
-
-impl ValueSource<ALUFlags> for ALU {
+impl<Operation: ALUOperation> ValueSource<ALUFlags> for ALU<Operation> {
     fn get_value(&self, bus_values: &BusValues) -> ALUFlags {
-        match self.out.source.1 {
-            FlagsSource::AddSub => self.solve_add_sub_flags(bus_values),
-            FlagsSource::ShiftSwap => self.solve_shift_swap_flags(bus_values),
-            _ => ALUFlags {
-                carry: None,
-                overflow: None,
-            },
-        }
+        Operation::solve_flags(self, bus_values)
     }
 }
 

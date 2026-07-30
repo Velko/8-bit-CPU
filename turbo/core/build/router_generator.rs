@@ -522,6 +522,7 @@ fn map_device_type<'a>(dev_type: &'a str, name: &str) -> &'a str {
     match dev_type {
         "TransferRegister" if name == "TX" => "TransferRegister<AddressBusSource>",
         "TransferRegister" => "TransferRegister<MainBusSource>",
+        "ALU" => Box::leak(format!("ALU<{}>", name).into_boxed_str()),
         _ => dev_type,
     }
 }
