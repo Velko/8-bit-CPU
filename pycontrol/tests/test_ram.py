@@ -11,6 +11,9 @@ from collections.abc import Sequence
 
 from conftest import Compiler
 
+full_exec_supported = True
+full_exec_reason = "code execution is not yet supported"
+
 pytestmark = pytest.mark.hardware
 
 # can not make as a fixture, because it can not be
@@ -47,6 +50,7 @@ def test_store(cpu_helper: CPUHelper, acpu: AssistedCPU, addr: int) -> None:
 
     assert cpu_helper.ram[addr] == test_val
 
+@pytest.mark.skipif(not full_exec_supported, reason=full_exec_reason)
 def test_ldx_hw(cpu_helper: CPUHelper, asm_compiler: Compiler) -> None:
 
     cpu_helper.ram[0x2203] = 0x33
@@ -111,6 +115,7 @@ def test_store_idx(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
 
     assert cpu_helper.ram[0x45] == 0xB5
 
+@pytest.mark.skipif(not full_exec_supported, reason=full_exec_reason)
 def test_stx_hw(cpu_helper: CPUHelper, asm_compiler: Compiler) -> None:
 
     cpu_helper.ram[0x2203] = 0
