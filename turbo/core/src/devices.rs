@@ -12,6 +12,9 @@ pub use crate::stack_pointer::StackPointer;
 pub use crate::transfer_register::{TransferRegister, TransferRegisterBehavior, MainBusBehavior, AddressBusBehavior};
 use crate::router::{ALULSource, ALURSource, AddressBusSource, MainBusSource};
 
+/// Pin that, when enabled, does not have an immediate effect, but instead will be checked by a
+/// device when time comes for it to act. Typically that happens on the clock tick event. This
+/// is used for pins that load values into registers, for example.
 pub struct DelayedPin{
     enabled: Cell<bool>,
 }
@@ -32,6 +35,11 @@ impl DelayedPin {
     }
 }
 
+/// Pin that when enabled has an effect of putting a value from the device's internal state onto
+/// the bus. This is used for pins that output values from registers, for example.
+/// Note that this still does not mean that the value will be immediately available on the bus, as
+/// it merely sets the source of the value, not the value itself. The values will be resolved
+/// by a dedicated resolver that will be invoked after all pins have been configured.
 pub trait BusOutputPinChange {
     fn change(&self, bus_values: &mut BusValues, enable: bool);
 }
@@ -88,13 +96,16 @@ impl BusOutputPinChange for BusOutputPin<ALURSource> {
     }
 }
 
-
+/// Trait for devices that can receive global signals, such as clock ticks or reset events.
 pub trait GlobalSignalsReceiver {
     fn on_clock_tick_primary(&mut self, _bus_values: &BusValues) {}
     fn on_clock_tick_secondary(&mut self) {}
     fn on_reset(&mut self) {}
 }
 
+/// Trait for devices that can provide a value of a specific type, used for registers or other
+/// components that acts as a source of values for one of the buses. The value could be retrieved
+/// from the device's internal state or computed based on the current bus values.
 pub trait ValueSource<T> {
     fn get_value(&self, _bus_values: &BusValues) -> T;
 }
