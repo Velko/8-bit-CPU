@@ -49,7 +49,10 @@ impl MuxPart {
                     "laddr" |
                     "write" |
                     "to_dev" => writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.{}.change(&dev.{}, bus_values, enable),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin, dev_ref.device)?,
-                    "alu_l" | "alu_r" | "out" =>  writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.{}.change(bus_values, enable),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin)?,
+                    "alu_l" |
+                    "alu_r" |
+                    "out" |
+                    "from_dev" =>  writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.{}.change(bus_values, enable),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin)?,
                     _ => writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.on_{}_change(bus_values, enable),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin)?,
                 }
 
@@ -139,8 +142,8 @@ impl BusSourcesPart {
             "ALU" |
             "FlagsRegister" |
             "RAM" |
-            "ROM"  => true,
-            // "IOController"=> true,
+            "ROM" |
+            "IOController"=> true,
             "TransferRegister" if name != "TX" => true,
             _ => false,
         }
