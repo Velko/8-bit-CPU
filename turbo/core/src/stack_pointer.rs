@@ -33,10 +33,12 @@ impl GlobalSignalsReceiver for StackPointer {
     fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
         if self.load.is_enabled() {
             self.value_primary = bus_values.address_bus.value.unwrap();
-        } else if self.inc.is_enabled() {
-            self.value_primary = self.value_primary.wrapping_add(1);
-        } else if self.dec.is_enabled() {
-            self.value_primary = self.value_primary.wrapping_sub(1);
+        } else if Some(self.out.source) == bus_values.address_bus.source {
+            if self.inc.is_enabled() {
+                self.value_primary = self.value_primary.wrapping_add(1);
+            } else if self.dec.is_enabled() {
+                self.value_primary = self.value_primary.wrapping_sub(1);
+            }
         }
     }
 
@@ -132,5 +134,37 @@ use crate::test_helpers::TestBench;
 
         bench.devices.broadcast_clock_tick_secondary();
         assert_eq!(0x5678, bench.devices.SP.value_secondary);
+    }
+
+    #[test]
+    fn test_not_incremented_without_out() {
+        let mut bench = TestBench::new();
+        bench.devices.SP.set_value(0x1234);
+
+        let sp_inc_cw = ControlWordBuilder::default()
+            .apply_bit::<AddrInc>()
+            .build(); // Enable Inc without Out
+        bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, sp_inc_cw);
+
+        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+
+        // if out is not enabled, the original value should be preserved
+        assert_eq!(0x1234, bench.devices.SP.value_primary);
+    }
+
+    #[test]
+    fn test_not_decremented_without_out() {
+        let mut bench = TestBench::new();
+        bench.devices.SP.set_value(0x1234);
+
+        let sp_dec_cw = ControlWordBuilder::default()
+            .apply_bit::<AddrDec>()
+            .build(); // Enable Dec without Out
+        bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, sp_dec_cw);
+
+        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+
+        // if out is not enabled, the original value should be preserved
+        assert_eq!(0x1234, bench.devices.SP.value_primary);
     }
 }
