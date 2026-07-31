@@ -10,6 +10,11 @@ pub use crate::wo_register::WORegister;
 pub use crate::memory::{RAM, ROM};
 pub use crate::stack_pointer::StackPointer;
 pub use crate::transfer_register::{TransferRegister, TransferRegisterBehavior, MainBusBehavior, AddressBusBehavior};
+pub use crate::clock::Clock;
+pub use crate::step_counter::StepCounter;
+pub use crate::address_register::AddressRegister;
+pub use crate::address_calculator::AddressCalculator;
+pub use crate::io_controller::IOController;
 use crate::router::{ALULSource, ALURSource, AddressBusSource, MainBusSource};
 
 /// Pin that, when enabled, does not have an immediate effect, but instead will be checked by a
@@ -110,96 +115,13 @@ pub trait ValueSource<T> {
     fn get_value(&self, _bus_values: &BusValues) -> T;
 }
 
-pub struct Clock {
-    pub name: &'static str,
-}
-impl Clock {
-    pub fn new(name: &'static str) -> Self {
-        Self { name }
-    }
-    pub fn on_halt_change(&self, _bus_values: &mut BusValues, _enable: bool) {}
-    pub fn on_brk_change(&self, _bus_values: &mut BusValues, _enable: bool) {}
-}
-impl GlobalSignalsReceiver for Clock {}
-
-pub struct StepCounter {
-    pub name: &'static str,
-}
-
-impl StepCounter {
-    pub fn new(name: &'static str) -> Self {
-        Self { name }
-    }
-    pub fn on_reset_change(&self, _bus_values: &mut BusValues, _enable: bool) {}
-    pub fn on_extended_change(&self, _bus_values: &mut BusValues, _enable: bool) {}
-}
-impl GlobalSignalsReceiver for StepCounter {}
 
 
-pub struct AddressRegister {
-    pub name: &'static str,
-    pub out: BusOutputPin<AddressBusSource>,
-    pub load: DelayedPin,
-}
-impl AddressRegister {
-    pub fn new(name: &'static str, address_bus_id: AddressBusSource) -> Self {
-        Self {
-            name,
-            out: BusOutputPin::new(address_bus_id),
-            load: DelayedPin::new()
-        }
-    }
-}
-
-impl ValueSource<u16> for AddressRegister {
-    fn get_value(&self, _bus_values: &BusValues) -> u16 {
-        todo!()
-    }
-}
 
 
-impl GlobalSignalsReceiver for AddressRegister {}
-
-pub struct AddressCalculator {
-    pub name: &'static str,
-    pub out: BusOutputPin<AddressBusSource>,
-    pub load: DelayedPin,
-    pub signed: DelayedPin,
-}
-
-impl AddressCalculator {
-    pub fn new(name: &'static str, address_bus_id: AddressBusSource) -> Self {
-        Self {
-            name,
-            out: BusOutputPin::new(address_bus_id),
-            load: DelayedPin::new(),
-            signed: DelayedPin::new()
-        }
-    }
-}
-impl GlobalSignalsReceiver for AddressCalculator {}
-impl ValueSource<u16> for AddressCalculator {
-    fn get_value(&self, _bus_values: &BusValues) -> u16 {
-        todo!()
-    }
-}
 
 
-pub struct IOController {
-    pub name: &'static str,
-    pub to_dev: DelayedPin,
-    pub laddr: DelayedPin,
-}
-impl IOController {
-    pub fn new(name: &'static str) -> Self {
-        Self { name,
-            to_dev: DelayedPin::new(),
-            laddr: DelayedPin::new()
-        }
-    }
-    pub fn on_from_dev_change(&self, _bus_values: &mut BusValues, _enable: bool) {}
-}
-impl GlobalSignalsReceiver for IOController {}
+
 
 #[cfg(test)]
 mod tests {

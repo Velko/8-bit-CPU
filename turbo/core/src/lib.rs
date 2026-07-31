@@ -12,6 +12,11 @@ mod runtime_state;
 mod cpu;
 mod transfer_register;
 mod stack_pointer;
+mod clock;
+mod step_counter;
+mod address_register;
+mod address_calculator;
+mod io_controller;
 
 pub use control_word::ControlWord;
 pub use router::DeviceMap;
