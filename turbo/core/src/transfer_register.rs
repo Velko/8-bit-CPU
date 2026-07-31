@@ -81,3 +81,48 @@ impl<Behavior: TransferRegisterBehavior> ValueSource<Behavior::ValueType> for Tr
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use crate::{control_word::ControlWordBuilder, devices::ValueSource, router::{AddrLoadMux, LoadMux}, test_helpers::TestBench};
+
+    #[test]
+    fn test_load_tx_get_th_tl() {
+        let mut bench = TestBench::new();
+        bench.bus_values.address_bus.value = Some(0xABCD);
+
+        let load_tx_cw = ControlWordBuilder::default()
+            .apply_mux::<AddrLoadMux>(AddrLoadMux::VALUE_TX_LOAD)
+            .build(); // Enable TX Load
+
+        bench.devices.route_word(&mut bench.bus_values, crate::router::DEFAULT_CW, load_tx_cw);
+
+        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+
+        assert_eq!(bench.bus_values.th_reg_val.get(), 0xAB);
+        assert_eq!(bench.bus_values.tl_reg_val.get(), 0xCD);
+    }
+
+    #[test]
+    fn test_load_th_tl_get_tx() {
+        let mut bench = TestBench::new();
+
+        let load_th_cw = ControlWordBuilder::default()
+            .apply_mux::<LoadMux>(LoadMux::VALUE_TH_LOAD)
+            .build(); // Enable TH Load
+
+        bench.devices.route_word(&mut bench.bus_values, crate::router::DEFAULT_CW, load_th_cw);
+        bench.bus_values.main_bus.value = Some(0x12);
+
+        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+
+        let load_tl_cw = ControlWordBuilder::default()
+            .apply_mux::<LoadMux>(LoadMux::VALUE_TL_LOAD)
+            .build(); // Enable TL Load
+        bench.devices.route_word(&mut bench.bus_values, load_th_cw, load_tl_cw);
+        bench.bus_values.main_bus.value = Some(0x34);
+
+        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+
+        assert_eq!(bench.devices.TX.get_value(&bench.bus_values), 0x1234);
+    }
+}
