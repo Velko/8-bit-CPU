@@ -47,8 +47,8 @@ impl GlobalSignalsReceiver for ProgramCounter {
         }
     }
     fn on_reset(&mut self) {
-        self.value_primary = 0;
-        self.value_secondary = 0;
+        self.value_primary = 0xE000;
+        self.value_secondary = 0xE000;
     }
 }
 
