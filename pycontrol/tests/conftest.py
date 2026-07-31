@@ -10,6 +10,9 @@ from libcpu.assisted_cpu import AssistedCPU
 from libcpu.pinclient import PinClient, get_client_instance
 from libcpu.devices import DeviceBase, Flags
 
+full_exec_supported = True
+full_exec_reason = "code execution is not yet supported"
+
 @pytest.fixture(scope="session")
 def pins_client_real() -> Iterator[PinClient]:
 

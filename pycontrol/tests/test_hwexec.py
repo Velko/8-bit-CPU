@@ -1,13 +1,14 @@
 #!/usr/bin/python3
 
 import pytest
-from conftest import Compiler
+from conftest import Compiler, full_exec_supported, full_exec_reason
 
 pytestmark = pytest.mark.hardware
 
 from libcpu.cpu_helper import CPUHelper
 
 @pytest.mark.hardware
+@pytest.mark.skipif(not full_exec_supported, reason=full_exec_reason)
 def test_ldi_on_hw(cpu_helper: CPUHelper, asm_compiler: Compiler) -> None:
 
     ldi_test_prog = asm_compiler.compile(f"""
@@ -25,6 +26,7 @@ def test_ldi_on_hw(cpu_helper: CPUHelper, asm_compiler: Compiler) -> None:
     assert val == 123
 
 @pytest.mark.hardware
+@pytest.mark.skipif(not full_exec_supported, reason=full_exec_reason)
 def test_rjmp_on_hw(cpu_helper: CPUHelper, asm_compiler: Compiler) -> None:
 
     jmp_test_prog = asm_compiler.compile(f"""

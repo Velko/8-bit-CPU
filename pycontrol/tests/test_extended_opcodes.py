@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import pytest
-from conftest import Compiler
+from conftest import Compiler, full_exec_supported, full_exec_reason
 
 pytestmark = pytest.mark.hardware
 
@@ -46,7 +46,7 @@ def test_dummy_fetch(acpu: AssistedCPU, fetch_test_prog: bytes) -> None:
     val = cpu_helper.regs.A
     assert val == opcode_of("hlt")
 
-#@pytest.mark.skip("Not supported by current emulator")
+@pytest.mark.skipif(not full_exec_supported, reason=full_exec_reason)
 def test_dummy_fetch_on_hw(cpu_helper: CPUHelper, fetch_test_prog: bytes) -> None:
     # reset A, to see if changed
     cpu_helper.regs.A = 0

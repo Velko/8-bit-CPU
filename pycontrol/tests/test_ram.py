@@ -9,10 +9,7 @@ from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
 from collections.abc import Sequence
 
-from conftest import Compiler
-
-full_exec_supported = True
-full_exec_reason = "code execution is not yet supported"
+from conftest import Compiler, full_exec_supported, full_exec_reason
 
 pytestmark = pytest.mark.hardware
 

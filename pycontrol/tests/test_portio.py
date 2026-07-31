@@ -5,7 +5,7 @@ from libcpu.assisted_cpu import AssistedCPU
 from libcpu.devmap import A, B
 from libcpu.messages import OutMessage
 
-from conftest import Compiler
+from conftest import Compiler, full_exec_supported, full_exec_reason
 
 def test_outa_emu_char(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     cpu_helper.regs.A = 120
@@ -36,6 +36,7 @@ def test_outa_emu_num(cpu_helper: CPUHelper, acpu: AssistedCPU, _desc: str, mode
     assert message.target == 0
     assert message.payload == expected
 
+@pytest.mark.skipif(not full_exec_supported, reason=full_exec_reason)
 @pytest.mark.emulator
 @pytest.mark.parametrize("_desc,mode,val,expected", outb_args)
 def test_outb_int_hw(cpu_helper: CPUHelper, _desc: str, mode: int, val: int, expected: str, asm_compiler: Compiler) -> None:
@@ -55,6 +56,7 @@ def test_outb_int_hw(cpu_helper: CPUHelper, _desc: str, mode: int, val: int, exp
     assert res == expected
 
 @pytest.mark.emulator
+@pytest.mark.skipif(not full_exec_supported, reason=full_exec_reason)
 def test_outc_char_hw(cpu_helper: CPUHelper, asm_compiler: Compiler) -> None:
 
     cpu_helper.regs.C = 102
@@ -70,6 +72,7 @@ def test_outc_char_hw(cpu_helper: CPUHelper, asm_compiler: Compiler) -> None:
     assert val == 'f'
 
 @pytest.mark.emulator
+@pytest.mark.skipif(not full_exec_supported, reason=full_exec_reason)
 def test_outc_newline_hw(cpu_helper: CPUHelper, asm_compiler: Compiler) -> None:
 
     cpu_helper.regs.C = 10

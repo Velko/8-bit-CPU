@@ -8,12 +8,9 @@ from libcpu.devmap import A, B
 from libcpu.opcodes import permute_gp_regs_nsame, gp_regs
 from libcpu.devices import GPRegister, Flags
 
-from conftest import ALUTwoRegTestCase, ALUOneRegTestCase, Compiler, devname
+from conftest import ALUTwoRegTestCase, ALUOneRegTestCase, Compiler, devname, full_exec_supported, full_exec_reason
 
 pytestmark = pytest.mark.hardware
-
-full_exec_supported = True
-full_exec_reason = "code execution is not yet supported"
 
 
 NZ_MASK = Flags.N | Flags.Z
