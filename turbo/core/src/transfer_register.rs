@@ -4,7 +4,7 @@ use crate::{BusValues, devices::{BusOutputPin, DelayedPin, GlobalSignalsReceiver
 pub trait TransferRegisterBehavior {
     type BusSource;
     type ValueType;
-    fn store_value(register: &mut TransferRegister<Self>, bus_values: &BusValues) where Self: Sized;
+    fn store_value(register: &mut TransferRegister<Self>, bus_values: &mut BusValues) where Self: Sized;
     fn get_value(register: &TransferRegister<Self>, bus_values: &BusValues) -> Self::ValueType where Self: Sized;
 }
 
@@ -29,19 +29,19 @@ impl TransferRegisterBehavior for MainBusBehavior {
     type BusSource = MainBusSource;
     type ValueType = u8;
 
-    fn store_value(register: &mut TransferRegister<Self>, bus_values: &BusValues) {
+    fn store_value(register: &mut TransferRegister<Self>, bus_values: &mut BusValues) {
         let value = bus_values.main_bus.value.unwrap();
         match register.out.source {
-            MainBusSource::TH => bus_values.th_reg_val.set(value),
-            MainBusSource::TL => bus_values.tl_reg_val.set(value),
+            MainBusSource::TH => bus_values.th_reg_val = value,
+            MainBusSource::TL => bus_values.tl_reg_val = value,
             _ => {},
         }
     }
 
     fn get_value(register: &TransferRegister<Self>, bus_values: &BusValues) -> Self::ValueType {
         match register.out.source {
-            MainBusSource::TH => bus_values.th_reg_val.get(),
-            MainBusSource::TL => bus_values.tl_reg_val.get(),
+            MainBusSource::TH => bus_values.th_reg_val,
+            MainBusSource::TL => bus_values.tl_reg_val,
             _ => panic!("Invalid bus source for MainBusBehavior: {:?}", register.out.source),
         }
     }
@@ -52,14 +52,14 @@ impl TransferRegisterBehavior for AddressBusBehavior {
     type BusSource = AddressBusSource;
     type ValueType = u16;
 
-    fn store_value(_register: &mut TransferRegister<Self>, bus_values: &BusValues) {
+    fn store_value(_register: &mut TransferRegister<Self>, bus_values: &mut BusValues) {
         let value = bus_values.address_bus.value.unwrap();
-        bus_values.th_reg_val.set((value >> 8) as u8);
-        bus_values.tl_reg_val.set((value & 0xFF) as u8);
+        bus_values.th_reg_val = (value >> 8) as u8;
+        bus_values.tl_reg_val = (value & 0xFF) as u8;
     }
 
     fn get_value(_register: &TransferRegister<Self>, bus_values: &BusValues) -> Self::ValueType {
-        ((bus_values.th_reg_val.get() as u16) << 8) | bus_values.tl_reg_val.get() as u16
+        ((bus_values.th_reg_val as u16) << 8) | bus_values.tl_reg_val as u16
     }
 }
 
@@ -98,8 +98,8 @@ mod tests {
 
         bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
 
-        assert_eq!(bench.bus_values.th_reg_val.get(), 0xAB);
-        assert_eq!(bench.bus_values.tl_reg_val.get(), 0xCD);
+        assert_eq!(bench.bus_values.th_reg_val, 0xAB);
+        assert_eq!(bench.bus_values.tl_reg_val, 0xCD);
     }
 
     #[test]

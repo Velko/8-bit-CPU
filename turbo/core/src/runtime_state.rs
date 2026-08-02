@@ -2,7 +2,6 @@ use crate::IOMessage;
 use crate::flags::Flags;
 use crate::router::{MainBusSource, ALULSource, ALURSource, AddressBusSource, FlagsSource};
 use crate::router::DeviceMap;
-use std::cell::Cell;
 
 pub struct BusValue<TSource, TValue> {
     pub source: Option<TSource>,
@@ -17,8 +16,8 @@ pub struct BusValues {
     pub flags: BusValue<FlagsSource, ALUFlags>,
     pub injected_main_bus_value: Option<u8>,
     pub injected_address_bus_value: Option<u16>,
-    pub th_reg_val: Cell<u8>,
-    pub tl_reg_val: Cell<u8>,
+    pub th_reg_val: u8,
+    pub tl_reg_val: u8,
     pub messages: Vec<IOMessage>,
 }
 
@@ -32,8 +31,8 @@ impl BusValues {
             flags: BusValue { source: None, value: ALUFlags { carry: None, overflow: None } },
             injected_main_bus_value: None,
             injected_address_bus_value: None,
-            th_reg_val: Cell::new(0),
-            tl_reg_val: Cell::new(0),
+            th_reg_val: 0,
+            tl_reg_val: 0,
             messages: Vec::new(),
         }
     }
