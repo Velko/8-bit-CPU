@@ -65,7 +65,7 @@ impl TransferRegisterBehavior for AddressBusBehavior {
 
 
 impl<Behavior: TransferRegisterBehavior> GlobalSignalsReceiver for TransferRegister<Behavior> {
-    fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
+    fn on_clock_tick_primary(&mut self, bus_values: &mut BusValues) {
         if self.load.is_enabled() {
             Behavior::store_value(self, bus_values);
         }
@@ -96,7 +96,7 @@ mod tests {
 
         bench.devices.route_word(&mut bench.bus_values, crate::router::DEFAULT_CW, load_tx_cw);
 
-        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
 
         assert_eq!(bench.bus_values.th_reg_val.get(), 0xAB);
         assert_eq!(bench.bus_values.tl_reg_val.get(), 0xCD);
@@ -113,7 +113,7 @@ mod tests {
         bench.devices.route_word(&mut bench.bus_values, crate::router::DEFAULT_CW, load_th_cw);
         bench.bus_values.main_bus.value = Some(0x12);
 
-        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
 
         let load_tl_cw = ControlWordBuilder::default()
             .apply_mux::<LoadMux>(LoadMux::VALUE_TL_LOAD)
@@ -121,7 +121,7 @@ mod tests {
         bench.devices.route_word(&mut bench.bus_values, load_th_cw, load_tl_cw);
         bench.bus_values.main_bus.value = Some(0x34);
 
-        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
 
         assert_eq!(bench.devices.TX.get_value(&bench.bus_values), 0x1234);
     }

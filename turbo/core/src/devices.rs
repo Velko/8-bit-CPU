@@ -103,7 +103,7 @@ impl BusOutputPinChange for BusOutputPin<ALURSource> {
 
 /// Trait for devices that can receive global signals, such as clock ticks or reset events.
 pub trait GlobalSignalsReceiver {
-    fn on_clock_tick_primary(&mut self, _bus_values: &BusValues) {}
+    fn on_clock_tick_primary(&mut self, _bus_values: &mut BusValues) {}
     fn on_clock_tick_secondary(&mut self) {}
     fn on_reset(&mut self) {}
 }

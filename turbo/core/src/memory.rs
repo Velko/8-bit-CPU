@@ -35,7 +35,7 @@ impl RAM {
     }
 }
 impl GlobalSignalsReceiver for RAM {
-        fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
+        fn on_clock_tick_primary(&mut self, bus_values: &mut BusValues) {
         if self.write.is_enabled() {
             if let Some(address) = bus_values.address_bus.value {
                 let address = address as usize;
@@ -127,7 +127,7 @@ mod tests {
 
         assert_eq!(bench.bus_values.main_bus.value, Some(3));
 
-        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(bench.devices.IR.get_value(&bench.bus_values), 3);
@@ -150,7 +150,7 @@ mod tests {
         bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, write_at_pc_cw);
         bench.bus_values.resolve(&bench.devices);
 
-        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(bench.devices.Ram.data[2], 42);

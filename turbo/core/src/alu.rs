@@ -225,7 +225,7 @@ mod tests {
         bench.bus_values.resolve(&bench.devices);
         assert_eq!(Some(expected_sum), bench.bus_values.main_bus.value); // Check if the ALU calculates the sum of A and B correctly
 
-        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(expected_sum, bench.devices.A.get_value(&bench.bus_values)); // Check if A has the value
@@ -266,7 +266,7 @@ mod tests {
 
         assert_eq!(Some(expected_result), bench.bus_values.main_bus.value); // Check if the ALU calculates the difference of B and C correctly
 
-        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(expected_result, bench.devices.B.get_value(&bench.bus_values)); // Check if B has the value
@@ -349,7 +349,7 @@ mod tests {
 
         assert_eq!(Some(expected_result), bench.bus_values.main_bus.value); // Check if the ALU calculates the AND of A and B correctly
 
-        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(expected_result, bench.devices.A.get_value(&bench.bus_values)); // Check if A has the value
@@ -383,7 +383,7 @@ mod tests {
 
         assert_eq!(Some(expected_result), bench.bus_values.main_bus.value); // Check if the ALU calculates the OR of A and B correctly
 
-        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(expected_result, bench.devices.A.get_value(&bench.bus_values)); // Check if A has the value
@@ -417,7 +417,7 @@ mod tests {
 
         assert_eq!(Some(expected_result), bench.bus_values.main_bus.value); // Check if the ALU calculates the XOR of A and B correctly
 
-        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(expected_result, bench.devices.A.get_value(&bench.bus_values)); // Check if A has the value
@@ -447,7 +447,7 @@ mod tests {
 
         assert_eq!(Some(expected_result), bench.bus_values.main_bus.value); // Check if the ALU calculates the NOT of A correctly
 
-        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(expected_result, bench.devices.A.get_value(&bench.bus_values)); // Check if A has the value
@@ -478,7 +478,7 @@ mod tests {
 
         assert_eq!(Some(expected_result), bench.bus_values.main_bus.value); // Check if the ALU calculates the SHR of A correctly
 
-        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(expected_result, bench.devices.A.get_value(&bench.bus_values)); // Check if A has the value
@@ -505,7 +505,7 @@ mod tests {
 
         assert_eq!(Some(0x80), bench.bus_values.main_bus.value); // Check if the ALU calculates the SHR of A correctly with carry in
 
-        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(0x80, bench.devices.A.get_value(&bench.bus_values)); // Check if A has the value
@@ -539,7 +539,7 @@ mod tests {
 
         assert_eq!(Some(expected_result), bench.bus_values.main_bus.value); // Check if the ALU calculates the SWAP of A correctly
 
-        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(expected_result, bench.devices.A.get_value(&bench.bus_values)); // Check if A has the value

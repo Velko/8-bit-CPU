@@ -21,7 +21,7 @@ impl AddressCalculator {
 }
 
 impl GlobalSignalsReceiver for AddressCalculator {
-    fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
+    fn on_clock_tick_primary(&mut self, bus_values: &mut BusValues) {
         if self.load.is_enabled() {
             let base_address = bus_values.address_bus.value.unwrap();
             self.value = if self.signed.is_enabled() {
@@ -60,7 +60,7 @@ mod tests {
         bench.bus_values.main_bus.value = Some(0x20);
         bench.bus_values.address_bus.value = Some(0x1000);
 
-        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
 
 
         assert_eq!(bench.devices.ACalc.value, 0x1020);
@@ -79,7 +79,7 @@ mod tests {
         bench.bus_values.main_bus.value = Some(0x80);
         bench.bus_values.address_bus.value = Some(0x1000);
 
-        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
 
 
         assert_eq!(bench.devices.ACalc.value, 0x0F80);

@@ -32,7 +32,7 @@ impl TempRegister {
 }
 
 impl GlobalSignalsReceiver for TempRegister {
-    fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
+    fn on_clock_tick_primary(&mut self, bus_values: &mut BusValues) {
         if self.load.is_enabled() {
             self.value_primary = bus_values.main_bus.value.unwrap();
         }
@@ -72,7 +72,7 @@ mod tests {
         bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, load_t_cw);
         bench.bus_values.main_bus.value = Some(42); // Simulate loading 42 into T
 
-        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(42, bench.devices.T.value_secondary); // Check if T has the value 42 after clock tick

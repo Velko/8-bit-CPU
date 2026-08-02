@@ -279,7 +279,7 @@ impl DeviceMapPart {
         writeln!(writer, "    }}")?;
         writeln!(writer)?;
 
-        writeln!(writer, "    pub fn broadcast_clock_tick_primary(&mut self, bus_values: &BusValues) {{")?;
+        writeln!(writer, "    pub fn broadcast_clock_tick_primary(&mut self, bus_values: &mut BusValues) {{")?;
         for device in self.devices.iter() {
             writeln!(writer, "        self.{}.on_clock_tick_primary(bus_values);", device.name)?;
         }

@@ -24,7 +24,7 @@ impl ValueSource<u16> for AddressRegister {
 }
 
 impl GlobalSignalsReceiver for AddressRegister {
-    fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
+    fn on_clock_tick_primary(&mut self, bus_values: &mut BusValues) {
         if self.load.is_enabled() {
             let value = bus_values.address_bus.value.unwrap();
             self.value = value;

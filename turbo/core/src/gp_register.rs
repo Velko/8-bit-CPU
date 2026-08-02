@@ -15,7 +15,7 @@ pub struct GPRegister {
 }
 
 impl GlobalSignalsReceiver for GPRegister {
-    fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
+    fn on_clock_tick_primary(&mut self, bus_values: &mut BusValues) {
         if self.load.is_enabled() {
             self.value_primary = bus_values.main_bus.value.unwrap();
         }
@@ -73,7 +73,7 @@ mod tests {
 
         // Simulate loading a value into the register
         gp_reg.load.change(&gp_reg, &mut args, true);
-        gp_reg.on_clock_tick_primary(&args);
+        gp_reg.on_clock_tick_primary(&mut args);
         assert_eq!(gp_reg.value_primary, 42);
         assert_eq!(gp_reg.value_secondary, 0); // value_secondary should not change yet
 
@@ -90,10 +90,9 @@ mod tests {
             .build(); // load_A
 
         bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, load_a_cw);
-        let mut args = BusValues::new();
-        args.main_bus.value = Some(42); // Simulate loading 42 into A
+        bench.bus_values.main_bus.value = Some(42); // Simulate loading 42 into A
 
-        bench.devices.broadcast_clock_tick_primary(&args);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(42, bench.devices.A.value_secondary); // Check if A has the value 42 after clock tick
@@ -131,7 +130,7 @@ mod tests {
 
         // Simulate clock tick
         bench.bus_values.resolve(&bench.devices);
-        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(42, bench.devices.B.value_secondary); // Check if B has the value 42 after clock tick

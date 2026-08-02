@@ -33,7 +33,7 @@ impl ProgramCounter {
 }
 
 impl GlobalSignalsReceiver for ProgramCounter {
-    fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
+    fn on_clock_tick_primary(&mut self, bus_values: &mut BusValues) {
         if self.load.is_enabled() {
             self.value_primary = bus_values.address_bus.value.unwrap();
         } else if self.inc.is_enabled() {
@@ -83,7 +83,7 @@ mod tests {
         assert_eq!(Some(0x1234), bench.bus_values.address_bus.value);
 
         // incrementing the value should only affect the internal storage
-        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
         assert_eq!(0x1235, bench.devices.PC.value_primary);
 
         // check if still broadcasts the original value
@@ -101,7 +101,7 @@ mod tests {
             .build(); // Enable PC Load
         bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, pc_load_cw);
 
-        bench.devices.broadcast_clock_tick_primary(&bench.bus_values);
+        bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
 
         assert_eq!(0x5678, bench.devices.PC.value_primary);
         assert_eq!(0, bench.devices.PC.value_secondary);

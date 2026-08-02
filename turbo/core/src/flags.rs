@@ -77,7 +77,7 @@ impl FlagsRegister {
 }
 
 impl GlobalSignalsReceiver for FlagsRegister {
-    fn on_clock_tick_primary(&mut self, bus_values: &BusValues) {
+    fn on_clock_tick_primary(&mut self, bus_values: &mut BusValues) {
         if self.calc.is_enabled() {
             // Perform Z and N calculations based on the main bus value
             let result = bus_values.main_bus.value.unwrap();
