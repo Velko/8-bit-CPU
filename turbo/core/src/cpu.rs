@@ -1,5 +1,5 @@
 
-use crate::DEFAULT_CW;
+use crate::{DEFAULT_CW, IOMessage};
 use crate::control_word::ControlWord;
 use crate::devices::ValueSource;
 use crate::runtime_state::BusValues;
@@ -38,9 +38,11 @@ impl Cpu {
         self.devices.broadcast_clock_tick_secondary();
     }
 
-    pub fn clock_tick(&mut self) {
+    pub fn clock_tick(&mut self) -> Option<IOMessage> {
         self.clock_pulse_primary();
+        let message = self.bus_values.message.take();
         self.clock_pulse_secondary();
+        message
     }
 
     pub fn inject_main_bus_value(&mut self, value: u8) {

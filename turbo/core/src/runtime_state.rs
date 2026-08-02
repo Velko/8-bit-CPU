@@ -18,7 +18,7 @@ pub struct BusValues {
     pub injected_address_bus_value: Option<u16>,
     pub th_reg_val: u8,
     pub tl_reg_val: u8,
-    pub messages: Vec<IOMessage>,
+    pub message: Option<IOMessage>,
 }
 
 impl BusValues {
@@ -33,7 +33,7 @@ impl BusValues {
             injected_address_bus_value: None,
             th_reg_val: 0,
             tl_reg_val: 0,
-            messages: Vec::new(),
+            message: None,
         }
     }
 

@@ -1,5 +1,7 @@
 use std::{net::{SocketAddr, UdpSocket}, sync::mpsc::{self, Receiver, Sender}, thread};
 
+use turbo_core::IOMessage;
+
 const BUFFER_SIZE: usize = 1024;
 
 fn main() -> std::io::Result<()> {
@@ -86,7 +88,13 @@ fn main() -> std::io::Result<()> {
                 // send response immediately, as executing the tick may produce additional output
                 println!("Received: T command, executing clock tick\n");
                 socket.send_to(b"#T", ch0_dest).expect("Couldn't send response");
-                cpu.clock_tick();
+                match cpu.clock_tick() {
+                    Some(IOMessage::Out { port, value }) => {
+                        let response = format!("#OUT#{:02X}#{}", port, value as char);
+                        socket.send_to(response.as_bytes(), ch0_dest).expect("Couldn't send response");
+                    },
+                    None => {},
+                }
             },
             'r' => {
                 _ = recv_int(&rx); // client sends control word for IRFetch, discard it

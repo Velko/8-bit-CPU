@@ -31,7 +31,7 @@ impl GlobalSignalsReceiver for IOController {
             self.selected_port = bus_values.main_bus.value.unwrap();
         } else if self.to_dev.is_enabled() {
             println!("IOController {}: to_dev enabled, selected_port = {}", self.name, self.selected_port);
-            bus_values.messages.push(crate::IOMessage::Out { port: self.selected_port, value: bus_values.main_bus.value.unwrap() });
+            bus_values.message = Some(crate::IOMessage::Out { port: self.selected_port, value: bus_values.main_bus.value.unwrap() });
         }
     }
 }
