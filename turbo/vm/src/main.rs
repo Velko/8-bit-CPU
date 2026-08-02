@@ -89,8 +89,8 @@ fn main() -> std::io::Result<()> {
                 println!("Received: T command, executing clock tick\n");
                 socket.send_to(b"#T", ch0_dest).expect("Couldn't send response");
                 match cpu.clock_tick() {
-                    Some(IOMessage::Out { port, value }) => {
-                        let response = format!("#OUT#{:02X}#{}", port, value as char);
+                    Some(message) => {
+                        let response = message.to_string();
                         socket.send_to(response.as_bytes(), ch0_dest).expect("Couldn't send response");
                     },
                     None => {},
