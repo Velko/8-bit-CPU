@@ -1,7 +1,7 @@
 
 use crate::{ControlROM, DEFAULT_CW, IOMessage};
 use crate::control_word::ControlWord;
-use crate::devices::ValueSource;
+use crate::devices::{GlobalSignalsReceiver, ValueSource};
 use crate::runtime_state::BusValues;
 use crate::router::DeviceMap;
 
@@ -84,6 +84,10 @@ impl Cpu {
     }
 
     pub fn run_until_message(&mut self) -> Option<IOMessage> {
+        //TODO: At the moment there's no "count disable" for the StepCounter and it
+        // will keep counting on every clock tick, even if it comes from outside source.
+        // A quick fix is to reset the StepCounter before running the program.
+        self.devices.StepCounter.on_reset();
         loop {
             let message = self.execute_step();
             if message.is_some() {
