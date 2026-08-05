@@ -448,6 +448,8 @@ fn emit_router_fn(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPa
                 "carry_in" |
                 "load" |
                 "signed" => writeln!(writer, "            self.{}.{}.change(&self.{}, bus_values, new_cw & {}::MASK == {}::VALUE);", direct_pin.device, direct_pin.pin, direct_pin.device, alias, alias)?,
+                "halt" |
+                "brk" =>   writeln!(writer, "            self.{}.{}.change(bus_values, new_cw & {}::MASK == {}::VALUE);", direct_pin.device, direct_pin.pin, alias, alias)?,
                 _ => writeln!(writer, "            self.{}.on_{}_change(bus_values, new_cw & {}::MASK == {}::VALUE);", direct_pin.device, direct_pin.pin, alias, alias)?,
             }
         }
