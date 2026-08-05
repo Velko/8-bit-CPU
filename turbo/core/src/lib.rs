@@ -18,6 +18,7 @@ mod address_register;
 mod address_calculator;
 mod io_controller;
 mod io_messages;
+mod control_rom;
 
 pub use control_word::ControlWord;
 pub use router::DeviceMap;
@@ -25,7 +26,7 @@ pub use router::DEFAULT_CW;
 pub use runtime_state::BusValues;
 pub use cpu::Cpu;
 pub use io_messages::IOMessage;
-
+pub use control_rom::ControlROM;
 #[cfg(test)]
 mod test_helpers;
 

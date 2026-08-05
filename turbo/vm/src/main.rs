@@ -103,7 +103,15 @@ fn main() -> std::io::Result<()> {
                 socket.send_to(response.as_bytes(), ch0_dest).expect("Couldn't send response");
             },
             'R' => {
-                todo!("Run program until event occurs");
+                println!("Received: R command, running a program until message is produced");
+                match cpu.run_until_message() {
+                    Some(message) => {
+                        let response = message.to_string();
+                        println!("Produced message: {}", response);
+                        socket.send_to(response.as_bytes(), ch0_dest).expect("Couldn't send response");
+                    },
+                    None => {},
+                }
             },
             'Z' => {
                 cpu.reset();

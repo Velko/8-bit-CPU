@@ -1,5 +1,5 @@
 
-use crate::{DEFAULT_CW, IOMessage};
+use crate::{ControlROM, DEFAULT_CW, IOMessage};
 use crate::control_word::ControlWord;
 use crate::devices::ValueSource;
 use crate::runtime_state::BusValues;
@@ -40,9 +40,8 @@ impl Cpu {
 
     pub fn clock_tick(&mut self) -> Option<IOMessage> {
         self.clock_pulse_primary();
-        let message = self.bus_values.message.take();
         self.clock_pulse_secondary();
-        message
+        self.bus_values.message.take()
     }
 
     pub fn inject_main_bus_value(&mut self, value: u8) {
@@ -82,5 +81,96 @@ impl Cpu {
     pub fn clear_injected_values(&mut self) {
         self.bus_values.injected_main_bus_value = None;
         self.bus_values.injected_address_bus_value = None;
+    }
+
+    pub fn run_until_message(&mut self) -> Option<IOMessage> {
+        loop {
+            let message = self.execute_step();
+            if message.is_some() {
+                return message;
+            }
+        }
+    }
+
+    fn load_control_word(&self) -> ControlWord {
+        let opcode = self.devices.IR.get_value(&self.bus_values) as usize;
+        let op_ext = self.devices.StepCounter.get_extended_value();
+        let step = self.devices.StepCounter.get_value(&self.bus_values) as usize;
+        let flags = ValueSource::<u8>::get_value(&self.devices.F, &self.bus_values) as usize;
+
+        // The Control ROM is addressed by a combination of bits (least-to-most significant):
+        // * 3 bits of the step counter
+        // * 4 bits of the flags register
+        // * 8 bits of the opcode
+        // * 1 (or more) bits of the opcode extension
+
+        let rom_addr = (op_ext << 15) | (opcode << 7) | (flags << 3) | step;
+        ControlROM::get_value(rom_addr)
+    }
+
+    fn execute_step(&mut self) -> Option<IOMessage> {
+        let control_word = self.load_control_word();
+        self.apply_control_word(control_word);
+        self.clock_tick()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{control_word::ControlWordBuilder, router::{AddrInc, AddrOutMux, LoadMux, OutMux}};
+    use super::*;
+
+    #[test]
+    fn test_first_fetch_control_word() {
+        let mut cpu = Cpu::new();
+        cpu.reset();
+
+        // The first control word after the reset should always be a fetch.
+        let control_word = cpu.load_control_word();
+
+        // fetch:
+        //   - - PC.out
+        //     - PC.inc
+        //     - ProgMem.out
+        //     - IR.load
+
+        let expected_cw = ControlWordBuilder::default()
+            .apply_mux::<AddrOutMux>(AddrOutMux::VALUE_PC_OUT)
+            .apply_bit::<AddrInc>()
+            .apply_mux::<OutMux>(OutMux::VALUE_MEMORY_OUT)
+            .apply_mux::<LoadMux>(LoadMux::VALUE_IR_LOAD)
+            .build();
+
+        assert_eq!(control_word, expected_cw);
+    }
+
+    #[test]
+    fn test_fetch_ldi_a() {
+        let mut cpu = Cpu::new();
+        cpu.reset();
+
+        // Reset sets the PC to Reset Vector (currently 0xE000). Changing back to 0x0000 for this test.
+        cpu.devices.PC.set_value(0x0000);
+
+        // Load a program consisting of a single instrucion into memory: ldi A, 0x42
+        cpu.devices.Ram.set_data(0x0000, &[0x01, 0x42]); // ldi A, 0x42
+
+        cpu.execute_step(); // Fetch
+
+        assert_eq!(cpu.read_instruction_register(), 0x01); // ldi A, 0x42
+    }
+
+    #[test]
+    fn test_execute_ldi_a_and_break() {
+        let mut cpu = Cpu::new();
+        cpu.reset();
+        cpu.devices.PC.set_value(0x0000);
+
+        cpu.devices.Ram.set_data(0x0000, &[0x01, 0x42, 0xe4]); // ldi A, 0x42; brk
+
+        let msg = cpu.run_until_message();
+
+        assert_eq!(msg, Some(IOMessage::Brk));
+        assert_eq!(cpu.devices.A.get_value(&cpu.bus_values), 0x42);
     }
 }
