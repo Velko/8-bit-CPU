@@ -88,12 +88,8 @@ fn main() -> std::io::Result<()> {
                 // send response immediately, as executing the tick may produce additional output
                 println!("Received: T command, executing clock tick\n");
                 socket.send_to(b"#T", ch0_dest).expect("Couldn't send response");
-                match cpu.clock_tick() {
-                    Some(message) => {
-                        let response = message.to_string();
-                        socket.send_to(response.as_bytes(), ch0_dest).expect("Couldn't send response");
-                    },
-                    None => {},
+                if let Some(message) = cpu.clock_tick() {
+                    send_response_message(&socket, &ch0_dest, &message);
                 }
             },
             'r' => {
@@ -104,13 +100,16 @@ fn main() -> std::io::Result<()> {
             },
             'R' => {
                 println!("Received: R command, running a program until message is produced");
-                match cpu.run_until_message() {
-                    Some(message) => {
-                        let response = message.to_string();
-                        println!("Produced message: {}", response);
-                        socket.send_to(response.as_bytes(), ch0_dest).expect("Couldn't send response");
-                    },
-                    None => {},
+                loop {
+                    let message = cpu.run_until_message().expect("Error while running program");
+                    send_response_message(&socket, &ch0_dest, &message);
+                    match message {
+                        IOMessage::Halt | IOMessage::Brk => {
+                            println!("Produced break message");
+                            break;
+                        },
+                        _ => {},
+                    }
                 }
             },
             'Z' => {
@@ -163,4 +162,9 @@ fn recv_int(rx: &Receiver<char>) -> u32 {
     }
 
     u32::from_str_radix(&digits.iter().collect::<String>(), 16).expect("Failed to parse hex string")
+}
+
+fn send_response_message(socket: &UdpSocket, dest: &SocketAddr, message: &IOMessage) {
+    let response = message.to_string();
+    socket.send_to(response.as_bytes(), dest).expect("Couldn't send response");
 }

@@ -8,7 +8,7 @@ pub enum IOMessage {
 impl IOMessage {
     pub fn to_string(&self) -> String {
         match self {
-            IOMessage::Out { payload, port } => Self::escape_newline(&format!("#OUT#{:02X}#{}", port, payload)),
+            IOMessage::Out { payload, port } => Self::escape_newline(&format!("#OUT#{:X}#{}", port, payload)),
             IOMessage::Halt => "#HLT".to_string(),
             IOMessage::Brk => "#BRK".to_string(),
         }
