@@ -37,7 +37,9 @@ impl GlobalSignalsReceiver for StepCounter {
             self.step = 0;
             self.extval = 0;
         } else {
-            self.step += 1;
+            if !self.extended.is_enabled() {
+                self.step += 1;
+            }
         }
     }
 
@@ -89,5 +91,17 @@ mod tests {
         bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
 
         assert_eq!(bench.devices.StepCounter.get_extended_value(), 0x1);
+    }
+
+    #[test]
+    fn test_step_counter_extended_stretch() {
+        let mut bench = TestBench::new();
+        bench.devices.StepCounter.step = 1;
+
+        bench.devices.StepCounter.extended.change(&bench.devices.StepCounter, &mut bench.bus_values, true);
+        bench.devices.broadcast_clock_tick_secondary();
+
+        // Should keep the original step value, when extended is enabled
+        assert_eq!(bench.devices.StepCounter.get_value(&bench.bus_values), 1);
     }
 }
