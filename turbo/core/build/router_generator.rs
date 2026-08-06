@@ -273,7 +273,7 @@ impl DeviceMapPart {
                 ids.push(format!("FlagsSource::{}", device.name));
                 self.bus_sources.flags_sources.push(device.name.clone());
             }
-            writeln!(writer, "            {}: {}::new({}),", device.name, device.dev_type, ids.join(", "))?;
+            writeln!(writer, "            {}: {}::new({}),", device.name, map_device_type(&device.dev_type, &device.name), ids.join(", "))?;
         }
         writeln!(writer, "        }}")?;
         writeln!(writer, "    }}")?;
@@ -526,10 +526,13 @@ fn emit_default_control_word(writer: &mut dyn std::io::Write, muxes: &HashMap<St
 }
 
 fn map_device_type<'a>(dev_type: &'a str, name: &str) -> &'a str {
+    eprintln!("Mapping device type: {} with name: {}", dev_type, name);
     match dev_type {
-        "TransferRegister" if name == "TX" => "TransferRegister<AddressBusBehavior>",
-        "TransferRegister" => "TransferRegister<MainBusBehavior>",
-        "ALU" => Box::leak(format!("ALU<{}>", name).into_boxed_str()),
+        "TransferRegister" if name == "TX" => "TransferRegister::<AddressBusBehavior>",
+        "TransferRegister" => "TransferRegister::<MainBusBehavior>",
+        "ALU" => Box::leak(format!("ALU::<{}>", name).into_boxed_str()),
+        "RAM" => "Memory",
+        "ROM" => "NullSource",
         _ => dev_type,
     }
 }

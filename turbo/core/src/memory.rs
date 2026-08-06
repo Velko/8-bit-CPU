@@ -7,17 +7,21 @@ use crate::router::MainBusSource;
 use crate::runtime_state::BusValues;
 
 const ADDRESS_SPACE_SIZE: usize = 0x10000; // 64KB
-const ROM_SIZE: usize = 0x2000; // 8KB
-const RAM_SIZE: usize = ADDRESS_SPACE_SIZE - ROM_SIZE; // 56KB
+const ROM_SIZE: usize = BIOS_ROM.len(); // Typically 8KB
+pub const RAM_SIZE: usize = ADDRESS_SPACE_SIZE - ROM_SIZE; // 56KB
 
-pub struct RAM {
+/// Although the RAM and ProgMem are separate from microcode and layout perspective, they are combined
+/// into a single device (both in hardware and in the emulator code). All reads and writes are handled
+/// by the Memory struct. The sibling struct for ProgMem is just a dummy, that does not do anything
+/// except for receiving and discarding all control signals.
+pub struct Memory {
     pub name: &'static str,
     pub write: DelayedPin,
     pub out: BusOutputPin<MainBusSource>,
     data: [u8; RAM_SIZE],
 }
 
-impl RAM {
+impl Memory {
     pub fn new(name: &'static str, main_id: MainBusSource) -> Self {
         Self {
             name,
@@ -35,7 +39,7 @@ impl RAM {
         self.data[address..end_address].copy_from_slice(value);
     }
 }
-impl GlobalSignalsReceiver for RAM {
+impl GlobalSignalsReceiver for Memory {
         fn on_clock_tick_primary(&mut self, bus_values: &mut BusValues) {
         if self.write.is_enabled() {
             if let Some(address) = bus_values.address_bus.value {
@@ -50,19 +54,23 @@ impl GlobalSignalsReceiver for RAM {
     }
 }
 
-impl ValueSource<u8> for RAM {
+impl ValueSource<u8> for Memory {
     fn get_value(&self, bus_values: &BusValues) -> u8 {
         let address = bus_values.address_bus.value.unwrap() as usize;
-        self.data[address]
+        if address < RAM_SIZE {
+            self.data[address]
+        } else {
+            BIOS_ROM[address - RAM_SIZE] // Read from ROM if address is in ROM range
+        }
     }
 }
 
-pub struct ROM {
+pub struct NullSource {
     pub name: &'static str,
     pub out: NullPin,
 }
 
-impl ROM {
+impl NullSource {
     pub fn new(name: &'static str, _main_id: MainBusSource) -> Self {
         Self {
             name,
@@ -70,10 +78,12 @@ impl ROM {
         }
     }
 }
-impl GlobalSignalsReceiver for ROM {}
-impl ValueSource<u8> for ROM {
+
+impl GlobalSignalsReceiver for NullSource {}
+
+impl ValueSource<u8> for NullSource {
     fn get_value(&self, _bus_values: &BusValues) -> u8 {
-        panic!("ROM value source should not be used. Reads are handled by RAM module.");
+        panic!("Null value source should not be used. Reads are handled by Memory module.");
     }
 }
 
@@ -92,6 +102,8 @@ impl BusOutputPinChange for NullPin {
         // Do nothing
     }
 }
+
+static BIOS_ROM: &[u8] = include_bytes!("../../../bios/bios.bin");
 
 #[cfg(test)]
 mod tests {

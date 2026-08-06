@@ -7,7 +7,7 @@ pub use crate::program_counter::ProgramCounter;
 pub use crate::alu::{ALU, AddSub, AndOr, XorNot, ShiftSwap};
 pub use crate::flags::{FlagsRegister};
 pub use crate::wo_register::WORegister;
-pub use crate::memory::{RAM, ROM};
+pub use crate::memory::{Memory, NullSource};
 pub use crate::stack_pointer::StackPointer;
 pub use crate::transfer_register::{TransferRegister, TransferRegisterBehavior, MainBusBehavior, AddressBusBehavior};
 pub use crate::clock::Clock;

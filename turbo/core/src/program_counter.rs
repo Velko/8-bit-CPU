@@ -2,6 +2,7 @@ use crate::devices::BusOutputPin;
 use crate::devices::DelayedPin;
 use crate::devices::GlobalSignalsReceiver;
 use crate::devices::ValueSource;
+use crate::memory::RAM_SIZE;
 use crate::router::AddressBusSource;
 use crate::runtime_state::BusValues;
 
@@ -38,7 +39,7 @@ impl GlobalSignalsReceiver for ProgramCounter {
             self.value_primary = bus_values.address_bus.value.unwrap();
         } else if Some(self.out.source) == bus_values.address_bus.source {
             if self.inc.is_enabled() {
-            self.value_primary = self.value_primary.wrapping_add(1);
+                self.value_primary = self.value_primary.wrapping_add(1);
             }
         }
     }
@@ -49,8 +50,10 @@ impl GlobalSignalsReceiver for ProgramCounter {
         }
     }
     fn on_reset(&mut self) {
-        self.value_primary = 0xE000;
-        self.value_secondary = 0xE000;
+        // Resetting the program counter to the start of the ROM area, where the BIOS
+        // or bootloader resides.
+        self.value_primary = RAM_SIZE as u16;
+        self.value_secondary = RAM_SIZE as u16;
     }
 }
 
