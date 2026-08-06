@@ -1,3 +1,4 @@
+use crate::devices::BusOutputPin;
 use crate::devices::BusOutputPinChange;
 use crate::devices::DelayedPin;
 use crate::devices::GlobalSignalsReceiver;
@@ -12,7 +13,7 @@ const RAM_SIZE: usize = ADDRESS_SPACE_SIZE - ROM_SIZE; // 56KB
 pub struct RAM {
     pub name: &'static str,
     pub write: DelayedPin,
-    pub out: MemoryOutputPin,
+    pub out: BusOutputPin<MainBusSource>,
     data: [u8; RAM_SIZE],
 }
 
@@ -21,7 +22,7 @@ impl RAM {
         Self {
             name,
             write: DelayedPin::new(),
-            out: MemoryOutputPin::new(main_id, true),
+            out: BusOutputPin::new(main_id),
             data: [0; RAM_SIZE]
         }
     }
@@ -58,48 +59,37 @@ impl ValueSource<u8> for RAM {
 
 pub struct ROM {
     pub name: &'static str,
-    pub out: MemoryOutputPin,
+    pub out: NullPin,
 }
 
 impl ROM {
-    pub fn new(name: &'static str, main_id: MainBusSource) -> Self {
+    pub fn new(name: &'static str, _main_id: MainBusSource) -> Self {
         Self {
             name,
-            out: MemoryOutputPin::new(main_id, false),
+            out: NullPin::new(),
         }
     }
 }
 impl GlobalSignalsReceiver for ROM {}
 impl ValueSource<u8> for ROM {
-    fn get_value(&self, bus_values: &BusValues) -> u8 {
-        todo!()
+    fn get_value(&self, _bus_values: &BusValues) -> u8 {
+        panic!("ROM value source should not be used. Reads are handled by RAM module.");
     }
 }
 
 
-pub struct MemoryOutputPin {
-    source: MainBusSource,
-    connected: bool,
-}
+pub struct NullPin;
 
-impl MemoryOutputPin {
-    pub fn new(source: MainBusSource, connected: bool) -> Self {
+impl NullPin {
+    pub fn new() -> Self {
         Self {
-            source,
-            connected
         }
     }
 }
 
-impl BusOutputPinChange for MemoryOutputPin {
-    fn change(&self, bus_values: &mut BusValues, enable: bool) {
-        if self.connected {
-            bus_values.main_bus.source = if enable {
-                Some(self.source)
-            } else {
-                None
-            };
-        }
+impl BusOutputPinChange for NullPin {
+    fn change(&self, _bus_values: &mut BusValues, _enable: bool) {
+        // Do nothing
     }
 }
 
