@@ -36,8 +36,10 @@ impl GlobalSignalsReceiver for ProgramCounter {
     fn on_clock_tick_primary(&mut self, bus_values: &mut BusValues) {
         if self.load.is_enabled() {
             self.value_primary = bus_values.address_bus.value.unwrap();
-        } else if self.inc.is_enabled() {
+        } else if Some(self.out.source) == bus_values.address_bus.source {
+            if self.inc.is_enabled() {
             self.value_primary = self.value_primary.wrapping_add(1);
+            }
         }
     }
 
@@ -108,5 +110,21 @@ mod tests {
 
         bench.devices.broadcast_clock_tick_secondary();
         assert_eq!(0x5678, bench.devices.PC.value_secondary);
+    }
+
+    #[test]
+    fn test_program_counter_holds_when_inc_but_no_out() {
+        let mut bench = TestBench::new();
+        bench.devices.PC.set_value(0x9ABC);
+
+        let pc_inc_cw = ControlWordBuilder::default()
+            .apply_bit::<AddrInc>()
+            .build(); // Enable PC Inc
+        bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, pc_inc_cw);
+
+        bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
+
+        // if PC.out is not enabled, the value on the bus should not change, even if PC.inc is enabled
+        assert_eq!(0x9ABC, bench.devices.PC.value_primary);
     }
 }
