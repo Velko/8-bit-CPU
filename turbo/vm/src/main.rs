@@ -93,7 +93,11 @@ impl<T> PeekableReceiver<T> where T: Copy {
 
     pub fn peek(&self) -> Option<T> {
         if self.peeked.get().is_none() {
-            self.peeked.set(Some(self.receiver.recv().expect("Receive error")));
+            match self.receiver.try_recv() {
+                Ok(value) => self.peeked.set(Some(value)),
+                Err(mpsc::TryRecvError::Empty) => return None,
+                Err(mpsc::TryRecvError::Disconnected) => panic!("Couldn't receive from channel"),
+            }
         }
         self.peeked.get()
     }
