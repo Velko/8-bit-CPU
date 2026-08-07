@@ -42,11 +42,16 @@ impl CommsChannel {
             if c.is_digit(16) {
                 digits.push(c);
             } else {
+                self.rx.unrecv(c);
                 break;
             }
         }
 
         u32::from_str_radix(&digits.iter().collect::<String>(), 16).expect("Failed to parse hex string")
+    }
+
+    fn discard_char(&self) {
+        let _ = self.rx.recv();
     }
 
     fn send_response_message(&self, message: &IOMessage) {
@@ -100,6 +105,13 @@ impl<T> PeekableReceiver<T> where T: Copy {
         } else {
             self.receiver.recv().expect("Couldn't receive from channel")
         }
+    }
+
+    pub fn unrecv(&self, value: T) {
+        if self.peeked.get().is_some() {
+            panic!("Peeked value already exists");
+        }
+        self.peeked.set(Some(value));
     }
 }
 
@@ -187,9 +199,12 @@ fn main() -> std::io::Result<()> {
             },
             'W' => {
                 let cw = comms_channel.recv_int();
+                comms_channel.discard_char(); // discard separator
                 let mut addr = comms_channel.recv_int();
+                comms_channel.discard_char();
                 let mut data = comms_channel.recv_int();
                 while data < 0x100 {
+                    comms_channel.discard_char();
                     cpu.inject_main_bus_value(data as u8);
                     cpu.inject_address_bus_value(addr as u16);
                     cpu.apply_control_word(cw);
@@ -204,6 +219,7 @@ fn main() -> std::io::Result<()> {
             },
             'E' => {
                 let _chan = comms_channel.recv_int();
+                comms_channel.discard_char(); // discard separator
                 let port = comms_channel.recv_int();
                 comms_channel.set_response_destination(port as u16);
             },
