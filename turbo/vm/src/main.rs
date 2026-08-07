@@ -1,4 +1,4 @@
-use std::{collections::HashMap, net::{SocketAddr, UdpSocket}, sync::mpsc::{self, Receiver, Sender}, thread};
+use std::{collections::HashMap, net::{SocketAddr, UdpSocket}, sync::mpsc::{self, Receiver, Sender}, thread, cell::Cell, str};
 
 use turbo_core::IOMessage;
 
@@ -6,7 +6,7 @@ const BUFFER_SIZE: usize = 1024;
 
 struct CommsChannel {
     socket: UdpSocket,
-    rx: Receiver<char>,
+    rx: PeekableReceiver<char>,
     response_destination: Option<SocketAddr>,
 }
 
@@ -29,7 +29,7 @@ impl CommsChannel {
 
         Self {
             socket,
-            rx,
+            rx: PeekableReceiver::new(rx),
             response_destination: None,
         }
     }
@@ -38,7 +38,7 @@ impl CommsChannel {
         let mut digits: Vec<char> = Vec::new();
 
         loop {
-            let c = self.rx.recv().expect("Couldn't receive from channel");
+            let c = self.rx.recv();
             if c.is_digit(16) {
                 digits.push(c);
             } else {
@@ -73,6 +73,36 @@ impl CommsChannel {
 
 }
 
+struct PeekableReceiver<T> {
+    receiver: Receiver<T>,
+    peeked: Cell<Option<T>>,
+}
+
+impl<T> PeekableReceiver<T> where T: Copy {
+    pub fn new(receiver: Receiver<T>) -> Self {
+        Self {
+            receiver,
+            peeked: Cell::new(None),
+        }
+    }
+
+    pub fn peek(&self) -> Option<T> {
+        if self.peeked.get().is_none() {
+            self.peeked.set(Some(self.receiver.recv().expect("Receive error")));
+        }
+        self.peeked.get()
+    }
+
+    pub fn recv(&self) -> T {
+        if let Some(value) = self.peeked.get() {
+            self.peeked.set(None);
+            value
+        } else {
+            self.receiver.recv().expect("Couldn't receive from channel")
+        }
+    }
+}
+
 fn main() -> std::io::Result<()> {
 
     let mut comms_channel = CommsChannel::new(8888);
@@ -81,7 +111,7 @@ fn main() -> std::io::Result<()> {
 
     loop {
 
-        let c = comms_channel.rx.recv().expect("Couldn't receive from channel");
+        let c = comms_channel.rx.recv();
         match c {
             'I' => {
                 comms_channel.send_response_str("Turbo VM");
