@@ -35,7 +35,6 @@ impl GlobalSignalsReceiver for IOController {
         if self.laddr.is_enabled() {
             self.selected_port = bus_values.main_bus.value.unwrap();
         } else if self.to_dev.is_enabled() {
-            println!("IOController {}: to_dev enabled, selected_port = {}", self.name, self.selected_port);
             bus_values.message = match self.selected_port {
                 0 => self.display_numeric.format(bus_values.main_bus.value.unwrap()),
                 1 => self.display_numeric.set_mode(bus_values.main_bus.value.unwrap()),
@@ -67,7 +66,6 @@ impl DisplayNumeric {
     }
 
     pub fn set_mode(&mut self, mode: u8) -> Option<String> {
-        println!("DisplayNumeric: set_mode called with mode {}", mode);
         self.mode = mode;
         None
     }

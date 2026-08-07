@@ -32,13 +32,11 @@ fn main() -> std::io::Result<()> {
         let c = rx.recv().expect("Couldn't receive from channel");
         match c {
             'I' => {
-                println!("Received: I command");
                 socket.send_to(b"Turbo VM", channel_dest.get(&0).expect("Channel 0 not set")).expect("Couldn't send response");
             },
             'A' => {
                 let addr = recv_int(&rx);
                 cpu.inject_address_bus_value(addr as u16);
-                println!("Received: A command with address 0x{:04X}", addr);
             },
             'a' => {
                 let value = cpu.read_address_bus_value();
@@ -47,7 +45,6 @@ fn main() -> std::io::Result<()> {
             },
             'B' => {
                 let value = recv_int(&rx);
-                println!("Received: B command with value 0x{:02X}", value);
                 cpu.inject_main_bus_value(value as u8);
             },
             'b' => {
@@ -66,13 +63,11 @@ fn main() -> std::io::Result<()> {
             },
             'O' => {
                 let _cw = recv_int(&rx);
-                println!("Received: O command with control word 0x{:08X}", _cw);
                 cpu.clear_injected_values();
                 cpu.apply_control_word(turbo_core::DEFAULT_CW);
             },
             'M' => {
                 let cw = recv_int(&rx);
-                println!("Received: M command with control word 0x{:08X}", cw);
                 cpu.apply_control_word(cw);
             },
             'N' => {
@@ -86,7 +81,6 @@ fn main() -> std::io::Result<()> {
             },
             'T' => {
                 // send response immediately, as executing the tick may produce additional output
-                println!("Received: T command, executing clock tick\n");
                 socket.send_to(b"#T", channel_dest.get(&0).expect("Channel 0 not set")).expect("Couldn't send response");
                 if let Some(message) = cpu.clock_tick() {
                     send_response_message(&socket, channel_dest.get(&0).expect("Channel 0 not set"), &message);
@@ -99,13 +93,11 @@ fn main() -> std::io::Result<()> {
                 socket.send_to(response.as_bytes(), channel_dest.get(&0).expect("Channel 0 not set")).expect("Couldn't send response");
             },
             'R' => {
-                println!("Received: R command, running a program until message is produced");
                 loop {
                     let message = cpu.run_until_message().expect("Error while running program");
                     send_response_message(&socket, channel_dest.get(&0).expect("Channel 0 not set"), &message);
                     match message {
                         IOMessage::Halt | IOMessage::Brk => {
-                            println!("Produced break message");
                             break;
                         },
                         _ => {},
@@ -118,7 +110,6 @@ fn main() -> std::io::Result<()> {
             'W' => {
                 let cw = recv_int(&rx);
                 let mut addr = recv_int(&rx);
-                println!("Received: W command with control word 0x{:08X} and address 0x{:04X}", cw, addr);
                 let mut data = recv_int(&rx);
                 while data < 0x100 {
                     cpu.inject_main_bus_value(data as u8);
@@ -131,13 +122,11 @@ fn main() -> std::io::Result<()> {
                 socket.send_to(b"#W", channel_dest.get(&0).expect("Channel 0 not set")).expect("Couldn't send response");
             },
             'Q' => {
-                println!("Received 'Q', exiting.");
                 break;
             },
             'E' => {
                 let chan = recv_int(&rx);
                 let port = recv_int(&rx);
-                println!("Received: E command with channel {} and port {}", chan, port);
                 let dest = format!("127.0.0.1:{}", port).parse().expect("Invalid address");
                 channel_dest.insert(chan as u8, dest);
             },
