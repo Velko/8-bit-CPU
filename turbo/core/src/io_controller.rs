@@ -1,4 +1,4 @@
-use crate::{BusValues, IOMessage, devices::{BusOutputPin, DelayedPin, GlobalSignalsReceiver, ValueSource}, router::MainBusSource};
+use crate::{BusValues, IOMessage, devices::{BusOutputPin, DelayedPin, GlobalSignalsReceiver, ValueSource}, router::MainBusSource, display_lcd::Lcd};
 
 pub struct IOController {
     pub name: &'static str,
@@ -59,7 +59,9 @@ impl GlobalSignalsReceiver for IOController {
                     bus_values.message = self.wrap_message(self.display_char.format(bus_values.main_bus.value.unwrap()));
                 },
                 0x10 => {
-                    self.lcd.send_data(bus_values.main_bus.value.unwrap());
+                    if let Some(msg) = self.lcd.send_data(bus_values.main_bus.value.unwrap()) {
+                        bus_values.message = self.wrap_message(msg);
+                    }
                 },
                 0x11 => {
                     self.lcd.send_command(bus_values.main_bus.value.unwrap());
@@ -107,27 +109,6 @@ impl DisplayChar {
 
     pub fn format(&self, value: u8) -> String {
         format!("{}", value as char)
-    }
-}
-
-struct Lcd {
-}
-
-impl Lcd {
-    pub fn new() -> Self {
-        Self {}
-    }
-
-    pub fn send_data(&self, value: u8) {
-        print!("{}", value as char);
-    }
-
-    pub fn send_command(&self, value: u8) {
-        print!("LCD command: 0x{:02x}\\n", value);
-    }
-
-    pub fn get_status(&self) -> u8 {
-        todo!()
     }
 }
 
