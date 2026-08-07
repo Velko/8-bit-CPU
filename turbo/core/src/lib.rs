@@ -20,6 +20,7 @@ mod io_controller;
 mod io_messages;
 mod control_rom;
 mod display_lcd;
+mod uart;
 
 pub use control_word::ControlWord;
 pub use router::DeviceMap;

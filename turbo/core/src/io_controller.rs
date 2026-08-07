@@ -1,4 +1,4 @@
-use crate::{BusValues, IOMessage, devices::{BusOutputPin, DelayedPin, GlobalSignalsReceiver, ValueSource}, router::MainBusSource, display_lcd::Lcd};
+use crate::{BusValues, IOMessage, devices::{BusOutputPin, DelayedPin, GlobalSignalsReceiver, ValueSource}, display_lcd::Lcd, router::MainBusSource, uart::Uart};
 
 pub struct IOController {
     pub name: &'static str,
@@ -112,23 +112,3 @@ impl DisplayChar {
     }
 }
 
-struct Uart {
-}
-
-impl Uart {
-    pub fn new() -> Self {
-        Self {}
-    }
-
-    pub fn send_char(&self, value: u8) {
-        print!("{}", value as char);
-    }
-
-    pub fn get_status(&self) -> u8 {
-        todo!()
-    }
-
-    pub fn get_char(&self) -> u8 {
-        todo!()
-    }
-}
