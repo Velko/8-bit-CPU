@@ -30,6 +30,7 @@ pub use runtime_state::BusValues;
 pub use cpu::Cpu;
 pub use io_messages::IOMessage;
 pub use control_rom::ControlROM;
+pub use io_controller::IOPorts;
 #[cfg(test)]
 mod test_helpers;
 

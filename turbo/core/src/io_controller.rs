@@ -9,6 +9,11 @@ pub struct IOController {
     peripherals: Peripherals,
 }
 
+pub trait IOPorts {
+    fn read_port(&self, port: u8) -> u8;
+    fn write_port(&mut self, port: u8, value: u8) -> Option<crate::IOMessage>;
+}
+
 impl IOController {
     pub fn new(name: &'static str, main_id: MainBusSource) -> Self {
         Self {
@@ -37,3 +42,4 @@ impl GlobalSignalsReceiver for IOController {
         }
     }
 }
+

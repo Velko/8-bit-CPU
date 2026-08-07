@@ -1,4 +1,4 @@
-use crate::{IOMessage, display_lcd::Lcd, uart::Uart};
+use crate::{IOMessage, display_lcd::Lcd, IOPorts, uart::Uart};
 
 pub struct Peripherals {
     display_numeric: DisplayNumeric,
@@ -16,8 +16,10 @@ impl Peripherals {
             uart: Uart::new(),
         }
     }
+}
 
-    pub fn read_port(&self, port: u8) -> u8 {
+impl IOPorts for Peripherals {
+    fn read_port(&self, port: u8) -> u8 {
         match port {
             0x11 => self.lcd.get_status(),
             0x20 => self.uart.get_status(),
@@ -26,7 +28,7 @@ impl Peripherals {
         }
     }
 
-    pub fn write_port(&mut self, port: u8, value: u8) -> Option<IOMessage> {
+    fn write_port(&mut self, port: u8, value: u8) -> Option<IOMessage> {
         match port {
             0 => {
                 return Some(IOMessage::Out { payload: self.display_numeric.format(value), port: port });
