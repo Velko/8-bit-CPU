@@ -1,4 +1,4 @@
-use std::{net::{SocketAddr, UdpSocket}, sync::mpsc::{self, Receiver, Sender}, thread};
+use std::{collections::HashMap, net::{SocketAddr, UdpSocket}, sync::mpsc::{self, Receiver, Sender}, thread};
 
 use turbo_core::IOMessage;
 
@@ -25,7 +25,7 @@ fn main() -> std::io::Result<()> {
 
     let mut cpu = turbo_core::Cpu::new();
 
-    let mut ch0_dest: SocketAddr = "127.0.0.1:8888".parse().expect("Invalid address");
+    let mut channel_dest: HashMap<u8, SocketAddr> = HashMap::new();
 
     loop {
 
@@ -33,7 +33,7 @@ fn main() -> std::io::Result<()> {
         match c {
             'I' => {
                 println!("Received: I command");
-                socket.send_to(b"Turbo VM", ch0_dest).expect("Couldn't send response");
+                socket.send_to(b"Turbo VM", channel_dest.get(&0).expect("Channel 0 not set")).expect("Couldn't send response");
             },
             'A' => {
                 let addr = recv_int(&rx);
@@ -43,7 +43,7 @@ fn main() -> std::io::Result<()> {
             'a' => {
                 let value = cpu.read_address_bus_value();
                 let response = format!("{:04X}", value);
-                socket.send_to(response.as_bytes(), ch0_dest).expect("Couldn't send response");
+                socket.send_to(response.as_bytes(), channel_dest.get(&0).expect("Channel 0 not set")).expect("Couldn't send response");
             },
             'B' => {
                 let value = recv_int(&rx);
@@ -53,12 +53,12 @@ fn main() -> std::io::Result<()> {
             'b' => {
                 let value = cpu.read_main_bus_value();
                 let response = format!("{:02X}", value);
-                socket.send_to(response.as_bytes(), ch0_dest).expect("Couldn't send response");
+                socket.send_to(response.as_bytes(), channel_dest.get(&0).expect("Channel 0 not set")).expect("Couldn't send response");
             },
             's' => {
                 let value = cpu.read_flags_value();
                 let response = format!("{:02X}", value);
-                socket.send_to(response.as_bytes(), ch0_dest).expect("Couldn't send response");
+                socket.send_to(response.as_bytes(), channel_dest.get(&0).expect("Channel 0 not set")).expect("Couldn't send response");
             },
             'f' => {
                 // is this ever used?
@@ -87,22 +87,22 @@ fn main() -> std::io::Result<()> {
             'T' => {
                 // send response immediately, as executing the tick may produce additional output
                 println!("Received: T command, executing clock tick\n");
-                socket.send_to(b"#T", ch0_dest).expect("Couldn't send response");
+                socket.send_to(b"#T", channel_dest.get(&0).expect("Channel 0 not set")).expect("Couldn't send response");
                 if let Some(message) = cpu.clock_tick() {
-                    send_response_message(&socket, &ch0_dest, &message);
+                    send_response_message(&socket, channel_dest.get(&0).expect("Channel 0 not set"), &message);
                 }
             },
             'r' => {
                 _ = recv_int(&rx); // client sends control word for IRFetch, discard it
                 let value = cpu.read_instruction_register();
                 let response = format!("{:02X}", value);
-                socket.send_to(response.as_bytes(), ch0_dest).expect("Couldn't send response");
+                socket.send_to(response.as_bytes(), channel_dest.get(&0).expect("Channel 0 not set")).expect("Couldn't send response");
             },
             'R' => {
                 println!("Received: R command, running a program until message is produced");
                 loop {
                     let message = cpu.run_until_message().expect("Error while running program");
-                    send_response_message(&socket, &ch0_dest, &message);
+                    send_response_message(&socket, channel_dest.get(&0).expect("Channel 0 not set"), &message);
                     match message {
                         IOMessage::Halt | IOMessage::Brk => {
                             println!("Produced break message");
@@ -128,17 +128,18 @@ fn main() -> std::io::Result<()> {
                     addr += 1;
                     data = recv_int(&rx);
                 }
-                socket.send_to(b"#W", ch0_dest).expect("Couldn't send response");
+                socket.send_to(b"#W", channel_dest.get(&0).expect("Channel 0 not set")).expect("Couldn't send response");
             },
             'Q' => {
                 println!("Received 'Q', exiting.");
                 break;
             },
             'E' => {
-                let _chan = recv_int(&rx);
-                let _port = recv_int(&rx);
-                println!("Received: E command with channel {} and port {}", _chan, _port);
-                ch0_dest = format!("127.0.0.1:{}", _port).parse().expect("Invalid address");
+                let chan = recv_int(&rx);
+                let port = recv_int(&rx);
+                println!("Received: E command with channel {} and port {}", chan, port);
+                let dest = format!("127.0.0.1:{}", port).parse().expect("Invalid address");
+                channel_dest.insert(chan as u8, dest);
             },
             _ => {
                 println!("Received: unknown {}", c);
