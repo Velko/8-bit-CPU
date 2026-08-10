@@ -37,7 +37,7 @@ class TempRegister(WORegister):
 class ALU(DeviceBase):
     out: Pin
     alt: Pin
-    carry_in: Pin = None
+    carry_in: Pin | None = None
 
 
 class Flags(enum.Flag):
