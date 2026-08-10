@@ -70,6 +70,11 @@ impl CommsChannel {
         self.socket.send_to(value.as_bytes(), dest).expect("Couldn't send response");
     }
 
+    pub fn send_response_byte(&self, value: u8) {
+        let dest = self.response_destination.as_ref().expect("Response destination not configured");
+        self.socket.send_to(&[value], dest).expect("Couldn't send response");
+    }
+
     pub fn set_response_destination(&mut self, port: u16) {
         let dest = format!("127.0.0.1:{}", port).parse().expect("Invalid address");
         self.response_destination = Some(dest);

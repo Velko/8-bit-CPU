@@ -19,14 +19,24 @@ impl Uart {
     }
 
     pub fn send_char(&self, value: u8) {
-        print!("{}", value as char);
+        self.comm_channel.borrow().send_response_byte(value);
     }
 
     pub fn get_status(&self) -> u8 {
-        todo!()
+        if self.comm_channel.borrow().rx.peek().is_some() {
+            0x01
+        } else {
+            0x00
+        }
     }
 
     pub fn get_char(&self) -> u8 {
-        todo!()
+        let rx = &self.comm_channel.borrow().rx;
+        // avoid blocking if no input is available, return 0xFF instead
+        if self.get_status() == 0 {
+            0xFF
+        } else {
+            rx.recv() as u8
+        }
     }
 }
