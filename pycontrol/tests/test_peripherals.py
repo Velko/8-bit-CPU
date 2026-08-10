@@ -34,8 +34,11 @@ def test_uart_input(cpu_helper: CPUHelper, asm_compiler: Compiler, value: int) -
 # A bug in UART module caused IO Bus contention by LCD_STATUS and UART_DATA
 @pytest.mark.skipif(not full_exec_supported, reason=full_exec_reason)
 def test_lcd_status_and_uart_data_read(cpu_helper: CPUHelper, asm_compiler: Compiler) -> None:
-    # LCD_STATUS and UART_DATA share the same address, but should return different values
+    # LCD_STATUS and UART_DATA has different major device, but same sub-address. Checking that
+    # only the desired major device is selected.
     prog = asm_compiler.compile("""
+        ldi C, 0x01             ; clear display command
+        out DISPLAY_LCD_CMD, C  ; send command to LCD, to ensure it is busy
         in A, DISPLAY_LCD_CMD
         in B, UART_DATA
     """)
