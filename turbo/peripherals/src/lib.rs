@@ -1,4 +1,8 @@
-use crate::{IOMessage, display_lcd::Lcd, IOPorts, uart::Uart};
+mod display_lcd;
+mod uart;
+
+use turbo_core::{IOMessage, IOPorts};
+use crate::{display_lcd::Lcd, uart::Uart};
 
 pub struct Peripherals {
     display_numeric: DisplayNumeric,

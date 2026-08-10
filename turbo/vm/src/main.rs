@@ -1,5 +1,5 @@
+use turbo_peripherals::Peripherals;
 use turbo_core::IOMessage;
-use turbo_core::peripherals::Peripherals;
 mod comms_channel;
 use comms_channel::CommsChannel;
 
