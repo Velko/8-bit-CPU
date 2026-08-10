@@ -4,6 +4,9 @@ mod display_char;
 mod uart;
 
 use turbo_core::{IOMessage, IOPorts};
+use std::cell::RefCell;
+use std::rc::Rc;
+use turbo_bridge::CommsChannel;
 use crate::{display_lcd::Lcd, display_numeric::DisplayNumeric, display_char::DisplayChar, uart::Uart};
 
 pub struct Peripherals {
@@ -14,12 +17,12 @@ pub struct Peripherals {
 }
 
 impl Peripherals {
-    pub fn new() -> Self {
+    pub fn new(comm_channel0: Rc<RefCell<CommsChannel>>) -> Self {
         Self {
             display_numeric: DisplayNumeric::new(),
             display_char: DisplayChar::new(),
             lcd: Lcd::new(),
-            uart: Uart::new(),
+            uart: Uart::new(comm_channel0),
         }
     }
 }

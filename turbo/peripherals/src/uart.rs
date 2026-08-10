@@ -5,17 +5,16 @@
 
 use std::rc::Rc;
 use std::cell::RefCell;
-
-struct CommsChannel; //TODO: Ok, we have a project structure problem here.
+use turbo_bridge::CommsChannel;
 
 pub struct Uart {
-    comm_channel: Option<Rc<RefCell<CommsChannel>>>,
+    comm_channel: Rc<RefCell<CommsChannel>>,
 }
 
 impl Uart {
-    pub fn new() -> Self {
+    pub fn new(comm_channel: Rc<RefCell<CommsChannel>>) -> Self {
         Self {
-            comm_channel: None,
+            comm_channel,
         }
     }
 
