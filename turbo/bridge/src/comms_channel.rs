@@ -53,26 +53,27 @@ impl CommsChannel {
         let _ = self.rx.recv();
     }
 
+    fn send_to_dest(&self, data: &[u8]) {
+        let dest = self.response_destination.as_ref().expect("Response destination not configured");
+        self.socket.send_to(data, dest).expect("Couldn't send response");
+    }
+
     pub fn send_response_message(&self, message: &IOMessage) {
         let response = message.to_string();
-        let dest = self.response_destination.as_ref().expect("Response destination not configured");
-        self.socket.send_to(response.as_bytes(), dest).expect("Couldn't send response");
+        self.send_to_dest(response.as_bytes());
     }
 
     pub fn send_response_int(&self, value: u32) {
         let response = format!("{:X}", value);
-        let dest = self.response_destination.as_ref().expect("Response destination not configured");
-        self.socket.send_to(response.as_bytes(), dest).expect("Couldn't send response");
+        self.send_to_dest(response.as_bytes());
     }
 
     pub fn send_response_str(&self, value: &str) {
-        let dest = self.response_destination.as_ref().expect("Response destination not configured");
-        self.socket.send_to(value.as_bytes(), dest).expect("Couldn't send response");
+        self.send_to_dest(value.as_bytes());
     }
 
     pub fn send_response_byte(&self, value: u8) {
-        let dest = self.response_destination.as_ref().expect("Response destination not configured");
-        self.socket.send_to(&[value], dest).expect("Couldn't send response");
+        self.send_to_dest(&[value]);
     }
 
     pub fn set_response_destination(&mut self, port: u16) {
