@@ -6,3 +6,4 @@ edition = "2024"
 [dependencies]
 turbo-peripherals = { version = "0.1.0", path = "../peripherals" }
 turbo-core = { version = "0.1.0", path = "../core" }
+turbo-bridge = { version = "0.1.0", path = "../bridge" }

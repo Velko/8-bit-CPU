@@ -1,7 +1,6 @@
 use turbo_peripherals::Peripherals;
 use turbo_core::IOMessage;
-mod comms_channel;
-use comms_channel::CommsChannel;
+use turbo_bridge::CommsChannel;
 
 fn main() -> std::io::Result<()> {
 
