@@ -1,4 +1,5 @@
 use turbo_core::IOMessage;
+use turbo_core::peripherals::Peripherals;
 mod comms_channel;
 use comms_channel::CommsChannel;
 
@@ -6,7 +7,7 @@ fn main() -> std::io::Result<()> {
 
     let mut comms_channel = CommsChannel::new(8888);
 
-    let mut cpu = turbo_core::Cpu::new();
+    let mut cpu = turbo_core::Cpu::new(Peripherals::new());
 
     loop {
 

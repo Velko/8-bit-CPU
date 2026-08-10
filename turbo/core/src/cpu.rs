@@ -1,20 +1,20 @@
 
-use crate::{ControlROM, DEFAULT_CW, IOMessage};
+use crate::{ControlROM, DEFAULT_CW, IOMessage, IOPorts};
 use crate::control_word::ControlWord;
 use crate::devices::{GlobalSignalsReceiver, ValueSource};
 use crate::runtime_state::BusValues;
 use crate::router::DeviceMap;
 
-pub struct Cpu {
-    devices: DeviceMap,
+pub struct Cpu<P> where P: IOPorts {
+    devices: DeviceMap<P>,
     control_word: ControlWord,
     bus_values: BusValues,
 }
 
 
-impl Cpu {
-    pub fn new() -> Self {
-        let devices = DeviceMap::new();
+impl<P: IOPorts> Cpu<P> {
+    pub fn new(ioports: P) -> Self {
+        let devices = DeviceMap::new(ioports);
         let mut bus_values = BusValues::new();
         devices.route_word(&mut bus_values, !DEFAULT_CW, DEFAULT_CW); // Ensure we start from the default state
         Cpu {
@@ -121,12 +121,12 @@ impl Cpu {
 
 #[cfg(test)]
 mod tests {
-    use crate::{control_word::ControlWordBuilder, router::{AddrInc, AddrOutMux, LoadMux, OutMux}};
+    use crate::{control_word::ControlWordBuilder, router::{AddrInc, AddrOutMux, LoadMux, OutMux}, test_helpers::TestIOPorts};
     use super::*;
 
     #[test]
     fn test_first_fetch_control_word() {
-        let mut cpu = Cpu::new();
+        let mut cpu = Cpu::new(TestIOPorts::new());
         cpu.reset();
 
         // The first control word after the reset should always be a fetch.
@@ -150,7 +150,7 @@ mod tests {
 
     #[test]
     fn test_fetch_ldi_a() {
-        let mut cpu = Cpu::new();
+        let mut cpu = Cpu::new(TestIOPorts::new());
         cpu.reset();
 
         // Reset sets the PC to Reset Vector (currently 0xE000). Changing back to 0x0000 for this test.
@@ -166,7 +166,7 @@ mod tests {
 
     #[test]
     fn test_execute_ldi_a_and_break() {
-        let mut cpu = Cpu::new();
+        let mut cpu = Cpu::new(TestIOPorts::new());
         cpu.reset();
         cpu.devices.PC.set_value(0x0000);
 

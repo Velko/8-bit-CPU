@@ -39,7 +39,7 @@ impl MuxPart {
         writeln!(writer, "impl MuxDispatcher for {} {{", self.name)?;
         writeln!(writer, "    const MASK: ControlWord = 0b{:032b};", self.mask)?;
         writeln!(writer, "    const VALUE_DEFAULT: ControlWord = 0b{:032b};", self.default)?;
-        writeln!(writer, "    fn dispatch(dev: &DeviceMap, bus_values: &mut BusValues, word: ControlWord, enable: bool) {{")?;
+        writeln!(writer, "    fn dispatch<P: IOPorts>(dev: &DeviceMap<P>, bus_values: &mut BusValues, word: ControlWord, enable: bool) {{")?;
         writeln!(writer, "        match word & Self::MASK {{")?;
         for (_value, (alias, dev_refs)) in self.device_bits.iter() {
             if dev_refs.len() == 1 {
@@ -240,7 +240,7 @@ pub struct DeviceMapPart {
 
 impl DeviceMapPart {
     fn emit(&mut self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
-        writeln!(writer, "pub struct DeviceMap {{")?;
+        writeln!(writer, "pub struct DeviceMap<P: IOPorts> {{")?;
         for device in self.devices.iter() {
             writeln!(writer, "    pub {}: {},", device.name, map_device_type(&device.dev_type, &device.name))?;
         }
@@ -248,8 +248,8 @@ impl DeviceMapPart {
         writeln!(writer)?;
 
 
-        writeln!(writer, "impl DeviceMap {{")?;
-        writeln!(writer, "    pub fn new() -> Self {{")?;
+        writeln!(writer, "impl<P: IOPorts> DeviceMap<P> {{")?;
+        writeln!(writer, "    pub fn new(ioports: P) -> Self {{")?;
         writeln!(writer, "        DeviceMap {{")?;
         for device in self.devices.iter() {
             let mut ids: Vec<String> = vec![format!("\"{}\"", device.name)];
@@ -272,6 +272,9 @@ impl DeviceMapPart {
             if BusSourcesPart::is_flags_source(&device.dev_type) {
                 ids.push(format!("FlagsSource::{}", device.name));
                 self.bus_sources.flags_sources.push(device.name.clone());
+            }
+            if device.dev_type == "IOController" {
+                ids.push("ioports".to_string());
             }
             writeln!(writer, "            {}: {}::new({}),", device.name, map_device_type(&device.dev_type, &device.name), ids.join(", "))?;
         }
@@ -427,7 +430,7 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) {
 
 
 fn emit_router_fn(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPart>, direct_pins: &HashMap<u32, (String, Vec<DirectPinRef>)>) -> std::io::Result<()> {
-    writeln!(writer, "impl DeviceMap {{")?;
+    writeln!(writer, "impl< P: IOPorts> DeviceMap<P> {{")?;
     writeln!(writer, "    pub fn route_word(&self, bus_values: &mut BusValues, old_cw: ControlWord, new_cw: ControlWord) {{")?;
 
     for (name, _) in muxes.iter() {
@@ -533,6 +536,7 @@ fn map_device_type<'a>(dev_type: &'a str, name: &str) -> &'a str {
         "ALU" => Box::leak(format!("ALU::<{}>", name).into_boxed_str()),
         "RAM" => "Memory",
         "ROM" => "NullSource",
+        "IOController" => "IOController::<P>",
         _ => dev_type,
     }
 }

@@ -1,4 +1,4 @@
-use crate::IOMessage;
+use crate::{IOMessage, IOPorts};
 use crate::flags::Flags;
 use crate::router::{MainBusSource, ALULSource, ALURSource, AddressBusSource, FlagsSource};
 use crate::router::DeviceMap;
@@ -37,7 +37,7 @@ impl BusValues {
         }
     }
 
-    pub fn resolve(&mut self, devices: &DeviceMap) {
+    pub fn resolve<P: IOPorts>(&mut self, devices: &DeviceMap<P>) {
         self.alu_l.value = self.alu_l.source.map(|source| devices.get_alu_l_value(source, self));
         self.alu_r.value = self.alu_r.source.map(|source| devices.get_alu_r_value(source, self));
         self.address_bus.value = self.injected_address_bus_value.or_else(|| self.address_bus.source.map(|source| devices.get_address_bus_value(source, self)));

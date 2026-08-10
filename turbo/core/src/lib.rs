@@ -21,7 +21,7 @@ mod io_messages;
 mod control_rom;
 mod display_lcd;
 mod uart;
-mod peripherals;
+pub mod peripherals;
 
 pub use control_word::ControlWord;
 pub use router::DeviceMap;

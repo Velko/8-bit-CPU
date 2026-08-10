@@ -6,13 +6,14 @@ use crate::devices::*;
 use crate::control_word::ControlWordBuilder;
 use crate::runtime_state::ALUFlags;
 use crate::runtime_state::BusValues;
+use crate::IOPorts;
 
 include!(concat!(env!("OUT_DIR"), "/router_generated.rs"));
 
 pub trait MuxDispatcher {
     const MASK: ControlWord;
     const VALUE_DEFAULT: ControlWord;
-    fn dispatch(dev: &DeviceMap, bus_values: &mut BusValues, word: ControlWord, enable: bool);
+    fn dispatch<P: IOPorts>(dev: &DeviceMap<P>, bus_values: &mut BusValues, word: ControlWord, enable: bool);
 }
 
 pub trait BitDispatcher {
@@ -22,11 +23,12 @@ pub trait BitDispatcher {
 
 #[cfg(test)]
 mod tests {
+    use crate::test_helpers::TestIOPorts;
     use super::*;
 
     #[test]
     fn test_static_dispatch() {
-        let device_map = DeviceMap::new();
+        let device_map = DeviceMap::new(TestIOPorts::new());
         let default_cw = 0x07ff58ff; // default
         let add_bc_cw = 0x07ff0915; // add_B_C
         println!("add_B_C");
