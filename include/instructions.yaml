@@ -855,6 +855,8 @@ instructions:
     # ext bit should stick, even if it is not
     # present in each step. Only steps_reset can clear it
     steps:
+      - []
+      - []
       - - PC.out
         - PC.inc
         - ProgMem.out
