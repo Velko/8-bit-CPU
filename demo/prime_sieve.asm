@@ -11,6 +11,9 @@ sieve_start:
     ; also, value of 0 is used frequently
     ldi C, 0
 
+    ; switch numeric display to mode 0 - unsigned decimal
+    out DISPLAY_NUM_MODE, C
+
     ; start with seg0[2]
     ldi A, 2
     lea TDP, seg0
