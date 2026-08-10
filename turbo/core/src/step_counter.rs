@@ -38,7 +38,9 @@ impl GlobalSignalsReceiver for StepCounter {
             self.extval = 0;
         } else {
             if !self.extended.is_enabled() {
-                self.step += 1;
+                // do not care about overflow, it is reset to 0 before entering the Run mode
+                // and not used otherwise
+                self.step = self.step.wrapping_add(1);
             }
         }
     }
