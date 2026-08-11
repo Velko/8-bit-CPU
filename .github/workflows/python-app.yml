@@ -19,6 +19,8 @@ jobs:
       uses: actions/setup-python@v6
       with:
         python-version: '3.14'
+    - name: Install Rust
+      uses: moonrepo/setup-rust@v1
     - name: Install tools and libraries
       run: |
         sudo add-apt-repository -y ppa:velko/compilers
@@ -52,7 +54,7 @@ jobs:
       working-directory: ./pycontrol
       run: |
         python -m mypy --strict libcpu tests tools ../tools tdbg
-    - name: Run tests
+    - name: Run tests (Verilog Emulator)
       working-directory: ./pycontrol
       run: |
         python -m pytest
@@ -63,18 +65,46 @@ jobs:
         customasm prime_sieve.asm
         customasm double_dabble.asm
         customasm uart_output.asm
-    - name: Run demo in debugger
+    - name: Run demo in debugger (Verilog Emulator)
       working-directory: ./demo
       run: |
         python ../pycontrol/tools/debugger.py -s hello.bin | tee /dev/stderr | grep -q "Hello, World!"
-    - name: Run demo programs
+    - name: Run demo programs (Verilog Emulator)
       working-directory: ./demo
       run: |
         python ../tools/exec_bin.py hello.bin | tee /dev/stderr | grep -q "Hello, World!"
         python ../tools/exec_bin.py prime_sieve.bin | tee /dev/stderr | diff -u primes.txt -
         python ../tools/exec_bin.py double_dabble.bin | tee /dev/stderr | grep -q "36324058"
         python ../tools/exec_bin.py -M uart_output.bin | tee /dev/stderr | diff -u uart_output.txt -
-    - name: Shutdown hardware emulator
+    - name: Shutdown Verilog emulator
+      working-directory: ./tools
+      run: |
+        python ./shutdown.py
+    - name: Test Rust emulator
+      working-directory: ./turbo
+      run: |
+        cargo test
+    - name: Build and run Rust emulator
+      working-directory: ./turbo
+      run: |
+        cargo build --release
+        ./target/release/turbo-vm &
+    - name: Run tests (Rust Emulator)
+      working-directory: ./pycontrol
+      run: |
+        python -m pytest
+    - name: Run demo in debugger (Rust Emulator)
+      working-directory: ./demo
+      run: |
+        python ../pycontrol/tools/debugger.py -s hello.bin | tee /dev/stderr | grep -q "Hello, World!"
+    - name: Run demo programs (Rust Emulator)
+      working-directory: ./demo
+      run: |
+        python ../tools/exec_bin.py hello.bin | tee /dev/stderr | grep -q "Hello, World!"
+        python ../tools/exec_bin.py prime_sieve.bin | tee /dev/stderr | diff -u primes.txt -
+        python ../tools/exec_bin.py double_dabble.bin | tee /dev/stderr | grep -q "36324058"
+        python ../tools/exec_bin.py -M uart_output.bin | tee /dev/stderr | diff -u uart_output.txt -
+    - name: Shutdown Rust emulator
       working-directory: ./tools
       run: |
         python ./shutdown.py
