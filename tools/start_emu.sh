@@ -1,6 +1,6 @@
 #!/bin/sh
 
-killall -9 vvp || true
+killall -9 vvp turbo-vm || true
 
 VMPATH=$(dirname $0)/../emulator/vm
 
