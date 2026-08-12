@@ -312,6 +312,11 @@ Repository index
     * **tests** - PyTest scripts, testing (real or emulated) hardware and PyControl itself
     * **tools** - various tools that generates microcode, customasm definitions, execute and debug binaries
 * **simulation** - [Logisim][logisim] and [Digital][digital] simulations for tricky logic
+* **turbo** - high-performance hardware emulator in Rust
+    * **core** - core CPU implementation
+    * **peripherals** - implementations of various peripherals, e.g. displays, UART, etc.
+    * **bridge** - communication bridge between emulator and clients over UDP
+    * **vm** - a "virtual machine", tying it all together
 
 Progress
 ========
@@ -407,6 +412,11 @@ Progress
   run it in SSH session. No code editing nor compilation features, focused on debugger because it was
   fiddly to run the GTK version in remote session. It was quite hard to develop the Snake game demo
   without usable debugger UI. I had only a cmd-based one, which was not very convenient.
+* Implemented another emulator, this time in Rust. This is a high-performance one, nicknamed "Turbo".
+  It can be controlled using the same protocol as the Verilog-based emulator, so it can be used as a
+  drop-in replacement. The performance difference is staggering - the Snake game does not have a chance
+  to receive an input before the snake has ran into a wall. In Verilog emulator the game was playable,
+  despite that it does not wait on any timers to slow down.
 
 
 [eater-net-8bit]: https://eater.net/8bit
