@@ -87,13 +87,6 @@ module debug (
 
     always @(negedge iclk or posedge power_on) begin
         if (brk || !hlt || power_on) begin
-            if (brk) begin
-                $hdb_send_str(0, "#BRK");
-            end
-            if (!hlt) begin
-                $hdb_send_str(0, "#HLT");
-            end
-
             ctrlen <= 1;
             #100; // give long enough for clock to disengage
 

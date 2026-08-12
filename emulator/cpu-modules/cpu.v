@@ -61,6 +61,8 @@ module cpu(
 
     clock clock (
         .ctrlen(ctrlen),
+        .brk(brk),
+        .hlt(hlt),
         .clk(clk),
         .iclk(iclk)
     );
