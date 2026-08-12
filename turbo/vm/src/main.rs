@@ -61,11 +61,10 @@ fn main() -> std::io::Result<()> {
                 cpu.clock_pulse_secondary();
             },
             'T' => {
-                // send response immediately, as executing the tick may produce additional output
-                comms_channel.borrow().send_response_str("#T");
                 if let Some(message) = cpu.clock_tick() {
                     comms_channel.borrow().send_response_message(&message);
                 }
+                comms_channel.borrow().send_response_str("#T");
             },
             'r' => {
                 _ = comms_channel.borrow().recv_int(); // client sends control word for IRFetch, discard it

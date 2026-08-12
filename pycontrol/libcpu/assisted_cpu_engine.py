@@ -77,23 +77,13 @@ class AssistedCPUEngine:
         if progmem_out:
             self.imm.publish()
 
-        # capture port selection BEFORE clock tick. This is important for the decision
-        # whether the instruction will produce an output message
-        if hardware.IOCtl is not None and control.is_enabled(hardware.IOCtl.laddr):
-            self.iomon.select_port(self.client.bus_get())
-
-        self.client.clock_tick()
+        result = self.client.clock_tick()
 
         if control.is_enabled(hardware.PC.load):
             self.imm.invalidate()
 
         if control.is_enabled(hardware.F.calc) or control.is_enabled(hardware.F.load):
             self.flags_cache = None
-
-        if control.is_enabled(hardware.Clock.halt) or \
-            control.is_enabled(hardware.Clock.brk) or \
-            (control.is_enabled(hardware.IOCtl.to_dev) and self.iomon.active_port_produces_output()):
-            result = self.client.receive_message()
 
         # Drop current opcode since it was a prefix for extended one
         if control.is_enabled(hardware.StepCounter.extended):

@@ -163,8 +163,9 @@ module debug (
 
                     "T": begin
                         // clock_tick
-                        $hdb_send_str(0, "#T"); // send response immediately, as executing the tick may produce additional output
                         tick();
+                        #1 // a delay to make sure message goes first
+                        $hdb_send_str(0, "#T"); // terminate with a #T response
                     end
 
                     "r": begin

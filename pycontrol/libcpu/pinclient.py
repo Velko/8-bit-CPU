@@ -78,9 +78,19 @@ class PinClient:
         self.send_cmd('C')
 
     def clock_tick(self) -> RunMessage | None:
+        message = None
         t = self.query('T')
+
+        # The clock tick may produce an output message.
+        if t != "#T":
+            message = self.parse_message(t)
+            t = self.recv_answer()
+
+        # The tick command always terminates with #T
         if t != "#T":
             raise ProtocolException(f"Expected #T from clock tick, got: /{t}/")
+
+        return message
 
     def write_mem(self, cw: CtrlWord, addr: int, data: bytes) -> None:
         # split data into chunks of 128 bytes, to avoid overrunning buffer in emulator
