@@ -7,7 +7,7 @@ from .opcodes import ops_by_num, fetch, InvalidOpcodeException
 from .pinclient import PinClient
 from .ctrl_word import CtrlWord
 from .pin import ControlSignal
-from .messages import RunMessage, OutMessage, HaltMessage, BrkMessage
+from .messages import RunMessage
 
 class AssistedCPUEngine:
     def __init__(self, client: PinClient) -> None:
@@ -79,14 +79,10 @@ class AssistedCPUEngine:
             if progmem_out:
                 self.imm.publish(self.client)
 
-            # capture port output BEFORE clock tick.
-            # TODO: think of more reliable approach
-            # this probably messes up the immediate value on the Bus
+            # capture port selection BEFORE clock tick. This is important for the decision
+            # whether the instruction will produce an output message
             if hardware.IOCtl is not None and control.is_enabled(hardware.IOCtl.laddr):
                 self.iomon.select_port(self.client.bus_get())
-
-            if hardware.IOCtl is not None and control.is_enabled(hardware.IOCtl.to_dev):
-                result = self.iomon.format_value(self.client.bus_get())
 
             self.client.clock_tick()
 
@@ -97,18 +93,9 @@ class AssistedCPUEngine:
                 self.flags_cache = None
 
             if control.is_enabled(hardware.Clock.halt) or \
-               control.is_enabled(hardware.Clock.brk):
+               control.is_enabled(hardware.Clock.brk) or \
+               (control.is_enabled(hardware.IOCtl.to_dev) and self.iomon.active_port_produces_output()):
                 result = self.client.receive_message()
-            if isinstance(result, OutMessage):
-                # if we have captured a simulated OutMessage,
-                # hardware should also produced one
-                # consume and (potantially) verify it
-                hw_message = self.client.receive_message()
-                # not sure if really need to assert, but Ok for now
-                assert isinstance(hw_message, OutMessage)
-                assert hw_message.payload == result.payload
-                assert hw_message.target == result.target
-
 
             # Drop current opcode since it was a prefix for extended one
             if control.is_enabled(hardware.StepCounter.extended):

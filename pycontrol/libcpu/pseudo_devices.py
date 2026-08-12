@@ -1,7 +1,5 @@
 from .markers import AddrBase
-from .util import to_i8
 from .pinclient import PinClient
-from .messages import OutMessage
 
 class ImmediateValue:
     def __init__(self) -> None:
@@ -41,29 +39,9 @@ class ImmediateValue:
 class IOMonitor:
     def __init__(self) -> None:
         self.selected_port: int | None = None
-        self.numeric_mode = 0
 
     def select_port(self, port: int) -> None:
         self.selected_port = port
 
-    def format_value(self, value: int) -> OutMessage | None:
-        match self.selected_port:
-            case 0:
-                match self.numeric_mode:
-                    case 0:
-                        return OutMessage(self.selected_port, f"{value:>4}\n")
-                    case 1:
-                        return OutMessage(self.selected_port, f"{to_i8(value):>4}\n")
-                    case 2:
-                        return OutMessage(self.selected_port, f"h {value:02x}\n")
-                    case 3:
-                        return OutMessage(self.selected_port, f"o{value:>03o}\n")
-            case 1:
-                self.numeric_mode = value
-                return None
-            case 4:
-                return OutMessage(self.selected_port, chr(value))
-            case 0x10:
-                return OutMessage(self.selected_port, chr(value))
-
-        return None
+    def active_port_produces_output(self) -> bool:
+        return self.selected_port is not None and self.selected_port in (0, 4, 0x10)
