@@ -72,35 +72,33 @@ class AssistedCPUEngine:
 
         result: RunMessage | None = None
 
-        if control.c_word != hardware.DEFAULT_CW.c_word:
+        self.client.ctrl_commit(control)
 
-            self.client.ctrl_commit(control)
+        if progmem_out:
+            self.imm.publish(self.client)
 
-            if progmem_out:
-                self.imm.publish(self.client)
+        # capture port selection BEFORE clock tick. This is important for the decision
+        # whether the instruction will produce an output message
+        if hardware.IOCtl is not None and control.is_enabled(hardware.IOCtl.laddr):
+            self.iomon.select_port(self.client.bus_get())
 
-            # capture port selection BEFORE clock tick. This is important for the decision
-            # whether the instruction will produce an output message
-            if hardware.IOCtl is not None and control.is_enabled(hardware.IOCtl.laddr):
-                self.iomon.select_port(self.client.bus_get())
+        self.client.clock_tick()
 
-            self.client.clock_tick()
+        if control.is_enabled(hardware.PC.load):
+            self.imm.invalidate()
 
-            if control.is_enabled(hardware.PC.load):
-                self.imm.invalidate()
+        if control.is_enabled(hardware.F.calc) or control.is_enabled(hardware.F.load):
+            self.flags_cache = None
 
-            if control.is_enabled(hardware.F.calc) or control.is_enabled(hardware.F.load):
-                self.flags_cache = None
+        if control.is_enabled(hardware.Clock.halt) or \
+            control.is_enabled(hardware.Clock.brk) or \
+            (control.is_enabled(hardware.IOCtl.to_dev) and self.iomon.active_port_produces_output()):
+            result = self.client.receive_message()
 
-            if control.is_enabled(hardware.Clock.halt) or \
-               control.is_enabled(hardware.Clock.brk) or \
-               (control.is_enabled(hardware.IOCtl.to_dev) and self.iomon.active_port_produces_output()):
-                result = self.client.receive_message()
-
-            # Drop current opcode since it was a prefix for extended one
-            if control.is_enabled(hardware.StepCounter.extended):
-                self.opcode_cache = None
-                self.op_extension += 1
+        # Drop current opcode since it was a prefix for extended one
+        if control.is_enabled(hardware.StepCounter.extended):
+            self.opcode_cache = None
+            self.op_extension += 1
 
         self.imm.unpublish(self.client)
 
