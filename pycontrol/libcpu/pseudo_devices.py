@@ -2,9 +2,10 @@ from .markers import AddrBase
 from .pinclient import PinClient
 
 class ImmediateValue:
-    def __init__(self) -> None:
+    def __init__(self, client: PinClient) -> None:
         self.value: list[int] = []
         self.write_enabled = False
+        self.client = client
 
     def inject(self, value: int | AddrBase | bytes | None) -> None:
         if value is None:
@@ -21,14 +22,14 @@ class ImmediateValue:
     def invalidate(self) -> None:
         self.value = []
 
-    def unpublish(self, client: PinClient) -> None:
+    def unpublish(self) -> None:
         if self.write_enabled:
-            client.bus_free()
+            self.client.bus_free()
             self.write_enabled = False
 
-    def publish(self, client: PinClient) -> None:
+    def publish(self) -> None:
         if len(self.value) > 0:
-            client.bus_set(self.value[0])
+            self.client.bus_set(self.value[0])
             self.write_enabled = True
             del self.value[0]
 

@@ -19,7 +19,7 @@ class AssistedCPUEngine:
         self.iomon = IOMonitor()
 
         # RAM hooks
-        self.imm = ImmediateValue()
+        self.imm = ImmediateValue(client)
 
         self.ops_by_str = {op.opstr: op for op in ops_by_num}
 
@@ -75,7 +75,7 @@ class AssistedCPUEngine:
         self.client.ctrl_commit(control)
 
         if progmem_out:
-            self.imm.publish(self.client)
+            self.imm.publish()
 
         # capture port selection BEFORE clock tick. This is important for the decision
         # whether the instruction will produce an output message
@@ -100,7 +100,7 @@ class AssistedCPUEngine:
             self.opcode_cache = None
             self.op_extension += 1
 
-        self.imm.unpublish(self.client)
+        self.imm.unpublish()
 
         return result
 
