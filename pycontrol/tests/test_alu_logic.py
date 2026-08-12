@@ -5,7 +5,7 @@ import pytest
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.devmap import A, B
-from libcpu.opcodes import permute_gp_regs_nsame, gp_regs
+from conftest import permute_gp_regs_nsame, gp_regs
 from libcpu.devices import GPRegister, Flags
 
 from conftest import ALUTwoRegTestCase, ALUOneRegTestCase, Compiler, devname, full_exec_supported, full_exec_reason

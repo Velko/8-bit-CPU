@@ -2,7 +2,7 @@
 
 import pytest
 
-from libcpu.opcodes import permute_gp_regs_nsame, gp_regs
+from conftest import permute_gp_regs_nsame, gp_regs
 from libcpu.devices import GPRegister, Flags
 
 from libcpu.cpu_helper import CPUHelper

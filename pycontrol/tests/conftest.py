@@ -8,7 +8,8 @@ from collections.abc import  Sequence, Iterator, Iterable
 
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.pinclient import PinClient, get_client_instance
-from libcpu.devices import DeviceBase, Flags
+from libcpu.devices import DeviceBase, Flags, GPRegister
+from libcpu.DeviceSetup import hardware
 
 full_exec_supported = True
 full_exec_reason = "code execution is not yet supported"
@@ -110,3 +111,11 @@ def asm_compiler() -> Iterator[Compiler]:
     finally:
         shutil.rmtree(dir, ignore_errors=True)
         pass
+
+gp_regs: list[GPRegister] = [r for r in hardware.devices.values() if isinstance(r, GPRegister)]
+
+def permute_gp_regs_nsame() -> Iterator[tuple[GPRegister, GPRegister]]:
+    for l in gp_regs:
+        for r in gp_regs:
+            if l != r:
+                yield l, r

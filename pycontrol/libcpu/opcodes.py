@@ -1,37 +1,16 @@
-from collections.abc import Sequence, Iterator
 from typing import Tuple
-from unittest import case
 from .pin import ControlSignal
 from .instruction_cfg import InstructionConfig, Instruction
 from .DeviceSetup import hardware
 from .opcode_builder import MicrocodeBuilder, MicroCode, OpcodeArg
-from .devices import DeviceBase, Register, GPRegister, Flags
+from .devices import DeviceBase, Register, Flags
 import os.path
-
-#TODO: gp_regs and pairs are used by tests only. Would be a good idea to re-work them
-gp_regs: list[GPRegister] = [r for r in hardware.devices.values() if isinstance(r, GPRegister)]
 
 _ops_by_str: dict[str, MicroCode] = {}
 
 class InvalidOpcodeException(Exception):
     pass
 
-def permute_gp_regs_all() -> Iterator[tuple[GPRegister, GPRegister]]:
-    for l in gp_regs:
-        for r in gp_regs:
-            yield l, r
-
-
-def permute_gp_regs_nsame() -> Iterator[tuple[GPRegister, GPRegister]]:
-    for l in gp_regs:
-        for r in gp_regs:
-            if l != r:
-                yield l, r
-
-def permute_regs_lr(lregs: Sequence[Register], rregs: Sequence[Register]) -> Iterator[tuple[Register, Register]]:
-    for l in lregs:
-        for r in rregs:
-            yield l, r
 
 def opcode_of(instr: str) -> int:
     microcode = _ops_by_str.get(instr)

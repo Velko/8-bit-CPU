@@ -9,7 +9,7 @@ from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
 from collections.abc import Iterator
-from libcpu.opcodes import permute_gp_regs_nsame, gp_regs
+from conftest import permute_gp_regs_nsame, gp_regs
 
 pytestmark = pytest.mark.hardware
 
