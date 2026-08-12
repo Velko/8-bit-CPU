@@ -25,10 +25,13 @@ class PinClient:
     def send_cmd(self, cmd: str) -> None:
         self.transport.sendto(cmd.encode("ascii"), (TARGET_IP, TARGET_PORT))
 
+    def recv_answer(self) -> str:
+        packet, _ = self.transport.recvfrom(1024)
+        return packet.decode('ascii').strip("\r\n")
+
     def query(self, cmd: str) -> str:
         self.send_cmd(cmd)
-        packet, src = self.transport.recvfrom(1024)
-        return packet.decode('ascii').strip()
+        return self.recv_answer()
 
     def identify(self) -> str:
         return self.query('I')
@@ -74,7 +77,7 @@ class PinClient:
     def clock_inverted(self) -> None:
         self.send_cmd('C')
 
-    def clock_tick(self) -> None:
+    def clock_tick(self) -> RunMessage | None:
         t = self.query('T')
         if t != "#T":
             raise ProtocolException(f"Expected #T from clock tick, got: /{t}/")
@@ -108,8 +111,9 @@ class PinClient:
     OUT_RE = re.compile(r"#OUT#([0-9A-Fa-f]+)#(.*)")
 
     def receive_message(self) -> RunMessage:
-        packet, src = self.transport.recvfrom(1024)
-        line = packet.decode('ascii').strip('\r\n')
+        return self.parse_message(self.recv_answer())
+
+    def parse_message(self, line: str) -> RunMessage:
 
         match line:
             case "#HLT":
