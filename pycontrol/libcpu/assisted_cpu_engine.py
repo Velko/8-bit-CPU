@@ -96,16 +96,9 @@ class AssistedCPUEngine:
             if control.is_enabled(hardware.F.calc) or control.is_enabled(hardware.F.load):
                 self.flags_cache = None
 
-            if control.is_enabled(hardware.Clock.halt):
-                hw_message = self.client.receive_message()
-                result = HaltMessage()
-                assert isinstance(hw_message, HaltMessage)
-
-            if control.is_enabled(hardware.Clock.brk):
-                hw_message = self.client.receive_message()
-                result = BrkMessage()
-                assert isinstance(hw_message, BrkMessage)
-
+            if control.is_enabled(hardware.Clock.halt) or \
+               control.is_enabled(hardware.Clock.brk):
+                result = self.client.receive_message()
             if isinstance(result, OutMessage):
                 # if we have captured a simulated OutMessage,
                 # hardware should also produced one
