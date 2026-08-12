@@ -63,16 +63,8 @@ fn main() -> std::io::Result<()> {
             'T' => {
                 // send response immediately, as executing the tick may produce additional output
                 comms_channel.borrow().send_response_str("#T");
-                //TOOD: this is how Verilog emulator works: only sends a message if the output is
-                // produced, and immediately dropping out on HLT or BRK. I wonder why do we even
-                // emulate this on the Python client side. Should probably simplify.
-                match cpu.clock_tick() {
-                    Some(IOMessage::Halt) |
-                    Some(IOMessage::Brk) |
-                    None => {},
-                    Some(message) => {
-                        comms_channel.borrow().send_response_message(&message);
-                    }
+                if let Some(message) = cpu.clock_tick() {
+                    comms_channel.borrow().send_response_message(&message);
                 }
             },
             'r' => {

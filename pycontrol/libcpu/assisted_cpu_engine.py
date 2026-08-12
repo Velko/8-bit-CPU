@@ -97,10 +97,14 @@ class AssistedCPUEngine:
                 self.flags_cache = None
 
             if control.is_enabled(hardware.Clock.halt):
+                hw_message = self.client.receive_message()
                 result = HaltMessage()
+                assert isinstance(hw_message, HaltMessage)
 
             if control.is_enabled(hardware.Clock.brk):
+                hw_message = self.client.receive_message()
                 result = BrkMessage()
+                assert isinstance(hw_message, BrkMessage)
 
             if isinstance(result, OutMessage):
                 # if we have captured a simulated OutMessage,
