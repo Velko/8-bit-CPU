@@ -191,6 +191,13 @@ startup:
 
 .move_head:
 
+    ; sleep for some time
+    ldi A, 15
+    out TIMER_COUNTER, A
+.delay_loop:
+    in A, TIMER_COUNTER
+    bne .delay_loop
+
     ; check if paused
     ld A, is_paused
     bne .game_loop
