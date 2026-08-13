@@ -6,3 +6,5 @@
 
 #const(noemit) UART_STATUS = 0x20
 #const(noemit) UART_DATA = 0x21
+
+#const(noemit) TIMER_COUNTER = 0x30
