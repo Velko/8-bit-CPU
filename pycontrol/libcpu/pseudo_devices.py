@@ -35,14 +35,3 @@ class ImmediateValue:
 
     def has_value(self) -> bool:
         return len(self.value) > 0
-
-
-class IOMonitor:
-    def __init__(self) -> None:
-        self.selected_port: int | None = None
-
-    def select_port(self, port: int) -> None:
-        self.selected_port = port
-
-    def active_port_produces_output(self) -> bool:
-        return self.selected_port is not None and self.selected_port in (0, 4, 0x10)

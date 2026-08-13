@@ -1,7 +1,7 @@
 from collections.abc import Sequence
 from .markers import AddrBase
 from .devices import Flags
-from .pseudo_devices import ImmediateValue, IOMonitor
+from .pseudo_devices import ImmediateValue
 from .DeviceSetup import hardware
 from .opcodes import ops_by_num, fetch, InvalidOpcodeException
 from .pinclient import PinClient
@@ -15,8 +15,6 @@ class AssistedCPUEngine:
         self.flags_cache: Flags | None = None
         self.opcode_cache: int | None = None
         self.op_extension = 0
-
-        self.iomon = IOMonitor()
 
         # RAM hooks
         self.imm = ImmediateValue(client)
@@ -69,8 +67,6 @@ class AssistedCPUEngine:
                 progmem_out = True
             else:
                 control.enable(pin)
-
-        result: RunMessage | None = None
 
         self.client.ctrl_commit(control)
 
