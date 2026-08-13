@@ -9,6 +9,7 @@ module io_control (
 
     output [7:0] sel_x,
     output [7:0] sel_y,
+    output [7:0] sel_p,
     inout [7:0] io_bus
 );
 
@@ -43,5 +44,7 @@ module io_control (
         .dir(from_devn),
         .oen(from_devn && to_devn)
     );
+
+    assign sel_p = port_addr;
 
 endmodule

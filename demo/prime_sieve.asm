@@ -11,9 +11,6 @@ sieve_start:
     ; also, value of 0 is used frequently
     ldi C, 0
 
-    ; switch numeric display to mode 0 - unsigned decimal
-    out DISPLAY_NUM_MODE, C
-
     ; start with seg0[2]
     ldi A, 2
     lea TDP, seg0
@@ -45,7 +42,7 @@ sieve_start:
         beq seg0_next
 
             ; print out
-            out DISPLAY_NUM_DATA, B
+            out DISPLAY_NUM_UNSIGNED, B
 
             ; mark multiples, starting from next one
             mov A, B
@@ -170,7 +167,7 @@ sieve_start:
                 ld B, r_low
                 add B, A
 
-                out DISPLAY_NUM_DATA, B
+                out DISPLAY_NUM_UNSIGNED, B
 
             seg_n_print_skip:
 

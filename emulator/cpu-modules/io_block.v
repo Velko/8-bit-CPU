@@ -30,9 +30,8 @@ module io_block (
     display_num ndisp(
         .main_bus(io_bus),
         .clk(clk),
-        .load_val(ctl.sel_x[0] == 1'b0 && ctl.sel_y[0] == 1'b0),
-        .load_mode(ctl.sel_x[1] == 1'b0 && ctl.sel_y[0] == 1'b0),
-        .reset(reset)
+        .load_val(ctl.sel_p[7:2] == 6'b0 && !to_devn),
+        .mode(ctl.sel_p[1:0])
     );
 
     display_char cdisp(

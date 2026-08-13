@@ -18,15 +18,12 @@ init_rand:
     st rand_x, A
     call rnd8
 
-    ldi A, 2
-    out DISPLAY_NUM_MODE, A
-
     ldi A, 0
 .loop:
     push A
     call rnd8
     call reduce_to_38
-    out DISPLAY_NUM_DATA, A
+    out DISPLAY_NUM_HEX, A
     pop A
     inc A
     bcc .loop

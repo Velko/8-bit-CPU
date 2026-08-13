@@ -43,11 +43,8 @@ impl IOPorts for Peripherals {
 
     fn write_port(&mut self, port: u8, value: u8) -> Option<IOMessage> {
         match port {
-            0 => {
-                return Some(IOMessage::Out { payload: self.display_numeric.format(value), port: port });
-            },
-            1 => {
-                self.display_numeric.set_mode(value);
+            0..4 => {
+                return Some(IOMessage::Out { payload: self.display_numeric.format(value, port), port: 0 });
             },
             4 => {
                 return Some(IOMessage::Out { payload: self.display_char.format(value), port: port });

@@ -26,11 +26,9 @@ outb_args = [
 
 @pytest.mark.parametrize("_desc,mode,val,expected", outb_args)
 def test_outa_emu_num(cpu_helper: CPUHelper, acpu: AssistedCPU, _desc: str, mode: int, val: int, expected: str) -> None:
-    cpu_helper.regs.B = mode
-    acpu.out(1, B)
 
     cpu_helper.regs.A = val
-    message = acpu.out(0, A)
+    message = acpu.out(mode, A)
 
     assert isinstance(message, OutMessage)
     assert message.target == 0
@@ -41,12 +39,10 @@ def test_outa_emu_num(cpu_helper: CPUHelper, acpu: AssistedCPU, _desc: str, mode
 @pytest.mark.parametrize("_desc,mode,val,expected", outb_args)
 def test_outb_int_hw(cpu_helper: CPUHelper, _desc: str, mode: int, val: int, expected: str, asm_compiler: Compiler) -> None:
 
-    cpu_helper.regs.D = mode
     cpu_helper.regs.B = val
 
     out_test_prog = asm_compiler.compile(f"""
-        out 1, D
-        out 0, B
+        out {mode}, B
     """)
 
     # run program on hardware

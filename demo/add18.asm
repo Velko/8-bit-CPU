@@ -13,12 +13,12 @@
     ldi B, 18
 loop:
     add A, B
-    out DISPLAY_NUM_DATA, A
+    out DISPLAY_NUM_UNSIGNED, A
     bcc loop
 
     sub A, B
 subloop:
-    out DISPLAY_NUM_DATA, A
+    out DISPLAY_NUM_UNSIGNED, A
     sub A, B
     bcc subloop
 

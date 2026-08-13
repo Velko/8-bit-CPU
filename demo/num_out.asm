@@ -1,19 +1,25 @@
 #include "velkocpu.def"
 
-
-    ldi A, 0
-next_mode:
-    out DISPLAY_NUM_MODE, A
-
     ldi C, 0
-next_number:
-    out DISPLAY_NUM_DATA, C
+next_unsigned:
+    out DISPLAY_NUM_UNSIGNED, C
     inc C
-    bcc next_number
+    bcc next_unsigned
 
-    inc A
-    cmpi A, 4
-    bne next_mode
+next_signed:
+    out DISPLAY_NUM_SIGNED, C
+    inc C
+    bcc next_signed
+
+next_hex:
+    out DISPLAY_NUM_HEX, C
+    inc C
+    bcc next_hex
+
+next_oct:
+    out DISPLAY_NUM_OCT, C
+    inc C
+    bcc next_oct
 
     hlt
 

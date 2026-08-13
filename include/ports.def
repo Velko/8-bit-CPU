@@ -1,6 +1,9 @@
-#const(noemit) DISPLAY_NUM_DATA = 0
-#const(noemit) DISPLAY_NUM_MODE = 1
-#const(noemit) DISPLAY_CHR_DATA = 4
+#const(noemit) DISPLAY_NUM_UNSIGNED = 0x00
+#const(noemit) DISPLAY_NUM_SIGNED   = 0x01
+#const(noemit) DISPLAY_NUM_HEX      = 0x02
+#const(noemit) DISPLAY_NUM_OCT      = 0x03
+#const(noemit) DISPLAY_CHR_DATA     = 0x04
+
 #const(noemit) DISPLAY_LCD_DATA = 0x10
 #const(noemit) DISPLAY_LCD_CMD  = 0x11
 

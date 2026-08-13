@@ -69,7 +69,7 @@ skip_add:
 
     bcc next_bit
 
-    out DISPLAY_NUM_DATA, A
+    out DISPLAY_NUM_UNSIGNED, A
 
     inc D
     ldi B, 16

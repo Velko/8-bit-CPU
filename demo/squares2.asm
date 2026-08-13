@@ -54,7 +54,7 @@ skip_add:
             dec C
             bne next_bit
 
-        out DISPLAY_NUM_DATA, A
+        out DISPLAY_NUM_UNSIGNED, A
 
         inc D
         ldi A, 16

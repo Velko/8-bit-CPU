@@ -2,17 +2,15 @@ module display_num(
     input [7:0] main_bus,
     input clk,
     input load_val,
-    input load_mode,
-    input reset
+    input [1:0] mode
 );
 
     wire signed [7:0] signed_bus;
     reg [255:0] out_fmt;
-    reg [7:0] ifmt_mode;
 
     always @(posedge clk) begin
         if (load_val) begin
-            case (ifmt_mode)
+            case (mode)
             0: $sformat(out_fmt, "#OUT#0# %d\\n", main_bus);
             1: $sformat(out_fmt, "#OUT#0#%d\\n", signed_bus);
             2: $sformat(out_fmt, "#OUT#0#h %h\\n", main_bus);
@@ -22,15 +20,6 @@ module display_num(
             $hdb_send_str(0, out_fmt);
         end
 
-        if (load_mode) begin
-            ifmt_mode <= main_bus;
-        end
-    end
-
-    always @(reset) begin
-        if (reset == 1'b1) begin
-            ifmt_mode <= 0;
-        end
     end
 
     assign signed_bus = main_bus;
