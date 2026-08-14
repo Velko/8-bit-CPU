@@ -143,8 +143,9 @@ class PinClient:
     def shutdown(self) -> None:
         self.send_cmd('Q')
 
-    def register_endpoint(self, channel: int) -> None:
-        port = self.transport.getsockname()[1]
+    def register_endpoint(self, channel: int, port: int | None = None) -> None:
+        if port is None:
+            port = self.transport.getsockname()[1]
         self.send_cmd(f"E{channel:x};{port:x}N")
 
 def open_port() -> socket.socket:

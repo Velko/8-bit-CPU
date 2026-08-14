@@ -9,8 +9,10 @@ from libcpu.messages import OutMessage, HaltMessage, BrkMessage, RunMessage
 from libcpu.pinclient import PinClient, get_client_instance
 from libcpu.cpu_helper import CPUHelper
 from libcpu.pretty import format_message
+from libcpu.uart_channel import UARTChannel
 
 cpu_helper: CPUHelper = CPUHelper(get_client_instance())
+uart = UARTChannel()
 
 RAM_OFFSET = 0x0000
 
@@ -32,27 +34,33 @@ def run() -> None:
     cpu_helper.client.run_program()
 
     for msg in io_stream(cpu_helper.client):
-        match msg:
-            case HaltMessage():
-                print ("# Halted", flush=True, file=sys.stderr)
-                break
-
-            case BrkMessage():
-                print ("# Break", flush=True, file=sys.stderr)
-                break
-
-            case OutMessage(target, payload):
-                if sys.stdout.isatty():
-                    print(format_message(target, payload), end="", flush=True)
-                else:
-                    print(payload, end="", flush=True)
-
-            case UserInputMessage(data):
-                cpu_helper.client.send_raw(data)
+        if not handle_message(msg):
+            break
 
 @dataclass
 class UserInputMessage:
     data: bytes
+
+def handle_message(msg: RunMessage | UserInputMessage) -> bool:
+    match msg:
+        case HaltMessage():
+            print ("# Halted", flush=True, file=sys.stderr, end="\r\n")
+            return False
+
+        case BrkMessage():
+            print ("# Break", flush=True, file=sys.stderr, end="\r\n")
+            return False
+
+        case OutMessage(target, payload):
+            if sys.stdout.isatty():
+                print(format_message(target, payload), end="", flush=True)
+            else:
+                print(payload, end="", flush=True)
+
+        case UserInputMessage(data):
+            uart.send(data)
+
+    return True
 
 def io_stream(client: PinClient) -> Generator[RunMessage | UserInputMessage]:
     streams = [sys.stdin, client.transport]
@@ -73,6 +81,8 @@ def io_stream(client: PinClient) -> Generator[RunMessage | UserInputMessage]:
             return
 
 def monitor() -> None:
+    cpu_helper.client.register_endpoint(2, uart.get_port())
+
     print ("# Running (raw)...", flush=True, file=sys.stderr)
     cpu_helper.client.run_program()
 
@@ -83,7 +93,7 @@ def monitor() -> None:
         old = termios.tcgetattr(fd)
         tty.setraw(fd)
 
-    streams = [sys.stdin, cpu_helper.client.transport]
+    streams = [sys.stdin, cpu_helper.client.transport, uart.transport]
 
     try:
         while True:
@@ -100,11 +110,13 @@ def monitor() -> None:
                 cpu_helper.client.send_raw(data)
 
             if cpu_helper.client.transport in r:
-                text = cpu_helper.client.receive_raw()
-                print(text, flush=True, end="")
-                if text.endswith("#HLT\r\n"):
-                    print ("# Halted", flush=True, file=sys.stderr, end="\r\n")
+                message = cpu_helper.client.receive_message()
+                if not handle_message(message):
                     return
+
+            if uart.transport in r:
+                text = uart.receive()
+                print(text, flush=True, end="")
     finally:
         if interactive:
             termios.tcsetattr(fd, termios.TCSADRAIN, old)
