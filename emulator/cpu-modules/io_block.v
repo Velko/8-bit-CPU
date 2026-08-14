@@ -30,7 +30,7 @@ module io_block (
     display_num ndisp(
         .main_bus(io_bus),
         .clk(clk),
-        .load_val(ctl.sel_p[7:2] == 6'b0 && !to_devn),
+        .load_val(ctl.sel_p[3:2] == 2'b0 && ctl.sel_y[0] == 1'b0),
         .mode(ctl.sel_p[1:0])
     );
 
