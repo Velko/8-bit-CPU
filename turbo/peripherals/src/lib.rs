@@ -19,12 +19,12 @@ pub struct Peripherals {
 }
 
 impl Peripherals {
-    pub fn new(comm_channel0: Rc<RefCell<CommsChannel>>) -> Self {
+    pub fn new(channels: &[Rc<RefCell<CommsChannel>>]) -> Self {
         Self {
             display_numeric: DisplayNumeric::new(),
             display_char: DisplayChar::new(),
             lcd: Lcd::new(),
-            uart: Uart::new(comm_channel0),
+            uart: Uart::new(channels[2].clone()),
             timer: Timer::new(),
         }
     }
