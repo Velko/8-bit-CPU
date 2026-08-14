@@ -9,7 +9,7 @@ class UARTChannel:
         self.transport.bind(("", 0))
 
     def get_port(self) -> int:
-        return self.transport.getsockname()[1]
+        return int(self.transport.getsockname()[1])
 
     def receive(self) -> str:
         packet, _ = self.transport.recvfrom(1024)
