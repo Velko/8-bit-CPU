@@ -25,23 +25,7 @@ def upload(filename: str) -> None:
     cpu_helper.ram.write(RAM_OFFSET, binary)
 
 
-
-def run() -> None:
-
-    # Drumroll... now it should happen for real
-    print ("# Running ...", flush=True, file=sys.stderr)
-
-    cpu_helper.client.run_program()
-
-    for msg in io_stream(cpu_helper.client):
-        if not handle_message(msg):
-            break
-
-@dataclass
-class UserInputMessage:
-    data: bytes
-
-def handle_message(msg: RunMessage | UserInputMessage) -> bool:
+def handle_message(msg: RunMessage) -> bool:
     match msg:
         case HaltMessage():
             print ("# Halted", flush=True, file=sys.stderr, end="\r\n")
@@ -57,38 +41,15 @@ def handle_message(msg: RunMessage | UserInputMessage) -> bool:
             else:
                 print(payload, end="", flush=True)
 
-        case UserInputMessage(data):
-            uart.send(data)
-
     return True
 
-def io_stream(client: PinClient) -> Generator[RunMessage | UserInputMessage]:
-    streams = [sys.stdin, client.transport]
-    while True:
-        try:
-            r, _, _ = select.select(streams, [], [])
-            if sys.stdin in r:
-                data = os.read(sys.stdin.fileno(), 32)
-                if not data:
-                    print ("# EOF", flush=True, file=sys.stderr, end="\r\n")
-                    streams.remove(sys.stdin)
-                    continue
-                yield UserInputMessage(data)
-            if client.transport in r:
-                yield client.receive_message()
-        except KeyboardInterrupt:
-            print ("# Interrupted", flush=True, file=sys.stderr, end="\r\n")
-            return
-
-def monitor() -> None:
+def run(interactive: bool) -> None:
     cpu_helper.client.register_endpoint(2, uart.get_port())
 
     print ("# Running (raw)...", flush=True, file=sys.stderr)
     cpu_helper.client.run_program()
 
     fd = sys.stdin.fileno()
-    interactive = sys.stdin.isatty()
-
     if interactive:
         old = termios.tcgetattr(fd)
         tty.setraw(fd)
@@ -107,7 +68,7 @@ def monitor() -> None:
                 if b'\x03' in data:  # Ctrl-C
                     print ("# Interrupted", flush=True, file=sys.stderr, end="\r\n")
                     return
-                cpu_helper.client.send_raw(data)
+                uart.send(data)
 
             if cpu_helper.client.transport in r:
                 message = cpu_helper.client.receive_message()
@@ -137,6 +98,6 @@ if __name__ == "__main__":
     upload(args.filename)
     cpu_helper.client.reset()
     if args.monitor:
-        monitor()
+        run(sys.stdin.isatty())
     elif not args.upload_only:
-        run()
+        run(False)
