@@ -21,7 +21,6 @@ module mem_block(
         output [7:0] iout
 );
 
-    //TODO: replace quick boolean operators with proper handling using 74* chips
     address_counter pc(
         .abus(abus),
         .resetn(rstn),

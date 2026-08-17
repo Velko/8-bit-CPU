@@ -1,8 +1,3 @@
-//TODO: UART should get its own CommsChannel, and should not interfere with the main one.
-// Current implementation, however, utilizes the main one for compatibility with another
-// (VeriLog) implementation, and the Python client side. All parts should be ported to
-// the dedicated UART channel eventually, but we can not do it all at once.
-
 use std::rc::Rc;
 use std::cell::RefCell;
 use std::thread;
