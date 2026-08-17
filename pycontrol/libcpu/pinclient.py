@@ -111,13 +111,6 @@ class PinClient:
         while True:
             yield self.receive_message()
 
-    def receive_raw(self) -> str:
-        packet, _ = self.transport.recvfrom(1024)
-        return packet.decode('ascii')
-
-    def send_raw(self, data: bytes) -> None:
-        self.transport.sendto(data, (TARGET_IP, TARGET_PORT))
-
     OUT_RE = re.compile(r"#OUT#([0-9A-Fa-f]+)#(.*)")
 
     def receive_message(self) -> RunMessage:
