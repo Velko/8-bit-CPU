@@ -21,19 +21,19 @@ module uart(
 
     always @(negedge clk) begin
         if (sel_data && rnw) begin
-            $hdb_discard_char();
+            $hdb_discard_char(2);
         end
     end
 
     always @(posedge sel_status or posedge rnw) begin
         if (sel_status && rnw) begin
-            $hdb_check_input(status);
+            $hdb_check_input(2, status);
         end
     end
 
     always @(posedge sel_data or posedge rnw) begin
         if (sel_data && rnw) begin
-            $hdb_peek_char(in_data);
+            $hdb_peek_char(2, in_data);
         end
     end
 

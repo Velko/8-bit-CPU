@@ -8,11 +8,16 @@ static int hdb_get_char_handler(char *user_data)
     vpiHandle systfref = vpi_handle(vpiSysTfCall, NULL);
     vpiHandle args_iter = vpi_iterate(vpiArgument, systfref);
 
+    vpiHandle endpoint_arg = vpi_scan(args_iter);
     vpiHandle chr_arg = vpi_scan(args_iter);
+
+    struct t_vpi_value endpoint_val;
+    endpoint_val.format = vpiIntVal;
+    vpi_get_value(endpoint_arg, &endpoint_val);
 
     struct t_vpi_value chr_val;
     chr_val.format = vpiIntVal;
-    chr_val.value.integer = hdb_get_char();
+    chr_val.value.integer = hdb_get_char(endpoint_val.value.integer);
     vpi_put_value(chr_arg, &chr_val, NULL, vpiNoDelay);
 
     vpi_free_object(args_iter);
@@ -27,11 +32,16 @@ static int hdb_peek_char_handler(char *user_data)
     vpiHandle systfref = vpi_handle(vpiSysTfCall, NULL);
     vpiHandle args_iter = vpi_iterate(vpiArgument, systfref);
 
+    vpiHandle endpoint_arg = vpi_scan(args_iter);
     vpiHandle chr_arg = vpi_scan(args_iter);
+
+    struct t_vpi_value endpoint_val;
+    endpoint_val.format = vpiIntVal;
+    vpi_get_value(endpoint_arg, &endpoint_val);
 
     struct t_vpi_value chr_val;
     chr_val.format = vpiIntVal;
-    chr_val.value.integer = hdb_peek_char();
+    chr_val.value.integer = hdb_peek_char(endpoint_val.value.integer);
     vpi_put_value(chr_arg, &chr_val, NULL, vpiNoDelay);
 
     vpi_free_object(args_iter);
@@ -46,11 +56,16 @@ static int hdb_get_int_handler(char *user_data)
     vpiHandle systfref = vpi_handle(vpiSysTfCall, NULL);
     vpiHandle args_iter = vpi_iterate(vpiArgument, systfref);
 
+    vpiHandle endpoint_arg = vpi_scan(args_iter);
     vpiHandle int_arg = vpi_scan(args_iter);
+
+    struct t_vpi_value endpoint_val;
+    endpoint_val.format = vpiIntVal;
+    vpi_get_value(endpoint_arg, &endpoint_val);
 
     struct t_vpi_value int_val;
     int_val.format = vpiIntVal;
-    int_val.value.integer = hdb_get_int();
+    int_val.value.integer = hdb_get_int(endpoint_val.value.integer);
     vpi_put_value(int_arg, &int_val, NULL, vpiNoDelay);
 
     vpi_free_object(args_iter);
@@ -140,11 +155,17 @@ static int hdb_check_input_handler(char *user_data)
     vpiHandle systfref = vpi_handle(vpiSysTfCall, NULL);
     vpiHandle args_iter = vpi_iterate(vpiArgument, systfref);
 
+    vpiHandle endpoint_arg = vpi_scan(args_iter);
     vpiHandle chr_arg = vpi_scan(args_iter);
+
+    struct t_vpi_value endpoint_val;
+    endpoint_val.format = vpiIntVal;
+    vpi_get_value(endpoint_arg, &endpoint_val);
 
     struct t_vpi_value status_val;
     status_val.format = vpiIntVal;
-    status_val.value.integer = hdb_check_input();
+
+    status_val.value.integer = hdb_check_input(endpoint_val.value.integer);
     vpi_put_value(chr_arg, &status_val, NULL, vpiNoDelay);
 
     vpi_free_object(args_iter);
@@ -156,7 +177,18 @@ static int hdb_discard_char_handler(char *user_data)
 {
     (void)user_data; // suppress [-Wunused-parameter]
 
-    hdb_discard_char();
+    vpiHandle systfref = vpi_handle(vpiSysTfCall, NULL);
+    vpiHandle args_iter = vpi_iterate(vpiArgument, systfref);
+
+    vpiHandle endpoint_arg = vpi_scan(args_iter);
+
+    struct t_vpi_value endpoint_val;
+    endpoint_val.format = vpiIntVal;
+    vpi_get_value(endpoint_arg, &endpoint_val);
+
+    hdb_discard_char(endpoint_val.value.integer);
+
+    vpi_free_object(args_iter);
 
     return 0;
 }

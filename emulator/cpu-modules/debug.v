@@ -64,13 +64,13 @@ module debug (
     task write_ram();
         begin
             // Set control word (client supplies the bits)
-            $hdb_get_int(control_word_l);
+            $hdb_get_int(0, control_word_l);
 
             // Start address
-            $hdb_get_int(addr);
+            $hdb_get_int(0, addr);
             faddr <= 1;
 
-            $hdb_get_int(temp);
+            $hdb_get_int(0, temp);
             fdata <= 1;
 
             while (temp < 32'h100) begin
@@ -78,7 +78,7 @@ module debug (
                 data <= temp[7:0];
                 #1
                 tick();
-                $hdb_get_int(temp);
+                $hdb_get_int(0, temp);
                 addr++;
             end
         end
@@ -91,7 +91,7 @@ module debug (
             #100; // give long enough for clock to disengage
 
             while (ctrlen) begin
-                $hdb_get_char(cmd);
+                $hdb_get_char(0, cmd);
                 case (cmd)
                     "I": begin
                         // Identify
@@ -100,7 +100,7 @@ module debug (
 
                     "A": begin
                         // Write address
-                        $hdb_get_int(addr);
+                        $hdb_get_int(0, addr);
                         faddr <= 1;
                     end
 
@@ -111,7 +111,7 @@ module debug (
 
                     "B": begin
                         // Write bus
-                        $hdb_get_int(data);
+                        $hdb_get_int(0, data);
                         fdata <= 1;
                     end
 
@@ -135,12 +135,12 @@ module debug (
                         // Off
                         faddr <= 0;
                         fdata <= 0;
-                        $hdb_get_int(control_word_l);
+                        $hdb_get_int(0, control_word_l);
                     end
 
                     "M": begin
                         // Set control word
-                        $hdb_get_int(control_word_l);
+                        $hdb_get_int(0, control_word_l);
                     end
 
                     "N", 8'hff: begin
@@ -170,7 +170,7 @@ module debug (
 
                     "r": begin
                         // read current_opcode
-                        $hdb_get_int(temp); // client sends control word for IRFetch, discard it
+                        $hdb_get_int(0, temp); // client sends control word for IRFetch, discard it
                         $hdb_send_int(0, iout);
                     end
 
@@ -194,8 +194,8 @@ module debug (
                     end
 
                     "E": begin
-                        $hdb_get_int(temp);
-                        $hdb_get_int(temp2);
+                        $hdb_get_int(0, temp);
+                        $hdb_get_int(0, temp2);
                         $hdb_register_endpoint(temp, temp2);
                     end
 

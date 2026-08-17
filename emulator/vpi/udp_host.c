@@ -12,7 +12,7 @@
 
 static uint16_t endpoint_ports[NUM_CHANNELS] = {0};
 
-int channel_open(void)
+int channel_open(int endpoint)
 {
     // create an udp socket and bind it to LISTEN_PORT
     int fd = socket(AF_INET, SOCK_DGRAM, 0);
@@ -24,7 +24,7 @@ int channel_open(void)
     memset(&addr, 0, sizeof(addr));
     addr.sin_family = AF_INET;
     addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-    addr.sin_port = htons(LISTEN_PORT);
+    addr.sin_port = htons(LISTEN_PORT + endpoint); // use a different port for each endpoint
     if (bind(fd, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
         perror("bind");
         exit(EXIT_FAILURE);

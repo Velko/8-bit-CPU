@@ -10,57 +10,59 @@
 #include <sys/select.h>
 
 
-static int _channel_fd;
-static struct ringbuffer _ringbuffer;
+static int _channel_fds[NUM_CHANNELS];
+static struct ringbuffer _ringbuffers[NUM_CHANNELS];
 
 
 void hdb_setup_comm_lazy(void)
 {
-    _channel_fd = -1;
-}
-
-static void ensure_initialized(void)
-{
-    if (_channel_fd == -1)
-    {
-        _channel_fd = channel_open();
-        ringbuffer_init(&_ringbuffer, _channel_fd);
+    for (int i = 0; i < NUM_CHANNELS; i++) {
+        _channel_fds[i] = -1;
     }
 }
 
-static int get_channel(void)
+static void ensure_initialized(int endpoint)
 {
-    ensure_initialized();
-    return _channel_fd;
+    if (_channel_fds[endpoint] == -1)
+    {
+        _channel_fds[endpoint] = channel_open(endpoint);
+        ringbuffer_init(&_ringbuffers[endpoint], _channel_fds[endpoint]);
+    }
 }
 
-static struct ringbuffer *get_ringbuffer(void)
+static int get_channel(int endpoint)
 {
-    ensure_initialized();
-    return &_ringbuffer;
+    ensure_initialized(endpoint);
+    return _channel_fds[endpoint];
 }
 
-int hdb_get_char(void)
+static struct ringbuffer *get_ringbuffer(int endpoint)
 {
-    struct ringbuffer *rb = get_ringbuffer();
+    ensure_initialized(endpoint);
+    return &_ringbuffers[endpoint];
+}
+
+int hdb_get_char(int endpoint)
+{
+    struct ringbuffer *rb = get_ringbuffer(endpoint);
 
     int val = ringbuffer_read_blocking(rb);
 
     return val;
 }
 
-int hdb_peek_char(void)
+int hdb_peek_char(int endpoint)
 {
-    struct ringbuffer *rb = get_ringbuffer();
+    struct ringbuffer *rb = get_ringbuffer(endpoint);
 
     int val = ringbuffer_peek(rb);
 
     return val;
 }
 
-int hdb_get_int(void)
+int hdb_get_int(int endpoint)
 {
-    struct ringbuffer *rb = get_ringbuffer();
+    struct ringbuffer *rb = get_ringbuffer(endpoint);
 
     int val = ringbuffer_read_int_blocking(rb);
 
@@ -69,7 +71,7 @@ int hdb_get_int(void)
 
 void hdb_send_char(int endpoint, int value)
 {
-    int channel = get_channel();
+    int channel = get_channel(endpoint);
 
     int res = channel_send(channel, endpoint, &value, 1);
     if (res < 0) {
@@ -81,7 +83,7 @@ void hdb_send_char(int endpoint, int value)
 void hdb_send_int(int endpoint, int value)
 {
     char buffer[20];
-    int channel = get_channel();
+    int channel = get_channel(endpoint);
 
     int nbytes = snprintf(buffer, sizeof(buffer), "%x\n", value);
 
@@ -105,7 +107,7 @@ void hdb_send_int(int endpoint, int value)
 void hdb_send_str(int endpoint, const char *value)
 {
     char buffer[1024];
-    int channel = get_channel();
+    int channel = get_channel(endpoint);
 
     int nbytes = snprintf(buffer, sizeof(buffer), "%s\r\n", value);
 
@@ -126,18 +128,18 @@ void hdb_send_str(int endpoint, const char *value)
     }
 }
 
-int hdb_check_input(void)
+int hdb_check_input(int endpoint)
 {
-    struct ringbuffer *rb = get_ringbuffer();
+    struct ringbuffer *rb = get_ringbuffer(endpoint);
 
     int val = ringbuffer_peek(rb);
 
     return val != -1;
 }
 
-void hdb_discard_char(void)
+void hdb_discard_char(int endpoint)
 {
-    struct ringbuffer *rb = get_ringbuffer();
+    struct ringbuffer *rb = get_ringbuffer(endpoint);
 
     ringbuffer_discard(rb);
 }
