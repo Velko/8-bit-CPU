@@ -14,31 +14,21 @@ static int _channel_fds[NUM_CHANNELS];
 static struct ringbuffer _ringbuffers[NUM_CHANNELS];
 
 
-void hdb_setup_comm_lazy(void)
+void hdb_setup_comm(void)
 {
     for (int i = 0; i < NUM_CHANNELS; i++) {
-        _channel_fds[i] = -1;
-    }
-}
-
-static void ensure_initialized(int endpoint)
-{
-    if (_channel_fds[endpoint] == -1)
-    {
-        _channel_fds[endpoint] = channel_open(endpoint);
-        ringbuffer_init(&_ringbuffers[endpoint], _channel_fds[endpoint]);
+        _channel_fds[i] = channel_open(i);
+        ringbuffer_init(&_ringbuffers[i], _channel_fds[i]);
     }
 }
 
 static int get_channel(int endpoint)
 {
-    ensure_initialized(endpoint);
     return _channel_fds[endpoint];
 }
 
 static struct ringbuffer *get_ringbuffer(int endpoint)
 {
-    ensure_initialized(endpoint);
     return &_ringbuffers[endpoint];
 }
 

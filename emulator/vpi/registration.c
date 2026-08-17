@@ -2,7 +2,7 @@
 #include "hdb_comm.h"
 
 void (*vlog_startup_routines[])(void) = {
-    hdb_setup_comm_lazy,
+    hdb_setup_comm,
     register_hdb_get_char,
     register_hdb_peek_char,
     register_hdb_get_int,

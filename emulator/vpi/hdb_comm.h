@@ -4,9 +4,9 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#define NUM_CHANNELS 16
+#define NUM_CHANNELS 3
 
-void hdb_setup_comm_lazy(void);
+void hdb_setup_comm(void);
 int hdb_get_char(int endpoint);
 int hdb_peek_char(int endpoint);
 int hdb_get_int(int endpoint);
