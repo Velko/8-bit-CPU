@@ -46,7 +46,11 @@ def handle_message(msg: RunMessage) -> bool:
 def run(interactive: bool) -> None:
     cpu_helper.client.register_endpoint(2, uart.get_port())
 
-    print ("# Running (raw)...", flush=True, file=sys.stderr)
+    if interactive:
+        print ("# Running (raw)...", flush=True, file=sys.stderr)
+    else:
+        print ("# Running...", flush=True, file=sys.stderr)
+
     cpu_helper.client.run_program()
 
     fd = sys.stdin.fileno()
