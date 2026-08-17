@@ -5,6 +5,8 @@
 
 use std::rc::Rc;
 use std::cell::RefCell;
+use std::thread;
+use std::time::Duration;
 use turbo_bridge::CommsChannel;
 
 pub struct Uart {
@@ -20,6 +22,7 @@ impl Uart {
 
     pub fn send_char(&self, value: u8) {
         self.comm_channel.borrow().send_response_byte(value);
+        thread::sleep(Duration::from_micros(87));
     }
 
     pub fn get_status(&self) -> u8 {
