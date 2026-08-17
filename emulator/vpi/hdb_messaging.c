@@ -10,60 +10,64 @@
 #include <sys/select.h>
 
 
-static int _channel_fds[NUM_CHANNELS];
-static struct ringbuffer _ringbuffers[NUM_CHANNELS];
+struct comm_channel {
+    int fd;
+    struct ringbuffer ringbuffer;
+    uint16_t remote_port;
+};
 
+static struct comm_channel _channels[NUM_CHANNELS];
 
 void hdb_setup_comm(void)
 {
     for (int i = 0; i < NUM_CHANNELS; i++) {
-        _channel_fds[i] = channel_open(i);
-        ringbuffer_init(&_ringbuffers[i], _channel_fds[i]);
+        _channels[i].remote_port = 0;
+        _channels[i].fd = channel_open(i);
+        ringbuffer_init(&_channels[i].ringbuffer, _channels[i].fd);
     }
 }
 
-static int get_channel(int endpoint)
+static struct comm_channel *get_channel(int endpoint)
 {
-    return _channel_fds[endpoint];
-}
-
-static struct ringbuffer *get_ringbuffer(int endpoint)
-{
-    return &_ringbuffers[endpoint];
+    if (endpoint < 0 || endpoint >= NUM_CHANNELS) {
+        fprintf(stderr, "Invalid endpoint: %d\n", endpoint);
+        exit(EXIT_FAILURE);
+    }
+    return &_channels[endpoint];
 }
 
 int hdb_get_char(int endpoint)
 {
-    struct ringbuffer *rb = get_ringbuffer(endpoint);
+    struct comm_channel *channel = get_channel(endpoint);
 
-    int val = ringbuffer_read_blocking(rb);
+    int val = ringbuffer_read_blocking(&channel->ringbuffer);
 
     return val;
 }
 
 int hdb_peek_char(int endpoint)
 {
-    struct ringbuffer *rb = get_ringbuffer(endpoint);
+    struct comm_channel *channel = get_channel(endpoint);
 
-    int val = ringbuffer_peek(rb);
+    int val = ringbuffer_peek(&channel->ringbuffer);
 
     return val;
 }
 
 int hdb_get_int(int endpoint)
 {
-    struct ringbuffer *rb = get_ringbuffer(endpoint);
+    struct comm_channel *channel = get_channel(endpoint);
 
-    int val = ringbuffer_read_int_blocking(rb);
+    int val = ringbuffer_read_int_blocking(&channel->ringbuffer);
 
     return val;
 }
 
 void hdb_send_char(int endpoint, int value)
 {
-    int channel = get_channel(endpoint);
+    struct comm_channel *channel = get_channel(endpoint);
 
-    int res = channel_send(channel, endpoint, &value, 1);
+    int res = channel_send(channel->fd, channel->remote_port, &value, 1);
     if (res < 0) {
         perror("hdb_send_char");
         exit(EXIT_FAILURE);
@@ -73,7 +77,7 @@ void hdb_send_char(int endpoint, int value)
 void hdb_send_int(int endpoint, int value)
 {
     char buffer[20];
-    int channel = get_channel(endpoint);
+    struct comm_channel *channel = get_channel(endpoint);
 
     int nbytes = snprintf(buffer, sizeof(buffer), "%x\n", value);
 
@@ -87,7 +91,7 @@ void hdb_send_int(int endpoint, int value)
         exit(EXIT_FAILURE);
     }
 
-    int res = channel_send(channel, endpoint, buffer, nbytes);
+    int res = channel_send(channel->fd, channel->remote_port, buffer, nbytes);
     if (res < 0) {
         perror("hdb_send_int");
         exit(EXIT_FAILURE);
@@ -97,7 +101,7 @@ void hdb_send_int(int endpoint, int value)
 void hdb_send_str(int endpoint, const char *value)
 {
     char buffer[1024];
-    int channel = get_channel(endpoint);
+    struct comm_channel *channel = get_channel(endpoint);
 
     int nbytes = snprintf(buffer, sizeof(buffer), "%s\r\n", value);
 
@@ -111,7 +115,7 @@ void hdb_send_str(int endpoint, const char *value)
         exit(EXIT_FAILURE);
     }
 
-    int res = channel_send(channel, endpoint, buffer, nbytes);
+    int res = channel_send(channel->fd, channel->remote_port, buffer, nbytes);
     if (res < 0) {
         perror("hdb_send_str");
         exit(EXIT_FAILURE);
@@ -120,16 +124,24 @@ void hdb_send_str(int endpoint, const char *value)
 
 int hdb_check_input(int endpoint)
 {
-    struct ringbuffer *rb = get_ringbuffer(endpoint);
+    struct comm_channel *channel = get_channel(endpoint);
 
-    int val = ringbuffer_peek(rb);
+    int val = ringbuffer_peek(&channel->ringbuffer);
 
     return val != -1;
 }
 
 void hdb_discard_char(int endpoint)
 {
-    struct ringbuffer *rb = get_ringbuffer(endpoint);
+    struct comm_channel *channel = get_channel(endpoint);
 
-    ringbuffer_discard(rb);
+    ringbuffer_discard(&channel->ringbuffer);
+}
+
+
+void hdb_register_endpoint(int endpoint, uint16_t port)
+{
+    struct comm_channel *channel = get_channel(endpoint);
+
+    channel->remote_port = port;
 }

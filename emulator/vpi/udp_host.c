@@ -10,8 +10,6 @@
 
 #define LISTEN_PORT 8888
 
-static uint16_t endpoint_ports[NUM_CHANNELS] = {0};
-
 int channel_open(int endpoint)
 {
     // create an udp socket and bind it to LISTEN_PORT
@@ -33,22 +31,13 @@ int channel_open(int endpoint)
     return fd;
 }
 
-int channel_send(int fd, int endpoint, const void *buf, size_t len)
+int channel_send(int fd, uint16_t port, const void *buf, size_t len)
 {
-    if (endpoint < 0 || endpoint >= NUM_CHANNELS) {
-        fprintf(stderr, "channel_send: invalid endpoint number: %d\n", endpoint);
-        exit(EXIT_FAILURE);
-    }
-
-    if (endpoint_ports[endpoint] == 0) {
-        endpoint = 0; // fallback to endpoint 0 if the endpoint is not registered
-    }
-
     struct sockaddr_in dest_addr;
     memset(&dest_addr, 0, sizeof(dest_addr));
     dest_addr.sin_family = AF_INET;
     dest_addr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-    dest_addr.sin_port = htons(endpoint_ports[endpoint]);
+    dest_addr.sin_port = htons(port);
 
     return sendto(fd, buf, len, 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
 }
@@ -72,11 +61,3 @@ void channel_close(int fd)
     close(fd);
 }
 
-void hdb_register_endpoint(int endpoint, uint16_t port)
-{
-    if (endpoint < 0 || endpoint >= NUM_CHANNELS) {
-        fprintf(stderr, "hdb_register_endpoint: invalid endpoint number: %d\n", endpoint);
-        exit(EXIT_FAILURE);
-    }
-    endpoint_ports[endpoint] = port;
-}

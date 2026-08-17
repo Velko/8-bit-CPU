@@ -19,7 +19,7 @@ void hdb_discard_char(int endpoint);
 void hdb_register_endpoint(int endpoint, uint16_t port);
 
 int channel_open(int endpoint);
-int channel_send(int fd, int endpoint, const void *buf, size_t len);
+int channel_send(int fd, uint16_t port, const void *buf, size_t len);
 int channel_receive(int fd, void *buf, size_t len);
 void channel_close(int fd);
 
