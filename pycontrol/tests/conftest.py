@@ -10,6 +10,7 @@ from libcpu.assisted_cpu import AssistedCPU
 from libcpu.pinclient import PinClient, get_client_instance
 from libcpu.devices import DeviceBase, Flags, GPRegister
 from libcpu.DeviceSetup import hardware
+from libcpu.uart_channel import UARTChannel
 
 full_exec_supported = True
 full_exec_reason = "code execution is not yet supported"
@@ -36,6 +37,12 @@ def cpu_helper(pins_client_real: PinClient) -> CPUHelper:
     pins_client_real.reset()
     return CPUHelper(pins_client_real)
 
+
+@pytest.fixture(scope="session")
+def uart_channel(pins_client_real: PinClient) -> UARTChannel:
+    channel = UARTChannel()
+    pins_client_real.register_endpoint(2, channel.get_port())
+    return channel
 
 class FillRam:
     def __init__(self, addresses: Sequence[int], values: Iterable[int] | None = None) -> None:

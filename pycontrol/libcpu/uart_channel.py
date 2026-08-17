@@ -1,7 +1,7 @@
 import socket
 
 TARGET_IP = "127.0.0.1"
-TARGET_PORT = 8888
+TARGET_PORT = 8890
 
 class UARTChannel:
     def __init__(self) -> None:

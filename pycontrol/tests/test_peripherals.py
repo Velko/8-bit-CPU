@@ -2,6 +2,7 @@
 
 import pytest
 from conftest import Compiler, full_exec_supported, full_exec_reason
+from libcpu.uart_channel import UARTChannel
 
 pytestmark = pytest.mark.hardware
 
@@ -11,7 +12,7 @@ from libcpu.cpu_helper import CPUHelper
 # Such a case would hang the program
 @pytest.mark.skipif(not full_exec_supported, reason=full_exec_reason)
 @pytest.mark.parametrize("value", [0x00, 0x44, 0xFF])
-def test_uart_input(cpu_helper: CPUHelper, asm_compiler: Compiler, value: int) -> None:
+def test_uart_input(cpu_helper: CPUHelper, asm_compiler: Compiler, uart_channel: UARTChannel, value: int) -> None:
 
     uart_input_prog = asm_compiler.compile(f"""
         wait:
@@ -22,9 +23,11 @@ def test_uart_input(cpu_helper: CPUHelper, asm_compiler: Compiler, value: int) -
 
     # set A, to see if changed
     cpu_helper.regs.A = 0x10
+    # send data to UART, which will be read by the program
+    uart_channel.send(bytes([value]))
 
     # run program on hardware
-    cpu_helper.run_snippet(0x32, uart_input_prog, input=bytes([value]))
+    cpu_helper.run_snippet(0x32, uart_input_prog)
 
     # assert
     val = cpu_helper.regs.A
