@@ -3,6 +3,7 @@ use std::fs::File;
 use crate::bus_sources::BusSourcesPart;
 use crate::mux_part::MuxPart;
 use crate::pin_config;
+use crate::util::{format_type_name, map_device_type};
 
 
 pub struct DirectPinRef {
@@ -275,21 +276,6 @@ fn emit_direct_pins(writer: &mut dyn std::io::Write, direct_pins: &HashMap<u32, 
     Ok(())
 }
 
-fn format_type_name(name: &str) -> String {
-    // Split the name into words based on non-alphanumeric characters and capitalize each word
-    name.split(|c: char| !c.is_alphanumeric())
-        .filter(|s| !s.is_empty())
-        .map(|s| {
-            let mut chars = s.chars();
-            match chars.next() {
-                Some(first) => first.to_ascii_uppercase().to_string() + chars.as_str(),
-                None => String::new(),
-            }
-        })
-        .collect::<Vec<String>>()
-        .join("")
-}
-
 fn emit_default_control_word(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPart>, direct_pins: &HashMap<u32, (String, Vec<DirectPinRef>)>) -> std::io::Result<()> {
     writeln!(writer, "pub const DEFAULT_CW: ControlWord = ControlWordBuilder::bootstrap()")?;
     for (name, _) in muxes.iter() {
@@ -308,15 +294,3 @@ fn emit_default_control_word(writer: &mut dyn std::io::Write, muxes: &HashMap<St
     Ok(())
 }
 
-fn map_device_type<'a>(dev_type: &'a str, name: &str) -> &'a str {
-    eprintln!("Mapping device type: {} with name: {}", dev_type, name);
-    match dev_type {
-        "TransferRegister" if name == "TX" => "TransferRegister::<AddressBusBehavior>",
-        "TransferRegister" => "TransferRegister::<MainBusBehavior>",
-        "ALU" => Box::leak(format!("ALU::<{}>", name).into_boxed_str()),
-        "RAM" => "Memory",
-        "ROM" => "NullSource",
-        "IOController" => "IOController::<P>",
-        _ => dev_type,
-    }
-}
