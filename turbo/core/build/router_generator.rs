@@ -40,23 +40,23 @@ impl DeviceMapPart {
             let mut ids: Vec<String> = vec![format!("\"{}\"", device.name)];
             if BusSourcesPart::is_main_bus_source(&device.dev_type, &device.name) {
                 ids.push(format!("MainBusSource::{}", device.name));
-                self.bus_sources.main_bus_sources.push(device.name.clone());
+                self.bus_sources.main_bus_sources.push(&device.name);
             }
             if BusSourcesPart::is_alu_l_source(&device.dev_type) {
                 ids.push(format!("ALULSource::{}", device.name));
-                self.bus_sources.alu_l_sources.push(device.name.clone());
+                self.bus_sources.alu_l_sources.push(&device.name);
             }
             if BusSourcesPart::is_alu_r_source(&device.dev_type) {
                 ids.push(format!("ALURSource::{}", device.name));
-                self.bus_sources.alu_r_sources.push(device.name.clone());
+                self.bus_sources.alu_r_sources.push(&device.name);
             }
             if BusSourcesPart::is_address_bus_source(&device.dev_type, &device.name) {
                 ids.push(format!("AddressBusSource::{}", device.name));
-                self.bus_sources.address_bus_sources.push(device.name.clone());
+                self.bus_sources.address_bus_sources.push(&device.name);
             }
             if BusSourcesPart::is_flags_source(&device.dev_type) {
                 ids.push(format!("FlagsSource::{}", device.name));
-                self.bus_sources.flags_sources.push(device.name.clone());
+                self.bus_sources.flags_sources.push(&device.name);
             }
             if device.dev_type == "IOController" {
                 ids.push("ioports".to_string());
@@ -82,47 +82,27 @@ impl DeviceMapPart {
         writeln!(writer)?;
 
         writeln!(writer, "    pub fn get_main_bus_value(&self, source: MainBusSource, bus_values: &BusValues) -> u8 {{")?;
-        writeln!(writer, "        match source {{")?;
-        for device in self.bus_sources.main_bus_sources.iter() {
-            writeln!(writer, "            MainBusSource::{} => self.{}.get_value(bus_values),", device, device)?;
-        }
-        writeln!(writer, "        }}")?;
+        self.bus_sources.main_bus_sources.emit_get_value(writer)?;
         writeln!(writer, "    }}")?;
         writeln!(writer)?;
 
         writeln!(writer, "    pub fn get_alu_l_value(&self, source: ALULSource, bus_values: &BusValues) -> u8 {{")?;
-        writeln!(writer, "        match source {{")?;
-        for device in self.bus_sources.alu_l_sources.iter() {
-            writeln!(writer, "            ALULSource::{} => self.{}.get_value(bus_values),", device, device)?;
-        }
-        writeln!(writer, "        }}")?;
+        self.bus_sources.alu_l_sources.emit_get_value(writer)?;
         writeln!(writer, "    }}")?;
         writeln!(writer)?;
 
         writeln!(writer, "    pub fn get_alu_r_value(&self, source: ALURSource, bus_values: &BusValues) -> u8 {{")?;
-        writeln!(writer, "        match source {{")?;
-        for device in self.bus_sources.alu_r_sources.iter() {
-            writeln!(writer, "            ALURSource::{} => self.{}.get_value(bus_values),", device, device)?;
-        }
-        writeln!(writer, "        }}")?;
+        self.bus_sources.alu_r_sources.emit_get_value(writer)?;
         writeln!(writer, "    }}")?;
         writeln!(writer)?;
 
         writeln!(writer, "    pub fn get_address_bus_value(&self, source: AddressBusSource, bus_values: &BusValues) -> u16 {{")?;
-        writeln!(writer, "        match source {{")?;
-        for device in self.bus_sources.address_bus_sources.iter() {
-            writeln!(writer, "            AddressBusSource::{} => self.{}.get_value(bus_values),", device, device)?;
-        }
-        writeln!(writer, "        }}")?;
+        self.bus_sources.address_bus_sources.emit_get_value(writer)?;
         writeln!(writer, "    }}")?;
         writeln!(writer)?;
 
         writeln!(writer, "    pub fn get_flags_value(&self, source: FlagsSource, bus_values: &BusValues) -> ALUFlags {{")?;
-        writeln!(writer, "        match source {{")?;
-        for device in self.bus_sources.flags_sources.iter() {
-            writeln!(writer, "            FlagsSource::{} => self.{}.get_value(bus_values),", device, device)?;
-        }
-        writeln!(writer, "        }}")?;
+        self.bus_sources.flags_sources.emit_get_value(writer)?;
         writeln!(writer, "    }}")?;
         writeln!(writer)?;
 
@@ -135,9 +115,7 @@ impl DeviceMapPart {
         writeln!(writer, "}}")?;
         writeln!(writer)?;
 
-        self.bus_sources.emit(writer).expect("Failed to emit bus sources");
-
-        Ok(())
+        self.bus_sources.emit(writer)
     }
 }
 

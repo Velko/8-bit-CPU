@@ -1,19 +1,55 @@
 pub struct BusSourcesPart {
-    pub main_bus_sources: Vec<String>,
-    pub address_bus_sources: Vec<String>,
-    pub alu_l_sources: Vec<String>,
-    pub alu_r_sources: Vec<String>,
-    pub flags_sources: Vec<String>,
+    pub main_bus_sources: BusSource,
+    pub address_bus_sources: BusSource,
+    pub alu_l_sources: BusSource,
+    pub alu_r_sources: BusSource,
+    pub flags_sources: BusSource,
+}
+
+pub struct BusSource {
+    enum_name: String,
+    member_names: Vec<String>,
+}
+
+impl BusSource {
+    pub fn new(name: &str) -> Self {
+        Self {
+            enum_name: name.to_owned(),
+            member_names: Vec::new(),
+        }
+    }
+
+    pub fn push(&mut self, member_name: &str) {
+        self.member_names.push(member_name.to_owned());
+    }
+
+    pub fn emit_struct(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
+        writeln!(writer, "#[derive(Debug, Clone, Copy, PartialEq)]")?;
+        writeln!(writer, "pub enum {} {{", self.enum_name)?;
+        for source in self.member_names.iter() {
+            writeln!(writer, "    {},", source)?;
+        }
+        writeln!(writer, "}}")?;
+        writeln!(writer)
+    }
+
+    pub fn emit_get_value(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
+        writeln!(writer, "        match source {{")?;
+        for device in self.member_names.iter() {
+            writeln!(writer, "            {}::{} => self.{}.get_value(bus_values),", self.enum_name, device, device)?;
+        }
+        writeln!(writer, "        }}")
+    }
 }
 
 impl BusSourcesPart {
     pub fn new() -> Self {
         BusSourcesPart {
-            main_bus_sources: Vec::new(),
-            address_bus_sources: Vec::new(),
-            alu_l_sources: Vec::new(),
-            alu_r_sources: Vec::new(),
-            flags_sources: Vec::new(),
+            main_bus_sources: BusSource::new("MainBusSource"),
+            address_bus_sources: BusSource::new("AddressBusSource"),
+            alu_l_sources: BusSource::new("ALULSource"),
+            alu_r_sources: BusSource::new("ALURSource"),
+            flags_sources: BusSource::new("FlagsSource"),
         }
     }
 
@@ -64,46 +100,10 @@ impl BusSourcesPart {
     }
 
     pub fn emit(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
-        writeln!(writer, "#[derive(Debug, Clone, Copy, PartialEq)]")?;
-        writeln!(writer, "pub enum MainBusSource {{")?;
-        for source in self.main_bus_sources.iter() {
-            writeln!(writer, "    {},", source)?;
-        }
-        writeln!(writer, "}}")?;
-        writeln!(writer)?;
-
-        writeln!(writer, "#[derive(Debug, Clone, Copy, PartialEq)]")?;
-        writeln!(writer, "pub enum ALULSource {{")?;
-        for source in self.alu_l_sources.iter() {
-            writeln!(writer, "    {},", source)?;
-        }
-        writeln!(writer, "}}")?;
-        writeln!(writer)?;
-
-        writeln!(writer, "#[derive(Debug, Clone, Copy, PartialEq)]")?;
-        writeln!(writer, "pub enum ALURSource {{")?;
-        for source in self.alu_r_sources.iter() {
-            writeln!(writer, "    {},", source)?;
-        }
-        writeln!(writer, "}}")?;
-        writeln!(writer)?;
-
-        writeln!(writer, "#[derive(Debug, Clone, Copy, PartialEq)]")?;
-        writeln!(writer, "pub enum AddressBusSource {{")?;
-        for source in self.address_bus_sources.iter() {
-            writeln!(writer, "    {},", source)?;
-        }
-        writeln!(writer, "}}")?;
-        writeln!(writer)?;
-
-        writeln!(writer, "#[derive(Debug, Clone, Copy, PartialEq)]")?;
-        writeln!(writer, "pub enum FlagsSource {{")?;
-        for source in self.flags_sources.iter() {
-            writeln!(writer, "    {},", source)?;
-        }
-        writeln!(writer, "}}")?;
-        writeln!(writer)?;
-
-        Ok(())
+        self.main_bus_sources.emit_struct(writer)?;
+        self.alu_l_sources.emit_struct(writer)?;
+        self.alu_r_sources.emit_struct(writer)?;
+        self.address_bus_sources.emit_struct(writer)?;
+        self.flags_sources.emit_struct(writer)
     }
 }
