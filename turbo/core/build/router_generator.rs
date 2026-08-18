@@ -102,7 +102,7 @@ impl DeviceMapPart {
 }
 
 
-pub fn generate_router(out_dir: &str, manifest_dir: &str) {
+pub fn generate_router(out_dir: &str, manifest_dir: &str) -> std::io::Result<()> {
     let pins = pin_config::PinConfig::from_file(&format!("{}/pins.yaml", manifest_dir));
     //println!("Loaded pins: {:?}", pins);
 
@@ -158,19 +158,21 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) {
         }
     }
 
-    let mut f = File::create(&format!("{}/router_generated.rs", out_dir)).expect("Failed to create out file");
+    let mut f = File::create(&format!("{}/router_generated.rs", out_dir))?;
 
-    device_map.emit(&mut f).expect("Failed to emit device map");
+    device_map.emit(&mut f)?;
 
     for m in muxes.values() {
-         m.emit(&mut f).expect("Failed to emit mux");
+         m.emit(&mut f)?;
     }
 
-    emit_direct_pins(&mut f, &direct_pins).expect("Failed to emit direct pins");
-    emit_router_fn(&mut f, &muxes, &direct_pins).expect("Failed to emit router");
+    emit_direct_pins(&mut f, &direct_pins)?;
+    emit_router_fn(&mut f, &muxes, &direct_pins)?;
 
 
-    emit_default_control_word(&mut f, &muxes, &direct_pins).expect("Failed to emit default control word");
+    emit_default_control_word(&mut f, &muxes, &direct_pins)?;
+
+    Ok(())
 }
 
 
