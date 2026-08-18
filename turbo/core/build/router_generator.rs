@@ -81,30 +81,12 @@ impl DeviceMapPart {
         writeln!(writer, "    }}")?;
         writeln!(writer)?;
 
-        writeln!(writer, "    pub fn get_main_bus_value(&self, source: MainBusSource, bus_values: &BusValues) -> u8 {{")?;
         self.bus_sources.main_bus_sources.emit_get_value(writer)?;
-        writeln!(writer, "    }}")?;
-        writeln!(writer)?;
-
-        writeln!(writer, "    pub fn get_alu_l_value(&self, source: ALULSource, bus_values: &BusValues) -> u8 {{")?;
         self.bus_sources.alu_l_sources.emit_get_value(writer)?;
-        writeln!(writer, "    }}")?;
-        writeln!(writer)?;
-
-        writeln!(writer, "    pub fn get_alu_r_value(&self, source: ALURSource, bus_values: &BusValues) -> u8 {{")?;
         self.bus_sources.alu_r_sources.emit_get_value(writer)?;
-        writeln!(writer, "    }}")?;
-        writeln!(writer)?;
-
-        writeln!(writer, "    pub fn get_address_bus_value(&self, source: AddressBusSource, bus_values: &BusValues) -> u16 {{")?;
         self.bus_sources.address_bus_sources.emit_get_value(writer)?;
-        writeln!(writer, "    }}")?;
-        writeln!(writer)?;
-
-        writeln!(writer, "    pub fn get_flags_value(&self, source: FlagsSource, bus_values: &BusValues) -> ALUFlags {{")?;
         self.bus_sources.flags_sources.emit_get_value(writer)?;
-        writeln!(writer, "    }}")?;
-        writeln!(writer)?;
+
 
         writeln!(writer, "    pub fn broadcast_reset(&mut self) {{")?;
         for device in self.devices.iter() {

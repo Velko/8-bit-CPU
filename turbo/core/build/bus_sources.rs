@@ -7,14 +7,20 @@ pub struct BusSourcesPart {
 }
 
 pub struct BusSource {
-    enum_name: String,
+    type_name: &'static str,
+    getter_name: &'static str,
+    value_type:  &'static str,
+    source_type: &'static str,
     member_names: Vec<String>,
 }
 
 impl BusSource {
-    pub fn new(name: &str) -> Self {
+    pub fn new(type_name: &'static str, getter_name: &'static str, source_type: &'static str, value_type: &'static str) -> Self {
         Self {
-            enum_name: name.to_owned(),
+            type_name,
+            getter_name,
+            source_type,
+            value_type,
             member_names: Vec::new(),
         }
     }
@@ -25,7 +31,7 @@ impl BusSource {
 
     pub fn emit_struct(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
         writeln!(writer, "#[derive(Debug, Clone, Copy, PartialEq)]")?;
-        writeln!(writer, "pub enum {} {{", self.enum_name)?;
+        writeln!(writer, "pub enum {} {{", self.type_name)?;
         for source in self.member_names.iter() {
             writeln!(writer, "    {},", source)?;
         }
@@ -34,22 +40,25 @@ impl BusSource {
     }
 
     pub fn emit_get_value(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
+        writeln!(writer, "    pub fn get_{}_value(&self, source: {}, bus_values: &BusValues) -> {} {{", self.getter_name, self.source_type, self.value_type)?;
         writeln!(writer, "        match source {{")?;
         for device in self.member_names.iter() {
-            writeln!(writer, "            {}::{} => self.{}.get_value(bus_values),", self.enum_name, device, device)?;
+            writeln!(writer, "            {}::{} => self.{}.get_value(bus_values),", self.type_name, device, device)?;
         }
-        writeln!(writer, "        }}")
+        writeln!(writer, "        }}")?;
+        writeln!(writer, "    }}")?;
+        writeln!(writer)
     }
 }
 
 impl BusSourcesPart {
     pub fn new() -> Self {
         BusSourcesPart {
-            main_bus_sources: BusSource::new("MainBusSource"),
-            address_bus_sources: BusSource::new("AddressBusSource"),
-            alu_l_sources: BusSource::new("ALULSource"),
-            alu_r_sources: BusSource::new("ALURSource"),
-            flags_sources: BusSource::new("FlagsSource"),
+            main_bus_sources: BusSource::new("MainBusSource", "main_bus", "MainBusSource", "u8"),
+            address_bus_sources: BusSource::new("AddressBusSource", "address_bus", "AddressBusSource", "u16"),
+            alu_l_sources: BusSource::new("ALULSource", "alu_l", "ALULSource", "u8"),
+            alu_r_sources: BusSource::new("ALURSource", "alu_r", "ALURSource", "u8"),
+            flags_sources: BusSource::new("FlagsSource", "flags","FlagsSource", "ALUFlags"),
         }
     }
 
