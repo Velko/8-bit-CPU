@@ -37,18 +37,7 @@ impl MuxPart {
         for (_value, (alias, dev_refs)) in self.device_bits.iter() {
             if dev_refs.len() == 1 {
                 let dev_ref = &dev_refs[0];
-                match dev_ref.pin.as_str() {
-                    "load" |
-                    "laddr" |
-                    "write" |
-                    "to_dev" => writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.{}.change(&dev.{}, bus_values, enable),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin, dev_ref.device)?,
-                    "alu_l" |
-                    "alu_r" |
-                    "out" |
-                    "from_dev" =>  writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.{}.change(bus_values, enable),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin)?,
-                    _ => writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.on_{}_change(bus_values, enable),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin)?,
-                }
-
+                writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.{}.change(bus_values, enable),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin)?;
             } else {
                 writeln!(writer, "            Self::VALUE_{} => {{", format_const_name(alias))?;
                 for dev_ref in dev_refs {

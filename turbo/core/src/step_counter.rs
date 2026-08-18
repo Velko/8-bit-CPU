@@ -79,7 +79,7 @@ mod tests {
         let mut bench = TestBench::new();
         bench.devices.StepCounter.step = 5;
 
-        bench.devices.StepCounter.reset.change(&bench.devices.StepCounter, &mut bench.bus_values, true);
+        bench.devices.StepCounter.reset.change(&mut bench.bus_values, true);
         bench.devices.broadcast_clock_tick_secondary();
 
         assert_eq!(bench.devices.StepCounter.get_value(&bench.bus_values), 0);
@@ -89,7 +89,7 @@ mod tests {
     fn test_step_counter_extended() {
         let mut bench = TestBench::new();
 
-        bench.devices.StepCounter.extended.change(&bench.devices.StepCounter, &mut bench.bus_values, true);
+        bench.devices.StepCounter.extended.change(&mut bench.bus_values, true);
         bench.devices.broadcast_clock_tick_primary(&mut bench.bus_values);
 
         assert_eq!(bench.devices.StepCounter.get_extended_value(), 0x1);
@@ -100,7 +100,7 @@ mod tests {
         let mut bench = TestBench::new();
         bench.devices.StepCounter.step = 1;
 
-        bench.devices.StepCounter.extended.change(&bench.devices.StepCounter, &mut bench.bus_values, true);
+        bench.devices.StepCounter.extended.change(&mut bench.bus_values, true);
         bench.devices.broadcast_clock_tick_secondary();
 
         // Should keep the original step value, when extended is enabled

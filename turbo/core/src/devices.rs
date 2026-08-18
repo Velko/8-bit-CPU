@@ -31,7 +31,7 @@ impl DelayedPin {
         }
     }
 
-    pub fn change<D>(&self, _device: &D, _bus_values: &mut BusValues, enable: bool) {
+    pub fn change(&self, _bus_values: &mut BusValues, enable: bool) {
         self.enabled.set(enable);
     }
 

@@ -72,7 +72,7 @@ mod tests {
         let mut gp_reg = GPRegister::new("GP1", MainBusSource::A, ALULSource::A, ALURSource::A);
 
         // Simulate loading a value into the register
-        gp_reg.load.change(&gp_reg, &mut args, true);
+        gp_reg.load.change(&mut args, true);
         gp_reg.on_clock_tick_primary(&mut args);
         assert_eq!(gp_reg.value_primary, 42);
         assert_eq!(gp_reg.value_secondary, 0); // value_secondary should not change yet
