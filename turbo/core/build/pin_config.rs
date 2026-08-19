@@ -2,6 +2,7 @@
 use std::fs::File;
 use serde::Deserialize;
 use std::collections::HashMap;
+use anyhow::{Context, Result};
 
 #[derive(Debug, Deserialize)]
 pub struct PinConfig {
@@ -47,8 +48,12 @@ pub enum PinConfigEntry {
 }
 
 impl PinConfig {
-    pub fn from_file(file_path: &str) -> Self {
-        let f = File::open(file_path).expect("Failed to open pins file");
-        serde_yaml::from_reader(f).expect("Failed to parse pins file")
+    pub fn from_file(file_path: &str) -> Result<Self> {
+        let f = File::open(file_path)
+            .with_context(|| format!("Failed to open pins file: {}", file_path))?;
+        let pin_cfg = serde_yaml::from_reader(f)
+            .with_context(|| "Failed to parse pins file")?;
+
+        Ok(pin_cfg)
     }
 }

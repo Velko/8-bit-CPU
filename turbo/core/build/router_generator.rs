@@ -102,8 +102,8 @@ impl DeviceMapPart {
 }
 
 
-pub fn generate_router(out_dir: &str, manifest_dir: &str) -> std::io::Result<()> {
-    let pins = pin_config::PinConfig::from_file(&format!("{}/pins.yaml", manifest_dir));
+pub fn generate_router(out_dir: &str, manifest_dir: &str) -> anyhow::Result<()> {
+    let pins = pin_config::PinConfig::from_file(&format!("{}/pins.yaml", manifest_dir))?;
     //println!("Loaded pins: {:?}", pins);
 
     let mut muxes: HashMap<String, MuxPart> = HashMap::new();
