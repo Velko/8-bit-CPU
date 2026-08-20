@@ -1,10 +1,12 @@
 use std::collections::HashMap;
-use std::fs::File;
+use std::fs;
 use crate::bus_sources::BusSourcesPart;
 use crate::mux_part::MuxPart;
 use crate::pin_config;
 use crate::util::{format_type_name, map_device_type};
-
+use proc_macro2::Span;
+use quote::quote;
+use syn::Ident;
 
 pub struct DirectPinRef {
     device: String,
@@ -25,13 +27,19 @@ pub struct DeviceMapPart {
 
 impl DeviceMapPart {
     fn emit(&mut self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
-        writeln!(writer, "pub struct DeviceMap<P: IOPorts> {{")?;
-        for device in self.devices.iter() {
-            writeln!(writer, "    pub {}: {},", device.name, map_device_type(&device.dev_type, &device.name))?;
-        }
-        writeln!(writer, "}}")?;
-        writeln!(writer)?;
 
+        let names = self.devices.iter().map(|d|Ident::new(&d.name, Span::call_site()));
+        let types = self.devices.iter().map(|d|syn::parse_str::<syn::Type>(map_device_type(&d.dev_type, &d.name)).unwrap());
+
+        let devicemap = quote! {
+            pub struct DeviceMap<P: IOPorts> {
+                #( pub #names: #types ),*
+            }
+        };
+
+        let tree = syn::parse2(devicemap).unwrap();
+        let formatted = prettyplease::unparse(&tree);
+        write!(writer, "{}", formatted)?;
 
         writeln!(writer, "impl<P: IOPorts> DeviceMap<P> {{")?;
         writeln!(writer, "    pub fn new(ioports: P) -> Self {{")?;
@@ -158,7 +166,7 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) -> anyhow::Result<()> 
         }
     }
 
-    let mut f = File::create(&format!("{}/router_generated.rs", out_dir))?;
+    let mut f = fs::File::create(&format!("{}/router_generated.rs", out_dir))?;
 
     device_map.emit(&mut f)?;
 
