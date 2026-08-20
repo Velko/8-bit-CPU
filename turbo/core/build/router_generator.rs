@@ -4,7 +4,7 @@ use crate::bus_sources::BusSourcesPart;
 use crate::mux_part::MuxPart;
 use crate::pin_config;
 use crate::util::{format_type_name, map_device_type};
-use proc_macro2::Span;
+use proc_macro2::{Span, TokenStream};
 use quote::quote;
 use syn::Ident;
 
@@ -26,23 +26,64 @@ pub struct DeviceMapPart {
 }
 
 impl DeviceMapPart {
-    fn emit(&mut self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
+    fn emit_struct(&mut self) -> TokenStream {
 
         let names = self.devices.iter().map(|d|Ident::new(&d.name, Span::call_site()));
         let types = self.devices.iter().map(|d|syn::parse_str::<syn::Type>(map_device_type(&d.dev_type, &d.name)).unwrap());
 
-        let devicemap = quote! {
+        quote! {
             pub struct DeviceMap<P: IOPorts> {
                 #( pub #names: #types ),*
             }
+        }
+    }
+
+    fn emit(&mut self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
+
+        let s = self.emit_struct();
+        let i = self.emit_impl();
+        let wholestruct = quote! {
+            #s
+            #i
         };
 
-        let tree = syn::parse2(devicemap).unwrap();
-        let formatted = prettyplease::unparse(&tree);
-        write!(writer, "{}", formatted)?;
 
+
+        let tree = syn::parse2(wholestruct).unwrap();
+        let formatted = prettyplease::unparse(&tree);
+
+        //panic!("{}", formatted);
+        write!(writer, "{}", formatted)?;
+        self.emit_rest(writer)
+    }
+
+    fn emit_impl(&self) -> TokenStream {
+        let names: Vec<_> = self.devices.iter().map(|d|Ident::new(&d.name, Span::call_site())).collect();
+
+        quote! {
+            impl<P: IOPorts> DeviceMap<P> {
+                pub fn new(ioports: P) -> Self {
+                    Self::old_new(ioports)
+                }
+
+                pub fn broadcast_clock_tick_primary(&mut self, bus_values: &mut BusValues) {
+                    #( self.#names.on_clock_tick_primary(bus_values));*
+                }
+
+                pub fn broadcast_clock_tick_secondary(&mut self) {
+                    #( self.#names.on_clock_tick_secondary());*
+                }
+
+                pub fn broadcast_reset(&mut self) {
+                    #( self.#names.on_reset());*
+                }
+            }
+        }
+    }
+
+    fn emit_rest(&mut self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
         writeln!(writer, "impl<P: IOPorts> DeviceMap<P> {{")?;
-        writeln!(writer, "    pub fn new(ioports: P) -> Self {{")?;
+        writeln!(writer, "    pub fn old_new(ioports: P) -> Self {{")?;
         writeln!(writer, "        DeviceMap {{")?;
         for device in self.devices.iter() {
             let mut ids: Vec<String> = vec![format!("\"{}\"", device.name)];
@@ -75,32 +116,11 @@ impl DeviceMapPart {
         writeln!(writer, "    }}")?;
         writeln!(writer)?;
 
-        writeln!(writer, "    pub fn broadcast_clock_tick_primary(&mut self, bus_values: &mut BusValues) {{")?;
-        for device in self.devices.iter() {
-            writeln!(writer, "        self.{}.on_clock_tick_primary(bus_values);", device.name)?;
-        }
-        writeln!(writer, "    }}")?;
-        writeln!(writer)?;
-
-        writeln!(writer, "    pub fn broadcast_clock_tick_secondary(&mut self) {{")?;
-        for device in self.devices.iter() {
-            writeln!(writer, "        self.{}.on_clock_tick_secondary();", device.name)?;
-        }
-        writeln!(writer, "    }}")?;
-        writeln!(writer)?;
-
         self.bus_sources.main_bus_sources.emit_get_value(writer)?;
         self.bus_sources.alu_l_sources.emit_get_value(writer)?;
         self.bus_sources.alu_r_sources.emit_get_value(writer)?;
         self.bus_sources.address_bus_sources.emit_get_value(writer)?;
         self.bus_sources.flags_sources.emit_get_value(writer)?;
-
-
-        writeln!(writer, "    pub fn broadcast_reset(&mut self) {{")?;
-        for device in self.devices.iter() {
-            writeln!(writer, "        self.{}.on_reset();", device.name)?;
-        }
-        writeln!(writer, "    }}")?;
 
         writeln!(writer, "}}")?;
         writeln!(writer)?;
