@@ -54,17 +54,23 @@ impl BusSource {
 }
 
 impl BusSourcesPart {
-    pub fn new() -> Self {
-        BusSourcesPart {
+    pub fn new(devices: &[DevicePart]) -> Self {
+        let mut bus_sources = BusSourcesPart {
             main_bus_sources: BusSource::new("MainBusSource", "main_bus", "MainBusSource", "u8"),
             address_bus_sources: BusSource::new("AddressBusSource", "address_bus", "AddressBusSource", "u16"),
             alu_l_sources: BusSource::new("ALULSource", "alu_l", "ALULSource", "u8"),
             alu_r_sources: BusSource::new("ALURSource", "alu_r", "ALURSource", "u8"),
             flags_sources: BusSource::new("FlagsSource", "flags","FlagsSource", "ALUFlags"),
+        };
+
+        for device in devices {
+            bus_sources.add_device(device);
         }
+
+        bus_sources
     }
 
-    pub fn add_device(&mut self, device: &DevicePart) {
+    fn add_device(&mut self, device: &DevicePart) {
         if BusSourcesPart::is_main_bus_source(&device.dev_type, &device.name) {
             self.main_bus_sources.push(&device.name);
         }

@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::fs;
 use crate::bus_sources::BusSourcesPart;
 use crate::mux_part::MuxPart;
-use crate::pin_config;
+use crate::pin_config::{self, DeviceConfig};
 use crate::util::{format_type_name, map_device_type};
 use proc_macro2::{Span, TokenStream};
 use quote::quote;
@@ -26,6 +26,20 @@ pub struct DeviceMapPart {
 }
 
 impl DeviceMapPart {
+    pub fn new(dev_cfg: &[DeviceConfig]) -> Self {
+        let devices: Vec<_> = dev_cfg.iter().map(|d| DevicePart {
+            name: d.name.clone(),
+            dev_type: d.dev_type.clone(),
+        }).collect();
+
+        let bus_sources = BusSourcesPart::new(&devices);
+
+        DeviceMapPart {
+            devices,
+            bus_sources,
+        }
+    }
+
     fn emit_struct(&mut self) -> TokenStream {
 
         let names = self.devices.iter().map(|d|Ident::new(&d.name, Span::call_site()));
@@ -86,7 +100,6 @@ impl DeviceMapPart {
         writeln!(writer, "    pub fn old_new(ioports: P) -> Self {{")?;
         writeln!(writer, "        DeviceMap {{")?;
         for device in self.devices.iter() {
-            self.bus_sources.add_device(device);
             let ids = BusSourcesPart::make_bus_source_init_params(device);
             writeln!(writer, "            {}: {}::new({}),", device.name, map_device_type(&device.dev_type, &device.name), ids.join(", "))?;
         }
@@ -125,15 +138,11 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) -> anyhow::Result<()> 
         }, sp))
         .collect();
 
-    let mut device_map = DeviceMapPart { devices: Vec::new(), bus_sources: BusSourcesPart::new() };
+    let mut device_map = DeviceMapPart::new(&pins.devices);
 
     let mut direct_pins: HashMap<u32, (String, Vec<DirectPinRef>)> = HashMap::new();
 
     for device in pins.devices.iter() {
-        device_map.devices.push(DevicePart {
-            name: device.name.clone(),
-            dev_type: device.dev_type.clone(),
-        });
         for (pin_name, pin_entry) in device.pins.iter() {
             match pin_entry {
                 pin_config::PinConfigEntry::MuxPin { mux, pin } => {
