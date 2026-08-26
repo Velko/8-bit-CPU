@@ -20,6 +20,22 @@ pub struct DevicePart {
     pub dev_type: String,
 }
 
+impl DevicePart {
+    pub fn emit_constructor(&self) -> TokenStream {
+        let name = Ident::new(&self.name, Span::call_site());
+        let dev_type = syn::parse_str::<syn::Type>(&map_device_type(&self.dev_type, &self.name)).unwrap();
+
+        let ids = BusSourcesPart::make_bus_source_init_params(self);
+
+        quote! {
+            #name: #dev_type::new(
+                #ids
+            )
+        }
+    }
+}
+
+
 pub struct DeviceMapPart {
     devices: Vec<DevicePart>,
     bus_sources: BusSourcesPart,
@@ -73,11 +89,14 @@ impl DeviceMapPart {
 
     fn emit_impl(&self) -> TokenStream {
         let names: Vec<_> = self.devices.iter().map(|d|Ident::new(&d.name, Span::call_site())).collect();
+        let constructors: Vec<_> = self.devices.iter().map(|d|d.emit_constructor()).collect();
 
         quote! {
             impl<P: IOPorts> DeviceMap<P> {
                 pub fn new(ioports: P) -> Self {
-                    Self::old_new(ioports)
+                    DeviceMap {
+                        #( #constructors ),*
+                    }
                 }
 
                 pub fn broadcast_clock_tick_primary(&mut self, bus_values: &mut BusValues) {
@@ -97,15 +116,6 @@ impl DeviceMapPart {
 
     fn emit_rest(&mut self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
         writeln!(writer, "impl<P: IOPorts> DeviceMap<P> {{")?;
-        writeln!(writer, "    pub fn old_new(ioports: P) -> Self {{")?;
-        writeln!(writer, "        DeviceMap {{")?;
-        for device in self.devices.iter() {
-            let ids = BusSourcesPart::make_bus_source_init_params(device);
-            writeln!(writer, "            {}: {}::new({}),", device.name, map_device_type(&device.dev_type, &device.name), ids.join(", "))?;
-        }
-        writeln!(writer, "        }}")?;
-        writeln!(writer, "    }}")?;
-        writeln!(writer)?;
 
         self.bus_sources.main_bus_sources.emit_get_value(writer)?;
         self.bus_sources.alu_l_sources.emit_get_value(writer)?;

@@ -1,3 +1,7 @@
+use proc_macro2::{Span, TokenStream};
+use syn::Ident;
+use quote::quote;
+
 use crate::router_generator::DevicePart;
 
 pub struct BusSourcesPart {
@@ -88,27 +92,31 @@ impl BusSourcesPart {
         }
     }
 
-    pub fn make_bus_source_init_params(device: &DevicePart) -> Vec<String> {
-        let mut params: Vec<String> = vec![format!("\"{}\"", device.name)];
+        pub fn make_bus_source_init_params(device: &DevicePart) -> TokenStream {
+        let name_str = &device.name;
+        let name = Ident::new(&device.name, Span::call_site());
+        let mut params: Vec<TokenStream> = Vec::new();
+
         if BusSourcesPart::is_main_bus_source(&device.dev_type, &device.name) {
-            params.push(format!("MainBusSource::{}", device.name));
+            params.push(quote! { MainBusSource::#name });
         }
         if BusSourcesPart::is_alu_l_source(&device.dev_type) {
-            params.push(format!("ALULSource::{}", device.name));
+            params.push(quote! { ALULSource::#name });
         }
         if BusSourcesPart::is_alu_r_source(&device.dev_type) {
-            params.push(format!("ALURSource::{}", device.name));
+            params.push(quote! { ALURSource::#name });
         }
         if BusSourcesPart::is_address_bus_source(&device.dev_type, &device.name) {
-            params.push(format!("AddressBusSource::{}", device.name));
+            params.push(quote! { AddressBusSource::#name });
         }
         if BusSourcesPart::is_flags_source(&device.dev_type) {
-            params.push(format!("FlagsSource::{}", device.name));
+            params.push(quote! { FlagsSource::#name });
         }
         if device.dev_type == "IOController" {
-            params.push("ioports".to_string());
+            params.push(quote! { ioports });
         }
-        params
+
+        quote! { #name_str, #( #params ),* }
     }
 
     pub fn is_main_bus_source(dev_type: &str, name: &str) -> bool {
