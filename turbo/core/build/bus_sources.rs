@@ -45,15 +45,27 @@ impl BusSource {
         writeln!(writer)
     }
 
-    pub fn emit_get_value(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
-        writeln!(writer, "    pub fn get_{}_value(&self, source: {}, bus_values: &BusValues) -> {} {{", self.getter_name, self.source_type, self.value_type)?;
-        writeln!(writer, "        match source {{")?;
-        for device in self.member_names.iter() {
-            writeln!(writer, "            {}::{} => self.{}.get_value(bus_values),", self.type_name, device, device)?;
+    pub fn emit_get_value(&self) -> TokenStream {
+        let getter_name = Ident::new(&format!("get_{}_value", self.getter_name), Span::call_site());
+        let source_type = Ident::new(self.source_type, Span::call_site());
+        let value_type = Ident::new(self.value_type, Span::call_site());
+        let type_name = Ident::new(self.type_name, Span::call_site());
+        let member_names = &self.member_names;
+
+        let match_arms: Vec<TokenStream> = member_names.iter().map(|device| {
+            let device_ident = Ident::new(device, Span::call_site());
+            quote! {
+                #type_name::#device_ident => self.#device_ident.get_value(bus_values),
+            }
+        }).collect();
+
+        quote! {
+            pub fn #getter_name(&self, source: #source_type, bus_values: &BusValues) -> #value_type {
+                match source {
+                    #( #match_arms )*
+                }
+            }
         }
-        writeln!(writer, "        }}")?;
-        writeln!(writer, "    }}")?;
-        writeln!(writer)
     }
 }
 

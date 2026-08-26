@@ -90,6 +90,12 @@ impl DeviceMapPart {
         let names: Vec<_> = self.devices.iter().map(|d|Ident::new(&d.name, Span::call_site())).collect();
         let constructors: Vec<_> = self.devices.iter().map(|d|d.emit_constructor()).collect();
 
+        let main_getter = self.bus_sources.main_bus_sources.emit_get_value();
+        let alu_l_getter = self.bus_sources.alu_l_sources.emit_get_value();
+        let alu_r_getter = self.bus_sources.alu_r_sources.emit_get_value();
+        let address_getter = self.bus_sources.address_bus_sources.emit_get_value();
+        let flags_getter = self.bus_sources.flags_sources.emit_get_value();
+
         quote! {
             impl<P: IOPorts> DeviceMap<P> {
                 pub fn new(ioports: P) -> Self {
@@ -109,22 +115,17 @@ impl DeviceMapPart {
                 pub fn broadcast_reset(&mut self) {
                     #( self.#names.on_reset());*
                 }
+
+                #main_getter
+                #alu_l_getter
+                #alu_r_getter
+                #address_getter
+                #flags_getter
             }
         }
     }
 
     fn emit_rest(&mut self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
-        writeln!(writer, "impl<P: IOPorts> DeviceMap<P> {{")?;
-
-        self.bus_sources.main_bus_sources.emit_get_value(writer)?;
-        self.bus_sources.alu_l_sources.emit_get_value(writer)?;
-        self.bus_sources.alu_r_sources.emit_get_value(writer)?;
-        self.bus_sources.address_bus_sources.emit_get_value(writer)?;
-        self.bus_sources.flags_sources.emit_get_value(writer)?;
-
-        writeln!(writer, "}}")?;
-        writeln!(writer)?;
-
         self.bus_sources.emit(writer)
     }
 }
