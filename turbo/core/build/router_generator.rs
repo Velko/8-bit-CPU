@@ -23,13 +23,12 @@ pub struct DevicePart {
 impl DevicePart {
     pub fn emit_constructor(&self) -> TokenStream {
         let name = Ident::new(&self.name, Span::call_site());
-        let dev_type = syn::parse_str::<syn::Type>(&map_device_type(&self.dev_type, &self.name)).unwrap();
-
-        let ids = BusSourcesPart::make_bus_source_init_params(self);
+        let dev_type = map_device_type(&self.dev_type, &self.name);
+        let params = BusSourcesPart::make_bus_source_init_params(self);
 
         quote! {
             #name: #dev_type::new(
-                #ids
+                #params
             )
         }
     }
@@ -59,7 +58,7 @@ impl DeviceMapPart {
     fn emit_struct(&mut self) -> TokenStream {
 
         let names = self.devices.iter().map(|d|Ident::new(&d.name, Span::call_site()));
-        let types = self.devices.iter().map(|d|syn::parse_str::<syn::Type>(map_device_type(&d.dev_type, &d.name)).unwrap());
+        let types = self.devices.iter().map(|d|map_device_type(&d.dev_type, &d.name));
 
         quote! {
             pub struct DeviceMap<P: IOPorts> {
