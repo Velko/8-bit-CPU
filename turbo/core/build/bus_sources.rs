@@ -29,11 +29,11 @@ impl BusSource {
         }
     }
 
-    pub fn push(&mut self, member_name: &str) {
+    fn push(&mut self, member_name: &str) {
         self.member_names.push(member_name.to_owned());
     }
 
-    pub fn emit_struct(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
+    fn emit_struct(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
         writeln!(writer, "#[derive(Debug, Clone, Copy, PartialEq)]")?;
         writeln!(writer, "pub enum {} {{", self.type_name)?;
         for source in self.member_names.iter() {
@@ -43,7 +43,7 @@ impl BusSource {
         writeln!(writer)
     }
 
-    pub fn emit_get_value(&self) -> TokenStream {
+    fn emit_get_value(&self) -> TokenStream {
         let getter_name = Ident::new(&format!("get_{}_value", self.getter_name), Span::call_site());
         let value_type = Ident::new(self.value_type, Span::call_site());
         let type_name = Ident::new(self.type_name, Span::call_site());
@@ -101,7 +101,7 @@ impl BusSourcesPart {
         }
     }
 
-        pub fn make_bus_source_init_params(device: &DevicePart) -> TokenStream {
+    pub fn make_bus_source_init_params(device: &DevicePart) -> TokenStream {
         let name_str = &device.name;
         let name = Ident::new(&device.name, Span::call_site());
         let mut params: Vec<TokenStream> = Vec::new();
@@ -128,7 +128,7 @@ impl BusSourcesPart {
         quote! { #name_str, #( #params ),* }
     }
 
-    pub fn is_main_bus_source(dev_type: &str, name: &str) -> bool {
+    fn is_main_bus_source(dev_type: &str, name: &str) -> bool {
         match dev_type {
             "GPRegister" |
             "ALU" |
@@ -141,14 +141,14 @@ impl BusSourcesPart {
         }
     }
 
-    pub fn is_alu_l_source(dev_type: &str) -> bool {
+    fn is_alu_l_source(dev_type: &str) -> bool {
         match dev_type {
             "GPRegister" => true,
             _ => false,
         }
     }
 
-    pub fn is_alu_r_source(dev_type: &str) -> bool {
+    fn is_alu_r_source(dev_type: &str) -> bool {
         match dev_type {
             "GPRegister" |
             "TempRegister" => true,
@@ -156,7 +156,7 @@ impl BusSourcesPart {
         }
     }
 
-    pub fn is_address_bus_source(dev_type: &str, name: &str) -> bool {
+    fn is_address_bus_source(dev_type: &str, name: &str) -> bool {
         match dev_type {
             "ProgramCounter" |
             "AddressRegister" |
@@ -167,7 +167,7 @@ impl BusSourcesPart {
         }
     }
 
-    pub fn is_flags_source(dev_type: &str) -> bool {
+    fn is_flags_source(dev_type: &str) -> bool {
         match dev_type {
             "ALU" => true,
             _ => false,
