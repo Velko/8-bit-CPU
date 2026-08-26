@@ -33,14 +33,16 @@ impl BusSource {
         self.member_names.push(member_name.to_owned());
     }
 
-    fn emit_struct(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
-        writeln!(writer, "#[derive(Debug, Clone, Copy, PartialEq)]")?;
-        writeln!(writer, "pub enum {} {{", self.type_name)?;
-        for source in self.member_names.iter() {
-            writeln!(writer, "    {},", source)?;
+    fn emit_enum(&self) -> TokenStream {
+        let type_name = Ident::new(self.type_name, Span::call_site());
+        let member_names = self.member_names.iter().map(|name| Ident::new(name, Span::call_site()));
+
+        quote! {
+            #[derive(Debug, Clone, Copy, PartialEq)]
+            pub enum #type_name {
+                #( #member_names ),*
+            }
         }
-        writeln!(writer, "}}")?;
-        writeln!(writer)
     }
 
     fn emit_get_value(&self) -> TokenStream {
@@ -174,12 +176,20 @@ impl BusSourcesPart {
         }
     }
 
-    pub fn emit(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
-        self.main_bus_sources.emit_struct(writer)?;
-        self.alu_l_sources.emit_struct(writer)?;
-        self.alu_r_sources.emit_struct(writer)?;
-        self.address_bus_sources.emit_struct(writer)?;
-        self.flags_sources.emit_struct(writer)
+    pub fn emit_enums(&self) -> TokenStream {
+        let main = self.main_bus_sources.emit_enum();
+        let alu_l = self.alu_l_sources.emit_enum();
+        let alu_r = self.alu_r_sources.emit_enum();
+        let address = self.address_bus_sources.emit_enum();
+        let flags = self.flags_sources.emit_enum();
+
+        quote! {
+            #main
+            #alu_l
+            #alu_r
+            #address
+            #flags
+        }
     }
 
     pub fn emit_getters(&self) -> TokenStream {

@@ -69,11 +69,13 @@ impl DeviceMapPart {
 
     fn emit(&mut self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
 
-        let s = self.emit_struct();
-        let i = self.emit_impl();
+        let device_map_struct = self.emit_struct();
+        let device_map_impl = self.emit_impl();
+        let bus_sources = self.bus_sources.emit_enums();
         let wholestruct = quote! {
-            #s
-            #i
+            #device_map_struct
+            #device_map_impl
+            #bus_sources
         };
 
 
@@ -81,9 +83,7 @@ impl DeviceMapPart {
         let tree = syn::parse2(wholestruct).unwrap();
         let formatted = prettyplease::unparse(&tree);
 
-        //panic!("{}", formatted);
-        write!(writer, "{}", formatted)?;
-        self.emit_rest(writer)
+        write!(writer, "{}", formatted)
     }
 
     fn emit_impl(&self) -> TokenStream {
@@ -115,10 +115,6 @@ impl DeviceMapPart {
                 #getters
             }
         }
-    }
-
-    fn emit_rest(&mut self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
-        self.bus_sources.emit(writer)
     }
 }
 
