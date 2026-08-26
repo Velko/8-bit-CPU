@@ -5,11 +5,11 @@ use quote::quote;
 use crate::router_generator::DevicePart;
 
 pub struct BusSourcesPart {
-    pub main_bus_sources: BusSource,
-    pub address_bus_sources: BusSource,
-    pub alu_l_sources: BusSource,
-    pub alu_r_sources: BusSource,
-    pub flags_sources: BusSource,
+    main_bus_sources: BusSource,
+    address_bus_sources: BusSource,
+    alu_l_sources: BusSource,
+    alu_r_sources: BusSource,
+    flags_sources: BusSource,
 }
 
 pub struct BusSource {
@@ -180,5 +180,21 @@ impl BusSourcesPart {
         self.alu_r_sources.emit_struct(writer)?;
         self.address_bus_sources.emit_struct(writer)?;
         self.flags_sources.emit_struct(writer)
+    }
+
+    pub fn emit_getters(&self) -> TokenStream {
+        let main_getter = self.main_bus_sources.emit_get_value();
+        let alu_l_getter = self.alu_l_sources.emit_get_value();
+        let alu_r_getter = self.alu_r_sources.emit_get_value();
+        let address_getter = self.address_bus_sources.emit_get_value();
+        let flags_getter = self.flags_sources.emit_get_value();
+
+        quote! {
+            #main_getter
+            #alu_l_getter
+            #alu_r_getter
+            #address_getter
+            #flags_getter
+        }
     }
 }
