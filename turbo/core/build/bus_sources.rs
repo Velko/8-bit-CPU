@@ -16,16 +16,14 @@ pub struct BusSource {
     type_name: &'static str,
     getter_name: &'static str,
     value_type:  &'static str,
-    source_type: &'static str,
     member_names: Vec<String>,
 }
 
 impl BusSource {
-    pub fn new(type_name: &'static str, getter_name: &'static str, source_type: &'static str, value_type: &'static str) -> Self {
+    pub fn new(type_name: &'static str, getter_name: &'static str, value_type: &'static str) -> Self {
         Self {
             type_name,
             getter_name,
-            source_type,
             value_type,
             member_names: Vec::new(),
         }
@@ -47,7 +45,6 @@ impl BusSource {
 
     pub fn emit_get_value(&self) -> TokenStream {
         let getter_name = Ident::new(&format!("get_{}_value", self.getter_name), Span::call_site());
-        let source_type = Ident::new(self.source_type, Span::call_site());
         let value_type = Ident::new(self.value_type, Span::call_site());
         let type_name = Ident::new(self.type_name, Span::call_site());
         let member_names = &self.member_names;
@@ -60,7 +57,7 @@ impl BusSource {
         }).collect();
 
         quote! {
-            pub fn #getter_name(&self, source: #source_type, bus_values: &BusValues) -> #value_type {
+            pub fn #getter_name(&self, source: #type_name, bus_values: &BusValues) -> #value_type {
                 match source {
                     #( #match_arms )*
                 }
@@ -72,11 +69,11 @@ impl BusSource {
 impl BusSourcesPart {
     pub fn new(devices: &[DevicePart]) -> Self {
         let mut bus_sources = BusSourcesPart {
-            main_bus_sources: BusSource::new("MainBusSource", "main_bus", "MainBusSource", "u8"),
-            address_bus_sources: BusSource::new("AddressBusSource", "address_bus", "AddressBusSource", "u16"),
-            alu_l_sources: BusSource::new("ALULSource", "alu_l", "ALULSource", "u8"),
-            alu_r_sources: BusSource::new("ALURSource", "alu_r", "ALURSource", "u8"),
-            flags_sources: BusSource::new("FlagsSource", "flags","FlagsSource", "ALUFlags"),
+            main_bus_sources: BusSource::new("MainBusSource", "main_bus", "u8"),
+            address_bus_sources: BusSource::new("AddressBusSource", "address_bus", "u16"),
+            alu_l_sources: BusSource::new("ALULSource", "alu_l", "u8"),
+            alu_r_sources: BusSource::new("ALURSource", "alu_r", "u8"),
+            flags_sources: BusSource::new("FlagsSource", "flags","ALUFlags"),
         };
 
         for device in devices {
