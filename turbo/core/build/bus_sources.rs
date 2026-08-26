@@ -1,3 +1,5 @@
+use crate::router_generator::DevicePart;
+
 pub struct BusSourcesPart {
     pub main_bus_sources: BusSource,
     pub address_bus_sources: BusSource,
@@ -60,6 +62,47 @@ impl BusSourcesPart {
             alu_r_sources: BusSource::new("ALURSource", "alu_r", "ALURSource", "u8"),
             flags_sources: BusSource::new("FlagsSource", "flags","FlagsSource", "ALUFlags"),
         }
+    }
+
+    pub fn add_device(&mut self, device: &DevicePart) {
+        if BusSourcesPart::is_main_bus_source(&device.dev_type, &device.name) {
+            self.main_bus_sources.push(&device.name);
+        }
+        if BusSourcesPart::is_alu_l_source(&device.dev_type) {
+            self.alu_l_sources.push(&device.name);
+        }
+        if BusSourcesPart::is_alu_r_source(&device.dev_type) {
+            self.alu_r_sources.push(&device.name);
+        }
+        if BusSourcesPart::is_address_bus_source(&device.dev_type, &device.name) {
+            self.address_bus_sources.push(&device.name);
+        }
+        if BusSourcesPart::is_flags_source(&device.dev_type) {
+            self.flags_sources.push(&device.name);
+        }
+    }
+
+    pub fn make_bus_source_init_params(device: &DevicePart) -> Vec<String> {
+        let mut params: Vec<String> = vec![format!("\"{}\"", device.name)];
+        if BusSourcesPart::is_main_bus_source(&device.dev_type, &device.name) {
+            params.push(format!("MainBusSource::{}", device.name));
+        }
+        if BusSourcesPart::is_alu_l_source(&device.dev_type) {
+            params.push(format!("ALULSource::{}", device.name));
+        }
+        if BusSourcesPart::is_alu_r_source(&device.dev_type) {
+            params.push(format!("ALURSource::{}", device.name));
+        }
+        if BusSourcesPart::is_address_bus_source(&device.dev_type, &device.name) {
+            params.push(format!("AddressBusSource::{}", device.name));
+        }
+        if BusSourcesPart::is_flags_source(&device.dev_type) {
+            params.push(format!("FlagsSource::{}", device.name));
+        }
+        if device.dev_type == "IOController" {
+            params.push("ioports".to_string());
+        }
+        params
     }
 
     pub fn is_main_bus_source(dev_type: &str, name: &str) -> bool {

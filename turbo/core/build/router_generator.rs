@@ -16,8 +16,8 @@ pub struct DirectPinRef {
 }
 
 pub struct DevicePart {
-    name: String,
-    dev_type: String,
+    pub name: String,
+    pub dev_type: String,
 }
 
 pub struct DeviceMapPart {
@@ -86,30 +86,8 @@ impl DeviceMapPart {
         writeln!(writer, "    pub fn old_new(ioports: P) -> Self {{")?;
         writeln!(writer, "        DeviceMap {{")?;
         for device in self.devices.iter() {
-            let mut ids: Vec<String> = vec![format!("\"{}\"", device.name)];
-            if BusSourcesPart::is_main_bus_source(&device.dev_type, &device.name) {
-                ids.push(format!("MainBusSource::{}", device.name));
-                self.bus_sources.main_bus_sources.push(&device.name);
-            }
-            if BusSourcesPart::is_alu_l_source(&device.dev_type) {
-                ids.push(format!("ALULSource::{}", device.name));
-                self.bus_sources.alu_l_sources.push(&device.name);
-            }
-            if BusSourcesPart::is_alu_r_source(&device.dev_type) {
-                ids.push(format!("ALURSource::{}", device.name));
-                self.bus_sources.alu_r_sources.push(&device.name);
-            }
-            if BusSourcesPart::is_address_bus_source(&device.dev_type, &device.name) {
-                ids.push(format!("AddressBusSource::{}", device.name));
-                self.bus_sources.address_bus_sources.push(&device.name);
-            }
-            if BusSourcesPart::is_flags_source(&device.dev_type) {
-                ids.push(format!("FlagsSource::{}", device.name));
-                self.bus_sources.flags_sources.push(&device.name);
-            }
-            if device.dev_type == "IOController" {
-                ids.push("ioports".to_string());
-            }
+            self.bus_sources.add_device(device);
+            let ids = BusSourcesPart::make_bus_source_init_params(device);
             writeln!(writer, "            {}: {}::new({}),", device.name, map_device_type(&device.dev_type, &device.name), ids.join(", "))?;
         }
         writeln!(writer, "        }}")?;
