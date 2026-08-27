@@ -64,14 +64,7 @@ impl MuxPart {
             } else {
                 writeln!(writer, "            Self::VALUE_{} => {{", format_const_name(alias))?;
                 for dev_ref in dev_refs {
-                    match dev_ref.pin.as_str() {
-                        "load" |
-                        "laddr" |
-                        "write" |
-                        "to_dev" => writeln!(writer, "                dev.{}.{}.change(&dev.{}, bus_values, enable);", dev_ref.device, dev_ref.pin, dev_ref.device)?,
-                        "out" =>    writeln!(writer, "                dev.{}.{}.change(bus_values, enable);", dev_ref.device, dev_ref.pin)?,
-                        _ =>        writeln!(writer, "                dev.{}.on_{}_change(bus_values, enable);", dev_ref.device, dev_ref.pin)?,
-                    }
+                    writeln!(writer, "                dev.{}.{}.change(bus_values, enable);", dev_ref.device, dev_ref.pin)?;
                 }
                 writeln!(writer, "            }},")?;
             }
