@@ -59,6 +59,24 @@ impl MuxPart {
             }
         }).collect();
 
+        let consts: Vec<TokenStream> = self.device_bits.iter().map(|(value, (alias, dev_refs))| {
+            if dev_refs.len() == 1 {
+                let dev_ref = &dev_refs[0];
+                let value_ident = Ident::new(&format!("VALUE_{}_{}", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase()), Span::call_site());
+                let value_literal = Literal::u32_unsuffixed(*value);
+                quote! {
+                    pub const #value_ident: ControlWord = #value_literal;
+                }
+            } else {
+                let alias_ident = format_ident!("VALUE_{}", format_const_name(alias));
+                let value_literal = Literal::u32_unsuffixed(*value);
+                quote! {
+                    pub const #alias_ident: ControlWord = #value_literal;
+                }
+            }
+        }).collect();
+
+
         let part = quote! {
             pub struct #name;
 
@@ -72,23 +90,16 @@ impl MuxPart {
                     }
                 }
             }
+
+            impl #name {
+                #( #consts )*
+            }
         };
 
         part
     }
 
      pub fn emit(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
-        writeln!(writer, "impl {} {{", self.name)?;
-        for (value, (alias, dev_refs)) in self.device_bits.iter() {
-            if dev_refs.len() == 1 {
-                let dev_ref = &dev_refs[0];
-                writeln!(writer, "    pub const VALUE_{}_{}: ControlWord = 0b{:032b};", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), value)?;
-            } else {
-                writeln!(writer, "    pub const VALUE_{}: ControlWord = 0b{:032b};", format_const_name(alias), value)?;
-            }
-        }
-        writeln!(writer, "}}")?;
-        writeln!(writer)?;
         Ok(())
     }
 
