@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::fs;
+use std::io::Write;
 use crate::bus_sources::BusSourcesPart;
 use crate::mux_part::MuxPart;
 use crate::pin_config::{self, DeviceConfig};
@@ -67,23 +68,17 @@ impl DeviceMapPart {
         }
     }
 
-    fn emit(&mut self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
+    fn emit(&mut self) -> TokenStream {
 
         let device_map_struct = self.emit_struct();
         let device_map_impl = self.emit_impl();
         let bus_sources = self.bus_sources.emit_enums();
-        let wholestruct = quote! {
+
+        quote! {
             #device_map_struct
             #device_map_impl
             #bus_sources
-        };
-
-
-
-        let tree = syn::parse2(wholestruct).unwrap();
-        let formatted = prettyplease::unparse(&tree);
-
-        write!(writer, "{}", formatted)
+        }
     }
 
     fn emit_impl(&self) -> TokenStream {
@@ -173,7 +168,16 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) -> anyhow::Result<()> 
 
     let mut f = fs::File::create(&format!("{}/router_generated.rs", out_dir))?;
 
-    device_map.emit(&mut f)?;
+    let devmap = device_map.emit();
+
+    let whole_file = quote! {
+        #devmap
+    };
+
+    let tree = syn::parse2(whole_file).unwrap();
+    let formatted = prettyplease::unparse(&tree);
+
+    write!(f, "{}", formatted)?;
 
     for m in muxes.values() {
          m.emit(&mut f)?;
