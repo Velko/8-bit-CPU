@@ -29,7 +29,7 @@ impl MuxPart {
         mask
     }
 
-    pub fn emit_ts(&self) -> TokenStream {
+    pub fn emit(&self) -> TokenStream {
         let name = Ident::new(&self.name, Span::call_site());
         let mask = Literal::u32_unsuffixed(self.mask);
         let default = Literal::u32_unsuffixed(self.default);
@@ -97,10 +97,6 @@ impl MuxPart {
         };
 
         part
-    }
-
-     pub fn emit(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
-        Ok(())
     }
 
     pub fn add_device_bit(&mut self, device: &str, pin: &str, alias: &str, value: u8) {

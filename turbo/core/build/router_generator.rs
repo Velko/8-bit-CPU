@@ -173,7 +173,7 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) -> anyhow::Result<()> 
     let devmap = device_map.emit();
     let bus_sources = device_map.emit_bus_sources();
 
-    let muxes_emitted: Vec<_> = muxes.values().map(|m| m.emit_ts()).collect();
+    let muxes_emitted = muxes.values().map(|m| m.emit());
 
     let whole_file = quote! {
         #devmap
@@ -185,10 +185,6 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) -> anyhow::Result<()> 
     let formatted = prettyplease::unparse(&tree);
 
     write!(f, "{}", formatted)?;
-
-    for m in muxes.values() {
-          m.emit(&mut f)?;
-    }
 
     emit_direct_pins(&mut f, &direct_pins)?;
     emit_router_fn(&mut f, &muxes, &direct_pins)?;
