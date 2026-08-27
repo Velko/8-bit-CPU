@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use proc_macro2::{Literal, Span, TokenStream};
-use quote::quote;
+use quote::{format_ident, quote};
 use syn::Ident;
 
 use crate::{pin_config, util::format_const_name};
@@ -33,6 +33,31 @@ impl MuxPart {
         let name = Ident::new(&self.name, Span::call_site());
         let mask = Literal::u32_unsuffixed(self.mask);
         let default = Literal::u32_unsuffixed(self.default);
+        let match_arms: Vec<TokenStream> = self.device_bits.iter().map(|(_, (alias, dev_refs))| {
+            if dev_refs.len() == 1 {
+                let dev_ref = &dev_refs[0];
+                let device_ident = Ident::new(&dev_ref.device, Span::call_site());
+                let pin_ident = Ident::new(&dev_ref.pin, Span::call_site());
+                let value_ident = Ident::new(&format!("VALUE_{}_{}", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase()), Span::call_site());
+                quote! {
+                    Self::#value_ident => dev.#device_ident.#pin_ident.change(bus_values, enable),
+                }
+            } else {
+                let alias_ident = format_ident!("VALUE_{}", format_const_name(alias));
+                let dev_changes: Vec<TokenStream> = dev_refs.iter().map(|dev_ref| {
+                    let device_ident = Ident::new(&dev_ref.device, Span::call_site());
+                    let pin_ident = Ident::new(&dev_ref.pin, Span::call_site());
+                    quote! {
+                        dev.#device_ident.#pin_ident.change(bus_values, enable);
+                    }
+                }).collect();
+                quote! {
+                    Self::#alias_ident => {
+                        #( #dev_changes )*
+                    },
+                }
+            }
+        }).collect();
 
         let part = quote! {
             pub struct #name;
@@ -41,7 +66,10 @@ impl MuxPart {
                 const MASK: ControlWord = #mask;
                 const VALUE_DEFAULT: ControlWord = #default;
                 fn dispatch<P: IOPorts>(dev: &DeviceMap<P>, bus_values: &mut BusValues, word: ControlWord, enable: bool) {
-
+                    match word & Self::MASK {
+                        #( #match_arms )*
+                        _ => {},
+                    }
                 }
             }
         };
@@ -50,30 +78,6 @@ impl MuxPart {
     }
 
      pub fn emit(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
-        writeln!(writer, "pub struct {};", self.name)?;
-        writeln!(writer)?;
-        writeln!(writer, "impl MuxDispatcher for {} {{", self.name)?;
-        writeln!(writer, "    const MASK: ControlWord = 0b{:032b};", self.mask)?;
-        writeln!(writer, "    const VALUE_DEFAULT: ControlWord = 0b{:032b};", self.default)?;
-        writeln!(writer, "    fn dispatch<P: IOPorts>(dev: &DeviceMap<P>, bus_values: &mut BusValues, word: ControlWord, enable: bool) {{")?;
-        writeln!(writer, "        match word & Self::MASK {{")?;
-        for (_value, (alias, dev_refs)) in self.device_bits.iter() {
-            if dev_refs.len() == 1 {
-                let dev_ref = &dev_refs[0];
-                writeln!(writer, "            Self::VALUE_{}_{} => dev.{}.{}.change(bus_values, enable),", dev_ref.device.to_uppercase(), dev_ref.pin.to_uppercase(), dev_ref.device, dev_ref.pin)?;
-            } else {
-                writeln!(writer, "            Self::VALUE_{} => {{", format_const_name(alias))?;
-                for dev_ref in dev_refs {
-                    writeln!(writer, "                dev.{}.{}.change(bus_values, enable);", dev_ref.device, dev_ref.pin)?;
-                }
-                writeln!(writer, "            }},")?;
-            }
-        }
-        writeln!(writer, "            _ => {{}},")?;
-        writeln!(writer, "        }}")?;
-        writeln!(writer, "    }}")?;
-        writeln!(writer, "}}")?;
-        writeln!(writer)?;
         writeln!(writer, "impl {} {{", self.name)?;
         for (value, (alias, dev_refs)) in self.device_bits.iter() {
             if dev_refs.len() == 1 {

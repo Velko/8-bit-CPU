@@ -178,6 +178,7 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) -> anyhow::Result<()> 
     let whole_file = quote! {
         #devmap
         #bus_sources
+        #( #muxes_emitted )*
     };
 
     let tree = syn::parse2(whole_file).unwrap();
@@ -186,7 +187,7 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) -> anyhow::Result<()> 
     write!(f, "{}", formatted)?;
 
     for m in muxes.values() {
-         m.emit(&mut f)?;
+          m.emit(&mut f)?;
     }
 
     emit_direct_pins(&mut f, &direct_pins)?;
