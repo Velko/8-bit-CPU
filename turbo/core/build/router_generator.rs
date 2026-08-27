@@ -72,13 +72,15 @@ impl DeviceMapPart {
 
         let device_map_struct = self.emit_struct();
         let device_map_impl = self.emit_impl();
-        let bus_sources = self.bus_sources.emit_enums();
 
         quote! {
             #device_map_struct
             #device_map_impl
-            #bus_sources
         }
+    }
+
+    pub fn emit_bus_sources(&self) -> TokenStream {
+        self.bus_sources.emit_enums()
     }
 
     fn emit_impl(&self) -> TokenStream {
@@ -169,9 +171,13 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) -> anyhow::Result<()> 
     let mut f = fs::File::create(&format!("{}/router_generated.rs", out_dir))?;
 
     let devmap = device_map.emit();
+    let bus_sources = device_map.emit_bus_sources();
+
+    let muxes_emitted: Vec<_> = muxes.values().map(|m| m.emit_ts()).collect();
 
     let whole_file = quote! {
         #devmap
+        #bus_sources
     };
 
     let tree = syn::parse2(whole_file).unwrap();

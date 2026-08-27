@@ -1,4 +1,7 @@
 use std::collections::HashMap;
+use proc_macro2::{Literal, Span, TokenStream};
+use quote::quote;
+use syn::Ident;
 
 use crate::{pin_config, util::format_const_name};
 
@@ -26,7 +29,27 @@ impl MuxPart {
         mask
     }
 
-    pub fn emit(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
+    pub fn emit_ts(&self) -> TokenStream {
+        let name = Ident::new(&self.name, Span::call_site());
+        let mask = Literal::u32_unsuffixed(self.mask);
+        let default = Literal::u32_unsuffixed(self.default);
+
+        let part = quote! {
+            pub struct #name;
+
+            impl MuxDispatcher for #name {
+                const MASK: ControlWord = #mask;
+                const VALUE_DEFAULT: ControlWord = #default;
+                fn dispatch<P: IOPorts>(dev: &DeviceMap<P>, bus_values: &mut BusValues, word: ControlWord, enable: bool) {
+
+                }
+            }
+        };
+
+        part
+    }
+
+     pub fn emit(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
         writeln!(writer, "pub struct {};", self.name)?;
         writeln!(writer)?;
         writeln!(writer, "impl MuxDispatcher for {} {{", self.name)?;
