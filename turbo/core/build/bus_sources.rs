@@ -1,6 +1,6 @@
 use proc_macro2::{Span, TokenStream};
 use syn::Ident;
-use quote::quote;
+use quote::{format_ident, quote};
 
 use crate::device_map::DevicePart;
 
@@ -46,7 +46,7 @@ impl BusSource {
     }
 
     fn emit_get_value(&self) -> TokenStream {
-        let getter_name = Ident::new(&format!("get_{}_value", self.getter_name), Span::call_site());
+        let getter_name = format_ident!("get_{}_value", self.getter_name);
         let value_type = Ident::new(self.value_type, Span::call_site());
         let type_name = Ident::new(self.type_name, Span::call_site());
         let member_names = &self.member_names;
