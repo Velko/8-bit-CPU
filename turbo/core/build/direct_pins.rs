@@ -10,6 +10,17 @@ pub struct DirectPinRef {
     pub value: u32,
 }
 
+impl DirectPinRef {
+    fn emit(&self, writer: &mut dyn std::io::Write, struct_name: &str) -> std::io::Result<()> {
+        writeln!(writer, "pub struct {};", struct_name)?;
+        writeln!(writer)?;
+        writeln!(writer, "impl BitDispatcher for {} {{", struct_name)?;
+        writeln!(writer, "    const MASK: ControlWord = 0b{:032b};", self.mask)?;
+        writeln!(writer, "    const VALUE: ControlWord = 0b{:032b};", self.value)?;
+        writeln!(writer, "}}")
+    }
+}
+
 pub struct DirectPinsPart {
     pub direct_pins: HashMap<u32, (String, Vec<DirectPinRef>)>,
 }
@@ -22,24 +33,14 @@ impl DirectPinsPart {
     }
 
     pub fn emit(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
-        for (mask, (device_name, direct_pins)) in &self.direct_pins {
+        for (_, (device_name, direct_pins)) in &self.direct_pins {
+            let direct_pin = &direct_pins[0];
             if direct_pins.len() == 1 {
-                let direct_pin = &direct_pins[0];
                 let struct_name = format_type_name(&format!("{}.{}", direct_pin.device, direct_pin.pin));
-                writeln!(writer, "pub struct {};",  struct_name)?;
-                writeln!(writer)?;
-                writeln!(writer, "impl BitDispatcher for {} {{", struct_name)?;
-                writeln!(writer, "    const MASK: ControlWord = 0b{:032b};", direct_pin.mask)?;
-                writeln!(writer, "    const VALUE: ControlWord = 0b{:032b};", direct_pin.value)?;
-                writeln!(writer, "}}")?;
+                direct_pin.emit(writer, &struct_name)?;
             } else {
-                let direct_pin = &direct_pins[0];
-                writeln!(writer, "pub struct {};", format_type_name(&device_name))?;
-                writeln!(writer)?;
-                writeln!(writer, "impl BitDispatcher for {} {{", format_type_name(&device_name))?;
-                writeln!(writer, "    const MASK: ControlWord = 0b{:032b};", mask)?;
-                writeln!(writer, "    const VALUE: ControlWord = 0b{:032b};", direct_pin.value)?;
-                writeln!(writer, "}}")?;
+                let struct_name = format_type_name(&device_name);
+                direct_pin.emit(writer, &struct_name)?;
             }
             writeln!(writer)?;
         }
