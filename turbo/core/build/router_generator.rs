@@ -4,19 +4,11 @@ use std::io::Write;
 use crate::mux_part::MuxPart;
 use crate::pin_config;
 use crate::device_map::DeviceMapPart;
+use crate::direct_pins::{DirectPinRef, DirectPinsPart};
 use crate::util::{format_type_name};
 use quote::quote;
 
-pub struct DirectPinRef {
-    device: String,
-    pin: String,
-    mask: u32,
-    value: u32,
-}
-
-
-
-pub fn generate_router(out_dir: &str, manifest_dir: &str) -> anyhow::Result<()> {
+    pub fn generate_router(out_dir: &str, manifest_dir: &str) -> anyhow::Result<()> {
     let pins = pin_config::PinConfig::from_file(&format!("{}/pins.yaml", manifest_dir))?;
     //println!("Loaded pins: {:?}", pins);
 
@@ -35,7 +27,7 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) -> anyhow::Result<()> 
 
     let mut device_map = DeviceMapPart::new(&pins.devices);
 
-    let mut direct_pins: HashMap<u32, (String, Vec<DirectPinRef>)> = HashMap::new();
+    let mut direct_pins = DirectPinsPart::new();
 
     for device in pins.devices.iter() {
         for (pin_name, pin_entry) in device.pins.iter() {
@@ -49,7 +41,7 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) -> anyhow::Result<()> 
                     // Direct pins are not part of a mux, we will handle them separately
                     let mask = 1 << pin;
                     let value = if *level == pin_config::Level::HIGH { mask } else { 0 };
-                    direct_pins.entry(mask).or_insert_with(|| (format_type_name(&format!("{}.{}", device.name, pin_name)), Vec::new())).1.push(DirectPinRef { device: device.name.clone(), pin: pin_name.clone(), mask, value });
+                    direct_pins.direct_pins.entry(mask).or_insert_with(|| (format_type_name(&format!("{}.{}", device.name, pin_name)), Vec::new())).1.push(DirectPinRef { device: device.name.clone(), pin: pin_name.clone(), mask, value });
                 },
                 pin_config::PinConfigEntry::Alias { pin: apin }  => {
                     match shared.get(apin).unwrap() {
@@ -60,7 +52,7 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) -> anyhow::Result<()> 
                         pin_config::SharedPinConfig::DirectPin { pin: direct_pin, level, .. } => {
                             let mask = 1 << direct_pin;
                             let value = if *level == pin_config::Level::HIGH { mask } else { 0 };
-                            direct_pins.entry(mask).or_insert_with(|| (format_type_name(apin), Vec::new())).1.push(DirectPinRef { device: device.name.clone(), pin: pin_name.clone(), mask, value });
+                            direct_pins.direct_pins.entry(mask).or_insert_with(|| (format_type_name(apin), Vec::new())).1.push(DirectPinRef { device: device.name.clone(), pin: pin_name.clone(), mask, value });
                         },
                     }
                 },
@@ -86,7 +78,7 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) -> anyhow::Result<()> 
 
     write!(f, "{}", formatted)?;
 
-    emit_direct_pins(&mut f, &direct_pins)?;
+    direct_pins.emit(&mut f)?;
     emit_router_fn(&mut f, &muxes, &direct_pins)?;
 
 
@@ -96,7 +88,7 @@ pub fn generate_router(out_dir: &str, manifest_dir: &str) -> anyhow::Result<()> 
 }
 
 
-fn emit_router_fn(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPart>, direct_pins: &HashMap<u32, (String, Vec<DirectPinRef>)>) -> std::io::Result<()> {
+fn emit_router_fn(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPart>, direct_pins: &DirectPinsPart) -> std::io::Result<()> {
     writeln!(writer, "impl< P: IOPorts> DeviceMap<P> {{")?;
     writeln!(writer, "    pub fn route_word(&self, bus_values: &mut BusValues, old_cw: ControlWord, new_cw: ControlWord) {{")?;
 
@@ -107,7 +99,7 @@ fn emit_router_fn(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPa
         writeln!(writer, "        }}")?;
     }
 
-    for (_, (alias, direct_pins)) in direct_pins {
+    for (_, (alias, direct_pins)) in &direct_pins.direct_pins {
         writeln!(writer, "        if old_cw & {}::MASK != new_cw & {}::MASK {{", alias, alias)?;
         for direct_pin in direct_pins {
             writeln!(writer, "            self.{}.{}.change(bus_values, new_cw & {}::MASK == {}::VALUE);", direct_pin.device, direct_pin.pin, alias, alias)?;
@@ -120,37 +112,12 @@ fn emit_router_fn(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPa
     Ok(())
 }
 
-fn emit_direct_pins(writer: &mut dyn std::io::Write, direct_pins: &HashMap<u32, (String, Vec<DirectPinRef>)>) -> std::io::Result<()> {
-    for (mask, (device_name, direct_pins)) in direct_pins {
-        if direct_pins.len() == 1 {
-            let direct_pin = &direct_pins[0];
-            let struct_name = format_type_name(&format!("{}.{}", direct_pin.device, direct_pin.pin));
-            writeln!(writer, "pub struct {};",  struct_name)?;
-            writeln!(writer)?;
-            writeln!(writer, "impl BitDispatcher for {} {{", struct_name)?;
-            writeln!(writer, "    const MASK: ControlWord = 0b{:032b};", direct_pin.mask)?;
-            writeln!(writer, "    const VALUE: ControlWord = 0b{:032b};", direct_pin.value)?;
-            writeln!(writer, "}}")?;
-        } else {
-            let direct_pin = &direct_pins[0];
-            writeln!(writer, "pub struct {};", format_type_name(&device_name))?;
-            writeln!(writer)?;
-            writeln!(writer, "impl BitDispatcher for {} {{", format_type_name(&device_name))?;
-            writeln!(writer, "    const MASK: ControlWord = 0b{:032b};", mask)?;
-            writeln!(writer, "    const VALUE: ControlWord = 0b{:032b};", direct_pin.value)?;
-            writeln!(writer, "}}")?;
-        }
-        writeln!(writer)?;
-    }
-    Ok(())
-}
-
-fn emit_default_control_word(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPart>, direct_pins: &HashMap<u32, (String, Vec<DirectPinRef>)>) -> std::io::Result<()> {
+fn emit_default_control_word(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPart>, direct_pins: &DirectPinsPart) -> std::io::Result<()> {
     writeln!(writer, "pub const DEFAULT_CW: ControlWord = ControlWordBuilder::bootstrap()")?;
     for (name, _) in muxes.iter() {
         writeln!(writer, "        .apply_mux::<{}>({}::VALUE_DEFAULT)", name, name)?;
     }
-    for (_, (device_name, direct_pins)) in direct_pins {
+    for (_, (device_name, direct_pins)) in &direct_pins.direct_pins {
         if direct_pins.len() == 1 {
             let direct_pin = &direct_pins[0];
             writeln!(writer, "        .remove_bit::<{}>()", format_type_name(&format!("{}.{}", direct_pin.device, direct_pin.pin)))?;

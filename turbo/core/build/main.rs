@@ -4,6 +4,7 @@ mod mux_part;
 mod util;
 mod bus_sources;
 mod device_map;
+mod direct_pins;
 use crate::router_generator::generate_router;
 use std::env;
 
