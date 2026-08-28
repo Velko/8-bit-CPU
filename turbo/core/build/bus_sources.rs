@@ -2,7 +2,7 @@ use proc_macro2::{Span, TokenStream};
 use syn::Ident;
 use quote::quote;
 
-use crate::router_generator::DevicePart;
+use crate::device_map::DevicePart;
 
 pub struct BusSourcesPart {
     main_bus_sources: BusSource,

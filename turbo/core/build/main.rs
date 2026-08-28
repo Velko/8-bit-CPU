@@ -3,6 +3,7 @@ mod pin_config;
 mod mux_part;
 mod util;
 mod bus_sources;
+mod device_map;
 use crate::router_generator::generate_router;
 use std::env;
 
