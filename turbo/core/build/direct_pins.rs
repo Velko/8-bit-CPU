@@ -1,5 +1,9 @@
 use std::collections::HashMap;
 
+use proc_macro2::{Literal, Span, TokenStream};
+use quote::quote;
+use syn::Ident;
+
 use crate::util::format_type_name;
 
 #[derive(Debug, Clone)]
@@ -11,13 +15,17 @@ pub struct DirectPinRef {
 }
 
 impl DirectPinRef {
-    fn emit(&self, writer: &mut dyn std::io::Write, struct_name: &str) -> std::io::Result<()> {
-        writeln!(writer, "pub struct {};", struct_name)?;
-        writeln!(writer)?;
-        writeln!(writer, "impl BitDispatcher for {} {{", struct_name)?;
-        writeln!(writer, "    const MASK: ControlWord = 0b{:032b};", self.mask)?;
-        writeln!(writer, "    const VALUE: ControlWord = 0b{:032b};", self.value)?;
-        writeln!(writer, "}}")
+    fn emit(&self, struct_name: &str) -> TokenStream {
+        let name = Ident::new(struct_name, Span::call_site());
+        let mask = Literal::u32_unsuffixed(self.mask);
+        let value = Literal::u32_unsuffixed(self.value);
+        quote! {
+            pub struct #name;
+            impl BitDispatcher for #name {
+                const MASK: ControlWord = #mask;
+                const VALUE: ControlWord = #value;
+            }
+        }
     }
 }
 
@@ -32,18 +40,18 @@ impl DirectPinsPart {
         }
     }
 
-    pub fn emit(&self, writer: &mut dyn std::io::Write) -> std::io::Result<()> {
+    pub fn emit(&self) -> Vec<TokenStream> {
+        let mut pins_emitted: Vec<TokenStream> = Vec::new();
         for (_, (device_name, direct_pins)) in &self.direct_pins {
             let direct_pin = &direct_pins[0];
             if direct_pins.len() == 1 {
                 let struct_name = format_type_name(&format!("{}.{}", direct_pin.device, direct_pin.pin));
-                direct_pin.emit(writer, &struct_name)?;
+                pins_emitted.push(direct_pin.emit(&struct_name));
             } else {
                 let struct_name = format_type_name(&device_name);
-                direct_pin.emit(writer, &struct_name)?;
+                pins_emitted.push(direct_pin.emit(&struct_name));
             }
-            writeln!(writer)?;
         }
-        Ok(())
+        pins_emitted
     }
 }

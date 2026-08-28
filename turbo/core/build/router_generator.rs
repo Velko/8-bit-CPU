@@ -66,11 +66,13 @@ use quote::quote;
     let bus_sources = device_map.emit_bus_sources();
 
     let muxes_emitted = muxes.values().map(|m| m.emit());
+    let direct_pins_emitted = direct_pins.emit();
 
     let whole_file = quote! {
         #devmap
         #bus_sources
         #( #muxes_emitted )*
+        #( #direct_pins_emitted )*
     };
 
     let tree = syn::parse2(whole_file).unwrap();
@@ -78,8 +80,7 @@ use quote::quote;
 
     write!(f, "{}", formatted)?;
 
-    direct_pins.emit(&mut f)?;
-    emit_router_fn(&mut f, &muxes, &direct_pins)?;
+        emit_router_fn(&mut f, &muxes, &direct_pins)?;
 
 
     emit_default_control_word(&mut f, &muxes, &direct_pins)?;
