@@ -1,6 +1,6 @@
 VPATH=../vpi
 
-all: launcher.vvp hdb_comm.vpi
+all: launcher.vvp hdb_comm.vpi control_rom*.hex
 
 include ../cpu-modules/Modules.mk
 include ../vpi/Makefile
