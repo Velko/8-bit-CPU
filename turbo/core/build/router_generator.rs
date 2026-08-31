@@ -6,8 +6,9 @@ use crate::pin_config;
 use crate::device_map::DeviceMapPart;
 use crate::direct_pins::{DirectPinRef, DirectPinsPart};
 use crate::util::{format_type_name};
-use proc_macro2::TokenStream;
+use proc_macro2::{Span, TokenStream};
 use quote::{format_ident, quote};
+use syn::Ident;
 
     pub fn generate_router(out_dir: &str, manifest_dir: &str) -> anyhow::Result<()> {
     let pins = pin_config::PinConfig::from_file(&format!("{}/pins.yaml", manifest_dir))?;
@@ -69,6 +70,7 @@ use quote::{format_ident, quote};
     let muxes_emitted = muxes.values().map(|m| m.emit());
     let direct_pins_emitted = direct_pins.emit();
     let router_fn = emit_router_fn(&muxes, &direct_pins);
+    let default_cw = emit_default_control_word(&muxes, &direct_pins);
 
     let whole_file = quote! {
         #devmap
@@ -76,14 +78,13 @@ use quote::{format_ident, quote};
         #( #muxes_emitted )*
         #( #direct_pins_emitted )*
         #router_fn
+        #default_cw
     };
 
     let tree = syn::parse2(whole_file).unwrap();
     let formatted = prettyplease::unparse(&tree);
 
     write!(f, "{}", formatted)?;
-
-    emit_default_control_word(&mut f, &muxes, &direct_pins)?;
 
     Ok(())
 }
@@ -127,21 +128,37 @@ fn emit_router_fn(muxes: &HashMap<String, MuxPart>, direct_pins: &DirectPinsPart
     }
 }
 
-fn emit_default_control_word(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPart>, direct_pins: &DirectPinsPart) -> std::io::Result<()> {
-    writeln!(writer, "pub const DEFAULT_CW: ControlWord = ControlWordBuilder::bootstrap()")?;
+fn emit_default_control_word(muxes: &HashMap<String, MuxPart>, direct_pins: &DirectPinsPart) -> TokenStream {
+    let mut tokens = quote! {
+        pub const DEFAULT_CW: ControlWord = ControlWordBuilder::bootstrap()
+    };
     for (name, _) in muxes.iter() {
-        writeln!(writer, "        .apply_mux::<{}>({}::VALUE_DEFAULT)", name, name)?;
+        let name_ident = Ident::new(&name, Span::call_site());
+        tokens = quote! {
+            #tokens
+            .apply_mux::<#name_ident>(#name_ident::VALUE_DEFAULT)
+        };
     }
     for (_, (device_name, direct_pins)) in &direct_pins.direct_pins {
         if direct_pins.len() == 1 {
             let direct_pin = &direct_pins[0];
-            writeln!(writer, "        .remove_bit::<{}>()", format_type_name(&format!("{}.{}", direct_pin.device, direct_pin.pin)))?;
+            let type_name = Ident::new(&format_type_name(&format!("{}.{}", direct_pin.device, direct_pin.pin)), Span::call_site());
+            tokens = quote! {
+                #tokens
+                .remove_bit::<#type_name>()
+            };
         } else {
-            writeln!(writer, "        .remove_bit::<{}>()", format_type_name(&device_name))?;
+            let type_name = Ident::new(&device_name, Span::call_site());
+            tokens = quote! {
+                #tokens
+                .remove_bit::<#type_name>()
+            };
         }
     }
-    writeln!(writer, "        .build();")?;
-    writeln!(writer)?;
-    Ok(())
+    tokens = quote! {
+        #tokens
+        .build();
+    };
+    tokens
 }
 
