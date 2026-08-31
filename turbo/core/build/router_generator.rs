@@ -6,7 +6,8 @@ use crate::pin_config;
 use crate::device_map::DeviceMapPart;
 use crate::direct_pins::{DirectPinRef, DirectPinsPart};
 use crate::util::{format_type_name};
-use quote::quote;
+use proc_macro2::TokenStream;
+use quote::{format_ident, quote};
 
     pub fn generate_router(out_dir: &str, manifest_dir: &str) -> anyhow::Result<()> {
     let pins = pin_config::PinConfig::from_file(&format!("{}/pins.yaml", manifest_dir))?;
@@ -67,12 +68,14 @@ use quote::quote;
 
     let muxes_emitted = muxes.values().map(|m| m.emit());
     let direct_pins_emitted = direct_pins.emit();
+    let router_fn = emit_router_fn(&muxes, &direct_pins);
 
     let whole_file = quote! {
         #devmap
         #bus_sources
         #( #muxes_emitted )*
         #( #direct_pins_emitted )*
+        #router_fn
     };
 
     let tree = syn::parse2(whole_file).unwrap();
@@ -80,37 +83,48 @@ use quote::quote;
 
     write!(f, "{}", formatted)?;
 
-        emit_router_fn(&mut f, &muxes, &direct_pins)?;
-
-
     emit_default_control_word(&mut f, &muxes, &direct_pins)?;
 
     Ok(())
 }
 
 
-fn emit_router_fn(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPart>, direct_pins: &DirectPinsPart) -> std::io::Result<()> {
-    writeln!(writer, "impl< P: IOPorts> DeviceMap<P> {{")?;
-    writeln!(writer, "    pub fn route_word(&self, bus_values: &mut BusValues, old_cw: ControlWord, new_cw: ControlWord) {{")?;
+fn emit_router_fn(muxes: &HashMap<String, MuxPart>, direct_pins: &DirectPinsPart) -> TokenStream {
 
-    for (name, _) in muxes.iter() {
-        writeln!(writer, "        if old_cw & {}::MASK != new_cw & {}::MASK {{", name, name)?;
-        writeln!(writer, "            {}::dispatch(self, bus_values, old_cw, false);", name)?;
-        writeln!(writer, "            {}::dispatch(self, bus_values, new_cw, true);", name)?;
-        writeln!(writer, "        }}")?;
-    }
-
-    for (_, (alias, direct_pins)) in &direct_pins.direct_pins {
-        writeln!(writer, "        if old_cw & {}::MASK != new_cw & {}::MASK {{", alias, alias)?;
-        for direct_pin in direct_pins {
-            writeln!(writer, "            self.{}.{}.change(bus_values, new_cw & {}::MASK == {}::VALUE);", direct_pin.device, direct_pin.pin, alias, alias)?;
+    let muxes_ts = muxes.iter().map(|(name, _)| {
+        let name_ident = format_ident!("{}", name);
+        quote! {
+            if old_cw & #name_ident::MASK != new_cw & #name_ident::MASK {
+                #name_ident::dispatch(self, bus_values, old_cw, false);
+                #name_ident::dispatch(self, bus_values, new_cw, true);
+            }
         }
-        writeln!(writer, "        }}")?;
+    });
+
+    let direct_pins_ts = direct_pins.direct_pins.iter().map(|(_, (alias, direct_pins))| {
+        let alias_ident = format_ident!("{}", alias);
+        let direct_pin_changes = direct_pins.iter().map(|direct_pin| {
+            let device_ident = format_ident!("{}", direct_pin.device);
+            let pin_ident = format_ident!("{}", direct_pin.pin);
+            quote! {
+                self.#device_ident.#pin_ident.change(bus_values, new_cw & #alias_ident::MASK == #alias_ident::VALUE);
+            }
+        });
+        quote! {
+            if old_cw & #alias_ident::MASK != new_cw & #alias_ident::MASK {
+                #( #direct_pin_changes )*
+            }
+        }
+    });
+
+    quote! {
+        impl <P: IOPorts> DeviceMap<P> {
+            pub fn route_word(&self, bus_values: &mut BusValues, old_cw: ControlWord, new_cw: ControlWord) {
+                #( #muxes_ts )*
+                #( #direct_pins_ts )*
+            }
+        }
     }
-    writeln!(writer, "    }}")?;
-    writeln!(writer, "}}")?;
-    writeln!(writer)?;
-    Ok(())
 }
 
 fn emit_default_control_word(writer: &mut dyn std::io::Write, muxes: &HashMap<String, MuxPart>, direct_pins: &DirectPinsPart) -> std::io::Result<()> {
