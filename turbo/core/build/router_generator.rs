@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use std::fs;
 use std::io::Write;
+use crate::bus_sources::BusSourcesPart;
 use crate::mux_part::MuxPart;
 use crate::pin_config;
 use crate::device_map::DeviceMapPart;
@@ -28,6 +29,7 @@ use syn::Ident;
         .collect();
 
     let mut device_map = DeviceMapPart::new(&pins.devices);
+    let bus_sources = BusSourcesPart::new(&pins.devices);
 
     let mut direct_pins = DirectPinsPart::new();
 
@@ -64,8 +66,8 @@ use syn::Ident;
 
     let mut f = fs::File::create(&format!("{}/router_generated.rs", out_dir))?;
 
-    let devmap = device_map.emit();
-    let bus_sources = device_map.emit_bus_sources();
+    let devmap = device_map.emit(&bus_sources);
+    let bus_source_enums = bus_sources.emit_enums();
 
     let muxes_emitted = muxes.values().map(|m| m.emit());
     let direct_pins_emitted = direct_pins.emit();
@@ -74,7 +76,7 @@ use syn::Ident;
 
     let whole_file = quote! {
         #devmap
-        #bus_sources
+        #bus_source_enums
         #( #muxes_emitted )*
         #( #direct_pins_emitted )*
         #router_fn

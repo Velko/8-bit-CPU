@@ -28,7 +28,6 @@ pub struct DevicePart {
 
 pub struct DeviceMapPart {
     devices: Vec<DevicePart>,
-    bus_sources: BusSourcesPart,
 }
 
 impl DeviceMapPart {
@@ -38,11 +37,8 @@ impl DeviceMapPart {
             dev_type: d.dev_type.clone(),
         }).collect();
 
-        let bus_sources = BusSourcesPart::new(&devices);
-
         DeviceMapPart {
             devices,
-            bus_sources,
         }
     }
 
@@ -58,10 +54,10 @@ impl DeviceMapPart {
         }
     }
 
-    pub fn emit(&mut self) -> TokenStream {
+    pub fn emit(&mut self, bus_sources: &BusSourcesPart) -> TokenStream {
 
         let device_map_struct = self.emit_struct();
-        let device_map_impl = self.emit_impl();
+        let device_map_impl = self.emit_impl(bus_sources);
 
         quote! {
             #device_map_struct
@@ -69,15 +65,11 @@ impl DeviceMapPart {
         }
     }
 
-    pub fn emit_bus_sources(&self) -> TokenStream {
-        self.bus_sources.emit_enums()
-    }
-
-    fn emit_impl(&self) -> TokenStream {
+    fn emit_impl(&self, bus_sources: &BusSourcesPart) -> TokenStream {
         let names: Vec<_> = self.devices.iter().map(|d|Ident::new(&d.name, Span::call_site())).collect();
         let constructors: Vec<_> = self.devices.iter().map(|d|d.emit_constructor()).collect();
 
-        let getters = self.bus_sources.emit_getters();
+        let getters = bus_sources.emit_getters();
 
         quote! {
             impl<P: IOPorts> DeviceMap<P> {

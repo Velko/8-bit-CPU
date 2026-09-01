@@ -2,7 +2,7 @@ use proc_macro2::{Span, TokenStream};
 use syn::Ident;
 use quote::{format_ident, quote};
 
-use crate::device_map::DevicePart;
+use crate::{device_map::DevicePart, pin_config::DeviceConfig};
 
 pub struct BusSourcesPart {
     main_bus_sources: BusSource,
@@ -69,7 +69,7 @@ impl BusSource {
 }
 
 impl BusSourcesPart {
-    pub fn new(devices: &[DevicePart]) -> Self {
+    pub fn new(dev_cfg: &[DeviceConfig]) -> Self {
         let mut bus_sources = BusSourcesPart {
             main_bus_sources: BusSource::new("MainBusSource", "main_bus", "u8"),
             address_bus_sources: BusSource::new("AddressBusSource", "address_bus", "u16"),
@@ -78,14 +78,14 @@ impl BusSourcesPart {
             flags_sources: BusSource::new("FlagsSource", "flags","ALUFlags"),
         };
 
-        for device in devices {
+        for device in dev_cfg {
             bus_sources.add_device(device);
         }
 
         bus_sources
     }
 
-    fn add_device(&mut self, device: &DevicePart) {
+    fn add_device(&mut self, device: &DeviceConfig) {
         if BusSourcesPart::is_main_bus_source(&device.dev_type, &device.name) {
             self.main_bus_sources.push(&device.name);
         }
