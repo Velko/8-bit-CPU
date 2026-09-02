@@ -1,4 +1,4 @@
-use std::{cell::Cell, net::{SocketAddr, UdpSocket}, str, sync::mpsc::{self, Receiver, Sender}, thread};
+use std::{cell::Cell, net::{SocketAddr, UdpSocket}, str, sync::{Arc, Mutex, mpsc::{self, Receiver, Sender}}, thread};
 use turbo_core::IOMessage;
 
 const BUFFER_SIZE: usize = 1024;
@@ -7,19 +7,23 @@ pub struct CommsChannel {
     socket: UdpSocket,
     pub rx: PeekableReceiver<char>,
     response_destination: Option<SocketAddr>,
+    latest_addr: LatestSlot<SocketAddr>,
 }
 
 impl CommsChannel {
     pub fn new(port: u16) -> Self {
         let socket = UdpSocket::bind(format!("127.0.0.1:{}", port)).expect("Couldn't bind to address");
         let (tx, rx): (Sender<char>, Receiver<char>) = mpsc::channel();
+        let latest_addr: LatestSlot<SocketAddr> = LatestSlot::new();
 
         let r_socket = socket.try_clone().expect("Couldn't clone socket");
+        let r_addr = latest_addr.clone();
         thread::spawn(move || {
             let mut buf = [0; BUFFER_SIZE];
 
             loop {
-                let (amt, _src) = r_socket.recv_from(&mut buf).expect("Couldn't receive");
+                let (amt, src) = r_socket.recv_from(&mut buf).expect("Couldn't receive");
+                r_addr.send(src);
                 for byte in &buf[..amt] {
                     tx.send(*byte as char).expect("Couldn't send to main");
                 }
@@ -30,6 +34,7 @@ impl CommsChannel {
             socket,
             rx: PeekableReceiver::new(rx),
             response_destination: None,
+            latest_addr,
         }
     }
 
@@ -54,8 +59,9 @@ impl CommsChannel {
     }
 
     fn send_to_dest(&self, data: &[u8]) {
-        let dest = self.response_destination.as_ref().expect("Response destination not configured");
-        self.socket.send_to(data, dest).expect("Couldn't send response");
+        if let Some(dest) = self.response_destination.or_else(|| self.latest_addr.read()) {
+            self.socket.send_to(data, dest).expect("Couldn't send response");
+        }
     }
 
     pub fn send_response_message(&self, message: &IOMessage) {
@@ -121,5 +127,39 @@ impl<T> PeekableReceiver<T> where T: Copy {
             panic!("Peeked value already exists");
         }
         self.peeked.set(Some(value));
+    }
+}
+
+pub struct LatestSlot<T> {
+    inner: Arc<Mutex<Option<T>>>,
+}
+
+impl<T: Clone> LatestSlot<T> {
+    pub fn new() -> Self {
+        Self {
+            inner: Arc::new(Mutex::new(None)),
+        }
+    }
+
+    /// Overwrites the slot with a new item.
+    pub fn send(&self, item: T) {
+        let mut guard = self.inner.lock().unwrap();
+        *guard = Some(item);
+    }
+
+    /// Instantly returns a clone of the latest item, or None if it's empty.
+    /// Does not block and does not consume the item.
+    pub fn read(&self) -> Option<T> {
+        let guard = self.inner.lock().unwrap();
+        guard.clone() // Clones the Option<T> inside the mutex
+    }
+}
+
+// Implement Clone so handles can be passed to multiple threads
+impl<T> Clone for LatestSlot<T> {
+    fn clone(&self) -> Self {
+        Self {
+            inner: Arc::clone(&self.inner),
+        }
     }
 }
