@@ -26,6 +26,7 @@
 `define C_ARG_R       2
 `define D_ARG_R       3
 `define T_ARG_R       4
+`define Z_ARG_R       6
 
 module alu_block(
         inout [7:0] main_bus,
@@ -122,6 +123,14 @@ module alu_block(
         .alu_r(alu_arg_r)
     );
 
+    const_arg zero (
+        .value(8'h0),
+        .loutn(1'b1),
+        .routn(arg_r_mux.y[`Z_ARG_R]),
+        .alu_l(alu_arg_l),
+        .alu_r(alu_arg_r)
+    );
+
     alu_addsub addsub(
         .outn(out_mux.y[`ADDSUB_OUT]),
         .sub(alt),
@@ -185,9 +194,5 @@ module alu_block(
 
     demux_138 arg_l_mux(.e1n(1'b0), .e2n(1'b0), .e3(1'b1), .a({1'b0, arg_l}));
     demux_138 arg_r_mux(.e1n(1'b0), .e2n(1'b0), .e3(1'b1), .a(arg_r));
-
-    wire [7:0] z_source;
-    buffer_245 arg_r_fz(.oen(arg_r_mux.y[6]), .dir(1'b1), .a(z_source), .b(alu_arg_r));
-    assign z_source = 8'b0;
 
 endmodule

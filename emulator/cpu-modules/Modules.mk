@@ -1,4 +1,5 @@
 GPREGSRC=../cpu-modules/gp_register.v ../chips/dff_377.v ../chips/dff_374.v ../chips/buffer_245.v
+CONSTARGSRC=../cpu-modules/const_arg.v ../chips/buffer_245.v
 ALUADDSUBSRC=../cpu-modules/alu_addsub.v ../chips/buffer_245.v ../chips/adder_283.v ../chips/xor_86b.v ../chips/xor_86p.v ../chips/and_08p.v ../chips/buffer_125p.v
 ALUANDORSRC=../cpu-modules/alu_andor.v ../chips/buffer_245.v ../chips/and_08b.v ../chips/or_32b.v ../chips/mux_157b.v
 ALUXORNOTSRC=../cpu-modules/alu_xornot.v ../chips/buffer_245.v ../chips/xor_86b.v ../chips/or_32b.v
@@ -13,7 +14,7 @@ IOCTLSRC=../cpu-modules/io_control.v ../chips/dff_377.v ../chips/demux_138.v ../
 CTRLSRC=../cpu-modules/control_logic.v ../chips/counter_161.v ../chips/dff_74.v ../chips/nand_00p.v ../chips/rom_async.v
 CLOCKSRC=../cpu-modules/clock.v ../chips/dff_74.v ../chips/nand_00p.v ../chips/nor_02p.v ../chips/xor_86p.v
 DEMUX16SRC=../cpu-modules/demux_16.v ../chips/demux_138.v
-ALUBLOCKSRC=../cpu-modules/alu_block.v $(GPREGSRC) $(ALUADDSUBSRC) $(ALUANDORSRC) $(ALUXORNOTSRC) $(ALUSHIFTSWAPSRC) $(FLGREGSRC) $(DEMUX16SRC) ../chips/demux_138.v
+ALUBLOCKSRC=../cpu-modules/alu_block.v $(GPREGSRC) $(CONSTARGSRC) $(ALUADDSUBSRC) $(ALUANDORSRC) $(ALUXORNOTSRC) $(ALUSHIFTSWAPSRC) $(FLGREGSRC) $(DEMUX16SRC) ../chips/demux_138.v
 MEMBLOCKSRC=../cpu-modules/mem_block.v $(MEMSRC) $(IREGSRC) $(TXREGSRC) $(ACSRC) $(ACALCSRC) $(DEMUX16SRC) ../chips/demux_138.v
 IOBLOCKSRC=../cpu-modules/io_block.v $(IOCTLSRC) $(DEMUX16SRC) ../chips/demux_138.v ../cpu-modules/display_num.v ../cpu-modules/display_char.v ../cpu-modules/display_lcd.v ../cpu-modules/uart.v
 CPUSRC=../cpu-modules/cpu.v ../cpu-modules/debug.v ../cpu-modules/clock_simple.v ../cpu-modules/cword_splitter.v $(ALUBLOCKSRC) $(MEMBLOCKSRC) $(CTRLSRC) $(IOBLOCKSRC)
