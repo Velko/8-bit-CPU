@@ -123,14 +123,18 @@ devices:
         pin: "Alu.alt"
       carry_in:
         pin: "Alu.carry_in"
-  - name: "AndOr"
+  - name: "And"
     type: "ALU"
     pins:
       out:
         mux: "OutMux"
         pin: 6
-      alt:
-        pin: "Alu.alt"
+  - name: "Or"
+    type: "ALU"
+    pins:
+      out:
+        mux: "OutMux"
+        pin: 13
   - name: "Xor"
     type: "ALU"
     pins:

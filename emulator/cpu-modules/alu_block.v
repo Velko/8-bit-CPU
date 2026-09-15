@@ -4,9 +4,10 @@
 `define D_OUT          3
 `define F_OUT          4
 `define ADDSUB_OUT     5
-`define ANDOR_OUT      6
+`define AND_OUT        6
 `define XOR_OUT       10
 `define SHIFTSWAP_OUT  7
+`define OR_OUT        13
 
 
 `define A_LOAD       0
@@ -154,9 +155,16 @@ module alu_block(
         .cout(cfb)
     );
 
-    alu_andor andor(
-        .outn(out_mux.y[`ANDOR_OUT]),
-        .fn_or(alt),
+    alu_and a_and(
+        .outn(out_mux.y[`AND_OUT]),
+
+        .bus(main_bus),
+        .arg_l(alu_arg_l),
+        .arg_r(alu_arg_r)
+    );
+
+    alu_or a_or(
+        .outn(out_mux.y[`OR_OUT]),
 
         .bus(main_bus),
         .arg_l(alu_arg_l),

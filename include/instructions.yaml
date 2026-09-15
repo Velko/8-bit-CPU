@@ -117,7 +117,7 @@ instructions:
       - - r0.load
         - r0.alu_l
         - r1.alu_r
-        - AndOr.out
+        - And.out
         - F.calc
 
   - name: "or"
@@ -128,8 +128,7 @@ instructions:
       - - r0.load
         - r0.alu_l
         - r1.alu_r
-        - AndOr.out
-        - AndOr.alt
+        - Or.out
         - F.calc
 
   - name: "xor"
@@ -783,10 +782,9 @@ instructions:
       - r0: gp_regs
       - r1: ^gp_regs
     steps:
-      # .add_step(l.alu_l, r.alu_r, AndOr.out, F.calc)
       - - r0.alu_l
         - r1.alu_r
-        - AndOr.out
+        - And.out
         - F.calc
 
   - name: "ld"
@@ -965,7 +963,7 @@ instructions:
       - - r0.load
         - r0.alu_l
         - T.alu_r
-        - AndOr.out
+        - And.out
         - F.calc
 
   - name: "ori"
@@ -980,8 +978,7 @@ instructions:
       - - r0.load
         - r0.alu_l
         - T.alu_r
-        - AndOr.out
-        - AndOr.alt
+        - Or.out
         - F.calc
 
   - name: "xori"

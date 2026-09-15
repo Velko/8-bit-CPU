@@ -426,40 +426,40 @@ const struct op_microcode microcode[] PROGMEM = {
     { .default_steps = {0x07ff0b36},},
 
     /* 4b or_A_B     */
-    { .default_steps = {0x07ff2406},},
+    { .default_steps = {0x07ff040d},},
 
     /* 4c or_A_C     */
-    { .default_steps = {0x07ff2806},},
+    { .default_steps = {0x07ff080d},},
 
     /* 4d or_A_D     */
-    { .default_steps = {0x07ff2c06},},
+    { .default_steps = {0x07ff0c0d},},
 
     /* 4e or_B_A     */
-    { .default_steps = {0x07ff2116},},
+    { .default_steps = {0x07ff011d},},
 
     /* 4f or_B_C     */
-    { .default_steps = {0x07ff2916},},
+    { .default_steps = {0x07ff091d},},
 
     /* 50 or_B_D     */
-    { .default_steps = {0x07ff2d16},},
+    { .default_steps = {0x07ff0d1d},},
 
     /* 51 or_C_A     */
-    { .default_steps = {0x07ff2226},},
+    { .default_steps = {0x07ff022d},},
 
     /* 52 or_C_B     */
-    { .default_steps = {0x07ff2626},},
+    { .default_steps = {0x07ff062d},},
 
     /* 53 or_C_D     */
-    { .default_steps = {0x07ff2e26},},
+    { .default_steps = {0x07ff0e2d},},
 
     /* 54 or_D_A     */
-    { .default_steps = {0x07ff2336},},
+    { .default_steps = {0x07ff033d},},
 
     /* 55 or_D_B     */
-    { .default_steps = {0x07ff2736},},
+    { .default_steps = {0x07ff073d},},
 
     /* 56 or_D_C     */
-    { .default_steps = {0x07ff2b36},},
+    { .default_steps = {0x07ff0b3d},},
 
     /* 57 xor_A_B    */
     { .default_steps = {0x07ff040a},},
@@ -1267,16 +1267,16 @@ const struct op_microcode microcode[] PROGMEM = {
     { .default_steps = {0x07bd5869, 0x07ff1336},},
 
     /* 122 ori_A_imm  */
-    { .default_steps = {0x07bd5869, 0x07ff3006},},
+    { .default_steps = {0x07bd5869, 0x07ff100d},},
 
     /* 123 ori_B_imm  */
-    { .default_steps = {0x07bd5869, 0x07ff3116},},
+    { .default_steps = {0x07bd5869, 0x07ff111d},},
 
     /* 124 ori_C_imm  */
-    { .default_steps = {0x07bd5869, 0x07ff3226},},
+    { .default_steps = {0x07bd5869, 0x07ff122d},},
 
     /* 125 ori_D_imm  */
-    { .default_steps = {0x07bd5869, 0x07ff3336},},
+    { .default_steps = {0x07bd5869, 0x07ff133d},},
 
     /* 126 xori_A_imm */
     { .default_steps = {0x07bd5869, 0x07ff100a},},
