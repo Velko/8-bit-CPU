@@ -6,9 +6,9 @@
 `define ADDSUB_OUT     5
 `define AND_OUT        6
 `define XOR_OUT       10
-`define SHIFTSWAP_OUT  7
+`define SHIFT_OUT      7
 `define OR_OUT        13
-
+`define SWAP_OUT      14
 
 `define A_LOAD       0
 `define B_LOAD       1
@@ -179,9 +179,8 @@ module alu_block(
         .arg_r(alu_arg_r)
     );
 
-    alu_shiftswap shiftswap(
-        .outn(out_mux.y[`SHIFTSWAP_OUT]),
-        .fn_swap(alt),
+    alu_shift a_shift(
+        .outn(out_mux.y[`SHIFT_OUT]),
 
         .bus(main_bus),
         .arg_l(alu_arg_l),
@@ -189,6 +188,14 @@ module alu_block(
         .cin(cin),
         .cout(cfb)
     );
+
+    alu_swap a_swap(
+        .outn(out_mux.y[`SWAP_OUT]),
+
+        .bus(main_bus),
+        .arg_l(alu_arg_l)
+    );
+
 
     flags_reg flags(
         .boutn(out_mux.y[`F_OUT]),

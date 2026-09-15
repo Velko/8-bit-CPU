@@ -2,8 +2,8 @@ test: test-138 test-161-basics test-161-chaining test-245 test-173 test-283 test
       test-08b test-08p test-02b test-02p test-157b test-125p test-32b test-32p test-00b test-00p \
       test-10p test-rom_async test-373 test-595 test-377 test-374 test-85b\
       test-193-basics test-193-chaining test-04p test-74\
-      test-gp-register test-alu-addsub test-alu-and test-alu-or test-alu-xor test-alu-shiftswap \
-      test-flags-reg test-io-control \
+      test-gp-register test-alu-addsub test-alu-and test-alu-or test-alu-xor test-alu-shift \
+	  test-alu-swap test-flags-reg test-io-control \
       test-alu-block test-ac test-memory test-address-calc test-control-logic test-clock
 
 VPATH=../vpi
@@ -201,9 +201,14 @@ TBALUXORSRC=$(ALUXORSRC) testhelpers.v tb_alu_xor.v
 tb_alu-xor.vvp: $(TBALUXORSRC)
 	iverilog -Wall $^ -o $@
 
-TBALUSHIFTSWAPSRC=$(ALUSHIFTSWAPSRC) testhelpers.v tb_alu_shiftswap.v
+TBALUSHIFTSRC=$(ALUSHIFTSRC) testhelpers.v tb_alu_shift.v
 
-tb_alu-shiftswap.vvp: $(TBALUSHIFTSWAPSRC)
+tb_alu-shift.vvp: $(TBALUSHIFTSRC)
+	iverilog -Wall $^ -o $@
+
+TBALUSWAPSRC=$(ALUSWAPSRC) testhelpers.v tb_alu_swap.v
+
+tb_alu-swap.vvp: $(TBALUSWAPSRC)
 	iverilog -Wall $^ -o $@
 
 TBFLGREGSRC=$(FLGREGSRC) testhelpers.v tb_flags_reg.v

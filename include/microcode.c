@@ -638,16 +638,16 @@ const struct op_microcode microcode[] PROGMEM = {
     },
 
     /* 7f swap_A     */
-    { .default_steps = {0x07ff3807},},
+    { .default_steps = {0x07ff180e},},
 
     /* 80 swap_B     */
-    { .default_steps = {0x07ff3917},},
+    { .default_steps = {0x07ff191e},},
 
     /* 81 swap_C     */
-    { .default_steps = {0x07ff3a27},},
+    { .default_steps = {0x07ff1a2e},},
 
     /* 82 swap_D     */
-    { .default_steps = {0x07ff3b37},},
+    { .default_steps = {0x07ff1b3e},},
 
     /* 83 cmp_A_B    */
     { .default_steps = {0x07ff24f5},},

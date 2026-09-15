@@ -49,7 +49,8 @@ pub struct AddSub;
 pub struct And;
 pub struct Or;
 pub struct Xor;
-pub struct ShiftSwap;
+pub struct Shift;
+pub struct Swap;
 
 impl ALUOperation for AddSub {
     fn solve(alu: &ALU<Self>, bus_values: &BusValues) -> u8 {
@@ -124,39 +125,36 @@ impl ALUOperation for Xor {
     }
 }
 
-impl ALUOperation for ShiftSwap {
+impl ALUOperation for Shift {
     fn solve(alu: &ALU<Self>, bus_values: &BusValues) -> u8 {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
-        if alu.alt.is_enabled() {
-            // Swap
-            (alu_l_value << 4) | (alu_l_value >> 4)
-        } else {
-            // Shift right
-            let carry_in = if alu.carry_in.is_enabled() { 0x80 } else { 0 };
-            alu_l_value >> 1 | carry_in
-        }
+
+        // Shift right
+        let carry_in = if alu.carry_in.is_enabled() { 0x80 } else { 0 };
+        alu_l_value >> 1 | carry_in
     }
 
-    fn solve_flags(alu: &ALU<Self>, bus_values: &BusValues) -> ALUFlags {
+    fn solve_flags(_alu: &ALU<Self>, bus_values: &BusValues) -> ALUFlags {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
-        if alu.alt.is_enabled() {
-            // Swap
-            ALUFlags {
-                carry: None,
-                overflow: None,
-            }
-        } else {
-            // Shift right
-            let carry = (alu_l_value & 0x01) != 0;
-            ALUFlags {
-                carry: if carry { Some(Flags::C) } else { Some(Flags::EMPTY) },
-                overflow: None,
-            }
-        }
 
+        // Shift right
+        let carry = (alu_l_value & 0x01) != 0;
+        ALUFlags {
+            carry: if carry { Some(Flags::C) } else { Some(Flags::EMPTY) },
+            overflow: None,
+        }
     }
 }
 
+
+impl ALUOperation for Swap {
+    fn solve(_alu: &ALU<Self>, bus_values: &BusValues) -> u8 {
+        let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
+
+        // Swap
+        (alu_l_value << 4) | (alu_l_value >> 4)
+    }
+}
 
 impl<Operation: ALUOperation> ALU<Operation> {
     pub fn new(name: &'static str, main_id: MainBusSource, flags_id: FlagsSource) -> Self {
@@ -187,7 +185,7 @@ impl<Operation: ALUOperation> ValueSource<ALUFlags> for ALU<Operation> {
 #[cfg(test)]
 mod tests {
     use rstest::rstest;
-    use crate::router::{OutMux, AluArgL, AluArgR, LoadMux, FCalc, AluAlt, AluCarryIn};
+    use crate::router::{OutMux, AluArgL, AluArgR, LoadMux, FCalc, AddSubAlt, AluCarryIn};
     use crate::devices::ValueSource;
     use crate::flags::Flags;
     use crate::test_helpers::{TestBench, i16tou8};
@@ -259,7 +257,7 @@ mod tests {
             .apply_mux::<OutMux>(OutMux::VALUE_ADDSUB_OUT)
             .apply_mux::<AluArgL>(AluArgL::VALUE_B_ALU_L)
             .apply_mux::<AluArgR>(AluArgR::VALUE_C_ALU_R)
-            .apply_bit::<AluAlt>()
+            .apply_bit::<AddSubAlt>()
             .apply_bit::<FCalc>()
             .build();
         bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, sub_bc_cw);
@@ -311,7 +309,7 @@ mod tests {
             .apply_mux::<OutMux>(OutMux::VALUE_ADDSUB_OUT)
             .apply_mux::<AluArgL>(AluArgL::VALUE_B_ALU_L)
             .apply_mux::<AluArgR>(AluArgR::VALUE_C_ALU_R)
-            .apply_bit::<AluAlt>()
+            .apply_bit::<AddSubAlt>()
             .apply_bit::<FCalc>()
             .apply_bit::<AluCarryIn>()
             .build();
@@ -377,7 +375,6 @@ mod tests {
             .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
             .apply_mux::<AluArgR>(AluArgR::VALUE_B_ALU_R)
             .apply_bit::<FCalc>()
-            .apply_bit::<AluAlt>()
             .build();
 
         bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, or_ab);
@@ -470,7 +467,7 @@ mod tests {
         // shr_A
         let shr_a = ControlWordBuilder::default()
             .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
-            .apply_mux::<OutMux>(OutMux::VALUE_SHIFTSWAP_OUT)
+            .apply_mux::<OutMux>(OutMux::VALUE_SHIFT_OUT)
             .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
             .apply_bit::<FCalc>()
             .build();
@@ -496,7 +493,7 @@ mod tests {
         // shr_A
         let shr_a = ControlWordBuilder::default()
             .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
-            .apply_mux::<OutMux>(OutMux::VALUE_SHIFTSWAP_OUT)
+            .apply_mux::<OutMux>(OutMux::VALUE_SHIFT_OUT)
             .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
             .apply_bit::<FCalc>()
             .apply_bit::<AluCarryIn>()
@@ -530,10 +527,9 @@ mod tests {
         // swap_A
         let swap_a = ControlWordBuilder::default()
             .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
-            .apply_mux::<OutMux>(OutMux::VALUE_SHIFTSWAP_OUT)
+            .apply_mux::<OutMux>(OutMux::VALUE_SWAP_OUT)
             .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
             .apply_bit::<FCalc>()
-            .apply_bit::<AluAlt>()
             .build();
 
         bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, swap_a);

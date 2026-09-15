@@ -189,7 +189,7 @@ instructions:
     steps:
       - - r0.load
         - r0.alu_l
-        - ShiftSwap.out
+        - Shift.out
         - F.calc
 
   - name: "ror"
@@ -198,7 +198,7 @@ instructions:
     steps:
       - - r0.load
         - r0.alu_l
-        - ShiftSwap.out
+        - Shift.out
         - F.calc
     conditions:
       - match:
@@ -206,8 +206,8 @@ instructions:
         steps:
           - - r0.load
             - r0.alu_l
-            - ShiftSwap.out
-            - ShiftSwap.carry_in
+            - Shift.out
+            - Shift.carry_in
             - F.calc
 
   - name: "asr"
@@ -218,7 +218,7 @@ instructions:
         - F.calc
       - - r0.load
         - r0.alu_l
-        - ShiftSwap.out
+        - Shift.out
         - F.calc
     conditions:
       - match:
@@ -228,8 +228,8 @@ instructions:
             - F.calc
           - - r0.load
             - r0.alu_l
-            - ShiftSwap.out
-            - ShiftSwap.carry_in
+            - Shift.out
+            - Shift.carry_in
             - F.calc
 
   - name: "swap"
@@ -238,8 +238,7 @@ instructions:
     steps:
       - - r0.load
         - r0.alu_l
-        - ShiftSwap.out
-        - ShiftSwap.alt
+        - Swap.out
         - F.calc
 
   - name: "cmp"

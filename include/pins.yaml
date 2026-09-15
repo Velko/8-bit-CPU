@@ -37,9 +37,6 @@ muxes:
       - 21
     default: 7
 shared_pins:
-  - name: "Alu.alt"
-    level: "HIGH"
-    pin: 13
   - name: "Addr.inc"
     level: "LOW"
     pin: 22
@@ -120,7 +117,8 @@ devices:
         mux: "OutMux"
         pin: 5
       alt:
-        pin: "Alu.alt"
+        level: "HIGH"
+        pin: 13
       carry_in:
         pin: "Alu.carry_in"
   - name: "And"
@@ -141,18 +139,20 @@ devices:
       out:
         mux: "OutMux"
         pin: 10
-      alt:
-        pin: "Alu.alt"
-  - name: "ShiftSwap"
+  - name: "Shift"
     type: "ALU"
     pins:
       out:
         mux: "OutMux"
         pin: 7
-      alt:
-        pin: "Alu.alt"
       carry_in:
         pin: "Alu.carry_in"
+  - name: "Swap"
+    type: "ALU"
+    pins:
+      out:
+        mux: "OutMux"
+        pin: 14
   - name: "F"
     type: "FlagsRegister"
     pins:
