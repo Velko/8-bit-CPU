@@ -34,10 +34,6 @@ def pins_in_mux(mux: Mux, include_default: bool) -> Iterator[tuple[str, int]]:
     for name, pin in hw.mux_pins(mux):
         yield name, pin.num
 
-    # also add default as assigned pin
-    if include_default:
-        yield "default", mux.default
-
 def each_pin_with_others_in_mux() -> Iterator[tuple[str, int, str, int]]:
 
     for mux_name, mux in hw.all_muxes():
