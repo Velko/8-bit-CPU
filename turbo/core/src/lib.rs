@@ -19,6 +19,7 @@ mod address_calculator;
 mod io_controller;
 mod io_messages;
 mod control_rom;
+mod const_arg;
 
 pub use control_word::ControlWord;
 pub use router::DeviceMap;
@@ -28,6 +29,8 @@ pub use cpu::Cpu;
 pub use io_messages::IOMessage;
 pub use control_rom::ControlROM;
 pub use io_controller::IOPorts;
+pub use const_arg::ConstArg;
+
 #[cfg(test)]
 mod test_helpers;
 

@@ -31,6 +31,7 @@ pub fn map_device_type<'a>(dev_type: &'a str, name: &str) -> TokenStream {
         "RAM" => quote::quote! { Memory },
         "ROM" => quote::quote! { NullSource },
         "IOController" => quote::quote! { IOController::<P> },
+        "ConstArg" if name == "ZeroArg" => quote::quote! { ConstArg::<0> },
         _ => {
             let dev_type_ident = syn::Ident::new(dev_type, proc_macro2::Span::call_site());
             quote::quote! { #dev_type_ident }

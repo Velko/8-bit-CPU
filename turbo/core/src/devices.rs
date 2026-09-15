@@ -15,6 +15,7 @@ pub use crate::step_counter::StepCounter;
 pub use crate::address_register::AddressRegister;
 pub use crate::address_calculator::AddressCalculator;
 pub use crate::io_controller::IOController;
+pub use crate::ConstArg;
 use crate::router::{ALULSource, ALURSource, AddressBusSource, MainBusSource};
 
 /// Pin that, when enabled, does not have an immediate effect, but instead will be checked by a

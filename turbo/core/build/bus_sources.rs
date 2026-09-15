@@ -153,7 +153,8 @@ impl BusSourcesPart {
     fn is_alu_r_source(dev_type: &str) -> bool {
         match dev_type {
             "GPRegister" |
-            "TempRegister" => true,
+            "TempRegister" |
+            "ConstArg" => true,
             _ => false,
         }
     }
