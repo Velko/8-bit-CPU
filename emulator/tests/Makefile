@@ -176,80 +176,80 @@ tb_rom_async.vvp: $(TBROMASYNCSRC) testrom.hex
 
 
 
-TBGPREGSRC=$(GPREGSRC) testhelpers.v tb_gp_register.v
+TBGP_REG_SRC=$(GP_REG_SRC) testhelpers.v tb_gp_register.v
 
-tb_gp-register.vvp: $(TBGPREGSRC)
+tb_gp-register.vvp: $(TBGP_REG_SRC)
 	iverilog -Wall $^ -o $@
 
-TBALUADDSUBSRC=$(ALUADDSUBSRC) testhelpers.v tb_alu_addsub.v
+TBALU_ADD_SUB_SRC=$(ALU_ADD_SUB_SRC) testhelpers.v tb_alu_addsub.v
 
-tb_alu-addsub.vvp: $(TBALUADDSUBSRC)
+tb_alu-addsub.vvp: $(TBALU_ADD_SUB_SRC)
 	iverilog -Wall $^ -o $@
 
-TBALUANDSRC=$(ALUANDSRC) testhelpers.v tb_alu_and.v
+TBALU_AND_SRC=$(ALU_AND_SRC) testhelpers.v tb_alu_and.v
 
-tb_alu-and.vvp: $(TBALUANDSRC)
+tb_alu-and.vvp: $(TBALU_AND_SRC)
 	iverilog -Wall $^ -o $@
 
-TBALUORSRC=$(ALUORSRC) testhelpers.v tb_alu_or.v
+TBALU_OR_SRC=$(ALU_OR_SRC) testhelpers.v tb_alu_or.v
 
-tb_alu-or.vvp: $(TBALUORSRC)
+tb_alu-or.vvp: $(TBALU_OR_SRC)
 	iverilog -Wall $^ -o $@
 
-TBALUXORSRC=$(ALUXORSRC) testhelpers.v tb_alu_xor.v
+TBALU_XOR_SRC=$(ALU_XOR_SRC) testhelpers.v tb_alu_xor.v
 
-tb_alu-xor.vvp: $(TBALUXORSRC)
+tb_alu-xor.vvp: $(TBALU_XOR_SRC)
 	iverilog -Wall $^ -o $@
 
-TBALUSHIFTSRC=$(ALUSHIFTSRC) testhelpers.v tb_alu_shift.v
+TBALU_SHIFT_SRC=$(ALU_SHIFT_SRC) testhelpers.v tb_alu_shift.v
 
-tb_alu-shift.vvp: $(TBALUSHIFTSRC)
+tb_alu-shift.vvp: $(TBALU_SHIFT_SRC)
 	iverilog -Wall $^ -o $@
 
-TBALUSWAPSRC=$(ALUSWAPSRC) testhelpers.v tb_alu_swap.v
+TBALU_SWAP_SRC=$(ALU_SWAP_SRC) testhelpers.v tb_alu_swap.v
 
-tb_alu-swap.vvp: $(TBALUSWAPSRC)
+tb_alu-swap.vvp: $(TBALU_SWAP_SRC)
 	iverilog -Wall $^ -o $@
 
-TBFLGREGSRC=$(FLGREGSRC) testhelpers.v tb_flags_reg.v
+TBFLG_REG_SRC=$(FLG_REG_SRC) testhelpers.v tb_flags_reg.v
 
-tb_flags-reg.vvp: $(TBFLGREGSRC)
+tb_flags-reg.vvp: $(TBFLG_REG_SRC)
 	iverilog -Wall $^ -o $@
 
-TBIOCTLSRC=$(IOCTLSRC) testhelpers.v tb_io_control.v
+TBIO_CTRL_SRC=$(IO_CTRL_SRC) testhelpers.v tb_io_control.v
 
-tb_io-control.vvp: $(TBIOCTLSRC)
+tb_io-control.vvp: $(TBIO_CTRL_SRC)
 	iverilog -Wall $^ -o $@
 
-TBALUBLOCKSRC=$(ALUBLOCKSRC) testhelpers.v tb_alu_block.v
+TBALU_BLOCK_SRC=$(ALU_BLOCK_SRC) testhelpers.v tb_alu_block.v
 
-tb_alu-block.vvp: $(TBALUBLOCKSRC)
+tb_alu-block.vvp: $(TBALU_BLOCK_SRC)
 	iverilog -Wall $^ -o $@
 
-TBACSRC=$(ACSRC) testhelpers.v tb_address_counter.v
+TBADDRESS_COUNTER_SRC=$(ADDRESS_COUNTER_SRC) testhelpers.v tb_address_counter.v
 
-tb_ac.vvp: $(TBACSRC)
+tb_ac.vvp: $(TBADDRESS_COUNTER_SRC)
 	iverilog -Wall $^ -o $@
 
-TBMEMSRC=$(MEMSRC) testhelpers.v tb_memory.v
+TBMEMORY_SRC=$(MEMORY_SRC) testhelpers.v tb_memory.v
 
-tb_memory.vvp: $(TBMEMSRC)
+tb_memory.vvp: $(TBMEMORY_SRC)
 	iverilog -Wall $^ -o $@
 
 
-TBACALCSRC=$(ACALCSRC) testhelpers.v tb_address_calc.v
+TBADDRESS_CALC_SRC=$(ADDRESS_CALC_SRC) testhelpers.v tb_address_calc.v
 
-tb_address-calc.vvp: $(TBACALCSRC)
+tb_address-calc.vvp: $(TBADDRESS_CALC_SRC)
 	iverilog -Wall $^ -o $@
 
-TBCTRLSRC=$(CTRLSRC) testhelpers.v tb_control_logic.v
+TBCONTROL_SRC=$(CONTROL_SRC) testhelpers.v tb_control_logic.v
 
-tb_control-logic.vvp: $(TBCTRLSRC)
+tb_control-logic.vvp: $(TBCONTROL_SRC)
 	iverilog -Wall $^ -o $@
 
-TBCLOCKSRC=$(CLOCKSRC) testhelpers.v tb_clock.v
+TBCLOCK_SRC=$(CLOCK_SRC) testhelpers.v tb_clock.v
 
-tb_clock.vvp: $(TBCLOCKSRC)
+tb_clock.vvp: $(TBCLOCK_SRC)
 	iverilog -Wall $^ -o $@
 
 clean:

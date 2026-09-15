@@ -11,7 +11,7 @@ run: launcher.vvp hdb_comm.vpi control_rom*.hex
 control_rom%.hex:
 	../../pycontrol/tools/microcode.py
 
-CMDSRC=$(CPUSRC) launcher.v
+CMDSRC=$(CPU_SRC) launcher.v
 
 launcher.vvp: $(CMDSRC)
 	iverilog -Wall $^ -o $@
