@@ -40,7 +40,7 @@ class ConstArg(DeviceBase):
 @dataclass
 class ALU(DeviceBase):
     out: Pin
-    alt: Pin
+    alt: Pin | None = None
     carry_in: Pin | None = None
 
 
