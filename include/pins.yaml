@@ -189,6 +189,12 @@ devices:
       alu_r:
         mux: "AluArgR"
         pin: 6
+  - name: "OnesArg"
+    type: "ConstArg"
+    pins:
+      alu_r:
+        mux: "AluArgR"
+        pin: 5
   - name: "IR"
     type: "WORegister"
     pins:

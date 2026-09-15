@@ -26,6 +26,7 @@
 `define C_ARG_R       2
 `define D_ARG_R       3
 `define T_ARG_R       4
+`define O_ARG_R       5
 `define Z_ARG_R       6
 
 module alu_block(
@@ -130,6 +131,15 @@ module alu_block(
         .alu_l(alu_arg_l),
         .alu_r(alu_arg_r)
     );
+
+    const_arg ones (
+        .value(8'hFF),
+        .loutn(1'b1),
+        .routn(arg_r_mux.y[`O_ARG_R]),
+        .alu_l(alu_arg_l),
+        .alu_r(alu_arg_r)
+    );
+
 
     alu_addsub addsub(
         .outn(out_mux.y[`ADDSUB_OUT]),
