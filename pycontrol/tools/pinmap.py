@@ -28,10 +28,14 @@ for name, mux in hw.all_muxes():
     print (name, mux.pins)
     mpm: dict[int, str] = {}
 
-    for mpname, mpin in hw.mux_pins(mux):
-        mpm[mpin.num] = mpname
-
     mpm[mux.default] = "(default)"
+
+    for mpname, mpin in hw.mux_pins(mux):
+        if mpin.num == mux.default:
+            mpm[mux.default] = f"{mpname} (default)"
+        else:
+            mpm[mpin.num] = mpname
+
 
     capacity = 2**len(mux.pins)
 

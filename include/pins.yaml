@@ -17,7 +17,7 @@ muxes:
     pins:
       - 8
       - 9
-    default: 4
+    default: 0
   - name: "AluArgR"
     pins:
       - 10
@@ -183,6 +183,12 @@ devices:
       alu_r:
         mux: "AluArgR"
         pin: 4
+  - name: "ZeroArg"
+    type: "ConstArg"
+    pins:
+      alu_r:
+        mux: "AluArgR"
+        pin: 6
   - name: "IR"
     type: "WORegister"
     pins:

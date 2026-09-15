@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from .pin import Mux, MuxPin, SimplePin, Level, PinUsage, Pin
-from .devices import GPRegister, DeviceBase, ALU, FlagsRegister, RAM, ROM, TempRegister, WORegister, Clock, StepCounter, ProgramCounter, TransferRegister, StackPointer, AddressRegister, AddressCalculator, IOController
+from .devices import GPRegister, DeviceBase, ALU, FlagsRegister, RAM, ROM, TempRegister, WORegister, Clock, StepCounter, ProgramCounter, TransferRegister, StackPointer, AddressRegister, AddressCalculator, IOController, ConstArg
 import copy
 
 
@@ -42,6 +42,8 @@ class PinConfig:
                     self.devices[name] = ROM(**args)
                 case "TempRegister":
                     self.devices[name] = TempRegister(**args)
+                case "ConstArg":
+                    self.devices[name] = ConstArg(**args)
                 case "WORegister":
                     self.devices[name] = WORegister(**args)
                 case "Clock":

@@ -34,6 +34,10 @@ class TempRegister(WORegister):
     alu_r: Pin
 
 @dataclass
+class ConstArg(DeviceBase):
+    alu_r: Pin
+
+@dataclass
 class ALU(DeviceBase):
     out: Pin
     alt: Pin
