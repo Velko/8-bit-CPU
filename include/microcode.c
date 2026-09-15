@@ -498,16 +498,16 @@ const struct op_microcode microcode[] PROGMEM = {
     { .default_steps = {0x07ff0b3a},},
 
     /* 63 not_A      */
-    { .default_steps = {0x07ff380a},},
+    { .default_steps = {0x07ff140a},},
 
     /* 64 not_B      */
-    { .default_steps = {0x07ff391a},},
+    { .default_steps = {0x07ff151a},},
 
     /* 65 not_C      */
-    { .default_steps = {0x07ff3a2a},},
+    { .default_steps = {0x07ff162a},},
 
     /* 66 not_D      */
-    { .default_steps = {0x07ff3b3a},},
+    { .default_steps = {0x07ff173a},},
 
     /* 67 clr_A      */
     { .default_steps = {0x07ff000a},},

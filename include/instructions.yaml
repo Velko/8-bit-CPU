@@ -150,7 +150,7 @@ instructions:
       - - r0.load
         - r0.alu_l
         - XorNot.out
-        - XorNot.alt
+        - OnesArg.alu_r
         - F.calc
 
   - name: "clr"
