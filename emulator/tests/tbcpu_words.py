@@ -49,7 +49,7 @@ control = CtrlWord()
 control.enable(hw.A.load)
 control.enable(hw.A.alu_l)
 control.enable(hw.A.alu_r)
-control.enable(hw.XorNot.out)
+control.enable(hw.Xor.out)
 control.enable(hw.F.calc)
 print(f"32'b{control.c_word:032b}")
 

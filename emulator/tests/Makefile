@@ -2,7 +2,7 @@ test: test-138 test-161-basics test-161-chaining test-245 test-173 test-283 test
       test-08b test-08p test-02b test-02p test-157b test-125p test-32b test-32p test-00b test-00p \
       test-10p test-rom_async test-373 test-595 test-377 test-374 test-85b\
       test-193-basics test-193-chaining test-04p test-74\
-      test-gp-register test-alu-addsub test-alu-andor test-alu-xornot test-alu-shiftswap \
+      test-gp-register test-alu-addsub test-alu-andor test-alu-xor test-alu-shiftswap \
       test-flags-reg test-io-control \
       test-alu-block test-ac test-memory test-address-calc test-control-logic test-clock
 
@@ -191,9 +191,9 @@ TBALUANDORSRC=$(ALUANDORSRC) testhelpers.v tb_alu_andor.v
 tb_alu-andor.vvp: $(TBALUANDORSRC)
 	iverilog -Wall $^ -o $@
 
-TBALUXORNOTSRC=$(ALUXORNOTSRC) testhelpers.v tb_alu_xornot.v
+TBALUXORSRC=$(ALUXORSRC) testhelpers.v tb_alu_xor.v
 
-tb_alu-xornot.vvp: $(TBALUXORNOTSRC)
+tb_alu-xor.vvp: $(TBALUXORSRC)
 	iverilog -Wall $^ -o $@
 
 TBALUSHIFTSWAPSRC=$(ALUSHIFTSWAPSRC) testhelpers.v tb_alu_shiftswap.v

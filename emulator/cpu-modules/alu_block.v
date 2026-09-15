@@ -5,7 +5,7 @@
 `define F_OUT          4
 `define ADDSUB_OUT     5
 `define ANDOR_OUT      6
-`define XORNOT_OUT    10
+`define XOR_OUT       10
 `define SHIFTSWAP_OUT  7
 
 
@@ -163,9 +163,8 @@ module alu_block(
         .arg_r(alu_arg_r)
     );
 
-    alu_xornot xornot(
-        .outn(out_mux.y[`XORNOT_OUT]),
-        .fn_not(alt),
+    alu_xor a_xor(
+        .outn(out_mux.y[`XOR_OUT]),
 
         .bus(main_bus),
         .arg_l(alu_arg_l),

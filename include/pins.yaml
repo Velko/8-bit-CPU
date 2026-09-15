@@ -131,7 +131,7 @@ devices:
         pin: 6
       alt:
         pin: "Alu.alt"
-  - name: "XorNot"
+  - name: "Xor"
     type: "ALU"
     pins:
       out:

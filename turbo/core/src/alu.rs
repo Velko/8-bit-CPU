@@ -47,7 +47,7 @@ impl BusOutputPinChange for BusOutputPin<(MainBusSource, FlagsSource)> {
 
 pub struct AddSub;
 pub struct AndOr;
-pub struct XorNot;
+pub struct Xor;
 pub struct ShiftSwap;
 
 impl ALUOperation for AddSub {
@@ -108,17 +108,13 @@ impl ALUOperation for AndOr {
     }
 }
 
-impl ALUOperation for XorNot {
-    fn solve(alu: &ALU<Self>, bus_values: &BusValues) -> u8 {
+impl ALUOperation for Xor {
+    fn solve(_alu: &ALU<Self>, bus_values: &BusValues) -> u8 {
         let alu_l_value = bus_values.alu_l.value.unwrap_or(0);
-        if alu.alt.is_enabled() {
-            // Not
-            !alu_l_value
-        } else {
-            // Xor
-            let alu_r_value = bus_values.alu_r.value.unwrap_or(0);
-            alu_l_value ^ alu_r_value
-        }
+        let alu_r_value = bus_values.alu_r.value.unwrap_or(0);
+
+        // Xor
+        alu_l_value ^ alu_r_value
     }
 }
 
@@ -406,7 +402,7 @@ mod tests {
         // xor_A_B
         let xor_ab = ControlWordBuilder::default()
             .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
-            .apply_mux::<OutMux>(OutMux::VALUE_XORNOT_OUT)
+            .apply_mux::<OutMux>(OutMux::VALUE_XOR_OUT)
             .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
             .apply_mux::<AluArgR>(AluArgR::VALUE_B_ALU_R)
             .apply_bit::<FCalc>()
@@ -437,10 +433,10 @@ mod tests {
         // not_A
         let not_a = ControlWordBuilder::default()
             .apply_mux::<LoadMux>(LoadMux::VALUE_A_LOAD)
-            .apply_mux::<OutMux>(OutMux::VALUE_XORNOT_OUT)
+            .apply_mux::<OutMux>(OutMux::VALUE_XOR_OUT)
             .apply_mux::<AluArgL>(AluArgL::VALUE_A_ALU_L)
+            .apply_mux::<AluArgR>(AluArgR::VALUE_ONESARG_ALU_R)
             .apply_bit::<FCalc>()
-            .apply_bit::<AluAlt>()
             .build();
         bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, not_a);
         bench.bus_values.resolve(&bench.devices);

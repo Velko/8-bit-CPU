@@ -8,7 +8,7 @@ D = hw.get_typed_dev("D", dev.GPRegister)
 
 AddSub = hw.get_typed_dev("AddSub", dev.ALU)
 AndOr = hw.get_typed_dev("AndOr", dev.ALU)
-XorNot = hw.get_typed_dev("XorNot", dev.ALU)
+Xor = hw.get_typed_dev("Xor", dev.ALU)
 ShiftSwap = hw.get_typed_dev("ShiftSwap", dev.ALU)
 F = hw.get_typed_dev("F", dev.FlagsRegister)
 RAM = hw.get_typed_dev("Ram", dev.RAM)

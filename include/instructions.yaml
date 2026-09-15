@@ -140,7 +140,7 @@ instructions:
       - - r0.load
         - r0.alu_l
         - r1.alu_r
-        - XorNot.out
+        - Xor.out
         - F.calc
 
   - name: "not"
@@ -149,7 +149,7 @@ instructions:
     steps:
       - - r0.load
         - r0.alu_l
-        - XorNot.out
+        - Xor.out
         - OnesArg.alu_r
         - F.calc
 
@@ -160,7 +160,7 @@ instructions:
       - - r0.load
         - r0.alu_l
         - r0.alu_r
-        - XorNot.out
+        - Xor.out
         - F.calc
 
   - name: "inc"
@@ -996,7 +996,7 @@ instructions:
       - - r0.load
         - r0.alu_l
         - T.alu_r
-        - XorNot.out
+        - Xor.out
         - F.calc
 
   - name: "st"
