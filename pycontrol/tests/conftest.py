@@ -1,6 +1,6 @@
 import pytest
 import random
-import os, tempfile, shutil
+import os, tempfile, shutil, itertools
 from dataclasses import dataclass
 from functools import wraps
 from typing import ParamSpec, TypeVar
@@ -130,6 +130,8 @@ def make_gp_reg_pair_permutations() -> Iterator[tuple[GPRegister, GPRegister]]:
                 yield l, r
 
 gp_reg_pair_permutations: list[tuple[GPRegister, GPRegister]] = list(make_gp_reg_pair_permutations())
+
+nibble_transition_ranges = list(itertools.chain(range(0xC, 0x15), range(0xFC, 0x105), range(0xFFC, 0x1005)))
 
 
 P = ParamSpec("P")

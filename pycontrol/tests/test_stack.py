@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 
 import pytest
-import itertools
-
+from conftest import nibble_transition_ranges
 pytestmark = pytest.mark.hardware
 
 from libcpu.devmap import SP, A, C, F, LR, SDP, TDP
@@ -26,7 +25,7 @@ def test_lea_sp(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     assert cpu_helper.regs.SP == 0x1234
 
 # check transitions between SP chips
-@pytest.mark.parametrize("expected", itertools.chain(range(0xC, 0x15), range(0xFC, 0x105), range(0xFFC, 0x1005)))
+@pytest.mark.parametrize("expected", nibble_transition_ranges)
 def test_sp_inc(cpu_helper: CPUHelper, expected: int) -> None:
     cpu_helper.regs.SP = expected - 1
 
@@ -39,7 +38,7 @@ def test_sp_inc(cpu_helper: CPUHelper, expected: int) -> None:
 
     assert cpu_helper.regs.SP == expected
 
-@pytest.mark.parametrize("expected", itertools.chain(range(0xC, 0x15), range(0xFC, 0x105), range(0xFFC, 0x1005)))
+@pytest.mark.parametrize("expected", nibble_transition_ranges)
 def test_sp_dec(cpu_helper: CPUHelper, expected: int) -> None:
     cpu_helper.regs.SP = expected + 1
 

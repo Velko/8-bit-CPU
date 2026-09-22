@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
 import pytest
-import itertools
 from collections.abc import Callable
+from conftest import nibble_transition_ranges
 
 pytestmark = pytest.mark.hardware
 
@@ -26,7 +26,7 @@ def test_pc_load(cpu_helper: CPUHelper, expected: int) -> None:
 # assuming that PC works at all (test_pc_load should prove that), there's no need
 # to count full range. Since it is built from four 161 counter chips, we should check
 # ranges that include transitions between chips
-@pytest.mark.parametrize("expected", itertools.chain(range(0xC, 0x15), range(0xFC, 0x105), range(0xFFC, 0x1005)))
+@pytest.mark.parametrize("expected", nibble_transition_ranges)
 def test_pc_count(cpu_helper: CPUHelper, expected: int) -> None:
     # CPU gets a Reset before each test, preload value to increment from
     cpu_helper.regs.PC = expected - 1
