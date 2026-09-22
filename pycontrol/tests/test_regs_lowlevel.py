@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import pytest
+from conftest import listify
 
 from libcpu.devmap import A, B, AddSub, IR
 from libcpu.cpu_helper import CPUHelper
@@ -40,6 +41,7 @@ def test_reg_a_latch(cpu_helper: CPUHelper) -> None:
     assert value == 54
 
 
+@listify
 def singlebit_vals() -> Iterator[int]:
     yield 255
     for b in range(8):

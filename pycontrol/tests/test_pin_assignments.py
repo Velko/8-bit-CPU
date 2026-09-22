@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import pytest
+from conftest import listify
 
 from libcpu.DeviceSetup import hardware as hw
 from libcpu.pin import Mux
@@ -15,6 +16,7 @@ def mux_addr_lines() -> Iterator[tuple[str, int]]:
         for num, pin in enumerate(mux.pins):
             yield f"{name}.A{num}", pin
 
+@listify
 def each_simple_pin_and_addr_with_others() -> Iterator[tuple[str, int, str, int]]:
 
     all_pins = list(mux_addr_lines()) + list(simple_pin_nums())
@@ -34,6 +36,7 @@ def pins_in_mux(mux: Mux, include_default: bool) -> Iterator[tuple[str, int]]:
     for name, pin in hw.mux_pins(mux):
         yield name, pin.num
 
+@listify
 def each_pin_with_others_in_mux() -> Iterator[tuple[str, int, str, int]]:
 
     for mux_name, mux in hw.all_muxes():
@@ -49,6 +52,7 @@ def test_mux_pin_overlap(_name_a: str, pin_a: int, _name_b: str, pin_b: int) -> 
     assert pin_a != pin_b
 
 
+@listify
 def each_pin_with_capacity_in_mux() -> Iterator[tuple[str, int, int]]:
     for mux_name, mux in hw.all_muxes():
         mpins = list(pins_in_mux(mux, False))

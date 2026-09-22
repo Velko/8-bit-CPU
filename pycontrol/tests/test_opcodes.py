@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import pytest
+from conftest import listify
 
 
 from libcpu.opcodes import ops_by_num
@@ -13,6 +14,7 @@ from libcpu.instruction_cfg import Instruction
 
 from collections.abc import Iterator, Sequence
 
+@listify
 def calc_flags_alt_PC_counts() -> Iterator[tuple[str, int, int, str, str]]:
 
     # all opcodes, that are flags-dependent
@@ -104,6 +106,7 @@ def test_opcode_flag_default(fake_opcodes: OpcodeFixture) -> None:
 
 
 
+@listify
 def all_steps() -> Iterator[tuple[str, str, int, Sequence[ControlSignal]]]:
     for microcode in ops_by_num:
         for steps in microcode._steps:
@@ -122,6 +125,7 @@ def test_mux_enables(_name: str, _flags: str, _vfal: int, step: Sequence[Control
                 muxes_found.append(signal.mux)
                 sig_cache.append(signal)
 
+@listify
 def named_opcodes_and_expected() -> Iterator[tuple[str, int, int]]:
     for idx, microcode in enumerate(ops_by_num):
         yield microcode.opstr, microcode.opcode, idx

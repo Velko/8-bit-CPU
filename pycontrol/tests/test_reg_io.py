@@ -2,6 +2,7 @@
 
 import pytest
 import random
+from conftest import listify
 
 from libcpu.devices import GPRegister, Flags
 from libcpu.devmap import F, SDP, SP, A, B, TDP
@@ -13,6 +14,7 @@ from conftest import gp_reg_pair_permutations, gp_regs
 
 pytestmark = pytest.mark.hardware
 
+@listify
 def all_regs_and_bits() -> Iterator[tuple[GPRegister, int]]:
     bits = range(8)
 

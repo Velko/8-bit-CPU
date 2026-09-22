@@ -2,9 +2,11 @@ import pytest
 import random
 import os, tempfile, shutil
 from dataclasses import dataclass
+from functools import wraps
+from typing import ParamSpec, TypeVar
 
 from libcpu.cpu_helper import CPUHelper
-from collections.abc import  Sequence, Iterator, Iterable
+from collections.abc import Callable, Sequence, Iterator, Iterable
 
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.pinclient import PinClient, get_client_instance
@@ -128,3 +130,15 @@ def make_gp_reg_pair_permutations() -> Iterator[tuple[GPRegister, GPRegister]]:
                 yield l, r
 
 gp_reg_pair_permutations: list[tuple[GPRegister, GPRegister]] = list(make_gp_reg_pair_permutations())
+
+
+P = ParamSpec("P")
+T = TypeVar("T")
+
+def listify(func: Callable[P, Iterator[T]]) -> Callable[P, list[T]]:
+    """decorator for making generator functions return a list instead"""
+    @wraps(func)
+    def new_func(*args: P.args, **kwargs: P.kwargs) -> list[T]:
+        return list(func(*args, **kwargs))
+
+    return new_func
