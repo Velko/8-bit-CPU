@@ -121,8 +121,10 @@ def asm_compiler() -> Iterator[Compiler]:
 
 gp_regs: list[GPRegister] = [r for r in hardware.devices.values() if isinstance(r, GPRegister)]
 
-def permute_gp_regs_nsame() -> Iterator[tuple[GPRegister, GPRegister]]:
+def make_gp_reg_pair_permutations() -> Iterator[tuple[GPRegister, GPRegister]]:
     for l in gp_regs:
         for r in gp_regs:
             if l != r:
                 yield l, r
+
+gp_reg_pair_permutations: list[tuple[GPRegister, GPRegister]] = list(make_gp_reg_pair_permutations())

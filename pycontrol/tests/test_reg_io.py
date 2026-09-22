@@ -9,7 +9,7 @@ from libcpu.markers import Addr
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
 from collections.abc import Iterator
-from conftest import permute_gp_regs_nsame, gp_regs
+from conftest import gp_reg_pair_permutations, gp_regs
 
 pytestmark = pytest.mark.hardware
 
@@ -36,7 +36,7 @@ def test_load_store_flags(cpu_helper: CPUHelper, acpu: AssistedCPU, value: Flags
 
     assert value == received
 
-@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame())
+@pytest.mark.parametrize("lhs,rhs", gp_reg_pair_permutations)
 def test_mov_a_b(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister) -> None:
     cpu_helper.load_reg8(lhs, 0)
     val = random.randrange(256)

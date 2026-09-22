@@ -2,7 +2,7 @@
 
 import pytest
 
-from conftest import permute_gp_regs_nsame, gp_regs
+from conftest import gp_reg_pair_permutations, gp_regs
 from libcpu.devices import GPRegister, Flags
 
 from libcpu.cpu_helper import CPUHelper
@@ -39,7 +39,7 @@ add_aa_test_args = [
     ALUOneRegTestCase("czv", -128, 0, Flags.C | Flags.Z | Flags.V),
 ]
 
-@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
+@pytest.mark.parametrize("lhs,rhs", gp_reg_pair_permutations, ids=devname)
 @pytest.mark.parametrize("case", add_ab_test_args, ids=str)
 def test_add_ab(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.load_reg8(lhs, case.val_a)
@@ -100,7 +100,7 @@ sub_test_args = [
     ALUTwoRegTestCase("cvn", 120, -126, -10, Flags.V | Flags.C | Flags.N),
 ]
 
-@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
+@pytest.mark.parametrize("lhs,rhs", gp_reg_pair_permutations, ids=devname)
 @pytest.mark.parametrize("case", sub_test_args, ids=str)
 def test_sub(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.load_reg8(lhs, case.val_a)
@@ -127,7 +127,7 @@ def test_subi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: A
     assert flags == case.xflags
 
 
-@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
+@pytest.mark.parametrize("lhs,rhs", gp_reg_pair_permutations, ids=devname)
 @pytest.mark.parametrize("case", sub_test_args, ids=str)
 def test_cmp(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
     """CMP sets flags based on subtraction but does not store result."""
@@ -169,7 +169,7 @@ adc_ab_test_args = [
     ALUTwoRegTestCase("cv", -128, -128, 1, Flags.V | Flags.C),
 ]
 
-@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
+@pytest.mark.parametrize("lhs,rhs", gp_reg_pair_permutations, ids=devname)
 @pytest.mark.parametrize("case", adc_ab_test_args, ids=str)
 def test_adc_ab_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.regs.F = Flags.C
@@ -195,7 +195,7 @@ def test_adc_ab_c_set_simple(cpu_helper: CPUHelper, acpu: AssistedCPU) -> None:
     assert value == 0
     assert flags == Flags.C | Flags.Z
 
-@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
+@pytest.mark.parametrize("lhs,rhs", gp_reg_pair_permutations, ids=devname)
 @pytest.mark.parametrize("case", add_ab_test_args, ids=str)
 def test_adc_ab_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.regs.F = Flags.Empty
@@ -248,7 +248,7 @@ sbb_test_args = [
     ALUTwoRegTestCase("cvn", 120, -126, -11, Flags.V | Flags.C | Flags.N),
 ]
 
-@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
+@pytest.mark.parametrize("lhs,rhs", gp_reg_pair_permutations, ids=devname)
 @pytest.mark.parametrize("case", sbb_test_args, ids=str)
 def test_sbb_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.regs.F = Flags.C
@@ -262,7 +262,7 @@ def test_sbb_c_set(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rh
     assert value == to_u8(case.result)
     assert flags == case.xflags
 
-@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
+@pytest.mark.parametrize("lhs,rhs", gp_reg_pair_permutations, ids=devname)
 @pytest.mark.parametrize("case", sub_test_args, ids=str)
 def test_sbb_c_clear(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.regs.F = Flags.Empty

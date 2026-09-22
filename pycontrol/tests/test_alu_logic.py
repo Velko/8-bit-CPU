@@ -5,7 +5,7 @@ import pytest
 from libcpu.cpu_helper import CPUHelper
 from libcpu.assisted_cpu import AssistedCPU
 from libcpu.devmap import A, B
-from conftest import permute_gp_regs_nsame, gp_regs
+from conftest import gp_reg_pair_permutations, gp_regs
 from libcpu.devices import GPRegister, Flags
 
 from conftest import ALUTwoRegTestCase, ALUOneRegTestCase, Compiler, devname, full_exec_supported, full_exec_reason
@@ -25,7 +25,7 @@ and_test_args = [
     ALUTwoRegTestCase("z_only_2", 128, 127, 0, Flags.Z),
 ]
 
-@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
+@pytest.mark.parametrize("lhs,rhs", gp_reg_pair_permutations, ids=devname)
 @pytest.mark.parametrize("case", and_test_args)
 def test_and(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.load_reg8(lhs, case.val_a)
@@ -50,7 +50,7 @@ def test_andi(cpu_helper: CPUHelper, acpu: AssistedCPU, reg: GPRegister, case: A
     assert value == case.result
     assert flags == case.xflags
 
-@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
+@pytest.mark.parametrize("lhs,rhs", gp_reg_pair_permutations, ids=devname)
 @pytest.mark.parametrize("case", and_test_args)
 def test_lcmp(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.load_reg8(lhs, case.val_a)
@@ -74,7 +74,7 @@ or_test_args = [
     ALUTwoRegTestCase("z_only", 0, 0, 0, Flags.Z),
 ]
 
-@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
+@pytest.mark.parametrize("lhs,rhs", gp_reg_pair_permutations, ids=devname)
 @pytest.mark.parametrize("case", or_test_args)
 def test_or(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.load_reg8(lhs, case.val_a)
@@ -394,7 +394,7 @@ xor_test_args = [
     ALUTwoRegTestCase("z_only_2", 0x00, 0x00, 0, Flags.Z),
 ]
 
-@pytest.mark.parametrize("lhs,rhs", permute_gp_regs_nsame(), ids=devname)
+@pytest.mark.parametrize("lhs,rhs", gp_reg_pair_permutations, ids=devname)
 @pytest.mark.parametrize("case", xor_test_args)
 def test_xor(cpu_helper: CPUHelper, acpu: AssistedCPU, lhs: GPRegister, rhs: GPRegister, case: ALUTwoRegTestCase) -> None:
     cpu_helper.load_reg8(lhs, case.val_a)
