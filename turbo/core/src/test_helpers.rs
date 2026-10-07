@@ -21,9 +21,8 @@ impl IOPorts for TestIOPorts {
         0x42 // Return a dummy value for testing
     }
 
-    fn write_port(&mut self, port: u8, value: u8) -> Option<crate::IOMessage> {
+    fn write_port(&mut self, port: u8, value: u8) {
         println!("TestIOPorts: write_port({}, {})", port, value);
-        None // No message for testing
     }
 }
 

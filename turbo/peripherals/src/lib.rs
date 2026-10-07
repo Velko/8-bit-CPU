@@ -4,7 +4,7 @@ mod display_char;
 mod uart;
 mod timer;
 
-use turbo_core::{IOMessage, IOPorts};
+use turbo_core::IOPorts;
 use std::cell::RefCell;
 use std::rc::Rc;
 use turbo_bridge::CommsChannel;
@@ -41,7 +41,7 @@ impl IOPorts for Peripherals {
         }
     }
 
-    fn write_port(&mut self, port: u8, value: u8) -> Option<IOMessage> {
+    fn write_port(&mut self, port: u8, value: u8) {
         match port {
             0..4 => {
                 self.display_numeric.send(value, port);
@@ -63,6 +63,5 @@ impl IOPorts for Peripherals {
             },
             _ => todo!("Port: 0x{:02x} not yet implemented", port),
         }
-        None
     }
 }

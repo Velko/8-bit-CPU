@@ -11,7 +11,7 @@ pub struct IOController<P> where P: IOPorts {
 
 pub trait IOPorts {
     fn read_port(&self, port: u8) -> u8;
-    fn write_port(&mut self, port: u8, value: u8) -> Option<crate::IOMessage>;
+    fn write_port(&mut self, port: u8, value: u8);
 }
 
 impl<P: IOPorts> IOController<P> {
@@ -38,7 +38,7 @@ impl<P: IOPorts> GlobalSignalsReceiver for IOController<P> {
         if self.laddr.is_enabled() {
             self.selected_port = bus_values.main_bus.value.unwrap();
         } else if self.to_dev.is_enabled() {
-            bus_values.message = self.ioports.write_port(self.selected_port, bus_values.main_bus.value.unwrap());
+            self.ioports.write_port(self.selected_port, bus_values.main_bus.value.unwrap());
         }
     }
 }
