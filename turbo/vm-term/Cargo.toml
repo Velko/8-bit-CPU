@@ -1,0 +1,9 @@
+[package]
+name = "vm-term"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+turbo-bridge = { version = "0.1.0", path = "../bridge" }
+turbo-core = { version = "0.1.0", path = "../core" }
+turbo-peripherals = { version = "0.1.0", path = "../peripherals" }

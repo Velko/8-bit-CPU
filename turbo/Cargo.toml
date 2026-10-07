@@ -5,5 +5,6 @@ members = [
     "bridge",
     "core",
     "peripherals",
-    "vm-server"
+    "vm-server",
+    "vm-term"
 ]

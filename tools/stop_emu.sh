@@ -1,3 +1,3 @@
 #!/bin/sh
 
-killall -9 vvp turbo-vm
+killall -9 vvp turbo-vm-server
