@@ -23,7 +23,7 @@ impl Peripherals {
         Self {
             display_numeric: DisplayNumeric::new(channels[0].clone()),
             display_char: DisplayChar::new(channels[0].clone()),
-            lcd: Lcd::new(),
+            lcd: Lcd::new(channels[0].clone()), //TODO: should use channel 1 instead
             uart: Uart::new(channels[2].clone()),
             timer: Timer::new(),
         }
@@ -50,9 +50,7 @@ impl IOPorts for Peripherals {
                 self.display_char.send(value);
             },
             0x10 => {
-                if let Some(msg) = self.lcd.send_data(value) {
-                    return Some(IOMessage::Out { payload: msg, port: port });
-                }
+                self.lcd.send_data(value);
             },
             0x11 => {
                 self.lcd.send_command(value);

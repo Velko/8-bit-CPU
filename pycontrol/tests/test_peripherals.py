@@ -53,3 +53,15 @@ def test_lcd_status_and_uart_data_read(cpu_helper: CPUHelper, asm_compiler: Comp
 
     assert lcd_status == 0x80  # LCD is ready
     assert uart_data == 0xFF  # no input available (technically have to check UART_STATUS to distinguish from actual 0xFF input)
+
+def test_lcd_output(cpu_helper: CPUHelper, asm_compiler: Compiler) -> None:
+    prog = asm_compiler.compile("""
+        in A, DISPLAY_LCD_CMD
+        ldi A, "A"
+        out DISPLAY_LCD_DATA, A
+    """)
+
+    val = cpu_helper.run_snippet(0x32, prog)
+
+    # assert
+    assert val == 'A'  # LCD returned value

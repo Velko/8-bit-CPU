@@ -1,24 +1,29 @@
 use std::cell::Cell;
-
+use std::rc::Rc;
+use std::cell::RefCell;
+use turbo_bridge::CommsChannel;
 pub struct Lcd {
     status: Cell<u8>,
+    comm_channel: Rc<RefCell<CommsChannel>>,
 }
 
 const LCD_BUSY_FLAG: u8 = 0x80;
 
 impl Lcd {
-    pub fn new() -> Self {
+    pub fn new(comm_channel: Rc<RefCell<CommsChannel>>) -> Self {
         Self {
             status: Cell::new(LCD_BUSY_FLAG), // Initially busy
+            comm_channel,
         }
     }
 
-    pub fn send_data(&self, value: u8) -> Option<String> {
+    pub fn send_data(&self, value: u8) {
         if self.status.get() & LCD_BUSY_FLAG != 0 {
-            return None; // LCD is busy, cannot send data
+            return; // LCD is busy, cannot send data
         }
         self.status.set(LCD_BUSY_FLAG);
-        Some(format!("{}", value as char))
+        let payload = format!("{}", value as char);
+        self.comm_channel.borrow_mut().send_output_msg(&payload, 0x10);
     }
 
     pub fn send_command(&self, _value: u8) {
