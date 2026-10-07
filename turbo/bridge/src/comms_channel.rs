@@ -4,11 +4,6 @@ use turbo_core::TrapReason;
 const BUFFER_SIZE: usize = 1024;
 
 pub trait CommsChannel {
-    fn recv_int(&self) -> u32;
-    fn discard_char(&self);
-    fn send_to_dest(&self, data: &[u8]);
-    fn send_response_trap(&self, trap: &TrapReason);
-    fn send_response_int(&self, value: u32);
     fn send_response_str(&self, value: &str);
     fn send_response_byte(&self, value: u8);
     fn send_output_msg(&self, payload: &str, port: u8);
@@ -59,13 +54,7 @@ impl UDPCommsChannel {
         self.response_destination = Some(dest);
     }
 
-    fn escape_newline(s: &str) -> String {
-        s.replace("\n", "\\n").replace("\r", "\\r")
-    }
-}
-
-impl CommsChannel for UDPCommsChannel {
-    fn recv_int(&self) -> u32 {
+    pub fn recv_int(&self) -> u32 {
         let mut digits: Vec<char> = Vec::new();
 
         loop {
@@ -81,17 +70,11 @@ impl CommsChannel for UDPCommsChannel {
         u32::from_str_radix(&digits.iter().collect::<String>(), 16).expect("Failed to parse hex string")
     }
 
-    fn discard_char(&self) {
+    pub fn discard_char(&self) {
         let _ = self.rx.recv();
     }
 
-    fn send_to_dest(&self, data: &[u8]) {
-        if let Some(dest) = self.response_destination.or_else(|| self.latest_addr.read()) {
-            self.socket.send_to(data, dest).expect("Couldn't send response");
-        }
-    }
-
-    fn send_response_trap(&self, trap: &TrapReason) {
+    pub fn send_response_trap(&self, trap: &TrapReason) {
         let response = match trap {
             TrapReason::Halt => "#HLT\r\n",
             TrapReason::Brk => "#BRK\r\n",
@@ -99,11 +82,24 @@ impl CommsChannel for UDPCommsChannel {
         self.send_to_dest(response.as_bytes());
     }
 
-    fn send_response_int(&self, value: u32) {
+    pub fn send_response_int(&self, value: u32) {
         let response = format!("{:X}", value);
         self.send_to_dest(response.as_bytes());
     }
 
+
+    fn send_to_dest(&self, data: &[u8]) {
+        if let Some(dest) = self.response_destination.or_else(|| self.latest_addr.read()) {
+            self.socket.send_to(data, dest).expect("Couldn't send response");
+        }
+    }
+
+    fn escape_newline(s: &str) -> String {
+        s.replace("\n", "\\n").replace("\r", "\\r")
+    }
+}
+
+impl CommsChannel for UDPCommsChannel {
     fn send_response_str(&self, value: &str) {
         self.send_to_dest(value.as_bytes());
     }
