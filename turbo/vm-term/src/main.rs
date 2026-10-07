@@ -1,10 +1,39 @@
 use std::cell::RefCell;
-use std::io::Read;
+use std::fmt::write;
+use std::io::{Read, stdout, Write};
 use std::rc::Rc;
 
-use turbo_bridge::UDPCommsChannel;
+use turbo_bridge::CommsChannel;
 use turbo_peripherals::Peripherals;
-use turbo_core::Cpu;
+use turbo_core::{Cpu, TrapReason};
+
+struct LocalCommsChannel;
+
+
+impl CommsChannel for LocalCommsChannel {
+    fn send_response_str(&self, value: &str) {
+        stdout().write_all(value.as_bytes()).expect("Failed to write to stdout");
+        stdout().flush().expect("Failed to flush stdout");
+    }
+
+    fn send_response_byte(&self, value: u8) {
+        stdout().write_all(&[value]).expect("Failed to write to stdout");
+        stdout().flush().expect("Failed to flush stdout");
+    }
+
+    fn send_output_msg(&self, payload: &str, _port: u8) {
+        self.send_response_str(payload);
+    }
+
+    fn recv_char(&self) -> char {
+        todo!()
+    }
+
+    fn is_input_available(&self) -> bool {
+        todo!()
+    }
+}
+
 
 fn main() -> std::io::Result<()> {
     // open file specified by command line arguments
@@ -20,10 +49,10 @@ fn main() -> std::io::Result<()> {
     file.read_to_end(&mut buf)?;
 
 
-    let comms_channels: Vec<Rc<RefCell<UDPCommsChannel>>> = vec![
-        Rc::new(RefCell::new(UDPCommsChannel::new(8888))),
-        Rc::new(RefCell::new(UDPCommsChannel::new(8889))),
-        Rc::new(RefCell::new(UDPCommsChannel::new(8890))),
+    let comms_channels: Vec<Rc<RefCell<LocalCommsChannel>>> = vec![
+        Rc::new(RefCell::new(LocalCommsChannel)),
+        Rc::new(RefCell::new(LocalCommsChannel)),
+        Rc::new(RefCell::new(LocalCommsChannel)),
     ];
 
     let peripherals = Peripherals::new(&comms_channels);
@@ -33,7 +62,10 @@ fn main() -> std::io::Result<()> {
 
     let trap = cpu.run_until_trap();
 
-    println!("Trap reason: {:?}", trap);
+    match trap {
+        TrapReason::Halt => println!("# Halted"),
+        TrapReason::Brk => println!("# Break"),
+    }
 
     Ok(())
 }
