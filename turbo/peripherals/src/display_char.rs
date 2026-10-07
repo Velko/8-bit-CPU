@@ -2,12 +2,12 @@ use std::rc::Rc;
 use std::cell::RefCell;
 use turbo_bridge::CommsChannel;
 
-pub struct DisplayChar {
-    comm_channel: Rc<RefCell<CommsChannel>>,
+pub struct DisplayChar<CC: CommsChannel> {
+    comm_channel: Rc<RefCell<CC>>,
 }
 
-impl DisplayChar {
-    pub fn new(comm_channel: Rc<RefCell<CommsChannel>>) -> Self {
+impl<CC: CommsChannel> DisplayChar<CC> {
+    pub fn new(comm_channel: Rc<RefCell<CC>>) -> Self {
         Self {
             comm_channel
         }

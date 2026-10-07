@@ -3,14 +3,30 @@ use turbo_core::TrapReason;
 
 const BUFFER_SIZE: usize = 1024;
 
-pub struct CommsChannel {
+pub trait CommsChannel {
+    fn recv_int(&self) -> u32;
+    fn discard_char(&self);
+    fn send_to_dest(&self, data: &[u8]);
+    fn send_response_trap(&self, trap: &TrapReason);
+    fn send_response_int(&self, value: u32);
+    fn send_response_str(&self, value: &str);
+    fn send_response_byte(&self, value: u8);
+    fn send_output_msg(&self, payload: &str, port: u8);
+    fn recv_char(&self) -> char;
+    fn is_input_available(&self) -> bool;
+    fn recv_byte(&self) -> u8 {
+        self.recv_char() as u8
+    }
+}
+
+pub struct UDPCommsChannel {
     socket: UdpSocket,
-    pub rx: PeekableReceiver<char>,
+    rx: PeekableReceiver<char>,
     response_destination: Option<SocketAddr>,
     latest_addr: LatestSlot<SocketAddr>,
 }
 
-impl CommsChannel {
+impl UDPCommsChannel {
     pub fn new(port: u16) -> Self {
         let socket = UdpSocket::bind(format!("127.0.0.1:{}", port)).expect("Couldn't bind to address");
         let (tx, rx): (Sender<char>, Receiver<char>) = mpsc::channel();
@@ -38,7 +54,18 @@ impl CommsChannel {
         }
     }
 
-    pub fn recv_int(&self) -> u32 {
+    pub fn set_response_destination(&mut self, port: u16) {
+        let dest = format!("127.0.0.1:{}", port).parse().expect("Invalid address");
+        self.response_destination = Some(dest);
+    }
+
+    fn escape_newline(s: &str) -> String {
+        s.replace("\n", "\\n").replace("\r", "\\r")
+    }
+}
+
+impl CommsChannel for UDPCommsChannel {
+    fn recv_int(&self) -> u32 {
         let mut digits: Vec<char> = Vec::new();
 
         loop {
@@ -54,7 +81,7 @@ impl CommsChannel {
         u32::from_str_radix(&digits.iter().collect::<String>(), 16).expect("Failed to parse hex string")
     }
 
-    pub fn discard_char(&self) {
+    fn discard_char(&self) {
         let _ = self.rx.recv();
     }
 
@@ -64,7 +91,7 @@ impl CommsChannel {
         }
     }
 
-    pub fn send_response_trap(&self, trap: &TrapReason) {
+    fn send_response_trap(&self, trap: &TrapReason) {
         let response = match trap {
             TrapReason::Halt => "#HLT\r\n",
             TrapReason::Brk => "#BRK\r\n",
@@ -72,33 +99,31 @@ impl CommsChannel {
         self.send_to_dest(response.as_bytes());
     }
 
-    pub fn send_response_int(&self, value: u32) {
+    fn send_response_int(&self, value: u32) {
         let response = format!("{:X}", value);
         self.send_to_dest(response.as_bytes());
     }
 
-    pub fn send_response_str(&self, value: &str) {
+    fn send_response_str(&self, value: &str) {
         self.send_to_dest(value.as_bytes());
     }
 
-    pub fn send_response_byte(&self, value: u8) {
+    fn send_response_byte(&self, value: u8) {
         self.send_to_dest(&[value]);
     }
 
-    pub fn set_response_destination(&mut self, port: u16) {
-        let dest = format!("127.0.0.1:{}", port).parse().expect("Invalid address");
-        self.response_destination = Some(dest);
-    }
-
-    pub fn send_output_msg(&self, payload: &str, port: u8) {
+    fn send_output_msg(&self, payload: &str, port: u8) {
         let escaped_msg = Self::escape_newline(&format!("#OUT#{:X}#{}", port, payload));
         self.send_response_str(&escaped_msg);
     }
 
-    fn escape_newline(s: &str) -> String {
-        s.replace("\n", "\\n").replace("\r", "\\r")
+    fn recv_char(&self) -> char {
+        self.rx.recv()
     }
 
+    fn is_input_available(&self) -> bool {
+        self.rx.peek().is_some()
+    }
 }
 
 pub struct PeekableReceiver<T> {

@@ -3,12 +3,12 @@ use std::cell::RefCell;
 
 use turbo_bridge::CommsChannel;
 
-pub struct DisplayNumeric {
-    comm_channel: Rc<RefCell<CommsChannel>>,
+pub struct DisplayNumeric<CC: CommsChannel> {
+    comm_channel: Rc<RefCell<CC>>,
 }
 
-impl DisplayNumeric {
-    pub fn new(comm_channel: Rc<RefCell<CommsChannel>>) -> Self {
+impl<CC: CommsChannel> DisplayNumeric<CC> {
+    pub fn new(comm_channel: Rc<RefCell<CC>>) -> Self {
         Self {
             comm_channel
         }

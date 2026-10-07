@@ -1,14 +1,14 @@
 use turbo_peripherals::Peripherals;
-use turbo_bridge::CommsChannel;
+use turbo_bridge::{CommsChannel, UDPCommsChannel};
 use std::rc::Rc;
 use std::cell::RefCell;
 
 fn main() -> std::io::Result<()> {
 
-    let comms_channels: Vec<Rc<RefCell<CommsChannel>>> = vec![
-        Rc::new(RefCell::new(CommsChannel::new(8888))),
-        Rc::new(RefCell::new(CommsChannel::new(8889))),
-        Rc::new(RefCell::new(CommsChannel::new(8890))),
+    let comms_channels: Vec<Rc<RefCell<UDPCommsChannel>>> = vec![
+        Rc::new(RefCell::new(UDPCommsChannel::new(8888))),
+        Rc::new(RefCell::new(UDPCommsChannel::new(8889))),
+        Rc::new(RefCell::new(UDPCommsChannel::new(8890))),
     ];
 
     let main_channel = comms_channels[0].clone();
@@ -18,7 +18,7 @@ fn main() -> std::io::Result<()> {
 
     loop {
 
-        let c = main_channel.borrow().rx.recv();
+        let c = main_channel.borrow().recv_char();
         match c {
             'I' => {
                 main_channel.borrow().send_response_str("Turbo VM");

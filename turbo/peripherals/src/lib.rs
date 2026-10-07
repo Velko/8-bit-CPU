@@ -10,16 +10,16 @@ use std::rc::Rc;
 use turbo_bridge::CommsChannel;
 use crate::{display_lcd::Lcd, display_numeric::DisplayNumeric, display_char::DisplayChar, uart::Uart, timer::Timer};
 
-pub struct Peripherals {
-    display_numeric: DisplayNumeric,
-    display_char: DisplayChar,
-    lcd: Lcd,
-    uart: Uart,
+pub struct Peripherals<CC: CommsChannel> {
+    display_numeric: DisplayNumeric<CC>,
+    display_char: DisplayChar<CC>,
+    lcd: Lcd<CC>,
+    uart: Uart<CC>,
     timer: Timer,
 }
 
-impl Peripherals {
-    pub fn new(channels: &[Rc<RefCell<CommsChannel>>]) -> Self {
+impl<CC: CommsChannel> Peripherals<CC> {
+    pub fn new(channels: &[Rc<RefCell<CC>>]) -> Self {
         Self {
             display_numeric: DisplayNumeric::new(channels[0].clone()),
             display_char: DisplayChar::new(channels[0].clone()),
@@ -30,7 +30,7 @@ impl Peripherals {
     }
 }
 
-impl IOPorts for Peripherals {
+impl<CC: CommsChannel> IOPorts for Peripherals<CC> {
     fn read_port(&self, port: u8) -> u8 {
         match port {
             0x11 => self.lcd.get_status(),

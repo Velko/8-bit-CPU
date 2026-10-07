@@ -2,7 +2,7 @@ use std::cell::RefCell;
 use std::io::Read;
 use std::rc::Rc;
 
-use turbo_bridge::CommsChannel;
+use turbo_bridge::UDPCommsChannel;
 use turbo_peripherals::Peripherals;
 use turbo_core::Cpu;
 
@@ -20,10 +20,10 @@ fn main() -> std::io::Result<()> {
     file.read_to_end(&mut buf)?;
 
 
-    let comms_channels: Vec<Rc<RefCell<CommsChannel>>> = vec![
-        Rc::new(RefCell::new(CommsChannel::new(8888))),
-        Rc::new(RefCell::new(CommsChannel::new(8889))),
-        Rc::new(RefCell::new(CommsChannel::new(8890))),
+    let comms_channels: Vec<Rc<RefCell<UDPCommsChannel>>> = vec![
+        Rc::new(RefCell::new(UDPCommsChannel::new(8888))),
+        Rc::new(RefCell::new(UDPCommsChannel::new(8889))),
+        Rc::new(RefCell::new(UDPCommsChannel::new(8890))),
     ];
 
     let peripherals = Peripherals::new(&comms_channels);

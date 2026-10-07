@@ -4,12 +4,12 @@ use std::thread;
 use std::time::Duration;
 use turbo_bridge::CommsChannel;
 
-pub struct Uart {
-    comm_channel: Rc<RefCell<CommsChannel>>,
+pub struct Uart<CC: CommsChannel> {
+    comm_channel: Rc<RefCell<CC>>,
 }
 
-impl Uart {
-    pub fn new(comm_channel: Rc<RefCell<CommsChannel>>) -> Self {
+impl<CC: CommsChannel> Uart<CC> {
+    pub fn new(comm_channel: Rc<RefCell<CC>>) -> Self {
         Self {
             comm_channel,
         }
@@ -21,7 +21,7 @@ impl Uart {
     }
 
     pub fn get_status(&self) -> u8 {
-        if self.comm_channel.borrow().rx.peek().is_some() {
+        if self.comm_channel.borrow().is_input_available() {
             0x01
         } else {
             0x00
@@ -29,12 +29,11 @@ impl Uart {
     }
 
     pub fn get_char(&self) -> u8 {
-        let rx = &self.comm_channel.borrow().rx;
         // avoid blocking if no input is available, return 0xFF instead
         if self.get_status() == 0 {
             0xFF
         } else {
-            rx.recv() as u8
+            self.comm_channel.borrow().recv_byte()
         }
     }
 }

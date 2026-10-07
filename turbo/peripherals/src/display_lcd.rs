@@ -2,15 +2,15 @@ use std::cell::Cell;
 use std::rc::Rc;
 use std::cell::RefCell;
 use turbo_bridge::CommsChannel;
-pub struct Lcd {
+pub struct Lcd<CC: CommsChannel> {
     status: Cell<u8>,
-    comm_channel: Rc<RefCell<CommsChannel>>,
+    comm_channel: Rc<RefCell<CC>>,
 }
 
 const LCD_BUSY_FLAG: u8 = 0x80;
 
-impl Lcd {
-    pub fn new(comm_channel: Rc<RefCell<CommsChannel>>) -> Self {
+impl<CC: CommsChannel> Lcd<CC> {
+    pub fn new(comm_channel: Rc<RefCell<CC>>) -> Self {
         Self {
             status: Cell::new(LCD_BUSY_FLAG), // Initially busy
             comm_channel,
