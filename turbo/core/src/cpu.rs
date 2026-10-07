@@ -1,5 +1,5 @@
 
-use crate::{ControlROM, DEFAULT_CW, IOMessage, IOPorts};
+use crate::{ControlROM, DEFAULT_CW, TrapReason, IOPorts};
 use crate::control_word::ControlWord;
 use crate::devices::{GlobalSignalsReceiver, ValueSource};
 use crate::runtime_state::BusValues;
@@ -38,10 +38,10 @@ impl<P: IOPorts> Cpu<P> {
         self.devices.broadcast_clock_tick_secondary();
     }
 
-    pub fn clock_tick(&mut self) -> Option<IOMessage> {
+    pub fn clock_tick(&mut self) -> Option<TrapReason> {
         self.clock_pulse_primary();
         self.clock_pulse_secondary();
-        self.bus_values.message.take()
+        self.bus_values.trap_reason.take()
     }
 
     pub fn inject_main_bus_value(&mut self, value: u8) {
@@ -83,15 +83,15 @@ impl<P: IOPorts> Cpu<P> {
         self.bus_values.injected_address_bus_value = None;
     }
 
-    pub fn run_until_message(&mut self) -> Option<IOMessage> {
+    pub fn run_until_trap(&mut self) -> Option<TrapReason> {
         //TODO: At the moment there's no "count disable" for the StepCounter and it
         // will keep counting on every clock tick, even if it comes from outside source.
         // A quick fix is to reset the StepCounter before running the program.
         self.devices.StepCounter.on_reset();
         loop {
-            let message = self.execute_step();
-            if message.is_some() {
-                return message;
+            let trap = self.execute_step();
+            if trap.is_some() {
+                return trap;
             }
         }
     }
@@ -112,7 +112,7 @@ impl<P: IOPorts> Cpu<P> {
         ControlROM::get_value(rom_addr)
     }
 
-    fn execute_step(&mut self) -> Option<IOMessage> {
+    fn execute_step(&mut self) -> Option<TrapReason> {
         let control_word = self.load_control_word();
         self.apply_control_word(control_word);
         self.clock_tick()
@@ -172,9 +172,9 @@ mod tests {
 
         cpu.devices.Ram.set_data(0x0000, &[0x01, 0x42, 0xe4]); // ldi A, 0x42; brk
 
-        let msg = cpu.run_until_message();
+        let msg = cpu.run_until_trap();
 
-        assert_eq!(msg, Some(IOMessage::Brk));
+        assert_eq!(msg, Some(TrapReason::Brk));
         assert_eq!(cpu.devices.A.get_value(&cpu.bus_values), 0x42);
     }
 }

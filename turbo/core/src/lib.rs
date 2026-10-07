@@ -17,7 +17,7 @@ mod step_counter;
 mod address_register;
 mod address_calculator;
 mod io_controller;
-mod io_messages;
+mod trap_reason;
 mod control_rom;
 mod const_arg;
 
@@ -26,7 +26,7 @@ pub use router::DeviceMap;
 pub use router::DEFAULT_CW;
 pub use runtime_state::BusValues;
 pub use cpu::Cpu;
-pub use io_messages::IOMessage;
+pub use trap_reason::TrapReason;
 pub use control_rom::ControlROM;
 pub use io_controller::IOPorts;
 pub use const_arg::ConstArg;

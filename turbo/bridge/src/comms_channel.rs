@@ -1,5 +1,5 @@
 use std::{cell::Cell, net::{SocketAddr, UdpSocket}, str, sync::{Arc, Mutex, mpsc::{self, Receiver, Sender}}, thread};
-use turbo_core::IOMessage;
+use turbo_core::TrapReason;
 
 const BUFFER_SIZE: usize = 1024;
 
@@ -64,10 +64,10 @@ impl CommsChannel {
         }
     }
 
-    pub fn send_response_message(&self, message: &IOMessage) {
-        let response = match message {
-            IOMessage::Halt => "#HLT\r\n",
-            IOMessage::Brk => "#BRK\r\n",
+    pub fn send_response_trap(&self, trap: &TrapReason) {
+        let response = match trap {
+            TrapReason::Halt => "#HLT\r\n",
+            TrapReason::Brk => "#BRK\r\n",
         };
         self.send_to_dest(response.as_bytes());
     }

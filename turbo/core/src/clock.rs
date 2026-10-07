@@ -1,29 +1,29 @@
-use crate::{BusValues, IOMessage, devices::{BusOutputPinChange, GlobalSignalsReceiver}};
+use crate::{BusValues, TrapReason, devices::{BusOutputPinChange, GlobalSignalsReceiver}};
 
 
-pub struct MessageOutPin {
-    msg: IOMessage,
+pub struct SetTrapPin {
+    trap: TrapReason,
 }
 
-impl BusOutputPinChange for MessageOutPin {
+impl BusOutputPinChange for SetTrapPin {
     fn change(&self, bus_values: &mut BusValues, enable: bool) {
         if enable {
-            bus_values.message = Some(self.msg.clone());
+            bus_values.trap_reason = Some(self.trap.clone());
         }
     }
 }
 
 pub struct Clock {
     pub name: &'static str,
-    pub halt: MessageOutPin,
-    pub brk: MessageOutPin,
+    pub halt: SetTrapPin,
+    pub brk: SetTrapPin,
 }
 impl Clock {
     pub fn new(name: &'static str) -> Self {
         Self {
             name,
-            halt: MessageOutPin { msg: IOMessage::Halt },
-            brk: MessageOutPin { msg: IOMessage::Brk },
+            halt: SetTrapPin { trap: TrapReason::Halt },
+            brk: SetTrapPin { trap: TrapReason::Brk },
         }
     }
 }
@@ -32,10 +32,10 @@ impl GlobalSignalsReceiver for Clock {}
 
 #[cfg(test)]
 mod tests {
-    use crate::{DEFAULT_CW, IOMessage, control_word::ControlWordBuilder, router::{ClockHalt, ClockBrk}, test_helpers::TestBench};
+    use crate::{DEFAULT_CW, TrapReason, control_word::ControlWordBuilder, router::{ClockHalt, ClockBrk}, test_helpers::TestBench};
 
     #[test]
-    fn test_clock_halt_message() {
+    fn test_clock_halt_trap() {
         let mut bench = TestBench::new();
 
         let halt_cw = ControlWordBuilder::default()
@@ -44,11 +44,11 @@ mod tests {
 
         bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, halt_cw);
 
-        assert_eq!(bench.bus_values.message, Some(IOMessage::Halt));
+        assert_eq!(bench.bus_values.trap_reason, Some(TrapReason::Halt));
     }
 
      #[test]
-    fn test_clock_brk_message() {
+    fn test_clock_brk_trap() {
         let mut bench = TestBench::new();
 
         let brk_cw = ControlWordBuilder::default()
@@ -57,6 +57,6 @@ mod tests {
 
         bench.devices.route_word(&mut bench.bus_values, DEFAULT_CW, brk_cw);
 
-        assert_eq!(bench.bus_values.message, Some(IOMessage::Brk));
+        assert_eq!(bench.bus_values.trap_reason, Some(TrapReason::Brk));
     }
 }

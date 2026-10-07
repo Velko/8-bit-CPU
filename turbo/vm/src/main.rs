@@ -66,8 +66,8 @@ fn main() -> std::io::Result<()> {
                 cpu.clock_pulse_secondary();
             },
             'T' => {
-                if let Some(message) = cpu.clock_tick() {
-                    main_channel.borrow().send_response_message(&message);
+                if let Some(trap) = cpu.clock_tick() {
+                    main_channel.borrow().send_response_trap(&trap);
                 }
                 main_channel.borrow().send_response_str("#T");
             },
@@ -77,8 +77,8 @@ fn main() -> std::io::Result<()> {
                 main_channel.borrow().send_response_int(value as u32);
             },
             'R' => {
-                let message = cpu.run_until_message().expect("Error while running program");
-                main_channel.borrow().send_response_message(&message);
+                let trap = cpu.run_until_trap().expect("Error while running program");
+                main_channel.borrow().send_response_trap(&trap);
             },
             'Z' => {
                 cpu.reset();

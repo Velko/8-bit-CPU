@@ -1,4 +1,4 @@
-use crate::{IOMessage, IOPorts};
+use crate::{TrapReason, IOPorts};
 use crate::flags::Flags;
 use crate::router::{MainBusSource, ALULSource, ALURSource, AddressBusSource, FlagsSource};
 use crate::router::DeviceMap;
@@ -18,7 +18,7 @@ pub struct BusValues {
     pub injected_address_bus_value: Option<u16>,
     pub th_reg_val: u8,
     pub tl_reg_val: u8,
-    pub message: Option<IOMessage>,
+    pub trap_reason: Option<TrapReason>,
 }
 
 impl BusValues {
@@ -33,7 +33,7 @@ impl BusValues {
             injected_address_bus_value: None,
             th_reg_val: 0,
             tl_reg_val: 0,
-            message: None,
+            trap_reason: None,
         }
     }
 
