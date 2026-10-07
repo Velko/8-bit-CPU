@@ -87,6 +87,15 @@ impl CommsChannel {
         self.response_destination = Some(dest);
     }
 
+    pub fn send_output_msg(&self, payload: &str, port: u8) {
+        let escaped_msg = Self::escape_newline(&format!("#OUT#{:X}#{}", port, payload));
+        self.send_response_str(&escaped_msg);
+    }
+
+    fn escape_newline(s: &str) -> String {
+        s.replace("\n", "\\n").replace("\r", "\\r")
+    }
+
 }
 
 pub struct PeekableReceiver<T> {

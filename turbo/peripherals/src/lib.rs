@@ -21,8 +21,8 @@ pub struct Peripherals {
 impl Peripherals {
     pub fn new(channels: &[Rc<RefCell<CommsChannel>>]) -> Self {
         Self {
-            display_numeric: DisplayNumeric::new(),
-            display_char: DisplayChar::new(),
+            display_numeric: DisplayNumeric::new(channels[0].clone()),
+            display_char: DisplayChar::new(channels[0].clone()),
             lcd: Lcd::new(),
             uart: Uart::new(channels[2].clone()),
             timer: Timer::new(),
@@ -44,10 +44,10 @@ impl IOPorts for Peripherals {
     fn write_port(&mut self, port: u8, value: u8) -> Option<IOMessage> {
         match port {
             0..4 => {
-                return Some(IOMessage::Out { payload: self.display_numeric.format(value, port), port: 0 });
+                self.display_numeric.send(value, port);
             },
             4 => {
-                return Some(IOMessage::Out { payload: self.display_char.format(value), port: port });
+                self.display_char.send(value);
             },
             0x10 => {
                 if let Some(msg) = self.lcd.send_data(value) {
