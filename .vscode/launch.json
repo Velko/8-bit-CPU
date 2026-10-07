@@ -7,6 +7,24 @@
         {
             "type": "lldb",
             "request": "launch",
+            "name": "Launch Terminal VM with Snake",
+            "args": ["../../demo/snake.bin"],
+            "cwd": "${workspaceFolder}/turbo/vm-term",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--manifest-path",
+                    "${workspaceFolder}/turbo/vm-term/Cargo.toml"
+                ],
+                "filter": {
+                    "name": "vm-term",
+                    "kind": "bin"
+                }
+            }
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
             "name": "Cargo test",
             "cwd": "${workspaceFolder}/turbo",
             "cargo": {

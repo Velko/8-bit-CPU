@@ -118,9 +118,7 @@ impl<P: IOPorts> Cpu<P> {
     }
 
     pub fn write_memory(&mut self, start_addr: usize, data: &[u8]) {
-        for (offset, &byte) in data.iter().enumerate() {
-            self.devices.Ram.set_data(start_addr + offset, &[byte]);
-        }
+        self.devices.Ram.set_data(start_addr, data);
     }
 }
 

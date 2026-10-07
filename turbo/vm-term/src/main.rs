@@ -1,5 +1,4 @@
 use std::cell::RefCell;
-use std::fmt::write;
 use std::io::{Read, stdout, Write};
 use std::rc::Rc;
 
@@ -26,11 +25,11 @@ impl CommsChannel for LocalCommsChannel {
     }
 
     fn recv_char(&self) -> char {
-        todo!()
+        0xFF as char
     }
 
     fn is_input_available(&self) -> bool {
-        todo!()
+        false
     }
 }
 
@@ -59,6 +58,7 @@ fn main() -> std::io::Result<()> {
     let mut cpu = Cpu::new(peripherals);
 
     cpu.write_memory(0, &buf);
+    cpu.reset();
 
     let trap = cpu.run_until_trap();
 

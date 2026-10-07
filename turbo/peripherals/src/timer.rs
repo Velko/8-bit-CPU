@@ -17,13 +17,13 @@ impl Timer {
             move || {
                 loop {
                     thread::sleep(Duration::from_millis(10));
-                    counter.try_update(Ordering::SeqCst, Ordering::SeqCst, |x| {
+                    counter.update(Ordering::SeqCst, Ordering::SeqCst, |x| {
                         if x > 0 {
-                            Some(x - 1)
+                            x - 1
                         } else {
-                            None
+                            0
                         }
-                    }).ok();
+                    });
                 }
             }
         });
