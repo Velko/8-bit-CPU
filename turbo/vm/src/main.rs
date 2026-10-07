@@ -1,5 +1,4 @@
 use turbo_peripherals::Peripherals;
-use turbo_core::IOMessage;
 use turbo_bridge::CommsChannel;
 use std::rc::Rc;
 use std::cell::RefCell;
@@ -78,16 +77,8 @@ fn main() -> std::io::Result<()> {
                 main_channel.borrow().send_response_int(value as u32);
             },
             'R' => {
-                loop {
-                    let message = cpu.run_until_message().expect("Error while running program");
-                    main_channel.borrow().send_response_message(&message);
-                    match message {
-                        IOMessage::Halt | IOMessage::Brk => {
-                            break;
-                        },
-                        _ => {},
-                    }
-                }
+                let message = cpu.run_until_message().expect("Error while running program");
+                main_channel.borrow().send_response_message(&message);
             },
             'Z' => {
                 cpu.reset();

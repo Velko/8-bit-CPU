@@ -65,7 +65,10 @@ impl CommsChannel {
     }
 
     pub fn send_response_message(&self, message: &IOMessage) {
-        let response = message.to_string();
+        let response = match message {
+            IOMessage::Halt => "#HLT\r\n",
+            IOMessage::Brk => "#BRK\r\n",
+        };
         self.send_to_dest(response.as_bytes());
     }
 
