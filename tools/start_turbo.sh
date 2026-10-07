@@ -1,6 +1,6 @@
 #!/bin/sh
 
-killall -9 vvp turbo-vm || true
+killall -9 vvp turbo-vm-server || true
 
 VMPATH=$(dirname $0)/../turbo
 cd $VMPATH
