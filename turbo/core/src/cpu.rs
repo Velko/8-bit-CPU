@@ -83,14 +83,13 @@ impl<P: IOPorts> Cpu<P> {
         self.bus_values.injected_address_bus_value = None;
     }
 
-    pub fn run_until_trap(&mut self) -> Option<TrapReason> {
+    pub fn run_until_trap(&mut self) -> TrapReason {
         //TODO: At the moment there's no "count disable" for the StepCounter and it
         // will keep counting on every clock tick, even if it comes from outside source.
         // A quick fix is to reset the StepCounter before running the program.
         self.devices.StepCounter.on_reset();
         loop {
-            let trap = self.execute_step();
-            if trap.is_some() {
+            if let Some(trap) = self.execute_step() {
                 return trap;
             }
         }
@@ -116,6 +115,12 @@ impl<P: IOPorts> Cpu<P> {
         let control_word = self.load_control_word();
         self.apply_control_word(control_word);
         self.clock_tick()
+    }
+
+    pub fn write_memory(&mut self, start_addr: usize, data: &[u8]) {
+        for (offset, &byte) in data.iter().enumerate() {
+            self.devices.Ram.set_data(start_addr + offset, &[byte]);
+        }
     }
 }
 
@@ -174,7 +179,7 @@ mod tests {
 
         let msg = cpu.run_until_trap();
 
-        assert_eq!(msg, Some(TrapReason::Brk));
+        assert_eq!(msg, TrapReason::Brk);
         assert_eq!(cpu.devices.A.get_value(&cpu.bus_values), 0x42);
     }
 }

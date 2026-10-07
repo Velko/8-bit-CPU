@@ -77,7 +77,7 @@ fn main() -> std::io::Result<()> {
                 main_channel.borrow().send_response_int(value as u32);
             },
             'R' => {
-                let trap = cpu.run_until_trap().expect("Error while running program");
+                let trap = cpu.run_until_trap();
                 main_channel.borrow().send_response_trap(&trap);
             },
             'Z' => {
