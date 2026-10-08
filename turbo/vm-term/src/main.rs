@@ -8,37 +8,25 @@ use turbo_bridge::{CommsChannel, PeekableReceiver};
 use turbo_peripherals::Peripherals;
 use turbo_core::{Cpu, TrapReason};
 
-#[derive(PartialEq)]
-enum ChannelId {
+enum LocalCommsChannel {
     Debug,
     LCD,
-    UART,
-}
-
-struct LocalCommsChannel {
-    id: ChannelId,
-    rx: PeekableReceiver<char>,
-    tx: std::sync::mpsc::Sender<char>,
+    UART {
+        rx: PeekableReceiver<char>,
+    },
 }
 
 impl LocalCommsChannel {
-    pub fn new(id: ChannelId) -> Self {
+    pub fn new_uart() -> Self {
         let (tx, rx_c) = std::sync::mpsc::channel();
-        let channel = Self {
-            id,
+        let channel = Self::UART {
             rx: PeekableReceiver::new(rx_c),
-            tx,
         };
-
-        if channel.id == ChannelId::UART {
-            channel.start_terminal_reader();
-        }
-
+        channel.start_terminal_reader(tx);
         channel
     }
 
-    fn start_terminal_reader(&self) {
-        let tx = self.tx.clone();
+    fn start_terminal_reader(&self, tx: std::sync::mpsc::Sender<char>) {
         std::thread::spawn(move || {
             let stdin = stdin();
             for key in stdin.keys() {
@@ -76,11 +64,19 @@ impl CommsChannel for LocalCommsChannel {
     }
 
     fn recv_char(&self) -> char {
-        self.rx.recv()
+        if let Self::UART { rx, .. } = self {
+            rx.recv()
+        } else {
+            0xFF as char
+        }
     }
 
     fn is_input_available(&self) -> bool {
-        self.rx.peek().is_some()
+        if let Self::UART { rx, .. } = self {
+            rx.peek().is_some()
+        } else {
+            false
+        }
     }
 }
 
@@ -101,9 +97,9 @@ fn main() -> std::io::Result<()> {
     let _raw_stdio = stdout().into_raw_mode().unwrap();
 
     let comms_channels: Vec<Rc<RefCell<LocalCommsChannel>>> = vec![
-        Rc::new(RefCell::new(LocalCommsChannel::new(ChannelId::Debug))),
-        Rc::new(RefCell::new(LocalCommsChannel::new(ChannelId::LCD))),
-        Rc::new(RefCell::new(LocalCommsChannel::new(ChannelId::UART))),
+        Rc::new(RefCell::new(LocalCommsChannel::Debug)),
+        Rc::new(RefCell::new(LocalCommsChannel::LCD)),
+        Rc::new(RefCell::new(LocalCommsChannel::new_uart())),
     ];
 
     let peripherals = Peripherals::new(&comms_channels);
