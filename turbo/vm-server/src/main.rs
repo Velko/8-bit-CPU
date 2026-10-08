@@ -18,13 +18,13 @@ fn main() -> std::io::Result<()> {
 
     loop {
 
-        let c = main_channel.borrow().recv_char();
+        let c = main_channel.borrow_mut().recv_char();
         match c {
             'I' => {
                 main_channel.borrow().send_response_str("Turbo VM");
             },
             'A' => {
-                let addr = main_channel.borrow().recv_int();
+                let addr = main_channel.borrow_mut().recv_int();
                 cpu.inject_address_bus_value(addr as u16);
             },
             'a' => {
@@ -32,7 +32,7 @@ fn main() -> std::io::Result<()> {
                 main_channel.borrow().send_response_int(value as u32);
             },
             'B' => {
-                let value = main_channel.borrow().recv_int();
+                let value = main_channel.borrow_mut().recv_int();
                 cpu.inject_main_bus_value(value as u8);
             },
             'b' => {
@@ -48,12 +48,12 @@ fn main() -> std::io::Result<()> {
                 cpu.clear_injected_values();
             },
             'O' => {
-                let _cw = main_channel.borrow().recv_int();
+                let _cw = main_channel.borrow_mut().recv_int();
                 cpu.clear_injected_values();
                 cpu.apply_control_word(turbo_core::DEFAULT_CW);
             },
             'M' => {
-                let cw = main_channel.borrow().recv_int();
+                let cw = main_channel.borrow_mut().recv_int();
                 cpu.apply_control_word(cw);
             },
             'N' => {
@@ -72,7 +72,7 @@ fn main() -> std::io::Result<()> {
                 main_channel.borrow().send_response_str("#T");
             },
             'r' => {
-                _ = main_channel.borrow().recv_int(); // client sends control word for IRFetch, discard it
+                _ = main_channel.borrow_mut().recv_int(); // client sends control word for IRFetch, discard it
                 let value = cpu.read_instruction_register();
                 main_channel.borrow().send_response_int(value as u32);
             },
@@ -84,7 +84,7 @@ fn main() -> std::io::Result<()> {
                 cpu.reset();
             },
             'W' => {
-                let channel = main_channel.borrow();
+                let mut channel = main_channel.borrow_mut();
                 let cw = channel.recv_int();
                 channel.discard_char(); // discard separator
                 let mut addr = channel.recv_int();
@@ -105,7 +105,7 @@ fn main() -> std::io::Result<()> {
                 break;
             },
             'E' => {
-                let channel = main_channel.borrow();
+                let mut channel = main_channel.borrow_mut();
                 let chan = channel.recv_int();
                 channel.discard_char(); // discard separator
                 let port = channel.recv_int();

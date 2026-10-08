@@ -63,7 +63,7 @@ impl CommsChannel for LocalCommsChannel {
         self.send_response_str(payload);
     }
 
-    fn recv_char(&self) -> char {
+    fn recv_char(&mut self) -> char {
         if let Self::UART { rx, .. } = self {
             rx.recv()
         } else {
@@ -71,7 +71,7 @@ impl CommsChannel for LocalCommsChannel {
         }
     }
 
-    fn is_input_available(&self) -> bool {
+    fn is_input_available(&mut self) -> bool {
         if let Self::UART { rx, .. } = self {
             rx.peek().is_some()
         } else {

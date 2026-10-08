@@ -9,9 +9,9 @@ pub trait CommsChannel {
     fn send_response_str(&self, value: &str);
     fn send_response_byte(&self, value: u8);
     fn send_output_msg(&self, payload: &str, port: u8);
-    fn recv_char(&self) -> char;
-    fn is_input_available(&self) -> bool;
-    fn recv_byte(&self) -> u8 {
+    fn recv_char(&mut self) -> char;
+    fn is_input_available(&mut self) -> bool;
+    fn recv_byte(&mut self) -> u8 {
         self.recv_char() as u8
     }
 }
@@ -56,7 +56,7 @@ impl UDPCommsChannel {
         self.response_destination = Some(dest);
     }
 
-    pub fn recv_int(&self) -> u32 {
+    pub fn recv_int(&mut self) -> u32 {
         let mut digits: Vec<char> = Vec::new();
 
         loop {
@@ -72,7 +72,7 @@ impl UDPCommsChannel {
         u32::from_str_radix(&digits.iter().collect::<String>(), 16).expect("Failed to parse hex string")
     }
 
-    pub fn discard_char(&self) {
+    pub fn discard_char(&mut self) {
         let _ = self.rx.recv();
     }
 
@@ -115,11 +115,11 @@ impl CommsChannel for UDPCommsChannel {
         self.send_response_str(&escaped_msg);
     }
 
-    fn recv_char(&self) -> char {
+    fn recv_char(&mut self) -> char {
         self.rx.recv()
     }
 
-    fn is_input_available(&self) -> bool {
+    fn is_input_available(&mut self) -> bool {
         self.rx.peek().is_some()
     }
 }

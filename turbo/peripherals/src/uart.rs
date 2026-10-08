@@ -21,7 +21,7 @@ impl<CC: CommsChannel> Uart<CC> {
     }
 
     pub fn get_status(&self) -> u8 {
-        if self.comm_channel.borrow().is_input_available() {
+        if self.comm_channel.borrow_mut().is_input_available() {
             0x01
         } else {
             0x00
@@ -33,7 +33,7 @@ impl<CC: CommsChannel> Uart<CC> {
         if self.get_status() == 0 {
             0xFF
         } else {
-            self.comm_channel.borrow().recv_byte()
+            self.comm_channel.borrow_mut().recv_byte()
         }
     }
 }

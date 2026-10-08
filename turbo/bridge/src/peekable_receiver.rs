@@ -1,42 +1,42 @@
-use std::{cell::Cell, sync::mpsc::{self, Receiver}};
+use std::{sync::mpsc::{self, Receiver}};
 
 pub struct PeekableReceiver<T> {
     receiver: Receiver<T>,
-    peeked: Cell<Option<T>>,
+    peeked: Option<T>,
 }
 
 impl<T> PeekableReceiver<T> where T: Copy {
     pub fn new(receiver: Receiver<T>) -> Self {
         Self {
             receiver,
-            peeked: Cell::new(None),
+            peeked: None,
         }
     }
 
-    pub fn peek(&self) -> Option<T> {
-        if self.peeked.get().is_none() {
+    pub fn peek(&mut self) -> Option<T> {
+        if self.peeked.is_none() {
             match self.receiver.try_recv() {
-                Ok(value) => self.peeked.set(Some(value)),
+                Ok(value) => self.peeked = Some(value),
                 Err(mpsc::TryRecvError::Empty) => return None,
                 Err(mpsc::TryRecvError::Disconnected) => panic!("Couldn't receive from channel"),
             }
         }
-        self.peeked.get()
+        self.peeked
     }
 
-    pub fn recv(&self) -> T {
-        if let Some(value) = self.peeked.get() {
-            self.peeked.set(None);
+    pub fn recv(&mut self) -> T {
+        if let Some(value) = self.peeked {
+            self.peeked = None;
             value
         } else {
             self.receiver.recv().expect("Couldn't receive from channel")
         }
     }
 
-    pub fn unrecv(&self, value: T) {
-        if self.peeked.get().is_some() {
+    pub fn unrecv(&mut self, value: T) {
+        if self.peeked.is_some() {
             panic!("Peeked value already exists");
         }
-        self.peeked.set(Some(value));
+        self.peeked = Some(value);
     }
 }
