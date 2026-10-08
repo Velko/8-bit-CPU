@@ -1,7 +1,7 @@
-use std::{net::{SocketAddr, UdpSocket}, str, sync::{Arc, Mutex, mpsc::{self, Receiver, Sender}}, thread};
+use std::{net::{SocketAddr, UdpSocket}, str, sync::mpsc::{self, Receiver, Sender}, thread};
 use turbo_core::TrapReason;
 
-use crate::PeekableReceiver;
+use crate::{PeekableReceiver, latest_slot::LatestSlot};
 
 const BUFFER_SIZE: usize = 1024;
 
@@ -121,39 +121,5 @@ impl CommsChannel for UDPCommsChannel {
 
     fn is_input_available(&mut self) -> bool {
         self.rx.peek().is_some()
-    }
-}
-
-pub struct LatestSlot<T> {
-    inner: Arc<Mutex<Option<T>>>,
-}
-
-impl<T: Clone> LatestSlot<T> {
-    pub fn new() -> Self {
-        Self {
-            inner: Arc::new(Mutex::new(None)),
-        }
-    }
-
-    /// Overwrites the slot with a new item.
-    pub fn send(&self, item: T) {
-        let mut guard = self.inner.lock().unwrap();
-        *guard = Some(item);
-    }
-
-    /// Instantly returns a clone of the latest item, or None if it's empty.
-    /// Does not block and does not consume the item.
-    pub fn read(&self) -> Option<T> {
-        let guard = self.inner.lock().unwrap();
-        guard.clone() // Clones the Option<T> inside the mutex
-    }
-}
-
-// Implement Clone so handles can be passed to multiple threads
-impl<T> Clone for LatestSlot<T> {
-    fn clone(&self) -> Self {
-        Self {
-            inner: Arc::clone(&self.inner),
-        }
     }
 }
