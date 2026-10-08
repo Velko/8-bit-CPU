@@ -769,7 +769,7 @@ key_to_dir:
     #d DIR_UP, DIR_DOWN, DIR_RIGHT, DIR_LEFT
 
 game_over_message:
-    #d 0x1B, "[10;10HGame over !", 0x00
+    #d 0x1B, "[10;10HGame over !", 0x1B, "[?25h", 0x00; show message and re-enable cursor
 
 
 #bankdef bss
