@@ -120,6 +120,6 @@ impl CommsChannel for UDPCommsChannel {
     }
 
     fn is_input_available(&mut self) -> bool {
-        self.rx.peek().is_some()
+        self.rx.peek().is_value()
     }
 }

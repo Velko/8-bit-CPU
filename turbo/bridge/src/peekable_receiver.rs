@@ -1,8 +1,21 @@
-use std::{sync::mpsc::{self, Receiver}};
+use std::sync::mpsc::{self, Receiver};
 
 pub struct PeekableReceiver<T> {
     receiver: Receiver<T>,
     peeked: Option<T>,
+}
+
+#[derive(Debug, PartialEq)]
+pub enum PeekResult<T> {
+    Value(T),
+    Empty,
+    Disconnected,
+}
+
+impl<T> PeekResult<T> {
+    pub fn is_value(&self) -> bool {
+        matches!(self, PeekResult::Value(_))
+    }
 }
 
 impl<T> PeekableReceiver<T> where T: Copy {
@@ -13,15 +26,19 @@ impl<T> PeekableReceiver<T> where T: Copy {
         }
     }
 
-    pub fn peek(&mut self) -> Option<T> {
-        if self.peeked.is_none() {
+    pub fn peek(&mut self) -> PeekResult<T> {
+        if let Some(value) = self.peeked {
+            return PeekResult::Value(value);
+        } else {
             match self.receiver.try_recv() {
-                Ok(value) => self.peeked = Some(value),
-                Err(mpsc::TryRecvError::Empty) => return None,
-                Err(mpsc::TryRecvError::Disconnected) => panic!("Couldn't receive from channel"),
+                Ok(value) => {
+                    self.peeked = Some(value);
+                    return PeekResult::Value(value);
+                }
+                Err(mpsc::TryRecvError::Empty) => return PeekResult::Empty,
+                Err(mpsc::TryRecvError::Disconnected) => return PeekResult::Disconnected,
             }
         }
-        self.peeked
     }
 
     pub fn recv(&mut self) -> T {

@@ -73,7 +73,7 @@ impl CommsChannel for LocalCommsChannel {
 
     fn is_input_available(&mut self) -> bool {
         if let Self::UART { rx, .. } = self {
-            rx.peek().is_some()
+            rx.peek().is_value()
         } else {
             false
         }
