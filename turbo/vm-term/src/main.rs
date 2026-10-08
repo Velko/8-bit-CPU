@@ -94,7 +94,7 @@ fn main() -> std::io::Result<()> {
     let mut buf = Vec::new();
     file.read_to_end(&mut buf)?;
 
-    let _raw_stdio = stdout().into_raw_mode().unwrap();
+    let _raw_stdio = stdout().into_raw_mode().ok();
 
     let comms_channels: Vec<Rc<RefCell<LocalCommsChannel>>> = vec![
         Rc::new(RefCell::new(LocalCommsChannel::Debug)),
@@ -111,8 +111,8 @@ fn main() -> std::io::Result<()> {
     let trap = cpu.run_until_trap();
 
     match trap {
-        TrapReason::Halt => println!("# Halted"),
-        TrapReason::Brk => println!("# Break"),
+        TrapReason::Halt => eprintln!("# Halted"),
+        TrapReason::Brk => eprintln!("# Break"),
     }
 
     Ok(())
