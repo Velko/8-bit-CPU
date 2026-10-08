@@ -1,5 +1,7 @@
-use std::{cell::Cell, net::{SocketAddr, UdpSocket}, str, sync::{Arc, Mutex, mpsc::{self, Receiver, Sender}}, thread};
+use std::{net::{SocketAddr, UdpSocket}, str, sync::{Arc, Mutex, mpsc::{self, Receiver, Sender}}, thread};
 use turbo_core::TrapReason;
+
+use crate::PeekableReceiver;
 
 const BUFFER_SIZE: usize = 1024;
 
@@ -119,47 +121,6 @@ impl CommsChannel for UDPCommsChannel {
 
     fn is_input_available(&self) -> bool {
         self.rx.peek().is_some()
-    }
-}
-
-pub struct PeekableReceiver<T> {
-    receiver: Receiver<T>,
-    peeked: Cell<Option<T>>,
-}
-
-impl<T> PeekableReceiver<T> where T: Copy {
-    pub fn new(receiver: Receiver<T>) -> Self {
-        Self {
-            receiver,
-            peeked: Cell::new(None),
-        }
-    }
-
-    pub fn peek(&self) -> Option<T> {
-        if self.peeked.get().is_none() {
-            match self.receiver.try_recv() {
-                Ok(value) => self.peeked.set(Some(value)),
-                Err(mpsc::TryRecvError::Empty) => return None,
-                Err(mpsc::TryRecvError::Disconnected) => panic!("Couldn't receive from channel"),
-            }
-        }
-        self.peeked.get()
-    }
-
-    pub fn recv(&self) -> T {
-        if let Some(value) = self.peeked.get() {
-            self.peeked.set(None);
-            value
-        } else {
-            self.receiver.recv().expect("Couldn't receive from channel")
-        }
-    }
-
-    pub fn unrecv(&self, value: T) {
-        if self.peeked.get().is_some() {
-            panic!("Peeked value already exists");
-        }
-        self.peeked.set(Some(value));
     }
 }
 
